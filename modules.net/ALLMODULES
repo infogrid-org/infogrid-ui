@@ -1,12 +1,10 @@
 org.infogrid.kernel.net
-org.infogrid.comm.net
 org.infogrid.model.Feeds
 org.infogrid.model.Probe
 org.infogrid.model.VCard
 org.infogrid.meshbase.store.net
 org.infogrid.lid.yadis
 org.infogrid.lid
-org.infogrid.lid.messaging
 org.infogrid.lid.openid
 org.infogrid.lid.openid.store
 org.infogrid.lid.store

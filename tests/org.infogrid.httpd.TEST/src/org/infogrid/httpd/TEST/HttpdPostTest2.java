@@ -107,7 +107,7 @@ public class HttpdPostTest2
     /**
      * The number of concurrent threads.
      */
-    protected static final int THREADS = 20;
+    protected static final int THREADS = 10;
 
     /**
      * The Runnable for the Threads.
