@@ -1,10 +1,7 @@
 #!/bin/sh
 #
-# Build all of InfoGrid.
-# Synopsis:
-#     tools/buildall.sh [-r]
+# Build all of InfoGrid. Run with option -h to see synopsis.
 #
-# -r stands for rebuild
 
 script=tools/`basename $0`
 
@@ -27,6 +24,8 @@ do_apps=1;
 do_apps_net=1;
 do_tests=1;
 do_tests_net=1;
+do_dist=1;
+do_dist_net=1;
 do_nothing=1;
 do_all=1;
 verbose=1;
@@ -64,6 +63,10 @@ for arg in $*; do
 		do_tests=0;
 	elif [ "$arg" = 'tests.net' ]; then
 		do_tests_net=0;
+	elif [ "$arg" = 'dist' ]; then
+		do_dist=0;
+	elif [ "$arg" = 'dist.net' ]; then
+		do_dist_net=0;
 	else
 		echo "ERROR: Unknown argument: $arg"
 		exit 1;
@@ -71,7 +74,7 @@ for arg in $*; do
 	shift;
 done
 
-# echo args ${do_clean} ${do_build} ${do_run} ${do_modules} ${do_modules_net} ${do_apps} ${do_apps_net} ${do_tests} ${do_tests_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
+# echo args ${do_clean} ${do_build} ${do_run} ${do_modules} ${do_modules_net} ${do_apps} ${do_apps_net} ${do_tests} ${do_tests_net} ${do_dist} ${do_dist_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
 # exit 0;
 
 if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
@@ -80,13 +83,13 @@ if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
 	echo "        -v: verbose output"
 	echo "        -h: this help"
 	echo "        -n: do not execute, only print"
-	echo "        -a: complete rebuild, equivalent to -clean -build -run modules modules.net apps apps.net tests tests.net"
+	echo "        -a: complete rebuild, equivalent to -clean -build -run modules modules.net apps apps.net tests tests.net dist dist.net"
 	echo "        -clean: remove old build artifacts"
 	echo "        -build: build"
 	echo "        -run: run"
 	echo "            (more than one of -clean,-build,-run may be given. Default is -build,-run)"
-	echo "        -antflags <flags>: pass flags to ant invokation"
-	echo "        category: one or more of modules, modules.net, apps, apps.net, tests, tests.net"
+	echo "        -antflags <flags>: pass flags to ant invocation"
+	echo "        category: one or more of modules, modules.net, apps, apps.net, tests, tests.net, dist, dist.net"
 	exit 1;
 fi
 
@@ -100,19 +103,23 @@ if [ "${do_all}" = 0 ]; then
 	do_apps_net=0;
 	do_tests=0;
 	do_tests_net=0;
+	do_dist=0;
+	do_dist_net=0;
 else
 	if [ "${do_clean}" = 1 -a "${do_build}" = 1 -a "${do_run}" = 1 ]; then
 		do_clean=1;
 		do_build=0;
 		do_run=0;
 	fi
-	if [ "${do_modules}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests}" = 1 -a "${do_tests_net}" = 1 ]; then
+	if [ "${do_modules}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests}" = 1 -a "${do_tests_net}" = 1 -a "${do_dist}" = 1 -a "${do_dist_net}" = 1 ]; then
 		do_modules=0;
 		do_modules_net=0;
 		do_apps=0;
 		do_apps_net=0;
 		do_tests=0;
 		do_tests_net=0;
+		do_dist=0;
+		do_dist_net=0;
 	fi
 fi
 
@@ -145,6 +152,12 @@ if [ "${do_nothing}" = 0 ]; then
 	fi
 	if [ "${do_tests_net}" = 0 ]; then
 		/bin/echo -n " tests.net"
+	fi
+	if [ "${do_dist}" = 0 ]; then
+		/bin/echo -n " dist"
+	fi
+	if [ "${do_dist_net}" = 0 ]; then
+		/bin/echo -n " dist.net"
 	fi
 	if [ "${verbose}" = 0 ]; then
 		/bin/echo -n " (verbose)"
@@ -204,6 +217,19 @@ run_module()
 	return "${?}";
 }
 
+expand_module()
+{
+	local cmd;
+	pushd build/$2 > /dev/null
+	cmd="jar xf ../../$2/$1/dist/$1.jar"
+	if [ "${verbose}" = 0 ]; then
+		echo $cmd
+	fi
+	$cmd
+	popd > /dev/null
+	return "${?}";
+}
+
 if [ "${do_clean}" = 0 ]; then
 	if [ "${do_modules}" = 0 ]; then
 		echo '**** Cleaning modules ****'
@@ -242,6 +268,21 @@ if [ "${do_clean}" = 0 ]; then
 		for f in `filter_modules tests.net/ALLTESTS '\[noclean\]'`; do
 			clean_module tests.net/$f || exit 1;
 		done;
+	fi
+
+	if [ "${do_dist}" = 0 ]; then
+		echo '**** Cleaning dist ****'
+		if [ "${verbose}" = 0 ]; then
+			/bin/rm -rf build dist
+		fi
+		/bin/rm -rf build dist
+	fi
+	if [ "${do_dist_net}" = 0 ]; then
+		echo '**** Cleaning dist.net ****'
+		if [ "${verbose}" = 0 ]; then
+			echo rm -rf build.net dist.net
+		fi
+		/bin/rm -rf build.net dist.net
 	fi
 fi
 
@@ -283,6 +324,31 @@ if [ "${do_build}" = 0 ]; then
 		for f in `filter_modules tests.net/ALLTESTS '\[nobuild\]'`; do
 			build_module tests.net/$f jar || exit 1;
 		done;
+	fi
+
+	if [ "${do_dist}" = 0 ]; then
+		echo '**** Building dist ****'
+		/bin/mkdir dist
+		/bin/mkdir -p build/modules
+		for f in `filter_modules modules/ALLMODULES '\[nodist\]'`; do
+			expand_module $f modules || exit 1;
+		done;
+		if [ "${verbose}" = 0 ]; then
+			echo jar cf dist/infogrid-fnd.jar 'build/modules/*'
+		fi
+		( cd build/modules; jar cf ../../dist/infogrid-fnd.jar * )
+	fi
+	if [ "${do_dist_net}" = 0 ]; then
+		echo '**** Building dist.net ****'
+		/bin/mkdir dist.net
+		/bin/mkdir -p build/modules.net
+		for f in `filter_modules modules.net/ALLMODULES '\[nodist\]'`; do
+			expand_module $f modules.net || exit 1;
+		done;
+		if [ "${verbose}" = 0 ]; then
+			echo jar cf dist.net/infogrid-net.jar 'build/modules.net/*'
+		fi
+		( cd build/modules.net; jar cf ../../dist.net/infogrid-net.jar * )
 	fi
 fi
 
