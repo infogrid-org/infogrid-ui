@@ -17,7 +17,7 @@ package org.infogrid.kernel.TEST.mesh.externalized;
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- * Tests the Store implementation of MeshBase.
+ * Tests the externalization of MeshObjectIdentifiers and PropertyValues.
  */
 public abstract class AllTests
         extends
@@ -35,8 +35,6 @@ public abstract class AllTests
 
         TestSpec [] tests = {
                 new TestSpec( SerializerTest1.class, emptyArgs ),
-                new TestSpec( SerializerTest2.class, emptyArgs ),
-                new TestSpec( SerializerTest3.class, emptyArgs ),
         };
 
         runTests( tests );

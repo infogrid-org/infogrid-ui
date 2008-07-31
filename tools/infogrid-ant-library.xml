@@ -23,16 +23,22 @@ $Date$
 
   <property location="../.." name="infogrid.org" />
 
-  <property name="infogrid.org.apps"    value="${infogrid.org}/apps"/>
-  <property name="infogrid.org.modules" value="${infogrid.org}/modules"/>
-  <property name="infogrid.org.tests"   value="${infogrid.org}/tests"/>
+  <property name="infogrid.org.apps"        value="${infogrid.org}/apps"/>
+  <property name="infogrid.org.modules"     value="${infogrid.org}/modules"/>
+  <property name="infogrid.org.tests"       value="${infogrid.org}/tests"/>
+  <property name="infogrid.org.apps.net"    value="${infogrid.org}/apps.net"/>
+  <property name="infogrid.org.modules.net" value="${infogrid.org}/modules.net"/>
+  <property name="infogrid.org.tests.net"   value="${infogrid.org}/tests.net"/>
+
   <property name="infogrid.org.tools"   value="${infogrid.org}/tools"/>
   <property name="infogrid.org.vendors" value="${infogrid.org}/vendors"/>
 
-  <property name="all.modules.dirs"    value=".." />
+  <property name="all.modules.dirs"    value="${infogrid.org.modules}:${infogrid.org.modules.net}" />
 
+<!--
   <property name="thismoduledir"       value="${infogrid.org.modules}/${ant.project.name}"/>
   <property name="thistestdir"         value="${infogrid.org.tests}/${ant.project.name}"/>
+-->
 
   <property name="javadoc.windowtitle" value="InfoGrid Module '${ant.project.name}'" />
 

@@ -41,4 +41,5 @@
                 <arg line="${application.args}"/>
             </customize>
         </j2seproject3:debug>
-    </target></project>
+    </target>
+</project>

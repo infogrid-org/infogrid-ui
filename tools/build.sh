@@ -22,8 +22,11 @@ do_clean=1;
 do_build=1;
 do_run=1;
 do_modules=1;
+do_modules_net=1;
 do_apps=1;
+do_apps_net=1;
 do_tests=1;
+do_tests_net=1;
 do_nothing=1;
 do_all=1;
 verbose=1;
@@ -51,10 +54,16 @@ for arg in $*; do
 		ANTFLAGS='ANTFLAGS';
 	elif [ "$arg" = 'modules' ]; then
 		do_modules=0;
+	elif [ "$arg" = 'modules.net' ]; then
+		do_modules_net=0;
 	elif [ "$arg" = 'apps' ]; then
 		do_apps=0;
+	elif [ "$arg" = 'apps.net' ]; then
+		do_apps_net=0;
 	elif [ "$arg" = 'tests' ]; then
 		do_tests=0;
+	elif [ "$arg" = 'tests.net' ]; then
+		do_tests_net=0;
 	else
 		echo "ERROR: Unknown argument: $arg"
 		exit 1;
@@ -62,7 +71,7 @@ for arg in $*; do
 	shift;
 done
 
-# echo args ${do_clean} ${do_build} ${do_run} ${do_modules} ${do_apps} ${do_tests} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
+# echo args ${do_clean} ${do_build} ${do_run} ${do_modules} ${do_modules_net} ${do_apps} ${do_apps_net} ${do_tests} ${do_tests_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
 # exit 0;
 
 if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
@@ -71,13 +80,13 @@ if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
 	echo "        -v: verbose output"
 	echo "        -h: this help"
 	echo "        -n: do not execute, only print"
-	echo "        -a: complete rebuild, equivalent to -clean -build -run modules apps tests"
+	echo "        -a: complete rebuild, equivalent to -clean -build -run modules modules.net apps apps.net tests tests.net"
 	echo "        -clean: remove old build artifacts"
 	echo "        -build: build"
 	echo "        -run: run"
 	echo "            (more than one of -clean,-build,-run may be given. Default is -build,-run)"
 	echo "        -antflags <flags>: pass flags to ant invokation"
-	echo "        category: one or more of modules, apps, tests"
+	echo "        category: one or more of modules, modules.net, apps, apps.net, tests, tests.net"
 	exit 1;
 fi
 
@@ -86,18 +95,24 @@ if [ "${do_all}" = 0 ]; then
 	do_build=0;
 	do_run=0;
 	do_modules=0;
+	do_modules_net=0;
 	do_apps=0;
+	do_apps_net=0;
 	do_tests=0;
+	do_tests_net=0;
 else
 	if [ "${do_clean}" = 1 -a "${do_build}" = 1 -a "${do_run}" = 1 ]; then
 		do_clean=1;
 		do_build=0;
 		do_run=0;
 	fi
-	if [ "${do_modules}" = 1 -a "${do_apps}" = 1 -a "${do_tests}" = 1 ]; then
+	if [ "${do_modules}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests}" = 1 -a "${do_tests_net}" = 1 ]; then
 		do_modules=0;
+		do_modules_net=0;
 		do_apps=0;
+		do_apps_net=0;
 		do_tests=0;
+		do_tests_net=0;
 	fi
 fi
 
@@ -116,11 +131,20 @@ if [ "${do_nothing}" = 0 ]; then
 	if [ "${do_modules}" = 0 ]; then
 		/bin/echo -n " modules"
 	fi
+	if [ "${do_modules_net}" = 0 ]; then
+		/bin/echo -n " modules.net"
+	fi
 	if [ "${do_apps}" = 0 ]; then
 		/bin/echo -n " apps"
 	fi
+	if [ "${do_apps_net}" = 0 ]; then
+		/bin/echo -n " apps.net"
+	fi
 	if [ "${do_tests}" = 0 ]; then
 		/bin/echo -n " tests"
+	fi
+	if [ "${do_tests_net}" = 0 ]; then
+		/bin/echo -n " tests.net"
 	fi
 	if [ "${verbose}" = 0 ]; then
 		/bin/echo -n " (verbose)"
@@ -187,6 +211,12 @@ if [ "${do_clean}" = 0 ]; then
 			clean_module modules/$f || exit 1;
 		done;
 	fi
+	if [ "${do_modules_net}" = 0 ]; then
+		echo '**** Cleaning modules.net ****'
+		for f in `filter_modules modules.net/ALLMODULES '\[noclean\]'`; do
+			clean_module modules.net/$f || exit 1;
+		done;
+	fi
 
 	if [ "${do_apps}" = 0 ]; then
 		echo '**** Cleaning apps ****'
@@ -194,11 +224,23 @@ if [ "${do_clean}" = 0 ]; then
 			clean_module apps/$f || exit 1;
 		done;
 	fi
+	if [ "${do_apps_net}" = 0 ]; then
+		echo '**** Cleaning apps.net ****'
+		for f in `filter_modules apps.net/ALLAPPS '\[noclean\]'`; do
+			clean_module apps.net/$f || exit 1;
+		done;
+	fi
 
 	if [ "${do_tests}" = 0 ]; then
 		echo '**** Cleaning tests ****'
 		for f in `filter_modules tests/ALLTESTS '\[noclean\]'`; do
 			clean_module tests/$f || exit 1;
+		done;
+	fi
+	if [ "${do_tests_net}" = 0 ]; then
+		echo '**** Cleaning tests.net ****'
+		for f in `filter_modules tests.net/ALLTESTS '\[noclean\]'`; do
+			clean_module tests.net/$f || exit 1;
 		done;
 	fi
 fi
@@ -210,11 +252,23 @@ if [ "${do_build}" = 0 ]; then
 			build_module modules/$f jar || exit 1;
 		done;
 	fi
+	if [ "${do_modules_net}" = 0 ]; then
+		echo '**** Building modules.net ****'
+		for f in `filter_modules modules.net/ALLMODULES '\[nobuild\]'`; do
+			build_module modules.net/$f jar || exit 1;
+		done;
+	fi
 
 	if [ "${do_apps}" = 0 ]; then
 		echo '**** Building apps ****'
 		for f in `filter_modules apps/ALLAPPS '\[nobuild\]'`; do
 			build_module apps/$f dist || exit 1;
+		done;
+	fi
+	if [ "${do_apps_net}" = 0 ]; then
+		echo '**** Building apps.net ****'
+		for f in `filter_modules apps.net/ALLAPPS '\[nobuild\]'`; do
+			build_module apps.net/$f dist || exit 1;
 		done;
 	fi
 
@@ -224,6 +278,12 @@ if [ "${do_build}" = 0 ]; then
 			build_module tests/$f jar || exit 1;
 		done;
 	fi
+	if [ "${do_tests_net}" = 0 ]; then
+		echo '**** Building tests.net ****'
+		for f in `filter_modules tests.net/ALLTESTS '\[nobuild\]'`; do
+			build_module tests.net/$f jar || exit 1;
+		done;
+	fi
 fi
 
 if [ "${do_run}" = 0 ]; then
@@ -231,6 +291,12 @@ if [ "${do_run}" = 0 ]; then
 		echo '**** Running tests ****'
 		for f in `filter_modules tests/ALLTESTS '\[norun\]'`; do
 			run_module tests/$f run || exit 1;
+		done;
+	fi
+	if [ "${do_tests_net}" = 0 ]; then
+		echo '**** Running tests.net ****'
+		for f in `filter_modules tests.net/ALLTESTS '\[norun\]'`; do
+			run_module tests.net/$f run || exit 1;
 		done;
 	fi
 fi

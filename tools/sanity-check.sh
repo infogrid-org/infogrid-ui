@@ -4,7 +4,7 @@
 # check-in
 
 echo '** Checking that no funny paths exist **'
-grep '\.\./\.\./\.\.' {modules,tests}/*/nbproject/project.properties
+grep '\.\./\.\./\.\.' {modules*,apps*,tests*}/*/nbproject/project.properties
 
 echo '** Checking that the Vendor is set right'
-grep application.vendor {modules,tests}/*/nbproject/project.properties | grep -v InfoGrid.org
+grep application.vendor {modules*,apps*,tests*}/*/nbproject/project.properties | grep -v InfoGrid.org

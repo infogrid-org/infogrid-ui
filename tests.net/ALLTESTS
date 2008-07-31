@@ -1,0 +1,9 @@
+org.infogrid.kernel.net.TEST.mesh.externalized
+org.infogrid.kernel.net.TEST.urls
+org.infogrid.kernel.net.TEST.xpriso
+org.infogrid.meshbase.store.net.TEST
+org.infogrid.probe.TEST
+org.infogrid.probe.feeds.TEST
+org.infogrid.probe.vcard.TEST
+org.infogrid.probe.store.TEST
+# org.infogrid.probe.TEST.active -- currently broken

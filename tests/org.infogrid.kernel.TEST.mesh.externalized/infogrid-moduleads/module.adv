@@ -23,7 +23,6 @@
  </provides>
  <dependencies>
   <requires name="org.infogrid.kernel"/>
-  <requires name="org.infogrid.kernel.net"/>
   <requires name="org.infogrid.modelbase.m"/>
   <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.util"/>
