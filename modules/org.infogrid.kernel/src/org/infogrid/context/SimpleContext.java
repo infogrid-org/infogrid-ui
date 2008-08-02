@@ -76,15 +76,16 @@ public class SimpleContext
     }
 
     /**
-      * <p>Find an object in this <code>Context</code>by using its <code>Class</code>
-      * or a superclass as a key. This method will return the
-      * first object found if there are multiple objects of this class; to avoid this,
-      * specify a more concrete class.</p>
-      * <p>If the context object cannot be found, return <code>null</code>.</p>
-      *
-      * @param classOfContextObject class of the object that we are looking for it
-      * @return the found object, or null
-      */
+     * <p>Find an object in this <code>Context</code>by using its <code>Class</code>
+     * or a superclass as a key. This method will return the
+     * first object found if there are multiple objects of this class; to avoid this,
+     * specify a more concrete class.</p>
+     * <p>If the context object cannot be found, return <code>null</code>.</p>
+     *
+     * @param classOfContextObject class of the object that we are looking for it
+     * @return the found object, or null
+     * @param <T> type of the object to find
+     */
     @SuppressWarnings(value={"unchecked"})
     public <T> T findContextObject(
             Class<? extends T> classOfContextObject )
@@ -107,17 +108,18 @@ public class SimpleContext
     }
 
     /**
-      * <p>Find an object in this <code>Context</code>by using its <code>Class</code>
-      * or a superclass as a key. This method will return the
-      * first object found if there are multiple objects of this class; to avoid this,
-      * specify a more concrete class.</p>
-      * <p>If the context object cannot be found, throw a
-      *  {@link ContextObjectNotFoundException ContextObjectNotFoundException}.</p>
-      *
-      * @param classOfContextObject class of the object that we are looking for it
-      * @return the found object
-      * @throws ContextObjectNotFoundException if the Context object was not found
-      */
+     * <p>Find an object in this <code>Context</code>by using its <code>Class</code>
+     * or a superclass as a key. This method will return the
+     * first object found if there are multiple objects of this class; to avoid this,
+     * specify a more concrete class.</p>
+     * <p>If the context object cannot be found, throw a
+     *  {@link ContextObjectNotFoundException ContextObjectNotFoundException}.</p>
+     *
+     * @param classOfContextObject class of the object that we are looking for it
+     * @return the found object
+     * @throws ContextObjectNotFoundException if the Context object was not found
+     * @param <T> type of the object to find
+     */
     public <T> T findContextObjectOrThrow(
             Class<? extends T> classOfContextObject )
         throws

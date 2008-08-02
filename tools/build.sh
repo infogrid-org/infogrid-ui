@@ -175,7 +175,7 @@ function stop
 
 run_command()
 {
-	echo ' -' `date '+%Y%m%e-%H:%M:%S'` : $1
+	echo ' -' `date '+%Y%m%d-%H:%M:%S'` : $1
 	shift
 	if [ "${verbose}" = 0 ]; then
 		$*
