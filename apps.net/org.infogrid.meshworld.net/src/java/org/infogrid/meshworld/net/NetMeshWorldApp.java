@@ -27,6 +27,8 @@ import javax.sql.DataSource;
 import org.infogrid.context.SimpleContext;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.security.StoreFormTokenService;
+import org.infogrid.jee.viewlet.templates.DefaultStructuredResponseTemplateFactory;
+import org.infogrid.jee.viewlet.templates.StructuredResponseTemplateFactory;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -46,6 +48,7 @@ import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.logging.log4j.Log4jLog;
+import org.infogrid.viewlet.ViewletFactory;
 
 /**
  * NetMeshWorldApp application class.
@@ -182,6 +185,15 @@ public class NetMeshWorldApp
         StoreFormTokenService formTokenService = StoreFormTokenService.create( formTokenStore );
         rootContext.addContextObject( formTokenService );
 
+        // ViewletFactory
+        ViewletFactory vlFact = new NetMeshWorldViewletFactory();
+        rootContext.addContextObject( vlFact );
+        
+        // StructuredResponseTemplateFactory
+        StructuredResponseTemplateFactory tmplFact = DefaultStructuredResponseTemplateFactory.create();
+        rootContext.addContextObject( tmplFact );
+        
+        // finally, create the application
         NetMeshWorldApp ret = new NetMeshWorldApp( rootContext );
         return ret;
     }

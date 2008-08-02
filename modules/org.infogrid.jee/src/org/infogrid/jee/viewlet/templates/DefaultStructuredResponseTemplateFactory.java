@@ -26,6 +26,8 @@ import org.infogrid.util.FactoryException;
 public class DefaultStructuredResponseTemplateFactory
         extends
             AbstractFactory<RestfulRequest,StructuredResponseTemplate,StructuredResponse>
+        implements
+            StructuredResponseTemplateFactory
 {
     /**
      * Factory method.
