@@ -19,9 +19,9 @@ import java.lang.ref.Reference;
 /**
  * A {@link SwappingHashMap} that stores data in memory only.
  * 
- * @param K the type of key
- * @param V the type of value
- * @param A the type of argument
+ * @param <K> the type of key
+ * @param <V> the type of value
+ * @param <A> the type of argument
  */
 public abstract class MSwappingHashMap<K,V,A>
         extends
@@ -31,6 +31,9 @@ public abstract class MSwappingHashMap<K,V,A>
      * Create MSwappingHashMap that uses SoftReferences.
      * 
      * @return the created MSwappingHashMap
+     * @param <K> the type of key
+     * @param <V> the type of value
+     * @param <A> the type of argument
      */
     public static <K,V,A> MSwappingHashMap<K, V, A> createSoft()
     {
@@ -42,6 +45,9 @@ public abstract class MSwappingHashMap<K,V,A>
      * 
      * @param initialSize the initial size of the MSwappingHashMap
      * @return the created MSwappingHashMap
+     * @param <K> the type of key
+     * @param <V> the type of value
+     * @param <A> the type of argument
      */
     public static <K,V,A> MSwappingHashMap<K, V, A> createSoft(
             int initialSize )
@@ -60,6 +66,9 @@ public abstract class MSwappingHashMap<K,V,A>
      * Create MSwappingHashMap that uses WeakReferences.
      * 
      * @return the created MSwappingHashMap
+     * @param <K> the type of key
+     * @param <V> the type of value
+     * @param <A> the type of argument
      */
     public static <K,V,A> MSwappingHashMap<K, V, A> createWeak()
     {
@@ -71,6 +80,9 @@ public abstract class MSwappingHashMap<K,V,A>
      * 
      * @param initialSize the initial size of the MSwappingHashMap
      * @return the created MSwappingHashMap
+     * @param <K> the type of key
+     * @param <V> the type of value
+     * @param <A> the type of argument
      */
     public static <K,V,A> MSwappingHashMap<K, V, A> createWeak(
             int initialSize )

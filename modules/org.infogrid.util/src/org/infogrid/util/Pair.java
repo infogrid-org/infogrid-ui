@@ -17,13 +17,13 @@ package org.infogrid.util;
 /**
  * A helper class that represents a pair of name and value.
  * 
- * @param K the type of key
- * @param V the type of value
+ * @param <K> the type of key
+ * @param <V> the type of value
  */
 public class Pair<K,V>
 {
     /**
-      * Construct one.
+      * Constructor.
       *
       * @param name the name
       * @param value the value
