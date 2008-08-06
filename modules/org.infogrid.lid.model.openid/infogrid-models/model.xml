@@ -15,17 +15,17 @@
 
 <!DOCTYPE model PUBLIC '-//InfoGrid.org//InfoGrid Model//EN' 'http://infogrid.org/dtds/model.dtd'>
 <model>
-    <subjectarea ID="org.infogrid.lid.openid">
-        <name>org.infogrid.lid.openid</name>
+    <subjectarea ID="org.infogrid.lid.model.openid">
+        <name>org.infogrid.lid.model.openid</name>
         <username>OpenID Subject Area</username>
         <userdescription>The concepts defined by OpenID.</userdescription>
 
         <dependson>
             <subjectareareference>
-                <name>org.infogrid.lid.yadis</name>
+                <name>org.infogrid.lid.model.yadis</name>
             </subjectareareference>
             <subjectareareference>
-                <name>org.infogrid.lid</name>
+                <name>org.infogrid.lid.model</name>
             </subjectareareference>
         </dependson>
 
@@ -33,10 +33,10 @@
             <name>AuthenticationService</name>
             <username>OpenID Authentication Service</username>
             <userdescription>This represents an OpenID Authentication Service in any version.</userdescription>
-            <supertype>org.infogrid.lid#WebAuthenticationService</supertype>
+            <supertype>org.infogrid.lid.model#WebAuthenticationService</supertype>
             <isabstract/>
             
-            <propertytype ID="org.infogrid.lid.openid#AuthenticationService/Delegate">
+            <propertytype ID="org.infogrid.lid.model.openid#AuthenticationService/Delegate">
                 <name>Delegate</name>
                 <username>Delegate</username>
                 <userdescription>The delegate identifier.</userdescription>
@@ -47,7 +47,7 @@
             </propertytype>
         </entitytype>        
 
-        <entitytype ID="org.infogrid.lid.openid#Authentication1Service">
+        <entitytype ID="org.infogrid.lid.model.openid#Authentication1Service">
             <name>Authentication1Service</name>
             <username>OpenID Authentication Service (version 1)</username>
             <userdescription>This represents an OpenID Authentication Service (version 1)</userdescription>
@@ -212,7 +212,7 @@
             <name>RelyingPartyService</name>
             <username>OpenID Relying Party Service</username>
             <userdescription>This service is provided by OpenID RelyingParties in any version.</userdescription>
-            <supertype>org.infogrid.lid#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model#RelyingPartyService</supertype>
         </entitytype>
         
         <entitytype ID="http://specs.openid.net/auth/1.0/return_to">

@@ -13,8 +13,8 @@
     All rights reserved.
 -->
 
-<project name="org.infogrid.lid.yadis" default="default" basedir=".">
-    <description>Builds, tests, and runs the project org.infogrid.lid.yadis.</description>
+<project name="org.infogrid.lid.model.openid" default="default" basedir=".">
+    <description>Builds, tests, and runs the project org.infogrid.lid.model.openid.</description>
     <import file="../../tools/infogrid-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
 

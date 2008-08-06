@@ -15,24 +15,24 @@
 
 <!DOCTYPE model PUBLIC '-//InfoGrid.org//InfoGrid Model//EN' 'http://infogrid.org/dtds/model.dtd'>
 <model>
-    <subjectarea ID="org.infogrid.lid.yadis">
-        <name>org.infogrid.lid.yadis</name>
+    <subjectarea ID="org.infogrid.lid.model.yadis">
+        <name>org.infogrid.lid.model.yadis</name>
         <username>Yadis Subject Area</username>
         <userdescription>This Subject Area covers the concepts defined by the Yadis protocol.</userdescription>
 
-        <entitytype ID="org.infogrid.lid.yadis#Site">
+        <entitytype ID="org.infogrid.lid.model.yadis#Site">
             <name>Site</name>
             <username>Site</username>
             <userdescription>Essentially a URI.</userdescription>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.yadis#Service">
+        <entitytype ID="org.infogrid.lid.model.yadis#Service">
             <name>Service</name>
             <username>Yadis Service</username>
             <userdescription>This represents a Yadis Service. The concept of a ServiceType is
               expressed by subclasses of this EntityType.</userdescription>
             
-            <propertytype ID="org.infogrid.lid.yadis#Service/Priority">
+            <propertytype ID="org.infogrid.lid.mnodel.yadis#Service/Priority">
                 <name>Priority</name>
                 <username>Priority</username>
                 <userdescription>Priority of this Service.</userdescription>
@@ -43,48 +43,48 @@
             </propertytype>
         </entitytype>
         
-        <relationshiptype ID="org.infogrid.lid.yadis#Site_MakesUseOf_Service">
+        <relationshiptype ID="org.infogrid.lid.model.yadis#Site_MakesUseOf_Service">
             <name>Site_MakesUseOf_Service</name>
             <username>makes use of</username>
             <userdescription>This relates a MeshObject to the Yadis Services that it makes use of. For example,
             an individual (Site) uses this relationship to identify the authentication services (Service)
             that he uses for authentication, e.g. via an XRDS file they put together.</userdescription>
             <src>
-              <e>org.infogrid.lid.yadis#Site</e>
+              <e>org.infogrid.lid.model.yadis#Site</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.lid.yadis#Service</e>
+              <e>org.infogrid.lid.model.yadis#Service</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>
 
-        <relationshiptype ID="org.infogrid.lid.yadis#Service_IsProvidedAtEndpoint_Site">
+        <relationshiptype ID="org.infogrid.lid.model.yadis#Service_IsProvidedAtEndpoint_Site">
             <name>Service_IsProvidedAtEndpoint_Site</name>
             <username>Is provided at</username>
             <userdescription>Expresses at which endpoints a Service is available. For example,
             an identity provider (Service) uses this to list its endpoints (Site).</userdescription>
             <src>
-              <e>org.infogrid.lid.yadis#Service</e>
+              <e>org.infogrid.lid.model.yadis#Service</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.lid.yadis#Site</e>
+              <e>org.infogrid.lid.model.yadis#Site</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>
         
-        <relationshiptype ID="org.infogrid.lid.yadis#Site_Offers_Service">
+        <relationshiptype ID="org.infogrid.lid.model.yadis#Site_Offers_Service">
             <name>Site_Offers_Service</name>
             <username>offers</username>
             <userdescription>Expresses which Services a Site offers. This is distinct from Service_IsProvidedAt_Site.
             For example, a website (Site) may offer identity provider services (Service).</userdescription>
             <src>
-              <e>org.infogrid.lid.yadis#Site</e>
+              <e>org.infogrid.lid.model.yadis#Site</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.lid.yadis#Service</e>
+              <e>org.infogrid.lid.model.yadis#Service</e>
               <MultiplicityValue>0:1</MultiplicityValue>
             </dest>
         </relationshiptype>

@@ -13,7 +13,7 @@
     All rights reserved.
 -->
 
-<project name="org.infogrid.lid.yadis-impl" default="default" basedir=".." xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:j2seproject2="http://www.netbeans.org/ns/j2se-project/2" xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
+<project name="org.infogrid.lid.model.yadis-impl" default="default" basedir=".." xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:j2seproject2="http://www.netbeans.org/ns/j2se-project/2" xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
     <target name="default" depends="test,jar,javadoc" description="Build and test whole project."/>
     <!-- 
     ======================

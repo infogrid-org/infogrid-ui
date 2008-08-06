@@ -263,6 +263,7 @@ public class ArrayMap<K,V>
      * Returns a set view of the keys contained in this map.
      *
      * @return a set view of the keys contained in this map.
+     * @see #getKeySet
      */
     public synchronized Set<K> keySet()
     {
@@ -273,9 +274,21 @@ public class ArrayMap<K,V>
     }
 
     /**
+     * Make method easier to call from JSP.
+     * 
+     * @return a set view of the mappings contained in this map.
+     * @see #keySet
+     */
+    public Set<K> getKeySet()
+    {
+        return keySet();
+    }
+
+    /**
      * Returns a collection view of the values contained in this map.
      *
      * @return a collection view of the values contained in this map.
+     * @see #getValues
      */
     public synchronized Collection<V> values()
     {
@@ -286,9 +299,21 @@ public class ArrayMap<K,V>
     }
 
     /**
+     * Make method easier to call from JSP.
+     * 
+     * @return a set view of the mappings contained in this map.
+     * @see #values
+     */
+    public Collection<V> getValues()
+    {
+        return values();
+    }
+
+    /**
      * Returns a set view of the mappings contained in this map.
      *
      * @return a set view of the mappings contained in this map.
+     * @see #getEntrySet
      */
     public synchronized Set<Map.Entry<K,V>> entrySet()
     {
@@ -298,6 +323,16 @@ public class ArrayMap<K,V>
         return theEntrySet;
     }
 
+    /**
+     * Make method easier to call from JSP.
+     * 
+     * @return a set view of the mappings contained in this map.
+     * @see #entrySet
+     */
+    public Set<Map.Entry<K,V>> getEntrySet()
+    {
+        return entrySet();
+    }
 
     /**
      * Compares the specified object with this map for equality.
