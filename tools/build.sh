@@ -328,7 +328,7 @@ if [ "${do_build}" = 0 ]; then
 
 	if [ "${do_dist}" = 0 ]; then
 		echo '**** Building dist ****'
-		/bin/mkdir dist
+		/bin/mkdir -p dist
 		/bin/mkdir -p build/modules
 		for f in `filter_modules modules/ALLMODULES '\[nodist\]'`; do
 			expand_module $f modules || exit 1;
@@ -340,7 +340,7 @@ if [ "${do_build}" = 0 ]; then
 	fi
 	if [ "${do_dist_net}" = 0 ]; then
 		echo '**** Building dist.net ****'
-		/bin/mkdir dist.net
+		/bin/mkdir -p dist.net
 		/bin/mkdir -p build/modules.net
 		for f in `filter_modules modules.net/ALLMODULES '\[nodist\]'`; do
 			expand_module $f modules.net || exit 1;
