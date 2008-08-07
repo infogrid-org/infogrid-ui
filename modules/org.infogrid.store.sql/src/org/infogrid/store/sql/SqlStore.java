@@ -161,6 +161,7 @@ public class SqlStore
      * @see #update if a data element with this key exists already
      * @see #putOrUpdate if a data element with this key may exist already
      */
+    @Override
     public void put(
             final String  key,
             final String  encodingId,
@@ -289,6 +290,7 @@ public class SqlStore
      * @see #put if a data element with this key does not exist already
      * @see #putOrUpdate if a data element with this key may exist already
      */
+    @Override
     public void update(
             final String  key,
             final String  encodingId,
@@ -415,6 +417,7 @@ public class SqlStore
      * @see #put if a data element with this key does not exist already
      * @see #update if a data element with this key exists already
      */
+    @Override
     public boolean putOrUpdate(
             final String  key,
             final String  encodingId,
@@ -702,18 +705,6 @@ public class SqlStore
         } catch( SQLException ex ) {
             throw new SqlStoreIOException( ex );
         }
-    }
-
-    /**
-     * Remove all data in this Store.
-     *
-     * @throws SqlStoreIOException thrown if the database could not be written
-     */
-    public void deleteAll()
-        throws
-            SqlStoreIOException
-    {
-        deleteAll( "" );
     }
 
     /**

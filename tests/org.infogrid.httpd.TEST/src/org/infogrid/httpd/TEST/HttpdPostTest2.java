@@ -107,7 +107,7 @@ public class HttpdPostTest2
     /**
      * The number of concurrent threads.
      */
-    protected static final int THREADS = 10;
+    protected static final int THREADS = 20;
 
     /**
      * The Runnable for the Threads.
@@ -129,7 +129,7 @@ public class HttpdPostTest2
             HashMap<String,String> pars = new HashMap<String,String>();
             pars.put( "abc", "def" );
 
-            int MAX = 20;
+            int MAX = 100;
 
             for( int i=0 ; i<MAX ; ++i ) {
                 log.info( "Performing test " + i );
