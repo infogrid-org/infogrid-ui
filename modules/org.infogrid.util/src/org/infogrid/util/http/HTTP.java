@@ -196,7 +196,11 @@ public abstract class HTTP
         long                     lastModified = conn.getLastModified();
         Map<String,List<String>> headers      = conn.getHeaderFields();
         
-        return new Response( url, String.valueOf( status ), input, lastModified, headers );
+        Response ret = new Response( url, String.valueOf( status ), input, lastModified, headers );
+        
+        input.close();
+
+        return ret;
     }
 
     /**
@@ -428,7 +432,12 @@ public abstract class HTTP
         long                     lastModified = conn.getLastModified();
         Map<String,List<String>> headers      = conn.getHeaderFields();
         
-        return new Response( url, String.valueOf( status ), input, lastModified, headers );
+        Response ret = new Response( url, String.valueOf( status ), input, lastModified, headers );
+        
+        outStream.close();
+        input.close();
+        
+        return ret;
     }
 
     /**
