@@ -13,8 +13,8 @@
     All rights reserved.
 -->
 
-<project name="org.infogrid.lid.model" default="default" basedir=".">
-    <description>Builds, tests, and runs the project org.infogrid.lid.model.</description>
+<project name="org.infogrid.lid.model.lid" default="default" basedir=".">
+    <description>Builds, tests, and runs the project org.infogrid.lid.model.lid.</description>
     <import file="../../tools/infogrid-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
 

@@ -13,6 +13,8 @@ org.infogrid.crypto
 org.infogrid.comm
 org.infogrid.comm.pingpong
 org.infogrid.comm.smtp
+org.infogrid.lid
+org.infogrid.lid.openid
 org.infogrid.kernel
 org.infogrid.modelbase.m
 org.infogrid.kernel.active
@@ -24,12 +26,17 @@ org.infogrid.model.Test
 org.infogrid.model.SecurityTest
 org.infogrid.model.Viewlet
 org.infogrid.model.Wiki
+org.infogrid.lid.model.yadis
+org.infogrid.lid.model.lid
+org.infogrid.lid.model.openid
 org.infogrid.store
 org.infogrid.store.filesystem
 org.infogrid.store.hadoop
 org.infogrid.store.jets3t
 org.infogrid.store.keystore
 org.infogrid.store.sql
+org.infogrid.lid.store
+org.infogrid.lid.openid.store
 org.infogrid.meshbase.store
 org.infogrid.viewlet
 org.infogrid.jee

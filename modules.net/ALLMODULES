@@ -3,15 +3,12 @@ org.infogrid.model.Feeds
 org.infogrid.model.Probe
 org.infogrid.model.VCard
 org.infogrid.meshbase.store.net
-org.infogrid.lid
-org.infogrid.lid.openid
-org.infogrid.lid.openid.store
-org.infogrid.lid.store
 org.infogrid.jee.lid
 org.infogrid.jee.net
 org.infogrid.probe
 org.infogrid.probe.feeds
 org.infogrid.probe.store
 org.infogrid.probe.vcard
+org.infogrid.lid.messaging
 org.infogrid.net.local
 org.infogrid.net.local.store

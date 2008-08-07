@@ -25,7 +25,7 @@
                 <name>org.infogrid.lid.model.yadis</name>
             </subjectareareference>
             <subjectareareference>
-                <name>org.infogrid.lid.model</name>
+                <name>org.infogrid.lid.model.lid</name>
             </subjectareareference>
         </dependson>
 
@@ -33,7 +33,7 @@
             <name>AuthenticationService</name>
             <username>OpenID Authentication Service</username>
             <userdescription>This represents an OpenID Authentication Service in any version.</userdescription>
-            <supertype>org.infogrid.lid.model#WebAuthenticationService</supertype>
+            <supertype>org.infogrid.lid.model.lid#WebAuthenticationService</supertype>
             <isabstract/>
             
             <propertytype ID="org.infogrid.lid.model.openid#AuthenticationService/Delegate">
@@ -79,7 +79,7 @@
                         org.infogrid.lid.LidNonceManager.class );
 
         org.infogrid.mesh.set.MeshObjectSet endpoints = traverse(
-                org.infogrid.lid.yadis.YadisSubjectArea.SERVICE_ISPROVIDEDATENDPOINT_SITE.getSource() );
+                org.infogrid.lid.model.yadis.YadisSubjectArea.SERVICE_ISPROVIDEDATENDPOINT_SITE.getSource() );
         if( endpoints.isEmpty() ) {
             return null;
         }
@@ -145,7 +145,7 @@
                         org.infogrid.lid.LidNonceManager.class );
 
         org.infogrid.mesh.set.MeshObjectSet endpoints = traverse(
-                org.infogrid.lid.yadis.YadisSubjectArea.SERVICE_ISPROVIDEDATENDPOINT_SITE.getSource() );
+                org.infogrid.lid.model.yadis.YadisSubjectArea.SERVICE_ISPROVIDEDATENDPOINT_SITE.getSource() );
         if( endpoints.isEmpty() ) {
             return null;
         }
@@ -212,7 +212,7 @@
             <name>RelyingPartyService</name>
             <username>OpenID Relying Party Service</username>
             <userdescription>This service is provided by OpenID RelyingParties in any version.</userdescription>
-            <supertype>org.infogrid.lid.model#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model.lid#RelyingPartyService</supertype>
         </entitytype>
         
         <entitytype ID="http://specs.openid.net/auth/1.0/return_to">

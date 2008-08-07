@@ -14,24 +14,23 @@
 
 package org.infogrid.probe.TEST;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import org.infogrid.httpd.HttpEntity;
 import org.infogrid.httpd.HttpEntityResponse;
 import org.infogrid.httpd.HttpErrorResponse;
 import org.infogrid.httpd.HttpRequest;
 import org.infogrid.httpd.HttpResponse;
 import org.infogrid.httpd.HttpResponseFactory;
+import org.infogrid.lid.model.yadis.YadisSubjectArea;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.model.primitives.IntegerValue;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
-
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import org.infogrid.lid.yadis.YadisSubjectArea;
-import org.infogrid.mesh.set.MeshObjectSet;
-import org.infogrid.model.primitives.IntegerValue;
 
 /**
  * Tests XRDS discovery via MIME type with a mylid.net example file.

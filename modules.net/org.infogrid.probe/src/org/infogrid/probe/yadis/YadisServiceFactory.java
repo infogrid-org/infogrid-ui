@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
-import org.infogrid.lid.openid.Authentication1_0Service;
-import org.infogrid.lid.yadis.Service;
-import org.infogrid.lid.yadis.Site;
-import org.infogrid.lid.yadis.YadisSubjectArea;
+import org.infogrid.lid.model.openid.Authentication1_0Service;
+import org.infogrid.lid.model.yadis.Service;
+import org.infogrid.lid.model.yadis.Site;
+import org.infogrid.lid.model.yadis.YadisSubjectArea;
 import org.infogrid.mesh.BlessedAlreadyException;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
@@ -605,7 +605,7 @@ public class YadisServiceFactory
 
                     serviceMeshObject.bless( Authentication1_0Service._TYPE ); // FIXME? OpenIDAuthentication.TYPE );
                     if( delegateIdentifier != null ) {
-                        serviceMeshObject.setPropertyValue( org.infogrid.lid.openid.AuthenticationService.DELEGATE, StringValue.create( delegateIdentifier.toExternalForm() ));
+                        serviceMeshObject.setPropertyValue( org.infogrid.lid.model.openid.AuthenticationService.DELEGATE, StringValue.create( delegateIdentifier.toExternalForm() ));
                     }
                     
                     NetMeshObject endpoint = base.getMeshBaseLifecycleManager().createForwardReference(

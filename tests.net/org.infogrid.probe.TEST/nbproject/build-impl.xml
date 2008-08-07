@@ -315,11 +315,13 @@ is divided into following sections:
     <target depends="init" name="deps-jar" unless="no.deps">
         <ant antfile="${project.org_infogrid_comm}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_comm_pingpong}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_lid}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_lid_openid}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_lid_yadis}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_httpd}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_lid}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_lid_model_lid}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_lid_model_openid}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_lid_model_yadis}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_lid_openid}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Probe}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_kernel_net}/build.xml" inheritall="false" target="jar"/>
@@ -645,11 +647,13 @@ is divided into following sections:
     <target depends="init" name="deps-clean" unless="no.deps">
         <ant antfile="${project.org_infogrid_comm}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_comm_pingpong}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_lid}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_lid_openid}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_lid_yadis}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_httpd}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_lid}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_lid_model_lid}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_lid_model_openid}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_lid_model_yadis}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_lid_openid}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Probe}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_kernel_net}/build.xml" inheritall="false" target="clean"/>
