@@ -107,23 +107,23 @@
                     <file>${reference.org_infogrid_net_local_store.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library>
+                <library files="1">
                     <file>${reference.org_infogrid_lid.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library>
+                <library files="1">
                     <file>${reference.org_infogrid_lid_model_lid.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library>
+                <library files="1">
                     <file>${reference.org_infogrid_lid_model_openid.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library>
+                <library files="1">
                     <file>${reference.org_infogrid_lid_model_yadis.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library>
+                <library files="1">
                     <file>${reference.org_infogrid_lid_openid.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
