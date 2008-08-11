@@ -14,7 +14,6 @@
 
 package org.infogrid.probe.shadow.m;
 
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -37,6 +36,7 @@ import org.infogrid.probe.shadow.a.AShadowMeshBase;
 import org.infogrid.probe.shadow.a.AStagingMeshBaseLifecycleManager;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.MCachingHashMap;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

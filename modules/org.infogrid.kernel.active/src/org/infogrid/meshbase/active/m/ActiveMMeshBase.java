@@ -14,7 +14,6 @@
 
 package org.infogrid.meshbase.active.m;
 
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetFactory;
@@ -26,6 +25,7 @@ import org.infogrid.meshbase.a.DefaultAMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.security.AccessManager;
 import org.infogrid.modelbase.ModelBase;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.MCachingHashMap;
 import org.infogrid.util.logging.Log;

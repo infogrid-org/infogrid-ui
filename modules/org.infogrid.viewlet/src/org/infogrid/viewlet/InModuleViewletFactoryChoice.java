@@ -14,10 +14,9 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.context.Context;
+import java.net.MalformedURLException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.primitives.EntityType;
-
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleCapability;
 import org.infogrid.module.ModuleException;
@@ -25,11 +24,9 @@ import org.infogrid.module.ModuleNotFoundException;
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleResolutionException;
 import org.infogrid.module.StandardModuleAdvertisement;
-
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
-
-import java.net.MalformedURLException;
 
 /**
  * ViewletFactoryChoice referencing a ModuleCapability in a Module.

@@ -14,26 +14,20 @@
 
 package org.infogrid.meshbase.a;
 
-import org.infogrid.context.Context;
-
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
-
 import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.IterableMeshBaseDifferencer;
 import org.infogrid.meshbase.MeshBaseIdentifier;
-import org.infogrid.meshbase.Sweeper;
-import org.infogrid.meshbase.sweeper.SweepStep;
-import org.infogrid.meshbase.security.AccessManager;
-
-import org.infogrid.modelbase.ModelBase;
-
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
-
+import org.infogrid.meshbase.Sweeper;
+import org.infogrid.meshbase.security.AccessManager;
+import org.infogrid.meshbase.sweeper.SweepStep;
+import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.CursorIterator;
-
+import org.infogrid.util.context.Context;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**

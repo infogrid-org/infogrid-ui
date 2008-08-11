@@ -15,8 +15,6 @@
 package org.infogrid.kernel.active.TEST.objectset;
 
 import java.net.URISyntaxException;
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
 import org.infogrid.kernel.active.TEST.AllTests;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.IsAbstractException;
@@ -40,6 +38,8 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 
 

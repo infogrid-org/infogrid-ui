@@ -24,11 +24,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import org.infogrid.context.SimpleContext;
 import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.security.StoreFormTokenService;
-import org.infogrid.jee.viewlet.templates.DefaultStructuredResponseTemplateFactory;
-import org.infogrid.jee.viewlet.templates.StructuredResponseTemplateFactory;
+import org.infogrid.jee.rest.net.NetRestfulJeeFormatter;
+import org.infogrid.jee.security.store.StoreFormTokenService;
+import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
+import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -46,6 +46,7 @@ import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.store.sql.SqlStore;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.logging.log4j.Log4jLog;
 import org.infogrid.viewlet.ViewletFactory;
@@ -185,10 +186,13 @@ public class NetMeshWorldApp
         StoreFormTokenService formTokenService = StoreFormTokenService.create( formTokenStore );
         rootContext.addContextObject( formTokenService );
 
-        // ViewletFactory
+        // ViewletFactory and utils
         ViewletFactory vlFact = new NetMeshWorldViewletFactory();
         rootContext.addContextObject( vlFact );
         
+        NetRestfulJeeFormatter formatter = new NetRestfulJeeFormatter();
+        rootContext.addContextObject( formatter );
+
         // StructuredResponseTemplateFactory
         StructuredResponseTemplateFactory tmplFact = DefaultStructuredResponseTemplateFactory.create();
         rootContext.addContextObject( tmplFact );

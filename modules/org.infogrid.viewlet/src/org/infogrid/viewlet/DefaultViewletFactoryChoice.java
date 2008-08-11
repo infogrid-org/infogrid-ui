@@ -14,12 +14,10 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.context.Context;
-
+import java.util.ArrayList;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
-
-import java.util.ArrayList;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

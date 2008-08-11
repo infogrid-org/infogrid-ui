@@ -16,7 +16,6 @@ package org.infogrid.viewlet;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
@@ -25,6 +24,7 @@ import org.infogrid.model.Viewlet.ViewletSubjectArea;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

@@ -16,7 +16,6 @@ package org.infogrid.meshbase.net.local.m;
 
 import java.util.HashMap;
 import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -48,6 +47,7 @@ import org.infogrid.util.CursorIterator;
 import org.infogrid.util.MapCursorIterator;
 import org.infogrid.util.MCachingHashMap;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

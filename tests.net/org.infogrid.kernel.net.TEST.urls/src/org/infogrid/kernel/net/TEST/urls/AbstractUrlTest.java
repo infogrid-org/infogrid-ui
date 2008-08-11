@@ -14,8 +14,6 @@
 
 package org.infogrid.kernel.net.TEST.urls;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
@@ -24,6 +22,8 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.MNameServer;
 import org.infogrid.util.WritableNameServer;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 
 /**
  * Superclass for all tests in this package.

@@ -14,13 +14,9 @@
 
 package org.infogrid.jee.shell.http;
 
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.sane.SaneServletRequest;
-
-import org.infogrid.mesh.NotPermittedException;
-
-import org.infogrid.util.logging.Log;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -29,12 +25,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.infogrid.jee.servlet.SafeUnsafePostFilter;
-import org.infogrid.jee.servlet.ViewletDispatcherServlet;
+import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.jee.security.SafeUnsafePostFilter;
+import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.util.logging.Log;
 
 /**
  * <p>Recognizes <code>MeshObject</code> change-related requests as part of the incoming HTTP
@@ -144,12 +139,14 @@ public class HttpShellFilter
             log.warn( ex );
             
             @SuppressWarnings( "unchecked" )
-            List<Throwable> problems = (List<Throwable>) request.getAttribute( ViewletDispatcherServlet.PROCESSING_PROBLEM_EXCEPTION_NAME );
+            List<Throwable> problems = (List<Throwable>) request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
             if( problems == null ) {
                 problems = new ArrayList<Throwable>();
-                request.setAttribute( ViewletDispatcherServlet.PROCESSING_PROBLEM_EXCEPTION_NAME, problems );
+                request.setAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME, problems );
             }
-            problems.add( ex );
+            synchronized( problems ) {
+                problems.add( ex );
+            }
             
         }
         chain.doFilter( realRequest, realResponse );

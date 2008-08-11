@@ -132,10 +132,10 @@
             <isabstract/>
             <declaresMethod>
     public abstract String determineRedirectUrl(
-            MeshObject                   principal,
-            String                       here,
-            String                       trustRoot,
-            org.infogrid.context.Context context )
+            MeshObject                        principal,
+            String                            here,
+            String                            trustRoot,
+            org.infogrid.util.context.Context context )
         throws
             org.infogrid.mesh.NotPermittedException,
             org.infogrid.util.FactoryException;
@@ -157,10 +157,10 @@
             <supertype>http://lid.netmesh.org/sso</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
-            MeshObject                   principal,
-            String                       here,
-            String                       trustRoot,
-            org.infogrid.context.Context context )
+            MeshObject                        principal,
+            String                            here,
+            String                            trustRoot,
+            org.infogrid.util.context.Context context )
     {
         org.infogrid.mesh.set.MeshObjectSet endpoints = this.traverse(
                 org.infogrid.lid.model.yadis.YadisSubjectArea.SERVICE_ISPROVIDEDATENDPOINT_SITE.getSource() );

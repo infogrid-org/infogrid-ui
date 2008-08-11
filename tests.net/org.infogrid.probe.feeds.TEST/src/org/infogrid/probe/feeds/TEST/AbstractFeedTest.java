@@ -14,8 +14,7 @@
 
 package org.infogrid.probe.feeds.TEST;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
+import java.util.Iterator;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
@@ -27,8 +26,8 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.logging.Log;
-
-import java.util.Iterator;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 
 /**
  *

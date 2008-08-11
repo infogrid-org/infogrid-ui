@@ -15,7 +15,6 @@
 package org.infogrid.probe.shadow.a;
 
 import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -32,6 +31,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.CursorIterator;
+import org.infogrid.util.context.Context;
 
 /**
  * Factors out common functionality of ShadowMeshBases and StagingMeshBase.

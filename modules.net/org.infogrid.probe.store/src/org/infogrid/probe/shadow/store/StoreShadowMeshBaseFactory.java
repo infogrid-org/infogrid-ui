@@ -14,32 +14,25 @@
 
 package org.infogrid.probe.shadow.store;
 
-import org.infogrid.context.Context;
-
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
-
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
-
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
+import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.modelbase.ModelBase;
-
-import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
-
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.shadow.AbstractShadowMeshBaseFactory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
 import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
-
 import org.infogrid.probe.shadow.proxy.DefaultShadowProxyPolicyFactory;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
-
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.context.Context;
 
 /**
  * Knows how to instantiate StoreShadowMeshBaseFactory.

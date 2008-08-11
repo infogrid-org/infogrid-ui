@@ -15,7 +15,6 @@
 package org.infogrid.probe.shadow.a;
 
 import java.util.Iterator;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -47,6 +46,7 @@ import org.infogrid.util.Invocable;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.MapCursorIterator;
 import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

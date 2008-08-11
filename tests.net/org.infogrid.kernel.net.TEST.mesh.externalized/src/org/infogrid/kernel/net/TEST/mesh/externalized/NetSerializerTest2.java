@@ -14,7 +14,6 @@
 
 package org.infogrid.kernel.net.TEST.mesh.externalized;
 
-import org.infogrid.context.SimpleContext;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
@@ -22,6 +21,7 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.ScopeSpecification;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
+import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
 

@@ -14,36 +14,30 @@
 
 package org.infogrid.kernel.TEST.differencer;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
-
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
-
 import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.transaction.Change;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.TransactionException;
-
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.SubjectArea;
-
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
-
 import org.infogrid.testharness.AbstractTest;
-
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 
 /**
- *
+ * Factors out common functionality for DifferencerTests.
  */
 public abstract class AbstractDifferencerTest
         extends

@@ -15,10 +15,9 @@
 package org.infogrid.jee.viewlet.wikiobject;
 
 import javax.servlet.ServletException;
-import org.infogrid.context.Context;
 import org.infogrid.jee.rest.RestfulRequest;
+import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
-import org.infogrid.jee.viewlet.templates.StructuredResponse;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.MeshObject;
@@ -27,6 +26,7 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.Wiki.WikiSubjectArea;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;

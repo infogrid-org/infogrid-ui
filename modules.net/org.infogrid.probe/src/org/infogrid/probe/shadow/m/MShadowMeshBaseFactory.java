@@ -14,19 +14,15 @@
 
 package org.infogrid.probe.shadow.m;
 
-import org.infogrid.context.Context;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
-import org.infogrid.modelbase.ModelBase;
-
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
-
+import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.shadow.AbstractShadowMeshBaseFactory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
-
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.context.Context;
 
 /**
  * Factory for MShadowMeshBases.

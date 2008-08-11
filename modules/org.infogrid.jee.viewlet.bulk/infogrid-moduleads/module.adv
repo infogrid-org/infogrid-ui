@@ -21,9 +21,8 @@
   <jar>org.infogrid.jee.viewlet.bulk.jar</jar> 
  </provides>
  <dependencies>
-  <requires name="org.infogrid.jee"/>
+  <requires name="org.infogrid.jee.viewlet"/>
   <requires name="org.infogrid.kernel"/>
-  <requires name="org.infogrid.viewlet"/>
   <requires name="org.infogrid.util"/>
  </dependencies>
 </standardmodule>

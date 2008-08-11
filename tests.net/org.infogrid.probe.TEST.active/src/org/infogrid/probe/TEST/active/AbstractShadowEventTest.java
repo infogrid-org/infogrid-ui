@@ -14,12 +14,11 @@
 
 package org.infogrid.probe.TEST.active;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
-
 import org.infogrid.testharness.AbstractTest;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 
 /**

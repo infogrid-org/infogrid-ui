@@ -16,7 +16,6 @@ package org.infogrid.meshbase.net.a;
 
 import java.util.HashMap;
 import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -34,6 +33,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.MapCursorIterator;
+import org.infogrid.util.context.Context;
 
 /**
  * The subtype of IterableMeshBase suitable for the AnetMeshObject implementation.

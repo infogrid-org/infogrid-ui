@@ -14,9 +14,9 @@
 
 package org.infogrid.meshbase.store.net.TEST;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
@@ -31,9 +31,8 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.store.sql.SqlStore;
 import org.infogrid.testharness.AbstractTest;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import org.infogrid.mesh.NotRelatedException;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 
 /**
  * Factors out common functionality of StoreNetMeshBaseTests.

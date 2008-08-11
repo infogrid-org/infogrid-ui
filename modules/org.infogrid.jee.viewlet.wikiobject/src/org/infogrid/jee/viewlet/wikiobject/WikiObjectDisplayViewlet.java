@@ -14,15 +14,14 @@
 
 package org.infogrid.jee.viewlet.wikiobject;
 
-import org.infogrid.context.Context;
 import org.infogrid.jee.viewlet.SimpleJeeViewlet;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.NotPermittedException;
-
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.Wiki.WikiSubjectArea;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
+import org.infogrid.util.context.Context;
 
 /**
  * Viewlet that can display a WikiObject.

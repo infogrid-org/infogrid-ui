@@ -16,8 +16,9 @@ package org.infogrid.jee.shell.http;
 
 import java.net.URISyntaxException;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.jee.taglib.InfoGridJspUtils;
+//import org.infogrid.jee.taglib.InfoGridJspUtils;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -34,6 +35,7 @@ import org.infogrid.mesh.RoleTypeNotBlessedException;
 import org.infogrid.mesh.RoleTypeRequiresEntityTypeException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -53,6 +55,7 @@ import org.infogrid.util.LocalizedObject;
 import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -264,15 +267,19 @@ public enum HttpShellVerb
                 objectString = null; // empty field should not mean home object here
             }
 
-            InfoGridWebApp app = InfoGridWebApp.getSingleton();
-
+            InfoGridWebApp app        = InfoGridWebApp.getSingleton();
+            Context        appContext = app.getApplicationContext();
+            
             @SuppressWarnings( "unchecked" )
-            NameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer = app.getApplicationContext().findContextObjectOrThrow( NameServer.class );
+            NameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer = appContext.findContextObjectOrThrow( NameServer.class );
+            RestfulJeeFormatter                     formatter          = appContext.findContextObjectOrThrow( RestfulJeeFormatter.class );
+            
             MeshBaseIdentifier                      meshBaseName       = null;
 
             if( meshBaseString != null ) {
                 try {
-                    meshBaseName = app.createMeshBaseIdentifier( meshBaseString );
+                    MeshBaseIdentifierFactory idFact = app.getApplicationContext().findContextObjectOrThrow( MeshBaseIdentifierFactory.class );
+                    meshBaseName                     = idFact.fromExternalForm( meshBaseString );
 
                 } catch( URISyntaxException ex ) {
                     throw new HttpShellException( ex );
@@ -293,8 +300,8 @@ public enum HttpShellVerb
             MeshObjectIdentifier subjectName;
             MeshObjectIdentifier objectName;
             try {
-                subjectName = InfoGridJspUtils.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), ModelPrimitivesStringRepresentation.TEXT_PLAIN, subjectString );
-                objectName  = InfoGridJspUtils.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), ModelPrimitivesStringRepresentation.TEXT_PLAIN, objectString );
+                subjectName = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), ModelPrimitivesStringRepresentation.TEXT_PLAIN, subjectString );
+                objectName  = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), ModelPrimitivesStringRepresentation.TEXT_PLAIN, objectString );
 
             } catch( URISyntaxException ex ) {
                 throw new HttpShellException( ex );
@@ -1145,15 +1152,18 @@ public enum HttpShellVerb
             objectString = null; // empty field should not mean home object here
         }
 
-        InfoGridWebApp app = InfoGridWebApp.getSingleton();
+        InfoGridWebApp app        = InfoGridWebApp.getSingleton();
+        Context        appContext = app.getApplicationContext();
         
         @SuppressWarnings( "unchecked" )
-        NameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer = app.getApplicationContext().findContextObjectOrThrow( NameServer.class );
+        NameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer = appContext.findContextObjectOrThrow( NameServer.class );
         MeshBaseIdentifier                      meshBaseName       = null;
+        RestfulJeeFormatter                     formatter          = appContext.findContextObjectOrThrow( RestfulJeeFormatter.class );
 
         if( meshBaseString != null ) {
             try {
-                meshBaseName = app.createMeshBaseIdentifier( meshBaseString );
+                MeshBaseIdentifierFactory idFact = app.getApplicationContext().findContextObjectOrThrow( MeshBaseIdentifierFactory.class );
+                meshBaseName                     = idFact.fromExternalForm( meshBaseString );
 
             } catch( URISyntaxException ex ) {
                 throw new HttpShellException( ex );
@@ -1174,8 +1184,8 @@ public enum HttpShellVerb
         MeshObjectIdentifier subjectName;
         MeshObjectIdentifier objectName;
         try {
-            subjectName = InfoGridJspUtils.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), ModelPrimitivesStringRepresentation.TEXT_PLAIN, subjectString );
-            objectName  = InfoGridJspUtils.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), ModelPrimitivesStringRepresentation.TEXT_PLAIN, objectString );
+            subjectName = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), ModelPrimitivesStringRepresentation.TEXT_PLAIN, subjectString );
+            objectName  = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), ModelPrimitivesStringRepresentation.TEXT_PLAIN, objectString );
 
         } catch( URISyntaxException ex ) {
             throw new HttpShellException( ex );

@@ -14,15 +14,14 @@
 
 package org.infogrid.probe.vcard.TEST;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.ProbeDirectory.StreamProbeDescriptor;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.vcard.VCardProbe;
-
 import org.infogrid.testharness.AbstractTest;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 
 /**

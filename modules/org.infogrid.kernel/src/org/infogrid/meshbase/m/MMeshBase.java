@@ -15,7 +15,6 @@
 package org.infogrid.meshbase.m;
 
 import java.util.HashMap;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
@@ -31,6 +30,7 @@ import org.infogrid.util.CachingMap;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.MCachingHashMap;
 import org.infogrid.util.MapCursorIterator;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

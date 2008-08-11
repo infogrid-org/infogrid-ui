@@ -14,10 +14,10 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.util.context.Context;
 
 /**
  * Factors out commonly used functionality for Viewlets.

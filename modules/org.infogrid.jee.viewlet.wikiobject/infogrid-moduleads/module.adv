@@ -21,8 +21,7 @@
   <jar>org.infogrid.jee.viewlet.wikiobject.jar</jar> 
  </provides>
  <dependencies>
-  <requires name="org.infogrid.jee"/>
-  <requires name="org.infogrid.kernel"/>
+  <requires name="org.infogrid.jee.viewlet"/>
   <requires name="org.infogrid.model.Wiki"/>
   <requires name="org.infogrid.util"/>
  </dependencies>

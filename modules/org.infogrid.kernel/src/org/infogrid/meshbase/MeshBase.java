@@ -14,30 +14,25 @@
 
 package org.infogrid.meshbase;
 
-import org.infogrid.context.ObjectInContext;
-
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.meshbase.security.AccessManager;
-
 import org.infogrid.meshbase.transaction.MeshObjectLifecycleListener;
 import org.infogrid.meshbase.transaction.Transaction;
-import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.meshbase.transaction.TransactionListener;
-
-import org.infogrid.model.primitives.RoleType;
-import org.infogrid.modelbase.ModelBase;
-
-import org.infogrid.util.LiveDeadObject;
-import org.infogrid.util.QuitListener;
-import org.infogrid.util.text.StringRepresentation;
-
-import java.beans.PropertyChangeListener;
-import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.meshbase.transaction.TransactionActiveAlreadyException;
 import org.infogrid.meshbase.transaction.TransactionAsapTimeoutException;
+import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.meshbase.transaction.TransactionListener;
+import org.infogrid.model.primitives.RoleType;
+import org.infogrid.modelbase.ModelBase;
+import org.infogrid.util.LiveDeadObject;
+import org.infogrid.util.QuitListener;
+import org.infogrid.util.context.ObjectInContext;
+import org.infogrid.util.text.StringRepresentation;
+import java.beans.PropertyChangeListener;
 
 /**
   * <p>MeshBase represents the place where MeshObjects live. MeshBases collect MeshObjects

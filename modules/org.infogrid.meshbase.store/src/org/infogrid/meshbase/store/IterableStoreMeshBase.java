@@ -16,7 +16,6 @@ package org.infogrid.meshbase.store;
 
 import java.io.IOException;
 import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
@@ -34,6 +33,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
 import org.infogrid.util.CursorIterator;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

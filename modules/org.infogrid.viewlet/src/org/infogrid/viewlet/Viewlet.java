@@ -14,10 +14,10 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.context.ObjectInContext;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.util.context.ObjectInContext;
 
 /**
  * <p>A software component of an InfoGrid application's user interface.

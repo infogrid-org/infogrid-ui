@@ -15,15 +15,13 @@
 package org.infogrid.jee.app;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import org.infogrid.context.Context;
-import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.util.context.Context;
 
 /**
  * <p>An InfoGrid web application. This needs to be subclassed.</p>
@@ -258,18 +256,12 @@ public abstract class InfoGridWebApp
             return false;
         }
     }
-
+    
     /**
-     *  Factory method to create the right subtype MeshBaseIdentifier.
-     * 
-     * @param stringForm the String representation of the MeshBaseIdentifier
-     * @return suitable subtype of MeshBaseIdentifier
-     * @throws URISyntaxException thrown if a syntax error occurred
+     * Name of a Request-level attribute that contains the problems that have occurred, as a
+     * List&lt;Throwable&gt;.
      */
-    public abstract MeshBaseIdentifier createMeshBaseIdentifier(
-            String stringForm )
-        throws
-            URISyntaxException;
+    public static final String PROCESSING_PROBLEM_EXCEPTION_NAME = InfoGridWebApp.class.getName() + "-RequestProblems";
 
     /**
      * The application context.

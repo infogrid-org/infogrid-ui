@@ -15,7 +15,6 @@
 package org.infogrid.meshbase.a;
 
 import java.util.ArrayList;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -41,6 +40,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

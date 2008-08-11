@@ -38,7 +38,7 @@
 
  <filter>
   <filter-name>SafeUnsafePostFilter</filter-name>
-  <filter-class>org.infogrid.jee.servlet.SafeUnsafePostFilter</filter-class>
+  <filter-class>org.infogrid.jee.security.SafeUnsafePostFilter</filter-class>
  </filter>
 
  <filter>
@@ -53,7 +53,7 @@
 
  <servlet>
   <servlet-name>ViewletDispatcher</servlet-name>
-  <servlet-class>org.infogrid.jee.servlet.ViewletDispatcherServlet</servlet-class>
+  <servlet-class>org.infogrid.jee.viewlet.servlet.ViewletDispatcherServlet</servlet-class>
  </servlet>
 
  <filter-mapping>

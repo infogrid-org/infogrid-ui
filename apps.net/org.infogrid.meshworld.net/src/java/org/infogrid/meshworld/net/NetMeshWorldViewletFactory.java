@@ -15,7 +15,6 @@
 package org.infogrid.meshworld.net;
 
 import java.util.ArrayList;
-import org.infogrid.jee.servlet.net.NetViewletDispatcherServlet;
 import org.infogrid.jee.viewlet.PseudoJspViewletFactoryChoice;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshBasesViewlet;
@@ -23,6 +22,7 @@ import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
+import org.infogrid.jee.viewlet.servlet.net.NetViewletDispatcherServlet;
 import org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet;
 import org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet;
 import org.infogrid.mesh.net.NetMeshObject;

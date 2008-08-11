@@ -14,7 +14,7 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.context.Context;
+import org.infogrid.util.context.Context;
 
 /**
  * A ViewletFactoryChoice whose quality has been overridden, but otherwise delegates

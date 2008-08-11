@@ -14,40 +14,33 @@
 
 package org.infogrid.probe.shadow.store;
 
-import org.infogrid.context.Context;
-
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
-
 import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.set.m.ImmutableMMeshObjectSetFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
-import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
+import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.meshbase.net.security.NetAccessManager;
 import org.infogrid.meshbase.store.net.StoreProxyManager;
-
 import org.infogrid.modelbase.ModelBase;
-
-import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
-
 import org.infogrid.probe.ProbeDirectory;
-import org.infogrid.probe.shadow.proxy.DefaultShadowProxyFactory;
-import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
 import org.infogrid.probe.shadow.a.AShadowMeshBase;
-
+import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
+import org.infogrid.probe.shadow.proxy.DefaultShadowProxyFactory;
 import org.infogrid.probe.shadow.proxy.DefaultShadowProxyPolicyFactory;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
-
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.MCachingHashMap;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

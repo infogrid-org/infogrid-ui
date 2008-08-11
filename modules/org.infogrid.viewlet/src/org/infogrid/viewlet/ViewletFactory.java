@@ -14,10 +14,9 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.context.Context;
-
 import org.infogrid.util.Factory;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.context.Context;
 
 /**
  * <p>A factory for Viewlets. Objects supporting this interface not only support the

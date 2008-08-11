@@ -14,8 +14,6 @@
 
 package org.infogrid.kernel.net.TEST.xpriso;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -34,6 +32,8 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.MNameServer;
 import org.infogrid.util.WritableNameServer;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 
 /**
  * Superclass for all tests in this package.

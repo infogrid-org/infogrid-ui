@@ -14,8 +14,6 @@
 
 package org.infogrid.kernel.TEST.meshbase.m.security;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
@@ -28,6 +26,8 @@ import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 
 import java.net.URISyntaxException;
 

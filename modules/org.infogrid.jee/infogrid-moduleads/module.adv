@@ -16,14 +16,12 @@
 <standardmodule>
  <name>org.infogrid.jee</name>
  <username>JEE support for InfoGrid.</username>
- <userdescription>Frameworks and components that make the development of REST-ful InfoGrid applications
+ <userdescription>Frameworks and components that make the development of InfoGrid applications
    using JEE easier.</userdescription>
  <provides>
   <jar>org.infogrid.jee.jar</jar> 
  </provides>
  <dependencies>
-  <requires name="org.infogrid.kernel"/>
-  <requires name="org.infogrid.store"/>
   <requires name="org.infogrid.util"/>
  </dependencies>
 </standardmodule>

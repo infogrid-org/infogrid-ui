@@ -1,10 +1,14 @@
 org.infogrid.kernel.net
+# org.infogrid.comm.net
 org.infogrid.model.Feeds
 org.infogrid.model.Probe
 org.infogrid.model.VCard
 org.infogrid.meshbase.store.net
+# org.infogrid.lid.messaging
 org.infogrid.jee.lid
-org.infogrid.jee.net
+org.infogrid.jee.rest.net
+org.infogrid.jee.viewlet.net
+org.infogrid.jee.taglib.net
 org.infogrid.probe
 org.infogrid.probe.feeds
 org.infogrid.probe.store

@@ -16,7 +16,7 @@ package org.infogrid.viewlet;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.infogrid.context.Context;
+import org.infogrid.util.context.Context;
 
 /**
  * <p>A choice for instantiating a Viewlet by a ViewletFactory. See

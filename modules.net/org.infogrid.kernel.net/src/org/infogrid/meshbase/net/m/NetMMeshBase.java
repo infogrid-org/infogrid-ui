@@ -14,7 +14,6 @@
 
 package org.infogrid.meshbase.net.m;
 
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -36,6 +35,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.MCachingHashMap;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**

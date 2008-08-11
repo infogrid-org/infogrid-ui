@@ -15,7 +15,6 @@
 package org.infogrid.meshbase.net.local.a;
 
 import java.util.Collection;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
@@ -35,6 +34,7 @@ import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.context.Context;
 
 /**
  * This NetMeshBase manages local ShadowMeshBases, ie in the same address space.

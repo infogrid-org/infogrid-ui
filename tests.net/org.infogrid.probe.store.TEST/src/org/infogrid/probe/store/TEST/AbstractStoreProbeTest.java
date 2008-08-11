@@ -15,8 +15,6 @@
 package org.infogrid.probe.store.TEST;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -27,6 +25,8 @@ import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.store.sql.SqlStore;
 import org.infogrid.store.sql.SqlStoreIOException;
 import org.infogrid.testharness.AbstractTest;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 
 /**
  * Factors out common functionality of StoreProbeTests.

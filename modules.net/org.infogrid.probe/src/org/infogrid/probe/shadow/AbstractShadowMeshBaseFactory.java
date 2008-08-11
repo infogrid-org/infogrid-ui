@@ -14,13 +14,13 @@
 
 package org.infogrid.probe.shadow;
 
-import org.infogrid.context.Context;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.util.AbstractFactory;
+import org.infogrid.util.context.Context;
 
 /**
  * This type knows how to create ShadowMeshBases.

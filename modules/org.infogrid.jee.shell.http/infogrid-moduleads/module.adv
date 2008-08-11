@@ -15,12 +15,12 @@
 
 <standardmodule>
  <name>org.infogrid.jee.shell.http</name>
- <username>HTTP-based shell for NetMesh InfoGrid.</username>
+ <username>HTTP-based shell for InfoGrid.</username>
  <provides> 
   <jar>org.infogrid.jee.shell.http.jar</jar> 
  </provides>
  <dependencies>
-  <requires name="org.infogrid.jee"/>
+  <requires name="org.infogrid.jee.rest"/>
   <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.util"/>
  </dependencies>

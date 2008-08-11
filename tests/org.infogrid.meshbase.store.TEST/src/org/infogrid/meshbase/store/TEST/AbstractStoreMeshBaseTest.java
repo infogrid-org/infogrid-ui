@@ -14,14 +14,13 @@
 
 package org.infogrid.meshbase.store.TEST;
 
-import org.infogrid.context.Context;
-import org.infogrid.context.SimpleContext;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.store.sql.SqlStore;
 import org.infogrid.testharness.AbstractTest;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 
 /**
  * Factors out common functionality of StoreMeshBaseTests.

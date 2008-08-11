@@ -15,7 +15,6 @@
 package org.infogrid.meshbase;
 
 import java.beans.PropertyChangeListener;
-import org.infogrid.context.Context;
 import org.infogrid.mesh.AbstractMeshObject;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
@@ -44,6 +43,7 @@ import org.infogrid.util.FlexiblePropertyChangeListenerSet;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 
