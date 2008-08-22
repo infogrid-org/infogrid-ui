@@ -29,9 +29,8 @@ import org.infogrid.jee.taglib.IgnoreException;
 
 /**
  * <p>Allows the inclusion of named servlets. This should be a standard feature
- *    of the <code>&lt;jsp:include&lt;</code> tag, but it isn't.
- *    See description in the
- *   {@link org.infogrid.jee.taglib.util package documentation}.</p>
+ *    of the <code>&lt;jsp:include&lt;</code> tag, but it isn't.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class NamedServletIncludeTag
     extends

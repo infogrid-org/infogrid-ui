@@ -35,11 +35,6 @@ $Date$
 
   <property name="all.modules.dirs"    value="${infogrid.org.modules}:${infogrid.org.modules.net}" />
 
-<!--
-  <property name="thismoduledir"       value="${infogrid.org.modules}/${ant.project.name}"/>
-  <property name="thistestdir"         value="${infogrid.org.tests}/${ant.project.name}"/>
--->
-
   <property name="javadoc.windowtitle" value="InfoGrid Module '${ant.project.name}'" />
 
   <property name="classpath.moduleadvertisementserializer"
@@ -219,6 +214,38 @@ $Date$
                 </java>
             </sequential>
         </macrodef>
+    </target>
+
+<!-- override javadoc so we don't have to set the additional parameters in each module -->
+    <target depends="init" name="-javadoc-build">
+        <mkdir dir="${dist.javadoc.dir}"/>
+	<javadoc additionalparam="${javadoc.additionalparam} -stylesheetfile ${infogrid.org.tools}/module-stylesheet.css -doctitle Module ${ant.project.name} -overview ${basedir}/${build.dir}/module-description.html"
+                 author="${javadoc.author}"
+                 charset="UTF-8"
+                 destdir="${dist.javadoc.dir}"
+                 docencoding="UTF-8"
+                 encoding="${javadoc.encoding.used}"
+                 failonerror="true"
+                 noindex="${javadoc.noindex}"
+                 nonavbar="${javadoc.nonavbar}"
+                 notree="${javadoc.notree}"
+                 private="${javadoc.private}"
+                 source="${javac.source}"
+                 splitindex="${javadoc.splitindex}"
+                 use="${javadoc.use}"
+                 useexternalfile="true"
+                 version="${javadoc.version}"
+                 windowtitle="${javadoc.windowtitle}">
+            <classpath>
+                <path path="${javac.classpath}"/>
+            </classpath>
+            <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.module-generated.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+        </javadoc>
     </target>
 
 </project>

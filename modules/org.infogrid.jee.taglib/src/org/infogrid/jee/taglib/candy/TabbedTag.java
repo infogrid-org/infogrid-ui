@@ -39,6 +39,7 @@ import org.infogrid.jee.taglib.IgnoreException;
  *&lt;/div></pre>
  * <p>The content tags of this tag are processed twice: first, to generate the headers,
  *    then, the content. However, content contained in the tags should only be called once.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class TabbedTag
     extends

@@ -23,6 +23,7 @@ import org.infogrid.model.primitives.PropertyValue;
  * Tag that renders an instance of <code>PropertyValue</code>, held in the context.
  * Unlike {@link PropertyTag PropertyTag}, this tag does not attempt to obtain a
  * <code>PropertyValue</code> by accessing a <code>MeshObject</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class PropertyValueTag
         extends

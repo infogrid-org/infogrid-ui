@@ -23,6 +23,7 @@ import org.infogrid.util.ResourceHelper;
 /**
  * Factors out common functionality of tags that deal with the duration since something
  * happened to a <code>MeshObject</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public abstract class AbstractMeshObjectDurationTag
     extends

@@ -19,8 +19,8 @@ import org.infogrid.jee.taglib.IgnoreException;
 import javax.servlet.jsp.JspException;
 
 /**
- * <p>This tag tests whether a MeshObject does not have a certain type. See description in the
- *    {@link org.infogrid.jee.taglib.logic package documentation}.</p>
+ * <p>This tag tests whether a MeshObject does not have a certain type.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class NotIfTypeTag
         extends

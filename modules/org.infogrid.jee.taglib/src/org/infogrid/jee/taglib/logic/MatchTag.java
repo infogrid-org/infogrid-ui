@@ -19,8 +19,8 @@ import org.infogrid.jee.taglib.IgnoreException;
 
 /**
  * <p>This tag tests for a match of the String representation of a PropertyValue
- *    against a regular expression. See description in the
- *    {@link org.infogrid.jee.taglib.logic package documentation}.</p>
+ *    against a regular expression.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MatchTag
         extends

@@ -25,9 +25,8 @@ import java.util.Date;
 import javax.servlet.jsp.JspException;
 
 /**
- * <p>Formats a time stamp.
- *    See description in the
- *   {@link org.infogrid.jee.taglib.util package documentation}.</p>
+ * <p>Formats a time stamp.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class TimeStampTag
         extends

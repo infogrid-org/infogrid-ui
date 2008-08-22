@@ -25,6 +25,7 @@ import org.infogrid.mesh.MeshObject;
 /**
  * Factors out common functionality of tags that deal with the time when something
  * happened to a <code>MeshObject</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public abstract class AbstractMeshObjectTimeTag
     extends

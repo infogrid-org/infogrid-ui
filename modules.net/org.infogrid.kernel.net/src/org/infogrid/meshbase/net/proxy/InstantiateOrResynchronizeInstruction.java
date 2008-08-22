@@ -122,9 +122,28 @@ public class InstantiateOrResynchronizeInstruction
         return theGiveUpLock;
     }
     
+    /**
+     * Externalized representation of the correct version of the NetMeshObject.
+     */
     protected ExternalizedNetMeshObject theExternalizedNetMeshObject;
+    
+    /**
+     * Correct ProxyTowardsHome, if any.
+     */
     protected Proxy theProxyTowardsHome;
+    
+    /**
+     * Correct ProxyTowardsLock, if any.
+     */
     protected Proxy theProxyTowardsLock;
+    
+    /**
+     * If true, will surrender home replica status when asked.
+     */
     protected boolean theGiveUpHome;
+    
+    /**
+     * If true, will surrender update rights when asked.
+     */
     protected boolean theGiveUpLock;
 }

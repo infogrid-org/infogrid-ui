@@ -20,6 +20,7 @@ import org.infogrid.jee.templates.StructuredResponseSection;
 
 /**
  * Tests whether a named StructuredResponseSection is not empty.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfNotEmptyTag
     extends

@@ -21,6 +21,7 @@ import org.infogrid.mesh.MeshObject;
 
 /**
  * <p>Tag that displays the identifier of a MeshObject.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectIdentifierTag
     extends

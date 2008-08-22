@@ -28,6 +28,7 @@ import org.infogrid.util.ArrayCursorIterator;
 /**
  * Tag that iterates over the <code>RoleTypes</code> in which a start <code>MeshObject</code>
  * participates with a destination <code>MeshObject</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectRoleIterateTag
     extends

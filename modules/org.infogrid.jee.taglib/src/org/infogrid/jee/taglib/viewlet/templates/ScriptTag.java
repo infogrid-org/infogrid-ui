@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.viewlet.templates;
 
 /**
  * <p>Insert a href'd or inline'd script into the HTML header.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class ScriptTag
     extends

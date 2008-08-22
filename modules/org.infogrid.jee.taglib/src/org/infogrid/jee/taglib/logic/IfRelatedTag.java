@@ -20,8 +20,8 @@ import org.infogrid.mesh.set.MeshObjectSet;
 
 /**
  * <p>This tag tests whether the number of MeshObjects found by traversal is within the specified
- *    minimum and maximum values.
- *    {@link org.infogrid.jee.taglib.logic package documentation}.</p>
+ *    minimum and maximum values.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfRelatedTag
     extends

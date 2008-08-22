@@ -23,6 +23,7 @@ import org.infogrid.model.traversal.TraversalSpecification;
 /**
  * Iterate over a <code>MeshObjectSet</code> that is determined by traversing from a start
  * <code>MeshObject</code> via some <code>TraversalSpecification</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectSetTraverseIterateTag
     extends

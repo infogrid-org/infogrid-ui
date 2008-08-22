@@ -22,6 +22,7 @@ import org.infogrid.jee.templates.StructuredResponse;
 
 /**
  * Inlines the reported errors into the output.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class InlineErrorsTag
         extends

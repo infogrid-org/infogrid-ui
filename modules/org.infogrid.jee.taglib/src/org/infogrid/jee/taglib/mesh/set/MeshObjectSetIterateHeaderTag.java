@@ -22,6 +22,7 @@ import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
  * Tag that collects the content of a header row within
  * the <code>MeshObjectSetIterate</code> tag and thus distinguishes it from content
  * and other rows.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectSetIterateHeaderTag
     extends

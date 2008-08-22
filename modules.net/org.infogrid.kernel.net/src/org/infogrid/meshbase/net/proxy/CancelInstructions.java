@@ -31,6 +31,7 @@ public class CancelInstructions
      * Factory method.
      * 
      * @param proxy the Proxy through which the leases were obtained
+     * @return the created CancelInstructions
      */
     public static CancelInstructions create(
             Proxy proxy )

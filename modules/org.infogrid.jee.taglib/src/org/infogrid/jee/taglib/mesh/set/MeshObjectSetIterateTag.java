@@ -23,6 +23,7 @@ import javax.servlet.jsp.JspException;
 /**
  * Iterate over a <code>MeshObjectSet</code> given as a bean. Ordering is accomplished
  * by passing in a <code>OrderedMeshObjectSet</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectSetIterateTag
     extends

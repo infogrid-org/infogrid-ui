@@ -14,14 +14,11 @@
 
 package org.infogrid.meshbase.net.proxy;
 
-import org.infogrid.meshbase.net.proxy.ProxyMessageEndpoint;
+import java.util.List;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
 import org.infogrid.util.Factory;
 import org.infogrid.util.FactoryException;
-
-import java.util.List;
 
 /**
  * Manufactures ProxyMessageEndpoints for a given ordered pair of local NetMeshBaseIdentifier

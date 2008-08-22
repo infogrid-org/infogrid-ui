@@ -34,6 +34,7 @@ import org.infogrid.util.StringHelper;
 /**
  * Tag that iterates over all, or a subset, of a <code>MeshObject</code>'s properties.
  * It plays nicely with {@link PropertyTag PropertyTag} and {@link MeshTypeTag MeshTypeTag}.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectPropertyIterateTag
         extends

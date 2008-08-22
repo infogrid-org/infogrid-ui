@@ -18,8 +18,8 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 
 /**
- * <p>This tag tests for value equality. See description in the
- *    {@link org.infogrid.jee.taglib.logic package documentation}.</p>
+ * <p>This tag tests for value equality.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class EqualTag
     extends

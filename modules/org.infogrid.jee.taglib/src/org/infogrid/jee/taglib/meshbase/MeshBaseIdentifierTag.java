@@ -21,6 +21,7 @@ import org.infogrid.meshbase.MeshBase;
 
 /**
  * <p>Tag that displays the identifier of a NetMeshBase.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshBaseIdentifierTag
     extends

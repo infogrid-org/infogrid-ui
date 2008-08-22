@@ -22,6 +22,7 @@ import javax.servlet.jsp.tagext.Tag;
 /**
  * Tag that collects the content within the <code>TabbedCursorIteratorTag</code> tag
  * to be shown if the <code>CursorIterator</code> returns no elements.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class TabbedCursorIteratorNoContentTag
     extends

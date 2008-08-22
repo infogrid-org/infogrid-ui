@@ -21,9 +21,8 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
         
 /**
- * <p>Processes the body if the inclosing iteration has a next element.
- *    See description in the
- *   {@link org.infogrid.jee.taglib.util package documentation}.</p>
+ * <p>Processes the body if the inclosing iteration has a next element.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfIterationHasNextTag
         extends

@@ -27,6 +27,7 @@ import org.infogrid.model.traversal.TraversalSpecification;
 /**
  * Tag that iterates over the set of <code>MeshObjects</code> found by traversing a
  * <code>TraversalSpecification</code> from a given start <code>MeshObject</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectRelatedIterateTag
     extends

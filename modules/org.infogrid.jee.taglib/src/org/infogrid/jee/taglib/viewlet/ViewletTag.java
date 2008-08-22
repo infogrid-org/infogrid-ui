@@ -22,6 +22,7 @@ import org.infogrid.jee.viewlet.JeeViewlet;
 
 /**
  * Container for a JeeViewlet.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class ViewletTag
         extends

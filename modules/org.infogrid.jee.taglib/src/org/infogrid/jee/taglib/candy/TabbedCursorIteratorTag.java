@@ -23,6 +23,7 @@ import org.infogrid.util.CursorIterator;
 
 /**
  * A Tag that can iterate over a very large set of objects by paging them, one tab per page.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class TabbedCursorIteratorTag
     extends

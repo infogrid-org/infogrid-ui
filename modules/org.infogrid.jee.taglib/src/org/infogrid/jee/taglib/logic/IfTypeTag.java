@@ -18,8 +18,8 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 
 /**
- * <p>This tag tests whether a MeshObject has a certain type. See description in the
- *    {@link org.infogrid.jee.taglib.logic package documentation}.</p>
+ * <p>This tag tests whether a MeshObject has a certain type.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfTypeTag
         extends

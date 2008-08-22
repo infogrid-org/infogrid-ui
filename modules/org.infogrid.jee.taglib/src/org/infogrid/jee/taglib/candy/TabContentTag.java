@@ -19,6 +19,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 
 /**
  * Tag identifying the content portion of a tab.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class TabContentTag
     extends

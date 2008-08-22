@@ -21,6 +21,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 /**
  * Tag that collects {@link TabHeaderTag header} and {@link TabContentTag content}
  * of a single tab in a TabbedTag.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class TabTag
     extends

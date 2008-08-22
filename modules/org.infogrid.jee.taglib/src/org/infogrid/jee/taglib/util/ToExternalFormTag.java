@@ -22,8 +22,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 
 /**
  * <p>Formats an Object with its <code>toExternalForm</code> method.
- *    See description in the
- *   {@link org.infogrid.jee.taglib.util package documentation}.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class ToExternalFormTag
         extends

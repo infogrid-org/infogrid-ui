@@ -15,7 +15,5 @@
 
 <project name="org.infogrid.module.moduleadvertisementserializer" default="default" basedir=".">
     <description>Builds, tests, and runs the project org.infogrid.module.moduleadvertisementserializer.</description>
-    <import file="../../tools/infogrid-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
-
 </project>

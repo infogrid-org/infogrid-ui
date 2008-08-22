@@ -24,7 +24,8 @@ import org.infogrid.jee.taglib.IgnoreException;
         
 /**
  * <p>Generates an HTML form with a token that reduces CSRF attacks. This token
- * is stored in a Store, and is validated in {@link org.infogrid.jee.filter.TokenFilter}.</p>
+ * is stored in a Store, and is validated in {@link org.infogrid.jee.security.FormTokenService}.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class SafeFormTag
         extends

@@ -24,6 +24,7 @@ import java.io.IOException;
 
 /**
  * Generates an HTML overlay in a consistent manner.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class OverlayTag
     extends

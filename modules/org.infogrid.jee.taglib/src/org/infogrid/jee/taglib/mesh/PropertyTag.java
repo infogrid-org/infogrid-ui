@@ -23,6 +23,7 @@ import org.infogrid.model.primitives.PropertyValue;
 
 /**
  * Tag that renders a property of a <code>MeshObject</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class PropertyTag
         extends

@@ -25,9 +25,8 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextHtmlStructuredResponseSection;
         
 /**
- * <p>Generates a consistent refresh button.
- *    See description in the
- *   {@link org.infogrid.jee.taglib.util package documentation}.</p>
+ * <p>Generates a consistent refresh button.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class RefreshTag
         extends

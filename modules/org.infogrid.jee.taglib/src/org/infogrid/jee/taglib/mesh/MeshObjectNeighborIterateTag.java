@@ -25,6 +25,7 @@ import org.infogrid.mesh.MeshObject;
 /**
  * Tag that iterates over the current neighbor <code>MeshObjects</code> of a given
  * <code>MeshObject</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectNeighborIterateTag
     extends

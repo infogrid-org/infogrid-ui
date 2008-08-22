@@ -24,9 +24,8 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.util.ArrayHelper;
 
 /**
- * <p>Rotates through specified HTML class names for each row in a table.
- *    See description in the
- *   {@link org.infogrid.jee.taglib.util package documentation}.</p>
+ * <p>Rotates through specified HTML class names for each row in a table.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class RotatingTrTag
         extends

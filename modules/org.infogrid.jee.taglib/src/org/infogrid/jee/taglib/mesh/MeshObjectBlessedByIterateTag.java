@@ -26,6 +26,7 @@ import org.infogrid.util.ArrayCursorIterator;
 
 /**
  * Tag that iterates over the <code>MeshTypes</code> with which a <code>MeshObject</code> is blessed.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectBlessedByIterateTag
     extends

@@ -36,6 +36,7 @@ import org.infogrid.jee.viewlet.JeeViewlet;
 
 /**
  * Allows the user to select an alternate JeeViewlet to display the current subject.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class ViewletAlternativesTag
     extends

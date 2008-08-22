@@ -24,9 +24,9 @@ import org.infogrid.model.primitives.ModelPrimitivesStringRepresentation;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.util.text.StringRepresentation;
 
-
 /**
  * Tag that displays the user-visible String of a <code>MeshType</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshTypeTag
         extends

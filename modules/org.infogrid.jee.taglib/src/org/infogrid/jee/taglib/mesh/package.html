@@ -258,7 +258,7 @@
      </tr>
      <tr>
       <td><code>locale</code></td>
-      <td>If the specified property is of type <code>L10Map<code>, this attribute specifies the locale in
+      <td>If the specified property is of type <code>L10Map</code>, this attribute specifies the locale in
           which the value shall be retrieved. If this is not given, the default locale is assumed. This
           attribute is ignored for all properties that are not <code>L10Maps</code>. Locales are provided
           in the form <code>NN-NN-NN</code>, <code>NN-NN</code> or <code>NN</code>, e.g. <code>en</code>
@@ -267,7 +267,7 @@
      </tr>
      <tr>
       <td><code>exactLocaleMatch</code></td>
-      <td>If attribute <code>locale<code> is given, this boolean value indicates whether an exact locale
+      <td>If attribute <code>locale</code> is given, this boolean value indicates whether an exact locale
           match is required, or whether a less specific locale is also applicable (e.g. variants vs.
           country vs. language).</td>
       <td>optional</td>
@@ -461,10 +461,10 @@
     </tbody>
    </table>
 
-   <p>The {@link org.infogrid.jee.taglib.mesh.MeshObjectHyperlinkTag MeshObjectHyperlinkTag}
+   <p>The {@link org.infogrid.jee.taglib.mesh.MeshObjectLinkTag MeshObjectLinkTag}
       creates the HTML for a hyperlink to a <code>MeshObject</code>. Clicking on the generated link
       will send the browser to the respective <code>MeshObject</code>.</p>
-   <p>Example: <pre>&lt;MeshObjectHyperlinkTag meshObjectName=&quot;obj&quot; rootPath=&quot;http://example.com/foo/&quot; /&gt;</pre>
+   <p>Example: <pre>&lt;MeshObjectLinkTag meshObjectName=&quot;obj&quot; rootPath=&quot;http://example.com/foo/&quot; /&gt;</pre>
       will look up a <code>MeshObject</code> added as attribute named 'obj' to the (page context), prepending
       the <code>http://example.com/foo/</code> address the local replica.</p>
    <p>The following tag attributes are provided:</p>

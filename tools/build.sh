@@ -12,11 +12,13 @@ fi;
 
 CLEANFLAGS=-Dno.deps=1;
 BUILDFLAGS=-Dno.deps=1;
+DOCFLAGS=;
 RUNFLAGS=-Dno.deps=1;
 TMPFILE=`mktemp /tmp/infogrid-build-temp.XXXX`;
 
 do_clean=1;
 do_build=1;
+do_doc=1;
 do_run=1;
 do_modules=1;
 do_modules_net=1;
@@ -39,6 +41,8 @@ for arg in $*; do
 		do_clean=0;
 	elif [ "$arg" = '-build' ]; then
 		do_build=0;
+	elif [ "$arg" = '-doc' ]; then
+		do_doc=0;
 	elif [ "$arg" = '-run' ]; then
 		do_run=0;
 	elif [ "$arg" = '-n' ]; then
@@ -74,28 +78,30 @@ for arg in $*; do
 	shift;
 done
 
-# echo args ${do_clean} ${do_build} ${do_run} ${do_modules} ${do_modules_net} ${do_apps} ${do_apps_net} ${do_tests} ${do_tests_net} ${do_dist} ${do_dist_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
+# echo args ${do_clean} ${do_build} ${do_doc} ${do_run} ${do_modules} ${do_modules_net} ${do_apps} ${do_apps_net} ${do_tests} ${do_tests_net} ${do_dist} ${do_dist_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
 # exit 0;
 
 if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
 	echo Synopsis:
-	echo "    ${script} [-v][-h][-n] [-clean][-build][-run] [-antflags <flags>] [<category>...]"
+	echo "    ${script} [-v][-h][-n] [-clean][-build][-doc][-run] [-antflags <flags>] [<category>...]"
 	echo "        -v: verbose output"
 	echo "        -h: this help"
 	echo "        -n: do not execute, only print"
-	echo "        -a: complete rebuild, equivalent to -clean -build -run modules modules.net apps apps.net tests tests.net dist dist.net"
+	echo "        -a: complete rebuild, equivalent to -clean -build -doc -run modules modules.net apps apps.net tests tests.net dist dist.net"
 	echo "        -clean: remove old build artifacts"
 	echo "        -build: build"
+	echo "        -doc: document"
 	echo "        -run: run"
-	echo "            (more than one of -clean,-build,-run may be given. Default is -build,-run)"
+	echo "            (more than one of -clean,-build,-doc,-run may be given. Default is -build,-doc,-run)"
 	echo "        -antflags <flags>: pass flags to ant invocation"
-	echo "        category: one or more of modules, modules.net, apps, apps.net, tests, tests.net, dist, dist.net"
+	echo "        <category>: one or more of modules, modules.net, apps, apps.net, tests, tests.net, dist, dist.net"
 	exit 1;
 fi
 
 if [ "${do_all}" = 0 ]; then
 	do_clean=0;
 	do_build=0;
+	do_doc=0;
 	do_run=0;
 	do_modules=0;
 	do_modules_net=0;
@@ -106,9 +112,10 @@ if [ "${do_all}" = 0 ]; then
 	do_dist=0;
 	do_dist_net=0;
 else
-	if [ "${do_clean}" = 1 -a "${do_build}" = 1 -a "${do_run}" = 1 ]; then
+	if [ "${do_clean}" = 1 -a "${do_build}" = 1 -a "${do_doc}" = 1 -a "${do_run}" = 1 ]; then
 		do_clean=1;
 		do_build=0;
+		do_doc=0;
 		do_run=0;
 	fi
 	if [ "${do_modules}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests}" = 1 -a "${do_tests_net}" = 1 -a "${do_dist}" = 1 -a "${do_dist_net}" = 1 ]; then
@@ -130,6 +137,9 @@ if [ "${do_nothing}" = 0 ]; then
 	fi
 	if [ "${do_build}" = 0 ]; then
 		/bin/echo -n " build"
+	fi
+	if [ "${do_doc}" = 0 ]; then
+		/bin/echo -n " doc"
 	fi
 	if [ "${do_run}" = 0 ]; then
 		/bin/echo -n " run"
@@ -208,6 +218,12 @@ clean_module()
 build_module()
 {
 	run_command $1 ant ${ANTFLAGS} -f $1/build.xml ${BUILDFLAGS} $2
+	return "${?}";
+}
+
+doc_module()
+{
+	run_command $1 ant ${ANTFLAGS} -f $1/build.xml ${DOCFLAGS} javadoc
 	return "${?}";
 }
 
@@ -349,6 +365,47 @@ if [ "${do_build}" = 0 ]; then
 			echo jar cf dist.net/infogrid-net.jar 'build/modules.net/*'
 		fi
 		( cd build/modules.net; jar cf ../../dist.net/infogrid-net.jar * )
+	fi
+fi
+
+if [ "${do_doc}" = 0 ]; then
+	if [ "${do_modules}" = 0 ]; then
+		echo '**** Documenting modules ****'
+		for f in `filter_modules modules/ALLMODULES '\[nodoc\]'`; do
+			doc_module modules/$f || exit 1;
+		done;
+	fi
+	if [ "${do_modules_net}" = 0 ]; then
+		echo '**** Documenting modules.net ****'
+		for f in `filter_modules modules.net/ALLMODULES '\[nodoc\]'`; do
+			doc_module modules.net/$f || exit 1;
+		done;
+	fi
+
+	if [ "${do_apps}" = 0 ]; then
+		echo '**** Documenting apps ****'
+		for f in `filter_modules apps/ALLAPPS '\[nodoc\]'`; do
+			doc_module apps/$f || exit 1;
+		done;
+	fi
+	if [ "${do_apps_net}" = 0 ]; then
+		echo '**** Documenting apps.net ****'
+		for f in `filter_modules apps.net/ALLAPPS '\[nodoc\]'`; do
+			doc_module apps.net/$f || exit 1;
+		done;
+	fi
+
+	if [ "${do_tests}" = 0 ]; then
+		echo '**** Documenting tests ****'
+		for f in `filter_modules tests/ALLTESTS '\[nodoc\]'`; do
+			doc_module tests/$f || exit 1;
+		done;
+	fi
+	if [ "${do_tests_net}" = 0 ]; then
+		echo '**** Documenting tests.net ****'
+		for f in `filter_modules tests.net/ALLTESTS '\[nodoc\]'`; do
+			doc_module tests.net/$f || exit 1;
+		done;
 	fi
 fi
 

@@ -20,8 +20,8 @@ import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.PropertyValue;
 
 /**
- * <p>This tag tests for a true boolean value. See description in the
- *    {@link org.infogrid.jee.taglib.logic package documentation}.</p>
+ * <p>This tag tests for a true boolean value.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfTag
     extends

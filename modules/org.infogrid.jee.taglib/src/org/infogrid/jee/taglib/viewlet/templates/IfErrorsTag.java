@@ -22,6 +22,7 @@ import org.infogrid.jee.templates.StructuredResponse;
 
 /**
  * Tests whether one or more errors has been reported.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfErrorsTag
     extends

@@ -19,6 +19,7 @@ import org.infogrid.mesh.set.MeshObjectSet;
 
 /**
  * Tag that evaluates its content when a <code>MeshObjectSet</code> is empty.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfSetEmptyTag
     extends

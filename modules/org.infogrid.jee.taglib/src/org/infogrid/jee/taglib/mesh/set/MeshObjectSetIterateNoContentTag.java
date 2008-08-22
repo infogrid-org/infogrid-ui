@@ -21,6 +21,7 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 /**
  * Tag that collects the content within the <code>MeshObjectSetIterate</code> tag
  * to be shown if the <code>MeshObjectSet</code> is empty.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectSetIterateNoContentTag
     extends

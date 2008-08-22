@@ -27,6 +27,7 @@ import org.infogrid.jee.templates.TextStructuredResponseSection;
 
 /**
  * Inlines a named section of a StructuredResponse into the output.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class InlineTag
         extends

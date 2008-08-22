@@ -18,6 +18,7 @@ import org.infogrid.mesh.MeshObject;
 
 /**
  * <p>Tag that shows the duration since a <code>MeshObject</code> was last udpated.</p>
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshObjectSinceTimeUpdatedTag
     extends

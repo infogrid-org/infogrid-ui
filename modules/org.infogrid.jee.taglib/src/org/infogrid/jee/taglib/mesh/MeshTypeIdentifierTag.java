@@ -22,6 +22,7 @@ import org.infogrid.model.primitives.MeshTypeIdentifier;
 
 /**
  * Tag that displays the user-visible String of a <code>MeshType</code>.
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class MeshTypeIdentifierTag
         extends
