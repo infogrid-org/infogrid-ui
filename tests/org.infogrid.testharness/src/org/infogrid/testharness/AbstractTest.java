@@ -24,6 +24,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.ref.Reference;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -654,6 +656,47 @@ public abstract class AbstractTest
         if( test > max ) {
             reportError( msg, String.valueOf( test ) + " is outside of [ " + min + ", " + max + " ] (by " + (test-max) + ")" );
             return false;
+        }
+        return true;
+    }
+
+    /**
+     * Report error if a set contains duplicates.
+     * 
+     * @param iter iterator over the set
+     * @param useEquals if true, use the equals method to determine equality; identity otherwise
+     * @param msg message to print
+     * @return true if check passed
+     */
+    protected final boolean checkNoDuplicates(
+            Iterator<?> iter,
+            boolean     useEquals,
+            String      msg )
+    {
+        ArrayList<Object> found = new ArrayList<Object>();
+        
+        while( iter.hasNext() ) {
+            Object current = iter.next();
+            
+            for( Object currentFound : found ) {
+                if( useEquals ) {
+                    if( currentFound == null ) {
+                        if( current == null ) {
+                            reportError( msg, "Null value contained at least twice" );
+                            return false;
+                        }
+                    } else if( currentFound.equals( current )) {
+                        reportError( msg, "Object " + current + " contained at least twice" );
+                        return false;
+                    }
+                } else {
+                    if( currentFound == found ) {
+                        reportError( msg, "Object " + current + " contained at least twice" );
+                        return false;
+                    }
+                }
+            }
+            found.add( current );
         }
         return true;
     }

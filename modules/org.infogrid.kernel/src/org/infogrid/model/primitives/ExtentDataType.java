@@ -26,6 +26,8 @@ import java.io.ObjectStreamException;
 public final class ExtentDataType
         extends DataType
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
       * This is the default instance of this class.
       */

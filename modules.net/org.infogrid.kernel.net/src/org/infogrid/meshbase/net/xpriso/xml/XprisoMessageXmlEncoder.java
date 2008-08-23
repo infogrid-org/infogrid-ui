@@ -43,6 +43,7 @@ import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
+import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -439,7 +440,7 @@ public class XprisoMessageXmlEncoder
 
             if( identifier != null ) {
                 try {
-                    theMeshObjectBeingParsed.setIdentifier( theMeshObjectIdentifierFactory.fromExternalForm( descape( identifier )));
+                    theMeshObjectBeingParsed.setIdentifier( theMeshObjectIdentifierFactory.fromExternalForm( XmlUtils.descape( identifier )));
                 } catch( URISyntaxException ex ) {
                     log.warn( ex );
                 }

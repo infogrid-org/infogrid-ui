@@ -14,10 +14,12 @@
 
 package org.infogrid.util;
 
-import java.util.*;
+import java.util.NoSuchElementException;
 
 /**
- * Factors out common behaviors of {@link CursorIterator}s.
+ * Factors out common behaviors of {@link CursorIterator}s. The default implementation
+ * is rather inefficient, but works for all CursorIterators with little required work for
+ * new implementations. Subclasses may want to override for performance reasons.
  * 
  * @param <E> the type of element to iterate over
  */
@@ -33,6 +35,9 @@ public abstract class AbstractCursorIterator<E>
     protected AbstractCursorIterator(
             Class<E> arrayComponentType )
     {
+        if( arrayComponentType == null ) {
+            throw new IllegalArgumentException( "arrayComponentType must not be null" );
+        }
         theArrayComponentType = arrayComponentType;
     }
 
@@ -46,7 +51,7 @@ public abstract class AbstractCursorIterator<E>
         throws
             NoSuchElementException
     {
-        CursorIterator<E> clone = this.createCopy();
+        CursorIterator<E> clone = createCopy();
         E                 ret   = clone.next();
         
         return ret;
@@ -62,7 +67,7 @@ public abstract class AbstractCursorIterator<E>
         throws
             NoSuchElementException
     {
-        CursorIterator<E> clone = this.createCopy();
+        CursorIterator<E> clone = createCopy();
         E                 ret   = clone.previous();
         
         return ret;

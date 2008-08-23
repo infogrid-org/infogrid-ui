@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 /**
  * <p>Iterator that returns the content returned by N delegate Iterators, in sequence.</p>
  * 
- * @param E the type of element to iterate over
+ * @param <E> the type of element to iterate over
  */
 public class CompositeIterator<E>
         implements
@@ -160,6 +160,7 @@ public class CompositeIterator<E>
     /**
      * Determine whether this Iterator has a next element.
      *
+     * @param candidate the Iterator or Enumeration to consider
      * @return true if it has a next element
      */
     protected boolean hasNext(

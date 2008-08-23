@@ -1,15 +1,15 @@
 <%@    page contentType="text/html"
- %><%@ taglib prefix="set"   uri="/v/org/infogrid/jee/taglib/mesh/set/objectset.tld"
+ %><%@ taglib prefix="set"   uri="/v/org/infogrid/jee/taglib/mesh/set/set.tld"
  %><%@ taglib prefix="mesh"  uri="/v/org/infogrid/jee/taglib/mesh/mesh.tld"
  %><%@ taglib prefix="candy" uri="/v/org/infogrid/jee/taglib/candy/candy.tld"
  %><%@ taglib prefix="u"     uri="/v/org/infogrid/jee/taglib/util/util.tld"
  %><%@ taglib prefix="v"     uri="/v/org/infogrid/jee/taglib/viewlet/viewlet.tld"
- %><%@ taglib prefix="tmpl"  uri="/v/org/infogrid/jee/taglib/viewlet/templates/templates.tld"
+ %><%@ taglib prefix="tmpl"  uri="/v/org/infogrid/jee/taglib/templates/templates.tld"
  %><%@ taglib prefix="c"     uri="http://java.sun.com/jsp/jstl/core"
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/meshbase/AllMeshObjectsViewlet.css"/>
 <v:viewletAlternatives />
-<u:refresh>Reload page</u:refresh>
+<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <div class="slide-in-button">
   <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/icons/add.png" alt="Create"/></a>

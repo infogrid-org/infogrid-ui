@@ -29,7 +29,6 @@ import org.infogrid.probe.blob.BlobProbe;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.util.logging.Log;
 
-
 /**
  * Probes an HTML document with an X-XRDS-Location header, then relates this to a local
  * object.

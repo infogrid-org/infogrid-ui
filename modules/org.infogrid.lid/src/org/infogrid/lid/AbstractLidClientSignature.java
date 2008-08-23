@@ -15,7 +15,6 @@
 package org.infogrid.lid;
 
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.logging.Log;
 
 /**
  * Captures the information provided by the client that is relevant to authenticate a request.
@@ -24,8 +23,6 @@ public abstract class AbstractLidClientSignature
         implements
             LidClientSignature
 {
-    private static final Log log = Log.getLogInstance( AbstractLidClientSignature.class ); // our own, private logger
-
     /**
      * Constructor for subclasses only.
      * 

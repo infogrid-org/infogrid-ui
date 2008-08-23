@@ -573,7 +573,7 @@ public class IterableLocalNetStoreMeshBase
      */
     public CursorIterator<MeshObject> iterator()
     {
-        return getCachingMap().valuesIterator( null, MeshObject.class );
+        return getCachingMap().valuesIterator( MeshObjectIdentifier.class, MeshObject.class );
     }
     
     /**

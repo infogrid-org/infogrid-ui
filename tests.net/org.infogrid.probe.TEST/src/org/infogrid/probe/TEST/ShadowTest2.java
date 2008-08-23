@@ -14,8 +14,19 @@
 
 package org.infogrid.probe.TEST;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import org.infogrid.mesh.EntityBlessedAlreadyException;
+import org.infogrid.mesh.EntityNotBlessedException;
+import org.infogrid.mesh.IllegalPropertyTypeException;
+import org.infogrid.mesh.IllegalPropertyValueException;
+import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
@@ -26,6 +37,7 @@ import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.model.primitives.StringValue;
+import org.infogrid.module.ModuleException;
 import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.ProbeException;
@@ -34,19 +46,6 @@ import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.mesh.EntityBlessedAlreadyException;
-import org.infogrid.mesh.EntityNotBlessedException;
-import org.infogrid.mesh.IllegalPropertyTypeException;
-import org.infogrid.mesh.IllegalPropertyValueException;
-import org.infogrid.mesh.IsAbstractException;
-import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
-import org.infogrid.mesh.NotRelatedException;
-import org.infogrid.module.ModuleException;
 
 /**
   * Tests the ApiProbe mechanism.

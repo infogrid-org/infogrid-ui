@@ -171,7 +171,6 @@ public class StoreLidKeyPairMapper
         }
     }
 
-    
     /**
      * The encoding to use.
      */

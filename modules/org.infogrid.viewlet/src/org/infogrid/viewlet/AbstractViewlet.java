@@ -17,12 +17,15 @@ package org.infogrid.viewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
 
 /**
  * Factors out commonly used functionality for Viewlets.
  */
 public abstract class AbstractViewlet
+        extends
+            AbstractObjectInContext
         implements
             Viewlet
 {
@@ -36,8 +39,9 @@ public abstract class AbstractViewlet
             AbstractViewedMeshObjects viewed,
             Context                   c )
     {
+        super( c );
+
         theViewedMeshObjects = viewed;
-        theContext           = c;
     }
     
     /**
@@ -132,22 +136,7 @@ public abstract class AbstractViewlet
     }
     
     /**
-     * Obtain the application context.
-     *
-     * @return the application context
-     */
-    public final Context getContext()
-    {
-        return theContext;
-    }
-
-    /**
      * The objects being viewed.
      */
     protected AbstractViewedMeshObjects theViewedMeshObjects;
-
-    /**
-     * The application context
-     */
-    protected Context theContext;
 }

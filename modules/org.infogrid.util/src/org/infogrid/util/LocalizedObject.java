@@ -21,7 +21,7 @@ public interface LocalizedObject
 {
     /**
      * Determine the correct internationalized string that can be shown to the
-     * user when the LocalizedException is thrown.
+     * user.
      *
      * @param formatter the formatter to use for data objects to be displayed as part of the message
      * @return the internationalized string

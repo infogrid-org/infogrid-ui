@@ -31,6 +31,7 @@ import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.model.primitives.externalized.xml.PropertyValueXmlEncoder;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
+import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -318,7 +319,7 @@ public class ExternalizedMeshObjectXmlEncoder
             if( identifier != null ) {
                 try {
                     theMeshObjectBeingParsed.setIdentifier(
-                            theMeshObjectIdentifierFactory.fromExternalForm( descape( identifier )));
+                            theMeshObjectIdentifierFactory.fromExternalForm( XmlUtils.descape( identifier )));
                 } catch( URISyntaxException ex ) {
                     error( ex );
                 }
@@ -341,7 +342,7 @@ public class ExternalizedMeshObjectXmlEncoder
             String type = attrs.getValue( TYPE_TAG );
 
             if( type != null && type.length() > 0 ) {
-                theMeshObjectBeingParsed.addPropertyType( theMeshTypeIdentifierFactory.fromExternalForm( descape( type )));
+                theMeshObjectBeingParsed.addPropertyType( theMeshTypeIdentifierFactory.fromExternalForm( XmlUtils.descape( type )));
             } else {
                 log.error( "empty '" + TYPE_TAG + "' on '" + PROPERTY_TYPE_TAG + "'" );
             }
@@ -353,7 +354,7 @@ public class ExternalizedMeshObjectXmlEncoder
                 try {
                     theHasTypesBeingParsed = new ParserFriendlyExternalizedMeshObject.HasRoleTypes(
                             theMeshObjectBeingParsed.getIdentifier(),
-                            theMeshObjectIdentifierFactory.fromExternalForm( descape( identifier )),
+                            theMeshObjectIdentifierFactory.fromExternalForm( XmlUtils.descape( identifier )),
                             updated );
                 } catch( URISyntaxException ex ) {
                     error( ex );

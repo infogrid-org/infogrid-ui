@@ -1,4 +1,4 @@
-<%@ taglib prefix="tmpl"  uri="/v/org/infogrid/jee/taglib/viewlet/templates/templates.tld" %>
+<%@ taglib prefix="tmpl"  uri="/v/org/infogrid/jee/taglib/templates/templates.tld" %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/shell/http/HttpShellVerb.css"/>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/candy/OverlayTag.css"/>
 <tmpl:script href="${CONTEXT}/v/org/infogrid/jee/taglib/candy/OverlayTag.js"/>

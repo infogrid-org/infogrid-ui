@@ -27,6 +27,8 @@ import java.io.ObjectStreamException;
 public class IntegerDataType
         extends DataType
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
       * This is the default instance of this class. It represents
       * an int data type with no domain restriction.
@@ -345,14 +347,16 @@ public class IntegerDataType
     {
         final String className = getClass().getName();
 
-        if( this == theDefault )
+        if( this == theDefault ) {
             return className + DEFAULT_STRING;
-        else if( this == thePositiveDefault )
+
+        } else if( this == thePositiveDefault ) {
             return className + ".thePositiveDefault";
-        else if( this == thePositiveOrZeroDefault )
+
+        } else if( this == thePositiveOrZeroDefault ) {
             return className + ".thePositiveOrZeroDefault";
-        else
-        {
+
+        } else {
             StringBuffer ret = new StringBuffer( className );
             ret.append( CREATE_STRING );
 
@@ -431,7 +435,7 @@ public class IntegerDataType
 
             switch( found.length ) {
                 case 1:
-                    ret = IntegerValue.create( (Integer) found[0] );
+                    ret = IntegerValue.create( (Number) found[0] );
                     break;
 
                 default:

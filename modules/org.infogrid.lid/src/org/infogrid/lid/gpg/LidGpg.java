@@ -29,6 +29,8 @@ import org.infogrid.util.logging.Log;
 
 /**
  * Wrapper around the GPG commandline tool.
+ * 
+ * FIXME: This should be re-implemented with a native GPG library in Java.
  */
 public class LidGpg
 {

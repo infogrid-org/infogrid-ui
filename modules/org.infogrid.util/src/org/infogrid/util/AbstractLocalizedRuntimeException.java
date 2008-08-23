@@ -14,8 +14,6 @@
 
 package org.infogrid.util;
 
-import java.text.MessageFormat;
-
 /**
  * Superclass for RuntimeExceptions that knows how to internationalize themselves.
  * Given that Exceptions carry all their data, it is a lot easier to to
@@ -80,46 +78,12 @@ public abstract class AbstractLocalizedRuntimeException
     public String getLocalizedMessage(
             LocalizedObjectFormatter formatter )
     {
-        Throwable cause = getCause();
-        if( cause != null && cause instanceof LocalizedException ) {
-             return ((LocalizedException)cause).getLocalizedMessage( formatter );
-        }
-
-        ResourceHelper theHelper = findResourceHelperForLocalizedMessage();        
-        String         message   = theHelper.getResourceStringOrDefault( findMessageParameter(), null );
-        
-        Class c = getClass();
-
-        while( message == null && ! Object.class.equals( c )) {
-            c = c.getSuperclass();
-
-            theHelper = ResourceHelper.getInstance( c );
-            message   = theHelper.getResourceStringOrDefault( MESSAGE_PARAMETER, null );
-        }
-        if( message == null ) {
-            message = getClass().getName();
-        }
-        Object [] params = getLocalizationParameters();
-        if( params != null ) {
-            
-            Object [] formattedParams;
-            if( formatter != null ) {
-                formattedParams = new Object[ params.length ];
-                for( int i=0 ; i<formattedParams.length ; ++i ) {
-                    formattedParams[i] = formatter.asLocalizedString( params[i] );
-                }
-            } else {
-                formattedParams = params;
-            }
-            
-            try {
-                message = MessageFormat.format( message, formattedParams );
-
-            } catch( IllegalArgumentException ex ) {
-                message = message + "(error while formatting translated message)";
-            }
-        }
-        return message;
+        return AbstractLocalizedException.constructLocalizedMessage(
+                this,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findMessageParameter(),
+                formatter );
     }
 
     /**

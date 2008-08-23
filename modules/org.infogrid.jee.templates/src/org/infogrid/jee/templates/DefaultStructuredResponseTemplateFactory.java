@@ -37,16 +37,32 @@ public class DefaultStructuredResponseTemplateFactory
      */
     public static DefaultStructuredResponseTemplateFactory create()
     {
-        DefaultStructuredResponseTemplateFactory ret = new DefaultStructuredResponseTemplateFactory();
+        DefaultStructuredResponseTemplateFactory ret = new DefaultStructuredResponseTemplateFactory( DEFAULT_TEMPLATE_NAME );
+        return ret;
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param defaultTemplateName name of the default template
+     * @return the created DefaultStructuredResponseTemplateFactory
+     */
+    public static DefaultStructuredResponseTemplateFactory create(
+            String defaultTemplateName )
+    {
+        DefaultStructuredResponseTemplateFactory ret = new DefaultStructuredResponseTemplateFactory( defaultTemplateName );
         return ret;
     }
 
     /**
      * Constructor for subclasses only, use factory method.
+     * 
+     * @param defaultTemplateName name of the default template
      */
-    protected DefaultStructuredResponseTemplateFactory()
+    protected DefaultStructuredResponseTemplateFactory(
+            String defaultTemplateName )
     {
-        // nothing right now
+        theDefaultTemplateName = defaultTemplateName;
     }
 
     /**
@@ -117,7 +133,7 @@ public class DefaultStructuredResponseTemplateFactory
             String             mime )
     {
         if( templateName == null || templateName.length() == 0 ) {
-            templateName = DEFAULT_TEMPLATE_NAME;
+            templateName = theDefaultTemplateName;
         }
 
         StringBuilder jspPath = new StringBuilder();
@@ -138,7 +154,12 @@ public class DefaultStructuredResponseTemplateFactory
     }
 
     /**
-     * Name of the default template, if no other has been specified.
+     * Name of the default template, if no other has been specified in the request.
+     */
+    protected String theDefaultTemplateName;
+    
+    /**
+     * Name of the default template, if no other has been specified in ther constructor or the request.
      */
     public static final String DEFAULT_TEMPLATE_NAME = "default";
     

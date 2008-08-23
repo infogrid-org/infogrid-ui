@@ -14,17 +14,17 @@
 
 package org.infogrid.model.primitives;
 
+import java.io.ObjectStreamException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
-
-import java.io.ObjectStreamException;
-
 /**
   * This is a boolean DataType.
   */
 public final class BooleanDataType
         extends DataType
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
       * This is the default instance of this class.
       */

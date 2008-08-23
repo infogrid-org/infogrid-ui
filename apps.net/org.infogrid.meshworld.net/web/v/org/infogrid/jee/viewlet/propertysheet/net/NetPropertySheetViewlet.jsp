@@ -1,16 +1,16 @@
-<%@    taglib prefix="set"         uri="/v/org/infogrid/jee/taglib/mesh/set/objectset.tld"
+<%@    taglib prefix="set"         uri="/v/org/infogrid/jee/taglib/mesh/set/set.tld"
  %><%@ taglib prefix="mesh"        uri="/v/org/infogrid/jee/taglib/mesh/mesh.tld"
  %><%@ taglib prefix="netmesh"     uri="/v/org/infogrid/jee/taglib/mesh/net/netmesh.tld"
  %><%@ taglib prefix="netmeshbase" uri="/v/org/infogrid/jee/taglib/meshbase/net/netmeshbase.tld"
  %><%@ taglib prefix="candy"       uri="/v/org/infogrid/jee/taglib/candy/candy.tld"
  %><%@ taglib prefix="u"           uri="/v/org/infogrid/jee/taglib/util/util.tld"
  %><%@ taglib prefix="v"           uri="/v/org/infogrid/jee/taglib/viewlet/viewlet.tld"
- %><%@ taglib prefix="tmpl"  uri="/v/org/infogrid/jee/taglib/viewlet/templates/templates.tld"
+ %><%@ taglib prefix="tmpl"  uri="/v/org/infogrid/jee/taglib/templates/templates.tld"
  %><%@ taglib prefix="c"           uri="http://java.sun.com/jsp/jstl/core"
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/propertysheet/net/NetPropertySheetViewlet.css"/>
 <v:viewletAlternatives />
-<u:refresh>Reload page</u:refresh>
+<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <table class="audit"> <!-- IE is unable to render float:right correctly, so here is a table for you -->
   <tr>

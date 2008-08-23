@@ -87,7 +87,7 @@ public class ImmutableMMeshObjectSet
 
                     for( int k=0 ; k<found.length ; ++k ) {
                         if( ! almostRet.contains( found[k] )) {
-                            almostRet.add( found[j] );
+                            almostRet.add( found[k] );
                         }
                     }
                 }

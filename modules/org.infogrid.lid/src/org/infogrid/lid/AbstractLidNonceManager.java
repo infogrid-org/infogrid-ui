@@ -46,7 +46,7 @@ public abstract class AbstractLidNonceManager
         Calendar cal = new GregorianCalendar( TimeZone.getTimeZone( "GMT" ));
         cal.setTimeInMillis( System.currentTimeMillis() );
 
-        StringBuilder nonce = new StringBuilder( 64 );
+        StringBuilder nonce = new StringBuilder( 28 ); // should be enough
         nonce.append( formatTime( cal.get( Calendar.YEAR ), 4 ));
         nonce.append( '-' );
         nonce.append( formatTime( cal.get( Calendar.MONTH )+1, 2 ));

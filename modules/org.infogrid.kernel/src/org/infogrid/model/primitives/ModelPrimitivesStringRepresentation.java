@@ -14,16 +14,16 @@
 
 package org.infogrid.model.primitives;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.ArrayStringifier;
+import org.infogrid.util.text.HtmlStringStringifier;
 import org.infogrid.util.text.Stringifier;
 import org.infogrid.util.text.StringifierParseException;
 import org.infogrid.util.text.StringifierParsingChoice;
 import org.infogrid.util.text.StringRepresentation;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import org.infogrid.util.text.HtmlStringStringifier;
 
 /**
  * Extends the default definitions in StringRepresentation to be aware of the model primitives defined
@@ -33,6 +33,8 @@ public abstract class ModelPrimitivesStringRepresentation
         extends
             StringRepresentation
 {
+    private static final Log log = Log.getLogInstance( ModelPrimitivesStringRepresentation.class ); // our own, private logger
+
     /**
      * Smart factory method, using the default StringifierMap.
      *
@@ -241,8 +243,11 @@ public abstract class ModelPrimitivesStringRepresentation
                 return format( (PropertyValue) arg );
             } else if( arg instanceof String ) {
                 return StringValue.encodeAsJavaString( (String) arg );
+            } else if( arg instanceof Number ) {
+                return String.valueOf( arg );
             } else {
-                return "Cannot format " + arg + " (class: " + arg.getClass().getName() + ")";
+                log.error( "Cannot format " + arg + " (class: " + arg.getClass().getName() + ")" );
+                return "null";
             }
         }
 

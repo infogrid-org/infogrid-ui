@@ -1,4 +1,4 @@
-<%@    taglib prefix="set"         uri="/v/org/infogrid/jee/taglib/mesh/set/objectset.tld"
+<%@    taglib prefix="set"         uri="/v/org/infogrid/jee/taglib/mesh/set/set.tld"
  %><%@ taglib prefix="mesh"        uri="/v/org/infogrid/jee/taglib/mesh/mesh.tld"
  %><%@ taglib prefix="netmesh"     uri="/v/org/infogrid/jee/taglib/mesh/net/netmesh.tld"
  %><%@ taglib prefix="meshbase"    uri="/v/org/infogrid/jee/taglib/meshbase/meshbase.tld"
@@ -8,7 +8,7 @@
  %><%@ taglib prefix="v"           uri="/v/org/infogrid/jee/taglib/viewlet/viewlet.tld"
  %><%@ taglib prefix="c"           uri="http://java.sun.com/jsp/jstl/core"
  %>
-<u:refresh>Reload page</u:refresh>
+<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <h1><netmeshbase:proxyId proxyName="Proxy"/></h1>
  <table>

@@ -8,7 +8,6 @@ org.infogrid.meshbase.store.net
 org.infogrid.jee.lid
 org.infogrid.jee.rest.net
 org.infogrid.jee.viewlet.net
-org.infogrid.jee.taglib.net
 org.infogrid.probe
 org.infogrid.probe.feeds
 org.infogrid.probe.store

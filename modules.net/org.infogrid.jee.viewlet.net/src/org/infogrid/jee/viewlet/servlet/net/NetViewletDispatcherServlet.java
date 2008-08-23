@@ -42,64 +42,6 @@ public class NetViewletDispatcherServlet
     private static final Log  log              = Log.getLogInstance( NetViewletDispatcherServlet.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
 
-//    /**
-//     * Do the work. This may be overridden by subclasses.
-//     *
-//     * @param request the incoming request
-//     * @param response the outgoing response
-//     * @throws ServletException thrown if an error occurred
-//     * @throws IOException thrown if an I/O error occurred
-//     */
-//    @Override
-//    protected void performService(
-//            RestfulRequest     restful,
-//            StructuredResponse structured )
-//        throws
-//            MeshObjectAccessException,
-//            NotPermittedException,
-//            CannotViewException,
-//            URISyntaxException,
-//           // IllegalArgumentException,
-//            ServletException,
-//            IOException
-//    {
-//        NetRestfulRequest realRestful    = (NetRestfulRequest) restful;
-//        InfoGridWebApp    app            = InfoGridWebApp.getSingleton();
-//
-//        NetMeshBaseIdentifier proxyIdentifier = realRestful.determineRequestedProxyIdentifier();
-//        if( proxyIdentifier == null ) {
-//            // not trying to show a Proxy
-//            super.performService( restful, structured );
-//            
-//            return;
-//        }
-//                
-//        Proxy p = realRestful.determineRequestedProxy();
-//        if( p == null ) {
-//            // not finding the proxy
-//            new IllegalArgumentException( "Cannot find specified Proxy with identifier " + proxyIdentifier );
-//        }
-//
-//        // showing a Proxy
-//        restful.getDelegate().setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME, p );
-//
-//        String            servletPath = "/v/org/infogrid/jee/viewlet/meshbase/net/Proxy.jsp";
-//        RequestDispatcher dispatcher  = app.findLocalizedRequestDispatcher(
-//                    servletPath,
-//                    restful.getSaneRequest().acceptLanguageIterator(),
-//                    getServletContext() );
-//
-//        StructuredResponse oldStructuredResponse = (StructuredResponse) restful.getDelegate().getAttribute( JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-//        restful.getDelegate().setAttribute( JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
-//
-//        try {
-//            AbstractJeeViewlet.runRequestDispatcher( dispatcher, restful, structured );
-//            
-//        } finally {
-//            restful.getDelegate().setAttribute( JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, oldStructuredResponse );            
-//        }
-//    }
-
     /**
      * Construct a RestfulRequest object that is suitable to the URL-to-MeshObject mapping
      * applied by this application.

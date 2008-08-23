@@ -61,14 +61,4 @@ public class StoreLidGpgPublicKeyManager
     {
         super( delegateFactory, storage );
     }
-    
-    /**
-     * The encoding to use.
-     */
-    public static final String ENCODING = StoreLidGpgPublicKeyManager.class.getName();
-    
-    /**
-     * THe characterset to use.
-     */
-    protected static final String CHARSET = "UTF-8";
 }

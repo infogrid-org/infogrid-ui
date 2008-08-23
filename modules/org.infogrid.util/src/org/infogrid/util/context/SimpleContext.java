@@ -14,12 +14,16 @@
 
 package org.infogrid.util.context;
 
-import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
-import org.infogrid.util.logging.Log;
-
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.ArrayListCursorIterator;
+import org.infogrid.util.CompositeCursorIterator;
+import org.infogrid.util.CursorIterator;
+import org.infogrid.util.FilteringCursorIterator;
+import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.Log;
 
 /**
   * A simple implementation of the Context interface.
@@ -175,6 +179,52 @@ public class SimpleContext
         if( log.isDebugEnabled() ) {
             log.debug( "removed from \"" + this + " ( \"" + theContextObject + "\" )" );
         }
+    }
+
+    /**
+     * Obtain an iterator over all context objects of this type.
+     * FIXME: there must be an effective way of using Java generics for this; if there is,
+     * it escapes me.
+     * 
+     * @param classOfContextObject class of the object that we are looking for it
+     * @return the iterator 
+     * @param <T> the type of Context object to find
+     */
+    @SuppressWarnings( { "unchecked" } )
+    public <T> CursorIterator<T> contextObjectIterator(
+            final Class<? extends T> classOfContextObject )
+    {
+        FilteringCursorIterator.Filter filter = new FilteringCursorIterator.Filter() {
+            
+            /**
+              * Determine whether or not to accept a candidate Object.
+              *
+              * @param candidate the candidate Object
+              * @return true if this Object shall be accepted according to this Filter
+              */
+            public boolean accept(
+                    Object candidate )
+            {
+                boolean ret = classOfContextObject.isInstance( candidate );
+                return ret;
+            }
+        };
+        
+        Iterator thisIter = ArrayListCursorIterator.create( theObjects, Object.class );
+
+        CursorIterator ret = FilteringCursorIterator.create( 
+                (CursorIterator<Object>) thisIter,
+                filter,
+                (Class<Object>) classOfContextObject );
+
+        if( theParentContext != null ) {
+            List iterators = new ArrayList();
+            iterators.add( ret );
+            iterators.add( theParentContext.contextObjectIterator( classOfContextObject ));
+            
+            ret = CompositeCursorIterator.<Object>create( iterators, (Class<Object>) classOfContextObject );
+        }
+        return (CursorIterator<T>) ret;
     }
 
     /**

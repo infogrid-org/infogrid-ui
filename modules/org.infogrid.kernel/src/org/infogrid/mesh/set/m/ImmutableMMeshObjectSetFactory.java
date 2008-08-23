@@ -82,11 +82,27 @@ public class ImmutableMMeshObjectSetFactory
      * @param candidates the candidate members of the set
      * @param selector determines which candidates are included
      * @return the created MeshObjectSet
+     * @throws IllegalArgumentException thrown if the array of MeshObjects contained dead objects, duplicates, null pointers etc.
      */
     public ImmutableMeshObjectSet createImmutableMeshObjectSet(
             MeshObject []      candidates,
             MeshObjectSelector selector )
     {
+        // check for duplicates first
+        for( int i=0 ; i<candidates.length ; ++i ) {
+            if( candidates[i] == null ) {
+                throw new IllegalArgumentException( "Cannot add a null object to a MeshObjectSet" );
+            }
+            if( candidates[i].getIsDead() ) {
+                throw new IllegalArgumentException( "Cannot add a dead object to a MeshObjectSet: " + candidates[i] );
+            }
+            for( int j=0 ; j<i ; ++j ) {
+                if( candidates[i] == candidates[j] ) {
+                    throw new IllegalArgumentException( "Cannot create a MeshObjectSet with duplicate members: " + candidates[i] );
+                }
+            }
+        }
+        
         MeshObject [] content;
         
         if( selector != null ) {

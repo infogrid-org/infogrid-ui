@@ -14,11 +14,10 @@
 
 package org.infogrid.model.primitives;
 
+import java.io.ObjectStreamException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
-
-import java.io.*;
 
 /**
   * This is a time stamp DataType for PropertyValues. A time stamp is a point in time.
@@ -27,6 +26,8 @@ public final class TimeStampDataType
         extends
             DataType
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
       * This is the default instance of this class.
       */
@@ -178,12 +179,12 @@ public final class TimeStampDataType
                 case 7:
                 case 8:
                     ret = TimeStampValue.create(
-                            ((Integer) found[0]).shortValue(),   // year
-                            ((Integer) found[1]).shortValue(),   // month
-                            ((Integer) found[2]).shortValue(),   // day
-                            ((Integer) found[3]).shortValue(),   // hour
-                            ((Integer) found[4]).shortValue(),   // minute
-                            ((Double)  found[5]).floatValue());  // second
+                            ((Number) found[0]).shortValue(),   // year
+                            ((Number) found[1]).shortValue(),   // month
+                            ((Number) found[2]).shortValue(),   // day
+                            ((Number) found[3]).shortValue(),   // hour
+                            ((Number) found[4]).shortValue(),   // minute
+                            ((Number) found[5]).floatValue());  // second
                     break;
 
                 default:

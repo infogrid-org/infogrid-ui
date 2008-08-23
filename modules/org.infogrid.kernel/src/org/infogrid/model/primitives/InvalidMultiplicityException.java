@@ -21,8 +21,13 @@ public class InvalidMultiplicityException
         extends
             InvalidPropertyValueException
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
      * Constructor.
+     * 
+     * @param min the minimum value specified
+     * @param max the maximum value specified
      */
     public InvalidMultiplicityException(
             int min,

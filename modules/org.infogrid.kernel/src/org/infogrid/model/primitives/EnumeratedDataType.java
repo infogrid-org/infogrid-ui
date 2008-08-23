@@ -14,20 +14,21 @@
 
 package org.infogrid.model.primitives;
 
+import java.io.ObjectStreamException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
 
-import java.io.*;
-
 /**
-  * This is an enumerated DataType for PropertyValues. It requires the explicit specification of
+  * An enumerated DataType for PropertyValues. It requires the explicit specification of
   * a domain.
   */
 public class EnumeratedDataType
         extends DataType
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
       * Default instance.
       */

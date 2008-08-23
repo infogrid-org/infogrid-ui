@@ -33,7 +33,7 @@ public class FloatDataType
         extends
             DataType
 {
-    private static final Log log = Log.getLogInstance(FloatDataType.class); // our own, private logger
+    private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
       * This is the default instance of this class. It represents
@@ -433,7 +433,7 @@ public class FloatDataType
 
             switch( found.length ) {
                 case 1:
-                    ret = FloatValue.create( (Double) found[0] );
+                    ret = FloatValue.create( (Number) found[0] );
                     break;
 
                 default:

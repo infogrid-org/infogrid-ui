@@ -14,9 +14,12 @@
 
 package org.infogrid.lid.userpass;
 
+import org.infogrid.lid.LidIdentityManager;
 import org.infogrid.lid.AbstractLidClientSignature;
+import org.infogrid.lid.LidInvalidCredentialException;
+import org.infogrid.lid.LidLocalPersonaUnknownException;
 import org.infogrid.lid.LidNonceManager;
-
+import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -32,6 +35,7 @@ public class UserPassClientSignature
      * @param request the incoming request
      * @param rpUrl the Relying Party's URL without identity parameters
      * @param identifier the given username, if any
+     * @param credentialType the credential type to use
      * @param credential the given password, if any
      * @param lidCookieString the identifier held by the LID identifier cookie, if any
      * @param sessionId the content of the LID session cookie, if any
@@ -39,12 +43,13 @@ public class UserPassClientSignature
      * @param realm the realm of the trust request, if any
      * @param nonce the nonce in the request, if any
      * @param nonceManager the LidNonceManager to use to validate the nonce
-     * @param passwordManager the PasswordManager to use to validate the password
+     * @param identityManager the LidIdentityManager to use to validate the password
      */
     public UserPassClientSignature(
             SaneRequest        request,
             String             rpUrl,
             String             identifier,
+            LidCredentialType  credentialType,
             String             credential,
             String             lidCookieString,
             String             sessionId,
@@ -52,11 +57,12 @@ public class UserPassClientSignature
             String             realm,
             String             nonce,
             LidNonceManager    nonceManager,
-            LidPasswordManager passwordManager )
+            LidIdentityManager identityManager )
     {
         super( request, rpUrl, identifier, credential, lidCookieString, sessionId, target, realm, nonce, nonceManager );
         
-        thePasswordManager = passwordManager;
+        theCredentialType  = credentialType;
+        theIdentityManager = identityManager;
     }
 
     /**
@@ -77,9 +83,17 @@ public class UserPassClientSignature
      */
     protected boolean determineSignedGoodRequest()
     {
-        boolean ret = thePasswordManager.isUserPass( theIdentifier, theCredential );
-        
-        return ret;
+        try {
+            theIdentityManager.checkCredential( theIdentifier, theCredentialType, theCredential );
+
+            return true;
+            
+        } catch( LidLocalPersonaUnknownException ex ) {
+            return false;
+
+        } catch( LidInvalidCredentialException ex ) {
+            return false;
+        }
     }
 
     /**
@@ -95,8 +109,13 @@ public class UserPassClientSignature
     /**
      * The PasswordManager to use.
      */
-    protected LidPasswordManager thePasswordManager;
-    
+    protected LidIdentityManager theIdentityManager;
+
+    /**
+     * The LidCredentialType to use.
+     */
+    protected LidCredentialType theCredentialType;
+
     /**
      * The name of the simple password credential type.
      */

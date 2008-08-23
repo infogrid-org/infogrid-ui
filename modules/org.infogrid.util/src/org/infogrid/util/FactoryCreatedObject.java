@@ -22,9 +22,9 @@ package org.infogrid.util;
  * key may be different from the key specified in the <code>SmartFactory</code>'s
  * {@link SmartFactory#obtainFor obtainFor} method.
  * 
- * @param K the type of key
- * @param V the type of value
- * @param A the type of argument
+ * @param <K> the type of key
+ * @param <V> the type of value
+ * @param <A> the type of argument
  */
 public interface FactoryCreatedObject<K,V,A>
 {

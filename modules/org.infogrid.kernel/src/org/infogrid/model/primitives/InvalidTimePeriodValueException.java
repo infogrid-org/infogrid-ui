@@ -103,6 +103,8 @@ public abstract class InvalidTimePeriodValueException
             extends
                 InvalidTimeStampValueException
     {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
         /**
          * Constructor.
          *
@@ -132,6 +134,8 @@ public abstract class InvalidTimePeriodValueException
             extends
                 InvalidTimeStampValueException
     {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
         /**
          * Constructor.
          *
@@ -161,6 +165,8 @@ public abstract class InvalidTimePeriodValueException
             extends
                 InvalidTimeStampValueException
     {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
         /**
          * Constructor.
          *
@@ -190,6 +196,8 @@ public abstract class InvalidTimePeriodValueException
             extends
                 InvalidTimeStampValueException
     {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
         /**
          * Constructor.
          *
@@ -219,6 +227,8 @@ public abstract class InvalidTimePeriodValueException
             extends
                 InvalidTimeStampValueException
     {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
         /**
          * Constructor.
          *
@@ -248,6 +258,8 @@ public abstract class InvalidTimePeriodValueException
             extends
                 InvalidTimeStampValueException
     {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
         /**
          * Constructor.
          *

@@ -26,11 +26,6 @@
     </tag>
 
     <tag>
-        <name>refresh</name>
-        <tag-class>org.infogrid.jee.taglib.util.RefreshTag</tag-class>
-    </tag>
-
-    <tag>
         <name>rotatingTr</name>
         <tag-class>org.infogrid.jee.taglib.util.RotatingTrTag</tag-class>
         <attribute>

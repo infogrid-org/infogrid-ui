@@ -14,13 +14,13 @@
 
 package org.infogrid.util;
 
-import java.util.*;
+import java.util.NoSuchElementException;
 
 /**
  * An interator for arrays. It supports the <code>java.util.Enumeration</code>,
  * <code>java.util.Iterator</code> and {@link CursorIterator} interfaces.
  * 
- * @param E the type of element to iterate over
+ * @param <E> the type of element to iterate over
  */
 public class ArrayCursorIterator<E>
         extends
@@ -34,6 +34,7 @@ public class ArrayCursorIterator<E>
      *
      * @param array the array to iterate over
      * @return the created ArrayCursorIterator
+     * @param <E> the type of element to iterate over
      */
     public static <E> ArrayCursorIterator<E> create(
             E [] array )
@@ -48,6 +49,7 @@ public class ArrayCursorIterator<E>
      * @param array the array to iterate over
      * @param startPosition the start position
      * @return the created ArrayCursorIterator
+     * @param <E> the type of element to iterate over
      */
     public static <E> ArrayCursorIterator<E> create(
             E [] array,
@@ -65,6 +67,7 @@ public class ArrayCursorIterator<E>
      * @param lowerBound the lowest index in the array to return (inclusive)
      * @param upperBound the highest index in the array to return (exclusive)
      * @return the created ArrayCursorIterator
+     * @param <E> the type of element to iterate over
      */
     public static <E> ArrayCursorIterator<E> create(
             E [] array,
@@ -122,6 +125,7 @@ public class ArrayCursorIterator<E>
      * @return the next element
      * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
      */
+    @Override
     public E peekNext()
     {
         if( thePosition >= theLowerBound && thePosition < theUpperBound ) {
@@ -137,6 +141,7 @@ public class ArrayCursorIterator<E>
      * @return the previous element
      * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
      */
+    @Override
     public E peekPrevious()
     {
         if( thePosition > theLowerBound && thePosition <= theUpperBound ) {

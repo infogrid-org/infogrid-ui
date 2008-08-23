@@ -80,15 +80,39 @@ public abstract class AbstractLocalizedException
     public String getLocalizedMessage(
             LocalizedObjectFormatter formatter )
     {
-        Throwable cause = getCause();
+        return constructLocalizedMessage(
+                this,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findMessageParameter(),
+                formatter );
+    }
+    
+    /**
+     * Factored out formatting, so several exception classes can reference the same code.
+     * 
+     * @param ex the exception to be localized
+     * @param theHelper the ResourceHelper to use
+     * @param params the localization parameters to use
+     * @param messageParameter the name of the message parameter to use with the ResourceHelper
+     * @param formatter the formatter to use for data objects to be displayed as part of the message
+     * @return the internationalized string
+     */
+    static String constructLocalizedMessage(
+            Exception                ex,
+            ResourceHelper           theHelper,
+            Object []                params,
+            String                   messageParameter,
+            LocalizedObjectFormatter formatter )
+    {
+        Throwable cause = ex.getCause();
         if( cause != null && cause instanceof LocalizedException ) {
              return ((LocalizedException)cause).getLocalizedMessage( formatter );
         }
 
-        ResourceHelper theHelper = findResourceHelperForLocalizedMessage();        
-        String         message   = theHelper.getResourceStringOrDefault( findMessageParameter(), null );
+        String message = theHelper.getResourceStringOrDefault( messageParameter, null );
         
-        Class c = getClass();
+        Class c = ex.getClass();
 
         while( message == null && ! Object.class.equals( c )) {
             c = c.getSuperclass();
@@ -97,9 +121,9 @@ public abstract class AbstractLocalizedException
             message   = theHelper.getResourceStringOrDefault( MESSAGE_PARAMETER, null );
         }
         if( message == null ) {
-            message = getClass().getName();
+            message = ex.getClass().getName();
         }
-        Object [] params = getLocalizationParameters();
+
         if( params != null ) {
             
             Object [] formattedParams;
@@ -115,7 +139,7 @@ public abstract class AbstractLocalizedException
             try {
                 message = MessageFormat.format( message, formattedParams );
 
-            } catch( IllegalArgumentException ex ) {
+            } catch( IllegalArgumentException ex2 ) {
                 message = message + "(error while formatting translated message)";
             }
         }

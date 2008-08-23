@@ -14,15 +14,14 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.PortableIcon;
-import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.StringRepresentation;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectStreamException;
 import java.io.OutputStream;
+import org.infogrid.util.PortableIcon;
+import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentation;
 
 /**
  * This is a Binary Large Object (BLOB) value for PropertyValues.
@@ -37,7 +36,7 @@ public abstract class BlobValue
             PropertyValue
 {
     private static final Log log = Log.getLogInstance( BlobValue.class ); // our own, private logger
-    private static final long serialVersionUID = 1382201442397779167L;
+    private static final long serialVersionUID = 1382201442397779167L;    // helps with serialization
 
     /**
      * Factory method to construct one from unformatted, plain text.

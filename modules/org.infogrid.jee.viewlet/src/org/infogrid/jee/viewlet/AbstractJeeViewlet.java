@@ -21,8 +21,8 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.UnsafePostException;
-import org.infogrid.jee.servlet.BufferedServletResponse;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.utils.JeeTemplateUtils;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
@@ -228,7 +228,7 @@ public abstract class AbstractJeeViewlet
                         structured.getServletContext() );
 
                 if( dispatcher != null ) {
-                    runRequestDispatcher( dispatcher, restful, structured );
+                    JeeTemplateUtils.runRequestDispatcher( dispatcher, (SaneServletRequest) restful.getSaneRequest(), structured );
                 } // FIXME? Should there be an else here, throwing an Exception?
             }
 
@@ -238,49 +238,6 @@ public abstract class AbstractJeeViewlet
             }
         }        
     }
-
-    /**
-     * Invoke the RequestDispatcher and put the results in the default section of the StructuredResponse.
-     * 
-     * @param dispatcher the RequestDispatcher to invoke
-     * @param restful the incoming request
-     * @param structured the outgoing response
-     * @throws javax.servlet.ServletException processing failed
-     * @throws java.io.IOException I/O error
-     */
-    public void runRequestDispatcher(
-            RequestDispatcher  dispatcher,
-            RestfulRequest     restful,
-            StructuredResponse structured )
-        throws
-            ServletException,
-            IOException
-    {
-        BufferedServletResponse bufferedResponse = new BufferedServletResponse( structured.getDelegate() );
-
-        dispatcher.include( restful.getDelegate(), bufferedResponse );
-
-        byte [] bufferedBytes  = bufferedResponse.getBufferedServletOutputStreamOutput();
-        String  bufferedString = bufferedResponse.getBufferedPrintWriterOutput();
-
-        if( bufferedBytes != null ) {
-            if( bufferedString != null ) {
-                // don't know what to do here -- defaults to "string gets processed, bytes ignore"
-                log.warn( "Have both String and byte content, don't know what to do: " + restful );
-                structured.setDefaultSectionContent( bufferedString ); // do something is better than nothing
-
-            } else {
-                structured.setDefaultSectionContent( bufferedBytes );
-            }
-
-        } else if( bufferedString != null ) {
-            structured.setDefaultSectionContent( bufferedString );
-        } else {
-            // do nothing
-        }
-        structured.setMimeType( bufferedResponse.getContentType() );
-    }
-                
 
     /**
      * Obtain the URL to which forms should be HTTP POSTed. This

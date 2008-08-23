@@ -98,18 +98,18 @@ public class AllTests
                                 AbstractTest.fileSystemFile( YadisTest5.class, "YadisTest5.xml" )
                         } ),
 
-            new TestSpec( // property updates
-                        WritableProbeTest1.class,
-                        noArgs ),
-            new TestSpec( // blessing
-                        WritableProbeTest2.class,
-                        noArgs ),
-            new TestSpec( // unblessing
-                        WritableProbeTest3.class,
-                        noArgs ),
-            new TestSpec( // deletion
-                        WritableProbeTest4.class,
-                        noArgs ),
+                new TestSpec( // property updates
+                            WritableProbeTest1.class,
+                            noArgs ),
+                new TestSpec( // blessing
+                            WritableProbeTest2.class,
+                            noArgs ),
+                new TestSpec( // unblessing
+                            WritableProbeTest3.class,
+                            noArgs ),
+                new TestSpec( // deletion
+                            WritableProbeTest4.class,
+                            noArgs ),
 
 // FIXME: The remaining WritableProbeTests have not been written yet.
 //                new TestSpec( // relationship delete
@@ -157,6 +157,9 @@ public class AllTests
                 new TestSpec(
                         ShadowTest7.class,
                         noArgs ),
+                new TestSpec(
+                        ShadowTest8.class,
+                        noArgs ),
 
                 new TestSpec(
                         ProbeUpdateCalculatorTest1.class,
@@ -173,6 +176,9 @@ public class AllTests
                         noArgs ),
                 new TestSpec(
                         ForwardReferenceTest3.class,
+                        noArgs ),
+                new TestSpec(
+                        ForwardReferenceTest4.class,
                         noArgs ),
 
                 new TestSpec(

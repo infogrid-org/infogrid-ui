@@ -79,7 +79,6 @@ public class ForwardReferenceTest1
         checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.A,  false ), "Blessed still by old type" );
         checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.AA, false ), "Not blessed by the right type (AA)" );
         checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.B,  false ), "Not blessed by the right type (B)" );
-        checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "resolved", "wrong property value" );
     }
 
     /**

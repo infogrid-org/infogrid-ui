@@ -31,6 +31,8 @@ public final class BlobDataType
         extends
             DataType
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
       * This DataType allows any MIME type.
       */

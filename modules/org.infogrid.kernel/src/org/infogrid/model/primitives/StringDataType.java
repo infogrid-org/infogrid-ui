@@ -14,11 +14,10 @@
 
 package org.infogrid.model.primitives;
 
+import java.io.ObjectStreamException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
-
-import java.io.ObjectStreamException;
 
 /**
   * This is an string DataType for PropertyValues. While this DataType does not limit
@@ -29,6 +28,8 @@ public final class StringDataType
         extends
             DataType
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
       * This is the default instance of this class.
       */

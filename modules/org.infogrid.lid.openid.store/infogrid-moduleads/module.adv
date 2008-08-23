@@ -22,7 +22,7 @@
  </provides>
  <dependencies>
   <requires name="org.infogrid.lid.openid"/>
-  <requires name="org.infogrid.kernel"/>
+  <requires name="org.infogrid.store"/>
   <requires name="org.infogrid.util"/>
  </dependencies>
 </standardmodule>

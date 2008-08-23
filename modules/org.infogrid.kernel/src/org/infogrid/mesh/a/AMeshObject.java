@@ -1022,6 +1022,11 @@ public class AMeshObject
             return ret;
         }
 
+        if( !( theTraverseSpec instanceof RoleType )) {
+            return theTraverseSpec.traverse( this, considerEquivalents );
+        }
+        RoleType type = (RoleType) theTraverseSpec;
+
         MeshObject [] starts;
         if( considerEquivalents ) {
             starts = getEquivalents().getMeshObjects();
@@ -1048,18 +1053,13 @@ public class AMeshObject
         if( n == 0 ) {
             return realBase.getMeshObjectSetFactory().obtainEmptyImmutableMeshObjectSet();
         }
-        if( !( theTraverseSpec instanceof RoleType )) {
-            return theTraverseSpec.traverse( this, considerEquivalents );
-        }
 
-        RoleType          type   = (RoleType) theTraverseSpec;
         MeshObjectIdentifier [] almost = new MeshObjectIdentifier[ n ];
-        int               max    = 0;
+        int                     max    = 0;
 
         // it's more efficient to first assemble all possible neighbors, and then subset based on permissions
         for( int s=0 ; s<otherSides.length ; ++s ) {
             for( int i=0 ; i<otherSides[s].length ; ++i ) {
-                boolean found = false;
                 if( roleTypes[s][i] != null ) {
                     for( int j=0 ; j<roleTypes[s][i].length ; ++j ) {
                         if( roleTypes[s][i][j].isSpecializationOfOrEquals( type ) ) {

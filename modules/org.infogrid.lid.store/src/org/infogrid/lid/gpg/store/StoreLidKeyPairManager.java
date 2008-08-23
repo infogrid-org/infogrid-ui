@@ -63,20 +63,4 @@ public class StoreLidKeyPairManager
     {
         super( delegateFactory, storage );
     }
-    
-    
-    /**
-     * The Store to use.
-     */
-    protected Store theStore;
-    
-    /**
-     * The encoding to use.
-     */
-    public static final String ENCODING = StoreLidKeyPairManager.class.getName();
-    
-    /**
-     * THe characterset to use.
-     */
-    protected static final String CHARSET = "UTF-8";
 }

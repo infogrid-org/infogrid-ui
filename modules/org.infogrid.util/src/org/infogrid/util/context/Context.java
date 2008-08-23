@@ -14,6 +14,8 @@
 
 package org.infogrid.util.context;
 
+import org.infogrid.util.CursorIterator;
+
 /**
  * <p>A <code>Context</code> collects an "environment" of objects. One can look
  *    at it as the set of "static" variables in a C or C++ program,
@@ -89,6 +91,15 @@ public interface Context
     public abstract void removeContextObject(
             Object theContextObject );
 
+    /**
+     * Obtain an iterator over all context objects of this type.
+     * 
+     * @return the iterator
+     * @param <T> the type of Context object to find
+     */
+    public abstract <T> CursorIterator<T> contextObjectIterator(
+            Class<? extends T> classOfContextObject );
+    
     /**
      * Obtain the parent Context of this Context, if any.
      *

@@ -176,7 +176,7 @@ if [ "${do_nothing}" = 0 ]; then
 	exit 0;
 fi
 
-trap stop SIGINT
+trap stop 2
 function stop
 {
 	echo 'Interrupted by control-c. Exiting ...'

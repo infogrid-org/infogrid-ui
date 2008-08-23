@@ -42,7 +42,7 @@ public final class FloatValue
     /**
      * Factory method.
      *
-     * @param value the value
+     * @param value the float value
      * @return the created FloatValue
      */
     public static FloatValue create(
@@ -54,8 +54,8 @@ public final class FloatValue
     /**
      * Factory method.
      *
-     * @param value the value
-     * @param u the Unit for the value
+     * @param value the float value
+     * @param u the unit for the float value
      * @return the created FloatValue
      */
     public static FloatValue create(
@@ -63,6 +63,76 @@ public final class FloatValue
             Unit   u )
     {
         return new FloatValue( value, u );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param value the float value
+     * @return the created FloatValue
+     * @throws IllegalArgumentException if null is given as argument
+     */
+    public static FloatValue create(
+            Number value )
+        throws
+            IllegalArgumentException
+    {
+        if( value == null ) {
+            throw new IllegalArgumentException( "null value" );
+        }
+        return new FloatValue( value.doubleValue(), null );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param value the float value
+     * @param u the unit for the float value
+     * @return the created FloatValue
+     * @throws IllegalArgumentException if null is given as argument for the value
+     */
+    public static FloatValue create(
+            Number value,
+            Unit   u )
+        throws
+            IllegalArgumentException
+    {
+        if( value == null ) {
+            throw new IllegalArgumentException( "null value" );
+        }
+        return new FloatValue( value.doubleValue(), u );
+    }
+
+    /**
+     * Factory method, or return null if the argument is null.
+     *
+     * @param value the float value
+     * @return the created FloatValue
+     */
+    public static FloatValue createOrNull(
+            Number value )
+    {
+        if( value == null ) {
+            return null;
+        }
+        return new FloatValue( value.doubleValue(), null );
+    }
+
+    /**
+     * Factory method, or return null if the argument is null.
+     *
+     * @param value the float value
+     * @param u the unit for the float value
+     * @return the created FloatValue
+     */
+    public static FloatValue createOrNull(
+            Number value,
+            Unit   u )
+    {
+        if( value == null ) {
+            return null;
+        }
+        return new FloatValue( value.doubleValue(), u );
     }
 
     /**
@@ -217,6 +287,7 @@ public final class FloatValue
       *
       * @return string representation of this object
       */
+    @Override
     public String toString()
     {
         if( theUnit != null ) {

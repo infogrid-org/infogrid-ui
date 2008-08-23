@@ -33,9 +33,7 @@
   <requires name="org.infogrid.jee"/>
   <requires name="org.infogrid.jee.rest"/>
   <requires name="org.infogrid.jee.store"/>
-  <requires name="org.infogrid.jee.taglib"/>
   <requires name="org.infogrid.jee.rest.net"/>
-  <requires name="org.infogrid.jee.taglib.net"/>
   <requires name="org.infogrid.jee.viewlet"/>
   <requires name="org.infogrid.jee.viewlet.net"/>
   <requires name="org.infogrid.jee.templates"/>

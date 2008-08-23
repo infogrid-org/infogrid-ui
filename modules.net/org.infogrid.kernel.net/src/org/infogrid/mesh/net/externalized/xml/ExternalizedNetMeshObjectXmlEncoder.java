@@ -28,6 +28,7 @@ import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
+import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -147,7 +148,7 @@ public class ExternalizedNetMeshObjectXmlEncoder
     {
         if( id != null ) {
             String externalForm = id.getCanonicalForm();
-            buf.append( escape( externalForm ));
+            buf.append( XmlUtils.escape( externalForm ));
         }
     }
 
@@ -163,7 +164,7 @@ public class ExternalizedNetMeshObjectXmlEncoder
     {
         if( path != null ) {
             String externalForm = path.toExternalForm();
-            buf.append( escape( externalForm ));
+            buf.append( XmlUtils.escape( externalForm ));
         }
     }
 

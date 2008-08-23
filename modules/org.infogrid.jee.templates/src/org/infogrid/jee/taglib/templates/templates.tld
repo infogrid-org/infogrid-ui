@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+    <tlib-version>1.0</tlib-version>
+    <short-name>set</short-name>
+    <uri>/v/org/infogrid/jee/taglib/templates/templates.tld</uri>
+
+    <!-- Tags are ordered alphabetically by Java Class name. Makes it easier
+         to find them in the IDE. -->
+         
+    <tag>
+        <name>ifEmpty</name>
+        <tag-class>org.infogrid.jee.taglib.templates.IfEmptyTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ifErrors</name>
+        <tag-class>org.infogrid.jee.taglib.templates.IfErrorsTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>ifNotEmpty</name>
+        <tag-class>org.infogrid.jee.taglib.templates.IfNotEmptyTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>inline</name>
+        <tag-class>org.infogrid.jee.taglib.templates.InlineTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>inlineErrors</name>
+        <tag-class>org.infogrid.jee.taglib.templates.InlineErrorsTag</tag-class>
+        <attribute>
+            <name>stringRepresentation</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>script</name>
+        <tag-class>org.infogrid.jee.taglib.templates.ScriptTag</tag-class>
+        <attribute>
+            <name>href</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>stylesheet</name>
+        <tag-class>org.infogrid.jee.taglib.templates.StylesheetTag</tag-class>
+        <attribute>
+            <name>href</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

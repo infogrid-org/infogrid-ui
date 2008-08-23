@@ -14,7 +14,10 @@
 
 package org.infogrid.jee.servlet;
 
-
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.RequestDispatcher;
@@ -23,12 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.Filter;
-
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * <p>Main dispatcher for the different request types.</p>
@@ -109,6 +106,9 @@ public class MainDispatcherFilter
             
             RequestDispatcher theRequestDispatcher = context.getNamedDispatcher( theViewletDispatcherServletName );
             
+            if( theRequestDispatcher == null ) {
+                throw new ServletException( "Named dispatcher '" + theViewletDispatcherServletName + "' could not be found" );
+            }
             theRequestDispatcher.include( request, response );
 
         } else {

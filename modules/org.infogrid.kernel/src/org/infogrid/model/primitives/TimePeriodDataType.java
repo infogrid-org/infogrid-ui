@@ -14,11 +14,10 @@
 
 package org.infogrid.model.primitives;
 
+import java.io.ObjectStreamException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
-
-import java.io.ObjectStreamException;
 
 /**
   * This is a time period DataType for PropertyTypes. A time period is a "delta" value in time.
@@ -27,6 +26,8 @@ public final class TimePeriodDataType
         extends
             DataType
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
       * This is the default instance of this class.
       */
@@ -194,12 +195,12 @@ public final class TimePeriodDataType
                 case 7:
                 case 8:
                     ret = TimePeriodValue.create(
-                            ((Integer) found[0]).shortValue(),   // year
-                            ((Integer) found[1]).shortValue(),   // month
-                            ((Integer) found[2]).shortValue(),   // day
-                            ((Integer) found[3]).shortValue(),   // hour
-                            ((Integer) found[4]).shortValue(),   // minute
-                            ((Double)  found[5]).floatValue());  // second
+                            ((Number) found[0]).shortValue(),   // year
+                            ((Number) found[1]).shortValue(),   // month
+                            ((Number) found[2]).shortValue(),   // day
+                            ((Number) found[3]).shortValue(),   // hour
+                            ((Number) found[4]).shortValue(),   // minute
+                            ((Number) found[5]).floatValue());  // second
                     break;
 
                 default:

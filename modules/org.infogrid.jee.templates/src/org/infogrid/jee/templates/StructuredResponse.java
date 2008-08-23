@@ -17,6 +17,7 @@ package org.infogrid.jee.templates;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -125,6 +126,31 @@ public class StructuredResponse
     public Collection<Cookie> cookies()
     {
         return theOutgoingCookies.values();
+    }
+
+    /**
+     * Add a header to the response.
+     * 
+     * @param key the header key
+     * @param value the header value
+     * @return the old value of this header, if any
+     */
+    public String addAdditionalHeader(
+            String key,
+            String value )
+    {
+        String ret = theAdditionalHeaders.put( key, value );
+        return ret;
+    }
+    
+    /**
+     * Obtain the additional headers.
+     * 
+     * @return the headers
+     */
+    public Map<String,String> additionalHeaders()
+    {
+        return theAdditionalHeaders;
     }
 
     /**
@@ -292,7 +318,7 @@ public class StructuredResponse
             for( Throwable cause = findCause( t ) ; cause != null ; cause = findCause( cause )) {
                 buf.append( "Caused by: " );
                 String msg2;
-                if( t instanceof LocalizedObject ) {
+                if( cause instanceof LocalizedObject ) {
                     msg2 = ((LocalizedObject) cause).getLocalizedMessage( formatter );
                 } else {
                     msg2 = cause.getMessage();
@@ -458,6 +484,11 @@ public class StructuredResponse
      * able to detect that the same cookie has been set again.
      */
     protected HashMap<String,Cookie> theOutgoingCookies = new HashMap<String,Cookie>();
+
+    /**
+     * The additional headers to be sent, as name-value pairs.
+     */
+    protected HashMap<String,String> theAdditionalHeaders = new HashMap<String,String>();
 
     /**
      * The sections of the response that are represented as text.

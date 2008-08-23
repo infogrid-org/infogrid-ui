@@ -62,14 +62,14 @@ public final class IntegerValue
      * @throws IllegalArgumentException if null is given as argument
      */
     public static IntegerValue create(
-            Long value )
+            Number value )
         throws
             IllegalArgumentException
     {
         if( value == null ) {
             throw new IllegalArgumentException( "null value" );
         }
-        return new IntegerValue( value.intValue(), null );
+        return new IntegerValue( value.longValue(), null );
     }
 
     /**
@@ -81,8 +81,8 @@ public final class IntegerValue
      * @throws IllegalArgumentException if null is given as argument for the value
      */
     public static IntegerValue create(
-            Long value,
-            Unit u )
+            Number value,
+            Unit   u )
         throws
             IllegalArgumentException
     {
@@ -99,12 +99,11 @@ public final class IntegerValue
      * @return the created IntegerValue
      */
     public static IntegerValue createOrNull(
-            Long value )
+            Number value )
     {
         if( value == null ) {
             return null;
         }
-
         return new IntegerValue( value.longValue(), null );
     }
 
@@ -116,13 +115,12 @@ public final class IntegerValue
      * @return the created IntegerValue
      */
     public static IntegerValue createOrNull(
-            Long value,
-            Unit u )
+            Number value,
+            Unit   u )
     {
         if( value == null ) {
             return null;
         }
-
         return new IntegerValue( value.longValue(), u );
     }
 

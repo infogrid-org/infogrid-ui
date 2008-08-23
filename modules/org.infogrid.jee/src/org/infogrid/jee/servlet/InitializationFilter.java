@@ -212,9 +212,6 @@ public class InitializationFilter
         theFilterConfig = filterConfig;
         
         theDefaultMeshBaseIdentifier = theFilterConfig.getInitParameter( DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER );
-        if( theDefaultMeshBaseIdentifier == null || theDefaultMeshBaseIdentifier.length() == 0 ) {
-            throw new ServletException( getClass().getName() + "'s configuration required the " + DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER + " filter parameter" );
-        }
     }
 
     /**
