@@ -137,6 +137,12 @@ public class SqlStore
             initialize();
 
         } catch( SqlStoreIOException ex ) {
+            
+            SQLException cause = ex.getCause();
+            Throwable    cause2 = cause.getCause();
+            if( cause2 != null && cause2 instanceof RuntimeException ) {
+                throw (RuntimeException) cause2.getCause();
+            }
             // do nothing
             if( log.isDebugEnabled() ) {
                 log.debug( "Already initialized.", ex );

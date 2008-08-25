@@ -248,4 +248,13 @@ $Date$
         </javadoc>
     </target>
 
+<!-- override pre-init so it is easy to set up automated builds -->
+    <target name="-pre-init" depends="read-build-properties" />
+
+    <target name="read-build-properties" if="build-properties">
+        <available file="${build-properties}" property="build-properties-present"/>
+	<fail unless="build-properties-present" message="Build property file ${build-properties} not found."/>
+	<property file="${build-properties}"/>
+    </target>
+
 </project>

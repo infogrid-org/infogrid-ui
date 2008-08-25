@@ -37,4 +37,15 @@ public class SqlStoreIOException
     {
         super( "SQL Exception", cause );
     }
+    
+    /**
+     * Obtain the underlying cause which we know to be a SQLException.
+     * 
+     * @return the cause
+     */
+    @Override
+    public SQLException getCause()
+    {
+        return (SQLException) super.getCause();
+    }
 }
