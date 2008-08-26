@@ -59,7 +59,7 @@ public class StoreScheduledExecutorProbeManager
      * @param executorService the ScheduledExecutorService that schedules our tasks
      */
     protected StoreScheduledExecutorProbeManager(
-            StoreShadowMeshBaseFactory                                   delegate,
+            StoreShadowMeshBaseFactory                                               delegate,
             IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,ShadowMeshBase> storage )
     {
         super( delegate, storage );

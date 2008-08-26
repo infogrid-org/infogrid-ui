@@ -192,7 +192,7 @@ public class XprisoTest7
 
         tx2.commitTransaction();
 
-        Thread.sleep( 4L*delay );
+        Thread.sleep( 5L*delay ); // 4L*delay );
 
         log.debug( "Checking proxies (7)" );
 

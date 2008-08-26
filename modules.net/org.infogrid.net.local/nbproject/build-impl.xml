@@ -314,7 +314,6 @@ is divided into following sections:
             -->
     <target depends="init" name="deps-jar" unless="no.deps">
         <ant antfile="${project.org_infogrid_comm_pingpong}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_codegen}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_kernel_net}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_probe}/build.xml" inheritall="false" target="jar"/>
@@ -632,7 +631,6 @@ is divided into following sections:
             -->
     <target depends="init" name="deps-clean" unless="no.deps">
         <ant antfile="${project.org_infogrid_comm_pingpong}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_codegen}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_kernel_net}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_probe}/build.xml" inheritall="false" target="clean"/>

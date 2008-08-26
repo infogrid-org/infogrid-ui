@@ -78,5 +78,4 @@ public abstract class JeeTemplateUtils
         }
         structured.setMimeType( bufferedResponse.getContentType() );
     }
-                
 }

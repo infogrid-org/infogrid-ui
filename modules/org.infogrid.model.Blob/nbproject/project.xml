@@ -60,7 +60,7 @@
                 <id>jar</id>
             </reference>
             <reference>
-                <foreign-project>orusg_infogrid_util</foreign-project>
+                <foreign-project>org_infogrid_util</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>
