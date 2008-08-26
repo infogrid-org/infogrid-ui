@@ -33,15 +33,11 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        String [] noArgs = {};
-        
         TestSpec [] tests = {
 
                 new TestSpec(
                         VCardProbeTest1.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( VCardProbeTest1.class, "VCardProbeTest1.vcf" )
-                        } )
+                        AbstractTest.fileSystemFile( VCardProbeTest1.class, "VCardProbeTest1.vcf" ))
         };
 
         runTests( tests );

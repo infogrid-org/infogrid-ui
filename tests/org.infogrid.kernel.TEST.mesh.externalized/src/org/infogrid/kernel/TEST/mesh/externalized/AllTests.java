@@ -31,10 +31,8 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] emptyArgs  = new String[] {};
-
         TestSpec [] tests = {
-                new TestSpec( SerializerTest1.class, emptyArgs ),
+                new TestSpec( SerializerTest1.class ),
         };
 
         runTests( tests );

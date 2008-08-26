@@ -34,10 +34,8 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs = new String[] {};
-        
         TestSpec [] tests = {
-                new TestSpec( SmtpSendingMessageEndpointTest1.class, subArgs ),
+                new TestSpec( SmtpSendingMessageEndpointTest1.class ),
         };
 
         runTests( tests );

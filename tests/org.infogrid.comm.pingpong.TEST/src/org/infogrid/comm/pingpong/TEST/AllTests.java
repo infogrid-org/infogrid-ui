@@ -31,17 +31,15 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs = new String[] {};
-        
         TestSpec [] tests = {
-                new TestSpec( PingPongTest1.class, subArgs ),
-                new TestSpec( PingPongTest2.class, subArgs ),
-                new TestSpec( PingPongTest3.class, subArgs ),
-                new TestSpec( PingPongTest4.class, subArgs ),
-                new TestSpec( PingPongTest5.class, subArgs ),
+                new TestSpec( PingPongTest1.class ),
+                new TestSpec( PingPongTest2.class ),
+                new TestSpec( PingPongTest3.class ),
+                new TestSpec( PingPongTest4.class ),
+                new TestSpec( PingPongTest5.class ),
 
-                new TestSpec( PingPongRpcTest1.class, subArgs ),
-                new TestSpec( PingPongRpcTest2.class, subArgs ),
+                new TestSpec( PingPongRpcTest1.class ),
+                new TestSpec( PingPongRpcTest2.class ),
         };
 
         runTests( tests );

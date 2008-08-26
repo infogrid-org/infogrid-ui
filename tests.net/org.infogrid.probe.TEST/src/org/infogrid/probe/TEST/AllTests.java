@@ -39,77 +39,68 @@ public class AllTests
 
                 new TestSpec(
                         ProbeTest1.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( ProbeTest1.class, "ProbeTest1.xml" )
-                        } ),
+                        AbstractTest.fileSystemFile( ProbeTest1.class, "ProbeTest1.xml" )),
+
                 new TestSpec(
                         ProbeTest2.class,
-                        new String[] {
-                                AbstractTest.tempInputFile( ProbeTest2.class, "test2-active.xml" ),
-                                AbstractTest.fileSystemFile( ProbeTest2.class, "ProbeTest2_1.xml" ),
-                                AbstractTest.fileSystemFile( ProbeTest2.class, "ProbeTest2_2.xml" )
-                        } ),
+                        AbstractTest.tempInputFile( ProbeTest2.class, "test2-active.xml" ),
+                        AbstractTest.fileSystemFile( ProbeTest2.class, "ProbeTest2_1.xml" ),
+                        AbstractTest.fileSystemFile( ProbeTest2.class, "ProbeTest2_2.xml" )),
+
                 new TestSpec(
                         ProbeTest3.class,
-                        new String[] {
-                                AbstractTest.tempInputFile( ProbeTest3.class, "test3-active.xml" ),
-                                AbstractTest.fileSystemFile( ProbeTest3.class, "ProbeTest2_1.xml" ),
-                                AbstractTest.fileSystemFile( ProbeTest3.class, "ProbeTest2_2.xml" )
-                        } ),
+                        AbstractTest.tempInputFile( ProbeTest3.class, "test3-active.xml" ),
+                        AbstractTest.fileSystemFile( ProbeTest3.class, "ProbeTest2_1.xml" ),
+                        AbstractTest.fileSystemFile( ProbeTest3.class, "ProbeTest2_2.xml" )),
+                        
                 new TestSpec(
                         ProbeTest4.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( ProbeTest4.class, "ProbeTest4.xml" )
-                        } ),
+                        AbstractTest.fileSystemFile( ProbeTest4.class, "ProbeTest4.xml" )),
+
                 new TestSpec(
-                        ProbeTest5.class,
-                        noArgs ),
+                        ProbeTest5.class ),
+
 //                new TestSpec( // FAILS (minor). Requires memory debugger to make progress. See also ProbeTest6
 //                        ProbeTest6.class,
-//                        new String [] {
-//                                AbstractTest.fileSystemFile( ProbeTest6.class, "ProbeTest6.xml" )
-//                        } ),
+//                        AbstractTest.fileSystemFile( ProbeTest6.class, "ProbeTest6.xml" )),
+//
                 new TestSpec(
-                        ProbeTest7.class,
-                        noArgs ),
+                        ProbeTest7.class ),
 
 // FIXME: ProbeTest8 seems to work, but spits out way too many warnings (but only when run in this test suite,
 // not when run standalone). It may be related to failure to clean up Proxies to expired Shadows, and perhaps
 // ProbeTest6. This needs more investigation but does not appear to be critical.
 //                new TestSpec(
-//                        ProbeTest8.class,
-//                        noArgs ),
+//                        ProbeTest8.class ),
 
                 new TestSpec(
-                        YadisTest1.class,
-                        noArgs ),
+                        YadisTest1.class ),
+
                 new TestSpec(
-                        YadisTest2.class,
-                        noArgs ),
+                        YadisTest2.class ),
+
                 new TestSpec(
-                        YadisTest3.class,
-                        noArgs ),
+                        YadisTest3.class ),
+
                 new TestSpec(
-                        YadisTest4.class,
-                        noArgs ),
+                        YadisTest4.class ),
+
                 new TestSpec(
                         YadisTest5.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( YadisTest5.class, "YadisTest5.xml" )
-                        } ),
+                        AbstractTest.fileSystemFile( YadisTest5.class, "YadisTest5.xml" )),
 
                 new TestSpec( // property updates
-                            WritableProbeTest1.class,
-                            noArgs ),
+                            WritableProbeTest1.class ),
+                            
                 new TestSpec( // blessing
-                            WritableProbeTest2.class,
-                            noArgs ),
+                            WritableProbeTest2.class ),
+                            
                 new TestSpec( // unblessing
-                            WritableProbeTest3.class,
-                            noArgs ),
+                            WritableProbeTest3.class ),
+                            
                 new TestSpec( // deletion
-                            WritableProbeTest4.class,
-                            noArgs ),
+                            WritableProbeTest4.class ),
+                            
 
 // FIXME: The remaining WritableProbeTests have not been written yet.
 //                new TestSpec( // relationship delete
@@ -134,56 +125,49 @@ public class AllTests
 
                 new TestSpec(
                         ShadowTest1.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( ShadowTest1.class, "ProbeTest1.xml" )
-                        } ),
+                        AbstractTest.fileSystemFile( ShadowTest1.class, "ProbeTest1.xml" )),
+                            
                 new TestSpec(
-                        ShadowTest2.class,
-                        noArgs ),
+                        ShadowTest2.class ),
+                            
                 new TestSpec(
                         ShadowTest3.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( ShadowTest3.class, "ShadowTest3a.html" ) // ShadowTest3b.xml referenced from ShadowTest3a.html
-                        } ),
-                new TestSpec(
-                        ShadowTest4.class,
-                        noArgs ),
-                new TestSpec(
-                        ShadowTest5.class,
-                        noArgs ),
-                new TestSpec(
-                        ShadowTest6.class,
-                        noArgs ),
-                new TestSpec(
-                        ShadowTest7.class,
-                        noArgs ),
-                new TestSpec(
-                        ShadowTest8.class,
-                        noArgs ),
+                        AbstractTest.fileSystemFile( ShadowTest3.class, "ShadowTest3a.html" )), // ShadowTest3b.xml referenced from ShadowTest3a.html
 
                 new TestSpec(
-                        ProbeUpdateCalculatorTest1.class,
-                        noArgs ),
+                        ShadowTest4.class ),
+
+                new TestSpec(
+                        ShadowTest5.class ),
+
+                new TestSpec(
+                        ShadowTest6.class ),
+
+                new TestSpec(
+                        ShadowTest7.class ),
+
+                new TestSpec(
+                        ShadowTest8.class ),
+
+                new TestSpec(
+                        ProbeUpdateCalculatorTest1.class ),
 
                 new TestSpec(
                         ForwardReferenceTest1.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( ForwardReferenceTest1.class, "ForwardReferenceTest1_1.xml" )
+                        AbstractTest.fileSystemFile( ForwardReferenceTest1.class, "ForwardReferenceTest1_1.xml" )),
                                 // ForwardReferenceRest1_2.xml included by reference from ForwardReferenceRest1.xml
-                        } ),
-                new TestSpec(
-                        ForwardReferenceTest2.class,
-                        noArgs ),
-                new TestSpec(
-                        ForwardReferenceTest3.class,
-                        noArgs ),
-                new TestSpec(
-                        ForwardReferenceTest4.class,
-                        noArgs ),
 
                 new TestSpec(
-                        ProbeMatchTest1.class,
-                        noArgs ),
+                        ForwardReferenceTest2.class ),
+
+                new TestSpec(
+                        ForwardReferenceTest3.class ),
+
+                new TestSpec(
+                        ForwardReferenceTest4.class ),
+
+                new TestSpec(
+                        ProbeMatchTest1.class ),
         };
 
         runTests( tests );

@@ -31,11 +31,9 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs          = new String[] {};
-        
         TestSpec [] tests = {
-                new TestSpec( FilesystemStoreTest1.class, subArgs ),
-                new TestSpec( FilesystemStoreTest2.class, subArgs ),
+                new TestSpec( FilesystemStoreTest1.class ),
+                new TestSpec( FilesystemStoreTest2.class ),
         };
 
         runTests( tests );

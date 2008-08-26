@@ -32,12 +32,12 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs = new String[] { "org.infogrid.model.Test" };
+        String subArg = "org.infogrid.model.Test";
         
         TestSpec [] tests = {
-                new TestSpec( ModelBaseTest1.class, subArgs ),
-                new TestSpec( ModelBaseTest2.class, subArgs ),
-                new TestSpec( ModelBaseTest3.class, subArgs )
+                new TestSpec( ModelBaseTest1.class, subArg ),
+                new TestSpec( ModelBaseTest2.class, subArg ),
+                new TestSpec( ModelBaseTest3.class, subArg )
         };
         // do not run ModelBaseTest4 -- it's not suitable for automatic testing
 

@@ -31,21 +31,20 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs1 = new String[] { "123" };
-        String [] emptyArgs  = new String[] {};
+        String subArg1 = "123";
 
         TestSpec [] tests = {
-                new TestSpec( StoreMeshBaseTest1.class, subArgs1 ),
-                new TestSpec( StoreMeshBaseTest2.class, subArgs1 ),
-                new TestSpec( StoreMeshBaseTest3.class, emptyArgs ),
-                new TestSpec( StoreMeshBaseTest4.class, new String[] { "10000" } ),
-                new TestSpec( StoreMeshBaseTest5.class, emptyArgs ),
-                new TestSpec( StoreMeshBaseTest6.class, emptyArgs ),
+                new TestSpec( StoreMeshBaseTest1.class, subArg1 ),
+                new TestSpec( StoreMeshBaseTest2.class, subArg1 ),
+                new TestSpec( StoreMeshBaseTest3.class ),
+                new TestSpec( StoreMeshBaseTest4.class, "10000" ),
+                new TestSpec( StoreMeshBaseTest5.class ),
+                new TestSpec( StoreMeshBaseTest6.class ),
                 
-                new TestSpec( StoreBulkLoaderTest1.class, emptyArgs ),
+                new TestSpec( StoreBulkLoaderTest1.class ),
 
-                new TestSpec( StoreSweeperTest1.class, emptyArgs ),
-                new TestSpec( StoreSweeperTest2.class, emptyArgs ),
+                new TestSpec( StoreSweeperTest1.class ),
+                new TestSpec( StoreSweeperTest2.class ),
         };
 
         runTests( tests );

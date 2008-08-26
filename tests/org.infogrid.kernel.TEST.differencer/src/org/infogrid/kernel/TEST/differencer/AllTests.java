@@ -31,18 +31,16 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs = new String[] {};
-        
         TestSpec [] tests = {
-                new TestSpec( DifferencerTest1.class, subArgs ),
-                new TestSpec( DifferencerTest2.class, subArgs ),
-                new TestSpec( DifferencerTest3.class, subArgs ),
-                new TestSpec( DifferencerTest4.class, subArgs ),
-                new TestSpec( DifferencerTest5.class, subArgs ),
-                new TestSpec( DifferencerTest6.class, subArgs ),
-                new TestSpec( DifferencerTest7.class, subArgs ),
-                new TestSpec( DifferencerTest8.class, subArgs ),
-                new TestSpec( DifferencerTest9.class, subArgs ),
+                new TestSpec( DifferencerTest1.class ),
+                new TestSpec( DifferencerTest2.class ),
+                new TestSpec( DifferencerTest3.class ),
+                new TestSpec( DifferencerTest4.class ),
+                new TestSpec( DifferencerTest5.class ),
+                new TestSpec( DifferencerTest6.class ),
+                new TestSpec( DifferencerTest7.class ),
+                new TestSpec( DifferencerTest8.class ),
+                new TestSpec( DifferencerTest9.class ),
         };
 
         runTests( tests );

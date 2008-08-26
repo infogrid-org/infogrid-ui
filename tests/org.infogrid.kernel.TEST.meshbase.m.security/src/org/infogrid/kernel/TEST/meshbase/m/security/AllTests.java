@@ -31,14 +31,12 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs = new String[] {};
-        
         TestSpec [] tests = {
-                new TestSpec( MeshBaseSecurityTest1.class, subArgs ),
-                new TestSpec( MeshBaseSecurityTest2.class, subArgs ),
-                new TestSpec( MeshBaseSecurityTest3.class, subArgs ),
-                new TestSpec( MeshBaseSecurityTest4.class, subArgs ),
-                new TestSpec( MeshBaseSecurityTest5.class, subArgs ),
+                new TestSpec( MeshBaseSecurityTest1.class ),
+                new TestSpec( MeshBaseSecurityTest2.class ),
+                new TestSpec( MeshBaseSecurityTest3.class ),
+                new TestSpec( MeshBaseSecurityTest4.class ),
+                new TestSpec( MeshBaseSecurityTest5.class ),
         };
 
         runTests( tests );

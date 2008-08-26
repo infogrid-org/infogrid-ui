@@ -31,29 +31,24 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs          = new String[] {};
-        String [] keyStoreSubArgs  = new String[] {
-            "test-keystore.key",
-            "asdfgh"
-        };
-        String [] encryptedSubArgs = new String[] { "DES" };
-        
+        String encryption = "DES";
+
         TestSpec [] tests = {
-                new TestSpec( SqlStoreTest1.class, subArgs ),
-                new TestSpec( SqlStoreTest2.class, subArgs ),
-                new TestSpec( SqlStoreTest3.class, subArgs ),
-                new TestSpec( SqlStoreTest4.class, subArgs ),
-                new TestSpec( SqlStoreTest5.class, subArgs ),
-                new TestSpec( SqlStoreTest6.class, subArgs ),
+                new TestSpec( SqlStoreTest1.class ),
+                new TestSpec( SqlStoreTest2.class ),
+                new TestSpec( SqlStoreTest3.class ),
+                new TestSpec( SqlStoreTest4.class ),
+                new TestSpec( SqlStoreTest5.class ),
+                new TestSpec( SqlStoreTest6.class ),
 
-                new TestSpec( SqlKeyStoreTest1.class, keyStoreSubArgs ),
-                new TestSpec( SqlStorePerformanceTest1.class, subArgs ),
+                new TestSpec( SqlKeyStoreTest1.class, "test-keystore.key", "asdfgh" ),
+                new TestSpec( SqlStorePerformanceTest1.class ),
 
-                new TestSpec( EncryptedSqlStoreTest1.class, encryptedSubArgs ),
-                new TestSpec( EncryptedSqlStoreTest2.class, encryptedSubArgs ),
-                new TestSpec( EncryptedSqlStoreTest3.class, encryptedSubArgs ),
+                new TestSpec( EncryptedSqlStoreTest1.class, encryption ),
+                new TestSpec( EncryptedSqlStoreTest2.class, encryption ),
+                new TestSpec( EncryptedSqlStoreTest3.class, encryption ),
 
-                new TestSpec( EncryptedSqlStorePerformanceTest1.class, encryptedSubArgs )
+                new TestSpec( EncryptedSqlStorePerformanceTest1.class, encryption )
         };
 
         runTests( tests );

@@ -32,33 +32,31 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        String [] emptyArgs = new String[] {};
-        
         TestSpec [] tests = {
-                new TestSpec( ArrayHelperTest1.class,                  emptyArgs ),
+                new TestSpec( ArrayHelperTest1.class ),
 
-                new TestSpec( DereferencingIteratorTest1.class,        emptyArgs ),
-                new TestSpec( ArrayCursorIteratorTest1.class,          emptyArgs ),
-                new TestSpec( ArrayListCursorIteratorTest1.class,      emptyArgs ),
-                new TestSpec( FileTreeFacadeCursorIteratorTest1.class, emptyArgs ),
-                new TestSpec( FilteringCursorIteratorTest1.class,      emptyArgs ),
-                new TestSpec( CompositeCursorIteratorTest1.class,      emptyArgs ),
+                new TestSpec( DereferencingIteratorTest1.class ),
+                new TestSpec( ArrayCursorIteratorTest1.class ),
+                new TestSpec( ArrayListCursorIteratorTest1.class ),
+                new TestSpec( FileTreeFacadeCursorIteratorTest1.class ),
+                new TestSpec( FilteringCursorIteratorTest1.class ),
+                new TestSpec( CompositeCursorIteratorTest1.class ),
 
-                new TestSpec( ReturnSynchronizerTest1.class,           emptyArgs ),
+                new TestSpec( ReturnSynchronizerTest1.class ),
 
-                new TestSpec( SmartFactoryTest1.class,                 emptyArgs ),
-                new TestSpec( SmartFactoryTest2.class,                 emptyArgs ),
-                new TestSpec( SmartFactoryTest3.class,                 emptyArgs ),
-                new TestSpec( SmartFactoryTest4.class,                 emptyArgs ),
+                new TestSpec( SmartFactoryTest1.class ),
+                new TestSpec( SmartFactoryTest2.class ),
+                new TestSpec( SmartFactoryTest3.class ),
+                new TestSpec( SmartFactoryTest4.class ),
 
-                new TestSpec( StringStringifierTest1.class,            emptyArgs ),
-                new TestSpec( IntegerStringifierTest1.class,           emptyArgs ),
-                new TestSpec( LongStringifierTest1.class,              emptyArgs ),
-                new TestSpec( DoubleStringifierTest1.class,            emptyArgs ),
-                new TestSpec( CompoundStringifierTest1.class,          emptyArgs ),
-                new TestSpec( ArrayStringifierTest1.class,             emptyArgs ),
+                new TestSpec( StringStringifierTest1.class ),
+                new TestSpec( IntegerStringifierTest1.class ),
+                new TestSpec( LongStringifierTest1.class ),
+                new TestSpec( DoubleStringifierTest1.class ),
+                new TestSpec( CompoundStringifierTest1.class ),
+                new TestSpec( ArrayStringifierTest1.class ),
                 
-                new TestSpec( UrlEncodingTest1.class,                  emptyArgs ),
+                new TestSpec( UrlEncodingTest1.class ),
         };
 
         runTests( tests );

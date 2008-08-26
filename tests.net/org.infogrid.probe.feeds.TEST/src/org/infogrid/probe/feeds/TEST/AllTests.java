@@ -37,30 +37,23 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        String [] noArgs = {};
-        
         TestSpec [] tests = {
 
                 new TestSpec(
                         AtomTest1.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( AtomTest1.class, "AtomTest1.xml" )
-                        } ),
+                        AbstractTest.fileSystemFile( AtomTest1.class, "AtomTest1.xml" )),
+
                 new TestSpec(
                         AtomTest2.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( AtomTest2.class, "AtomTest2.xml" )
-                        } ),
+                        AbstractTest.fileSystemFile( AtomTest2.class, "AtomTest2.xml" )),
+
                 new TestSpec(
                         RssTest1.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( RssTest1.class, "RssTest1.xml" )
-                        } ),
+                        AbstractTest.fileSystemFile( RssTest1.class, "RssTest1.xml" )),
+
                 new TestSpec(
                         RssTest2.class,
-                        new String [] {
-                                AbstractTest.fileSystemFile( RssTest2.class, "RssTest2.xml" )
-                        } ),
+                        AbstractTest.fileSystemFile( RssTest2.class, "RssTest2.xml" ))
         };
 
         runTests( tests );

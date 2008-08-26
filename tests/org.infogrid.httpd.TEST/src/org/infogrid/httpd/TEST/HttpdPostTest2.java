@@ -27,7 +27,7 @@ public class HttpdPostTest2
             AbstractHttpdTest
 {
     /**
-     * Test run.
+     * Run the test.
      *
      * @throws Exception this code may throw any Exception
      */

@@ -31,31 +31,29 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] emptyArgs = new String[] {};
-        
         TestSpec [] tests = {
-                new TestSpec(  EquivalenceSetComparatorTest1.class, emptyArgs ),
+                new TestSpec(  EquivalenceSetComparatorTest1.class ),
 
-                new TestSpec(  MeshBaseTest1.class, emptyArgs ),
-                new TestSpec(  MeshBaseTest2.class, emptyArgs ),
-                new TestSpec(  MeshBaseTest3.class, emptyArgs ),
-                new TestSpec(  MeshBaseTest4.class, emptyArgs ),
-                new TestSpec(  MeshBaseTest5.class, emptyArgs ),
-                new TestSpec(  MeshBaseTest6.class, emptyArgs ),
-                new TestSpec(  MeshBaseTest7.class, emptyArgs ),
-                new TestSpec(  MeshBaseTest8.class, emptyArgs ),
-                new TestSpec(  MeshBaseTest9.class, emptyArgs ),
-                new TestSpec( MeshBaseTest10.class, emptyArgs ),
-                new TestSpec( MeshBaseTest11.class, emptyArgs ),
-                new TestSpec( MeshBaseTest12.class, emptyArgs ),
-                new TestSpec( MeshBaseTest13.class, emptyArgs ),
-                new TestSpec( MeshBaseTest14.class, emptyArgs ),
-                new TestSpec( MeshBaseTest15.class, emptyArgs ),
+                new TestSpec(  MeshBaseTest1.class ),
+                new TestSpec(  MeshBaseTest2.class ),
+                new TestSpec(  MeshBaseTest3.class ),
+                new TestSpec(  MeshBaseTest4.class ),
+                new TestSpec(  MeshBaseTest5.class ),
+                new TestSpec(  MeshBaseTest6.class ),
+                new TestSpec(  MeshBaseTest7.class ),
+                new TestSpec(  MeshBaseTest8.class ),
+                new TestSpec(  MeshBaseTest9.class ),
+                new TestSpec( MeshBaseTest10.class ),
+                new TestSpec( MeshBaseTest11.class ),
+                new TestSpec( MeshBaseTest12.class ),
+                new TestSpec( MeshBaseTest13.class ),
+                new TestSpec( MeshBaseTest14.class ),
+                new TestSpec( MeshBaseTest15.class ),
 
-                new TestSpec( GarbageCollectionTest1.class, emptyArgs ),
+                new TestSpec( GarbageCollectionTest1.class ),
                 
-                new TestSpec( SweeperTest1.class, emptyArgs ),
-                new TestSpec( SweeperTest2.class, emptyArgs )
+                new TestSpec( SweeperTest1.class ),
+                new TestSpec( SweeperTest2.class )
         };
 
         runTests( tests );

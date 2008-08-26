@@ -33,13 +33,8 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        String [] noArgs = {};
-        
         TestSpec [] tests = {
-
-                new TestSpec(
-                        ShadowEventTest1.class,
-                        noArgs )
+                new TestSpec( ShadowEventTest1.class )
         };
 
         runTests( tests );

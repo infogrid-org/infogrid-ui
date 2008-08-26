@@ -31,13 +31,11 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs          = new String[] {};
-        
         TestSpec [] tests = {
-                new TestSpec( HadoopFsPathTreeFacadeCursorIteratorTest1.class, subArgs ),
+                new TestSpec( HadoopFsPathTreeFacadeCursorIteratorTest1.class ),
                 
-                new TestSpec( HadoopStoreTest1.class, subArgs ),
-                new TestSpec( HadoopStoreTest2.class, subArgs ),
+                new TestSpec( HadoopStoreTest1.class ),
+                new TestSpec( HadoopStoreTest2.class ),
         };
 
         runTests( tests );

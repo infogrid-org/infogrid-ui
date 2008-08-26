@@ -60,7 +60,7 @@ public abstract class AbstractTestGroup
         public TestSpec(
                 String                        testName,
                 Class<? extends AbstractTest> testClass,
-                String []                     testArgs )
+                String ...                    testArgs )
         {
             theTestName  = testName;
             theTestClass = testClass;
@@ -75,7 +75,7 @@ public abstract class AbstractTestGroup
          */
         public TestSpec(
                 Class<? extends AbstractTest> testClass,
-                String []                     testArgs )
+                String ...                    testArgs )
         {
             this( testClass.getName(), testClass, testArgs );
         }

@@ -32,17 +32,14 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] subArgs1 = new String[] { "123" };
-        String [] emptyArgs  = new String[] {};
-
         TestSpec [] tests = {
-                new TestSpec( ProxySerializationTest1.class, emptyArgs ),
-                new TestSpec( StoreNetMeshBaseTest1.class,   subArgs1 ),
-                new TestSpec( StoreNetMeshBaseTest2.class,   emptyArgs ),
-                new TestSpec( StoreNetMeshBaseTest3.class,   emptyArgs ),
-                new TestSpec( StoreNetMeshBaseTest4.class,   emptyArgs ),
-                new TestSpec( StoreNetMeshBaseTest5.class,   emptyArgs ),
-                new TestSpec( StoreNetMeshBaseTest6.class,   emptyArgs )
+                new TestSpec( ProxySerializationTest1.class ),
+                new TestSpec( StoreNetMeshBaseTest1.class,   "123" ),
+                new TestSpec( StoreNetMeshBaseTest2.class ),
+                new TestSpec( StoreNetMeshBaseTest3.class ),
+                new TestSpec( StoreNetMeshBaseTest4.class ),
+                new TestSpec( StoreNetMeshBaseTest5.class ),
+                new TestSpec( StoreNetMeshBaseTest6.class )
         };
 
         runTests( tests );

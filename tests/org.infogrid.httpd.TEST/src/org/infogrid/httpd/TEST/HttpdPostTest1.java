@@ -27,6 +27,54 @@ public class HttpdPostTest1
             AbstractHttpdTest
 {
     /**
+     * Run the test.
+     *
+     * @throws Exception this code may throw any Exception
+     */
+    public void run()
+            throws
+                Exception
+    {
+        Thread.sleep( 1000L );
+
+        String url = "http://localhost:" + SERVER_PORT + "/";
+
+        HashMap<String,String> pars = new HashMap<String,String>();
+        pars.put( "abc", "def" );
+
+        int MAX = 1000;
+
+        for( int i=0 ; i<MAX ; ++i ) {
+            log.info( "Performing test " + i );
+
+            pars.put( "index", String.valueOf( i ));
+
+            HTTP.Response r = HTTP.http_post( url, pars, false );
+
+            if( r != null ) {
+                checkEquals( r.getResponseCode(), "200",               "Wrong response code" );
+                checkEquals( r.getLocation(),     null,                "Wrong Location header" );
+                checkEquals( r.getContentType(),  "text/plain",        "Wrong MIME type" );
+
+                StringBuffer correctResponse = new StringBuffer();
+                String   sep = "";
+                Iterator<String> iter = pars.keySet().iterator();
+                while( iter.hasNext() ) {
+                    String key   = iter.next();
+                    String value = pars.get( key );
+                    correctResponse.append( sep ).append( key ).append( "=" ).append( value );
+                    sep = "&";
+                }
+                if( !checkEquals( r.getContentAsString(), correctResponse.toString(), "Wrong response" )) {
+                    log.info( "Pars is " + pars );
+                }
+            } else {
+                reportError( "Null response" );
+            }
+        }
+    }
+    
+    /**
       * Main program.
       *
       * @param args command-line arguments
@@ -73,53 +121,4 @@ public class HttpdPostTest1
     {
         super( args );
     }
-
-    /**
-     * Test run.
-     *
-     * @throws Exception this code may throw any Exception
-     */
-    public void run()
-            throws
-                Exception
-    {
-        Thread.sleep( 1000L );
-
-        String url = "http://localhost:" + SERVER_PORT + "/";
-
-        HashMap<String,String> pars = new HashMap<String,String>();
-        pars.put( "abc", "def" );
-
-        int MAX = 1000;
-
-        for( int i=0 ; i<MAX ; ++i ) {
-            log.info( "Performing test " + i );
-
-            pars.put( "index", String.valueOf( i ));
-
-            HTTP.Response r = HTTP.http_post( url, pars, false );
-
-            if( r != null ) {
-                checkEquals( r.getResponseCode(), "200",               "Wrong response code" );
-                checkEquals( r.getLocation(),     null,                "Wrong Location header" );
-                checkEquals( r.getContentType(),  "text/plain",        "Wrong MIME type" );
-
-                StringBuffer correctResponse = new StringBuffer();
-                String   sep = "";
-                Iterator<String> iter = pars.keySet().iterator();
-                while( iter.hasNext() ) {
-                    String key   = iter.next();
-                    String value = pars.get( key );
-                    correctResponse.append( sep ).append( key ).append( "=" ).append( value );
-                    sep = "&";
-                }
-                if( !checkEquals( r.getContentAsString(), correctResponse.toString(), "Wrong response" )) {
-                    log.info( "Pars is " + pars );
-                }
-            } else {
-                reportError( "Null response" );
-            }
-        }
-    }
-
 }

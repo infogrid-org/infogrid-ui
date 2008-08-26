@@ -31,11 +31,9 @@ public abstract class AllTests
     public static void main(
             String [] args )
     {
-        String [] emptyArgs  = new String[] {};
-
         TestSpec [] tests = {
-                new TestSpec( NetSerializerTest1.class, emptyArgs ),
-                new TestSpec( NetSerializerTest2.class, emptyArgs ),
+                new TestSpec( NetSerializerTest1.class ),
+                new TestSpec( NetSerializerTest2.class ),
         };
 
         runTests( tests );

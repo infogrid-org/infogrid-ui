@@ -1,7 +1,7 @@
 org.infogrid.testharness [norun]
 org.infogrid.util.TEST
 org.infogrid.comm.pingpong.TEST
-org.infogrid.comm.smtp.TEST
+org.infogrid.comm.smtp.TEST [norun]
 org.infogrid.httpd.TEST
 org.infogrid.store.TEST
 org.infogrid.store.filesystem.TEST
