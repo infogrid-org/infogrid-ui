@@ -74,6 +74,7 @@ public class StoreShadowMeshBaseTest9
                 theProbeDirectory,
                 exec,
                 100000L, // long time
+                true,
                 rootContext );
         
         checkEquals( base.getAllShadowMeshBases().size(), 0, "Wrong number of shadows" );
@@ -128,6 +129,7 @@ public class StoreShadowMeshBaseTest9
                 theProbeDirectory,
                 exec,
                 100000L, // long time
+                true,
                 rootContext );
         
         NetMeshObject found2 = base2.accessLocally( testFile1Id, (CoherenceSpecification) null );

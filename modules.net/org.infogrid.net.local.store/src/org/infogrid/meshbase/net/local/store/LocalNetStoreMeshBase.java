@@ -76,6 +76,7 @@ public class LocalNetStoreMeshBase
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
      * @param context the Context in which this NetMeshBase runs
      * @return the created LocalNetStoreMeshBase
      */
@@ -86,6 +87,7 @@ public class LocalNetStoreMeshBase
             IterableStore            store,
             ProbeDirectory           probeDirectory,
             long                     timeNotNeededTillExpires,
+            boolean                  doStart,
             Context                  context )
     {
         NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
@@ -98,6 +100,7 @@ public class LocalNetStoreMeshBase
                 store,
                 probeDirectory,
                 timeNotNeededTillExpires,
+                doStart,
                 context );
     }
 
@@ -114,6 +117,7 @@ public class LocalNetStoreMeshBase
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
      * @param context the Context in which this NetMeshBase runs
      * @return the created LocalNetStoreMeshBase
      */
@@ -125,6 +129,7 @@ public class LocalNetStoreMeshBase
             IterableStore            store,
             ProbeDirectory           probeDirectory,
             long                     timeNotNeededTillExpires,
+            boolean                  doStart,
             Context                  context )
     {
         Store         meshStore        = PrefixingStore.create(         "mesh",        store );
@@ -146,6 +151,7 @@ public class LocalNetStoreMeshBase
                 probeDirectory,
                 exec,
                 timeNotNeededTillExpires,
+                doStart,
                 context );
     }
 
@@ -163,6 +169,7 @@ public class LocalNetStoreMeshBase
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
      * @param context the Context in which this NetMeshBase runs
      * @return the created LocalNetStoreMeshBase
      */
@@ -175,6 +182,7 @@ public class LocalNetStoreMeshBase
             IterableStore            store,
             ProbeDirectory           probeDirectory,
             long                     timeNotNeededTillExpires,
+            boolean                  doStart,
             Context                  context )
     {
         Store         meshStore        = PrefixingStore.create(         "mesh",        store );
@@ -197,6 +205,7 @@ public class LocalNetStoreMeshBase
                 probeDirectory,
                 exec,
                 timeNotNeededTillExpires,
+                doStart,
                 context );
     }
 
@@ -217,6 +226,7 @@ public class LocalNetStoreMeshBase
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
      * @param context the Context in which this NetMeshBase runs
      * @return the created LocalNetStoreMeshBase
      */
@@ -232,6 +242,7 @@ public class LocalNetStoreMeshBase
             ProbeDirectory           probeDirectory,
             ScheduledExecutorService exec,
             long                     timeNotNeededTillExpires,
+            boolean                  doStart,
             Context                  context )
     {
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
@@ -263,7 +274,9 @@ public class LocalNetStoreMeshBase
                 context );
         
         probeManager.setMainNetMeshBase( ret );
-        probeManager.start( exec );
+        if( doStart ) {
+            probeManager.start( exec );
+        }
 
         return ret;
     }
@@ -286,6 +299,7 @@ public class LocalNetStoreMeshBase
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
      * @param context the Context in which this NetMeshBase runs
      * @return the created LocalNetStoreMeshBase
      */
@@ -302,6 +316,7 @@ public class LocalNetStoreMeshBase
             ProbeDirectory           probeDirectory,
             ScheduledExecutorService exec,
             long                     timeNotNeededTillExpires,
+            boolean                  doStart,
             Context                  context )
     {
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
@@ -334,8 +349,10 @@ public class LocalNetStoreMeshBase
                 context );
         
         probeManager.setMainNetMeshBase( ret );
-        probeManager.start( exec );
-
+        if( doStart ) {
+            probeManager.start( exec );
+        }
+        
         return ret;
     }
 
@@ -354,15 +371,15 @@ public class LocalNetStoreMeshBase
      * @return the created LocalNetStoreMeshBase
      */
     public static LocalNetStoreMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            Store                     meshObjectStore,
-            IterableStore             proxyStore,
-            ProbeManager              probeManager,
+            NetMeshBaseIdentifier       identifier,
+            ProxyPolicyFactory          proxyPolicyFactory,
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            Store                       meshObjectStore,
+            IterableStore               proxyStore,
+            ProbeManager                probeManager,
             ProxyMessageEndpointFactory endpointFactory,
-            Context                   context )
+            Context                     context )
     {
         ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
 
@@ -397,16 +414,16 @@ public class LocalNetStoreMeshBase
      * @return the created LocalNetStoreMeshBase
      */
     public static LocalNetStoreMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            MeshObjectSetFactory      setFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            Store                     meshObjectStore,
-            IterableStore             proxyStore,
-            ProbeManager              probeManager,
+            NetMeshBaseIdentifier       identifier,
+            ProxyPolicyFactory          proxyPolicyFactory,
+            MeshObjectSetFactory        setFactory,
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            Store                       meshObjectStore,
+            IterableStore               proxyStore,
+            ProbeManager                probeManager,
             ProxyMessageEndpointFactory endpointFactory,
-            Context                   context )
+            Context                     context )
     {
         DefaultProxyFactory proxyFactory = DefaultProxyFactory.create( endpointFactory, proxyPolicyFactory );
 

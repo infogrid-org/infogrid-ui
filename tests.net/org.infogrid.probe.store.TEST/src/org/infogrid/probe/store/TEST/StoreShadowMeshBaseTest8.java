@@ -79,6 +79,7 @@ public class StoreShadowMeshBaseTest8
                 theProbeDirectory,
                 exec,
                 100000L, // long time
+                true,
                 rootContext );
         
         checkEquals( base.getAllShadowMeshBases().size(), 0, "Wrong number of shadows" );
@@ -151,6 +152,7 @@ public class StoreShadowMeshBaseTest8
                 theProbeDirectory,
                 exec,
                 100000L, // long time
+                true,
                 rootContext );
         
         checkEquals( base2.size(), 2, "Wrong number of MeshObjects found in recreated MeshBase" );

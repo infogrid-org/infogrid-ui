@@ -108,6 +108,7 @@ public class StoreShadowMeshBaseTest7
                 theProbeDirectory,
                 exec,
                 100000L, // long
+                true,
                 rootContext );
         
         checkEquals( theMeshStore.size(),        1, "No home object in MeshStore" );

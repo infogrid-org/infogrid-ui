@@ -175,7 +175,8 @@ public class NetMeshWorldApp
                 shadowProxyStore,
                 probeDirectory,
                 exec,
-                theResourceHelper.getResourceLongOrDefault( "TimeShadowNotNeededTillExpires", 120000L ), // 2 min 
+                theResourceHelper.getResourceLongOrDefault( "TimeShadowNotNeededTillExpires", 120000L ), // 2 min
+                true,
                 rootContext );
         rootContext.addContextObject( meshBase );
 
