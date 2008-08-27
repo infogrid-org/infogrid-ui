@@ -73,8 +73,9 @@ public class VerbatimResponseTemplate
         throws
             IOException
     {
-        defaultOutputCookies(  delegate, structured );
-        defaultOutputMimeType( delegate, structured );
+        defaultOutputStatusCode( delegate, structured );
+        defaultOutputCookies(    delegate, structured );
+        defaultOutputMimeType(   delegate, structured );
         
         // stream default section(s)
             

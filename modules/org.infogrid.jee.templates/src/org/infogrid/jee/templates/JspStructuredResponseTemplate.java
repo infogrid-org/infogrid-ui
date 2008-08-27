@@ -82,8 +82,9 @@ public class JspStructuredResponseTemplate
             ServletException,
             IOException
     {
-        defaultOutputCookies(  delegate, structured );
-        defaultOutputMimeType( delegate, structured );
+        defaultOutputStatusCode( delegate, structured );
+        defaultOutputCookies(    delegate, structured );
+        defaultOutputMimeType(   delegate, structured );
 
         HttpServletRequest servletRequest = theRequest.getDelegate();
         

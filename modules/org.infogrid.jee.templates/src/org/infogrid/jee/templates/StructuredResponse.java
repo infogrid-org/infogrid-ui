@@ -17,6 +17,7 @@ package org.infogrid.jee.templates;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,6 +25,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.util.LocalizedObject;
 import org.infogrid.util.LocalizedObjectFormatter;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 
@@ -155,6 +157,27 @@ public class StructuredResponse
     }
 
     /**
+     * Set the HTTP response code.
+     * 
+     * @param code the HTTP response code
+     */
+    public void setHttpResponseCode(
+            int code )
+    {
+        theHttpResponseCode = code;
+    }
+
+    /**
+     * Obtain the HTTP response code.
+     * 
+     * @return the HTTP response code
+     */
+    public int getHttpResponseCode()
+    {
+        return theHttpResponseCode;
+    }
+    
+    /**
      * Set the content of the default section.
      * 
      * @param newValue the new content of the section
@@ -278,13 +301,23 @@ public class StructuredResponse
     public void reportProblem(
             Throwable t )
     {
-        if( theCurrentProblems.size() < 20 ) {
+        if( theCurrentProblems.size() < MAX_PROBLEMS ) {
             // make sure we aren't growing this indefinitely
             theCurrentProblems.add( t );
 
         } else {
             log.error( "Too many problems. Ignored ", t );
         }
+    }
+
+    /**
+     * Obtain the problems reported so far.
+     * 
+     * @return problems reported so far, in sequence
+     */
+    public List<Throwable> problems()
+    {
+        return theCurrentProblems;
     }
 
     /**
@@ -527,6 +560,11 @@ public class StructuredResponse
     protected HashMap<String,String> theAdditionalHeaders = new HashMap<String,String>();
 
     /**
+     * The outgoing HTTP response code. Default is 200/OK.
+     */
+    protected int theHttpResponseCode = HttpServletResponse.SC_OK;
+
+    /**
      * The sections of the response that are represented as text.
      */
     protected HashMap<TextStructuredResponseSection,String> theTextSections
@@ -564,4 +602,14 @@ public class StructuredResponse
      * interpret it as being an expression.
      */
     public static final String STRUCTURED_RESPONSE_ATTRIBUTE_NAME = StructuredResponse.class.getName().replaceAll( "\\.", "_");
+    
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( StructuredResponse.class );
+
+    /**
+     * The maximum number of problems to store.
+     */
+    public static final int MAX_PROBLEMS = theResourceHelper.getResourceIntegerOrDefault( "MaxProblems", 20 );
 }

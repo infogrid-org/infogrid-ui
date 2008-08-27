@@ -128,9 +128,7 @@ public class HttpShellFilter
     {
         HttpServletRequest  realRequest  = (HttpServletRequest)  request;
         HttpServletResponse realResponse = (HttpServletResponse) response;
-
-        SaneServletRequest lidRequest = (SaneServletRequest) realRequest.getAttribute( SaneServletRequest.class.getName() );
-        InfoGridWebApp     app        = InfoGridWebApp.getSingleton();
+        SaneServletRequest  lidRequest   = (SaneServletRequest) realRequest.getAttribute( SaneServletRequest.class.getName() );
 
         try {
             performFactoryOperations( lidRequest );

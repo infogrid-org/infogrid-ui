@@ -98,6 +98,8 @@ public abstract class AbortProcessingException
             String value = theResponse.additionalHeaders().get( key );
             response.addHeader( key, value );
         }
+        int httpStatus = theResponse.getHttpResponseCode();
+        response.setStatus( httpStatus );
     }
 
     /**

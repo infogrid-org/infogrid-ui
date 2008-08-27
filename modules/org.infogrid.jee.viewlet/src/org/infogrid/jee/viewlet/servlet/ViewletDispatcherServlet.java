@@ -22,6 +22,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.infogrid.jee.ServletExceptionWithHttpStatusCode;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.DefaultRestfulRequest;
 import org.infogrid.jee.rest.RestfulRequest;
@@ -96,16 +98,16 @@ public class ViewletDispatcherServlet
             toView  = createMeshObjectsToView( restfulRequest, dict );
 
         } catch( MeshObjectAccessException ex ) {
-            throw new ServletException( ex );
+            throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_NOT_FOUND ); // 404
 
         } catch( NotPermittedException ex ) {
-            throw new ServletException( ex );
+            throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_FORBIDDEN ); // 402
 
         } catch( CannotViewException ex ) {
-            throw new ServletException( ex );
+            throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_BAD_REQUEST ); // 400
 
         } catch( URISyntaxException ex ) {
-            throw new ServletException( ex );
+            throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_BAD_REQUEST ); // 400
         }
 
         JeeViewlet     viewlet        = null;

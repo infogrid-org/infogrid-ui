@@ -15,8 +15,10 @@
 package org.infogrid.jee.templates;
 
 import java.io.IOException;
+import java.util.Iterator;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.infogrid.jee.CarriesHttpStatusCodeException;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.http.SaneRequest;
 
@@ -64,6 +66,32 @@ public abstract class AbstractStructuredResponseTemplate
         return theStructured;
     }
 
+    /**
+     * Default implementation for how to handle the HTTP status code.
+     * 
+     * @param delegate the underlying HttpServletResponse
+     * @param structured the StructuredResponse that contains the response
+     * @throws IOException thrown if an I/O error occurred
+     */
+    protected void defaultOutputStatusCode(
+            HttpServletResponse delegate,
+            StructuredResponse  structured )
+        throws
+            IOException
+    {
+        // If it is set to something not-OK, that wins
+        // Then, the first exception wins
+        int status = structured.getHttpResponseCode();
+        Iterator<Throwable> iter = theStructured.problems().iterator();
+        while( status == HttpServletResponse.SC_OK && iter.hasNext() ) {
+            Throwable current = iter.next();
+            if( current instanceof CarriesHttpStatusCodeException ) {
+                status = ((CarriesHttpStatusCodeException)current).getDesiredHttpStatusCode();
+            }
+         }
+        delegate.setStatus( status );
+    }
+    
     /**
      * Default implentation for how to handle cookies.
      * 
