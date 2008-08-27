@@ -545,6 +545,14 @@ public abstract class AnetMeshBase
                     + " )" );
         }
 
+//        // You must not invoke accessLocally if this Thread has a current Transaction open
+//        // FIXME: This code should be there, but then findRelatedObjects (that is invoked during transactions)
+//        // cannot perform an accessLocally. This needs further investigation
+//        Transaction currentTx = getCurrentTransaction();
+//        if( currentTx != null && currentTx.owns( Thread.currentThread())) {
+//            throw new IllegalStateException( "You must not invoke accessLocally while your Thread has a Transaction open" );
+//        }
+
         // strip out cyclical and non-sensical items from path
         NetMeshObjectAccessSpecification [] correctRemotePaths;
         if( pathsToObjects != null ) {
