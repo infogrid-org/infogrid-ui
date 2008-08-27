@@ -28,6 +28,30 @@ public class LidSimplePasswordCredentialType
             LidCredentialType
 {
     /**
+     * Factory method.
+     * 
+     * @param credType String form of the credential type
+     * @return the created LidSimplePasswordCredentialType
+     */
+    public static LidSimplePasswordCredentialType create(
+            String credType )
+    {
+        LidSimplePasswordCredentialType ret = new LidSimplePasswordCredentialType( credType );
+        return ret;
+    }
+
+    /**
+     * Private constructor for subclasses only, use factory method.
+     * 
+     * @param credType String form of the credential type
+     */
+    protected LidSimplePasswordCredentialType(
+            String credType )
+    {
+        super( credType );
+    }
+
+    /**
      * Perform a check of the validity of a presented credential.
      * 
      * @param identifier the identifier for which credential was presented

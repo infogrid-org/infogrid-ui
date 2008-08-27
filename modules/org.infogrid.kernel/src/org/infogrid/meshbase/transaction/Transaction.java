@@ -103,9 +103,21 @@ public abstract class Transaction
         // FIXME? This should perhaps be somewhat looser than this: Threads should be able to
         // "empower" other threads to do work within a transaction on their behalf
 
-        if( myThread != Thread.currentThread() ) {
+        if( !owns( Thread.currentThread() )) {
             throw new IllegalTransactionThreadException( theTransactable );
         }
+    }
+
+    /**
+     * Determine whether the passed-in Thread owns this Transaction.
+     * 
+     * @param t the Thread to test
+     * @return true if t owns this Transaction
+     */
+    public boolean owns(
+            Thread t )
+    {
+        return myThread == t;
     }
 
     /**

@@ -17,7 +17,6 @@ package org.infogrid.jee.taglib.templates;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.templates.JspStructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseSection;
 
@@ -117,7 +116,7 @@ public abstract class AbstractSectionTestTag
             JspException,
             IgnoreException
     {
-        StructuredResponse response = (StructuredResponse) lookup( JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+        StructuredResponse response = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
         if( response == null ) {
             return null;
         }

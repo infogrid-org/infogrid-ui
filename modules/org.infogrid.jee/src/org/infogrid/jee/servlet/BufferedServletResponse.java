@@ -178,6 +178,22 @@ public class BufferedServletResponse
     }
 
     /**
+     * Determine whether the buffer is empty or anything has been written into it.
+     * 
+     * @return true if this buffer is empty
+     */
+    public boolean isEmpty()
+    {
+        if( theOutputStream != null && theOutputStream.size() > 0 ) {
+            return false;
+        }
+        if( theWriter != null && theWriter.getBuffer().length() > 0 ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Reset the locally held cache.
      */
     protected void resetCache()

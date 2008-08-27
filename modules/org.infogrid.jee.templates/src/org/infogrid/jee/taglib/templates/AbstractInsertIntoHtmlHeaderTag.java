@@ -18,7 +18,6 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.templates.JspStructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextHtmlStructuredResponseSection;
 
@@ -61,7 +60,7 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
             IgnoreException
     {
         theResponse = (StructuredResponse) lookupOrThrow(
-                JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+                StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
         return EVAL_BODY_INCLUDE;
     }

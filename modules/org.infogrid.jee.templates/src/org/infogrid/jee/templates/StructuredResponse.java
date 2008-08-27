@@ -24,6 +24,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.util.LocalizedObject;
 import org.infogrid.util.LocalizedObjectFormatter;
+import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -359,7 +360,17 @@ public class StructuredResponse
             if( msg == null ) {
                 msg = t.getClass().getName();
             }
-            buf.append( "<h1>" ).append( msg ).append( "</h1>\n" );
+
+            // make safe for HTML
+            buf.append( "<h1>" );
+            String sep = "";
+            for( String line : msg.split( "\n" )) {
+                buf.append( sep );
+                String escapedLine = XmlUtils.escape( line );
+                buf.append( escapedLine );
+                sep = "<br />\n";
+            }
+            buf.append( "</h1>\n" );
             
             buf.append( "<div class=\"stacktrace\">\n" );
             
@@ -470,6 +481,31 @@ public class StructuredResponse
     }
 
     /**
+     * Determine whether this StructuredResponse is empty.
+     * 
+     * @return true if it is empty
+     */
+    public boolean isEmpty()
+    {
+        if( !theOutgoingCookies.isEmpty() ) {
+            return false;
+        }
+        if( !theAdditionalHeaders.isEmpty() ) {
+            return false;
+        }
+        if( !theTextSections.isEmpty() ) {
+            return false;
+        }
+        if( !theBinarySections.isEmpty() ) {
+            return false;
+        }
+        if( !theCurrentProblems.isEmpty() ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * The underlying servlet response.
      */
     protected HttpServletResponse theDelegate;
@@ -521,4 +557,11 @@ public class StructuredResponse
      * Knows how to format an object in plain text.
      */
     protected LocalizedObjectFormatter thePlainObjectFormatter;
+
+    /**
+     * Name of the request attribute that contains the StructuredResponse. Make sure
+     * this constant does not contain any characters that might make some processor
+     * interpret it as being an expression.
+     */
+    public static final String STRUCTURED_RESPONSE_ATTRIBUTE_NAME = StructuredResponse.class.getName().replaceAll( "\\.", "_");
 }

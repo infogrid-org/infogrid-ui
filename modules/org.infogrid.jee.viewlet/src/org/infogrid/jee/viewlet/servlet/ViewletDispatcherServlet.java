@@ -17,7 +17,10 @@ package org.infogrid.jee.viewlet.servlet;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.DefaultRestfulRequest;
@@ -25,8 +28,6 @@ import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.security.UnsafePostException;
-import org.infogrid.jee.templates.servlet.AbstractDispatcherServlet;
-import org.infogrid.jee.templates.JspStructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
@@ -50,36 +51,35 @@ import org.infogrid.viewlet.ViewletFactory;
  */
 public class ViewletDispatcherServlet
         extends
-            AbstractDispatcherServlet
+            GenericServlet
 {
     private static final Log  log              = Log.getLogInstance( ViewletDispatcherServlet.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
-     * Do the work. This may be overridden by subclasses.
+     * Main servlet method.
      *
      * @param request the incoming request
-     * @param response the outgoing structured response
-     * @throws URISyntaxException thrown if a URI parsing error occurred
-     * @throws UnsafePostException thrown if an unsafe POST operation was not acceptable
+     * @param response the outgoing response
      * @throws ServletException thrown if an error occurred
      * @throws IOException thrown if an I/O error occurred
      */
-    protected void performService(
-            SaneServletRequest request,
-            StructuredResponse response )
+    public final void service(
+            ServletRequest  request,
+            ServletResponse response )
         throws
-            URISyntaxException,
-            UnsafePostException,
             ServletException,
             IOException
     {
+        HttpServletRequest  servletRequest = (HttpServletRequest) request;
+        SaneServletRequest  saneRequest    = (SaneServletRequest) request.getAttribute( SaneServletRequest.class.getName() );
+        StructuredResponse  structured     = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+
         Context context = InfoGridWebApp.getSingleton().getApplicationContext();
         
-        HttpServletRequest servletRequest = request.getDelegate();
-        RestfulRequest     restfulRequest = createRestfulRequest(
-                request,
-                request.getDelegate().getContextPath(),
+        RestfulRequest restfulRequest = createRestfulRequest(
+                saneRequest,
+                servletRequest.getContextPath(),
                 context.findContextObjectOrThrow( MeshBase.class ).getIdentifier().toExternalForm() );
 
         servletRequest.setAttribute( RestfulRequest.class.getName(), restfulRequest );
@@ -102,6 +102,9 @@ public class ViewletDispatcherServlet
             throw new ServletException( ex );
 
         } catch( CannotViewException ex ) {
+            throw new ServletException( ex );
+
+        } catch( URISyntaxException ex ) {
             throw new ServletException( ex );
         }
 
@@ -127,28 +130,29 @@ public class ViewletDispatcherServlet
             JeeViewlet oldViewlet = (JeeViewlet) servletRequest.getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
             servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, viewlet );
 
-            StructuredResponse oldStructuredResponse = (StructuredResponse) servletRequest.getAttribute( JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-            servletRequest.setAttribute( JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, response );
-
             synchronized( viewlet ) {
                 Throwable thrown  = null;
                 try {
                     viewlet.view( toView );
                     if( SafeUnsafePostFilter.isSafePost( servletRequest ) ) {                        
-                        viewlet.performBeforeSafePost( restfulRequest, response );
+                        viewlet.performBeforeSafePost( restfulRequest, structured );
                     } else if( SafeUnsafePostFilter.isUnsafePost( servletRequest ) ) {
-                        viewlet.performBeforeUnsafePost( restfulRequest, response );
+                        viewlet.performBeforeUnsafePost( restfulRequest, structured );
                     } else {
-                        viewlet.performBeforeGet( restfulRequest, response );
+                        viewlet.performBeforeGet( restfulRequest, structured );
                     }
 
-                    viewlet.processRequest( restfulRequest, response );
+                    viewlet.processRequest( restfulRequest, structured );
 
                 } catch( RuntimeException t ) {
                     thrown = t;
                     throw (RuntimeException) thrown; // notice the finally block
 
                 } catch( CannotViewException t ) {
+                    thrown = t;
+                    throw new ServletException( thrown ); // notice the finally block
+
+                } catch( UnsafePostException t ) {
                     thrown = t;
                     throw new ServletException( thrown ); // notice the finally block
 
@@ -161,10 +165,9 @@ public class ViewletDispatcherServlet
                     throw (IOException) thrown; // notice the finally block
 
                 } finally {
-                    viewlet.performAfter( restfulRequest, response, thrown );
+                    viewlet.performAfter( restfulRequest, structured, thrown );
 
                     servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, oldViewlet );
-                    servletRequest.setAttribute( JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, oldStructuredResponse );
                 }
             }
 

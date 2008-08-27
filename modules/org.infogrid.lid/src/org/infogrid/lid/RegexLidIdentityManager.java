@@ -201,11 +201,16 @@ public class RegexLidIdentityManager
             LidNotPermittedException,
             LidInvalidCredentialException
     {
-        HashMap<String,String> attributes = new HashMap<String,String>();
+        if( isUser( identifier )) {
+            HashMap<String,String> attributes = new HashMap<String,String>();
         
-        LidLocalPersona ret = LidLocalPersona.create( identifier, attributes );
+            LidLocalPersona ret = LidLocalPersona.create( identifier, attributes );
         
-        return ret;
+            return ret;
+
+        } else {
+            return null;
+        }
     }
 
     /**

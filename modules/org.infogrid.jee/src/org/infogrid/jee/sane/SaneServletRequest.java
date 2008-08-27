@@ -46,7 +46,7 @@ public class SaneServletRequest
     private static final Log log = Log.getLogInstance( SaneServletRequest.class ); // our own, private logger
     
     /**
-      * Factory method.
+      * Smart factory method.
       *
       * @param sRequest the HttpServletRequest from which to create a SaneRequest.
       * @return the created SaneServletRequest
@@ -54,7 +54,14 @@ public class SaneServletRequest
     public static SaneServletRequest create(
              HttpServletRequest sRequest )
     {
-        return new SaneServletRequest( sRequest );
+        SaneServletRequest ret = (SaneServletRequest) sRequest.getAttribute( SaneServletRequest.class.getName() );
+        if( ret == null ) {
+            ret = new SaneServletRequest( sRequest );
+            sRequest.setAttribute( SaneServletRequest.class.getName(), ret );
+            sRequest.setAttribute( SaneRequest.class.getName(), ret );
+        }
+
+        return ret;
     }
 
     /**

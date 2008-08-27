@@ -17,6 +17,7 @@ package org.infogrid.jee.templates;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.sane.SaneServletRequest;
 
@@ -84,13 +85,16 @@ public class JspStructuredResponseTemplate
         defaultOutputCookies(  delegate, structured );
         defaultOutputMimeType( delegate, structured );
 
+        HttpServletRequest servletRequest = theRequest.getDelegate();
+        
+        Object oldStructured = servletRequest.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
         try {
-            theRequest.getDelegate().setAttribute( STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
+            servletRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
 
             theRequestDispatcher.include( theRequest.getDelegate(), delegate );
 
         } finally {
-            theRequest.getDelegate().removeAttribute( STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+            servletRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, oldStructured );
         }
     }
     
@@ -98,9 +102,4 @@ public class JspStructuredResponseTemplate
      * The dispatcher.
      */
     protected RequestDispatcher theRequestDispatcher;
-    
-    /**
-     * Name of the request attribute that contains the StructuredResponse.
-     */
-    public static final String STRUCTURED_RESPONSE_ATTRIBUTE_NAME = "SR";
 }

@@ -105,9 +105,7 @@ public class InitializationFilter
             initializeInfoGridWebApp();
 
             SaneRequest lidRequest = SaneServletRequest.create( realRequest );
-            // doing both doesn't hurt, and there are arguments in favor of both
-            realRequest.setAttribute( SaneRequest.class.getName(), lidRequest );
-            realRequest.setAttribute( SaneServletRequest.class.getName(), lidRequest );
+            // SaneServletRequest adds itself as a request attribute
         
             request.setAttribute( CONTEXT_PARAMETER, realRequest.getContextPath() );
 

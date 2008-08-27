@@ -29,7 +29,6 @@ import org.infogrid.util.ResourceHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import java.util.HashMap;
-import org.infogrid.jee.templates.JspStructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextHtmlStructuredResponseSection;
 import org.infogrid.jee.viewlet.JeeViewlet;
@@ -75,7 +74,7 @@ public class ViewletAlternativesTag
             IgnoreException
     {
         StructuredResponse theResponse = (StructuredResponse) lookupOrThrow(
-                JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+                StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
         // this needs to be simple lookup so the periods in the class name don't trigger nestedLookup
         RestfulRequest restful = (RestfulRequest) theFormatter.simpleLookup(

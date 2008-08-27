@@ -20,7 +20,6 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.BinaryStructuredResponseSection;
-import org.infogrid.jee.templates.JspStructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseSection;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
@@ -90,7 +89,7 @@ public class InlineTag
             JspException,
             IgnoreException
     {
-        StructuredResponse structured = (StructuredResponse) lookup( JspStructuredResponseTemplate.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+        StructuredResponse structured = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
         if( structured == null ) {
             throw new JspException( "Cannot find StructuredResponse in the request context" );
         }

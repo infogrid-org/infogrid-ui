@@ -27,13 +27,24 @@ public abstract class LidCredentialType
             LocalizedObject
 {
     /**
+     * Constructor for subclasses only.
+     * 
+     * @param credType String form of the credential type
+     */
+    protected LidCredentialType(
+            String credType )
+    {
+        theCredType = credType;
+    }
+
+    /**
      * Determine the computable name of this LidCredentialType.
      * 
      * @return the computable name
      */
     public String getName()
     {
-        return getClass().getName();
+        return theCredType;
     }
 
     /**
@@ -50,4 +61,9 @@ public abstract class LidCredentialType
             String stored )
         throws
             LidInvalidCredentialException;
+    
+    /**
+     * String form of the credential type
+     */
+    protected String theCredType;
 }
