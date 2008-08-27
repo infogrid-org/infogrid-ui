@@ -32,6 +32,7 @@ public abstract class ModuleException
             Throwable           cause )
     {
         super( cause );
+
         theModuleAdvertisement = adv;
     }
 

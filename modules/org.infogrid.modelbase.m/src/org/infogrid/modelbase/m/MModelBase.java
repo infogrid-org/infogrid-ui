@@ -14,6 +14,12 @@
 
 package org.infogrid.modelbase.m;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.io.StreamCorruptedException;
+import java.util.Iterator;
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.CollectableMeshType;
 import org.infogrid.model.primitives.EntityType;
@@ -26,7 +32,6 @@ import org.infogrid.model.primitives.PropertyTypeOrGroup;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.SubjectArea;
-
 import org.infogrid.modelbase.AttributableMeshTypeNotFoundException;
 import org.infogrid.modelbase.EntityTypeNotFoundException;
 import org.infogrid.modelbase.MeshTypeLifecycleEventListener;
@@ -38,7 +43,6 @@ import org.infogrid.modelbase.PropertyTypeNotFoundException;
 import org.infogrid.modelbase.RelationshipTypeNotFoundException;
 import org.infogrid.modelbase.SubjectAreaNotFoundException;
 import org.infogrid.modelbase.WrongMeshTypeException;
-
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleActivationException;
 import org.infogrid.module.ModuleAdvertisement;
@@ -46,17 +50,9 @@ import org.infogrid.module.ModuleException;
 import org.infogrid.module.ModuleNotFoundException;
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleRequirement;
+import org.infogrid.module.ModuleResolutionCandidateNotUniqueException;
 import org.infogrid.module.ModuleResolutionException;
-
 import org.infogrid.util.logging.Log;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.io.StreamCorruptedException;
-
-import java.util.Iterator;
 
 /**
   * Implementation of ModelBase that holds its content in memory only.
@@ -228,6 +224,8 @@ public class MModelBase
             } catch( ModuleResolutionException ex ) {
                 throw new SubjectAreaNotFoundException( subjectAreaName, subjectAreaVersionNumber, ex );
             } catch( ModuleActivationException ex ) {
+                throw new SubjectAreaNotFoundException( subjectAreaName, subjectAreaVersionNumber, ex );
+            } catch( ModuleResolutionCandidateNotUniqueException ex ) {
                 throw new SubjectAreaNotFoundException( subjectAreaName, subjectAreaVersionNumber, ex );
             }
         }
@@ -535,9 +533,11 @@ public class MModelBase
      *
      * @param saName fully-qualified name of the SubjectArea to be loaded
      * @param saVersion version number of the SubjectArea to be loaded
+     * @return the found SubjectArea
      * @throws ModuleNotFoundException thrown if the ModelModule was not found
      * @throws ModuleResolutionException thrown if the found ModelModule's dependencies could not be resolved
-     * @throws ModuleActivationException throwsn if the found ModelModule could not be activated
+     * @throws ModuleActivationException thrown if the found ModelModule could not be activated
+     * @throws ModuleResolutionCandidateNotUniqueException thrown if a dependency could not be uniquely resolved
      */
     public SubjectArea attemptToLoadSubjectArea(
             String saName,
@@ -545,21 +545,16 @@ public class MModelBase
         throws
             ModuleNotFoundException,
             ModuleResolutionException,
-            ModuleActivationException
+            ModuleActivationException,
+            ModuleResolutionCandidateNotUniqueException
     {
         if( theModuleRegistry == null ) {
             return null; // not running under the Module Framework, will do nothing
         }
-        ModuleRequirement      saRequirement = ModuleRequirement.create1( saName, saVersion );
-        ModuleAdvertisement [] saCandidates  = theModuleRegistry.determineResolutionCandidates( saRequirement );
+        ModuleRequirement   saRequirement = ModuleRequirement.create1( saName, saVersion );
+        ModuleAdvertisement saCandidate   = theModuleRegistry.determineSingleResolutionCandidate( saRequirement );
 
-        if( saCandidates == null || saCandidates.length == 0 ) {
-            throw new ModuleActivationException( null, "Cannot find ModuleAdvertisement for subject area " + saName + " in version " + saVersion );
-        }
-        if( saCandidates.length > 1 ) {
-            log.warn( "Resolution of subject area " + saName + " in version " + saVersion + " not unique, has " + saCandidates.length + " solutions" );
-        }
-        Module saModule = theModuleRegistry.resolve( saCandidates[0], true );
+        Module saModule = theModuleRegistry.resolve( saCandidate, true );
 
         saModule.activateRecursively();
 

@@ -111,16 +111,10 @@ public abstract class AbstractModuleTestGroup
             throws
                 Throwable
         {
-            ModuleRegistry theModuleRegistry = ModuleRegistryContext.getModuleRegistry();
-            ModuleAdvertisement [] candidates = theModuleRegistry.determineResolutionCandidates( theTestModuleRequirement );
-            if( candidates.length == 0 ) {
-                throw new IllegalArgumentException( "Cannot find Module for " + theTestModuleRequirement );
-            }
-            if( candidates.length > 1 ) {
-                throw new IllegalArgumentException( "More than one Module for " + theTestModuleRequirement );
-            }
+            ModuleRegistry      registry  = ModuleRegistryContext.getModuleRegistry();
+            ModuleAdvertisement candidate = registry.determineSingleResolutionCandidate( theTestModuleRequirement );
 
-            Module testModule = theModuleRegistry.resolve( candidates[0] );
+            Module testModule = registry.resolve( candidate );
 
             testModule.configureRecursively( null );
             testModule.activateRecursively();

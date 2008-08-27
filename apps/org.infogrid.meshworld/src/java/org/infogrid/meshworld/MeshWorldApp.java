@@ -20,7 +20,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
@@ -60,12 +59,12 @@ public class MeshWorldApp
      *
      * @param defaultMeshBaseIdentifier String form of tthe MeshBaseIdentifier of the default MeshBase
      * @return the created MeshWorldApp
-     * @throws NamingException thrown if a JNDI problem occurred
+     * @throws Exception something went wrong and initialization was not possible
      */
     public static MeshWorldApp create(
             String defaultMeshBaseIdentifier )
         throws
-            NamingException
+            Exception
     {
         final String ROOT_MODULE_NAME = "org.infogrid.meshworld";
         
@@ -79,15 +78,8 @@ public class MeshWorldApp
             ModuleRequirement req      = ModuleRequirement.create1( ROOT_MODULE_NAME );
             ModuleRegistry    registry = ServletBootLoader.getModuleRegistry();
 
-            try {
-                theThisModule = registry.resolve( registry.determineResolutionCandidates( req )[0] ); // we know it is there
-
-            } catch( Exception ex ) {
-                System.err.println( "Unexpected Exception attempting to re-resolve module with " + req );
-                ex.printStackTrace( System.err );
-                throw new RuntimeException( ex );
-            }
-        }
+           theThisModule = registry.resolve( registry.determineSingleResolutionCandidate( req )); // we know it is there
+         }
         log = Log.getLogInstance( MeshWorldApp.class );            
         // first resource helper, then logger
         String nameOfResourceHelperFile = MeshWorldApp.class.getName();

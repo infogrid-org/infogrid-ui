@@ -56,12 +56,10 @@ public abstract class Init
 
         Class logFactoryClass;
         if( moduleName != null ) {
-            ModuleRegistry         reg = thisModule.getModuleRegistry();
-            ModuleAdvertisement [] ads = reg.determineResolutionCandidates( ModuleRequirement.create1( moduleName ));
-            if( ads.length != 1 ) {
-                throw new ModuleConfigurationException( thisModule.getModuleAdvertisement(), "Cannot find unique module " + moduleName );
-            }
-            Module logFactoryModule = reg.resolve( ads[0], true );
+            ModuleRegistry      reg   = thisModule.getModuleRegistry();
+            ModuleAdvertisement found = reg.determineSingleResolutionCandidate( ModuleRequirement.create1( moduleName ));
+
+            Module logFactoryModule = reg.resolve( found, true );
 
             logFactoryClass = Class.forName( className, true, logFactoryModule.getClassLoader());
 

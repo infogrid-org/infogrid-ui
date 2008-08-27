@@ -14,24 +14,6 @@
 
 package org.infogrid.codegen;
 
-import org.infogrid.codegen.impl.ImplementationGenerator;
-import org.infogrid.codegen.intfc.InterfaceGenerator;
-import org.infogrid.codegen.modelloader.ModelLoaderGenerator;
-
-import org.infogrid.model.primitives.SubjectArea;
-
-import org.infogrid.module.ModelModule;
-import org.infogrid.module.Module;
-import org.infogrid.module.ModuleActivationException;
-import org.infogrid.module.ModuleActivator;
-import org.infogrid.module.ModuleAdvertisement;
-import org.infogrid.module.ModuleRegistry;
-import org.infogrid.module.ModuleRequirement;
-
-import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.logging.Log;
-import org.infogrid.util.logging.log4j.Log4jLog;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +21,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import org.infogrid.codegen.impl.ImplementationGenerator;
+import org.infogrid.codegen.intfc.InterfaceGenerator;
+import org.infogrid.codegen.modelloader.ModelLoaderGenerator;
+import org.infogrid.model.primitives.SubjectArea;
+import org.infogrid.module.ModelModule;
+import org.infogrid.module.Module;
+import org.infogrid.module.ModuleActivator;
+import org.infogrid.module.ModuleAdvertisement;
+import org.infogrid.module.ModuleRegistry;
+import org.infogrid.module.ModuleRequirement;
+import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.logging.Log;
+import org.infogrid.util.logging.log4j.Log4jLog;
 
 /**
  * The InfoGrid code generator.
@@ -94,7 +89,7 @@ public class CodeGenerator
             Log4jLog.configure( logProperties );
             // which logger is being used is defined in the module dependency declaration through parameters
 
-        } catch( Exception ex ) {
+        } catch( Throwable ex ) {
             System.err.println( "Unexpected Exception attempting to load " + nameOfLog4jConfigFile );
             ex.printStackTrace( System.err );
         }
@@ -119,40 +114,30 @@ public class CodeGenerator
             String saName    = iter.next();
             String saVersion = "1_0";
 
-            ModuleRequirement      saRequirement = ModuleRequirement.create1( saName, saVersion );
-            ModuleAdvertisement [] saCandidates  = theModuleRegistry.determineResolutionCandidates( saRequirement );
+            try {
+                ModuleRequirement   saRequirement = ModuleRequirement.create1( saName, saVersion );
+                ModuleAdvertisement saCandidate  = theModuleRegistry.determineSingleResolutionCandidate( saRequirement );
 
-            if( saCandidates == null || saCandidates.length == 0 ) {
-                Iterator<ModuleAdvertisement> iter2 = theModuleRegistry.advertisementIterator();
-                StringBuffer buf = new StringBuffer();
-                buf.append( "ModuleRegistry contains:\n" );
-                while( iter2.hasNext() ) {
-                    ModuleAdvertisement current = iter2.next();
-                    buf.append( "    Name: '" ).append( current.getModuleName() ).append( "', version: '" ).append( current.getModuleVersion() ) .append( "'\n" );
+                ModelModule saModule = (ModelModule) theModuleRegistry.resolve( saCandidate, true );
+
+                ModuleActivator activator = new CodeGeneratorModelModuleActivator(
+                        saModule,
+                        saName,
+                        saVersion,
+                        moduleDirectories );
+
+                SubjectArea [] sas = (SubjectArea []) saModule.activateRecursively( activator );
+
+                if( sas == null || sas.length == 0 ) {
+                    log.error( "Could not obtain SubjectArea '" + saName + "', version '" + saVersion + "'" );
+                    System.exit( 0 );
                 }
-                throw new ModuleActivationException(
-                        null,
-                        "Cannot find ModuleAdvertisement for subject area " + saName + " in version " + saVersion + ", " + buf.toString() );
+                generator.generateForAll( sas );
+
+            } catch( Throwable ex ) {
+                System.err.println( "Unexpected Exception attempting to access SubjectArea " + saName );
+                ex.printStackTrace( System.err );
             }
-            if( saCandidates.length > 1 ) {
-                log.warn( "Resolution of subject area " + saName + " in version " + saVersion + " not unique, has " + saCandidates.length + " solutions" );
-            }
-
-            ModelModule saModule = (ModelModule) theModuleRegistry.resolve( saCandidates[0], true );
-
-            ModuleActivator activator = new CodeGeneratorModelModuleActivator(
-                    saModule,
-                    saName,
-                    saVersion,
-                    moduleDirectories );
-
-            SubjectArea [] sas = (SubjectArea []) saModule.activateRecursively( activator );
-
-            if( sas == null || sas.length == 0 ) {
-                log.error( "Could not obtain SubjectArea '" + saName + "', version '" + saVersion + "'" );
-                System.exit( 0 );
-            }
-            generator.generateForAll( sas );
         }
     }
 

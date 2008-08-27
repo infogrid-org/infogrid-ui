@@ -65,14 +65,12 @@ public class NetMeshWorldApp
      *
      * @param defaultMeshBaseIdentifier String form of tthe NetMeshBaseIdentifier of the default NetMeshBase
      * @return the created NetMeshWorldApp
-     * @throws NamingException thrown if a JNDI problem occurred
-     * @throws URISyntaxException thrown if the defaultMeshBaseIdentifier could not be parsed
+     * @throws Exception something went wrong and initialization was not possible
      */
     public static NetMeshWorldApp create(
             String defaultMeshBaseIdentifier )
         throws
-            NamingException,
-            URISyntaxException
+            Exception
     {
         final String ROOT_MODULE_NAME = "org.infogrid.meshworld.net";
         
@@ -86,14 +84,7 @@ public class NetMeshWorldApp
             ModuleRequirement req      = ModuleRequirement.create1( ROOT_MODULE_NAME );
             ModuleRegistry    registry = ServletBootLoader.getModuleRegistry();
 
-            try {
-                theThisModule = registry.resolve( registry.determineResolutionCandidates( req )[0] ); // we know it is there
-
-            } catch( Exception ex ) {
-                System.err.println( "Unexpected Exception attempting to re-resolve module with " + req );
-                ex.printStackTrace( System.err );
-                throw new RuntimeException( ex );
-            }
+            theThisModule = registry.resolve( registry.determineSingleResolutionCandidate( req )); // we know it is there
         }
         log = Log.getLogInstance( NetMeshWorldApp.class );            
         // first resource helper, then logger

@@ -14,6 +14,9 @@
 
 package org.infogrid.module.commandline;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Iterator;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleAdvertisement;
 import org.infogrid.module.ModuleClassLoader;
@@ -23,11 +26,6 @@ import org.infogrid.module.OverridingStandardModuleActivator;
 import org.infogrid.module.SoftwareInstallationException;
 import org.infogrid.module.StandardModule;
 import org.infogrid.module.StandardModuleActivator;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Iterator;
 
 /**
  * <p>Acts as the main() program in a Module-based application.
@@ -116,48 +114,15 @@ public class CommandlineBootLoader
         }
 
         // find and resolve the main module
-        ModuleAdvertisement [] rootModuleAdv = theModuleRegistry.determineResolutionCandidates( theInstallation.getRootModuleRequirement() );
-        if( rootModuleAdv == null || rootModuleAdv.length == 0 ) {
-            StringBuffer buf = new StringBuffer();
-            buf.append( "Cannot find ModuleAdvertisement for required Module\n    '" );
-            buf.append( theInstallation.getRootModuleRequirement().getRequiredModuleName() );
-            if( theInstallation.getRootModuleRequirement().getRequiredModuleVersion() != null ) {
-                buf.append( "',\n    version '" );
-                buf.append( theInstallation.getRootModuleRequirement().getRequiredModuleVersion() );
-            }
-            buf.append( "'\nin Software Installation with installation directory\n    '" );
-            String sep = "";
-            for( File current : theInstallation.getInstallModuleDirectories() ) {
-                buf.append( sep );
-                buf.append( current.getAbsolutePath() );
-                sep = ", ";
-            }
-            buf.append( "'." );
-            fatal( buf.toString(), null );
-        }
-        if( rootModuleAdv.length > 1 ) {
-            StringBuffer buf = new StringBuffer();
-            String       sep = "";
-
-            buf.append( "Cannot uniquely determine root Module for Module Requirement\n    '" );
-            buf.append( theInstallation.getRootModuleRequirement().getRequiredModuleName() );
-            if( theInstallation.getRootModuleRequirement().getRequiredModuleVersion() == null ) {
-                buf.append( "' (any version)" );
-            } else {
-                buf.append( "' (version " ).append( theInstallation.getRootModuleRequirement().getRequiredModuleVersion() ).append( ")" );
-            }
-            buf.append( ",\ncandidates are:\n    " );
-            for( int i=0 ; i<rootModuleAdv.length ; ++i ) {
-                buf.append( sep );
-                buf.append( "'" ).append( rootModuleAdv[i].getModuleName()).append( "' (version " );
-                buf.append( rootModuleAdv[i].getModuleVersion() ).append( ")" );
-                sep = ",\n    ";
-            }
-            fatal( buf.toString(), null );
+        ModuleAdvertisement rootModuleAdv = null;
+        try {
+            rootModuleAdv = theModuleRegistry.determineSingleResolutionCandidate( theInstallation.getRootModuleRequirement() );
+        } catch( Throwable ex ) {
+            fatal( null, ex );
         }
 
         try {
-            StandardModule theRootModule         = (StandardModule) theModuleRegistry.resolve( rootModuleAdv[0] );
+            StandardModule theRootModule         = (StandardModule) theModuleRegistry.resolve( rootModuleAdv );
             ClassLoader    rootModuleClassLoader = theRootModule.getClassLoader();
 
             if( ( rootModuleClassLoader instanceof ModuleClassLoader ) && theInstallation.allowDefaultClassPathForRootModule() ) {

@@ -14,9 +14,13 @@
 
 package org.infogrid.module;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
+ 
 /**
  * A ModuleRegistry is a place where Modules can be found and resolved. There is typically
  * only one ModuleRegistry per virtual machine or application. This class is abstract; instantiate a
@@ -106,6 +110,28 @@ public abstract class ModuleRegistry
             }
         }
         return ret;
+    }
+
+    /**
+     * Determine the one and only ModuleAdvertisement that is the only candidate to resolve a Module
+     * dependency, based on the knowledge of this ModuleRegistry. If there is more or less than one
+     * match, thrown an Exception.
+     * 
+     * @param req the ModuleRequirement that we attempt to resolve
+     * @return the ModuleAdvertisements that are candidates for the resolution of the ModuleRequirement
+     * @throws ModuleResolutionCandidateNotUniqueException thrown if there were fewer or more than one ModuleAdvertisement found
+     */
+    public final ModuleAdvertisement determineSingleResolutionCandidate(
+            ModuleRequirement req )
+        throws
+            ModuleResolutionCandidateNotUniqueException
+    {
+        ModuleAdvertisement [] found = determineResolutionCandidates( req );
+        if( found != null && found.length == 1 ) {
+            return found[0];
+        } else {
+            throw new ModuleResolutionCandidateNotUniqueException( req, found );
+        }
     }
 
     /**
@@ -596,7 +622,7 @@ public abstract class ModuleRegistry
     /**
      * Simple iterator over the elements in an array.
      * 
-     * @param T the type of elements to iterate over
+     * @param <T> the type of elements to iterate over
      */
     static class SimpleArrayIterator<T>
         implements
@@ -650,7 +676,7 @@ public abstract class ModuleRegistry
     /**
      * Helper iterator to filter out by type the results of a delegate Iterator.
      * 
-     * @param T the type of elements to iterate over
+     * @param <T> the type of elements to iterate over
      */
     static class FilteringIterator<T>
         implements

@@ -14,17 +14,15 @@
 
 package org.infogrid.module.servlet;
 
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleAdvertisement;
 import org.infogrid.module.ModuleErrorHandler;
 import org.infogrid.module.OverridingStandardModuleActivator;
 import org.infogrid.module.StandardModule;
 import org.infogrid.module.StandardModuleActivator;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * The Module Framework's BootLoader for use in a Servlet environment.
@@ -43,7 +41,7 @@ public abstract class ServletBootLoader
     {
         try {
             theInstallation = ServletSoftwareInstallation.createFromProperties( propStream );
-        } catch( Exception ex ) {
+        } catch( Throwable ex ) {
             fatal( ex );
         }
         return initialize( theInstallation, null );
@@ -60,7 +58,7 @@ public abstract class ServletBootLoader
     {
         try {
             theInstallation = ServletSoftwareInstallation.createFromProperties( props );
-        } catch( Exception ex ) {
+        } catch( Throwable ex ) {
             fatal( ex );
         }
         return initialize( theInstallation, null );
@@ -84,9 +82,7 @@ public abstract class ServletBootLoader
         // create ModuleRegistry
         try {
             theModuleRegistry = ServletModuleRegistry.create( theInstallation );
-        } catch( IOException ex ) {
-            fatal( ex );
-        } catch( ClassNotFoundException ex ) {
+        } catch( Throwable ex ) {
             fatal( ex );
         }
         if( theModuleRegistry == null ) {
@@ -98,44 +94,17 @@ public abstract class ServletBootLoader
         }
 
         // find and resolve the main module
-        ModuleAdvertisement [] rootModuleAdv = theModuleRegistry.determineResolutionCandidates( theInstallation.getRootModuleRequirement() );
-        if( rootModuleAdv == null || rootModuleAdv.length == 0 ) {
-            StringBuffer buf = new StringBuffer();
-            buf.append( "Cannot find ModuleAdvertisement for required Module\n    '" );
-            buf.append( theInstallation.getRootModuleRequirement().getRequiredModuleName() );
-            if( theInstallation.getRootModuleRequirement().getRequiredModuleVersion() != null ) {
-                buf.append( "',\n    version '" );
-                buf.append( theInstallation.getRootModuleRequirement().getRequiredModuleVersion() );
-            }
-            buf.append( "'." );
-            fatal( buf.toString(), null );
-
-        }
-        if( rootModuleAdv.length > 1 ) {
-            StringBuffer buf = new StringBuffer();
-            String       sep = "";
-
-            buf.append( "Cannot uniquely determine Root Module for Module Requirement '" );
-            buf.append( theInstallation.getRootModuleRequirement().getRequiredModuleName() );
-            if( theInstallation.getRootModuleRequirement().getRequiredModuleVersion() == null ) {
-                buf.append( "' (any version)" );
-            } else {
-                buf.append( "' (version " ).append( theInstallation.getRootModuleRequirement().getRequiredModuleVersion() ).append( ")" );
-            }
-            buf.append( ", candidates are: " );
-            for( int i=0 ; i<rootModuleAdv.length ; ++i ) {
-                buf.append( sep );
-                buf.append( "'" ).append( rootModuleAdv[i].getModuleName()).append( "' (version " );
-                buf.append( rootModuleAdv[i].getModuleVersion() ).append( ")" );
-                sep = ", ";
-            }
-            fatal( buf.toString(), null );
+        ModuleAdvertisement rootModuleAdv = null; // make compiler happy
+        try {
+            rootModuleAdv = theModuleRegistry.determineSingleResolutionCandidate( theInstallation.getRootModuleRequirement() );
+        } catch( Throwable ex ) {
+            fatal( ex );
         }
 
         StandardModule theRootModule = null;
         try {
-            theRootModule = (StandardModule) theModuleRegistry.resolve( rootModuleAdv[0], true );
-        } catch( Exception ex ) {
+            theRootModule = (StandardModule) theModuleRegistry.resolve( rootModuleAdv, true );
+        } catch( Throwable ex ) {
             fatal( ex );
         }
 
@@ -150,7 +119,7 @@ public abstract class ServletBootLoader
                         theInstallation.getOverriddenActivationMethodName(),
                         theInstallation.getOverriddenDeactivationMethodName(),
                         theRootModule.getClassLoader() );
-            } catch( Exception ex ) {
+            } catch( Throwable ex ) {
                 fatal( ex );
             }
         }
@@ -164,7 +133,7 @@ public abstract class ServletBootLoader
 
             // we don't run anything in servlet mode
 
-        } catch( Exception ex ) {
+        } catch( Throwable ex ) {
             fatal( ex );
         }
         return theRootModule;
