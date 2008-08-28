@@ -14,6 +14,8 @@
 
 package org.infogrid.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -25,6 +27,32 @@ import java.util.Map;
  */
 public abstract class StreamUtils
 {
+    /**
+     * Read a file into a byte [].
+     * 
+     * @param f the File
+     * @return the buffer into which the bytes have been written
+     * @throws IOException an I/O error occurred
+     */
+    public static byte [] slurp(
+            File f )
+        throws
+            IOException
+    {
+        FileInputStream inStream = null;
+        try {
+            inStream = new FileInputStream( f );
+         
+            byte [] ret = slurp( inStream );
+            return ret;
+
+        } finally {
+            if( inStream != null ) {
+                inStream.close();
+            }
+        }
+    }
+
     /**
      * Read an InputStream until EOF and put the content that was found into a byte[].
      *
