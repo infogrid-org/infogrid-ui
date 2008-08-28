@@ -14,15 +14,27 @@
 
 package org.infogrid.util;
 
-import java.util.*;
-
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.Vector;
 
 /**
   * Provides helper functions that deal with arrays. It cannot be instantiated.
   */
 public abstract class ArrayHelper
 {
+    /**
+     * Hidden constructor to keep this abstract.
+     */
+    private ArrayHelper() {}
+    
     /**
      * An "equals" method on Object that also works for null
      * pointers.
@@ -87,6 +99,7 @@ public abstract class ArrayHelper
      * @param two the Object which is being assigned.
      * @throws ArrayStoreException passed-on Exception with better error message
      * @throws ArrayIndexOutOfBoundsException passed-on Exception with better error message
+     * @param <T> parameterizes the array
      */
     public static final <T> void myArrayCopy(
             T [] one,
@@ -113,6 +126,7 @@ public abstract class ArrayHelper
      * @param arrayComponentType the base type of the to-be-created array that we return
      * @param size the size of the to-be-created array
      * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
      */
     @SuppressWarnings(value={"unchecked"})
     public static <T> T [] createArray(
@@ -131,6 +145,7 @@ public abstract class ArrayHelper
      * @param templateArray this array's component type is used as the component type of the new array
      * @param size the size of the to-be-created array
      * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
      */
     @SuppressWarnings(value={"unchecked"})
     public static <T> T [] createArray(
@@ -149,6 +164,7 @@ public abstract class ArrayHelper
      *
      * @param arg the array
      * @return the component type of the array
+     * @param <T> parameterizes the array
      */
     @SuppressWarnings(value={"unchecked"})
     public static <T> Class<T> arrayComponentClassFromArray(
@@ -158,13 +174,14 @@ public abstract class ArrayHelper
     }
     
     /**
-      * Append the second array to the first. Do not modify arguments.
-      *
-      * @param firstArray the first array
-      * @param secondArray the second array
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Append the second array to the first. Do not modify arguments.
+     *
+     * @param firstArray the first array
+     * @param secondArray the second array
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] append(
             T []     firstArray,
             T []     secondArray,
@@ -193,14 +210,15 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Append the third and the second array to the first. Do not modify arguments.
-      *
-      * @param firstArray the first array
-      * @param secondArray the second array
-      * @param thirdArray the second array
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Append the third and the second array to the first. Do not modify arguments.
+     *
+     * @param firstArray the first array
+     * @param secondArray the second array
+     * @param thirdArray the second array
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] append(
             T []     firstArray,
             T []     secondArray,
@@ -227,13 +245,14 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Prepend an object to an array and return newly allocated array. Do not modify arguments.
-      *
-      * @param first the Object to prepend
-      * @param secondArray the second array
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Prepend an object to an array and return newly allocated array. Do not modify arguments.
+     *
+     * @param first the Object to prepend
+     * @param secondArray the second array
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] append(
             T        first,
             T []     secondArray,
@@ -251,13 +270,14 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Append an object to an array and return newly allocated array. Do not modify arguments.
-      *
-      * @param firstArray the first array
-      * @param item the Object to append
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Append an object to an array and return newly allocated array. Do not modify arguments.
+     *
+     * @param firstArray the first array
+     * @param item the Object to append
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] append(
             T []     firstArray,
             T        item,
@@ -276,12 +296,13 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Append N arrays to each other and return newly allocated array. Do not modify arguments.
-      *
-      * @param theArrays the arrays whose content shall be appended
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Append N arrays to each other and return newly allocated array. Do not modify arguments.
+     *
+     * @param theArrays the arrays whose content shall be appended
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] append(
             T [][]   theArrays,
             Class<T> arrayComponentType )
@@ -326,15 +347,16 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Append item to array if item is not yet in the array,
-      * otherwise return array unchanged.
-      *
-      * @param firstArray     the array to append to
-      * @param item           the item to append
-      * @param useEquals      use equals() method to determine whether already in the array, ==
-      * @param arrayComponentType the type of the array to return (if newly allocated)
-      * @return the newly allocated array of type arrayComponentType
-      */
+     * Append item to array if item is not yet in the array,
+     * otherwise return array unchanged.
+     *
+     * @param firstArray     the array to append to
+     * @param item           the item to append
+     * @param useEquals      use equals() method to determine whether already in the array, ==
+     * @param arrayComponentType the type of the array to return (if newly allocated)
+     * @return the newly allocated array of type arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] appendWithoutDuplicates(
             T []     firstArray,
             T        item,
@@ -362,15 +384,16 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Append the content of an array to an array, but leave out
-      * duplicates.
-      *
-      * @param firstArray     the array to append to
-      * @param secondArray    the array to append
-      * @param useEquals      use equals() method to determine whether already in the array, == otherwise
-      * @param arrayComponentType the type of the array to return (if newly allocated)
-      * @return the newly allocated array of type arrayComponentType
-      */
+     * Append the content of an array to an array, but leave out
+     * duplicates.
+     *
+     * @param firstArray     the array to append to
+     * @param secondArray    the array to append
+     * @param useEquals      use equals() method to determine whether already in the array, == otherwise
+     * @param arrayComponentType the type of the array to return (if newly allocated)
+     * @return the newly allocated array of type arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] appendWithoutDuplicates(
             T []     firstArray,
             T []     secondArray,
@@ -418,15 +441,16 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Append the contents of N arrays to each other, but leave out
-      * duplicates.
-      *
-      * @param theArrays      the array of arrays to append after each other
-      * @param useEquals      use equals() method to determine whether already in the array, == otherwise
-      * @param skipNull       if true, do not return any nulls found in the input arrays
-      * @param arrayComponentType the type of the array to return (if newly allocated)
-      * @return the newly allocated array of type arrayComponentType
-      */
+     * Append the contents of N arrays to each other, but leave out
+     * duplicates.
+     *
+     * @param theArrays      the array of arrays to append after each other
+     * @param useEquals      use equals() method to determine whether already in the array, == otherwise
+     * @param skipNull       if true, do not return any nulls found in the input arrays
+     * @param arrayComponentType the type of the array to return (if newly allocated)
+     * @return the newly allocated array of type arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] appendWithoutDuplicates(
             T [][]   theArrays,
             boolean  useEquals,
@@ -472,12 +496,13 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Copy content from one array into a new one.
-      *
-      * @param theOldArray the array from where we take the content
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Copy content from one array into a new one.
+     *
+     * @param theOldArray the array from where we take the content
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] copyIntoNewArray(
             T []               theOldArray,
             Class<? extends T> arrayComponentType )
@@ -486,15 +511,16 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Copy content from one array into a new one starting with index start
-      * and ending with index end-1.
-      *
-      * @param theOldArray the array from where we take the content
-      * @param startIndex index of the first object to copy
-      * @param endIndex index of the first object not to copy any more
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Copy content from one array into a new one starting with index start
+     * and ending with index end-1.
+     *
+     * @param theOldArray the array from where we take the content
+     * @param startIndex index of the first object to copy
+     * @param endIndex index of the first object not to copy any more
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] copyIntoNewArray(
             T []               theOldArray,
             int                startIndex,
@@ -512,12 +538,13 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Copy content from one a Vector into a new array.
-      *
-      * @param theVector the Vector from where we take the content
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Copy content from one a Vector into a new array.
+     *
+     * @param theVector the Vector from where we take the content
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] copyIntoNewArray(
             Vector<? extends T> theVector,
             Class<T>            arrayComponentType )
@@ -531,14 +558,15 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Copy content from one a Hashtable into a new array.
-      *
-      * @param theTable the Hashtable from where we take the content
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
-    public static <K,T> T [] copyIntoNewArray(
-            Hashtable<K,? extends T> theTable,
+     * Copy content from one a Hashtable into a new array.
+     *
+     * @param theTable the Hashtable from where we take the content
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
+    public static <T> T [] copyIntoNewArray(
+            Hashtable<?,? extends T> theTable,
             Class<T>                 arrayComponentType )
     {
         T [] ret = createArray(
@@ -556,12 +584,13 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Copy content from one a Collection into a new array.
-      *
-      * @param theCollection the Collection from where we take the content
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Copy content from one a Collection into a new array.
+     *
+     * @param theCollection the Collection from where we take the content
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] copyIntoNewArray(
             Collection<? extends T> theCollection,
             Class<T>                arrayComponentType )
@@ -578,12 +607,13 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Copy content from what can be obtained from an Iterator into a new array.
-      *
-      * @param theIter the Iterator from where we take the content
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Copy content from what can be obtained from an Iterator into a new array.
+     *
+     * @param theIter the Iterator from where we take the content
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] copyIntoNewArray(
             Iterator<? extends T> theIter,
             Class<T>              arrayComponentType )
@@ -597,14 +627,15 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Determine whether two arrays contain the same content
-      * and in the same sequence.
-      *
-      * @param firstArray the first array
-      * @param secondArray the second array
-      * @param useEquals if true, use the equals() method to determine equality
-      * @return true if the two arrays have the same content in order
-      */
+     * Determine whether two arrays contain the same content
+     * and in the same sequence.
+     *
+     * @param firstArray the first array
+     * @param secondArray the second array
+     * @param useEquals if true, use the equals() method to determine equality
+     * @return true if the two arrays have the same content in order
+     * @param <T> parameterizes the array
+     */
     public static <T> boolean hasSameContentInOrder(
             T []    firstArray,
             T []    secondArray,
@@ -630,14 +661,15 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Determine whether two arrays contain the same content,
-      * but potentially in a different sequence.
-      *
-      * @param firstArray the first array
-      * @param secondArray the second array
-      * @param useEquals if true, use the equals() method to determine equality
-      * @return true if the two arrays have the same content
-      */
+     * Determine whether two arrays contain the same content,
+     * but potentially in a different sequence.
+     *
+     * @param firstArray the first array
+     * @param secondArray the second array
+     * @param useEquals if true, use the equals() method to determine equality
+     * @return true if the two arrays have the same content
+     * @param <T> parameterizes the array
+     */
     public static <T> boolean hasSameContentOutOfOrder(
             T []    firstArray,
             T []    secondArray,
@@ -692,16 +724,17 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Create a new array of the passed type with the same content as the
-      * input array, except for Object objectToRemove.
-      *
-      * @param theArray the input array
-      * @param objectToRemove the Object to remove from the input array if present
-      * @param useEquals if true, use equals method to determine equality
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      * @throws IllegalArgumentException if objectToRemove could not be found in the input array
-      */
+     * Create a new array of the passed type with the same content as the
+     * input array, except for Object objectToRemove.
+     *
+     * @param theArray the input array
+     * @param objectToRemove the Object to remove from the input array if present
+     * @param useEquals if true, use equals method to determine equality
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @throws IllegalArgumentException if objectToRemove could not be found in the input array
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] remove(
             T []     theArray,
             T        objectToRemove,
@@ -736,16 +769,17 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Create a new array of the passed type with the same content as the
-      * input array, except for Object objectToRemove. Don't complain if the
-      * object isn't there
-      *
-      * @param theArray the input array
-      * @param objectToRemove the Object to remove from the input array if present
-      * @param useEquals if true, use equals method to determine equality
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Create a new array of the passed type with the same content as the
+     * input array, except for Object objectToRemove. Don't complain if the
+     * object isn't there
+     *
+     * @param theArray the input array
+     * @param objectToRemove the Object to remove from the input array if present
+     * @param useEquals if true, use equals method to determine equality
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] removeIfPresent(
             T []     theArray,
             T        objectToRemove,
@@ -789,16 +823,17 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Create a new array of the passed type with the same content as the first
-      * input array, except that all objects from second input array are not present.
-      * Don't complain if objects aren't there.
-      *
-      * @param one the input array
-      * @param two the array whose objects shall not appear in the return value
-      * @param useEquals if true, use equals method to determine equality
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Create a new array of the passed type with the same content as the first
+     * input array, except that all objects from second input array are not present.
+     * Don't complain if objects aren't there.
+     *
+     * @param one the input array
+     * @param two the array whose objects shall not appear in the return value
+     * @param useEquals if true, use equals method to determine equality
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] removeIfPresent(
             T []     one,
             T []     two,
@@ -828,15 +863,16 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Create a new array of the passed type with the same content as the
-      * input array, except for the object at a certain index which is removed.
-      * All subsequent objects move forward by one spot.
-      *
-      * @param theArray the input array
-      * @param index the index of the object that shall not be returned
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Create a new array of the passed type with the same content as the
+     * input array, except for the object at a certain index which is removed.
+     * All subsequent objects move forward by one spot.
+     *
+     * @param theArray the input array
+     * @param index the index of the object that shall not be returned
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] remove(
             T []     theArray,
             int      index,
@@ -864,6 +900,7 @@ public abstract class ArrayHelper
      * @param insertIndex the index where the Object shall be inserted
      * @param arrayComponentType the base type of the to-be-created array that we return
      * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
      */
     public static <T> T [] insert(
             T []     theArray,
@@ -886,13 +923,14 @@ public abstract class ArrayHelper
     }
 
     /**
-      * This is a "substring" for arrays.
-      *
-      * @param inputArray the input array
-      * @param startIndex the index from which we start copying
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * This is a "substring" for arrays.
+     *
+     * @param inputArray the input array
+     * @param startIndex the index from which we start copying
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] subarray(
             T []     inputArray,
             int      startIndex,
@@ -902,14 +940,15 @@ public abstract class ArrayHelper
     }
 
     /**
-      * This is a "substring" for arrays.
-      *
-      * @param inputArray the input array
-      * @param startIndex the index from which we start copying
-      * @param endIndex the index that we are not copying any more
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * This is a "substring" for arrays.
+     *
+     * @param inputArray the input array
+     * @param startIndex the index from which we start copying
+     * @param endIndex the index that we are not copying any more
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] subarray(
             T []     inputArray,
             int      startIndex,
@@ -927,13 +966,14 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Determine whether an Object is contained in an array.
-      *
-      * @param theObject the Object that we are looking for
-      * @param theArray the array in which we look
-      * @param useEquals if true, use equals method to determine equality
-      * @return true if the Object is contained in the array
-      */
+     * Determine whether an Object is contained in an array.
+     *
+     * @param theObject the Object that we are looking for
+     * @param theArray the array in which we look
+     * @param useEquals if true, use equals method to determine equality
+     * @return true if the Object is contained in the array
+     * @param <T> parameterizes the array
+     */
     public static <T> boolean isIn(
             T       theObject,
             T []    theArray,
@@ -943,15 +983,16 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Determine whether an Object is contained in an array between two indices.
-      *
-      * @param theObject the Object that we are looking for
-      * @param theArray the array in which we look
-      * @param from the index at which we start looking
-      * @param to the index at which we are not looking any more
-      * @param useEquals if true, use equals method to determine equality
-      * @return true if the Object is contained in the array between the indices
-      */
+     * Determine whether an Object is contained in an array between two indices.
+     *
+     * @param theObject the Object that we are looking for
+     * @param theArray the array in which we look
+     * @param from the index at which we start looking
+     * @param to the index at which we are not looking any more
+     * @param useEquals if true, use equals method to determine equality
+     * @return true if the Object is contained in the array between the indices
+     * @param <T> parameterizes the array
+     */
     public static <T> boolean isIn(
             T       theObject,
             T []    theArray,
@@ -971,13 +1012,14 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Find the index of an Object in an array.
-      *
-      * @param theObject the Object that we are looking for
-      * @param theArray the array in which we look
-      * @param useEquals if true, use equals method to determine equality
-      * @return the index where the Object was found, or -1 if not found
-      */
+     * Find the index of an Object in an array.
+     *
+     * @param theObject the Object that we are looking for
+     * @param theArray the array in which we look
+     * @param useEquals if true, use equals method to determine equality
+     * @return the index where the Object was found, or -1 if not found
+     * @param <T> parameterizes the array
+     */
     public static <T> int findIn(
             T       theObject,
             T []    theArray,
@@ -987,15 +1029,16 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Find the index of an Object in an array.
-      *
-      * @param theObject the Object that we are looking for
-      * @param theArray the array in which we look
-      * @param from the index at which we start looking
-      * @param to the index at which we are not looking any more
-      * @param useEquals if true, use equals method to determine equality
-      * @return the index where the Object was found, or -1 if not found
-      */
+     * Find the index of an Object in an array.
+     *
+     * @param theObject the Object that we are looking for
+     * @param theArray the array in which we look
+     * @param from the index at which we start looking
+     * @param to the index at which we are not looking any more
+     * @param useEquals if true, use equals method to determine equality
+     * @return the index where the Object was found, or -1 if not found
+     * @param <T> parameterizes the array
+     */
     public static <T> int findIn(
             T       theObject,
             T []    theArray,
@@ -1015,13 +1058,14 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Determine whether an Object is contained in an array or an array
-      *
-      * @param theObject the Object that we are looking for
-      * @param theArrayArray the array of arrays in which we look
-      * @param useEquals if true, use equals method to determine equality
-      * @return true if the Object is contained in the array
-      */
+     * Determine whether an Object is contained in an array or an array
+     *
+     * @param theObject the Object that we are looking for
+     * @param theArrayArray the array of arrays in which we look
+     * @param useEquals if true, use equals method to determine equality
+     * @return true if the Object is contained in the array
+     * @param <T> parameterizes the array
+     */
     public static <T> boolean isIn(
             T       theObject,
             T [][]  theArrayArray,
@@ -1042,6 +1086,7 @@ public abstract class ArrayHelper
      * @param second the second array.
      * @param useEquals if true, use equals method to determine equality
      * @return true if the first array contains all elements of the second array
+     * @param <T> parameterizes the array
      */
     public static <T> boolean firstHasSecondAsSubset(
             T []    first,
@@ -1057,15 +1102,16 @@ public abstract class ArrayHelper
     }
 
     /**
-      * Create a new array with the same content as the passed-in
-      * array but without any duplicates. The returned array may have fewer
-      * elements.
-      *
-      * @param theArray the input array
-      * @param useEquals if true, use equals method to determine equality
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * Create a new array with the same content as the passed-in
+     * array but without any duplicates. The returned array may have fewer
+     * elements.
+     *
+     * @param theArray the input array
+     * @param useEquals if true, use equals method to determine equality
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] getWithoutDuplicates(
             T []     theArray,
             boolean  useEquals,
@@ -1102,18 +1148,19 @@ public abstract class ArrayHelper
     }
 
     /**
-      * This function selects the full set or a subset of the first argument
-      * by applying the comparison object on each of them with one of the
-      * arguments from the second set. If there is at least one true result
-      * for any argument object, the candidate object is included in the
-      * result.
-      *
-      * @param candidateObjects the Objects that we test for inclusion in the return result
-      * @param argumentObjects for each Object in this array, theFunction is executed with one Object from canidateObjects
-      * @param theFunction the function to be executed
-      * @param arrayComponentType the base type of the to-be-created array that we return
-      * @return a newly created array of arrayComponentType
-      */
+     * This function selects the full set or a subset of the first argument
+     * by applying the comparison object on each of them with one of the
+     * arguments from the second set. If there is at least one true result
+     * for any argument object, the candidate object is included in the
+     * result.
+     *
+     * @param candidateObjects the Objects that we test for inclusion in the return result
+     * @param argumentObjects for each Object in this array, theFunction is executed with one Object from canidateObjects
+     * @param theFunction the function to be executed
+     * @param arrayComponentType the base type of the to-be-created array that we return
+     * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
+     */
     public static <T> T [] select(
             T []             candidateObjects,
             T []             argumentObjects,
@@ -1140,6 +1187,7 @@ public abstract class ArrayHelper
      * @param ret the input array which is also returned
      * @param c the Comparator according to which we sort
      * @return same as ret
+     * @param <T> parameterizes the array
      */
     public static <T> T [] sort(
             T []          ret,
@@ -1167,6 +1215,7 @@ public abstract class ArrayHelper
      * @param c the Comparator according to which we sort
      * @param arrayComponentType the base type of the to-be-created array that we return
      * @return a newly created array of arrayComponentType
+     * @param <T> parameterizes the array
      */
     public static <T> T [] sort(
             Iterator<T>   iter,
@@ -1332,6 +1381,7 @@ public abstract class ArrayHelper
      * @param theArray the array that may contain null and non-null elements
      * @param arrayComponentType the base type of the to-be-created array that we return
      * @return the array with non-null elements only
+     * @param <T> parameterizes the array
      */
     public static <T> T [] collectNonNull(
             T []     theArray,
@@ -1354,6 +1404,7 @@ public abstract class ArrayHelper
      * @param arrayComponentType the base type of the to-be-created array that we return
      * @param n the number of non-null elements in the array
      * @return the array with non-null elements only
+     * @param <T> parameterizes the array
      */
     public static <T> T [] collectNonNull(
             T []     theArray,
@@ -1434,6 +1485,18 @@ public abstract class ArrayHelper
     /**
      * Join Strings, like Perl.
      *
+     * @param data the data elements
+     * @return the joined String
+     */
+    public static String join(
+            Object [] data )
+    {
+        return join( ", ", data );
+    }
+    
+    /**
+     * Join Strings, like Perl.
+     *
      * @param separator the separator between the data elements
      * @param data the data elements
      * @return the joined String
@@ -1486,6 +1549,7 @@ public abstract class ArrayHelper
      * @param useEquals if true, us the equals method for comparison
      * @param arrayComponentType the array component type for the returned arrays
      * @return the difference
+     * @param <T> parameterizes the array
      */
     public static <T> Difference<T> determineDifference(
             T []     one,
@@ -1523,7 +1587,7 @@ public abstract class ArrayHelper
 
     /**
      * Helper class to return two values.
-     * @param T the underlying type for the values
+     * @param <T> the underlying type for the values
      */
     public static class Difference<T>
     {

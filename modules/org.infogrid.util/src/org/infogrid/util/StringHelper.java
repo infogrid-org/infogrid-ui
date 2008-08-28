@@ -492,47 +492,6 @@ public abstract class StringHelper
     }
 
     /**
-     * Join a number of Strings into a compound String.
-     *
-     * @param args the component Strings
-     * @return the compound String
-     */
-    public static String join(
-            String [] args )
-    {
-        return join( args, ", " );
-    }
-    
-    /**
-     * Join a number of Strings into a compound String.
-     *
-     * @param args the component Strings
-     * @param sep the separator between the component Strings
-     * @return the compound String
-     */
-    public static String join(
-            String [] args,
-            String    sep )
-    {
-        StringBuilder buf = new StringBuilder();
-        if( args == null ) {
-            return null;
-        }
-        if( args.length == 0 ) {
-            return "";
-        }
-        if( args.length == 1 ) {
-            return args[0];
-        }
-        buf.append( args[0] );
-        for( int i=1 ; i<args.length ; ++i ) {
-            buf.append( sep );
-            buf.append( args[i] );
-        }
-        return buf.toString();
-    }
-
-    /**
      * Our default datokens -- used to determine where to split the string when tokenizing.
      */
     public static String defaultDatokens = ",;";

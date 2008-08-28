@@ -22,9 +22,9 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.StringHelper;
 
 /**
  * A network identifier, such as a URI, XRI or URL. It has two components
@@ -189,7 +189,7 @@ public class NetMeshBaseIdentifier
             }
             throw new IllegalArgumentException(
                     "canonical identifier uses unknown protocol (need one of "
-                    + StringHelper.join( theSupportedUrlProtocols )
+                    + ArrayHelper.join( theSupportedUrlProtocols )
                     + "), is "
                     + string );
         } else {
