@@ -65,7 +65,7 @@ public class ModuleResolutionCandidateNotUniqueException
         if( theFound != null ) {
             buf.append(  theFound.length );
         } else {
-            buf.append( "null s" );
+            buf.append( "null" );
         }
         buf.append( "." );
         return buf.toString();
