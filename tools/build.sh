@@ -368,6 +368,21 @@ if [ "${do_build}" = 0 ]; then
 	fi
 fi
 
+if [ "${do_run}" = 0 ]; then
+	if [ "${do_tests}" = 0 ]; then
+		echo '**** Running tests ****'
+		for f in `filter_modules tests/ALLTESTS '\[norun\]'`; do
+			run_module tests/$f run || exit 1;
+		done;
+	fi
+	if [ "${do_tests_net}" = 0 ]; then
+		echo '**** Running tests.net ****'
+		for f in `filter_modules tests.net/ALLTESTS '\[norun\]'`; do
+			run_module tests.net/$f run || exit 1;
+		done;
+	fi
+fi
+
 if [ "${do_doc}" = 0 ]; then
 	if [ "${do_modules}" = 0 ]; then
 		echo '**** Documenting modules ****'
@@ -409,18 +424,4 @@ if [ "${do_doc}" = 0 ]; then
 	fi
 fi
 
-if [ "${do_run}" = 0 ]; then
-	if [ "${do_tests}" = 0 ]; then
-		echo '**** Running tests ****'
-		for f in `filter_modules tests/ALLTESTS '\[norun\]'`; do
-			run_module tests/$f run || exit 1;
-		done;
-	fi
-	if [ "${do_tests_net}" = 0 ]; then
-		echo '**** Running tests.net ****'
-		for f in `filter_modules tests.net/ALLTESTS '\[norun\]'`; do
-			run_module tests.net/$f run || exit 1;
-		done;
-	fi
-fi
 echo '** DONE **'
