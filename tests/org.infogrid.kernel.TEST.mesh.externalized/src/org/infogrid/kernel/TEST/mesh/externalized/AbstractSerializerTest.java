@@ -30,8 +30,8 @@ public abstract class AbstractSerializerTest
     public AbstractSerializerTest(
             Class testClass )
     {
-        super( localFile( testClass, "/ResourceHelper" ),
-               localFile( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ),
+               localFileName( testClass, "/Log.properties" ));
 
     }
 }

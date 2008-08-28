@@ -42,43 +42,43 @@ public abstract class AllTests
 
                 new TestSpec(
                         StoreShadowMeshBaseTest3.class,
-                        AbstractTest.tempInputFile( StoreShadowMeshBaseTest3.class, "test3-active.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest3.class, "StoreProbeTest3_1.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest3.class, "StoreProbeTest3_2.xml" )),
+                        AbstractTest.tempInputFileName( StoreShadowMeshBaseTest3.class, "test3-active.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest3.class, "StoreProbeTest3_1.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest3.class, "StoreProbeTest3_2.xml" )),
 
                 new TestSpec(
                         StoreShadowMeshBaseTest4.class,
-                        AbstractTest.tempInputFile( StoreShadowMeshBaseTest4.class, "test4-1.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest4.class, "StoreShadowMeshBaseTest4_1a.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest4.class, "StoreShadowMeshBaseTest4_1b.xml" )),
+                        AbstractTest.tempInputFileName( StoreShadowMeshBaseTest4.class, "test4-1.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest4.class, "StoreShadowMeshBaseTest4_1a.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest4.class, "StoreShadowMeshBaseTest4_1b.xml" )),
 
                 new TestSpec(
                         StoreShadowMeshBaseTest5.class,
-                        AbstractTest.tempInputFile( StoreShadowMeshBaseTest5.class, "test5-1.xml" ),
-                        AbstractTest.tempInputFile( StoreShadowMeshBaseTest5.class, "test5-2.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest5.class, "StoreShadowMeshBaseTest5_1a.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest5.class, "StoreShadowMeshBaseTest5_2a.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest5.class, "StoreShadowMeshBaseTest5_1b.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest5.class, "StoreShadowMeshBaseTest5_2b.xml" )),
+                        AbstractTest.tempInputFileName( StoreShadowMeshBaseTest5.class, "test5-1.xml" ),
+                        AbstractTest.tempInputFileName( StoreShadowMeshBaseTest5.class, "test5-2.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest5.class, "StoreShadowMeshBaseTest5_1a.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest5.class, "StoreShadowMeshBaseTest5_2a.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest5.class, "StoreShadowMeshBaseTest5_1b.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest5.class, "StoreShadowMeshBaseTest5_2b.xml" )),
 
                 new TestSpec(
                         StoreShadowMeshBaseTest6.class,
-                        AbstractTest.tempInputFile( StoreShadowMeshBaseTest6.class, "test6-1.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest6.class, "StoreShadowMeshBaseTest6_1a.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest6.class, "StoreShadowMeshBaseTest6_1b.xml" )),
+                        AbstractTest.tempInputFileName( StoreShadowMeshBaseTest6.class, "test6-1.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest6.class, "StoreShadowMeshBaseTest6_1a.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest6.class, "StoreShadowMeshBaseTest6_1b.xml" )),
 
                 new TestSpec(
                         StoreShadowMeshBaseTest7.class ),
 
                 new TestSpec(
                         StoreShadowMeshBaseTest8.class,
-                        AbstractTest.tempInputFile( StoreShadowMeshBaseTest8.class, "test8-1.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest8.class, "StoreShadowMeshBaseTest8_1a.xml" ),
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest8.class, "StoreShadowMeshBaseTest8_1b.xml" )),
+                        AbstractTest.tempInputFileName( StoreShadowMeshBaseTest8.class, "test8-1.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest8.class, "StoreShadowMeshBaseTest8_1a.xml" ),
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest8.class, "StoreShadowMeshBaseTest8_1b.xml" )),
                         
                 new TestSpec(
                         StoreShadowMeshBaseTest9.class,
-                        AbstractTest.fileSystemFile( StoreShadowMeshBaseTest9.class, "StoreShadowMeshBaseTest9.xml" ))
+                        AbstractTest.fileSystemFileName( StoreShadowMeshBaseTest9.class, "StoreShadowMeshBaseTest9.xml" ))
                         
 //                new TestSpec(
 //                        WritableProbeStoreShadowMeshBaseTest1.class ) // FIXME to be written

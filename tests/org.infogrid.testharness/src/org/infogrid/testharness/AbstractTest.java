@@ -872,7 +872,7 @@ public abstract class AbstractTest
      * @param file the local file name
      * @return the file name relative to the project directory
      */
-    public static String localFile(
+    public static String localFileName(
             Class<?> testClass,
             String   file )
     {
@@ -896,7 +896,7 @@ public abstract class AbstractTest
      * @param file the local file name
      * @return the file name relative to the project directory
      */
-    public static String fileSystemFile(
+    public static String fileSystemFileName(
             Class<?> testClass,
             String   file )
     {
@@ -927,7 +927,7 @@ public abstract class AbstractTest
      * @param file the local file name
      * @return the file name relative to the project directory
      */
-    public static String tempInputFile(
+    public static String tempInputFileName(
             Class<?> testClass,
             String   file )
     {

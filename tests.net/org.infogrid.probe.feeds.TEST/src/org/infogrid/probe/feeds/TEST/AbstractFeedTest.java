@@ -46,8 +46,8 @@ public abstract class AbstractFeedTest
         throws
             MeshTypeNotFoundException
     {
-        super( localFile( AbstractFeedTest.class, "/ResourceHelper" ),
-               localFile( AbstractFeedTest.class, "/Log.properties" ));
+        super( localFileName( AbstractFeedTest.class, "/ResourceHelper" ),
+               localFileName( AbstractFeedTest.class, "/Log.properties" ));
     }
 
     /**

@@ -50,8 +50,8 @@ public abstract class AbstractXprisoTest
         throws
             MeshTypeNotFoundException
     {
-        super( localFile( testClass, "/ResourceHelper" ),
-               localFile( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ),
+               localFileName( testClass, "/Log.properties" ));
 
         theNameServer = MNameServer.create();
     }

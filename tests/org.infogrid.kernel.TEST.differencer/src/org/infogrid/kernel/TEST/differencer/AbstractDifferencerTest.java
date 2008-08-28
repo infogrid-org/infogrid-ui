@@ -51,8 +51,8 @@ public abstract class AbstractDifferencerTest
         throws
             MeshTypeNotFoundException
     {
-        super( localFile( testClass, "/ResourceHelper" ),
-               localFile( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ),
+               localFileName( testClass, "/Log.properties" ));
 
         SubjectArea sa = theModelBase.findSubjectArea( "org.infogrid.model.Test", null );
         

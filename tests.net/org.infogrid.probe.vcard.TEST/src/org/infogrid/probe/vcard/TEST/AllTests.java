@@ -37,7 +37,7 @@ public class AllTests
 
                 new TestSpec(
                         VCardProbeTest1.class,
-                        AbstractTest.fileSystemFile( VCardProbeTest1.class, "VCardProbeTest1.vcf" ))
+                        AbstractTest.fileSystemFileName( VCardProbeTest1.class, "VCardProbeTest1.vcf" ))
         };
 
         runTests( tests );

@@ -15,8 +15,9 @@
 package org.infogrid.kernel.TEST.modelbase;
 
 import org.infogrid.testharness.AbstractTest;
+
 /**
- *
+ * Factors out common behaviors of ModelBaseTests.
  */
 public abstract class AbstractModelBaseTest
         extends
@@ -24,11 +25,13 @@ public abstract class AbstractModelBaseTest
 {
     /**
      * Constructor.
+     * 
+     * @param testClass the test class to which the file is local
      */
     protected AbstractModelBaseTest(
-            Class testClass )
+            Class<?> testClass )
     {
-        super( localFile( testClass, "/ResourceHelper" ),
-               localFile( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ),
+               localFileName( testClass, "/Log.properties" ));
     }
 }

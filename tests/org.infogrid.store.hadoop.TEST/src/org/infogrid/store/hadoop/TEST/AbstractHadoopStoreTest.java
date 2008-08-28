@@ -37,8 +37,8 @@ public abstract class AbstractHadoopStoreTest
     public AbstractHadoopStoreTest(
             Class testClass )
     {
-        super( localFile( testClass, "/ResourceHelper" ),
-               localFile( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ),
+               localFileName( testClass, "/Log.properties" ));
         
         
         Path subdir = new Path( TEST_SUBDIR_NAME );

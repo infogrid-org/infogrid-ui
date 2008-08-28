@@ -36,8 +36,8 @@ public abstract class AbstractShadowEventTest
     protected AbstractShadowEventTest(
             Class testClass )
     {
-        super( localFile( testClass, "/ResourceHelper" ),
-               localFile( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ),
+               localFileName( testClass, "/Log.properties" ));
     }
 
     /**

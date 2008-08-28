@@ -39,30 +39,30 @@ public class AllTests
 
                 new TestSpec(
                         ProbeTest1.class,
-                        AbstractTest.fileSystemFile( ProbeTest1.class, "ProbeTest1.xml" )),
+                        AbstractTest.fileSystemFileName( ProbeTest1.class, "ProbeTest1.xml" )),
 
                 new TestSpec(
                         ProbeTest2.class,
-                        AbstractTest.tempInputFile( ProbeTest2.class, "test2-active.xml" ),
-                        AbstractTest.fileSystemFile( ProbeTest2.class, "ProbeTest2_1.xml" ),
-                        AbstractTest.fileSystemFile( ProbeTest2.class, "ProbeTest2_2.xml" )),
+                        AbstractTest.tempInputFileName( ProbeTest2.class, "test2-active.xml" ),
+                        AbstractTest.fileSystemFileName( ProbeTest2.class, "ProbeTest2_1.xml" ),
+                        AbstractTest.fileSystemFileName( ProbeTest2.class, "ProbeTest2_2.xml" )),
 
                 new TestSpec(
                         ProbeTest3.class,
-                        AbstractTest.tempInputFile( ProbeTest3.class, "test3-active.xml" ),
-                        AbstractTest.fileSystemFile( ProbeTest3.class, "ProbeTest2_1.xml" ),
-                        AbstractTest.fileSystemFile( ProbeTest3.class, "ProbeTest2_2.xml" )),
+                        AbstractTest.tempInputFileName( ProbeTest3.class, "test3-active.xml" ),
+                        AbstractTest.fileSystemFileName( ProbeTest3.class, "ProbeTest2_1.xml" ),
+                        AbstractTest.fileSystemFileName( ProbeTest3.class, "ProbeTest2_2.xml" )),
                         
                 new TestSpec(
                         ProbeTest4.class,
-                        AbstractTest.fileSystemFile( ProbeTest4.class, "ProbeTest4.xml" )),
+                        AbstractTest.fileSystemFileName( ProbeTest4.class, "ProbeTest4.xml" )),
 
                 new TestSpec(
                         ProbeTest5.class ),
 
 //                new TestSpec( // FAILS (minor). Requires memory debugger to make progress. See also ProbeTest6
 //                        ProbeTest6.class,
-//                        AbstractTest.fileSystemFile( ProbeTest6.class, "ProbeTest6.xml" )),
+//                        AbstractTest.fileSystemFileName( ProbeTest6.class, "ProbeTest6.xml" )),
 //
                 new TestSpec(
                         ProbeTest7.class ),
@@ -87,7 +87,7 @@ public class AllTests
 
                 new TestSpec(
                         YadisTest5.class,
-                        AbstractTest.fileSystemFile( YadisTest5.class, "YadisTest5.xml" )),
+                        AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" )),
 
                 new TestSpec( // property updates
                             WritableProbeTest1.class ),
@@ -125,14 +125,14 @@ public class AllTests
 
                 new TestSpec(
                         ShadowTest1.class,
-                        AbstractTest.fileSystemFile( ShadowTest1.class, "ProbeTest1.xml" )),
+                        AbstractTest.fileSystemFileName( ShadowTest1.class, "ProbeTest1.xml" )),
                             
                 new TestSpec(
                         ShadowTest2.class ),
                             
                 new TestSpec(
                         ShadowTest3.class,
-                        AbstractTest.fileSystemFile( ShadowTest3.class, "ShadowTest3a.html" )), // ShadowTest3b.xml referenced from ShadowTest3a.html
+                        AbstractTest.fileSystemFileName( ShadowTest3.class, "ShadowTest3a.html" )), // ShadowTest3b.xml referenced from ShadowTest3a.html
 
                 new TestSpec(
                         ShadowTest4.class ),
@@ -154,7 +154,7 @@ public class AllTests
 
                 new TestSpec(
                         ForwardReferenceTest1.class,
-                        AbstractTest.fileSystemFile( ForwardReferenceTest1.class, "ForwardReferenceTest1_1.xml" )),
+                        AbstractTest.fileSystemFileName( ForwardReferenceTest1.class, "ForwardReferenceTest1_1.xml" )),
                                 // ForwardReferenceRest1_2.xml included by reference from ForwardReferenceRest1.xml
 
                 new TestSpec(

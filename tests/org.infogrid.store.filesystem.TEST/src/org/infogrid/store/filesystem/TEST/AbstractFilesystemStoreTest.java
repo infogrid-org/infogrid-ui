@@ -34,8 +34,8 @@ public abstract class AbstractFilesystemStoreTest
     public AbstractFilesystemStoreTest(
             Class testClass )
     {
-        super( localFile( testClass, "/ResourceHelper" ),
-               localFile( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ),
+               localFileName( testClass, "/Log.properties" ));
         
         File subdir = new File( TEST_SUBDIR_NAME );
         

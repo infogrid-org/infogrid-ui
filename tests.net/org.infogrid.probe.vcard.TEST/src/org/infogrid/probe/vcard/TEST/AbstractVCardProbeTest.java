@@ -39,8 +39,8 @@ public abstract class AbstractVCardProbeTest
     protected AbstractVCardProbeTest(
             Class testClass )
     {
-        super( localFile( testClass, "/ResourceHelper" ),
-               localFile( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ),
+               localFileName( testClass, "/Log.properties" ));
         
         theProbeDirectory.addStreamProbe( new StreamProbeDescriptor( "text/x-vcard", VCardProbe.class ));
     }

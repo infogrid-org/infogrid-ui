@@ -41,19 +41,19 @@ public class AllTests
 
                 new TestSpec(
                         AtomTest1.class,
-                        AbstractTest.fileSystemFile( AtomTest1.class, "AtomTest1.xml" )),
+                        AbstractTest.fileSystemFileName( AtomTest1.class, "AtomTest1.xml" )),
 
                 new TestSpec(
                         AtomTest2.class,
-                        AbstractTest.fileSystemFile( AtomTest2.class, "AtomTest2.xml" )),
+                        AbstractTest.fileSystemFileName( AtomTest2.class, "AtomTest2.xml" )),
 
                 new TestSpec(
                         RssTest1.class,
-                        AbstractTest.fileSystemFile( RssTest1.class, "RssTest1.xml" )),
+                        AbstractTest.fileSystemFileName( RssTest1.class, "RssTest1.xml" )),
 
                 new TestSpec(
                         RssTest2.class,
-                        AbstractTest.fileSystemFile( RssTest2.class, "RssTest2.xml" ))
+                        AbstractTest.fileSystemFileName( RssTest2.class, "RssTest2.xml" ))
         };
 
         runTests( tests );
