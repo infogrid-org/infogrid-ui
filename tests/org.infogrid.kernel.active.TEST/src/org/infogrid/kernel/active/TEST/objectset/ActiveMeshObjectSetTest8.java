@@ -28,7 +28,7 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
 
 /**
- * This file tests the SelectiveActiveMeshObjectSet.
+ * Tests OrderedActiveMeshObjectSet.
  */
 public class ActiveMeshObjectSetTest8
     extends
@@ -256,10 +256,10 @@ public class ActiveMeshObjectSetTest8
     }
 
     /**
-      * Main program.
-     * 
-     * @param args command-line arguments
-      */
+     * The main program.
+     *
+     * @param args the command-line arguments
+     */
     public static void main(
              String [] args )
     {

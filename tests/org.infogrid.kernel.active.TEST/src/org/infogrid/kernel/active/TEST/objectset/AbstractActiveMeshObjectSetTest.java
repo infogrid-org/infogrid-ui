@@ -16,19 +16,14 @@ package org.infogrid.kernel.active.TEST.objectset;
 
 import java.net.URISyntaxException;
 import org.infogrid.kernel.active.TEST.AllTests;
-import org.infogrid.mesh.EntityBlessedAlreadyException;
-import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
-import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.active.m.ActiveMMeshObjectSetFactory;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
-import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.RelationshipType;
@@ -42,9 +37,8 @@ import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 
-
 /**
- *
+ * Factors out functionality common to ActiveMeshObjectSetTests.
  */
 public abstract class AbstractActiveMeshObjectSetTest
         extends
@@ -52,9 +46,13 @@ public abstract class AbstractActiveMeshObjectSetTest
 {
     /**
      * Constructor.
+     * 
+     * @param testClass the Class containing the test
+     * @throws MeshTypeNotFoundException a MeshType could not be found
+     * @throws URISyntaxException a MeshBaseIdentifier could not be created
      */
     protected AbstractActiveMeshObjectSetTest(
-            Class testClass )
+            Class<?> testClass )
         throws
             MeshTypeNotFoundException,
             URISyntaxException
@@ -75,17 +73,19 @@ public abstract class AbstractActiveMeshObjectSetTest
 
     /**
      * Create a MeshObject.
+     * 
+     * @param life the MeshBaseLifecycleManager to use
+     * @param type the type with which to bless the MeshObject
+     * @param identifier the MeshObjectIdentifier for the MeshObject
+     * @return the created MeshObject
+     * @throws Exception all sorts of things may go wrong in tests
      */
     protected MeshObject createMeshObject(
             MeshBaseLifecycleManager   life,
             EntityType                 type,
             MeshObjectIdentifier       identifier )
         throws
-            TransactionException,
-            MeshObjectIdentifierNotUniqueException,
-            EntityBlessedAlreadyException,
-            IsAbstractException,
-            NotPermittedException
+            Exception
     {
         MeshObject ret = life.createMeshObject( identifier );
         ret.bless( type );
@@ -113,6 +113,7 @@ public abstract class AbstractActiveMeshObjectSetTest
      * @param values the set of values for which we look in the set
      * @param msg a message to print to report an error
      * @return true if the test passed
+     * @throws Exception all sorts of things may go wrong in a test
      */
     protected final boolean checkMeshObjectSet(
             MeshObjectSet set,
@@ -160,7 +161,9 @@ public abstract class AbstractActiveMeshObjectSetTest
      *
      * @param set the MeshObjectSet whose content we want to dump
      * @param prefix a string to prepend
+     * @param type indicates the property whose value shall be dumped
      * @param mylog the Log to dump to
+     * @throws Exception all sorts of things may go wrong in a test
      */
     protected final void dumpMeshObjectSet(
             MeshObjectSet   set,
@@ -178,7 +181,9 @@ public abstract class AbstractActiveMeshObjectSetTest
      *
      * @param set the MeshObjectSet whose content we want to dump
      * @param prefix a string to prepend
+     * @param types indicates the properties whose values shall be dumped
      * @param mylog the Log to dump to
+     * @throws Exception all sorts of things may go wrong in a test
      */
     protected final void dumpMeshObjectSet(
             MeshObjectSet   set,

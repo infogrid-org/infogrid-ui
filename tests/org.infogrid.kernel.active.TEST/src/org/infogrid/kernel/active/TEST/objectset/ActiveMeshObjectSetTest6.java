@@ -25,14 +25,16 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
 
 /**
- * This file tests the CompositeActiveMeshObjectSet
+ * Tests CompositeActiveMeshObjectSet.
  */
 public class ActiveMeshObjectSetTest6
     extends
         AbstractActiveMeshObjectSetTest
 {
     /**
-     * run the test
+     * Run the test.
+     * 
+     * @throws Exception all sorts of things may go wrong in a test
      */
     public void run()
         throws
@@ -204,8 +206,10 @@ public class ActiveMeshObjectSetTest6
     }
 
     /**
-      * the main program
-      */
+     * The main program.
+     *
+     * @param args the command-line arguments
+     */
     public static void main(
              String [] args )
     {
@@ -236,8 +240,11 @@ public class ActiveMeshObjectSetTest6
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public ActiveMeshObjectSetTest6(
             String [] args )
         throws

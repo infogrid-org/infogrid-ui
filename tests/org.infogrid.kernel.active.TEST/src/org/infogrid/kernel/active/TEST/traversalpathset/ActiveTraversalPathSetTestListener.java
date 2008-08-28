@@ -14,6 +14,8 @@
 
 package org.infogrid.kernel.active.TEST.traversalpathset;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import org.infogrid.mesh.set.active.ActiveTraversalPathSet;
 import org.infogrid.mesh.set.active.ActiveTraversalPathSetListener;
 import org.infogrid.mesh.set.active.OrderedTraversalPathSetReorderedEvent;
@@ -21,11 +23,8 @@ import org.infogrid.mesh.set.active.TraversalPathAddedEvent;
 import org.infogrid.mesh.set.active.TraversalPathRemovedEvent;
 import org.infogrid.util.logging.Log;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 /**
- * This class is used to by the ActiveTraversalPathSetTests to receive callbacks
+ * Receive and track callbacks in ActiveTraversalPathSetTests.
  */
 class ActiveTraversalPathSetTestListener
         implements
@@ -33,8 +32,12 @@ class ActiveTraversalPathSetTestListener
             PropertyChangeListener
 {
     /**
-    * Constructor that sets a listenerName and the RootEntityRoleMonitor to which this listener registers itself.
-    */
+     * Constructor.
+     * 
+     * @param listenerName name of the listener to distinguish listeners
+     * @param set the ActiveTraversalPathSet to monitor
+     * @param logger logger to log to
+     */
     public ActiveTraversalPathSetTestListener(
             String                 listenerName,
             ActiveTraversalPathSet set,
@@ -51,23 +54,29 @@ class ActiveTraversalPathSetTestListener
     }
 
     /**
-    * Obtain the number of addition events that we have received
-    */
+     * Obtain the number of addition events that we have received.
+     * 
+     * @return number of events
+     */
     public int getAddCounter()
     {
         return addCounter;
     }
 
     /**
-    * Obtain the number of deletion events that we have received
-    */
+     * Obtain the number of deletion events that we have received.
+     * 
+     * @return number of events
+     */
     public int getRemoveCounter()
     {
         return removeCounter;
     }
 
     /**
-     * Obtain the number of reorder events that we have received
+     * Obtain the number of reorder events that we have received.
+     * 
+     * @return number of events
      */
     public int getReorderCounter()
     {
@@ -75,15 +84,19 @@ class ActiveTraversalPathSetTestListener
     }
 
     /**
-     * Obtain the number of property change events that we have received
+     * Obtain the number of PropertyChangeEvents that we have received.
+     * 
+     * @return number of events
      */
-    public int getPropertyCounter()
+    public int getPropertyChangeCounter()
     {
         return propertyCounter;
     }
 
     /**
-     * callback from the set
+     * Callback.
+     * 
+     * @param event the event
      */
     public void traversalPathAdded(
             TraversalPathAddedEvent event )
@@ -93,7 +106,9 @@ class ActiveTraversalPathSetTestListener
     }
 
     /**
-     * callback from the set
+     * Callback.
+     * 
+     * @param event the event
      */
     public void traversalPathRemoved(
             TraversalPathRemovedEvent event )
@@ -103,7 +118,9 @@ class ActiveTraversalPathSetTestListener
     }
 
     /**
-     * callback from the set
+     * Callback.
+     * 
+     * @param event the event
      */
     public void orderedTraversalPathSetReordered(
             OrderedTraversalPathSetReorderedEvent event )
@@ -113,8 +130,10 @@ class ActiveTraversalPathSetTestListener
     }
 
     /**
-    * ActiveRootEntitySetListener interface method. This does nothing in this case.
-    */
+     * Callback.
+     * 
+     * @param event the event
+     */
     public void propertyChange(
             PropertyChangeEvent event )
     {
@@ -123,7 +142,7 @@ class ActiveTraversalPathSetTestListener
     }
 
     /**
-     * this resets all the counters
+     * Reset all counters.
      */
     public void reset()
     {
@@ -134,37 +153,37 @@ class ActiveTraversalPathSetTestListener
     }
 
     /**
-     * our name
+     * The name of the listener.
      */
     String name;
 
     /**
-     * the role monitor that we listen to
+     * The set that we listen to.
      */
     ActiveTraversalPathSet theSet;
 
     /**
-     * the counter for our additions
+     * Counts additions.
      */
     private int addCounter;
 
     /**
-     * the counter for our deletions
+     * Counts removals.
      */
     private int removeCounter;
 
     /**
-     * the counter for our reorder events
+     * Counts reorder events.
      */
     private int reorderCounter;
 
     /**
-     * the counter for property change events
+     * Counts PropertyChangeEvents.
      */
     private int propertyCounter;
 
     /**
-     * the logger we log to
+     * The logger to log to.
      */
     private Log log;
 }

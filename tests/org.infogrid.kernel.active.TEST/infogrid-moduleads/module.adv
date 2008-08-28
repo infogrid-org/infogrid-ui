@@ -12,7 +12,7 @@
     Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
-
+ 
 <standardmodule>
  <name>org.infogrid.kernel.active.TEST</name>
  <username>Active kernel test Module</username>
@@ -22,12 +22,12 @@
   <jar>org.infogrid.kernel.active.TEST.jar</jar>
  </provides>
  <dependencies>
+  <requires name="org.infogrid.util.logging.log4j"/>
+  <requires name="org.infogrid.modelbase.m"/>
   <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.kernel.active"/>
-  <requires name="org.infogrid.modelbase.m"/>
-  <requires name="org.infogrid.probe"/>
+  <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.util"/>
-  <requires name="org.infogrid.util.logging.log4j"/>
   <requires name="org.infogrid.testharness"/>
  </dependencies>
 </standardmodule>

@@ -29,7 +29,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 /**
- *
+ * Receive and track callbacks in ActiveMeshObjectSetTests.
  */
 public class ActiveMeshObjectSetTestListener
         implements
@@ -37,8 +37,10 @@ public class ActiveMeshObjectSetTestListener
             PropertyChangeListener
 {
     /**
-    * Constructor that sets a listenerName and the ActiveMeshObjectSet to which this listener registers itself.
-    */
+     * @param listenerName name of the listener to distinguish listeners
+     * @param set the ActiveMeshObjectSet to monitor
+     * @param logger logger to log to
+     */
     public ActiveMeshObjectSetTestListener(
             String              listenerName,
             ActiveMeshObjectSet set,
@@ -46,6 +48,7 @@ public class ActiveMeshObjectSetTestListener
     {
         name   = listenerName;
         theSet = set;
+
         theSet.addWeakActiveMeshObjectSetListener( this );
         theSet.addWeakContentPropertyChangeListener( this );
 
@@ -55,23 +58,29 @@ public class ActiveMeshObjectSetTestListener
     }
 
     /**
-    * Obtain the number of addition events that we have received
-    */
+     * Obtain the number of addition events that we have received.
+     * 
+     * @return number of events
+     */
     public int getAddCounter()
     {
         return addedEvents.size();
     }
 
     /**
-    * Obtain the number of deletion events that we have received
-    */
+     * Obtain the number of deletion events that we have received.
+     * 
+     * @return number of events
+     */
     public int getRemoveCounter()
     {
         return removedEvents.size();
     }
 
     /**
-     * Obtain the number of PropertyChangeEvents that we have received
+     * Obtain the number of PropertyChangeEvents that we have received.
+     * 
+     * @return number of events
      */
     public int getPropertyChangesCounter()
     {
@@ -79,7 +88,9 @@ public class ActiveMeshObjectSetTestListener
     }
 
     /**
-     * Obtain the number of RoleChangeEvents that we have received
+     * Obtain the number of RoleChangeEvents that we have received.
+     * 
+     * @return number of events
      */
     public int getRoleChangesCounter()
     {
@@ -87,8 +98,9 @@ public class ActiveMeshObjectSetTestListener
     }
 
     /**
-     * ActiveMeshObjectSetListener interface method that gets called by the
-     * ActiveMeshObjectSet whenever an add happens.
+     * Callback.
+     * 
+     * @param event the event
      */
     public void meshObjectAdded(
             MeshObjectAddedEvent event )
@@ -103,8 +115,9 @@ public class ActiveMeshObjectSetTestListener
     }
 
     /**
-     * ActiveMeshObjectSetListener interface method that gets called by the
-     * ActiveMeshObjectSet whenever an remove happens.
+     * Callback.
+     * 
+     * @param event the event
      */
     public void meshObjectRemoved(
             MeshObjectRemovedEvent event )
@@ -119,8 +132,10 @@ public class ActiveMeshObjectSetTestListener
     }
 
     /**
-    * ActiveRootEntitySetListener interface method.
-    */
+     * Callback.
+     * 
+     * @param event the event
+     */
     public void propertyChange(
             PropertyChangeEvent event )
     {
@@ -147,7 +162,7 @@ public class ActiveMeshObjectSetTestListener
     }
 
     /**
-     * this resets all the counters
+     * Reset all counters.
      */
     public void reset()
     {
@@ -158,37 +173,37 @@ public class ActiveMeshObjectSetTestListener
     }
 
     /**
-     * Our name
+     * The name of the listener.
      */
     String name;
 
     /**
-     * The ActiveMeshObjectSet that we listen to
+     * The set that we listen to.
      */
     ActiveMeshObjectSet theSet;
 
     /**
-     * we store all added events here
+     * Stores received MeshObjectAddedEvents.
      */
     private ArrayList<MeshObjectAddedEvent> addedEvents;
 
     /**
-     * we store all removed events here
+     * Stores received MeshObjectRemovedEvents.
      */
     private ArrayList<MeshObjectRemovedEvent> removedEvents;
 
     /**
-     * we store all property update events here
+     * Stores received MeshObjectPropertyChangeEvent.
      */
     private ArrayList<MeshObjectPropertyChangeEvent> propertyChangeEvents;
 
     /**
-     * we store all role player update events here
+     * Stores received MeshObjectRoleChangeEvent.
      */
     private ArrayList<MeshObjectRoleChangeEvent> roleChangeEvents;
 
     /**
-     * the logger we log to
+     * The logger to log to.
      */
     private Log log;
 }

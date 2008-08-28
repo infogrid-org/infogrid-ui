@@ -25,16 +25,16 @@ import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.logging.Log;
 
 /**
- * This file tests the TraversalActiveTraversalPathSet.
- *
- * First we just relate some objects, but then we add more to form a more complex network
+ * Tests the TraversalActiveTraversalPathSet.
  */
 public class ActiveTraversalPathSetTest1
     extends
         AbstractActiveTraversalPathSetTest
 {
     /**
-     * run the test
+     * Run the test.
+     * 
+     * @throws Exception all sorts of things may go wrong in a test
      */
     public void run()
         throws
@@ -142,7 +142,7 @@ public class ActiveTraversalPathSetTest1
 
         checkEquals( listener1.getAddCounter(),      1, "wrong number of add events" );
         checkEquals( listener1.getRemoveCounter(),   0, "wrong number of remove events" );
-        checkEquals( listener1.getPropertyCounter(), 0, "wrong number of property change events" );
+        checkEquals( listener1.getPropertyChangeCounter(), 0, "wrong number of property change events" );
         checkEquals( listener1.getReorderCounter(),  0, "wrong number of reorder events" );
         listener1.reset();
 
@@ -174,7 +174,7 @@ public class ActiveTraversalPathSetTest1
 
         checkEquals( listener1.getAddCounter(),      1, "wrong number of add events" );
         checkEquals( listener1.getRemoveCounter(),   0, "wrong number of remove events" );
-        checkEquals( listener1.getPropertyCounter(), 0, "wrong number of property change events" );
+        checkEquals( listener1.getPropertyChangeCounter(), 0, "wrong number of property change events" );
         checkEquals( listener1.getReorderCounter(),  0, "wrong number of reorder events" );
         listener1.reset();
 
@@ -206,7 +206,7 @@ public class ActiveTraversalPathSetTest1
 
         checkEquals( listener1.getAddCounter(),      1, "wrong number of add events" );
         checkEquals( listener1.getRemoveCounter(),   0, "wrong number of remove events" );
-        checkEquals( listener1.getPropertyCounter(), 0, "wrong number of property change events" );
+        checkEquals( listener1.getPropertyChangeCounter(), 0, "wrong number of property change events" );
         checkEquals( listener1.getReorderCounter(),  0, "wrong number of reorder events" );
         listener1.reset();
 
@@ -237,7 +237,7 @@ public class ActiveTraversalPathSetTest1
 
         checkEquals( listener1.getAddCounter(),      0, "wrong number of add events" );
         checkEquals( listener1.getRemoveCounter(),   1, "wrong number of remove events" );
-        checkEquals( listener1.getPropertyCounter(), 0, "wrong number of property change events" );
+        checkEquals( listener1.getPropertyChangeCounter(), 0, "wrong number of property change events" );
         checkEquals( listener1.getReorderCounter(),  0, "wrong number of reorder events" );
         listener1.reset();
 
@@ -294,10 +294,11 @@ public class ActiveTraversalPathSetTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args the command-line arguments
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public ActiveTraversalPathSetTest1(
             String [] args )
         throws

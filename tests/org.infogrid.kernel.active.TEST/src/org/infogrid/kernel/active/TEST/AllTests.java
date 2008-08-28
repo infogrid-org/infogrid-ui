@@ -28,7 +28,7 @@ import org.infogrid.kernel.active.TEST.traversalpathset.ActiveTraversalPathSetTe
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- *
+ * Tests ActiveMeshObjectSet and ActiveTraversalPathSet.
  */
 public class AllTests
         extends
@@ -49,7 +49,7 @@ public class AllTests
                 new TestSpec( ActiveMeshObjectSetTest4.class ),
                 new TestSpec( ActiveMeshObjectSetTest5.class ),
                 new TestSpec( ActiveMeshObjectSetTest6.class ),
-                // new TestSpec( ActiveMeshObjectSetTest7.class ), // FIXME
+                // new TestSpec( ActiveMeshObjectSetTest7.class ), // FIXME, transitive closure is broken
                 new TestSpec( ActiveMeshObjectSetTest8.class ),
 
                 new TestSpec( ActiveTraversalPathSetTest1.class ),

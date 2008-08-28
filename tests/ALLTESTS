@@ -13,3 +13,4 @@ org.infogrid.kernel.TEST.meshbase.m.security
 org.infogrid.kernel.TEST.mesh.externalized
 org.infogrid.kernel.TEST.differencer
 org.infogrid.meshbase.store.TEST
+org.infogrid.kernel.active.TEST

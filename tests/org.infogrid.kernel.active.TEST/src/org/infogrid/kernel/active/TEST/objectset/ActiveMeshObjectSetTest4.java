@@ -22,16 +22,17 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
 import org.infogrid.util.logging.Log;
 
-
 /**
- * This file tests the ActiveMeshObjectSet listener mechanism with respect to forwarded PropertyChangeEvents
+ * Tests TraversalActiveMeshObjectSet.
  */
 public class ActiveMeshObjectSetTest4
     extends
         AbstractActiveMeshObjectSetTest
 {
     /**
-     * run the test
+     * Run the test.
+     * 
+     * @throws Exception all sorts of things may go wrong in a test
      */
     public void run()
         throws
@@ -166,8 +167,10 @@ public class ActiveMeshObjectSetTest4
     }
 
     /**
-      * the main program
-      */
+     * The main program.
+     *
+     * @param args the command-line arguments
+     */
     public static void main(
              String [] args )
     {
@@ -198,8 +201,11 @@ public class ActiveMeshObjectSetTest4
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public ActiveMeshObjectSetTest4(
             String [] args )
         throws

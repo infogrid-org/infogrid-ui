@@ -14,29 +14,30 @@
 
 package org.infogrid.kernel.active.TEST.objectset;
 
+import java.beans.PropertyChangeListener;
+import java.util.Iterator;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.active.TraversalActiveMeshObjectSet;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
+import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
 import org.infogrid.util.logging.Log;
 
-import java.beans.PropertyChangeListener;
-import java.util.Iterator;
-import org.infogrid.mesh.set.active.TraversalActiveMeshObjectSet;
-import org.infogrid.meshbase.MeshObjectIdentifierFactory;
-
-/**
- * This file tests the ActiveRootEntitySet listener mechanism with multiple roles
- */
+ /**
+  * Tests TraversalActiveMeshObjectSet with multiple Roles.
+  */
 public class ActiveMeshObjectSetTest2
     extends
         AbstractActiveMeshObjectSetTest
 {
     /**
-     * run the test
+     * Run the test.
+     * 
+     * @throws Exception all sorts of things may go wrong in a test
      */
     public void run()
         throws
@@ -293,7 +294,11 @@ public class ActiveMeshObjectSetTest2
     }
 
     /**
-     * helper method to check whether a certain RootObject has property change listeners
+     * Helper method to check whether a certain MeshObject has PropertyChangeListeners.
+     * 
+     * @param obj the MeshObject to check
+     * @param msg message to print when check failed
+     * @return true if check passed
      */
     protected boolean checkHasNoSubscribers(
             MeshObject obj,
@@ -318,8 +323,10 @@ public class ActiveMeshObjectSetTest2
     }
 
     /**
-      * the main program
-      */
+     * The main program.
+     *
+     * @param args the command-line arguments
+     */
     public static void main(
              String [] args )
     {
@@ -350,8 +357,11 @@ public class ActiveMeshObjectSetTest2
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public ActiveMeshObjectSetTest2(
             String [] args )
         throws

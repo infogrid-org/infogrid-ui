@@ -23,14 +23,16 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
 
 /**
- * This file tests the MeshObjectSet listener mechanism
+ * Tests TraversalActiveMeshObjectSet.
  */
 public class ActiveMeshObjectSetTest1
     extends
         AbstractActiveMeshObjectSetTest
 {
     /**
-     * run the test
+     * Run the test.
+     * 
+     * @throws Exception all sorts of things may go wrong in a test
      */
     public void run()
         throws
@@ -184,10 +186,11 @@ public class ActiveMeshObjectSetTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args the command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args the command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public ActiveMeshObjectSetTest1(
             String [] args )
         throws
