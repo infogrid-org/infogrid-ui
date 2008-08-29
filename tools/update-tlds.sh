@@ -6,7 +6,7 @@
 modprefix=modules;
 script=tools/`basename $0`
 
-if [ ! -d modules ]; then
+if [ ! -d modules.fnd ]; then
         echo "ERROR: this script must be invoked from the root directory of the branch using the command ${script}"
         exit 1;
 fi;

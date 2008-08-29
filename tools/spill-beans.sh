@@ -3,7 +3,7 @@
 # Print some statistics. Not the world's more efficient algorithm, but that doesn't seem very important for this purpose here.
 #
 
-if [ ! -d modules ]; then
+if [ ! -d modules.fnd ]; then
         echo "ERROR: this script must be invoked from the root directory of the branch using the command ${script}"
         exit 1;
 fi;
