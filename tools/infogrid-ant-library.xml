@@ -23,9 +23,9 @@ $Date$
 
   <property location="../.." name="infogrid.org" />
 
-  <property name="infogrid.org.apps"        value="${infogrid.org}/apps"/>
-  <property name="infogrid.org.modules"     value="${infogrid.org}/modules"/>
-  <property name="infogrid.org.tests"       value="${infogrid.org}/tests"/>
+  <property name="infogrid.org.apps.fnd"    value="${infogrid.org}/apps.fnd"/>
+  <property name="infogrid.org.modules.fnd" value="${infogrid.org}/modules.fnd"/>
+  <property name="infogrid.org.tests.fnd"   value="${infogrid.org}/tests.fnd"/>
   <property name="infogrid.org.apps.net"    value="${infogrid.org}/apps.net"/>
   <property name="infogrid.org.modules.net" value="${infogrid.org}/modules.net"/>
   <property name="infogrid.org.tests.net"   value="${infogrid.org}/tests.net"/>
@@ -33,17 +33,17 @@ $Date$
   <property name="infogrid.org.tools"   value="${infogrid.org}/tools"/>
   <property name="infogrid.org.vendors" value="${infogrid.org}/vendors"/>
 
-  <property name="all.modules.dirs"    value="${infogrid.org.modules}:${infogrid.org.modules.net}" />
+  <property name="all.modules.dirs"    value="${infogrid.org.modules.fnd}:${infogrid.org.modules.net}" />
 
   <property name="javadoc.windowtitle" value="InfoGrid Module '${ant.project.name}'" />
 
   <property name="classpath.moduleadvertisementserializer"
-            value="${infogrid.org.modules}/org.infogrid.module.moduleadvertisementserializer/dist/org.infogrid.module.moduleadvertisementserializer.jar:${infogrid.org.modules}/org.infogrid.module/dist/org.infogrid.module.jar:${infogrid.org.modules}/org.infogrid.util/dist/org.infogrid.util.jar"/>
+            value="${infogrid.org.modules.fnd}/org.infogrid.module.moduleadvertisementserializer/dist/org.infogrid.module.moduleadvertisementserializer.jar:${infogrid.org.modules.fnd}/org.infogrid.module/dist/org.infogrid.module.jar:${infogrid.org.modules.fnd}/org.infogrid.util/dist/org.infogrid.util.jar"/>
   <property name="class.moduleadvertisementserializer"
             value="org.infogrid.module.moduleadvertisementserializer.ModuleAdvertisementSerializer"/>
 
   <property name="classpath.bootloader"
-            value="${infogrid.org.modules}/org.infogrid.module/dist/org.infogrid.module.jar:${infogrid.org.modules}/org.infogrid.module.commandline/dist/org.infogrid.module.commandline.jar"/>
+            value="${infogrid.org.modules.fnd}/org.infogrid.module/dist/org.infogrid.module.jar:${infogrid.org.modules.fnd}/org.infogrid.module.commandline/dist/org.infogrid.module.commandline.jar"/>
   <property name="class.bootloader"
             value="org.infogrid.module.commandline.CommandlineBootLoader"/>
 
@@ -120,7 +120,7 @@ $Date$
           style="${infogrid.org.tools}/module-to-module-description.xsl">
       <xmlcatalog>
         <dtd publicId="-//InfoGrid.org//InfoGrid Model//EN"
-             location="${infogrid.org.modules}/org.infogrid.module/src/org/infogrid/module/module.dtd"/>
+             location="${infogrid.org.modules.fnd}/org.infogrid.module/src/org/infogrid/module/module.dtd"/>
       </xmlcatalog>
     </xslt>
     <touch file="${build.dir}/module-generated.touch"/>
@@ -143,7 +143,7 @@ $Date$
           style="${infogrid.org.tools}/model-to-adv.xsl">
       <xmlcatalog>
         <dtd publicId="-//InfoGrid.org//InfoGrid Model//EN"
-             location="${infogrid.org.modules}/org.infogrid.kernel/src/org/infogrid/modelbase/externalized/xml/model.dtd"/>
+             location="${infogrid.org.modules.fnd}/org.infogrid.kernel/src/org/infogrid/modelbase/externalized/xml/model.dtd"/>
       </xmlcatalog>
     </xslt>
     <xslt in="infogrid-models/model.xml"
@@ -151,7 +151,7 @@ $Date$
           style="${infogrid.org.tools}/model-to-module-description.xsl">
       <xmlcatalog>
         <dtd publicId="-//InfoGrid.org//InfoGrid Model//EN"
-             location="${infogrid.org.modules}/org.infogrid.kernel/src/org/infogrid/modelbase/externalized/xml/model.dtd"/>
+             location="${infogrid.org.modules.fnd}/org.infogrid.kernel/src/org/infogrid/modelbase/externalized/xml/model.dtd"/>
       </xmlcatalog>
     </xslt>
 

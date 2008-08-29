@@ -5,7 +5,7 @@ export tempsuffix=".fix-notice";
 
 echo "-- Fixing Java files --"
 
-find modules modules.net apps apps.net tests tests.net -name '*.java' | {
+find modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net -name '*.java' | {
     while read f
     do
         echo $f;
@@ -16,7 +16,7 @@ find modules modules.net apps apps.net tests tests.net -name '*.java' | {
 
 echo "-- Fixing properties files --"
 
-find modules modules.net apps apps.net tests tests.net -name '*.properties' | {
+find modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net -name '*.properties' | {
     while read f
     do
         echo $f;
@@ -27,7 +27,7 @@ find modules modules.net apps apps.net tests tests.net -name '*.properties' | {
 
 echo "-- Fixing XML files --"
 
-find modules modules.net apps apps.net tests tests.net \( -name '*.xml' -or -name 'module.adv' \) | {
+find modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net \( -name '*.xml' -or -name 'module.adv' \) | {
     while read f
     do
         echo $f;

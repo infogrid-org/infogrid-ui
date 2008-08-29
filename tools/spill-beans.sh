@@ -9,7 +9,7 @@ if [ ! -d modules ]; then
 fi;
 
 ECHO=/bin/echo;
-DIRS="modules modules.net apps apps.net tests tests.net"
+DIRS="modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net"
 SKIP1='.*/build/.*';
 SKIP2='.*/dist/.*';
 

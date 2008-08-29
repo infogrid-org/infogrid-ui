@@ -20,13 +20,13 @@ do_clean=1;
 do_build=1;
 do_doc=1;
 do_run=1;
-do_modules=1;
+do_modules_fnd=1;
 do_modules_net=1;
-do_apps=1;
+do_apps_fnd=1;
 do_apps_net=1;
-do_tests=1;
+do_tests_fnd=1;
 do_tests_net=1;
-do_dist=1;
+do_dist_fnd=1;
 do_dist_net=1;
 do_nothing=1;
 do_all=1;
@@ -55,20 +55,20 @@ for arg in $*; do
 		do_all=0;
 	elif [ "$arg" = '-antflags' ]; then
 		ANTFLAGS='ANTFLAGS';
-	elif [ "$arg" = 'modules' ]; then
-		do_modules=0;
+	elif [ "$arg" = 'modules.fnd' ]; then
+		do_modules_fnd=0;
 	elif [ "$arg" = 'modules.net' ]; then
 		do_modules_net=0;
-	elif [ "$arg" = 'apps' ]; then
-		do_apps=0;
+	elif [ "$arg" = 'apps.fnd' ]; then
+		do_apps_fnd=0;
 	elif [ "$arg" = 'apps.net' ]; then
 		do_apps_net=0;
-	elif [ "$arg" = 'tests' ]; then
-		do_tests=0;
+	elif [ "$arg" = 'tests.fnd' ]; then
+		do_tests_fnd=0;
 	elif [ "$arg" = 'tests.net' ]; then
 		do_tests_net=0;
-	elif [ "$arg" = 'dist' ]; then
-		do_dist=0;
+	elif [ "$arg" = 'dist.fnd' ]; then
+		do_dist_fnd=0;
 	elif [ "$arg" = 'dist.net' ]; then
 		do_dist_net=0;
 	else
@@ -78,7 +78,7 @@ for arg in $*; do
 	shift;
 done
 
-# echo args ${do_clean} ${do_build} ${do_doc} ${do_run} ${do_modules} ${do_modules_net} ${do_apps} ${do_apps_net} ${do_tests} ${do_tests_net} ${do_dist} ${do_dist_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
+# echo args ${do_clean} ${do_build} ${do_doc} ${do_run} ${do_modules_fnd} ${do_modules_net} ${do_apps_fnd} ${do_apps_net} ${do_tests_fnd} ${do_tests_net} ${do_dist_fnd} ${do_dist_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
 # exit 0;
 
 if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
@@ -87,14 +87,14 @@ if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
 	echo "        -v: verbose output"
 	echo "        -h: this help"
 	echo "        -n: do not execute, only print"
-	echo "        -a: complete rebuild, equivalent to -clean -build -doc -run modules modules.net apps apps.net tests tests.net dist dist.net"
+	echo "        -a: complete rebuild, equivalent to -clean -build -doc -run modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net dist.fnd dist.net"
 	echo "        -clean: remove old build artifacts"
 	echo "        -build: build"
 	echo "        -doc: document"
 	echo "        -run: run"
 	echo "            (more than one of -clean,-build,-doc,-run may be given. Default is -build,-doc,-run)"
 	echo "        -antflags <flags>: pass flags to ant invocation"
-	echo "        <category>: one or more of modules, modules.net, apps, apps.net, tests, tests.net, dist, dist.net"
+	echo "        <category>: one or more of modules.fnd, modules.net, apps.fnd, apps.net, tests.fnd, tests.net, dist.fnd, dist.net"
 	exit 1;
 fi
 
@@ -103,13 +103,13 @@ if [ "${do_all}" = 0 ]; then
 	do_build=0;
 	do_doc=0;
 	do_run=0;
-	do_modules=0;
+	do_modules_fnd=0;
 	do_modules_net=0;
-	do_apps=0;
+	do_apps_fnd=0;
 	do_apps_net=0;
-	do_tests=0;
+	do_tests_fnd=0;
 	do_tests_net=0;
-	do_dist=0;
+	do_dist_fnd=0;
 	do_dist_net=0;
 else
 	if [ "${do_clean}" = 1 -a "${do_build}" = 1 -a "${do_doc}" = 1 -a "${do_run}" = 1 ]; then
@@ -118,14 +118,14 @@ else
 		do_doc=0;
 		do_run=0;
 	fi
-	if [ "${do_modules}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests}" = 1 -a "${do_tests_net}" = 1 -a "${do_dist}" = 1 -a "${do_dist_net}" = 1 ]; then
-		do_modules=0;
+	if [ "${do_modules_fnd}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps_fnd}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests_fnd}" = 1 -a "${do_tests_net}" = 1 -a "${do_dist_fnd}" = 1 -a "${do_dist_net}" = 1 ]; then
+		do_modules_fnd=0;
 		do_modules_net=0;
-		do_apps=0;
+		do_apps_fnd=0;
 		do_apps_net=0;
-		do_tests=0;
+		do_tests_fnd=0;
 		do_tests_net=0;
-		do_dist=0;
+		do_dist_fnd=0;
 		do_dist_net=0;
 	fi
 fi
@@ -145,26 +145,26 @@ if [ "${do_nothing}" = 0 ]; then
 		/bin/echo -n " run"
 	fi
 	/bin/echo -n :
-	if [ "${do_modules}" = 0 ]; then
-		/bin/echo -n " modules"
+	if [ "${do_modules_fnd}" = 0 ]; then
+		/bin/echo -n " modules.fnd"
 	fi
 	if [ "${do_modules_net}" = 0 ]; then
 		/bin/echo -n " modules.net"
 	fi
-	if [ "${do_apps}" = 0 ]; then
-		/bin/echo -n " apps"
+	if [ "${do_apps_fnd}" = 0 ]; then
+		/bin/echo -n " apps.fnd"
 	fi
 	if [ "${do_apps_net}" = 0 ]; then
 		/bin/echo -n " apps.net"
 	fi
-	if [ "${do_tests}" = 0 ]; then
-		/bin/echo -n " tests"
+	if [ "${do_tests_fnd}" = 0 ]; then
+		/bin/echo -n " tests.fnd"
 	fi
 	if [ "${do_tests_net}" = 0 ]; then
 		/bin/echo -n " tests.net"
 	fi
-	if [ "${do_dist}" = 0 ]; then
-		/bin/echo -n " dist"
+	if [ "${do_dist_fnd}" = 0 ]; then
+		/bin/echo -n " dist.fnd"
 	fi
 	if [ "${do_dist_net}" = 0 ]; then
 		/bin/echo -n " dist.net"
@@ -236,8 +236,8 @@ run_module()
 expand_module()
 {
 	local cmd;
-	pushd build/$2 > /dev/null
-	cmd="jar xf ../../$2/$1/dist/$1.jar"
+	pushd $3 > /dev/null
+	cmd="jar xf ../$2/$1/dist/$1.jar"
 	if [ "${verbose}" = 0 ]; then
 		echo $cmd
 	fi
@@ -247,10 +247,10 @@ expand_module()
 }
 
 if [ "${do_clean}" = 0 ]; then
-	if [ "${do_modules}" = 0 ]; then
-		echo '**** Cleaning modules ****'
-		for f in `filter_modules modules/ALLMODULES '\[noclean\]'`; do
-			clean_module modules/$f || exit 1;
+	if [ "${do_modules_fnd}" = 0 ]; then
+		echo '**** Cleaning modules.fnd ****'
+		for f in `filter_modules modules.fnd/ALLMODULES '\[noclean\]'`; do
+			clean_module modules.fnd/$f || exit 1;
 		done;
 	fi
 	if [ "${do_modules_net}" = 0 ]; then
@@ -260,10 +260,10 @@ if [ "${do_clean}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_apps}" = 0 ]; then
-		echo '**** Cleaning apps ****'
-		for f in `filter_modules apps/ALLAPPS '\[noclean\]'`; do
-			clean_module apps/$f || exit 1;
+	if [ "${do_apps_fnd}" = 0 ]; then
+		echo '**** Cleaning apps.fnd ****'
+		for f in `filter_modules apps.fnd/ALLAPPS '\[noclean\]'`; do
+			clean_module apps.fnd/$f || exit 1;
 		done;
 	fi
 	if [ "${do_apps_net}" = 0 ]; then
@@ -273,10 +273,10 @@ if [ "${do_clean}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_tests}" = 0 ]; then
-		echo '**** Cleaning tests ****'
-		for f in `filter_modules tests/ALLTESTS '\[noclean\]'`; do
-			clean_module tests/$f || exit 1;
+	if [ "${do_tests_fnd}" = 0 ]; then
+		echo '**** Cleaning tests.fnd ****'
+		for f in `filter_modules tests.fnd/ALLTESTS '\[noclean\]'`; do
+			clean_module tests.fnd/$f || exit 1;
 		done;
 	fi
 	if [ "${do_tests_net}" = 0 ]; then
@@ -286,12 +286,12 @@ if [ "${do_clean}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_dist}" = 0 ]; then
-		echo '**** Cleaning dist ****'
+	if [ "${do_dist_fnd}" = 0 ]; then
+		echo '**** Cleaning dist.fnd ****'
 		if [ "${verbose}" = 0 ]; then
-			/bin/rm -rf build dist
+			/bin/rm -rf build.fnd dist.fnd
 		fi
-		/bin/rm -rf build dist
+		/bin/rm -rf build.fnd dist.fnd
 	fi
 	if [ "${do_dist_net}" = 0 ]; then
 		echo '**** Cleaning dist.net ****'
@@ -303,10 +303,10 @@ if [ "${do_clean}" = 0 ]; then
 fi
 
 if [ "${do_build}" = 0 ]; then
-	if [ "${do_modules}" = 0 ]; then
-		echo '**** Building modules ****'
-		for f in `filter_modules modules/ALLMODULES '\[nobuild\]'`; do
-			build_module modules/$f jar || exit 1;
+	if [ "${do_modules_fnd}" = 0 ]; then
+		echo '**** Building modules.fnd ****'
+		for f in `filter_modules modules.fnd/ALLMODULES '\[nobuild\]'`; do
+			build_module modules.fnd/$f jar || exit 1;
 		done;
 	fi
 	if [ "${do_modules_net}" = 0 ]; then
@@ -316,10 +316,10 @@ if [ "${do_build}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_apps}" = 0 ]; then
-		echo '**** Building apps ****'
-		for f in `filter_modules apps/ALLAPPS '\[nobuild\]'`; do
-			build_module apps/$f dist || exit 1;
+	if [ "${do_apps_fnd}" = 0 ]; then
+		echo '**** Building apps.fnd ****'
+		for f in `filter_modules apps.fnd/ALLAPPS '\[nobuild\]'`; do
+			build_module apps.fnd/$f dist || exit 1;
 		done;
 	fi
 	if [ "${do_apps_net}" = 0 ]; then
@@ -329,10 +329,10 @@ if [ "${do_build}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_tests}" = 0 ]; then
-		echo '**** Building tests ****'
-		for f in `filter_modules tests/ALLTESTS '\[nobuild\]'`; do
-			build_module tests/$f jar || exit 1;
+	if [ "${do_tests_fnd}" = 0 ]; then
+		echo '**** Building tests.fnd ****'
+		for f in `filter_modules tests.fnd/ALLTESTS '\[nobuild\]'`; do
+			build_module tests.fnd/$f jar || exit 1;
 		done;
 	fi
 	if [ "${do_tests_net}" = 0 ]; then
@@ -342,37 +342,37 @@ if [ "${do_build}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_dist}" = 0 ]; then
-		echo '**** Building dist ****'
-		/bin/mkdir -p dist
-		/bin/mkdir -p build/modules
-		for f in `filter_modules modules/ALLMODULES '\[nodist\]'`; do
-			expand_module $f modules || exit 1;
+	if [ "${do_dist_fnd}" = 0 ]; then
+		echo '**** Building dist.fnd ****'
+		/bin/mkdir -p dist.fnd
+		/bin/mkdir -p build.fnd
+		for f in `filter_modules modules.fnd/ALLMODULES '\[nodist\]'`; do
+			expand_module $f modules.fnd build.fnd || exit 1;
 		done;
 		if [ "${verbose}" = 0 ]; then
-			echo jar cf dist/infogrid-fnd.jar 'build/modules/*'
+			echo jar cf dist.fnd/infogrid-fnd.jar 'build.fnd/*'
 		fi
-		( cd build/modules; jar cf ../../dist/infogrid-fnd.jar * )
+		( cd build.fnd; jar cf ../dist.fnd/infogrid-fnd.jar * )
 	fi
 	if [ "${do_dist_net}" = 0 ]; then
 		echo '**** Building dist.net ****'
 		/bin/mkdir -p dist.net
-		/bin/mkdir -p build/modules.net
+		/bin/mkdir -p build.net
 		for f in `filter_modules modules.net/ALLMODULES '\[nodist\]'`; do
-			expand_module $f modules.net || exit 1;
+			expand_module $f modules.net build.net || exit 1;
 		done;
 		if [ "${verbose}" = 0 ]; then
-			echo jar cf dist.net/infogrid-net.jar 'build/modules.net/*'
+			echo jar cf dist.net/infogrid-net.jar 'build.net/*'
 		fi
-		( cd build/modules.net; jar cf ../../dist.net/infogrid-net.jar * )
+		( cd build.net; jar cf ../dist.net/infogrid-net.jar * )
 	fi
 fi
 
 if [ "${do_run}" = 0 ]; then
-	if [ "${do_tests}" = 0 ]; then
-		echo '**** Running tests ****'
-		for f in `filter_modules tests/ALLTESTS '\[norun\]'`; do
-			run_module tests/$f run || exit 1;
+	if [ "${do_tests_fnd}" = 0 ]; then
+		echo '**** Running tests.fnd ****'
+		for f in `filter_modules tests.fnd/ALLTESTS '\[norun\]'`; do
+			run_module tests.fnd/$f run || exit 1;
 		done;
 	fi
 	if [ "${do_tests_net}" = 0 ]; then
@@ -384,10 +384,10 @@ if [ "${do_run}" = 0 ]; then
 fi
 
 if [ "${do_doc}" = 0 ]; then
-	if [ "${do_modules}" = 0 ]; then
-		echo '**** Documenting modules ****'
-		for f in `filter_modules modules/ALLMODULES '\[nodoc\]'`; do
-			doc_module modules/$f || exit 1;
+	if [ "${do_modules_fnd}" = 0 ]; then
+		echo '**** Documenting modules.fnd ****'
+		for f in `filter_modules modules.fnd/ALLMODULES '\[nodoc\]'`; do
+			doc_module modules.fnd/$f || exit 1;
 		done;
 	fi
 	if [ "${do_modules_net}" = 0 ]; then
@@ -397,10 +397,10 @@ if [ "${do_doc}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_apps}" = 0 ]; then
-		echo '**** Documenting apps ****'
-		for f in `filter_modules apps/ALLAPPS '\[nodoc\]'`; do
-			doc_module apps/$f || exit 1;
+	if [ "${do_apps_fnd}" = 0 ]; then
+		echo '**** Documenting apps.fnd ****'
+		for f in `filter_modules apps.fnd/ALLAPPS '\[nodoc\]'`; do
+			doc_module apps.fnd/$f || exit 1;
 		done;
 	fi
 	if [ "${do_apps_net}" = 0 ]; then
@@ -410,10 +410,10 @@ if [ "${do_doc}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_tests}" = 0 ]; then
-		echo '**** Documenting tests ****'
-		for f in `filter_modules tests/ALLTESTS '\[nodoc\]'`; do
-			doc_module tests/$f || exit 1;
+	if [ "${do_tests_fnd}" = 0 ]; then
+		echo '**** Documenting tests.fnd ****'
+		for f in `filter_modules tests.fnd/ALLTESTS '\[nodoc\]'`; do
+			doc_module tests.fnd/$f || exit 1;
 		done;
 	fi
 	if [ "${do_tests_net}" = 0 ]; then
