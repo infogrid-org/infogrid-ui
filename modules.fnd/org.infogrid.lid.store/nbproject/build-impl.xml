@@ -313,9 +313,7 @@ is divided into following sections:
                 ===================
             -->
     <target depends="init" name="deps-jar" unless="no.deps">
-        <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_lid}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_lid_yadis}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="jar"/>
@@ -630,9 +628,7 @@ is divided into following sections:
                 ===============
             -->
     <target depends="init" name="deps-clean" unless="no.deps">
-        <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_lid}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_lid_yadis}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="clean"/>
