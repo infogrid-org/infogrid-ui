@@ -100,7 +100,10 @@ public abstract class CompoundStringifierCompileException
         @Override
         public String toString()
         {
-            return "MessageStringifier.UnbalancedBrackets: unbalanced brackets in format String '" + theFormatString + "'.";
+            return getClass().getName()
+                    + ": unbalanced brackets in format String '"
+                    + theFormatString
+                    + "'.";
         }
 
         /**
@@ -161,7 +164,10 @@ public abstract class CompoundStringifierCompileException
         @Override
         public String toString()
         {
-            return "MessageStringifier.IncompleteParameterException: incomplete parameter use in expression '" + theParameterExpression + "'.";
+            return getClass().getName()
+                    + ": incomplete parameter use in expression '"
+                    + theParameterExpression
+                    + "'.";
         }
 
         /**
@@ -235,7 +241,8 @@ public abstract class CompoundStringifierCompileException
         @Override
         public String toString()
         {
-            return "MessageStringifier.SymbolicChildNameUndefinedException: child '"
+            return getClass().getName()
+                    + ": child '"
                     + theChildName
                     + "' undefined in expression '"
                     + theParameterExpression

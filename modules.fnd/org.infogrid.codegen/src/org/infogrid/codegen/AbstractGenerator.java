@@ -14,17 +14,6 @@
 
 package org.infogrid.codegen;
 
-import org.infogrid.model.primitives.CollectableMeshType;
-import org.infogrid.model.primitives.EntityType;
-import org.infogrid.model.primitives.L10Map;
-import org.infogrid.model.primitives.MeshType;
-import org.infogrid.model.primitives.ModelPrimitivesStringRepresentation;
-import org.infogrid.model.primitives.PropertyType;
-import org.infogrid.model.primitives.PropertyValue;
-import org.infogrid.model.primitives.SubjectArea;
-
-import org.infogrid.util.logging.Log;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +21,15 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import org.infogrid.model.primitives.CollectableMeshType;
+import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.primitives.L10Map;
+import org.infogrid.model.primitives.MeshType;
+import org.infogrid.model.primitives.PropertyType;
+import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.SubjectArea;
+import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentation;
 
 /**
  * Abstract superclass for both InterfaceGenerator and ImplementationGenerator. It
@@ -42,14 +40,17 @@ public abstract class AbstractGenerator
     private static final Log log = Log.getLogInstance(AbstractGenerator.class); // our own, private logger
 
     /**
-      * Constructor.
-      *
-      * @param outputDir the directory into which the code shall be genreated
-      */
+     * Constructor.
+     *
+     * @param outputDir the directory into which the code shall be generated
+     * @param commentsRepresentation the StringRepresentation to use for emitting comments
+     */
     public AbstractGenerator(
-            File outputDir )
+            File                 outputDir,
+            StringRepresentation commentsRepresentation )
     {
-        theOutputDir = outputDir;
+        theOutputDir              = outputDir;
+        theCommentsRepresentation = commentsRepresentation;
     }
 
     /**
@@ -140,22 +141,22 @@ public abstract class AbstractGenerator
                 + thePropertyType.getIdentifier().toExternalForm()
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>Name:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getName(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( thePropertyType.getName(), theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>DataType:</td><td><tt>"
-                + thePropertyType.getDataType().toStringRepresentation( ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + thePropertyType.getDataType().toStringRepresentation( theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>DefaultValue:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getDefaultValue(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( thePropertyType.getDefaultValue(), theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>IsOptional:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getIsOptional(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( thePropertyType.getIsOptional(), theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>IsReadOnly:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getIsReadOnly(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( thePropertyType.getIsReadOnly(), theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>SequenceNumber:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getSequenceNumber(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( thePropertyType.getSequenceNumber(), theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         generateL10Map(
                 thePropertyType.getUserVisibleNameMap(),
@@ -320,7 +321,7 @@ public abstract class AbstractGenerator
         }
         w.print( prefix );
         w.print( "<table><tr><td>default locale:</td><td>" );
-        w.print( PropertyValue.toStringRepresentation( theMap.getDefault(), ModelPrimitivesStringRepresentation.TEXT_HTML ));
+        w.print( PropertyValue.toStringRepresentation( theMap.getDefault(), theCommentsRepresentation, null ));
         w.print( "</td></tr>" );
         Iterator<String> theIter = theMap.keyIterator();
         while( theIter.hasNext() ) {
@@ -328,7 +329,7 @@ public abstract class AbstractGenerator
             w.print( "<tr><td>" );
             w.print( key );
             w.print( "</td><td>" );
-            w.print( PropertyValue.toStringRepresentation( theMap.getExact( key ), ModelPrimitivesStringRepresentation.TEXT_HTML ));
+            w.print( PropertyValue.toStringRepresentation( theMap.getExact( key ), theCommentsRepresentation, null ));
             w.print( "</td></tr>" );
         }
         w.print( "</table>" );
@@ -385,4 +386,9 @@ public abstract class AbstractGenerator
      */
     protected static final DateFormat theCurrentDateTimeFormat = new SimpleDateFormat(
             "EEE, yyyy-MM-dd HH:mm:ss Z" );
+    
+    /**
+     * StringRepresentation for comments.
+     */
+    protected StringRepresentation theCommentsRepresentation;
 }

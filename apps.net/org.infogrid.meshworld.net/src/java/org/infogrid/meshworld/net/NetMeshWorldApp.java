@@ -182,7 +182,7 @@ public class NetMeshWorldApp
         ViewletFactory vlFact = new NetMeshWorldViewletFactory();
         rootContext.addContextObject( vlFact );
         
-        NetRestfulJeeFormatter formatter = new NetRestfulJeeFormatter();
+        NetRestfulJeeFormatter formatter = NetRestfulJeeFormatter.create();
         rootContext.addContextObject( formatter );
 
         // StructuredResponseTemplateFactory

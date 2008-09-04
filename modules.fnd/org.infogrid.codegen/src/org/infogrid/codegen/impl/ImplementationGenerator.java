@@ -14,28 +14,23 @@
 
 package org.infogrid.codegen.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
 import org.infogrid.codegen.AbstractGenerator;
-
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
-import org.infogrid.model.primitives.ModelPrimitivesStringRepresentation;
 import org.infogrid.model.primitives.ProjectedPropertyType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.SubjectArea;
-
 import org.infogrid.model.traversal.BreadthFirstSupertypeIterator;
-
 import org.infogrid.util.UniqueIterator;
 import org.infogrid.util.logging.Log;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import java.util.Iterator;
+import org.infogrid.util.text.StringRepresentation;
 
 /**
   * This class is a code generator that generates the implementation
@@ -48,14 +43,16 @@ public class ImplementationGenerator
     private static final Log log = Log.getLogInstance( ImplementationGenerator.class ); // our own, private logger
 
     /**
-      * Constructor.
-      *
-      * @param outputDir the directory into which the code shall be genreated
-      */
+     * Constructor.
+     *
+     * @param outputDir the directory into which the code shall be generated
+     * @param commentsRepresentation the StringRepresentation to use for emitting comments
+     */
     public ImplementationGenerator(
-            File outputDir )
+            File                 outputDir,
+            StringRepresentation commentsRepresentation )
     {
-        super( outputDir );
+        super( outputDir, commentsRepresentation );
     }
 
     /**
@@ -246,15 +243,15 @@ public class ImplementationGenerator
         outStream.println( "  * <table>" );
         outStream.println(
                   "  *  <tr><td>Identifier:</td><td><tt>"
-                + theMeshType.getIdentifier().toStringRepresentation( ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + theMeshType.getIdentifier().toStringRepresentation( theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         outStream.println(
                   "  *  <tr><td>Name:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( theMeshType.getName(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( theMeshType.getName(), theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         outStream.println(
                   "  *  <tr><td>IsAbstract:</td><td>"
-                + PropertyValue.toStringRepresentation( theMeshType.getIsAbstract(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( theMeshType.getIsAbstract(), theCommentsRepresentation, null )
                 + "</td></tr>" );
         generateL10Map(
                 theMeshType.getUserVisibleNameMap(),

@@ -31,6 +31,8 @@ public class ContextObjectNotFoundException
     public ContextObjectNotFoundException(
             Class classOfContextObject )
     {
+        super( ContextObjectNotFoundException.class.getName() + ": " + classOfContextObject );
+        
         theClassOfContextObject = classOfContextObject;
     }
     

@@ -16,7 +16,6 @@ package org.infogrid.kernel.net.TEST.urls;
 
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
@@ -34,11 +33,11 @@ public abstract class AbstractUrlTest
 {
     /**
      * Constructor.
+     * 
+     * @param testClass the class to be tested
      */
     protected AbstractUrlTest(
             Class testClass )
-        throws
-            MeshTypeNotFoundException
     {
         super( localFileName( testClass, "/ResourceHelper" ),
                localFileName( testClass, "/Log.properties" ));

@@ -23,7 +23,7 @@ import java.util.Iterator;
  * Iterator for a CompoundStringifier. This is basically an iterative implementation of a
  * depth-first search algorithm similar to how PROLOG works.
  * 
- * @param T the type of the Objects to be stringified
+ * @param <T> the type of the Objects to be stringified
  */
 class CompoundStringifierIterator<T>
         implements

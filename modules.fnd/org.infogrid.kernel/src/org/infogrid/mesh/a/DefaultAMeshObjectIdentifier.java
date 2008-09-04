@@ -16,8 +16,8 @@ package org.infogrid.mesh.a;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.a.DefaultAMeshObjectIdentifierFactory;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * Implements MeshObjectIdentifier for the "A" implementation.
@@ -147,14 +147,15 @@ public class DefaultAMeshObjectIdentifier
     }
 
     /**
-     * Convert this Identifier to its String representation, using the given
-     * StringRepresentation.
-     *
-     * @param representation the StringRrepresentation to use
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
         String externalForm = toExternalForm();
 
@@ -165,14 +166,44 @@ public class DefaultAMeshObjectIdentifier
             key = DEFAULT_ENTRY;
         }
 
-        String ret = representation.formatEntry(
-                ResourceHelper.getInstance( getClass() ), // dispatch to the right subtype
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
                 key,
                 externalForm );
 
         return ret;
     }
 
+    /**
+     * Obtain the start part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+    
     /**
      * The real value for the localId.
      */

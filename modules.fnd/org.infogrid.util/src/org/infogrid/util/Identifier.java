@@ -14,12 +14,14 @@
 
 package org.infogrid.util;
 
-import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.HasStringRepresentation;
 
 /**
  * An abstract interface to capture the semantics of identifiers.
  */
 public interface Identifier
+        extends
+            HasStringRepresentation
 {
     /**
      * Obtain an external form for this Identifier, similar to
@@ -28,14 +30,4 @@ public interface Identifier
      * @return external form of this Identifier
      */
     public abstract String toExternalForm();
-
-    /**
-     * Convert this Identifier to its String representation, using the given
-     * StringRepresentation.
-     *
-     * @param representation the StringRrepresentation to use
-     * @return the String representation
-     */
-    public String toStringRepresentation(
-            StringRepresentation representation );
 }

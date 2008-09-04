@@ -16,8 +16,8 @@ package org.infogrid.modelbase.m;
 
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * MeshTypeIdentifier implementation for MModelBase.
@@ -72,15 +72,47 @@ public class MMeshTypeIdentifier
     }
 
     /**
-     * Convert this Identifier to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry( RESOURCEHELPER, DEFAULT_ENTRY, toExternalForm() );
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY, toExternalForm() );
+    }
+
+    /**
+     * Obtain the start part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
     }
 
     /**
@@ -134,9 +166,4 @@ public class MMeshTypeIdentifier
      * The default entry in the resouce files, prefixed by the StringRepresentation's prefix.
      */
     public static final String DEFAULT_ENTRY = "String";
-
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( MMeshTypeIdentifier.class );
 }

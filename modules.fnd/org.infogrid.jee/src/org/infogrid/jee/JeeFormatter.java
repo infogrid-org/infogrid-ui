@@ -17,24 +17,63 @@ package org.infogrid.jee;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyContent;
+import org.infogrid.jee.servlet.InitializationFilter;
+import org.infogrid.util.FactoryException;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.SimpleStringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications.
  */
 public class JeeFormatter
 {
+    private static final Log log = Log.getLogInstance( JeeFormatter.class ); // our own, private logger
+
     /**
-     * Constructor.
+     * Factory method.
+     * 
+     * @return the created JeeFormatter
      */
-    public JeeFormatter()
+    public static JeeFormatter create()
     {
+        StringRepresentationDirectory stringRepDir = SimpleStringRepresentationDirectory.create();
+        return new JeeFormatter( stringRepDir );
+    }
+    
+    /**
+     * Factory method.
+     * 
+     * @param stringRepDir the StringRepresentationDirectory to use
+     * @return the created JeeFormatter
+     */
+    public static JeeFormatter create(
+            StringRepresentationDirectory stringRepDir )
+    {
+        return new JeeFormatter( stringRepDir );
+    }
+    
+    /**
+     * Private constructor for subclasses only, use factory method.
+     * 
+     * @param stringRepDir the StringRepresentationDirectory to use
+     */
+    protected JeeFormatter(
+            StringRepresentationDirectory stringRepDir )
+    {
+        theStringRepresentationDirectory = stringRepDir;
     }
 
     /**
@@ -947,6 +986,104 @@ public class JeeFormatter
         return ret;
     }
 
+    /**
+     * Format a list of problems represented as Throwables.
+     * 
+     * @param pageContext the PageContext object for this page
+     * @param reportedProblems the reported problems
+     * @param stringRepresentation the StringRepresentation to use
+     * @return the String to display
+     */
+    public String formatProblems(
+            PageContext        pageContext,
+            List<Throwable>    reportedProblems,
+            String             stringRepresentation )
+    {
+        return formatProblems( pageContext.getRequest(), reportedProblems, stringRepresentation );
+    }
+
+    /**
+     * Format a list of problems represented as Throwables.
+     * 
+     * @param request the incoming request
+     * @param reportedProblems the reported problems
+     * @param stringRepresentation the StringRepresentation to use
+     * @return the String to display
+     */
+    public String formatProblems(
+            ServletRequest     request,
+            List<Throwable>    reportedProblems,
+            String             stringRepresentation )
+    {
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+
+        StringBuilder buf = new StringBuilder();
+        for( Throwable current : reportedProblems ) {
+            Throwable toFormat = determineThrowableToFormat( current );
+            
+            String temp = rep.formatThrowable( toFormat, context );
+            buf.append( temp );
+        }
+        return buf.toString();        
+    }
+            
+    /**
+     * Given a Throwable, determine which Throwable should be formatted. This allows
+     * to skip ServletExceptions, for example, and show their cause instead.
+     * 
+     * @param candidate the candidate Throwable
+     * @return the Throwable to format
+     */
+    protected Throwable determineThrowableToFormat(
+            Throwable candidate )
+    {
+        Throwable ret;
+        Throwable cause = candidate.getCause();
+        
+        if( candidate instanceof ServletException && cause != null ) {
+            ret = cause;
+        } else {
+            ret = candidate;
+        }
+        return ret;
+    }
+
+    /**
+     * Determine the correct StringRepresentation, by correcting any supplied value and/or
+     * picking a reasonable default.
+     * 
+     * @param in the original value
+     * @return the StringRepresentation
+     */
+    public StringRepresentation determineStringRepresentation(
+            String in )
+    {
+        String sanitized;
+        
+        if( in == null || in.length() == 0 ) {
+            sanitized = "Html";
+        } else {
+            StringBuilder temp = new StringBuilder( in.length() );
+            temp.append( Character.toUpperCase( in.charAt( 0 )));
+            temp.append( in.substring( 1 ).toLowerCase() );
+            sanitized = temp.toString();
+        }
+        StringRepresentation ret;
+        try {
+            ret = theStringRepresentationDirectory.obtainFor( sanitized );
+        } catch( FactoryException ex ) {
+            log.info( ex );
+            ret = theStringRepresentationDirectory.getFallback();
+        }
+        return ret;
+    }
+
+    /**
+     * Directory of known StringRepresentations.
+     */
+    protected StringRepresentationDirectory theStringRepresentationDirectory;
+    
     /**
      * Maps lowercase JSP scope names to their PageContext integer constant values.
      */

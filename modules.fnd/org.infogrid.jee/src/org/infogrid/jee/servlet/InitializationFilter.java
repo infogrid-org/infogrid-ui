@@ -14,11 +14,9 @@
 
 package org.infogrid.jee.servlet;
 
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.logging.Log;
-
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -27,12 +25,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * <p>Filter that makes sure InfoGrid initialization has been performed prior to processing
@@ -85,9 +82,8 @@ public class InitializationFilter
      * @param request The incoming servlet request
      * @param response The outgoing servlet response
      * @param chain The filter chain to which this Filter belongs
-     *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
+     * @throws IOException if an input/output error occurs
+     * @throws ServletException if a servlet error occurs
      */
     public void doFilter(
             ServletRequest  request,
@@ -100,7 +96,6 @@ public class InitializationFilter
         HttpServletRequest  realRequest  = (HttpServletRequest)  request;
         HttpServletResponse realResponse = (HttpServletResponse) response;
 
-        Throwable thrown = null;
         try {
             initializeInfoGridWebApp();
 
@@ -116,31 +111,57 @@ public class InitializationFilter
 
             request.setAttribute( FULLCONTEXT_PARAMETER, fullContext.toString() );
 
+            StringRepresentationContext context = createStringRepresentationContext( realRequest );
+            request.setAttribute( STRING_REPRESENTATION_CONTEXT_PARAMETER, context );
+            
             chain.doFilter( request, response );
 
         } catch( Throwable t ) {
-            thrown = t;
-
-        } finally {
-            // this funny construct does not make us re-throw the exception
-
-            if( thrown != null ) {
-                if( log == null ) {
-                    log = Log.getLogInstance( InitializationFilter.class );
-                }
-                log.error( thrown );
-                if( thrown instanceof ServletException ) {
-                    log.error( "root cause: ", ((ServletException)thrown).getRootCause() );
-                }
-
-                // these three lines of code are for the debugger's benefit only
-                StringWriter w = new StringWriter();
-                thrown.printStackTrace( new PrintWriter( w ));
-                String error = w.getBuffer().toString();
-
-                realResponse.sendError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
+            try {
+                processException( realRequest, realResponse, t ); // may throw again
+            } catch( ServletException t2 ) {
+                throw t2;
+            } catch( Throwable t2 ) {
+                throw new ServletException( t2 );
             }
         }
+    }
+
+    /**
+     * Construct an appropriate StringRepresentationContext. This may be overridden by subclasses.
+     * 
+     * @param request the incoming request
+     * @return the created StringRepresentationContext
+     */
+    protected StringRepresentationContext createStringRepresentationContext(
+            HttpServletRequest request )
+    {
+        InfoGridWebApp app = InfoGridWebApp.getSingleton();
+        
+        StringRepresentationContext ret = app.constructStringRepresentationContext( request );
+        return ret;
+    }
+
+    /**
+     * An Exception was thrown. This method handles the Exception.
+     * 
+     * @param request The incoming servlet request
+     * @param response The outgoing servlet response
+     * @param t the thrown Exception
+     * @throws Throwable may re-throw the exception or a transformed exception
+     */
+    protected void processException(
+            ServletRequest  request,
+            ServletResponse response,
+            Throwable       t )
+        throws
+            Throwable
+    {
+        Throwable rootCause = t;
+        while( rootCause.getCause() == t ) {
+            rootCause = rootCause.getCause();
+        }
+        throw new ServletException( rootCause );
     }
     
     /**
@@ -152,7 +173,6 @@ public class InitializationFilter
         throws
             ServletException
     {
-        // the Exception trick gets around us having to do a synchronized
         InfoGridWebApp theApp = InfoGridWebApp.getSingleton();
         if( theApp == null ) {
             String className = theFilterConfig.getInitParameter( INFOGRID_WEB_APP_CLASS_NAME_PARAMETER );
@@ -176,7 +196,7 @@ public class InitializationFilter
                 throw new ServletException( "Cannot access method \"create\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
 
             } catch( InvocationTargetException ex ) {
-                throw new ServletException( "Cannot execute method \"create\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
+                throw new ServletException( "Cannot execute method \"create\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex.getTargetException() );
             }
 
             try {
@@ -185,7 +205,6 @@ public class InitializationFilter
             } catch( IllegalStateException ex ) {
                 // have one already, that's fine (a parallel thread was faster)
             }
-                
         }
     }
 
@@ -239,6 +258,11 @@ public class InitializationFilter
      */
     public static final String FULLCONTEXT_PARAMETER = "FULLCONTEXT";
     
+    /**
+     * Name of the default StringRepresentationContext in the RequestContext.
+     */
+    public static final String STRING_REPRESENTATION_CONTEXT_PARAMETER = StringRepresentationContext.class.getName().replaceAll( "\\.", "_" );
+
     /**
      * The Filter configuration object.
      */

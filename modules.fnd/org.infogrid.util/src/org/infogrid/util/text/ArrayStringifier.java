@@ -23,7 +23,7 @@ import java.util.Iterator;
  * {@link org.infogrid.util.ArrayFacade}, as Java generics aren't working well
  * enough to do without that intermediate class.
  * 
- * @param T the type of the Objects to be stringified
+ * @param <T> the type of the Objects to be stringified
  */
 public class ArrayStringifier<T>
         implements

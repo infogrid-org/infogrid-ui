@@ -71,6 +71,17 @@ public abstract class AbstractLocalizedException
     }
 
     /**
+     * Obtain localized message, per JDK 1.5.
+     *
+     * @return localized message
+     */
+    @Override
+    public String getLocalizedMessage()
+    {
+        return getLocalizedMessage( null );
+    }
+
+    /**
      * Determine the correct internationalized string that can be shown to the
      * user when the LocalizedException is thrown.
      *
@@ -144,17 +155,6 @@ public abstract class AbstractLocalizedException
             }
         }
         return message;
-    }
-
-    /**
-     * Obtain localized message, per JDK 1.5.
-     *
-     * @return localized message
-     */
-    @Override
-    public String getLocalizedMessage()
-    {
-        return getLocalizedMessage( null );
     }
 
     /**

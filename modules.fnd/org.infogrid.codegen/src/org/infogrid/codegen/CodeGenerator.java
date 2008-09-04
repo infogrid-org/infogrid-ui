@@ -25,6 +25,7 @@ import org.infogrid.codegen.impl.ImplementationGenerator;
 import org.infogrid.codegen.intfc.InterfaceGenerator;
 import org.infogrid.codegen.modelloader.ModelLoaderGenerator;
 import org.infogrid.model.primitives.SubjectArea;
+import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentation;
 import org.infogrid.module.ModelModule;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleActivator;
@@ -34,6 +35,7 @@ import org.infogrid.module.ModuleRequirement;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.logging.log4j.Log4jLog;
+import org.infogrid.util.text.StringRepresentation;
 
 /**
  * The InfoGrid code generator.
@@ -106,7 +108,9 @@ public class CodeGenerator
 
         Object base = modelBaseModule.activateRecursively(); // return value is ignored but may be helpful in debugging
 
-        CodeGenerator generator         = new CodeGenerator( outputDir );
+        SimpleModelPrimitivesStringRepresentation commentsRepresentation = SimpleModelPrimitivesStringRepresentation.create( "Html" );
+        
+        CodeGenerator generator         = new CodeGenerator( outputDir, commentsRepresentation );
         List<File>    moduleDirectories = theModuleRegistry.getSoftwareInstallation().getInstallModuleDirectories();
 
         Iterator<String> iter = subjectAreas.iterator();
@@ -176,11 +180,14 @@ public class CodeGenerator
      * Constructor.
      *
      * @param outputDir the output directory
+     * @param commentsRepresentation the StringRepresentation for generated comments
      */
     public CodeGenerator(
-            File outputDir )
+            File                 outputDir,
+            StringRepresentation commentsRepresentation )
     {
-        theOutputDirectory = outputDir;
+        theOutputDirectory        = outputDir;
+        theCommentsRepresentation = commentsRepresentation;
     }
     
     /**
@@ -194,13 +201,13 @@ public class CodeGenerator
         throws
             IOException
     {
-        InterfaceGenerator theInterfaceGenerator = new InterfaceGenerator( theOutputDirectory );
+        InterfaceGenerator theInterfaceGenerator = new InterfaceGenerator( theOutputDirectory, theCommentsRepresentation );
         theInterfaceGenerator.generateForAll( sas );
 
-        ImplementationGenerator theImplementationGenerator = new ImplementationGenerator( theOutputDirectory );
+        ImplementationGenerator theImplementationGenerator = new ImplementationGenerator( theOutputDirectory, theCommentsRepresentation );
         theImplementationGenerator.generateForAll( sas );
 
-        ModelLoaderGenerator theLoaderGenerator = new ModelLoaderGenerator( theOutputDirectory );
+        ModelLoaderGenerator theLoaderGenerator = new ModelLoaderGenerator( theOutputDirectory, theCommentsRepresentation );
         theLoaderGenerator.generateForAll( sas );
     }
 
@@ -213,4 +220,9 @@ public class CodeGenerator
      * The output directory for generated artifacts.
      */
     protected File theOutputDirectory;
+    
+    /**
+     * The StringRepresentation for generated comments.
+     */
+    protected StringRepresentation theCommentsRepresentation;
 }

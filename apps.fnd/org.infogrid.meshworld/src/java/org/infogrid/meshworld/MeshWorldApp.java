@@ -16,20 +16,24 @@ package org.infogrid.meshworld;
 
 import java.io.BufferedInputStream;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.naming.InitialContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.security.store.StoreFormTokenService;
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
+import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.security.AccessManager;
 import org.infogrid.meshbase.store.IterableStoreMeshBase;
+import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationDirectory;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.module.Module;
@@ -43,6 +47,9 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.logging.log4j.Log4jLog;
+import org.infogrid.util.text.SimpleStringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.viewlet.ViewletFactory;
 
 /**
@@ -160,10 +167,14 @@ public class MeshWorldApp
         rootContext.addContextObject( formTokenService );
         
         // ViewletFactory and utils
+        
+        StringRepresentationDirectory srepdir = SimpleModelPrimitivesStringRepresentationDirectory.create();
+        rootContext.addContextObject( srepdir );
+
         ViewletFactory vlFact = new MeshWorldViewletFactory();
         rootContext.addContextObject( vlFact );
         
-        RestfulJeeFormatter formatter = new RestfulJeeFormatter();
+        RestfulJeeFormatter formatter = RestfulJeeFormatter.create();
         rootContext.addContextObject( formatter );
         
         // StructuredResponseTemplateFactory
@@ -201,4 +212,26 @@ public class MeshWorldApp
         MeshBaseIdentifier ret = MeshBaseIdentifier.create( stringForm );
         return ret;
     }
+
+    /**
+     * Construct a StringRepresentationContext appropriate for this application. This may
+     * be overridden by subclasses.
+     * 
+     * @param request the incoming request
+     * @return the created StringRepresentationContext
+     */
+    @Override
+    public StringRepresentationContext constructStringRepresentationContext(
+            HttpServletRequest request )
+    {
+        MeshBase meshBase = theApplicationContext.findContextObjectOrThrow( MeshBase.class );
+        
+        HashMap<String,Object> contextObjects = new HashMap<String,Object>();
+        contextObjects.put( StringRepresentationContext.WEB_CONTEXT_KEY, request.getContextPath() );
+ 
+        contextObjects.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, meshBase );
+        StringRepresentationContext ret = SimpleStringRepresentationContext.create( contextObjects );
+        return ret;
+    }
+
 }

@@ -19,6 +19,7 @@ import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
 
 import java.io.ObjectStreamException;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This represents the DataType responsible for multiplicities.
@@ -140,18 +141,20 @@ public class MultiplicityDataType
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry(
-                RESOURCEHELPER,
+        return rep.formatEntry(
+                MultiplicityValue.class,
                 DEFAULT_ENTRY,
-                PropertyValue.toStringRepresentation( MultiplicityValue.ZERO_N, representation ),
+                PropertyValue.toStringRepresentation( MultiplicityValue.ZERO_N, rep, context ),
                 theSupertype );
     }
 
@@ -171,7 +174,7 @@ public class MultiplicityDataType
             PropertyValueParsingException
     {
         try {
-            Object [] found = representation.parseEntry( MultiplicityValue.RESOURCEHELPER, MultiplicityValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( MultiplicityValue.class, MultiplicityValue.DEFAULT_ENTRY, s );
 
             switch( found.length ) {
                 case 2:
@@ -204,9 +207,4 @@ public class MultiplicityDataType
             throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
-
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = MultiplicityValue.RESOURCEHELPER;
 }

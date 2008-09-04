@@ -27,6 +27,7 @@ import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
+import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -60,6 +61,7 @@ import org.infogrid.util.SmartFactory;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * <p>Factors out functionality common to many Proxy implementations.</>
@@ -1001,26 +1003,18 @@ public abstract class AbstractProxy
     }
 
     /**
-     * Obtain the right ResourceHelper for StringRepresentation.
-     * 
-     * @return the ResourceHelper
-     */
-    protected ResourceHelper getResourceHelperForStringRepresentation()
-    {
-        return theResourceHelper;
-    }
-
-    /**
-     * Obtain a String representation of this Proxy that can be shown to the user.
+     * Obtain a String representation of this instance that can be shown to the user.
      * 
      * @param rep the StringRepresentation
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation rep,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( getNetMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+
         String proxyExternalForm    = getPartnerMeshBaseIdentifier().toExternalForm();
         String meshBaseExternalForm = this.getNetMeshBase().getIdentifier().toExternalForm();
 
@@ -1032,7 +1026,7 @@ public abstract class AbstractProxy
         }
 
         String ret = rep.formatEntry(
-                getResourceHelperForStringRepresentation(),
+                getClass(),
                 key,
                 proxyExternalForm,
                 meshBaseExternalForm );
@@ -1041,19 +1035,20 @@ public abstract class AbstractProxy
     }
 
     /**
-     * Obtain the start part of a String representation of this Proxy that acts
+     * Obtain the start part of a String representation of this MeshBase that acts
      * as a link/hyperlink and can be shown to the user.
      * 
      * @param rep the StringRepresentation
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     public String toStringRepresentationLinkStart(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( getNetMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+
         String proxyExternalForm    = getPartnerMeshBaseIdentifier().toExternalForm();
         String meshBaseExternalForm = this.getNetMeshBase().getIdentifier().toExternalForm();
 
@@ -1065,29 +1060,30 @@ public abstract class AbstractProxy
         }
 
         String ret = rep.formatEntry(
-                getResourceHelperForStringRepresentation(),
+                getClass(),
                 key,
                 contextPath,
                 proxyExternalForm,
                 meshBaseExternalForm );
 
-        return ret;        
+        return ret;                
     }
 
     /**
-     * Obtain the end part of a String representation of this Proxy that acts
+     * Obtain the end part of a String representation of this MeshBase that acts
      * as a link/hyperlink and can be shown to the user.
      * 
      * @param rep the StringRepresentation
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     public String toStringRepresentationLinkEnd(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( getNetMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+
         String proxyExternalForm    = getPartnerMeshBaseIdentifier().toExternalForm();
         String meshBaseExternalForm = this.getNetMeshBase().getIdentifier().toExternalForm();
 
@@ -1099,7 +1095,7 @@ public abstract class AbstractProxy
         }
 
         String ret = rep.formatEntry(
-                getResourceHelperForStringRepresentation(),
+                getClass(),
                 key,
                 contextPath,
                 proxyExternalForm,

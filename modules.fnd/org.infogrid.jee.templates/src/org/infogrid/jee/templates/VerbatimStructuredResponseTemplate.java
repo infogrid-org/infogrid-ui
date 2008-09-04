@@ -17,14 +17,17 @@ package org.infogrid.jee.templates;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.infogrid.jee.JeeFormatter;
+import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 
 /**
  * A ResponseTemplate that returns the default sections in the StructuredResponse without
  * any changes, one after each other.
  */
-public class VerbatimResponseTemplate
+public class VerbatimStructuredResponseTemplate
         extends
             AbstractStructuredResponseTemplate
 {
@@ -36,12 +39,12 @@ public class VerbatimResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate, if any
      * @return the created JspStructuredResponseTemplate
      */
-    public static VerbatimResponseTemplate create(
+    public static VerbatimStructuredResponseTemplate create(
             SaneServletRequest request,
             String             requestedTemplate,
             StructuredResponse structured )
     {
-        VerbatimResponseTemplate ret = new VerbatimResponseTemplate( request, requestedTemplate, structured );
+        VerbatimStructuredResponseTemplate ret = new VerbatimStructuredResponseTemplate( request, requestedTemplate, structured );
         return ret;
     }
 
@@ -52,7 +55,7 @@ public class VerbatimResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate, if any
      * @param structured the StructuredResponse that contains the response
      */
-    protected VerbatimResponseTemplate(
+    protected VerbatimStructuredResponseTemplate(
             SaneServletRequest request,
             String             requestedTemplate,
             StructuredResponse structured )
@@ -78,8 +81,11 @@ public class VerbatimResponseTemplate
         defaultOutputMimeType(   delegate, structured );
         
         // stream default section(s)
-            
-        String errorContent = structured.getErrorContentAsPlain();
+        
+        JeeFormatter theFormatter = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( JeeFormatter.class );
+        
+        List<Throwable> reportedProblems = structured.problems();
+        String errorContent = theFormatter.formatProblems( theRequest.getDelegate(), reportedProblems, "Text" );                
         if( errorContent != null ) {
             Writer w = delegate.getWriter();
             w.write( errorContent );

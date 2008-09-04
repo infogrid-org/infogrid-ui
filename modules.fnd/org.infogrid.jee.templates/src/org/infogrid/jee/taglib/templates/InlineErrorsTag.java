@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.taglib.templates;
 
+import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
@@ -89,14 +90,11 @@ public class InlineErrorsTag
             throw new JspException( "Cannot find StructuredResponse in the request context" );
         }
 
-        String content;
-        if( "html".equalsIgnoreCase( theStringRepresentation )) {
-            content = structured.getErrorContentAsHtml();
-        } else {
-            content = structured.getErrorContentAsPlain();
-        }
+        List<Throwable> reportedProblems = structured.problems();
         
+        String content = theFormatter.formatProblems( pageContext, reportedProblems, theStringRepresentation );                
         print( content );
+
         return SKIP_BODY;
     }
 

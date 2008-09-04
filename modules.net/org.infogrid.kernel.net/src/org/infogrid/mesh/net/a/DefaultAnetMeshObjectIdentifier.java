@@ -18,7 +18,6 @@ import java.net.URISyntaxException;
 import org.infogrid.mesh.a.DefaultAMeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.util.text.StringRepresentation;
 
 /**
  * Implements NetMeshObjectIdentifier for the Anet implementation.
@@ -142,20 +141,6 @@ public class DefaultAnetMeshObjectIdentifier
                 meshBase,
                 local );
         return ret;
-    }
-
-    /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
-     */
-    @Override
-    public String toStringRepresentation(
-            StringRepresentation representation )
-    {
-        //  just like in superclass
-        return super.toStringRepresentation( representation );
     }
 
     /**

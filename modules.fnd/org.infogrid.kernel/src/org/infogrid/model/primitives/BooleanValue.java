@@ -14,8 +14,8 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is a boolean value for PropertyValues.
@@ -182,18 +182,20 @@ public final class BooleanValue
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
         if( theValue ) {
-            return representation.formatEntry( RESOURCEHELPER, "True" );
+            return rep.formatEntry( getClass(), "True" );
         } else {
-            return representation.formatEntry( RESOURCEHELPER, "False" );
+            return rep.formatEntry( getClass(), "False" );
         }
     }
 
@@ -243,9 +245,4 @@ public final class BooleanValue
       * Pre-defined FALSE value.
       */
     public static final BooleanValue FALSE = new BooleanValue( false );
-    
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( BooleanValue.class );
 }

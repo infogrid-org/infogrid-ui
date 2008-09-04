@@ -14,9 +14,10 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.text.StringRepresentation;
-
 import java.io.Serializable;
+import org.infogrid.util.text.HasStringRepresentation;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This represents a data type for properties. This is an abstract class;
@@ -30,6 +31,7 @@ import java.io.Serializable;
   */
 public abstract class DataType
         implements
+            HasStringRepresentation,
             Serializable
 {
     /**
@@ -157,15 +159,6 @@ public abstract class DataType
         return theSupertype;
     }
 
-    /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
-     */
-    public abstract String toStringRepresentation(
-            StringRepresentation representation );
-
 //
 //    /**
 //     * Consistent way of finding numbers in Strings for the purpose of parsing them.
@@ -235,6 +228,37 @@ public abstract class DataType
 //        }
 //        return ret;
 //    }
+
+
+    /**
+     * Obtain the start part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
 
     /**
      * Obtain a PropertyValue that corresponds to this PropertyType, based on the String representation

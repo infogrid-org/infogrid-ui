@@ -16,7 +16,6 @@ package org.infogrid.jee.taglib;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.JeeFormatter;

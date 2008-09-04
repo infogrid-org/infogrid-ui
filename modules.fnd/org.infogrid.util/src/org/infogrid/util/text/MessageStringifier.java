@@ -44,7 +44,7 @@ import java.util.Map;
  *    specified, only one match would be returned (the same as the one found using <code>unformat</code> because this
  *    particular format String can only be parsed in one way without leaving out characters.</p>
  * 
- * @param T the type of the Objects to be stringified
+ * @param <T> the type of the Objects to be stringified
  */
 public abstract class MessageStringifier<T>
         extends

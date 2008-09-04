@@ -16,6 +16,7 @@ package org.infogrid.model.primitives;
 
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is a string value for PropertyValues. StringValues are arbitary-length.
@@ -217,12 +218,14 @@ public final class StringValue
      * Convert this PropertyValue to its String representation, using the representation scheme.
      *
      * @param representation the representation scheme
+     * @param context the StringRepresentationContext of this object
      * @return the String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        representation,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry( RESOURCEHELPER, DEFAULT_ENTRY, theValue );
+        return representation.formatEntry( getClass(), DEFAULT_ENTRY, theValue );
     }
 
     /**
@@ -257,9 +260,4 @@ public final class StringValue
       * The real value.
       */
     protected String theValue;
-
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( StringValue.class );    
 }

@@ -22,6 +22,7 @@ import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
+import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.security.AccessManager;
 import org.infogrid.meshbase.security.IdentityChangeException;
 import org.infogrid.meshbase.transaction.AbstractMeshObjectLifecycleEvent;
@@ -46,6 +47,7 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * This abstract, partial implementation of MeshBase provides
@@ -1078,23 +1080,18 @@ public abstract class AbstractMeshBase
     }
 
     /**
-     * Obtain the right ResourceHelper for StringRepresentation.
-     * 
-     * @return the ResourceHelper
-     */
-    protected abstract ResourceHelper getResourceHelperForStringRepresentation();
-    
-    /**
-     * Obtain a String representation of this MeshBase that can be shown to the user.
+     * Obtain a String representation of this instance that can be shown to the user.
      * 
      * @param rep the StringRepresentation
-     * @param isDefaultMeshBase true if the MeshBase is the default MeshBase
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation rep,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+
         String meshBaseExternalForm = getIdentifier().toExternalForm();
 
         String key;
@@ -1105,7 +1102,7 @@ public abstract class AbstractMeshBase
         }
 
         String ret = rep.formatEntry(
-                getResourceHelperForStringRepresentation(),
+                getClass(),
                 key,
                 meshBaseExternalForm );
 
@@ -1117,15 +1114,16 @@ public abstract class AbstractMeshBase
      * as a link/hyperlink and can be shown to the user.
      * 
      * @param rep the StringRepresentation
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the MeshBase is the default MeshBase
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     public String toStringRepresentationLinkStart(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+
         String meshBaseExternalForm = getIdentifier().toExternalForm();
 
         String key;
@@ -1136,7 +1134,7 @@ public abstract class AbstractMeshBase
         }
 
         String ret = rep.formatEntry(
-                getResourceHelperForStringRepresentation(),
+                getClass(),
                 key,
                 contextPath,
                 meshBaseExternalForm );
@@ -1149,15 +1147,16 @@ public abstract class AbstractMeshBase
      * as a link/hyperlink and can be shown to the user.
      * 
      * @param rep the StringRepresentation
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the MeshBase is the default MeshBase
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     public String toStringRepresentationLinkEnd(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+
         String meshBaseExternalForm = getIdentifier().toExternalForm();
 
         String key;
@@ -1168,7 +1167,7 @@ public abstract class AbstractMeshBase
         }
 
         String ret = rep.formatEntry(
-                getResourceHelperForStringRepresentation(),
+                getClass(),
                 key,
                 contextPath,
                 meshBaseExternalForm );

@@ -14,11 +14,11 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentation;
 
 import java.io.ObjectStreamException;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is a point DataType for MetaAttributes.
@@ -151,18 +151,20 @@ public class PointDataType
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry(
-                RESOURCEHELPER,
+        return rep.formatEntry(
+                PointValue.class,
                 DEFAULT_ENTRY,
-                PropertyValue.toStringRepresentation( getDefaultValue(), representation ),
+                PropertyValue.toStringRepresentation( getDefaultValue(), rep, context ),
                 theSupertype );
     }
 
@@ -182,14 +184,14 @@ public class PointDataType
             PropertyValueParsingException
     {
         try {
-            Object [] found = representation.parseEntry( PointValue.RESOURCEHELPER, PointValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( PointValue.class, PointValue.DEFAULT_ENTRY, s );
 
             PointValue ret;
             switch( found.length ) {
                 case 2:
                     ret = PointValue.create(
-                            ((Double) found[0]).doubleValue(),
-                            ((Double) found[1]).doubleValue() );
+                            ((Number) found[0]).doubleValue(),
+                            ((Number) found[1]).doubleValue() );
                     break;
 
                 default:
@@ -205,9 +207,4 @@ public class PointDataType
             throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
-
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = PointValue.RESOURCEHELPER;
 }

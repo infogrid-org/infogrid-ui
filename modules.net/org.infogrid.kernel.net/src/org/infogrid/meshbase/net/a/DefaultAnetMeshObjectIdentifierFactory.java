@@ -22,7 +22,6 @@ import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentation;
 
@@ -123,14 +122,14 @@ public class DefaultAnetMeshObjectIdentifierFactory
             URISyntaxException
     {
         try {
-            representation.parseEntry( RESOURCEHELPER, DefaultAnetMeshObjectIdentifier.HOME_DEFAULT_ENTRY, s );
+            representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, DefaultAnetMeshObjectIdentifier.HOME_DEFAULT_ENTRY, s );
             return fromExternalForm( "" );
 
         } catch( StringifierException ex ) {
             // that wasn't it ...
         }
         try {
-            Object [] found = representation.parseEntry( RESOURCEHELPER, DefaultAnetMeshObjectIdentifier.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, DefaultAnetMeshObjectIdentifier.DEFAULT_ENTRY, s );
 
             DefaultAnetMeshObjectIdentifier ret;
             switch( found.length ) {
@@ -234,12 +233,6 @@ public class DefaultAnetMeshObjectIdentifierFactory
      * The home object identifier.
      */
     public final DefaultAnetMeshObjectIdentifier NET_HOME_OBJECT;
-
-    /**
-     * Our ResourceHelper. Note that this is the ResourceHelper of the Identifier,
-     * not of the factory. This is private so no conflicts with subtypes occur.
-     */
-    private static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( DefaultAnetMeshObjectIdentifier.class );
 
     /**
      * This subclass of DefaultAnetMeshObjectIdentifier is only used for identifiers

@@ -14,11 +14,16 @@
 
 package org.infogrid.jee.rest.net;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
+import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationDirectory;
+import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications
@@ -29,11 +34,37 @@ public class NetRestfulJeeFormatter
             RestfulJeeFormatter
 {
     /**
-     * Private useless constructor to keep JavaDoc straight.
+     * Factory method.
+     * 
+     * @return the created JeeFormatter
      */
-    public NetRestfulJeeFormatter()
+    public static NetRestfulJeeFormatter create()
     {
-        // nothing
+        SimpleModelPrimitivesStringRepresentationDirectory stringRepDir = SimpleModelPrimitivesStringRepresentationDirectory.create();
+        return new NetRestfulJeeFormatter( stringRepDir );
+    }
+    
+    /**
+     * Factory method.
+     * 
+     * @param stringRepDir the StringRepresentationDirectory to use
+     * @return the created JeeFormatter
+     */
+    public static RestfulJeeFormatter create(
+            StringRepresentationDirectory stringRepDir )
+    {
+        return new NetRestfulJeeFormatter( stringRepDir );
+    }
+    
+    /**
+     * Private constructor for subclasses only, use factory method.
+     * 
+     * @param stringRepDir the StringRepresentationDirectory to use
+     */
+    protected NetRestfulJeeFormatter(
+            StringRepresentationDirectory stringRepDir )
+    {
+        super( stringRepDir );
     }
 
     /**
@@ -41,19 +72,22 @@ public class NetRestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param p the Proxy whose identifier is to be formatted
+     * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      */
     public String formatProxyIdentifierStart(
             PageContext pageContext,
             Proxy       p,
+            String      rootPath,
             String      stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        boolean isDefaultMeshBase = isDefaultMeshBase( p.getNetMeshBase() );
-
-        String ret = p.toStringRepresentation( rep, isDefaultMeshBase );
+        context = perhapsOverrideStringRepresentationContext( rootPath, context );
+        
+        String ret = p.toStringRepresentation( rep, context );
         return ret;
     }
 
@@ -62,12 +96,14 @@ public class NetRestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param p the Proxy whose identifier is to be formatted
+     * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      */
     public String formatProxyIdentifierEnd(
             PageContext pageContext,
             Proxy       p,
+            String      rootPath,
             String      stringRepresentation )
     {
         return ""; // nothing
@@ -88,18 +124,12 @@ public class NetRestfulJeeFormatter
             String      rootPath,
             String      stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String contextPath;
-        if( rootPath != null ) {
-            contextPath = rootPath;
-        } else {
-            contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath() + "/";
-        }
+        context = perhapsOverrideStringRepresentationContext( rootPath, context );
 
-        boolean isDefaultMeshBase = isDefaultMeshBase( p.getNetMeshBase() );
-
-        String ret = p.toStringRepresentationLinkStart( rep, contextPath, isDefaultMeshBase );
+        String ret = p.toStringRepresentationLinkStart( rep, context );
         return ret;
     }
 
@@ -118,18 +148,37 @@ public class NetRestfulJeeFormatter
             String      rootPath,
             String      stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String contextPath;
-        if( rootPath != null ) {
-            contextPath = rootPath;
+        context = perhapsOverrideStringRepresentationContext( rootPath, context );
+
+        String ret = p.toStringRepresentationLinkEnd( rep, context );
+        return ret;
+    }
+
+    /**
+     * Helper method to perhaps override a StringRepresentationContext if a
+     * non-default rootPath has been given.
+     * 
+     * @param rootPath alternate root path to use, if any
+     * @param candidate the candidate StringRepresentationContext
+     * @return the candidate StringRepresentationContext, or an overridden StringRepresentationContext
+     */
+    protected StringRepresentationContext perhapsOverrideStringRepresentationContext(
+            String                      rootPath,
+            StringRepresentationContext candidate )
+    {
+        StringRepresentationContext ret;
+        
+        if( rootPath == null ) {
+            ret = candidate;
         } else {
-            contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath() + "/";
+            HashMap<String,Object> contextObjects = new HashMap<String,Object>();
+            contextObjects.put( StringRepresentationContext.WEB_CONTEXT_KEY, rootPath );
+            
+            ret = SimpleStringRepresentationContext.create( contextObjects, candidate );
         }
-
-        boolean contextImpliesThisMeshBase = isDefaultMeshBase( p.getNetMeshBase() );
-
-        String ret = p.toStringRepresentationLinkEnd( rep, contextPath, contextImpliesThisMeshBase );
         return ret;
     }
 }

@@ -14,12 +14,11 @@
 
 package org.infogrid.meshbase;
 
+import java.net.URISyntaxException;
 import org.infogrid.util.Identifier;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.text.StringRepresentation;
-
-import java.net.URISyntaxException;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * Identifies a MeshBase.
@@ -33,6 +32,7 @@ public class MeshBaseIdentifier
      * 
      * @param canonicalForm the canonical representation of this identifier
      * @return the created MeshBaseIdentifier
+     * @throws URISyntaxException thrown if the canonical form could not be passed
      */
     public static MeshBaseIdentifier create(
             String canonicalForm )
@@ -40,7 +40,7 @@ public class MeshBaseIdentifier
             URISyntaxException
     {
         if( canonicalForm == null ) {
-            throw new IllegalArgumentException( "MeshBaseIdentifier's canonical form cannot be null" );
+            throw new URISyntaxException( canonicalForm, "MeshBaseIdentifier's canonical form cannot be null" );
         }
         return new MeshBaseIdentifier( canonicalForm );
     }
@@ -79,17 +79,65 @@ public class MeshBaseIdentifier
     /**
      * Convert this PropertyValue to its String representation, using the representation scheme.
      *
-     * @param representation the representation scheme
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
      * @return the String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
         String externalForm = toExternalForm();
 
-        String ret = representation.formatEntry(
-                ResourceHelper.getInstance( getClass() ), // dispatch to the right subtype
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
                 DEFAULT_ENTRY,
+                externalForm );
+        return ret;
+    }
+
+    /**
+     * Obtain the start part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        String contextPath  = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        String externalForm = toExternalForm();
+
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
+                DEFAULT_LINK_START_ENTRY,
+                contextPath,
+                externalForm );
+        return ret;
+    }
+
+    /**
+     * Obtain the end part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        String contextPath  = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        String externalForm = toExternalForm();
+
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
+                DEFAULT_LINK_END_ENTRY,
+                contextPath,
                 externalForm );
         return ret;
     }
@@ -151,7 +199,17 @@ public class MeshBaseIdentifier
     protected String theCanonicalForm;
 
     /**
-     * The default entry in the resouce files, prefixed by the StringRepresentation's prefix.
+     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
      */
     public static final String DEFAULT_ENTRY = "String";
+
+    /**
+     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
+     */
+    public static final String DEFAULT_LINK_START_ENTRY = "LinkStartString";
+
+    /**
+     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
+     */
+    public static final String DEFAULT_LINK_END_ENTRY = "LinkEndString";
 }

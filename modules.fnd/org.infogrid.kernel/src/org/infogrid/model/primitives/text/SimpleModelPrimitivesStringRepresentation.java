@@ -12,14 +12,18 @@
 // All rights reserved.
 //
 
-package org.infogrid.model.primitives;
+package org.infogrid.model.primitives.text;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.infogrid.model.primitives.EnumeratedValue;
+import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.ArrayStringifier;
 import org.infogrid.util.text.HtmlStringStringifier;
+import org.infogrid.util.text.SimpleStringRepresentation;
 import org.infogrid.util.text.Stringifier;
 import org.infogrid.util.text.StringifierParseException;
 import org.infogrid.util.text.StringifierParsingChoice;
@@ -29,41 +33,90 @@ import org.infogrid.util.text.StringRepresentation;
  * Extends the default definitions in StringRepresentation to be aware of the model primitives defined
  * in this package.
  */
-public abstract class ModelPrimitivesStringRepresentation
+public class SimpleModelPrimitivesStringRepresentation
         extends
-            StringRepresentation
+            SimpleStringRepresentation
 {
-    private static final Log log = Log.getLogInstance( ModelPrimitivesStringRepresentation.class ); // our own, private logger
+    private static final Log log = Log.getLogInstance( SimpleModelPrimitivesStringRepresentation.class  ); // our own, private logger
+
 
     /**
      * Smart factory method, using the default StringifierMap.
      *
-     * @param tagName the tag name.
+     * @param name the name of the StringRepresentation
      * @return the created StringRepresentation
      */
-    public static synchronized StringRepresentation create(
-            String tagName )
+    public static synchronized SimpleModelPrimitivesStringRepresentation create(
+            String name )
     {
-        return create( tagName, DEFAULT_MODEL_PRIMITIVES_STRINGIFIER_MAP );
+        return create( name, DEFAULT_MODEL_PRIMITIVES_STRINGIFIER_MAP );
     }
 
     /**
-     * Non-functional constructor to make Java happy.
-     * 
-     * @param tagName the tag name.
-     * @param map the map of Stringifiers to use
+     * Smart factory method, using the default StringifierMap.
+     *
+     * @param name the name of the StringRepresentation
+     * @param delegate the StringRepresentation to use if this instance cannot perform the operation
+     * @return the created StringRepresentation
      */
-    protected ModelPrimitivesStringRepresentation(
-            String                                    tagName,
+    public static synchronized SimpleModelPrimitivesStringRepresentation create(
+            String               name,
+            StringRepresentation delegate )
+    {
+        return create( name, DEFAULT_MODEL_PRIMITIVES_STRINGIFIER_MAP );
+    }
+
+    /**
+     * Smart factory method.
+     *
+     * @param name the name of the StringRepresentation
+     * @param map the StringifierMap to use
+     * @return the created StringRepresentation
+     */
+    public static synchronized SimpleModelPrimitivesStringRepresentation create(
+            String                                    name,
             Map<String,Stringifier<? extends Object>> map )
     {
-        super( tagName, map );
+        SimpleModelPrimitivesStringRepresentation ret = new SimpleModelPrimitivesStringRepresentation( name, map, null );
+        return ret;
+    }
+
+    /**
+     * Smart factory method.
+     *
+     * @param name the name of the StringRepresentation
+     * @param map the StringifierMap to use
+     * @param delegate the StringRepresentation to use if this instance cannot perform the operation
+     * @return the created StringRepresentation
+     */
+    public static synchronized SimpleStringRepresentation create(
+            String                                    name,
+            Map<String,Stringifier<? extends Object>> map,
+            StringRepresentation                      delegate )
+    {
+        SimpleModelPrimitivesStringRepresentation ret = new SimpleModelPrimitivesStringRepresentation( name, map, delegate );
+        return ret;
+    }
+    
+    /**
+     * Constructor.
+     *
+     * @param name the name of the StringRepresentation
+     * @param map the map of Stringifiers
+     * @param delegate the StringRepresentation to use if this instance cannot perform the operation
+     */
+    protected SimpleModelPrimitivesStringRepresentation(
+            String                                    name,
+            Map<String,Stringifier<? extends Object>> map,
+            StringRepresentation                      delegate )
+    {
+        super( name, map, delegate );
     }
 
     /**
      * The default map for the compound stringifier.
      */
-    public static final Map<String,Stringifier<? extends Object>> DEFAULT_MODEL_PRIMITIVES_STRINGIFIER_MAP;
+    protected static final Map<String,Stringifier<? extends Object>> DEFAULT_MODEL_PRIMITIVES_STRINGIFIER_MAP;
 
     static {
         HashMap<String,Stringifier<? extends Object>> map = new HashMap<String,Stringifier<? extends Object>>();
@@ -80,16 +133,6 @@ public abstract class ModelPrimitivesStringRepresentation
         DEFAULT_MODEL_PRIMITIVES_STRINGIFIER_MAP = map;
     }
     
-    /**
-     * Represent as plain text.
-     */
-    public static final StringRepresentation TEXT_PLAIN = create( "Plain", DEFAULT_MODEL_PRIMITIVES_STRINGIFIER_MAP );
-    
-    /**
-     * Represent as Html text.
-     */
-    public static final StringRepresentation TEXT_HTML = create( "Html", DEFAULT_MODEL_PRIMITIVES_STRINGIFIER_MAP );
-
     /**
      * Stringifies EnumeratedValues.
      */
@@ -171,33 +214,36 @@ public abstract class ModelPrimitivesStringRepresentation
                 HtmlStringStringifier
     {
         /**
-         * Escape HTML characters in String. Inspired by at http://www.rgagnon.com/javadetails/java-0306.html
+         * Format an Object using this Stringifier. This may be null.
          *
-         * @param s the unescaped String
-         * @return the escaped String
+         * @param arg the Object to format, or null
+         * @return the formatted String
          */
         @Override
-        protected String stringToHtml(
-                String s )
+        public String format(
+                String arg )
         {
-            String ret = super.stringToHtml( s );
-            ret = ret.replaceAll( "#", "%23" );
+            String s   = super.format( arg );
+            String ret = s.replaceAll( "#", "%23" );
 
             return ret;
         }
 
         /**
-         * Unescape HTML escape characters in String.
+         * Parse out the Object in rawString that were inserted using this Stringifier.
          *
-         * @param s the escaped String
-         * @return the unescaped String
+         * @param rawString the String to parse
+         * @return the found Object
+         * @throws StringifierParseException thrown if a parsing problem occurred
          */
         @Override
-        protected String htmlToString(
-                String s )
+        public String unformat(
+                String rawString )
+            throws
+                StringifierParseException
         {
-            s = s.replaceAll( "%23", "%" );
-            String ret = super.htmlToString( s );
+            String s   = rawString.replaceAll( "%23", "%" );
+            String ret = super.unformat( s );
 
             return ret;
         }

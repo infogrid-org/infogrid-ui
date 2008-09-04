@@ -14,21 +14,23 @@
 
 package org.infogrid.kernel.net.TEST.urls;
 
-
+import java.util.HashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.mesh.net.NetMeshObject;
-
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
-import org.infogrid.meshbase.transaction.Transaction;
-
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.meshbase.transaction.Transaction;
+import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentation;
+import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationDirectory;
 import org.infogrid.util.logging.Log;
-
-import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.model.primitives.ModelPrimitivesStringRepresentation;
+import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
+
 
 /**
  * Tests conversion of NetMeshObjectIdentifiers into URLs.
@@ -65,32 +67,44 @@ public class UrlTest1
         
         log.info( "Checking HTML urls with different context" );
 
-        StringRepresentation rep = ModelPrimitivesStringRepresentation.TEXT_HTML;
+        StringRepresentation rep = SimpleModelPrimitivesStringRepresentation.create( SimpleModelPrimitivesStringRepresentationDirectory.TEXT_HTML_NAME );
         
-        String context = "http://example.org/foo";
+        String contextUrl = "http://example.org/foo";
         
-        String obj1_mb1_different_default    = obj1_mb1.toStringRepresentationLinkStart( rep, context, true );
-        String obj1_mb1_different_nonDefault = obj1_mb1.toStringRepresentationLinkStart( rep, context, false );
+        HashMap<String,Object> mb1Map = new HashMap<String,Object>();
+        HashMap<String,Object> mb2Map = new HashMap<String,Object>();
         
-        String obj2_mb1_different_default    = obj2_mb1.toStringRepresentationLinkStart( rep, context, true );
-        String obj2_mb1_different_nonDefault = obj2_mb1.toStringRepresentationLinkStart( rep, context, false );
+        mb1Map.put( StringRepresentationContext.WEB_CONTEXT_KEY, contextUrl );
+        mb2Map.put( StringRepresentationContext.WEB_CONTEXT_KEY, contextUrl );
+        
+        mb1Map.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb1 );
+        mb2Map.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb2 );
+        
+        SimpleStringRepresentationContext mb1Context = SimpleStringRepresentationContext.create( mb1Map );
+        SimpleStringRepresentationContext mb2Context = SimpleStringRepresentationContext.create( mb2Map );
+        
+        String obj1_mb1_different_default    = obj1_mb1.toStringRepresentationLinkStart( rep, mb1Context );
+        String obj1_mb1_different_nonDefault = obj1_mb1.toStringRepresentationLinkStart( rep, mb2Context );
+        
+        String obj2_mb1_different_default    = obj2_mb1.toStringRepresentationLinkStart( rep, mb1Context );
+        String obj2_mb1_different_nonDefault = obj2_mb1.toStringRepresentationLinkStart( rep, mb2Context );
 
         checkEquals(
                 obj1_mb1_different_default,
-                "<a href=\"" + context + "/%23xxx" + "\">",
+                "<a href=\"" + contextUrl + "/%23xxx" + "\">",
                 "obj1_mb1_different_default is wrong" );
         checkEquals(
                 obj1_mb1_different_nonDefault,
-                "<a href=\"" + context + "/[meshbase=" + mb1.getIdentifier().toExternalForm() + "]" + "%23xxx\">",
+                "<a href=\"" + contextUrl + "/[meshbase=" + mb1.getIdentifier().toExternalForm() + "]" + "%23xxx\">",
                 "obj1_mb1_different_nonDefault is wrong" );
 
         checkEquals(
                 obj2_mb1_different_default,
-                "<a href=\"" + context + "/" + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" ) + "\">",
+                "<a href=\"" + contextUrl + "/" + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" ) + "\">",
                 "obj2_mb1_different_default is wrong" );
         checkEquals(
                 obj2_mb1_different_nonDefault,
-                "<a href=\"" + context + "/[meshbase=" + mb1.getIdentifier().toExternalForm() + "]" + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" ) + "\">",
+                "<a href=\"" + contextUrl + "/[meshbase=" + mb1.getIdentifier().toExternalForm() + "]" + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" ) + "\">",
                 "obj2_mb1_different_nonDefault is wrong" );
     }
 

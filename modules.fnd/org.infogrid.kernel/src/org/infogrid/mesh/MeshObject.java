@@ -31,11 +31,11 @@ import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 
 import org.infogrid.util.IsDeadException;
-import org.infogrid.util.text.StringRepresentation;
 
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.Map;
+import org.infogrid.util.text.HasStringRepresentation;
 
 /**
  * <p>The core abstraction in InfoGrid.</p>
@@ -69,6 +69,8 @@ import java.util.Map;
  * for different callers.</p>
  */
 public interface MeshObject
+        extends
+            HasStringRepresentation
 {
     /**
      * Obtain the globally unique identifier of this MeshObject.
@@ -965,47 +967,6 @@ public interface MeshObject
      * @return this MeshObject as ExternalizedMeshObject
      */
     public abstract ExternalizedMeshObject asExternalized();
-
-    /**
-     * Obtain a String representation of this MeshObject that can be shown to the user.
-     * 
-     * @param rep the StringRepresentation to use
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentation(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase );
-
-    /**
-     * Obtain the start part of a String representation of this MeshObject that acts
-     * as a link/hyperlink and can be shown to the user.
-     * 
-     * @param rep the StringRepresentation to use
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentationLinkStart(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase );
-
-    /**
-     * Obtain the end part of a String representation of this MeshObject that acts
-     * as a link/hyperlink and can be shown to the user.
-     * 
-     * @param rep the StringRepresentation to use
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentationLinkEnd(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase );
 
     /**
      * The name of a pseudo-property that indicates the state of the object, such as

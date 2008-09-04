@@ -14,12 +14,11 @@
 
 package org.infogrid.model.primitives;
 
+import java.awt.geom.Dimension2D;
 import org.infogrid.util.DoubleDimension;
 import org.infogrid.util.ResourceHelper;
-
 import org.infogrid.util.text.StringRepresentation;
-
-import java.awt.geom.Dimension2D;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is a graphical extent value for PropertyValues.
@@ -63,8 +62,8 @@ public final class ExtentValue
     /**
      * Factory method.
      *
-     * @param width the width of the extent
-     * @param height the height of the extent
+     * @param theWidth the theWidth of the extent
+     * @param theHeight the theHeight of the extent
      * @return the created ExtentValue
      */
     public static ExtentValue create(
@@ -77,15 +76,15 @@ public final class ExtentValue
     /**
       * Private constructor, use factory method.
       *
-      * @param width the width of the extent
-      * @param height the height of the extent
+      * @param theWidth the theWidth of the extent
+      * @param theHeight the theHeight of the extent
       */
     private ExtentValue(
             double width,
             double height )
     {
-        this.width  = width;
-        this.height = height;
+        this.theWidth  = width;
+        this.theHeight = height;
     }
 
     /**
@@ -95,27 +94,27 @@ public final class ExtentValue
       */
     public Dimension2D value()
     {
-        return new DoubleDimension( width, height ); // FIXME as soon as Sun provides this
+        return new DoubleDimension( theWidth, theHeight    ); // FIXME as soon as Sun provides this
     }
 
     /**
-      * Determine width of the extent.
+      * Determine theWidth of the extent.
       *
-      * @return the width of the extent
+      * @return the theWidth of the extent
       */
     public double getWidth()
     {
-        return width;
+        return theWidth;
     }
 
     /**
-      * Determine height of the extent.
+      * Determine theHeight of the extent.
       *
-      * @return the height of the extent
+      * @return the theHeight of the extent
       */
     public double getHeight()
     {
-        return height;
+        return theHeight;
     }
 
     /**
@@ -129,8 +128,8 @@ public final class ExtentValue
             Object otherValue )
     {
         if( otherValue instanceof ExtentValue ) {
-            return (height == ((ExtentValue)otherValue).height)
-                && (width  == ((ExtentValue)otherValue).width);
+            return (theHeight == ((ExtentValue)otherValue).theHeight)
+                && (theWidth  == ((ExtentValue)otherValue).theWidth);
         }
         return false;
     }
@@ -143,7 +142,7 @@ public final class ExtentValue
     @Override
     public String toString()
     {
-        return "[" + width + ";" + height + "]";
+        return "[" + theWidth + ";" + theHeight + "]";
     }
 
     /**
@@ -160,9 +159,9 @@ public final class ExtentValue
         StringBuffer buf = new StringBuffer( 64 );
         buf.append( getClass().getName());
         buf.append( DataType.CREATE_STRING );
-        buf.append( width );
+        buf.append( theWidth  );
         buf.append( ", " );
-        buf.append( height );
+        buf.append( theHeight  );
         buf.append( DataType.CLOSE_PAREN_STRING );
         return buf.toString();
     }
@@ -184,20 +183,20 @@ public final class ExtentValue
     {
         ExtentValue realOther = (ExtentValue) o;
 
-        if( width < realOther.width ) {
-            if( height < realOther.height ) {
+        if( theWidth < realOther.theWidth ) {
+            if( theHeight < realOther.theHeight ) {
                 return -1;
             } else {
                 return +2; // not comparable convention: +2
             }
-        } else if( width == realOther.width ) {
-            if( height == realOther.height ) {
+        } else if( theWidth == realOther.theWidth ) {
+            if( theHeight == realOther.theHeight ) {
                 return 0;
             } else {
                return +2; // not comparable convention: +2
             }
         } else {
-            if( height > realOther.height ) {
+            if( theHeight > realOther.theHeight ) {
                 return +1;
             } else {
                 return +2; // not comparable convention: +2
@@ -206,29 +205,26 @@ public final class ExtentValue
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry( RESOURCEHELPER, DEFAULT_ENTRY, width, height );
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY, theWidth, theHeight    );
     }
 
     /**
-      * The actual value for the width.
+      * The actual value for the theWidth.
       */
-    protected double width;
+    protected double theWidth;
 
     /**
-      * The actual value for the height.
+      * The actual value for the theHeight.
       */
-    protected double height;
-    
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( ExtentValue.class );    
+    protected double theHeight;
 }

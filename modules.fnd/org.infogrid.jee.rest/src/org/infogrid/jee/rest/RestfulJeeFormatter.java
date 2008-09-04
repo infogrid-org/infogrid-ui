@@ -16,22 +16,25 @@ package org.infogrid.jee.rest;
 
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
-import org.infogrid.model.primitives.ModelPrimitivesStringRepresentation;
+import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentation;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationDirectory;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications
@@ -42,11 +45,37 @@ public class RestfulJeeFormatter
             JeeFormatter
 {
     /**
-     * Constructor.
+     * Factory method.
+     * 
+     * @return the created JeeFormatter
      */
-    public RestfulJeeFormatter()
+    public static RestfulJeeFormatter create()
     {
-        // nothing
+        SimpleModelPrimitivesStringRepresentationDirectory stringRepDir = SimpleModelPrimitivesStringRepresentationDirectory.create();
+        return new RestfulJeeFormatter( stringRepDir );
+    }
+    
+    /**
+     * Factory method.
+     * 
+     * @param stringRepDir the StringRepresentationDirectory to use
+     * @return the created JeeFormatter
+     */
+    public static RestfulJeeFormatter create(
+            StringRepresentationDirectory stringRepDir )
+    {
+        return new RestfulJeeFormatter( stringRepDir );
+    }
+    
+    /**
+     * Private constructor for subclasses only, use factory method.
+     * 
+     * @param stringRepDir the StringRepresentationDirectory to use
+     */
+    protected RestfulJeeFormatter(
+            StringRepresentationDirectory stringRepDir )
+    {
+        super( stringRepDir );
     }
 
     /**
@@ -60,6 +89,7 @@ public class RestfulJeeFormatter
      * @throws NullPointerException if the given object was null
      * @throws IllegalArgumentException thrown if an illegal propertyName was given
      */
+    @Override
     public Object getSimpleProperty(
             Object obj,
             String propertyName )
@@ -128,6 +158,7 @@ public class RestfulJeeFormatter
      * @throws IllegalArgumentException thrown if an illegal propertyName was given
      * @throws JspException thrown if the object's property could not be found
      */
+    @Override
     public Object getSimplePropertyOrThrow(
             Object obj,
             String propertyName )
@@ -259,9 +290,10 @@ public class RestfulJeeFormatter
             String             nullString,
             String             stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
         
-        String ret = PropertyValue.toStringRepresentationOrNull( value, rep );
+        String ret = PropertyValue.toStringRepresentationOrNull( value, rep, context );
         if( ret != null ) {
             return ret;
         } else {
@@ -282,9 +314,10 @@ public class RestfulJeeFormatter
             MeshTypeIdentifier identifier,
             String             stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
-
-        String ret = identifier.toStringRepresentation( rep );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+ 
+        String ret = identifier.toStringRepresentation( rep, context );
         
         return ret;
     }
@@ -302,13 +335,10 @@ public class RestfulJeeFormatter
             MeshObject         mesh,
             String             stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        RestfulRequest req         = (RestfulRequest) ((HttpServletRequest)pageContext.getRequest()).getAttribute( RestfulRequest.class.getName());
-        String         contextPath = req.getContextPath();
-        boolean isDefaultMeshBase  = isDefaultMeshBase( mesh.getMeshBase() );
-
-        String ret = mesh.toStringRepresentation( rep, contextPath, isDefaultMeshBase );
+        String ret = mesh.toStringRepresentation( rep, context );
         return ret;
     }
 
@@ -343,20 +373,10 @@ public class RestfulJeeFormatter
             String             rootPath,
             String             stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String contextPath;
-        if( rootPath != null ) {
-            contextPath = rootPath;
-
-        } else {
-            RestfulRequest req = (RestfulRequest) ((HttpServletRequest)pageContext.getRequest()).getAttribute( RestfulRequest.class.getName());
-            contextPath        = req.getContextPath();
-        }
-
-        boolean isDefaultMeshBase = isDefaultMeshBase( mesh.getMeshBase() );
-
-        String ret = mesh.toStringRepresentationLinkStart( rep, contextPath, isDefaultMeshBase );
+        String ret = mesh.toStringRepresentationLinkStart( rep, context );
         return ret;
     }
 
@@ -375,18 +395,10 @@ public class RestfulJeeFormatter
             String             rootPath,
             String             stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String contextPath;
-        if( rootPath != null ) {
-            contextPath = rootPath;
-        } else {
-            contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath() + "/";
-        }
-
-        boolean isDefaultMeshBase = isDefaultMeshBase( mesh.getMeshBase() );
-
-        String ret = mesh.toStringRepresentationLinkEnd( rep, contextPath, isDefaultMeshBase );
+        String ret = mesh.toStringRepresentationLinkEnd( rep, context );
         return ret;
 }
 
@@ -427,11 +439,10 @@ public class RestfulJeeFormatter
             MeshBase           base,
             String             stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        boolean contextImpliesThisMeshBase = isDefaultMeshBase( base );
-
-        String ret = base.toStringRepresentation( rep, contextImpliesThisMeshBase );
+        String ret = base.toStringRepresentation( rep, context );
         return ret;
     }
 
@@ -466,18 +477,10 @@ public class RestfulJeeFormatter
             String             rootPath,
             String             stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String contextPath;
-        if( rootPath != null ) {
-            contextPath = rootPath;
-        } else {
-            contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath() + "/";
-        }
-
-        boolean isDefaultMeshBase = isDefaultMeshBase( base );
-
-        String ret = base.toStringRepresentationLinkStart( rep, contextPath, isDefaultMeshBase );
+        String ret = base.toStringRepresentationLinkStart( rep, context );
         return ret;
     }
 
@@ -496,18 +499,10 @@ public class RestfulJeeFormatter
             String             rootPath,
             String             stringRepresentation )
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
-        
-        String contextPath;
-        if( rootPath != null ) {
-            contextPath = rootPath;
-        } else {
-            contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath() + "/";
-        }
+        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        boolean isDefaultMeshBase = isDefaultMeshBase( base );
-
-        String ret = base.toStringRepresentationLinkEnd( rep, contextPath, isDefaultMeshBase );
+        String ret = base.toStringRepresentationLinkEnd( rep, context );
         return ret;
     }
 
@@ -518,6 +513,7 @@ public class RestfulJeeFormatter
      * @param in the original value
      * @return the StringRepresentation
      */
+    @Override
     public StringRepresentation determineStringRepresentation(
             String in )
     {
@@ -531,7 +527,7 @@ public class RestfulJeeFormatter
             temp.append( in.substring( 1 ).toLowerCase() );
             sanitized = temp.toString();
         }
-        StringRepresentation ret = ModelPrimitivesStringRepresentation.create( sanitized );
+        StringRepresentation ret = SimpleModelPrimitivesStringRepresentation.create( sanitized );
         return ret;
     }
 
@@ -557,6 +553,4 @@ public class RestfulJeeFormatter
             return false;
         }
     }
-
-
 }

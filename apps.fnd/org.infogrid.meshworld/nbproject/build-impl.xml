@@ -601,13 +601,15 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${reference.org_infogrid_module_servlet.jar}" propname="included.lib.reference.org_infogrid_module_servlet.jar.X"/>
         <basename file="${libs.Log4j.classpath}" property="included.lib.libs.Log4j.classpath"/>
         <copy-ear-war file="${libs.Log4j.classpath}" propname="included.lib.libs.Log4j.classpath.X"/>
+        <basename file="${libs.J2EE.classpath}" property="included.lib.libs.J2EE.classpath"/>
+        <copy-ear-war file="${libs.J2EE.classpath}" propname="included.lib.libs.J2EE.classpath.X"/>
         <basename file="${libs.JSTL.classpath.libfile.2}" property="included.lib.libs.JSTL.classpath.2"/>
         <basename file="${libs.JSTL.classpath.libfile.1}" property="included.lib.libs.JSTL.classpath.1"/>
         <copy-ear-war file="${libs.JSTL.classpath.libfile.2}" propname="included.lib.libs.JSTL.classpath.2.X"/>
         <copy-ear-war file="${libs.JSTL.classpath.libfile.1}" propname="included.lib.libs.JSTL.classpath.1.X"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.reference.org_infogrid_util_logging_log4j.jar} ${included.lib.reference.org_infogrid_model_Test.jar} ${included.lib.reference.org_infogrid_model_Wiki.jar} ${included.lib.reference.org_infogrid_model_Viewlet.jar} ${included.lib.reference.org_infogrid_jee.jar} ${included.lib.reference.org_infogrid_jee_rest.jar} ${included.lib.reference.org_infogrid_jee_store.jar} ${included.lib.reference.org_infogrid_jee_viewlet.jar} ${included.lib.reference.org_infogrid_jee_templates.jar} ${included.lib.reference.org_infogrid_jee_shell_http.jar} ${included.lib.reference.org_infogrid_viewlet.jar} ${included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar} ${included.lib.reference.org_infogrid_jee_viewlet_bulk.jar} ${included.lib.reference.org_infogrid_kernel.jar} ${included.lib.reference.org_infogrid_meshbase_store.jar} ${included.lib.reference.org_infogrid_modelbase_m.jar} ${included.lib.reference.org_infogrid_store.jar} ${included.lib.reference.org_infogrid_store_sql.jar} ${included.lib.reference.org_infogrid_util.jar} ${included.lib.reference.org_infogrid_module.jar} ${included.lib.reference.org_infogrid_module_servlet.jar} ${included.lib.libs.Log4j.classpath} ${included.lib.libs.JSTL.classpath.1.X} ${included.lib.libs.JSTL.classpath.2.X} "/>
+            <attribute name="Class-Path" value="${included.lib.reference.org_infogrid_util_logging_log4j.jar} ${included.lib.reference.org_infogrid_model_Test.jar} ${included.lib.reference.org_infogrid_model_Wiki.jar} ${included.lib.reference.org_infogrid_model_Viewlet.jar} ${included.lib.reference.org_infogrid_jee.jar} ${included.lib.reference.org_infogrid_jee_rest.jar} ${included.lib.reference.org_infogrid_jee_store.jar} ${included.lib.reference.org_infogrid_jee_viewlet.jar} ${included.lib.reference.org_infogrid_jee_templates.jar} ${included.lib.reference.org_infogrid_jee_shell_http.jar} ${included.lib.reference.org_infogrid_viewlet.jar} ${included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar} ${included.lib.reference.org_infogrid_jee_viewlet_bulk.jar} ${included.lib.reference.org_infogrid_kernel.jar} ${included.lib.reference.org_infogrid_meshbase_store.jar} ${included.lib.reference.org_infogrid_modelbase_m.jar} ${included.lib.reference.org_infogrid_store.jar} ${included.lib.reference.org_infogrid_store_sql.jar} ${included.lib.reference.org_infogrid_util.jar} ${included.lib.reference.org_infogrid_module.jar} ${included.lib.reference.org_infogrid_module_servlet.jar} ${included.lib.libs.Log4j.classpath} ${included.lib.libs.J2EE.classpath} ${included.lib.libs.JSTL.classpath.1.X} ${included.lib.libs.JSTL.classpath.2.X} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
@@ -634,6 +636,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy file="${reference.org_infogrid_module.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_module_servlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.Log4j.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${libs.J2EE.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.JSTL.classpath.libfile.2}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.JSTL.classpath.libfile.1}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>

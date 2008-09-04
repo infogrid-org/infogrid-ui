@@ -18,6 +18,7 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.a.AMeshObjectEquivalenceSetComparator;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * Tests the AMeshObjectEquivalenceSetComparator.
@@ -249,13 +250,45 @@ public class EquivalenceSetComparatorTest1
         }
 
         /**
-         * Convert this Identifier to its String representation, using the representation scheme.
-         *
-         * @param representation the representation scheme
-         * @return the String representation
+         * Obtain a String representation of this instance that can be shown to the user.
+         * 
+         * @param rep the StringRepresentation
+         * @param context the StringRepresentationContext of this object
+         * @return String representation
          */
         public String toStringRepresentation(
-                StringRepresentation representation )
+                StringRepresentation        rep,
+                StringRepresentationContext context )
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        /**
+         * Obtain the start part of a String representation of this MeshBase that acts
+         * as a link/hyperlink and can be shown to the user.
+         * 
+         * @param rep the StringRepresentation
+         * @param context the StringRepresentationContext of this object
+         * @return String representation
+         */
+        public String toStringRepresentationLinkStart(
+                StringRepresentation        rep,
+                StringRepresentationContext context )
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        /**
+         * Obtain the end part of a String representation of this MeshBase that acts
+         * as a link/hyperlink and can be shown to the user.
+         * 
+         * @param rep the StringRepresentation
+         * @param context the StringRepresentationContext of this object
+         * @return String representation
+         */
+        public String toStringRepresentationLinkEnd(
+                StringRepresentation        rep,
+                StringRepresentationContext context )
         {
             throw new UnsupportedOperationException();
         }

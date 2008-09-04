@@ -14,11 +14,12 @@
 
 package org.infogrid.model.primitives;
 
+import java.io.Serializable;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
-
-import java.io.Serializable;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is the abstract supertype for values of all supported DataTypes for
@@ -29,9 +30,10 @@ import java.io.Serializable;
   * comparison operands are not comparable.
   */
 public abstract class PropertyValue
-    implements
-        Serializable,
-        Comparable<PropertyValue>
+        implements
+            HasStringRepresentation,
+            Serializable,
+            Comparable<PropertyValue>
 {
     private static final Log log = Log.getLogInstance( PropertyValue.class ); // our own, private logger
 
@@ -57,22 +59,55 @@ public abstract class PropertyValue
      */
     public abstract Object value();
 
+    
+    /**
+     * Obtain the start part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+    
     /**
      * Convert a PropertyValue to its String representation, using the representation scheme.
      * Return null if the PropertyValue is null.
      *
      * @param v the PropertyValue to convert
      * @param representation the representation scheme
+     * @param context the StringRepresentationContext of this object
      * @return the String representation
      */
     public static String toStringRepresentationOrNull(
-            PropertyValue        v,
-            StringRepresentation representation )
+            PropertyValue               v,
+            StringRepresentation        representation,
+            StringRepresentationContext context )
     {
         if( v == null ) {
             return null;
         } else {
-            return v.toStringRepresentation( representation );
+            return v.toStringRepresentation( representation, context );
         }
     }
 
@@ -82,27 +117,20 @@ public abstract class PropertyValue
      *
      * @param v the PropertyValue to convert
      * @param representation the representation scheme
+     * @param context the StringRepresentationContext of this object
      * @return the String representation
      */
     public final static String toStringRepresentation(
-            PropertyValue        v,
-            StringRepresentation representation )
+            PropertyValue               v,
+            StringRepresentation        representation,
+            StringRepresentationContext context )
     {
         if( v == null ) {
-            return representation.formatEntry( theResourceHelper, "Null" );
+            return representation.formatEntry( PropertyValue.class, "Null" );
         } else {
-            return v.toStringRepresentation( representation );
+            return v.toStringRepresentation( representation, context );
         }
     }
-
-    /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
-     */
-    public abstract String toStringRepresentation(
-            StringRepresentation representation );
 
     /**
      * This is a convenience comparison method in case one of the arguments may be null.

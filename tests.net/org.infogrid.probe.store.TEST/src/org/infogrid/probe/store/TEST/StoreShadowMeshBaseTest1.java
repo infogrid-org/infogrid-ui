@@ -15,27 +15,6 @@
 package org.infogrid.probe.store.TEST;
 
 import java.io.IOException;
-import org.infogrid.mesh.MeshObject;
-import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
-import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.model.primitives.IntegerValue;
-import org.infogrid.model.primitives.StringValue;
-import org.infogrid.model.Probe.ProbeSubjectArea;
-import org.infogrid.model.Test.TestSubjectArea;
-import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
-import org.infogrid.probe.ApiProbe;
-import org.infogrid.probe.ProbeDirectory;
-import org.infogrid.probe.StagingMeshBase;
-import org.infogrid.probe.manager.PassiveProbeManager;
-import org.infogrid.probe.manager.store.StorePassiveProbeManager;
-import org.infogrid.probe.shadow.ShadowMeshBase;
-import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
-import org.infogrid.store.prefixing.IterablePrefixingStore;
-import org.infogrid.util.logging.Log;
-
 import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
@@ -45,11 +24,31 @@ import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.IsAbstractException;
+import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
+import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.IntegerValue;
+import org.infogrid.model.primitives.StringValue;
+import org.infogrid.model.Probe.ProbeSubjectArea;
+import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.module.ModuleException;
+import org.infogrid.probe.ApiProbe;
+import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.ProbeException;
+import org.infogrid.probe.StagingMeshBase;
+import org.infogrid.probe.manager.PassiveProbeManager;
+import org.infogrid.probe.manager.store.StorePassiveProbeManager;
+import org.infogrid.probe.shadow.ShadowMeshBase;
+import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
+import org.infogrid.store.prefixing.IterablePrefixingStore;
+import org.infogrid.util.logging.Log;
 
 /**
  * Tests ProbeManager restore of StoreShadowMeshBase with a One-Time-Only CoherenceSpecification.

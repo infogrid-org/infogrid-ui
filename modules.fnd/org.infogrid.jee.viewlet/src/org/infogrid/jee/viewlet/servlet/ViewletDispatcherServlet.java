@@ -103,6 +103,9 @@ public class ViewletDispatcherServlet
         } catch( NotPermittedException ex ) {
             throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_FORBIDDEN ); // 402
 
+        } catch( CannotViewException.NoSubject ex ) {
+            throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_NOT_FOUND ); // 404
+
         } catch( CannotViewException ex ) {
             throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_BAD_REQUEST ); // 400
 

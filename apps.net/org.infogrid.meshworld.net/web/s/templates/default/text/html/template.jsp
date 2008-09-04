@@ -17,6 +17,7 @@
   <div id="canvas-top">
    <div id="canvas-app-row">
     <div class="canvas-main">
+     <a class="infogrid" href="http://infogrid.org/"><img src="${CONTEXT}/s/icons/infogrid-medium.png" alt="[InfoGrid logo]" /></a>
      <a href="${CONTEXT}/"><img id="app-logo" src="${CONTEXT}/s/icons/meshworld.png" alt="[Logo]" /></a>
      <h1><a href="${CONTEXT}/">The NetMesh World</a></h1>
     </div>
@@ -26,6 +27,7 @@
    <div class="canvas-main">
     <tmpl:ifErrors>
      <div class="errors">
+      <p>Errors:</p>
       <tmpl:inlineErrors stringRepresentation="Html"/>
      </div>
     </tmpl:ifErrors>
@@ -33,9 +35,10 @@
    </div>
   </div>
   <div id="canvas-bottom">
-   <div class="canvas-main footnote">&copy; 2001-2008 NetMesh Inc. All rights
-    reserved. NetMesh and InfoGrid are trademarks or registered trademarks of NetMesh Inc.
-    Learn more about <a href="http://infogrid.org/">InfoGrid</a>.</div>
+   <div class="canvas-main footnote">
+    &copy; 2001-2008 NetMesh Inc. All rights reserved. NetMesh and InfoGrid are trademarks or registered
+    trademarks of NetMesh Inc. Learn more about <a href="http://infogrid.org/">InfoGrid&trade;</a>.
+   </div>
   </div>
  </body>
 </html>

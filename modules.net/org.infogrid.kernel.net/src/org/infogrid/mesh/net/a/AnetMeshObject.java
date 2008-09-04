@@ -42,6 +42,7 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.mesh.net.LockChangedEvent;
 import org.infogrid.mesh.net.NotHomeReplicaException;
 import org.infogrid.mesh.net.proxy.ReplicaProxyInterface;
+import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessException;
@@ -69,10 +70,10 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.RemoteQueryTimeoutException;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * <p>Subclasses AMeshObject to add information necessary for NetMeshBases according
@@ -2220,19 +2221,20 @@ public class AnetMeshObject
     }
     
     /**
-     * Obtain a String representation of this MeshObject that can be shown to the user.
+     * Obtain a String representation of this instance that can be shown to the user.
      * 
-     * @param rep the StringRepresentation to use
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     @Override
     public String toStringRepresentation(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( getMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        
         String key;
         if( isDefaultMeshBase ) {
             if( isHomeObject() ) {
@@ -2252,30 +2254,31 @@ public class AnetMeshObject
         String meshBaseExternalForm   = theMeshBase.getIdentifier().toExternalForm();
 
         String ret = rep.formatEntry(
-                ResourceHelper.getInstance( getClass() ), // dispatch to the right subclass
+                getClass(), // dispatch to the right subclass
                 key,
                 meshObjectExternalForm,
                 contextPath,
                 meshBaseExternalForm );
 
-        return ret;
+        return ret;        
     }
 
     /**
-     * Obtain the start part of a String representation of this MeshObject that acts
+     * Obtain the start part of a String representation of this MeshBase that acts
      * as a link/hyperlink and can be shown to the user.
      * 
-     * @param rep the StringRepresentation to use
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     @Override
     public String toStringRepresentationLinkStart(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( getMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+
         String key;
         if( isDefaultMeshBase ) {
             if( isHomeObject() ) {
@@ -2304,30 +2307,31 @@ public class AnetMeshObject
         meshObjectExternalForm = meshObjectExternalForm.replaceAll( "#" , "%23" );
 
         String ret = rep.formatEntry(
-                ResourceHelper.getInstance( getClass() ), // dispatch to the right subtype
+                getClass(), // dispatch to the right subclass
                 key,
                 meshObjectExternalForm,
                 contextPath,
                 meshBaseExternalForm );
 
-        return ret;
+        return ret;        
     }
 
     /**
-     * Obtain the end part of a String representation of this MeshObject that acts
+     * Obtain the end part of a String representation of this MeshBase that acts
      * as a link/hyperlink and can be shown to the user.
      * 
-     * @param rep the StringRepresentation to use
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     @Override
     public String toStringRepresentationLinkEnd(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
+        boolean isDefaultMeshBase = context != null ? ( getMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
+        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+
         String key;
         if( isDefaultMeshBase ) {
             if( isHomeObject() ) {
@@ -2354,7 +2358,7 @@ public class AnetMeshObject
         }
         
         String ret = rep.formatEntry(
-                ResourceHelper.getInstance( getClass() ), // dispatch to the right subclass
+                getClass(), // dispatch to the right subclass
                 key,
                 meshObjectExternalForm,
                 contextPath,

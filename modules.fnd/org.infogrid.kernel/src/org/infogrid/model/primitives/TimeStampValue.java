@@ -14,11 +14,10 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.text.StringRepresentation;
-
 import java.util.Calendar;
 import java.util.Date;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is a time stamp value for PropertyValues. Its values generally
@@ -454,16 +453,18 @@ public final class TimeStampValue
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry(
-                RESOURCEHELPER,
+        return rep.formatEntry(
+                getClass(),
                 DEFAULT_ENTRY,
                 theYear,
                 theMonth,
@@ -504,9 +505,4 @@ public final class TimeStampValue
       * The real second value.
       */
     protected float theSecond;
-
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( TimeStampValue.class );    
 }

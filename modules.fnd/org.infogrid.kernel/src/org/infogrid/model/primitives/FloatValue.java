@@ -16,6 +16,7 @@ package org.infogrid.model.primitives;
 
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is a floating point value for PropertyValues. Internally, it uses double.
@@ -366,15 +367,17 @@ public final class FloatValue
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry( RESOURCEHELPER, DEFAULT_ENTRY, theValue );
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY, theValue );
     }
 
     /**
@@ -386,9 +389,4 @@ public final class FloatValue
       * The Unit, if any.
       */
     protected Unit theUnit;
-
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( FloatValue.class );    
 }

@@ -80,6 +80,11 @@ div.errors .stacktrace {
     font-size: 12px;
     overflow-x: scroll;
 }
+a.infogrid {
+    float: right;
+    margin-left: 10px;
+    margin-top: 12px;
+}
 
 
 span.org-infogrid-model-primitives-BlobValue > span.mime {

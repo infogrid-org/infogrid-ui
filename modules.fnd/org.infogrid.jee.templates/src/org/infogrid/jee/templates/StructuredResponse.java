@@ -23,10 +23,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import org.infogrid.util.LocalizedObject;
-import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -40,18 +37,14 @@ public class StructuredResponse
      * Factory method.
      *
      * @param delegate the underlying HttpServletResponse
-     * @param htmlObjectFormatter knows how to format an object in HTML
-     * @param plainObjectFormatter knows how to format an object in plain text
      * @param servletContext the ServletContext in which the StructuredResponse is created
      * @return the created StructuredResponse
      */
     public static StructuredResponse create(
             HttpServletResponse      delegate,
-            LocalizedObjectFormatter htmlObjectFormatter,
-            LocalizedObjectFormatter plainObjectFormatter,
             ServletContext           servletContext )
     {
-        StructuredResponse ret = new StructuredResponse( delegate, htmlObjectFormatter, plainObjectFormatter, servletContext );
+        StructuredResponse ret = new StructuredResponse( delegate, servletContext );
         return ret;
     }
 
@@ -59,19 +52,13 @@ public class StructuredResponse
      * Constructor for subclasses only, use factory method.
      *
      * @param delegate the underlying HttpServletResponse
-     * @param htmlObjectFormatter knows how to format an object in HTML
-     * @param plainObjectFormatter knows how to format an object in plain text
      * @param servletContext the ServletContext in which the StructuredResponse is created
      */
     protected StructuredResponse(
             HttpServletResponse      delegate,
-            LocalizedObjectFormatter htmlObjectFormatter,
-            LocalizedObjectFormatter plainObjectFormatter,
             ServletContext           servletContext )
     {
         theDelegate             = delegate;
-        theHtmlObjectFormatter  = htmlObjectFormatter;
-        thePlainObjectFormatter = plainObjectFormatter;
         theServletContext       = servletContext;
     }
     
@@ -321,126 +308,6 @@ public class StructuredResponse
     }
 
     /**
-     * Obtain the error content as plain text.
-     * 
-     * @return the error content
-     */
-    public String getErrorContentAsPlain()
-    {
-        StringBuilder            buf       = new StringBuilder();
-        LocalizedObjectFormatter formatter = obtainPlainObjectFormatter( );
-
-        for( Throwable t : theCurrentProblems ) {
-            String msg;
-            if( t instanceof LocalizedObject ) {
-                msg = ((LocalizedObject) t).getLocalizedMessage( formatter );
-            } else {
-                msg = t.getMessage();
-            }
-            if( msg == null ) {
-                msg = t.getClass().getName();
-            }
-            buf.append( msg );
-            
-            for( StackTraceElement trace : t.getStackTrace() ) {
-                buf.append( "    " );
-                buf.append( trace );
-                buf.append( "\n" );
-            }            
-
-            // now causes.
-            for( Throwable cause = findCause( t ) ; cause != null ; cause = findCause( cause )) {
-                buf.append( "Caused by: " );
-                String msg2;
-                if( cause instanceof LocalizedObject ) {
-                    msg2 = ((LocalizedObject) cause).getLocalizedMessage( formatter );
-                } else {
-                    msg2 = cause.getMessage();
-                }
-                if( msg2 == null ) {
-                    msg2 = cause.getClass().getName();
-                }
-                buf.append( msg2 );
-
-                for( StackTraceElement trace : cause.getStackTrace() ) {
-                    buf.append( "    " );
-                    buf.append( trace );
-                    buf.append( "\n" );
-                }
-            }
-        }
-        return buf.toString();
-    }
-
-    /**
-     * Obtain the error content as HTML text.
-     * 
-     * @return the error content
-     */
-    public String getErrorContentAsHtml()
-    {
-        StringBuilder            buf       = new StringBuilder();
-        LocalizedObjectFormatter formatter = obtainHtmlObjectFormatter( );
-
-        for( Throwable t : theCurrentProblems ) {
-            buf.append( "<div class=\"error\">\n" );
-            String msg;
-            if( t instanceof LocalizedObject ) {
-                msg = ((LocalizedObject) t).getLocalizedMessage( formatter );
-            } else {
-                msg = t.getMessage();
-            }
-            if( msg == null ) {
-                msg = t.getClass().getName();
-            }
-
-            // make safe for HTML
-            buf.append( "<h1>" );
-            String sep = "";
-            for( String line : msg.split( "\n" )) {
-                buf.append( sep );
-                String escapedLine = XmlUtils.escape( line );
-                buf.append( escapedLine );
-                sep = "<br />\n";
-            }
-            buf.append( "</h1>\n" );
-            
-            buf.append( "<div class=\"stacktrace\">\n" );
-            
-            for( StackTraceElement trace : t.getStackTrace() ) {
-                buf.append( "<div class=\"stacktracelement\">" );
-                buf.append( trace );
-                buf.append( "</div>\n" );
-            }            
-
-            // now causes.
-            for( Throwable cause = findCause( t ) ; cause != null ; cause = findCause( cause )) {
-                buf.append( "<div class=\"cause\">\n" );
-
-                String msg2;
-                if( cause instanceof LocalizedObject ) {
-                    msg2 = ((LocalizedObject) cause).getLocalizedMessage( formatter );
-                } else {
-                    msg2 = cause.getMessage();
-                }
-                if( msg2 == null ) {
-                    msg2 = cause.getClass().getName();
-                }
-                buf.append( "<h2>" ).append( msg2 ).append( "</h2>\n" );
-
-                for( StackTraceElement trace : cause.getStackTrace() ) {
-                    buf.append( "<div class=\"stacktracelement\">" );
-                    buf.append( trace );
-                    buf.append( "</div>\n" );
-                }            
-                buf.append( "</div>\n" );
-            }
-            buf.append( "</div>\n" );
-        }
-        return buf.toString();
-    }
-
-    /**
      * Helper method to find the cause of an Exception.
      * Unfortunately JspExceptions do getRootCause() instead of getCause().
      *
@@ -471,26 +338,6 @@ public class StructuredResponse
         String ret = in.replaceAll( "<", "&lt;" );
         ret = ret.replaceAll( ">", "&gt;" );
         return ret;
-    }
-
-    /**
-     * Obtain a LocalizedObjectFormatter for Html output. This can be overridden by subclasses.
-     * 
-     * @return the LocalizedObjectFormatter to use with this application
-     */
-    protected LocalizedObjectFormatter obtainHtmlObjectFormatter()
-    {
-        return theHtmlObjectFormatter;
-    }
-
-    /**
-     * Obtain a LocalizedObjectFormatter for plain text output. This can be overridden by subclasses.
-     * 
-     * @return the LocalizedObjectFormatter to use with this application
-     */
-    protected LocalizedObjectFormatter obtainPlainObjectFormatter()
-    {
-        return thePlainObjectFormatter;
     }
 
     /**
@@ -585,16 +432,6 @@ public class StructuredResponse
      * The ServletContext within which this response is assembled.
      */
     protected ServletContext theServletContext;
-
-    /**
-     * Knows how to format an object in HTML.
-     */
-    protected LocalizedObjectFormatter theHtmlObjectFormatter;
-
-    /**
-     * Knows how to format an object in plain text.
-     */
-    protected LocalizedObjectFormatter thePlainObjectFormatter;
 
     /**
      * Name of the request attribute that contains the StructuredResponse. Make sure

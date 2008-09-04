@@ -94,7 +94,7 @@ public class DefaultStructuredResponseTemplateFactory
             ret = JspStructuredResponseTemplate.create( dispatcher, request, templateName, structured );
         } else {
             // if none is there, we stream verbatim
-            ret = VerbatimResponseTemplate.create( request, templateName, structured );
+            ret = VerbatimStructuredResponseTemplate.create( request, templateName, structured );
         }
         return ret;
     }

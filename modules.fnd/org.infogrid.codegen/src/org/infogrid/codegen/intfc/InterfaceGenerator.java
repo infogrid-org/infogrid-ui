@@ -14,25 +14,22 @@
 
 package org.infogrid.codegen.intfc;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import org.infogrid.codegen.AbstractGenerator;
-
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.CollectableMeshType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
-import org.infogrid.model.primitives.ModelPrimitivesStringRepresentation;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.SubjectArea;
-
 import org.infogrid.util.logging.Log;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.infogrid.util.text.StringRepresentation;
 
 /**
   * This class is a code generator that generates the interface code
@@ -45,23 +42,25 @@ public class InterfaceGenerator
     private static final Log log = Log.getLogInstance(InterfaceGenerator.class); // our own, private logger
 
     /**
-      * Constructor.
-      *
-      * @param outputDir the directory into which the code shall be genreated
-      */
+     * Constructor.
+     *
+     * @param outputDir the directory into which the code shall be generated
+     * @param commentsRepresentation the StringRepresentation to use for emitting comments
+     */
     public InterfaceGenerator(
-            File outputDir )
+            File                 outputDir,
+            StringRepresentation commentsRepresentation )
     {
-        super( outputDir );
+        super( outputDir, commentsRepresentation );
     }
 
     /**
-      * Generate code for one EntityType.
-      *
-      * @param theMeshType the EntityType to generate code for
-      * @return the fully-qualified file name where it was generated
-      * @throws IOException thrown if an I/O error occurred during code generation
-      */
+     * Generate code for one EntityType.
+     *
+     * @param theMeshType the EntityType to generate code for
+     * @return the fully-qualified file name where it was generated
+     * @throws IOException thrown if an I/O error occurred during code generation
+     */
     protected String generateCodeForEntityType(
             EntityType theMeshType )
         throws
@@ -116,11 +115,11 @@ public class InterfaceGenerator
                 + "</tt></td></tr>" );
         outStream.println(
                   "  *  <tr><td>Name:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( theMeshType.getName(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( theMeshType.getName(), theCommentsRepresentation, null )
                 + "</tt></td></tr>" );
         outStream.println(
                   "  *  <tr><td>IsAbstract:</td><td>"
-                + PropertyValue.toStringRepresentation( theMeshType.getIsAbstract(), ModelPrimitivesStringRepresentation.TEXT_HTML )
+                + PropertyValue.toStringRepresentation( theMeshType.getIsAbstract(), theCommentsRepresentation, null )
                 + "</td></tr>" );
         generateL10Map(
                 theMeshType.getUserVisibleNameMap(),
@@ -369,7 +368,7 @@ public class InterfaceGenerator
             
             if( type.getUserVisibleDescription() != null ) {
                 outStream.println( "    /**" );
-                outStream.println( "      * " + PropertyValue.toStringRepresentation( type.getUserVisibleDescription(), ModelPrimitivesStringRepresentation.TEXT_HTML ));
+                outStream.println( "      * " + PropertyValue.toStringRepresentation( type.getUserVisibleDescription(), theCommentsRepresentation, null ));
                 outStream.println( "      */" );
             }
 
@@ -389,7 +388,7 @@ public class InterfaceGenerator
                     outStream.println();
                     if( propType.getUserVisibleDescription() != null ) {
                         outStream.println( "    /**" );
-                        outStream.println( "      * " + PropertyValue.toStringRepresentation( propType.getUserVisibleDescription(), ModelPrimitivesStringRepresentation.TEXT_HTML ));
+                        outStream.println( "      * " + PropertyValue.toStringRepresentation( propType.getUserVisibleDescription(), theCommentsRepresentation, null ));
                         outStream.println( "      */" );
                     }
                     outStream.println( "    public static final PropertyType " + upperName + "_" + upperPropName + " = " + packageName + getInterfaceSubPackageName() + "." + name + "." + propName.toUpperCase() + ";" );
@@ -434,7 +433,7 @@ public class InterfaceGenerator
         w.println( " </head>" );
         w.println( " <body>" );
         
-        w.println( PropertyValue.toStringRepresentation( theSubjectArea.getUserVisibleDescription(), ModelPrimitivesStringRepresentation.TEXT_HTML ));
+        w.println( PropertyValue.toStringRepresentation( theSubjectArea.getUserVisibleDescription(), theCommentsRepresentation, null ));
 
         w.println( " </body>" );
         w.println( "</html>" );

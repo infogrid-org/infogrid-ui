@@ -19,6 +19,7 @@ import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
 
 import java.io.ObjectStreamException;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is an integer DataType for PropertyValue with explicity minimum and maximum values.
@@ -395,20 +396,22 @@ public class IntegerDataType
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry(
-                RESOURCEHELPER,
+        return rep.formatEntry(
+                IntegerValue.class,
                 DEFAULT_ENTRY,
-                PropertyValue.toStringRepresentation( getDefaultValue(), representation ),
-                PropertyValue.toStringRepresentation( theMin,            representation ),
-                PropertyValue.toStringRepresentation( theMax,            representation ),
+                PropertyValue.toStringRepresentation( getDefaultValue(), rep, context ),
+                PropertyValue.toStringRepresentation( theMin,            rep, context ),
+                PropertyValue.toStringRepresentation( theMax,            rep, context ),
                 theUnitFamily,
                 theSupertype );
     }
@@ -429,7 +432,7 @@ public class IntegerDataType
             PropertyValueParsingException
     {
         try {
-            Object [] found = representation.parseEntry( IntegerValue.RESOURCEHELPER, IntegerValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( IntegerValue.class, IntegerValue.DEFAULT_ENTRY, s );
 
             IntegerValue ret;
 
@@ -466,9 +469,4 @@ public class IntegerDataType
       * The unit family (if any).
       */
     protected UnitFamily theUnitFamily;
-    
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = IntegerValue.RESOURCEHELPER;
 }

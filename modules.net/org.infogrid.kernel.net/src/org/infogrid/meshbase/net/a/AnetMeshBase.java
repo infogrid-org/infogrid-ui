@@ -983,17 +983,6 @@ public abstract class AnetMeshBase
     }
 
     /**
-     * Obtain the right ResourceHelper for StringRepresentation.
-     * 
-     * @return the ResourceHelper
-     */
-    @Override
-    protected ResourceHelper getResourceHelperForStringRepresentation()
-    {
-        return ResourceHelper.getInstance( AnetMeshBase.class );
-    }
-
-    /**
      * Tell the Proxies once a Transaction has been committed.
      *
      * @param tx Transaction the Transaction that was committed

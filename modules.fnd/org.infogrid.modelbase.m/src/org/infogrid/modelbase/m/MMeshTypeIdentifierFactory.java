@@ -73,7 +73,7 @@ public class MMeshTypeIdentifierFactory
             URISyntaxException
     {
         try {
-            Object [] found = representation.parseEntry( MMeshTypeIdentifier.RESOURCEHELPER, MMeshTypeIdentifier.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( MMeshTypeIdentifier.class, MMeshTypeIdentifier.DEFAULT_ENTRY, s );
 
             MMeshTypeIdentifier ret;
             switch( found.length ) {

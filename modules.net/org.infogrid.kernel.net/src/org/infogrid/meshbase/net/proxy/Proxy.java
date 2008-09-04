@@ -24,6 +24,7 @@ import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.FactoryCreatedObject;
 import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 
 /**
@@ -37,7 +38,8 @@ import org.infogrid.util.text.StringRepresentation;
  */
 public interface Proxy
         extends
-            FactoryCreatedObject<NetMeshBaseIdentifier,Proxy,CoherenceSpecification>
+            FactoryCreatedObject<NetMeshBaseIdentifier,Proxy,CoherenceSpecification>,
+            HasStringRepresentation
 {
     /**
      * Obtain the NetMeshBase to which this Proxy belongs.
@@ -289,42 +291,4 @@ public interface Proxy
     public abstract void removeProxyListener(
             ProxyListener oldListener );
 
-    /**
-     * Obtain a String representation of this Proxy that can be shown to the user.
-     * 
-     * @param rep the StringRepresentation
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentation(
-            StringRepresentation rep,
-            boolean              isDefaultMeshBase );
-
-    /**
-     * Obtain the start part of a String representation of this Proxy that acts
-     * as a link/hyperlink and can be shown to the user.
-     * 
-     * @param rep the StringRepresentation
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentationLinkStart(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase );
-
-    /**
-     * Obtain the end part of a String representation of this Proxy that acts
-     * as a link/hyperlink and can be shown to the user.
-     * 
-     * @param rep the StringRepresentation
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the enclosing MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentationLinkEnd(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase );
 }

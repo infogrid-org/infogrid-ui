@@ -32,8 +32,6 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.util.FactoryException;
-import org.infogrid.util.SimpleHtmlLocalizedObjectFormatter;
-import org.infogrid.util.SimplePlainLocalizedObjectFormatter;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -145,11 +143,7 @@ public class TemplatesFilter
             HttpServletResponse realResponse )
     {
         ServletContext     servletContext = theFilterConfig.getServletContext();
-        StructuredResponse ret            = StructuredResponse.create(
-                realResponse,
-                SimpleHtmlLocalizedObjectFormatter.create(),
-                SimplePlainLocalizedObjectFormatter.create(),
-                servletContext );
+        StructuredResponse ret            = StructuredResponse.create( realResponse, servletContext );
 
         return ret;
     }

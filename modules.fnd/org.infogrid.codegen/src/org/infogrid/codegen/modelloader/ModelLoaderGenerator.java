@@ -14,11 +14,12 @@
 
 package org.infogrid.codegen.modelloader;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import org.infogrid.codegen.AbstractGenerator;
-
 import org.infogrid.mesh.set.ByTypeMeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSelector;
-
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.CollectableMeshType;
@@ -33,20 +34,14 @@ import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.SubjectArea;
-
 import org.infogrid.model.traversal.AlternativeCompoundTraversalSpecification;
 import org.infogrid.model.traversal.SelectiveTraversalSpecification;
 import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.model.traversal.TraversalToPropertySpecification;
-
 import org.infogrid.module.ModuleRequirement;
-
 import org.infogrid.util.logging.Log;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.infogrid.util.text.StringRepresentation;
 
 /**
  * This class knows how to generate Java source code classs that implement
@@ -59,14 +54,16 @@ public class ModelLoaderGenerator
     private static final Log log = Log.getLogInstance( ModelLoaderGenerator.class ); // our own, private logger
 
     /**
-      * Constructor.
-      *
-      * @param outputDir the output directory for the generator
-      */
+     * Constructor.
+     *
+     * @param outputDir the directory into which the code shall be generated
+     * @param commentsRepresentation the StringRepresentation to use for emitting comments
+     */
     public ModelLoaderGenerator(
-            File outputDir )
+            File                 outputDir,
+            StringRepresentation commentsRepresentation )
     {
-        super( outputDir );
+        super( outputDir, commentsRepresentation );
     }
 
     /**

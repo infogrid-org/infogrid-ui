@@ -15,14 +15,15 @@
 package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.L10Map;
 import org.infogrid.model.primitives.MeshType;
-import org.infogrid.model.primitives.ModelPrimitivesStringRepresentation;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * Tag that displays the user-visible String of a <code>MeshType</code>.
@@ -235,10 +236,8 @@ public class MeshTypeTag
         PropertyValue value = null;
         String        text  = null;
 
-        StringRepresentation rep = ModelPrimitivesStringRepresentation.TEXT_HTML;
-        if( theStringRepresentation != null && theStringRepresentation.length() > 0 ) {
-            rep = ModelPrimitivesStringRepresentation.create( theStringRepresentation );
-        }
+        StringRepresentation        rep     = theFormatter.determineStringRepresentation( theStringRepresentation );
+        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
         if( thePropertyName != null ) {
             Object found = lookupOrThrow( theMeshTypeName, thePropertyName );
@@ -261,7 +260,7 @@ public class MeshTypeTag
                 }
             } else if( found instanceof DataType ) {
                 DataType realFound = (DataType) found;
-                text = realFound.toStringRepresentation( rep );
+                text = realFound.toStringRepresentation( rep, context );
                 // a bit of a funny structure, but the best I can do
             } else {
                 throw new ClassCastException( "Found object named " + theMeshTypeName + " is neither a PropertyValue nor an L10Map: " + found );

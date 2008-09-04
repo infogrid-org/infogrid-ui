@@ -55,6 +55,17 @@ public abstract class CannotViewException
     }
 
     /**
+     * Obtain localized message, per JDK 1.5.
+     *
+     * @return localized message
+     */
+    @Override
+    public String getLocalizedMessage()
+    {
+        return getLocalizedMessage( null );
+    }
+
+    /**
      * For debugging.
      *
      * @return String representation of this object.

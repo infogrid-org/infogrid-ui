@@ -16,7 +16,6 @@ package org.infogrid.meshbase.net;
 
 import java.net.URISyntaxException;
 import org.infogrid.util.IdentifierFactory;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentation;
 
@@ -58,7 +57,7 @@ public class NetMeshBaseIdentifierFactory
             URISyntaxException
     {
         try {
-            Object [] found = representation.parseEntry( RESOURCEHELPER, NetMeshBaseIdentifier.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( NetMeshBaseIdentifier.class, NetMeshBaseIdentifier.DEFAULT_ENTRY, s );
 
             NetMeshBaseIdentifier ret;
             switch( found.length ) {
@@ -80,9 +79,4 @@ public class NetMeshBaseIdentifierFactory
         }
         
     }
-    
-    /**
-     * The ResouceHelper to use.
-     */
-    private static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( NetMeshBaseIdentifierFactory.class );
 }

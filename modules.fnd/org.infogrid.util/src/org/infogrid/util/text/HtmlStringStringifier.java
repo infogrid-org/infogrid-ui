@@ -83,7 +83,7 @@ public class HtmlStringStringifier
      * @param s the unescaped String
      * @return the escaped String
      */
-    protected String stringToHtml(
+    public static String stringToHtml(
             String s )
     {
         StringBuilder sb = new StringBuilder( s.length() );
@@ -140,7 +140,7 @@ public class HtmlStringStringifier
      * @param s the escaped String
      * @return the unescaped String
      */
-    protected String htmlToString(
+    public static String htmlToString(
             String s )
     {
         StringBuilder sb = new StringBuilder( s.length() );

@@ -14,12 +14,12 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
 
 import java.awt.Color;
 import java.io.ObjectStreamException;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This is a color DataType.
@@ -151,18 +151,20 @@ public final class ColorDataType
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry(
-                RESOURCEHELPER,
+        return rep.formatEntry(
+                ColorValue.class,
                 DEFAULT_ENTRY,
-                PropertyValue.toStringRepresentation( theDefaultValue, representation ),
+                PropertyValue.toStringRepresentation( theDefaultValue, rep, context ),
                 theSupertype );
     }
 
@@ -182,7 +184,7 @@ public final class ColorDataType
             PropertyValueParsingException
     {
         try {
-            Object [] found = representation.parseEntry( ColorValue.RESOURCEHELPER, ColorValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( ColorValue.class, ColorValue.DEFAULT_ENTRY, s );
 
             Color color;
 
@@ -227,9 +229,4 @@ public final class ColorDataType
      * The default value.
      */
     private static final ColorValue theDefaultValue = ColorValue.create( 0 );
-
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ColorValue.RESOURCEHELPER;
 }

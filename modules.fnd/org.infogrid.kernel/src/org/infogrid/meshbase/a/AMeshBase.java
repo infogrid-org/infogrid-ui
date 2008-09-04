@@ -276,15 +276,4 @@ public abstract class AMeshBase
         }
         return ret;
     }
-
-    /**
-     * Obtain the right ResourceHelper for StringRepresentation.
-     * This is factored out so it can be easily overridden in subclasses.
-     * 
-     * @return the ResourceHelper
-     */
-    protected ResourceHelper getResourceHelperForStringRepresentation()
-    {
-        return ResourceHelper.getInstance( AMeshBase.class );
-    }
 }

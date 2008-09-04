@@ -33,6 +33,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -145,7 +147,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't equal
      * @return true if check passed
      */
-    protected final boolean checkEquals(
+    public final boolean checkEquals(
             Object one,
             Object two,
             String msg )
@@ -174,7 +176,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments are equal
      * @return true if check passed
      */
-    protected final boolean checkNotEquals(
+    public final boolean checkNotEquals(
             Object one,
             Object two,
             String msg )
@@ -203,7 +205,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't equal
      * @return true if check passed
      */
-    protected final boolean checkEquals(
+    public final boolean checkEquals(
             boolean one,
             boolean two,
             String msg )
@@ -223,7 +225,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments are equal
      * @return true if check passed
      */
-    protected final boolean checkNotEquals(
+    public final boolean checkNotEquals(
             boolean one,
             boolean two,
             String msg )
@@ -243,7 +245,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't equal
      * @return true if check passed
      */
-    protected final boolean checkEquals(
+    public final boolean checkEquals(
             long   one,
             long   two,
             String msg )
@@ -263,7 +265,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't equal
      * @return true if check passed
      */
-    protected final boolean checkEqualByteArrays(
+    public final boolean checkEqualByteArrays(
             byte [] one,
             byte [] two,
             String msg )
@@ -305,7 +307,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments are equal
      * @return true if check passed
      */
-    protected final boolean checkNotEquals(
+    public final boolean checkNotEquals(
             long   one,
             long   two,
             String msg )
@@ -325,7 +327,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't equal
      * @return true if check passed
      */
-    protected final boolean checkEqualsInSequence(
+    public final boolean checkEqualsInSequence(
             Object [] one,
             Object [] two,
             String    msg )
@@ -363,7 +365,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't equal
      * @return true if check passed
      */
-    protected final boolean checkEqualsInSequence(
+    public final boolean checkEqualsInSequence(
             List<?>   one,
             Object [] two,
             String    msg )
@@ -411,7 +413,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't equal
      * @return true if check passed
      */
-    protected final boolean checkEqualsOutOfSequence(
+    public final boolean checkEqualsOutOfSequence(
             Object [] one,
             Object [] two,
             String    msg )
@@ -431,7 +433,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't identical
      * @return true if check passed
      */
-    protected final boolean checkIdentity(
+    public final boolean checkIdentity(
             Object one,
             Object two,
             String msg )
@@ -452,7 +454,7 @@ public abstract class AbstractTest
      * @param msg message to print when arguments aren't equal
      * @return true if check passed
      */
-    protected final boolean checkStartsWith(
+    public final boolean checkStartsWith(
             String one,
             String two,
             String msg )
@@ -480,7 +482,7 @@ public abstract class AbstractTest
      * @param msg message to print when the argument is null
      * @return true if check passed
      */
-    protected final boolean checkObject(
+    public final boolean checkObject(
             Object one,
             String msg )
     {
@@ -500,7 +502,7 @@ public abstract class AbstractTest
      * @param msg message to print when the object is not an instance of type
      * @return true if check passed
      */
-    protected final boolean checkType(
+    public final boolean checkType(
             Object one,
             Class  typeOne,
             String msg )
@@ -523,7 +525,7 @@ public abstract class AbstractTest
      * @param msg message to print when the condition is false
      * @return true if check passed
      */
-    protected final boolean checkCondition(
+    public final boolean checkCondition(
             boolean condition,
             String  msg )
     {
@@ -542,7 +544,7 @@ public abstract class AbstractTest
      * @param msg message to print
      * @return true if check passed
      */
-    protected final boolean checkInPlusMinusRange(
+    public final boolean checkInPlusMinusRange(
             long   test,
             long   median,
             long   plusminus,
@@ -569,7 +571,7 @@ public abstract class AbstractTest
      * @param msg message to print
      * @return true if check passed
      */
-    protected final boolean checkInMarginRange(
+    public final boolean checkInMarginRange(
             long [] tests,
             long [] medians,
             long    jitter,
@@ -590,7 +592,7 @@ public abstract class AbstractTest
      * @param msg message to print
      * @return true if check passed
      */
-    protected final boolean checkInMarginRange(
+    public final boolean checkInMarginRange(
             long [] tests,
             long [] medians,
             long    jitter,
@@ -643,7 +645,7 @@ public abstract class AbstractTest
      * @param msg message to print
      * @return true if check passed
      */
-    protected final boolean checkInRange(
+    public final boolean checkInRange(
             long   test,
             long   min,
             long   max,
@@ -668,7 +670,7 @@ public abstract class AbstractTest
      * @param msg message to print
      * @return true if check passed
      */
-    protected final boolean checkNoDuplicates(
+    public final boolean checkNoDuplicates(
             Iterator<?> iter,
             boolean     useEquals,
             String      msg )
@@ -702,13 +704,59 @@ public abstract class AbstractTest
     }
 
     /**
+     * Check that a String matches a regular expression.
+     * 
+     * @param regex the regular expression to match
+     * @param candidate the candidate String
+     * @param msg the message to print in case of an error
+     * @return true if check passed
+     */
+    public final boolean checkRegex(
+            String regex,
+            String candidate,
+            String msg )
+    {
+        Pattern p = Pattern.compile( regex );
+        Matcher m = p.matcher( candidate );
+        if( !m.matches() ) {
+            reportError( msg + ": regex '" + regex + "' did not match candidate '" + candidate + "'" );
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check that a String matches a regular expression.
+     * 
+     * @param regex the regular expression to match
+     * @param flags the flags for the regular expression per Pattern.compile
+     * @param candidate the candidate String
+     * @param msg the message to print in case of an error
+     * @return true if check passed
+     */
+    public final boolean checkRegex(
+            String regex,
+            int    flags,
+            String candidate,
+            String msg )
+    {
+        Pattern p = Pattern.compile( regex, flags );
+        Matcher m = p.matcher( candidate );
+        if( !m.matches() ) {
+            reportError( msg + ": regex '" + regex + "' did not match candidate '" + candidate + "'" );
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Report error.
      *
      * @param msg message to print
      * @param explanation an explanation for this error
      * @return true if check passed
      */
-    protected final boolean reportError(
+    public final boolean reportError(
             String msg,
             String explanation )
     {
@@ -726,7 +774,7 @@ public abstract class AbstractTest
      * @param t the Throwable indicating the error
      * @return true if check passed
      */
-    protected final boolean reportError(
+    public final boolean reportError(
             String    msg,
             Throwable t )
     {
@@ -743,7 +791,7 @@ public abstract class AbstractTest
      * @param msg message to print
      * @return true if check passed
      */
-    protected final boolean reportError(
+    public final boolean reportError(
             String msg )
     {
         if( msg != null ) {
@@ -1088,7 +1136,7 @@ public abstract class AbstractTest
      * @param msg the message to print if the files do not have the same content
      * @return true if the test passed
      */
-    protected final boolean checkFileDiff(
+    public final boolean checkFileDiff(
             File   one,
             File   two,
             String msg )

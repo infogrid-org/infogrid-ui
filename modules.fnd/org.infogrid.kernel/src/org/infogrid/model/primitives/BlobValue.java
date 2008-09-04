@@ -22,6 +22,7 @@ import org.infogrid.util.PortableIcon;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * This is a Binary Large Object (BLOB) value for PropertyValues.
@@ -460,24 +461,26 @@ public abstract class BlobValue
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
         if( getMimeType().startsWith( "text" )) {
-            return representation.formatEntry(
-                    RESOURCEHELPER,
+            return rep.formatEntry(
+                    getClass(),
                     "TextString",
                     theMimeType,
                     value(),
                     getAsString());
         } else {
-            return representation.formatEntry(
-                    RESOURCEHELPER,
+            return rep.formatEntry(
+                    getClass(),
                     "ByteString",
                     theMimeType,
                     value() );
@@ -518,11 +521,6 @@ public abstract class BlobValue
      * Pre-defined MIME type for unknown.
      */
     public static final String NULL_MIME_TYPE = "application/octet-stream";
-
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( BlobValue.class );    
 
     /**
      * This private subclass of BlobValue stores the data as a String.

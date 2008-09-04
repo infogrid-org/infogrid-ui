@@ -15,12 +15,12 @@
 package org.infogrid.model.primitives;
 
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.ResourceHelper;
 
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
 
 import java.io.ObjectStreamException;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
   * This represents a Binary Large Object DataType. It carries a MIME type, identifying its content.
@@ -520,18 +520,20 @@ public final class BlobDataType
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
-     *
-     * @param representation the representation scheme
-     * @return the String representation
+     * Obtain a String representation of this instance that can be shown to the user.
+     * 
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation representation )
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return representation.formatEntry(
-                RESOURCEHELPER,
+        return rep.formatEntry(
+                getClass(),
                 DEFAULT_ENTRY,
-                PropertyValue.toStringRepresentation( theDefaultValue, representation ),
+                PropertyValue.toStringRepresentation( theDefaultValue, rep, context ),
                 theMimeType     != null ? theMimeType     : "*",
                 theMimeSubTypes != null ? theMimeSubTypes : "*",
                 theSupertype );
@@ -553,7 +555,7 @@ public final class BlobDataType
             PropertyValueParsingException
     {
         try {
-            Object [] found = representation.parseEntry( BlobValue.RESOURCEHELPER, "TextString", s );
+            Object [] found = representation.parseEntry( BlobValue.class, "TextString", s );
 
             BlobValue ret;
 
@@ -600,9 +602,4 @@ public final class BlobDataType
      * an array of length 1 to indicate exactly one, or a set of alternatives.
      */
     protected String [] theMimeSubTypes;
-    
-    /**
-     * Our ResourceHelper.
-     */
-    static final ResourceHelper RESOURCEHELPER = ResourceHelper.getInstance( BlobDataType.class );
 }

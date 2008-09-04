@@ -128,7 +128,13 @@ public final class ResourceHelper
     public static ResourceHelper getInstance(
             Class channel )
     {
-        return getInstance( channel.getName(), channel.getClassLoader(), null );
+        // we need to get the outer class in case this is an inner class
+        String channelName = channel.getName();
+        int    dollar      = channelName.indexOf( '$' );
+        if( dollar > 0 ) {
+            channelName = channelName.substring( 0, dollar );
+        }
+        return getInstance( channelName, channel.getClassLoader(), null );
     }
 
     /**

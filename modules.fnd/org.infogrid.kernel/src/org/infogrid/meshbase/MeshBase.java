@@ -31,8 +31,8 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.LiveDeadObject;
 import org.infogrid.util.QuitListener;
 import org.infogrid.util.context.ObjectInContext;
-import org.infogrid.util.text.StringRepresentation;
 import java.beans.PropertyChangeListener;
+import org.infogrid.util.text.HasStringRepresentation;
 
 /**
   * <p>MeshBase represents the place where MeshObjects live. MeshBases collect MeshObjects
@@ -74,7 +74,8 @@ public interface MeshBase
         extends
             ObjectInContext,
             QuitListener,
-            LiveDeadObject
+            LiveDeadObject,
+            HasStringRepresentation
 {    
     /**
      * Obtain the MeshBaseIdentifier that identifies this MeshBase.
@@ -505,43 +506,4 @@ public interface MeshBase
      */
     public abstract void removeMeshObjectLifecycleEventListener(
             MeshObjectLifecycleListener oldListener );
-
-    /**
-     * Obtain a String representation of this MeshBase that can be shown to the user.
-     * 
-     * @param rep the StringRepresentation
-     * @param isDefaultMeshBase true if the MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentation(
-            StringRepresentation rep,
-            boolean              isDefaultMeshBase );
-
-    /**
-     * Obtain the start part of a String representation of this MeshBase that acts
-     * as a link/hyperlink and can be shown to the user.
-     * 
-     * @param rep the StringRepresentation
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentationLinkStart(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase );
-
-    /**
-     * Obtain the end part of a String representation of this MeshBase that acts
-     * as a link/hyperlink and can be shown to the user.
-     * 
-     * @param rep the StringRepresentation
-     * @param contextPath the context path
-     * @param isDefaultMeshBase true if the MeshBase is the default MeshBase
-     * @return String representation
-     */
-    public abstract String toStringRepresentationLinkEnd(
-            StringRepresentation rep,
-            String               contextPath,
-            boolean              isDefaultMeshBase );
 }
