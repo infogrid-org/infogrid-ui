@@ -18,7 +18,6 @@ import java.net.URISyntaxException;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.sane.SaneServletRequest;
-//import org.infogrid.jee.taglib.InfoGridJspUtils;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -1341,7 +1340,18 @@ public enum HttpShellVerb
 
     /**
      * Determine the correct internationalized string that can be shown to the
-     * user when the LocalizedException is thrown.
+     * user representing this object.
+     *
+     * @return the internationalized string
+     */
+    public String getLocalizedMessage()
+    {
+        return getLocalizedMessage( null );
+    }
+
+    /**
+     * Determine the correct internationalized string that can be shown to the
+     * user representing this object.
      *
      * @param formatter the formatter to use for data objects to be displayed as part of the message
      * @return the internationalized string
