@@ -63,6 +63,17 @@ public abstract class LidCredentialType
             LidInvalidCredentialException;
     
     /**
+     * Determine the correct internationalized string that can be shown to the
+     * user. Use a default formatter.
+     *
+     * @return the internationalized string
+     */
+    public String getLocalizedMessage()
+    {
+        return getLocalizedMessage( null );
+    }
+
+    /**
      * String form of the credential type
      */
     protected String theCredType;

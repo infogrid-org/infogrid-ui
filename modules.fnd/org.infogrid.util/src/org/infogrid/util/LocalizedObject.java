@@ -21,6 +21,14 @@ public interface LocalizedObject
 {
     /**
      * Determine the correct internationalized string that can be shown to the
+     * user. Use a default formatter.
+     *
+     * @return the internationalized string
+     */
+    public String getLocalizedMessage();
+
+    /**
+     * Determine the correct internationalized string that can be shown to the
      * user.
      *
      * @param formatter the formatter to use for data objects to be displayed as part of the message
