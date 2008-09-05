@@ -750,6 +750,52 @@ public abstract class AbstractTest
     }
 
     /**
+     * Check that a String does not match a regular expression.
+     * 
+     * @param regex the regular expression to match
+     * @param candidate the candidate String
+     * @param msg the message to print in case of an error
+     * @return true if check passed
+     */
+    public final boolean checkNotRegex(
+            String regex,
+            String candidate,
+            String msg )
+    {
+        Pattern p = Pattern.compile( regex );
+        Matcher m = p.matcher( candidate );
+        if( m.matches() ) {
+            reportError( msg + ": regex '" + regex + "' matches candidate '" + candidate + "'" );
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check that a String does not match a regular expression.
+     * 
+     * @param regex the regular expression to match
+     * @param flags the flags for the regular expression per Pattern.compile
+     * @param candidate the candidate String
+     * @param msg the message to print in case of an error
+     * @return true if check passed
+     */
+    public final boolean checkNotRegex(
+            String regex,
+            int    flags,
+            String candidate,
+            String msg )
+    {
+        Pattern p = Pattern.compile( regex, flags );
+        Matcher m = p.matcher( candidate );
+        if( m.matches() ) {
+            reportError( msg + ": regex '" + regex + "' matches candidate '" + candidate + "'" );
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Report error.
      *
      * @param msg message to print
