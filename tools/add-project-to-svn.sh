@@ -5,7 +5,7 @@
 # have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 # or you do not consent to all aspects of the license and the disclaimers,
 # no license is granted; do not use this file.
-#
+# 
 # For more information about InfoGrid go to http://infogrid.org/
 #
 # Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -13,34 +13,30 @@
 #
 # (end of header)
 #
-# Diffs TLD files in a project
+# Makes it easier to add a new NetBeans project into SVN
 #
 
-modprefix=modules;
-script=tools/`basename $0`;
+script=tools/`basename $0`
 
 if [ ! -d modules.fnd ]; then
         echo "ERROR: this script must be invoked from the root directory of the branch using the command ${script}"
         exit 1;
 fi;
 
-module=;
-
-for arg in $*; do
-	if [ "${module}" == "" ]; then
-		module="${arg}";
-	fi
-done;
-
-if [ "${module}" == "" ]; then
-	echo Synopsis:
-	echo "    ${script} <module>"
-	echo "        <module>: name of a module, e.g. 'apps/org.infogrid.meshworld"
+if [ $# != 1 ]; then
+	echo "Synopsis: $0 <project directory>"
+	exit 1;
+fi
+if [ ! -d $1 ]; then
+	echo ERROR: $1 is not a directory
 	exit 1;
 fi
 
-for f in `find ${module}/web/v -name '*.tld' -print`; do
-	g=`echo $f | sed "s#^\${module}/web/v/##g"`;
-	echo '---- now looking at:' $g
-	diff ${modprefix}*/*/src/$g ${module}/web/v/$g
-done;
+export PROJ=$1;
+
+svn add -N ${PROJ}
+svn propset svn:ignore -F tools/help-files/ignore-build-dist ${PROJ}
+svn add ${PROJ}/{src,web,test,infogrid*} ${PROJ}/build.xml
+svn add -N ${PROJ}/nbproject
+svn propset svn:ignore -F tools/help-files/ignore-private-genfiles ${PROJ}/nbproject
+svn add ${PROJ}/nbproject/{ant-deploy,build-impl,project}.xml ${PROJ}/nbproject/project.properties
