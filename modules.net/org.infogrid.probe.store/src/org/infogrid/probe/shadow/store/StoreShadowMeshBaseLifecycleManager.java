@@ -14,33 +14,27 @@
 
 package org.infogrid.probe.shadow.store;
 
+import java.util.HashMap;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
 import org.infogrid.mesh.net.a.AnetMeshObject;
-
 import org.infogrid.meshbase.a.AMeshObjectEquivalenceSetComparator;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
-
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RoleType;
-
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
-
 import org.infogrid.probe.shadow.a.AStagingMeshBaseLifecycleManager;
-
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.logging.Log;
-
-import java.util.HashMap;
 
 /**
  * A MeshBaseLifecycleManager specifically for Store implementations of ShadowMeshBase.
@@ -48,7 +42,6 @@ import java.util.HashMap;
 public class StoreShadowMeshBaseLifecycleManager
         extends
             AStagingMeshBaseLifecycleManager
-        
 {
     private static final Log log = Log.getLogInstance( StoreShadowMeshBaseLifecycleManager.class ); // our own, private logger
     

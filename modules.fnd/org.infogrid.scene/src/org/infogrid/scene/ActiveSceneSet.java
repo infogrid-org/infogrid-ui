@@ -45,6 +45,8 @@ public interface ActiveSceneSet
      * Add a listener.
      *
      * @param newListener the new listener
+     * @see #addSoftActiveSceneSetListener
+     * @see #addWeakActiveSceneSetListener
      * @see #removeActiveSceneSetListener
      */
     public abstract void addDirectActiveSceneSetListener(
@@ -54,6 +56,8 @@ public interface ActiveSceneSet
      * Add a listener.
      *
      * @param newListener the new listener
+     * @see #addDirectActiveSceneSetListener
+     * @see #addWeakActiveSceneSetListener
      * @see #removeActiveSceneSetListener
      */
     public abstract void addSoftActiveSceneSetListener(
@@ -63,6 +67,8 @@ public interface ActiveSceneSet
      * Add a listener.
      *
      * @param newListener the new listener
+     * @see #addDirectActiveSceneSetListener
+     * @see #addSoftActiveSceneSetListener
      * @see #removeActiveSceneSetListener
      */
     public abstract void addWeakActiveSceneSetListener(
@@ -72,7 +78,9 @@ public interface ActiveSceneSet
      * Remove a listener.
      *
      * @param oldListener the existing listener to be removed
-     * @see #addActiveSceneSetListener
+     * @see #addDirectActiveSceneSetListener
+     * @see #addSoftActiveSceneSetListener
+     * @see #addWeakActiveSceneSetListener
      */
     public abstract void removeActiveSceneSetListener(
             ActiveSceneSetListener oldListener );

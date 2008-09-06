@@ -14,6 +14,7 @@
 
 package org.infogrid.kernel.TEST.differencer;
 
+import org.infogrid.util.logging.Log;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.IterableMeshBaseDifferencer;
@@ -24,12 +25,8 @@ import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.modelbase.ModelBaseSingleton;
 
-import org.infogrid.util.logging.Log;
-
 /**
- * This test tests the MeshBaseDifferencer on IterableMMeshBases.
- *
- * Create unrelated MeshObjects, make sure MeshObjectLifecycleEvents are created.
+ * Creates unrelated MeshObjects and makes sure that MeshObjectLifecycleEvents are created.
  */
 public class DifferencerTest1
         extends
@@ -38,7 +35,7 @@ public class DifferencerTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws
@@ -143,10 +140,11 @@ public class DifferencerTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may happen during a test
+     */
     public DifferencerTest1(
             String [] args )
         throws

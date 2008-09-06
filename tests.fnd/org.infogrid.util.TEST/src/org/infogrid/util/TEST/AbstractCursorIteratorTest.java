@@ -30,10 +30,10 @@ public abstract class AbstractCursorIteratorTest
     /**
      * Run the test.
      * 
-     * @param <T> the type of Iterator to test
      * @param testData the provided test data
      * @param iter the to-be-tested iterator
      * @param log the Logger to use
+     * @param <T> the type of Iterator to test
      */
     protected <T> void runWith(
             T []              testData,

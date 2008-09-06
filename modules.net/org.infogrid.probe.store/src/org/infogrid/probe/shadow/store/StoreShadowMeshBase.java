@@ -45,7 +45,7 @@ import org.infogrid.util.logging.Log;
 
 /**
  * A ShadowMeshBase whose content is stored in a Store. Unlike other Store implementations
- * of MeshBase, this implementation writes the entire content into the Store in bulk.
+ * of MeshBase, this implementation writes the entire content into the Store in bulk using a single StoreValue.
  * This avoid unnecessary network operations and for example, makes Differencer operations faster.
  */
 public class StoreShadowMeshBase
@@ -57,29 +57,28 @@ public class StoreShadowMeshBase
     /**
      * Factory method.
      *
-     * @param identifier the MeshBaseIdentifier of this MeshBase
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param endpointFactory the factory for communications endpoints
      * @param modelBase the ModelBase containing type information
-     * @param accessMgr the AccessManager that controls access to this MeshBase
-     * @param proxyManager the ProxyManager for this NetMeshBase
-     * @param placeholderProxyManager the ProxyManager for the placeholder Proxies (for forward references only)
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
      * @param directory the ProbeDirectory to use
-     * @param shadowStore the Store into which the ShadowMeshBase's MeshObjects are written
-     * @param shadowStoreEntryKey the key that identifies the location in the ShadowStore for the bulk MeshObjects
      * @param timeNotNeededTillExpires the time, in milliseconds, that this MShadowMeshBase will continue operating
      *         even if none of its MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
-     * @param context the Context in which this MeshBase runs.
+     * @param proxyStore the IterableStore in which to store the StoreShadowMeshBase's Proxies
+     * @param context the Context in which this NetMeshBase runs.
+     * @return the created StoreShadowMeshBase
      */
     public static StoreShadowMeshBase create(
-            NetMeshBaseIdentifier     identifier,
+            NetMeshBaseIdentifier       identifier,
             ProxyMessageEndpointFactory endpointFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            ProbeDirectory            directory,
-            long                      timeNotNeededTillExpires,
-            IterableStore             proxyStore,
-            Context                   context )
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            ProbeDirectory              directory,
+            long                        timeNotNeededTillExpires,
+            IterableStore               proxyStore,
+            Context                     context )
     {
         DefaultShadowProxyPolicyFactory proxyPolicyFactory = DefaultShadowProxyPolicyFactory.create();
 
@@ -99,30 +98,30 @@ public class StoreShadowMeshBase
     /**
      * Factory method.
      *
-     * @param identifier the MeshBaseIdentifier of this MeshBase
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param endpointFactory the factory for communications endpoints
+     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param modelBase the ModelBase containing type information
-     * @param accessMgr the AccessManager that controls access to this MeshBase
-     * @param proxyManager the ProxyManager for this NetMeshBase
-     * @param placeholderProxyManager the ProxyManager for the placeholder Proxies (for forward references only)
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
      * @param directory the ProbeDirectory to use
-     * @param shadowStore the Store into which the ShadowMeshBase's MeshObjects are written
-     * @param shadowStoreEntryKey the key that identifies the location in the ShadowStore for the bulk MeshObjects
      * @param timeNotNeededTillExpires the time, in milliseconds, that this MShadowMeshBase will continue operating
      *         even if none of its MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
-     * @param context the Context in which this MeshBase runs.
+     * @param proxyStore the IterableStore in which to store the StoreShadowMeshBase's Proxies
+     * @param context the Context in which this NetMeshBase runs.
+     * @return the created StoreShadowMeshBase
      */
     public static StoreShadowMeshBase create(
-            NetMeshBaseIdentifier     identifier,
+            NetMeshBaseIdentifier       identifier,
             ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            ProbeDirectory            directory,
-            long                      timeNotNeededTillExpires,
-            IterableStore             proxyStore,
-            Context                   context )
+            ProxyPolicyFactory          proxyPolicyFactory,
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            ProbeDirectory              directory,
+            long                        timeNotNeededTillExpires,
+            IterableStore               proxyStore,
+            Context                     context )
     {
         DefaultShadowProxyFactory   proxyFactory   = DefaultShadowProxyFactory.create( endpointFactory, proxyPolicyFactory );
         ShadowStoreProxyEntryMapper theProxyMapper = new ShadowStoreProxyEntryMapper( proxyFactory );
@@ -163,25 +162,39 @@ public class StoreShadowMeshBase
     }
 
     /**
-     * Factory method to restore.
-     *
+     * Factory method to restore a StoreShadowMeshBase from an ExternalizedShadowMeshBase object.
+     * 
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param externalized externalized representation of the content of the StoreShadowMeshBase
+     * @param endpointFactory the factory for communications endpoints
+     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param directory the ProbeDirectory to use
+     * @param timeNotNeededTillExpires the time, in milliseconds, that this MShadowMeshBase will continue operating
+     *         even if none of its MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param proxyStore the IterableStore in which to store the StoreShadowMeshBase's Proxies
+     * @param context the Context in which this NetMeshBase runs.
+     * @return the restored StoreShadowMeshBase
      */
     public static StoreShadowMeshBase restore(
-            NetMeshBaseIdentifier      identifier,
-            ExternalizedShadowMeshBase externalized,
-            ProxyMessageEndpointFactory  endpointFactory,
-            ProxyPolicyFactory         proxyPolicyFactory,
-            ModelBase                  modelBase,
-            NetAccessManager           accessMgr,
-            ProbeDirectory             directory,
-            long                       timeNotNeededTillExpires,
-            IterableStore              proxyStore,
-            Context                    c )
+            NetMeshBaseIdentifier       identifier,
+            ExternalizedShadowMeshBase  externalized,
+            ProxyMessageEndpointFactory endpointFactory,
+            ProxyPolicyFactory          proxyPolicyFactory,
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            ProbeDirectory              directory,
+            long                        timeNotNeededTillExpires,
+            IterableStore               proxyStore,
+            Context                     context )
     {
         DefaultShadowProxyFactory   proxyFactory   = DefaultShadowProxyFactory.create( endpointFactory, proxyPolicyFactory );
         ShadowStoreProxyEntryMapper theProxyMapper = new ShadowStoreProxyEntryMapper( proxyFactory );
 
-        MCachingHashMap<MeshObjectIdentifier,MeshObject>    objectStorage = MCachingHashMap.create();
+        MCachingHashMap<MeshObjectIdentifier,MeshObject>                objectStorage = MCachingHashMap.create();
         IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,Proxy> proxyStorage  = IterableStoreBackedSwappingHashMap.createWeak( theProxyMapper, proxyStore );
 
         StoreProxyManager proxyManager = StoreProxyManager.create( proxyFactory, proxyStorage );
@@ -202,7 +215,7 @@ public class StoreShadowMeshBase
                 directory,
                 System.currentTimeMillis(),
                 timeNotNeededTillExpires,
-                c );
+                context  );
 
         setFactory.setMeshBase( ret );
         proxyFactory.setNetMeshBase( ret );
@@ -226,23 +239,23 @@ public class StoreShadowMeshBase
     }
 
     /**
-     * Constructor. This does not initialize content.
+     * Constructor for subclasses only.
      *
-     * @param identifier the MeshBaseIdentifier of this MeshBase
-     * @param identifierFactory the factory for MeshObjectIdentifiers appropriate for this MeshBase
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
+     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
-     * @param accessMgr the AccessManager that controls access to this MeshBase
-     * @param cache the CachingMap that holds the MeshObjects in this MeshBase
-     * @param proxyManager the ProxyManager for this NetMeshBase
+     * @param life the MeshBaseLifecycleManager to use
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param cache the CachingMap that holds the NetMeshObjects in this NetMeshBase
+     * @param proxyManager the ProxyManager used by this NetMeshBase
      * @param directory the ProbeDirectory to use
-     * @param shadowStore the Store into which the ShadowMeshBase's MeshObjects are written
-     * @param shadowStoreEntryKey the key that identifies the location in the ShadowStore for the bulk MeshObjects
-     * @param timeCreated the time at which the data source was created (if this is a restore operation) or -1
+     * @param timeCreated the time at which the data source was created (if this is a recreate operation) or -1
      * @param timeNotNeededTillExpires the time, in milliseconds, that this MShadowMeshBase will continue operating
      *         even if none of its MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
-     * @param context the Context in which this MeshBase runs.
+     * @param context the Context in which this NetMeshBase runs.
      */
     protected StoreShadowMeshBase(
             NetMeshBaseIdentifier                       identifier,

@@ -29,9 +29,7 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
- * This test tests the MeshBaseDifferencer on IterableMMeshBases.
- *
- * Put everything together: object creation and deletion, type changes, property changes,
+ * Tests everything together: object creation and deletion, type changes, property changes,
  * relationship graph changes, and relationship type changes.
  */
 public class DifferencerTest8
@@ -41,7 +39,7 @@ public class DifferencerTest8
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws
@@ -192,10 +190,11 @@ public class DifferencerTest8
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may happen during a test
+     */
     public DifferencerTest8(
             String [] args )
         throws

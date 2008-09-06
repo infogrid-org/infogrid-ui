@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Tests multithreaded POSTs of our Web Server.
+ * Tests multithreaded HTTP POSTs.
  */
 public class HttpdPostTest2
         extends
@@ -78,8 +78,9 @@ public class HttpdPostTest2
             log.error( ex );
             ++errorCount;
         }
-        if( test != null )
+        if( test != null ) {
             test.cleanup();
+        }
 
         if( errorCount == 0 ) {
             log.info( "PASS" );

@@ -15,14 +15,11 @@
 package org.infogrid.probe.manager.store;
 
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
 import org.infogrid.probe.manager.ScheduledExecutorProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
-
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
-
 import org.infogrid.util.AbstractSwappingHashMapListener;
 import org.infogrid.util.SwappingHashMap;
 
@@ -34,10 +31,11 @@ public class StoreScheduledExecutorProbeManager
             ScheduledExecutorProbeManager
 {
     /**
-     * Factory method to create a ProbeManager in memory.
+     * Factory method.
      *
-     * @param delegate the underlying Factory
-     * @param executorService the ScheduledExecutorService that schedules our tasks
+     * @param delegate the underlying factory for StoreShadowMeshBases
+     * @param shadowStore the Store in which serialized ShadowMeshBases are kept
+     * @return the created StoreScheduledExecutorProbeManager
      */
     public static StoreScheduledExecutorProbeManager create(
             StoreShadowMeshBaseFactory delegate,
@@ -53,10 +51,10 @@ public class StoreScheduledExecutorProbeManager
     }
 
     /**
-     * Constructor.
-     *
-     * @param delegate the underlying Factory
-     * @param executorService the ScheduledExecutorService that schedules our tasks
+     * Private constructor, use factory method.
+     * 
+     * @param delegate the underlying factory for StoreShadowMeshBases
+     * @param storage the storage to use
      */
     protected StoreScheduledExecutorProbeManager(
             StoreShadowMeshBaseFactory                                               delegate,

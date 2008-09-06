@@ -28,7 +28,6 @@ import org.infogrid.util.text.StringStringifier;
 import org.infogrid.util.text.Stringifier;
 import org.infogrid.util.text.StringifierParsingChoice;
 
-
 /**
  * Factors out common elements of MessageStringifierTests.
  */
@@ -124,7 +123,7 @@ public abstract class AbstractMessageStringifierTest
     /**
      * Captures a single data set for a MessageStringifierTest.
      */
-    static abstract class Dataset
+    public static abstract class Dataset
     {
         /**
          * Constructor.

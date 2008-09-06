@@ -29,7 +29,6 @@ import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.Feeds.FeedsSubjectArea;
@@ -44,7 +43,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- *
+ * A Probe for the Atom file format, with optional InfoGrid extensions.
  */
 public class AtomProbe
         extends
@@ -60,63 +59,88 @@ public class AtomProbe
     }
 
     /**
-     * Read from the DOM and instantiate corresponding MeshObjects.
+     * <p>Read from the DOM and instantiate corresponding MeshObjects.</p>
+     * <p>This method declares
+     * many different types of Exceptions; that enables the Probe Framework to handle many
+     * possible error conditions out of the box, thereby making Probe programming easier.
+     * Note that many of the declared Exceptions, if actually thrown, indicate a programming
+     * error in the Probe implementation (e.g. IsAbstractException).</p>
+     * <p>The Probe framework invokes this method with an open Transaction on the current Thread;
+     * the Probe developer does not have to worry about Transactions.</p>
      * 
-     * 
-     * 
-     * @param networkId the NetMeshBaseIdentifier that is being accessed
-     * @param mb the interface through which the Probe instantiates MeshObjects
-     * @throws DoNotHaveLockException a Probe can declare to throw this Exception,
-     *         which makes programming easier, but if it actually threw it, that would be a programming error
-     * @throws IdeMeshObjectIdentifierNotUniqueExceptionobe throws this Exception, it indicates that the
-     *         Probe developer incorrectly assigned duplicate Identifiers to created MeshObject
-     * @throws RelationshipExistsAlreadyException if a Probe throws this Exception, it indicates that the
-     *         Probe developer incorrectly attempted to create another RelationshipType instance between
-     *         the same two Entities.
-     * @throws TransactionException a Probe can declare to throw this Exception,
-     *         which makes programming easier, but if it actually threw it, that would be a programming error
-     * @throws ProbeException a Probe error occurred per the possible subclasses defined in ProbeException
+     * @param dataSourceIdentifier identifies the data source that is being accessed
+     * @param coherenceSpecification the type of data coherence that is requested by the application. Probe
+     *         implementors may ignore this parameter, letting the Probe framework choose its own policy.
+     *         If the Probe chooses to define its own policy (considering or ignoring this parameter), the
+     *         Probe must bless the Probe's HomeObject with a subtype of <code>ProbeUpdateSpecification</code> (defined
+     *         in the <code>org.infogrid.model.Probe</code> Subject Area) and suitable Property
+     *         values that reflect the policy.
+     * @param theDocument the DOM document to be interpreted
+     * @param freshMeshBase the StagingMeshBase in which the corresponding MeshObjects are to be instantiated by the Probe.
+     *         This StagingMeshBase is empty when passed into this call, except for the home object which always exists
+     * @throws EntityBlessedAlreadyException thrown if a MeshObject was incorrectly blessed twice with the same
+     *         EntityType. Throwing this typically indicates a programming error.
+     * @throws EntityNotBlessedException thrown if a MeshObject was not blessed with a required EntityType.
+     *         Throwing this typically indicates a programming error.
+     * @throws IllegalPropertyTypeException thrown if a MeshObject did not carry a PropertyType that it needed
+     *         to carry. Throwing this typically indicates a programming error.
+     * @throws IllegalPropertyValueException thrown if a PropertyValue was assigned to a property that was
+     *         outside of the allowed range. Throwing this typically indicates a programming error.
      * @throws IOException an input/output error occurred during execution of the Probe
+     * @throws IsAbstractException thrown if an EntityType or a Relationship could not be instantiated because
+     *         it was abstract. Throwing this typically indicates a programming error.
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the Probe developer incorrectly
+     *         assigned duplicate MeshObjectsIdentifiers to created MeshObjects.
+     *         Throwing this typically indicates a programming error.
+     * @throws ModuleException thrown if a Module required by the Probe could not be loaded
+     * @throws NotPermittedException thrown if an operation performed by the Probe was not permitted
+     * @throws NotRelatedException thrown if a relationship was supposed to become blessed, but the relationship
+     *         did not exist. Throwing this typically indicates a programming error.
+     * @throws ProbeException a Probe error occurred per the possible subclasses defined in ProbeException
+     * @throws RelatedAlreadyException thrown if the Probe developer incorrectly attempted to
+     *         relate two already-related MeshObjects. Throwing this typically indicates a programming error.
+     * @throws RoleTypeBlessedAlreadyException thrown if a relationship was incorrectly blessed twice with the same
+     *         RelationshipType, in the same direction. Throwing this typically indicates a programming error.
+     * @throws TransactionException a Transaction problem occurred. Throwing this typically indicates a programming error.
+     * @throws URISyntaxException thrown if a URI was constructed in an invalid way
      */
     public void parseDocument(
-            NetMeshBaseIdentifier      networkId,
-            CoherenceSpecification coherence,
+            NetMeshBaseIdentifier  dataSourceIdentifier,
+            CoherenceSpecification coherenceSpecification,
             Document               theDocument,
-            StagingMeshBase        mb )
+            StagingMeshBase        freshMeshBase )
         throws
-            IsAbstractException,
             EntityBlessedAlreadyException,
             EntityNotBlessedException,
-            RelatedAlreadyException,
-            RoleTypeBlessedAlreadyException,
-            NotRelatedException,
-            MeshObjectIdentifierNotUniqueException,
             IllegalPropertyTypeException,
             IllegalPropertyValueException,
-            TransactionException,
-            NotPermittedException,
-            ProbeException,
             IOException,
+            IsAbstractException,
+            MeshObjectIdentifierNotUniqueException,
             ModuleException,
+            NotPermittedException,
+            NotRelatedException,
+            ProbeException,
+            RelatedAlreadyException,
+            RoleTypeBlessedAlreadyException,
+            TransactionException,
             URISyntaxException
     {
         Element atomNode = theDocument.getDocumentElement();
-        if ( atomNode.getLocalName() != "feed" ) {
-            throw new ProbeException.SyntaxError( networkId, "Not an Atom file", null );
+        if ( !"feed".equals( atomNode.getLocalName())) {
+            throw new ProbeException.SyntaxError( dataSourceIdentifier, "Not an Atom file", null );
         }
 
-        NetMeshObject home = mb.getHomeObject();
+        NetMeshObject home = freshMeshBase.getHomeObject();
         home.bless( FeedsSubjectArea.ATOMFEED ); // this is an Atpm feed
 
-        NetMeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
-        
         String feedTitle       = getChildNodeValue( atomNode, "title" );
         String feedDescription = getChildNodeValue( atomNode, "description" );
         
         home.setPropertyValue( FeedsSubjectArea.FEED_TITLE,       BlobValue.createOrNull( feedTitle,       "text/plain" ));
         home.setPropertyValue( FeedsSubjectArea.FEED_DESCRIPTION, BlobValue.createOrNull( feedDescription, "text/plain" ));
 
-        handleInfoGridFeedExtensions( networkId, theDocument, atomNode, home );
+        handleInfoGridFeedExtensions( dataSourceIdentifier, theDocument, atomNode, home );
         
         NodeList entryNodes = atomNode.getElementsByTagNameNS( "http://purl.org/atom/ns#", "entry" );
         if( entryNodes.getLength() == 0 ) {
@@ -151,12 +175,12 @@ public class AtomProbe
             }
             
             NetMeshObject item = createExtendedInfoGridFeedEntryObject(
-                    networkId,
+                    dataSourceIdentifier,
                     theDocument,
                     realItemNode,
-                    mb.getMeshObjectIdentifierFactory().fromExternalForm( entryGuid ),
+                    freshMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( entryGuid ),
                     FeedsSubjectArea.ATOMFEEDITEM,
-                    mb );
+                    freshMeshBase );
 
             item.setPropertyValue( FeedsSubjectArea.FEEDITEM_TITLE,   BlobValue.createOrNull( entryTitle,   "text/plain" ));
             item.setPropertyValue( FeedsSubjectArea.FEEDITEM_CONTENT, BlobValue.createOrNull( entryContent, entryContentMime ));

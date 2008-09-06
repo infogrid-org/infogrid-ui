@@ -20,7 +20,6 @@ import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
-import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.m.MProbeDirectory;
@@ -30,21 +29,19 @@ import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 
 /**
- *
+ * Factors out common behaviors of the feed tests.
  */
 public abstract class AbstractFeedTest
         extends
             AbstractTest
 {
-    private static final Log log = Log.getLogInstance( AbstractFeedTest.class );
-
     /**
      * Constructor.
+     * 
+     * @param testClass the class to test
      */
     protected AbstractFeedTest(
-            Class testClass )
-        throws
-            MeshTypeNotFoundException
+            Class<?> testClass )
     {
         super( localFileName( AbstractFeedTest.class, "/ResourceHelper" ),
                localFileName( AbstractFeedTest.class, "/Log.properties" ));
@@ -72,14 +69,14 @@ public abstract class AbstractFeedTest
      * @param mylog if given, log the found objects there
      * @return the number of Objects found
      */
-    public static <T> int countFromIterator(
-            Iterator<T> iter,
+    public static int countFromIterator(
+            Iterator<?> iter,
             Log         mylog )
     {
         int ret = 0;
         StringBuilder buf = new StringBuilder(); // do this instead of logging directly, that way we don't changing the threading behavior
         while( iter.hasNext() ) {
-            T current = iter.next();
+            Object current = iter.next();
 
             ++ret;
             buf.append( "found " + current );
@@ -97,6 +94,7 @@ public abstract class AbstractFeedTest
      * @param mb the MeshBase whose content we want to dump
      * @param prefix a string to prepend
      * @param mylog the Log to dump to
+     * @throws Exception all sorts of things may go wrong during a test
      */
     protected final void dumpMeshBase(
             IterableMeshBase mb,

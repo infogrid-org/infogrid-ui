@@ -14,6 +14,7 @@
 
 package org.infogrid.kernel.TEST.modelbase;
 
+import java.util.Iterator;
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
@@ -22,8 +23,6 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.modelbase.externalized.xml.XmlModelExporter;
 import org.infogrid.util.logging.Log;
-
-import java.util.Iterator;
 
 /**
  * Tests that overridden PropertyTypes in multiple inheritance
@@ -36,7 +35,7 @@ public class ModelBaseTest2
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws

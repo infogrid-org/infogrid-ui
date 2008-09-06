@@ -32,20 +32,21 @@ public interface LocalNetMeshBase
     /**
      * Obtain a ShadowMeshBase that we are operating.
      *
+     * @param networkId the identifier of the data source for which the ShadowMeshBase shall be returned
      * @return the ShadowMeshBase, or null
      */
     public ShadowMeshBase getShadowMeshBaseFor(
             NetMeshBaseIdentifier networkId );
 
     /**
-     * Obtain all ShadowMeshBases that we are operating.
+     * Obtain all ShadowMeshBases currently operating.
      *
      * @return all ShadowMeshBases
      */
     public Collection<ShadowMeshBase> getAllShadowMeshBases();
 
     /**
-     * Obtain the NetMeshBases (this one and all shadows) as a NameServer.
+     * Obtain the NetMeshBases (this one and all ShadowMeshBases) as a NameServer.
      * 
      * @return NameServer
      */

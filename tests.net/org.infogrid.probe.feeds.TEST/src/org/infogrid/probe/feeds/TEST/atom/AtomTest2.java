@@ -14,28 +14,27 @@
 
 package org.infogrid.probe.feeds.TEST.atom;
 
+import java.io.File;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.model.Feeds.FeedsSubjectArea;
+import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Test.TestSubjectArea;
-import org.infogrid.model.primitives.EntityType;
-import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.probe.ProbeDirectory;
-import org.infogrid.probe.feeds.TEST.AbstractFeedTest;
 import org.infogrid.probe.feeds.atom.AtomProbe;
+import org.infogrid.probe.feeds.TEST.AbstractFeedTest;
 import org.infogrid.probe.manager.PassiveProbeManager;
 import org.infogrid.probe.manager.m.MPassiveProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
 import org.infogrid.probe.shadow.m.MShadowMeshBaseFactory;
 import org.infogrid.util.logging.Log;
-
-import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Tests the Atom Probe with InfoGrid extensions with AtomTest2.xml.
@@ -47,7 +46,7 @@ public class AtomTest2
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws
@@ -149,6 +148,7 @@ public class AtomTest2
      * Constructor.
      *
      * @param args the command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public AtomTest2(
             String [] args )

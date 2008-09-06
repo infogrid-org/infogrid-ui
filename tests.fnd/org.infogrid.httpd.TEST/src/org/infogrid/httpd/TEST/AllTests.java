@@ -17,7 +17,7 @@ package org.infogrid.httpd.TEST;
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- * Tests the simplistic HTTPD server.
+ * Tests the simplistic HTTP server.
  */
 public class AllTests
         extends

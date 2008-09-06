@@ -17,7 +17,7 @@ package org.infogrid.store.TEST;
 import org.infogrid.testharness.AbstractTest;
 
 /**
- * Factors out common functionality for StoreTests.
+ * Factors out common functionality for tests in this package..
  */
 public abstract class AbstractStoreTest
         extends
@@ -25,6 +25,8 @@ public abstract class AbstractStoreTest
 {
     /**
      * Constructor.
+     * 
+     * @param testClass the Class to be tested
      */
     public AbstractStoreTest(
             Class testClass )

@@ -18,12 +18,10 @@ import org.infogrid.module.Module;
 import org.infogrid.module.ModuleAdvertisement;
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleRequirement;
-
 import org.infogrid.util.logging.Log;
 
-
 /**
- * This provides methods to easily run a group of tests specified as test Modules.
+ * Groups a set of tests into a test Module.
  */
 public abstract class AbstractModuleTestGroup
 {

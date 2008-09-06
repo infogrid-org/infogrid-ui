@@ -42,7 +42,7 @@ public class DefaultShadowProxyFactory
      */
     public static DefaultShadowProxyFactory create(
             ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory )
+            ProxyPolicyFactory          proxyPolicyFactory )
     {
         DefaultShadowProxyFactory ret = new DefaultShadowProxyFactory( endpointFactory, proxyPolicyFactory );
         
@@ -57,7 +57,7 @@ public class DefaultShadowProxyFactory
      */
     protected DefaultShadowProxyFactory(
             ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory )
+            ProxyPolicyFactory          proxyPolicyFactory )
     {
         super( endpointFactory, proxyPolicyFactory );
     }

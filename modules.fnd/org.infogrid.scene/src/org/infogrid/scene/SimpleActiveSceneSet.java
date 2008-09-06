@@ -15,7 +15,7 @@
 package org.infogrid.scene;
 
 /**
- * This is a very simple ActiveSceneSet implementation.
+ * A very simple ActiveSceneSet implementation.
  */
 public class SimpleActiveSceneSet
     extends

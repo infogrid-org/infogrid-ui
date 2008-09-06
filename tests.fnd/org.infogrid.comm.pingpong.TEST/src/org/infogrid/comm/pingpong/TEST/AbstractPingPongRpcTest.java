@@ -14,22 +14,19 @@
 
 package org.infogrid.comm.pingpong.TEST;
 
-import org.infogrid.comm.CarriesInvocationId;
-import org.infogrid.comm.BidirectionalMessageEndpoint;
-import org.infogrid.comm.RpcClientEndpoint;
-
-import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
-import org.infogrid.comm.pingpong.PingPongMessageEndpointListener;
-
-import org.infogrid.testharness.AbstractTest;
-
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
+import org.infogrid.comm.CarriesInvocationId;
+import org.infogrid.comm.BidirectionalMessageEndpoint;
 import org.infogrid.comm.MessageEndpoint;
+import org.infogrid.comm.RpcClientEndpoint;
 import org.infogrid.comm.SendingMessageEndpoint;
+import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
+import org.infogrid.comm.pingpong.PingPongMessageEndpointListener;
+import org.infogrid.testharness.AbstractTest;
 
 /**
- * Factors out common functionality needed by RpcTests.
+ * Factors out functionality common to PingPongRpcTests.
  */
 public abstract class AbstractPingPongRpcTest
         extends

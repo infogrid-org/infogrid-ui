@@ -32,7 +32,7 @@ import org.infogrid.module.ModuleRequirement;
 import org.infogrid.util.logging.Log;
 
 /**
- *
+ * Instantiates a test model.
  */
 public class ModelBaseTest3
         extends
@@ -41,7 +41,7 @@ public class ModelBaseTest3
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws

@@ -14,6 +14,7 @@
 
 package org.infogrid.store.TEST;
 
+import java.util.ArrayList;
 import org.infogrid.store.SerializingStoreEntryMapper;
 import org.infogrid.store.Store;
 import org.infogrid.store.m.MStore;
@@ -22,10 +23,8 @@ import org.infogrid.util.SwappingHashMap;
 import org.infogrid.util.SwappingHashMapListener;
 import org.infogrid.util.logging.Log;
 
-import java.util.ArrayList;
-
 /**
- *
+ * Tests the StoreBackedSwappingHashMap's persistence.
  */
 public class StoreBackedSwappingHashMapTest1
         extends
@@ -136,10 +135,11 @@ public class StoreBackedSwappingHashMapTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public StoreBackedSwappingHashMapTest1(
             String [] args )
         throws
@@ -153,6 +153,9 @@ public class StoreBackedSwappingHashMapTest1
 
     /**
      * Listener implementation for this test.
+     * 
+     * @param <K> key parameter
+     * @param <V> value parameter
      */
     static class MyListener<K,V>
             implements

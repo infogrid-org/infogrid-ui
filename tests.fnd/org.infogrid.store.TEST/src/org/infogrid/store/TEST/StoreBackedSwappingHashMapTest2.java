@@ -21,7 +21,7 @@ import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
 import org.infogrid.util.logging.Log;
 
 /**
- *
+ * Tests iteration over the content of a StoreBackedSwappingHashMap.
  */
 public class StoreBackedSwappingHashMapTest2
         extends
@@ -30,7 +30,7 @@ public class StoreBackedSwappingHashMapTest2
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws
@@ -135,10 +135,11 @@ public class StoreBackedSwappingHashMapTest2
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public StoreBackedSwappingHashMapTest2(
             String [] args )
         throws

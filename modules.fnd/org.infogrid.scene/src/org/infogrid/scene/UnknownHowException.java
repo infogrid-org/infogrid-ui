@@ -15,7 +15,7 @@
 package org.infogrid.scene;
 
 /**
- * This exception is thrown if an operation cannot be performed on a Scene because
+ * Thrown if an operation cannot be performed on a Scene because
  * the Scene implementation does not know how to.
  */
 public class UnknownHowException

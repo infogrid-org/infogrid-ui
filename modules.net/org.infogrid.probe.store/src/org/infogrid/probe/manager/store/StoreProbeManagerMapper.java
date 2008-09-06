@@ -14,28 +14,22 @@
 
 package org.infogrid.probe.manager.store;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
-
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
 import org.infogrid.probe.shadow.externalized.xml.ExternalizedShadowMeshBaseXmlEncoder;
 import org.infogrid.probe.shadow.store.StoreShadowMeshBase;
 import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
-
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
-
 import org.infogrid.util.FactoryException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import java.net.URISyntaxException;
 
 /**
  * Maps ShadowMeshBases to and from Stores.
@@ -46,6 +40,8 @@ public class StoreProbeManagerMapper
 {
     /**
      * Constructor.
+     * 
+     * @param factory the factory to recreate StoreMeshBases
      */
     public StoreProbeManagerMapper(
             StoreShadowMeshBaseFactory factory )

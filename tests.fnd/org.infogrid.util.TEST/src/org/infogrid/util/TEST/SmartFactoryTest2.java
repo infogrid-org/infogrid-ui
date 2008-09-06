@@ -21,7 +21,7 @@ import org.infogrid.util.MSmartFactory;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests the event generation of the SmartFactory.
+ * Tests the event generation of the MSmartFactory.
  */
 public class SmartFactoryTest2
         extends

@@ -14,13 +14,12 @@
 
 package org.infogrid.util.TEST;
 
+import java.util.Iterator;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.IntegerStringifier;
 import org.infogrid.util.text.StringifierParsingChoice;
-
-import java.util.Iterator;
 
 /**
  * Tests IntegerStringifier.

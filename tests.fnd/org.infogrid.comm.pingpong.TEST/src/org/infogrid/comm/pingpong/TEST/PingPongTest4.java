@@ -14,20 +14,17 @@
 
 package org.infogrid.comm.pingpong.TEST;
 
-import org.infogrid.testharness.AbstractTest;
-
-import org.infogrid.comm.BidirectionalMessageEndpoint;
-import org.infogrid.comm.MessageEndpointListener;
-import org.infogrid.comm.pingpong.m.MPingPongMessageEndpoint;
-
-import org.infogrid.util.logging.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
+import org.infogrid.comm.BidirectionalMessageEndpoint;
 import org.infogrid.comm.MessageEndpoint;
+import org.infogrid.comm.MessageEndpointListener;
 import org.infogrid.comm.ReceivingMessageEndpoint;
 import org.infogrid.comm.SendingMessageEndpoint;
+import org.infogrid.comm.pingpong.m.MPingPongMessageEndpoint;
+import org.infogrid.testharness.AbstractTest;
+import org.infogrid.util.logging.Log;
 
 /**
  * Tests that ping-ponging endpoints gracefully die.

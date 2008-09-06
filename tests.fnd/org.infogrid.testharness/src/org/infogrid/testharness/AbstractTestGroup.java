@@ -18,7 +18,7 @@ import org.infogrid.util.logging.Log;
 import java.lang.reflect.Constructor;
 
 /**
- * Methods to easily run a group of subclasses of AbstractTests.
+ * Methods to easily run a group of subclasses of AbstractTest.
  */
 public abstract class AbstractTestGroup
 {

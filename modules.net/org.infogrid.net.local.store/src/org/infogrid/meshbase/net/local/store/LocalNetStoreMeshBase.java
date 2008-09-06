@@ -54,7 +54,8 @@ import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**
- * A NetStoreMeshBase that uses local (collocated, in this address space) ShadowMeshBases.
+ * A NetStoreMeshBase that uses local (collocated, in this address space) ShadowMeshBases
+ * that are also persistent.
  */
 public class LocalNetStoreMeshBase
         extends

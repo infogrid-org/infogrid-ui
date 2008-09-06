@@ -17,7 +17,6 @@ package org.infogrid.comm.pingpong.TEST;
 import org.infogrid.comm.ReceivingMessageEndpoint;
 import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
 import org.infogrid.comm.pingpong.m.MPingPongMessageEndpoint;
-
 import org.infogrid.util.logging.Log;
 
 /**

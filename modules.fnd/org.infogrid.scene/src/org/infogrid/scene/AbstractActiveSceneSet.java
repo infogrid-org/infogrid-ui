@@ -14,16 +14,14 @@
 
 package org.infogrid.scene;
 
-import org.infogrid.util.FlexibleListenerSet;
-import org.infogrid.util.FlexiblePropertyChangeListenerSet;
-
-import org.infogrid.util.logging.Log;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import org.infogrid.util.FlexibleListenerSet;
+import org.infogrid.util.FlexiblePropertyChangeListenerSet;
+import org.infogrid.util.logging.Log;
 
 /**
- * Collects commonly used functionality for ActiveSceneSet implementations.
+ * Factors out commonly used functionality for ActiveSceneSet implementations.
  */
 public abstract class AbstractActiveSceneSet
     implements
@@ -82,6 +80,8 @@ public abstract class AbstractActiveSceneSet
      * Add a listener.
      *
      * @param newListener the listener to be added
+     * @see #addSoftActiveSceneSetListener
+     * @see #addWeakActiveSceneSetListener
      * @see #removeActiveSceneSetListener
      */
     public void addDirectActiveSceneSetListener(
@@ -94,6 +94,8 @@ public abstract class AbstractActiveSceneSet
      * Add a listener.
      *
      * @param newListener the listener to be added
+     * @see #addDirectActiveSceneSetListener
+     * @see #addWeakActiveSceneSetListener
      * @see #removeActiveSceneSetListener
      */
     public void addSoftActiveSceneSetListener(
@@ -106,6 +108,8 @@ public abstract class AbstractActiveSceneSet
      * Add a listener.
      *
      * @param newListener the listener to be added
+     * @see #addDirectActiveSceneSetListener
+     * @see #addSoftActiveSceneSetListener
      * @see #removeActiveSceneSetListener
      */
     public void addWeakActiveSceneSetListener(
@@ -118,7 +122,9 @@ public abstract class AbstractActiveSceneSet
      * Remove a listener.
      *
      * @param oldListener the listener to be removed
-     * @see #addActiveSceneSetListener
+     * @see #addDirectActiveSceneSetListener
+     * @see #addSoftActiveSceneSetListener
+     * @see #addWeakActiveSceneSetListener
      */
     public void removeActiveSceneSetListener(
             ActiveSceneSetListener oldListener )
@@ -130,6 +136,8 @@ public abstract class AbstractActiveSceneSet
      * Add a listener listening to PropertyChangeEvents on all contained Scenes.
      *
      * @param newListener the listener to be added
+     * @see #addSoftContentPropertyChangeListener
+     * @see #addWeakContentPropertyChangeListener
      * @see #removeContentPropertyChangeListener
      */
     public void addDirectContentPropertyChangeListener(
@@ -142,6 +150,8 @@ public abstract class AbstractActiveSceneSet
      * Add a listener listening to PropertyChangeEvents on all contained Scenes.
      *
      * @param newListener the listener to be added
+     * @see #addDirectContentPropertyChangeListener
+     * @see #addWeakContentPropertyChangeListener
      * @see #removeContentPropertyChangeListener
      */
     public void addSoftContentPropertyChangeListener(
@@ -154,6 +164,8 @@ public abstract class AbstractActiveSceneSet
      * Add a listener listening to PropertyChangeEvents on all contained Scenes.
      *
      * @param newListener the listener to be added
+     * @see #addDirectContentPropertyChangeListener
+     * @see #addSoftContentPropertyChangeListener
      * @see #removeContentPropertyChangeListener
      */
     public void addWeakContentPropertyChangeListener(
@@ -166,7 +178,9 @@ public abstract class AbstractActiveSceneSet
      * Remove a listener listening to PropertyChangeEvents on all contained Scenes.
      *
      * @param oldListener the listener to be removed
-     * @see #addContentPropertyChangeListener
+     * @see #addDirectContentPropertyChangeListener
+     * @see #addSoftContentPropertyChangeListener
+     * @see #addWeakContentPropertyChangeListener
      */
     public void removeContentPropertyChangeListener(
             PropertyChangeListener oldListener )

@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Common functionality for all Http tests.
+ * Common functionality for all HTTP tests.
  */
 public abstract class AbstractHttpdTest
         extends

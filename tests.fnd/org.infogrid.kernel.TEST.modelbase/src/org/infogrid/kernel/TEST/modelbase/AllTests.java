@@ -18,7 +18,7 @@ import org.infogrid.testharness.AbstractTestGroup;
 import org.infogrid.util.logging.Log;
 
 /**
- *
+ * Runs the tests in this package.
  */
 public abstract class AllTests
         extends

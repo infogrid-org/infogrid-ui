@@ -21,7 +21,7 @@ import org.infogrid.util.logging.Log;
 import java.util.ArrayList;
 
 /**
- * A CachingMapListener that also collects SwapwingHashMap-specific events
+ * A CachingMapListener that also collects SwapwingHashMap-specific events.
  */
 public class SwappingHashMapTestListener
         implements

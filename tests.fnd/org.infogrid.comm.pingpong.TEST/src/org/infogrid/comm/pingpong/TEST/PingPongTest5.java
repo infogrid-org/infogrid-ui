@@ -36,7 +36,7 @@ public class PingPongTest5
             AbstractTest
 {
     /**
-     * Test run.
+     * Run the test.
      *
      * @throws Exception this code may throw any Exception
      */

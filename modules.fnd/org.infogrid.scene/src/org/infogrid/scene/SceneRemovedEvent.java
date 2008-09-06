@@ -17,7 +17,7 @@ package org.infogrid.scene;
 import java.util.EventObject;
 
 /**
- * This event indicates that a Scene was removed from an ActiveSceneSet.
+ * Indicates that a Scene was removed from an ActiveSceneSet.
  */
 public class SceneRemovedEvent
     extends

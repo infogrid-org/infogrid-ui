@@ -14,21 +14,20 @@
 
 package org.infogrid.scene;
 
-import org.infogrid.modelbase.ModelBase;
-
 import java.util.HashMap;
 import java.util.Iterator;
+import org.infogrid.modelbase.ModelBase;
 
 /**
- * This is a directory of SceneTemplates.
+ * A directory of SceneTemplates.
  */
 public class SceneTemplateDirectory
 {
     /**
-      * Construct one.
-      *
-      * @param mb the ModelBase in which to look up MeshTypes
-      */
+     * Constructor.
+     *
+     * @param mb the ModelBase in which to look up MeshTypes
+     */
     public SceneTemplateDirectory(
             ModelBase mb )
     {

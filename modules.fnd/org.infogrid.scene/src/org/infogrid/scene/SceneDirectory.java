@@ -14,11 +14,10 @@
 
 package org.infogrid.scene;
 
-import org.infogrid.meshbase.MeshBaseLifecycleManager;
-import org.infogrid.util.ArrayHelper;
-
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import org.infogrid.meshbase.MeshBaseLifecycleManager;
+import org.infogrid.util.ArrayHelper;
 
 /**
  * A directory of currently active Scenes. This is similar to a MeshBase is for MeshObjects,

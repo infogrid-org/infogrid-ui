@@ -18,7 +18,7 @@ import org.infogrid.testharness.AbstractTestGroup;
 import org.infogrid.testharness.AbstractTestGroup.TestSpec;
 
 /**
- * Tests the Util package.
+ * Runs all tests.
  */
 public class AllTests
         extends

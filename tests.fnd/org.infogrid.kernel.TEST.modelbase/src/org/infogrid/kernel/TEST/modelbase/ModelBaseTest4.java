@@ -14,16 +14,14 @@
 
 package org.infogrid.kernel.TEST.modelbase;
 
+import java.io.FileOutputStream;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.modelbase.externalized.xml.XmlModelExporter;
-
 import org.infogrid.util.logging.Log;
 
-import java.io.FileOutputStream;
-
 /**
- *
+ * Tests loading SubjectAreas from files and saving their content to files.
  */
 public class ModelBaseTest4
         extends
@@ -32,7 +30,7 @@ public class ModelBaseTest4
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws

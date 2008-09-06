@@ -45,9 +45,12 @@ public abstract class AbstractDifferencerTest
 {
     /**
      * Constructor.
+     * 
+     * @param testClass the Class to be tested
+     * @throws MeshTypeNotFoundException a MeshType lookup failed
      */
     protected AbstractDifferencerTest(
-            Class testClass )
+            Class<?> testClass )
         throws
             MeshTypeNotFoundException
     {
@@ -70,7 +73,17 @@ public abstract class AbstractDifferencerTest
     }
     
     /**
-     * Helper method to createCopy a MeshObject
+     * Helper method to create a MeshObject.
+     * 
+     * @param life the MeshBaseLifecycleManager to use
+     * @param identifier the identifier for the MeshObject,
+     * @param type the EntitType for the MeshObject
+     * @param now the creation time
+     * @return the created MeshObject
+     * @throws IsAbstractException thrown if the EntityType is abstract
+     * @throws TransactionException thrown if invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a MeshObject with this identifier existed already
+     * @throws NotPermittedException thrown if the caller did not have the required permissions
      */
     protected MeshObject createMeshObject(
             MeshBaseLifecycleManager   life,
@@ -88,7 +101,15 @@ public abstract class AbstractDifferencerTest
     }
 
     /**
-     * Helper method to createCopy a MeshObject
+     * Helper method to create a MeshObject.
+     * 
+     * @param life the MeshBaseLifecycleManager to use
+     * @param identifier the identifier for the MeshObject,
+     * @param now the creation time
+     * @return the created MeshObject
+     * @throws TransactionException thrown if invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a MeshObject with this identifier existed already
+     * @throws NotPermittedException thrown if the caller did not have the required permissions
      */
     protected MeshObject createMeshObject(
             MeshBaseLifecycleManager life,
@@ -105,6 +126,9 @@ public abstract class AbstractDifferencerTest
 
     /**
      * Helper to print the contents of a MeshBase.
+     * 
+     * @param useThis the Log to print to
+     * @param theMeshBase the MeshBase to print
      */
     protected void printMeshBase(
             Log              useThis,
@@ -123,6 +147,9 @@ public abstract class AbstractDifferencerTest
 
     /**
      * Helper to print a ChangeSet.
+     * 
+     * @param useThis the Log to print to
+     * @param theChangeSet the ChangeSet to print
      */
     protected void printChangeSet(
             Log       useThis,

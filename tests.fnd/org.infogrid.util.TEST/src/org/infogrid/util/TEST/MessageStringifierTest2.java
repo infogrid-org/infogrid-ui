@@ -106,6 +106,8 @@ public class MessageStringifierTest2
     private static void f4()
     {
         throw new RuntimeException( "XXX" ) {
+            private static final long serialVersionUID = 1L;
+            @Override
             public String getLocalizedMessage()
             {
                 return "YYY";

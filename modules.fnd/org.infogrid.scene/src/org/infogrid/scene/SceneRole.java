@@ -14,23 +14,22 @@
 
 package org.infogrid.scene;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetListener;
+import org.infogrid.mesh.set.active.ActiveTraversalPathSet;
 import org.infogrid.mesh.set.active.MeshObjectAddedEvent;
 import org.infogrid.mesh.set.active.MeshObjectRemovedEvent;
+import org.infogrid.mesh.set.active.OrderedActiveMeshObjectSetReorderedEvent;
 import org.infogrid.mesh.set.active.m.ConstantActiveMMeshObjectSet;
-import org.infogrid.mesh.set.active.ActiveTraversalPathSet;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
 import org.infogrid.util.FlexiblePropertyChangeListenerSet;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import org.infogrid.mesh.set.active.OrderedActiveMeshObjectSetReorderedEvent;
-
 /**
- * This is a pair of a SceneTemplateRole, and a TraversalPath that leads to the
+ * A pair of a SceneTemplateRole, and a TraversalPath that leads to the
  * MeshObject playing the SceneTemplateRole in this Scene. It is the "instance",
  * so to speak, of a SceneTemplateRole for an instantiated Scene.
  */

@@ -23,7 +23,7 @@ import org.infogrid.util.MSmartFactory;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests the behavior of the values iterator.
+ * Tests the behavior of the values iterator in a MSmartFactory.
  */
 public class SmartFactoryTest4
         extends

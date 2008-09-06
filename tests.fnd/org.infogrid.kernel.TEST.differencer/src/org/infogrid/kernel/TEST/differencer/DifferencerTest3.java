@@ -27,11 +27,8 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
-
 /**
- * This test tests the MeshBaseDifferencer on IterableMMeshBases.
- *
- * Create unrelated MeshObjects with types, make sure MeshObjectTypeChangeEvents
+ * Creates unrelated MeshObjects with types and makes sure MeshObjectTypeChangeEvents
  * are created.
  */
 public class DifferencerTest3
@@ -41,7 +38,7 @@ public class DifferencerTest3
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws
@@ -153,10 +150,11 @@ public class DifferencerTest3
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may happen during a test
+     */
     public DifferencerTest3(
             String [] args )
         throws

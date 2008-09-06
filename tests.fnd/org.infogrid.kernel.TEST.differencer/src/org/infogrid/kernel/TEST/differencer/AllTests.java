@@ -17,7 +17,7 @@ package org.infogrid.kernel.TEST.differencer;
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- * Tests the IterableMeshBaseDifferencer.
+ * Runs all tests in this package.
  */
 public class AllTests
         extends

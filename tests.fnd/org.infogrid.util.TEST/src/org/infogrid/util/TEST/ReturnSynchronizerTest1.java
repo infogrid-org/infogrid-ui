@@ -19,7 +19,7 @@ import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.logging.Log;
 
 /**
- * This tests our ReturnSynchronizer class
+ * Tests the ReturnSynchronizer.
  */
 public class ReturnSynchronizerTest1
         extends

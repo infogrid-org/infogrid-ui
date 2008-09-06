@@ -15,7 +15,7 @@
 package org.infogrid.scene;
 
 /**
- * <p>This exception indicates that a SceneTemplate could not be matched
+ * <p>This Exception indicates that a SceneTemplate could not be matched
  * to an actual Scene because the matched SceneTemplateRoles did not uniquely specify the
  * Scene.</p>
  *

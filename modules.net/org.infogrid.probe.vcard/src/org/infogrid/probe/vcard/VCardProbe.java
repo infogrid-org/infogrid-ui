@@ -62,34 +62,59 @@ public class VCardProbe
     }
 
     /**
-     * Read from the InputStream and instantiate corresponding MeshObjects.
+     * <p>Read from the InputStream and instantiate corresponding MeshObjects.</p>
+     * <p>This method declares
+     * many different types of Exceptions; that enables the Probe Framework to handle many
+     * possible error conditions out of the box, thereby making Probe programming easier.
+     * Note that many of the declared Exceptions, if actually thrown, indicate a programming
+     * error in the Probe implementation (e.g. IsAbstractException).</p>
+     * <p>The Probe framework invokes this method with an open Transaction on the current Thread;
+     * the Probe developer does not have to worry about Transactions.</p>
      * 
-     * @param networkId the NetMeshBaseIdentifier that is being accessed
-     * @param coherenceSpecification the type of data coherence that is requested by the application. Probe
+     * @param dataSourceIdentifier identifies the data source that is being accessed
+     * @param coherenceSpecification the type of data coherenceSpecification that is requested by the application. Probe
      *         implementors may ignore this parameter, letting the Probe framework choose its own policy.
      *         If the Probe chooses to define its own policy (considering or ignoring this parameter), the
-     *         Probe must bless the Probe's HomeObject with a subtype of ProbeUpdateSpecification (defined
-     *         in the <code>org.infogrid.model.Probe</code>) that reflects the policy.
-     * @param theInputStream the InputStream to read from
-     * @param theContentType the content type (MIME) if known
-     * @param mb the StagingMeshBase in which the corresponding MeshObjects are instantiated by the Probe
-     * @throws IdentMeshObjectIdentifierNotUniqueExceptionhe Probe developer incorrectly
-     *         assigned duplicate Identifiers to created MeshObjects
-     * @throws RelatedAlreadyException thrown if the Probe developer incorrectly attempted to
-     *         relate two already-related MeshObjects
-     * @throws TransactionException this Exception is declared to make programming easier,
-     *         although actually throwing it would be a programming error
-     * @throws NotPermittedException thrown if an operation performed by the Probe was not permitted
-     * @throws ProbeException a Probe error occurred per the possible subclasses defined in ProbeException
+     *         Probe must bless the Probe's HomeObject with a subtype of <code>ProbeUpdateSpecification</code> (defined
+     *         in the <code>org.infogrid.model.Probe</code> Subject Area) and suitable Property
+     *         values that reflect the policy.
+     * @param stream the InputStream to read from
+     * @param contentType the content type (MIME) if known
+     * @param freshMeshBase the StagingMeshBase in which the corresponding MeshObjects are to be instantiated by the Probe.
+     *         This StagingMeshBase is empty when passed into this call, except for the home object which always exists
+     * @throws EntityBlessedAlreadyException thrown if a MeshObject was incorrectly blessed twice with the same
+     *         EntityType. Throwing this typically indicates a programming error.
+     * @throws EntityNotBlessedException thrown if a MeshObject was not blessed with a required EntityType.
+     *         Throwing this typically indicates a programming error.
+     * @throws IllegalPropertyTypeException thrown if a MeshObject did not carry a PropertyType that it needed
+     *         to carry. Throwing this typically indicates a programming error.
+     * @throws IllegalPropertyValueException thrown if a PropertyValue was assigned to a property that was
+     *         outside of the allowed range. Throwing this typically indicates a programming error.
      * @throws IOException an input/output error occurred during execution of the Probe
+     * @throws IsAbstractException thrown if an EntityType or a Relationship could not be instantiated because
+     *         it was abstract. Throwing this typically indicates a programming error.
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the Probe developer incorrectly
+     *         assigned duplicate MeshObjectsIdentifiers to created MeshObjects.
+     *         Throwing this typically indicates a programming error.
      * @throws ModuleException thrown if a Module required by the Probe could not be loaded
+     * @throws NotPermittedException thrown if an operation performed by the Probe was not permitted
+     * @throws NotRelatedException thrown if a relationship was supposed to become blessed, but the relationship
+     *         did not exist. Throwing this typically indicates a programming error.
+     * @throws ProbeException a Probe error occurred per the possible subclasses defined in ProbeException
+     * @throws RelatedAlreadyException thrown if the Probe developer incorrectly attempted to
+     *         relate two already-related MeshObjects. Throwing this typically indicates a programming error.
+     * @throws RoleTypeBlessedAlreadyException thrown if a relationship was incorrectly blessed twice with the same
+     *         RelationshipType, in the same direction. Throwing this typically indicates a programming error.
+     * @throws TransactionException a Transaction problem occurred. Throwing this typically indicates a programming error.
+     * @throws URISyntaxException thrown if a URI was constructed in an invalid way
      */
+    @SuppressWarnings( "fallthrough" )
     public void readFromStream(
-            NetMeshBaseIdentifier  networkId,
-            CoherenceSpecification coherence,
-            InputStream            theInputStream,
-            String                 theContentType,
-            StagingMeshBase        mb )
+            NetMeshBaseIdentifier  dataSourceIdentifier,
+            CoherenceSpecification coherenceSpecification,
+            InputStream            stream,
+            String                 contentType,
+            StagingMeshBase        freshMeshBase )
         throws
             IsAbstractException,
             EntityBlessedAlreadyException,
@@ -107,10 +132,10 @@ public class VCardProbe
             ModuleException,
             URISyntaxException
     {
-        MeshObject home = mb.getHomeObject();
+        MeshObject home = freshMeshBase.getHomeObject();
         home.bless( VCardSubjectArea.VCARD );
 
-        StagingMeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
+        StagingMeshBaseLifecycleManager life = freshMeshBase.getMeshBaseLifecycleManager();
         
         // strategy:
         // 1) read the whole thing into memory, while doing so, merge "continuing" lines and
@@ -122,12 +147,13 @@ public class VCardProbe
 
         // part 1, read
         LineBuffer     theLineBuffer = new LineBuffer();
-        BufferedReader theReader     = new BufferedReader( new InputStreamReader( theInputStream ));
+        BufferedReader theReader     = new BufferedReader( new InputStreamReader( stream  ));
 
         try {
             String currentLine = theReader.readLine(); // the line currently being assembled
-            if( currentLine == null )
+            if( currentLine == null ) {
                 return;
+            }
 
             while( true ) {
                 String nextLine = theReader.readLine();
@@ -156,23 +182,23 @@ public class VCardProbe
 
         // part 2: check -- FIXME: need to check more
         if( theLineBuffer.size() < 2 ) {
-            throw new ProbeException.EmptyDataSource( networkId );
+            throw new ProbeException.EmptyDataSource( dataSourceIdentifier  );
         }
 
         OneLine current = theLineBuffer.get( 0 );
         if( ! "BEGIN".equalsIgnoreCase( current.theName )) {
-            throw new ProbeException.SyntaxError( networkId, "No BEGIN keyword", null );
+            throw new ProbeException.SyntaxError( dataSourceIdentifier, "No BEGIN keyword", null  );
         }
         if( ! "VCARD".equalsIgnoreCase( current.theValue )) {
-            throw new ProbeException.SyntaxError( networkId, "No BEGIN:VCARD keyword", null );
+            throw new ProbeException.SyntaxError( dataSourceIdentifier, "No BEGIN:VCARD keyword", null  );
         }
 
         current = theLineBuffer.get( theLineBuffer.size()-1 );
         if( ! "END".equalsIgnoreCase( current.theName )) {
-            throw new ProbeException.SyntaxError( networkId, "No END keyword", null );
+            throw new ProbeException.SyntaxError( dataSourceIdentifier, "No END keyword", null  );
         }
         if( ! "VCARD".equalsIgnoreCase( current.theValue )) {
-            throw new ProbeException.SyntaxError( networkId, "No END:VCARD keyword", null );
+            throw new ProbeException.SyntaxError( dataSourceIdentifier, "No END:VCARD keyword", null  );
         }
 
         // the following calls may throw IOExceptions if there isn't exactly one line with this spec
@@ -292,7 +318,7 @@ public class VCardProbe
             // file as an object identifier
 
             MeshObject adr = life.createMeshObject(
-                    mb.getMeshObjectIdentifierFactory().fromExternalForm( "ph-" + i ),
+                    freshMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( "ph-" + i ),
                     VCardSubjectArea.PHYSICALADDRESS );
 
             if( postOfficeBox != null ) {
@@ -354,7 +380,7 @@ public class VCardProbe
             // file as an object identifier
 
             MeshObject adr = life.createMeshObject(
-                    mb.getMeshObjectIdentifierFactory().fromExternalForm( "co-em-" + i ),
+                    freshMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( "co-em-" + i ),
                     VCardSubjectArea.COMMUNICATIONADDRESS );
 
             adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "E-mail" ) );
@@ -382,13 +408,13 @@ public class VCardProbe
 
         // for all the phones that we found
         for( int i=0 ; telIter.hasNext() ; ++i ) {
-            OneLine telLine = (OneLine) telIter.next();
+            OneLine telLine = telIter.next();
 
             // instantiate a new CommunicationAddress object. We use the location in the
             // file as an object identifier
 
             MeshObject adr = life.createMeshObject(
-                    mb.getMeshObjectIdentifierFactory().fromExternalForm( "co-ph-" + i ),
+                    freshMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( "co-ph-" + i ),
                     VCardSubjectArea.COMMUNICATIONADDRESS );
 
             String [] params = telLine.theParams;
@@ -468,6 +494,7 @@ public class VCardProbe
          * @param raw the string to be parsed
          * @return found and instantiated object at this line
          */
+        @SuppressWarnings( "fallthrough" )
         public static OneLine parse(
                 String raw )
         {

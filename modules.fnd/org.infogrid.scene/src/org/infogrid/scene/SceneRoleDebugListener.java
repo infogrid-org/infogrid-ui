@@ -15,15 +15,13 @@
 package org.infogrid.scene;
 
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetListener;
+import org.infogrid.mesh.set.active.ActiveTraversalPathSetListener;
 import org.infogrid.mesh.set.active.MeshObjectAddedEvent;
 import org.infogrid.mesh.set.active.MeshObjectRemovedEvent;
 import org.infogrid.mesh.set.active.OrderedActiveMeshObjectSetReorderedEvent;
-
-import org.infogrid.mesh.set.active.ActiveTraversalPathSetListener;
+import org.infogrid.mesh.set.active.OrderedTraversalPathSetReorderedEvent;
 import org.infogrid.mesh.set.active.TraversalPathAddedEvent;
 import org.infogrid.mesh.set.active.TraversalPathRemovedEvent;
-import org.infogrid.mesh.set.active.OrderedTraversalPathSetReorderedEvent;
-
 import org.infogrid.util.logging.Log;
 
 /**

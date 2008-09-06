@@ -14,19 +14,17 @@
 
 package org.infogrid.scene;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
 import org.infogrid.meshbase.transaction.TransactionException;
-
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FlexiblePropertyChangeListenerSet;
 import org.infogrid.util.logging.Log;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * <p>A Scene is a collection of related MeshObjects that play certain SceneRoles.
@@ -424,6 +422,8 @@ public class Scene
      * Add a PropertyChangeListener.
      *
      * @param newListener the new PropertyChangeListener
+     * @see #addSoftPropertyChangeListener
+     * @see #addWeakPropertyChangeListener
      * @see #removePropertyChangeListener
      */
     public void addDirectPropertyChangeListener(
@@ -436,6 +436,8 @@ public class Scene
      * Add a PropertyChangeListener.
      *
      * @param newListener the new PropertyChangeListener
+     * @see #addDirectPropertyChangeListener
+     * @see #addWeakPropertyChangeListener
      * @see #removePropertyChangeListener
      */
     public void addSoftPropertyChangeListener(
@@ -448,6 +450,8 @@ public class Scene
      * Add a PropertyChangeListener.
      *
      * @param newListener the new PropertyChangeListener
+     * @see #addDirectPropertyChangeListener
+     * @see #addSoftPropertyChangeListener
      * @see #removePropertyChangeListener
      */
     public void addWeakPropertyChangeListener(
@@ -460,7 +464,9 @@ public class Scene
      * Remove a PropertyChangeListener.
      *
      * @param oldListener the to-be-removed PropertyChangeListener
-     * @see #addPropertyChangeListener
+     * @see #addDirectPropertyChangeListener
+     * @see #addSoftPropertyChangeListener
+     * @see #addWeakPropertyChangeListener
      */
     public synchronized void removePropertyChangeListener(
             PropertyChangeListener oldListener )

@@ -14,32 +14,27 @@
 
 package org.infogrid.probe.shadow.store;
 
-import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.meshbase.net.proxy.ProxyFactory;
-import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
-import org.infogrid.meshbase.net.externalized.ExternalizedProxyEncoder;
-
-import org.infogrid.model.primitives.externalized.DecodingException;
-import org.infogrid.model.primitives.externalized.EncodingException;
-
-import org.infogrid.probe.shadow.externalized.xml.ExternalizedShadowMeshBaseXmlEncoder;
-
-import org.infogrid.store.StoreEntryMapper;
-import org.infogrid.store.StoreValue;
-import org.infogrid.store.StoreValueDecodingException;
-import org.infogrid.store.StoreValueEncodingException;
-
-import org.infogrid.util.FactoryException;
-import org.infogrid.util.logging.Log;
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
+import org.infogrid.meshbase.net.externalized.ExternalizedProxyEncoder;
+import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.meshbase.net.proxy.ProxyFactory;
+import org.infogrid.model.primitives.externalized.DecodingException;
+import org.infogrid.model.primitives.externalized.EncodingException;
+import org.infogrid.probe.shadow.externalized.xml.ExternalizedShadowMeshBaseXmlEncoder;
+import org.infogrid.store.StoreEntryMapper;
+import org.infogrid.store.StoreValue;
+import org.infogrid.store.StoreValueDecodingException;
+import org.infogrid.store.StoreValueEncodingException;
+import org.infogrid.util.FactoryException;
+import org.infogrid.util.logging.Log;
 
 /**
- * A Mapper that supports the distinction between placeholder Proxies and regular Proxies for
+ * A StoreEntryMapper for Proxies that supports the distinction between placeholder Proxies and regular Proxies for
  * the purposes of a ShadowMeshBase.
  */
 public class ShadowStoreProxyEntryMapper
@@ -245,6 +240,7 @@ public class ShadowStoreProxyEntryMapper
     /**
      * Obtain the ExternalizedProxyEncoder with a certain id.
      *
+     * @param encoderId identifier of the encoder
      * @return the ExternalizedProxyEncoder, or null
      */
     protected ExternalizedProxyEncoder getEncoderFor(

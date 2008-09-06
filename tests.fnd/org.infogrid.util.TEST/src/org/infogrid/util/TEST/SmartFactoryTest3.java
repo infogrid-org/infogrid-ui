@@ -21,7 +21,7 @@ import org.infogrid.util.MSmartFactory;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests the WeakReference behavior of the SimpleSmartFactory.
+ * Tests the WeakReference behavior of the MSmartFactory.
  */
 public class SmartFactoryTest3
         extends

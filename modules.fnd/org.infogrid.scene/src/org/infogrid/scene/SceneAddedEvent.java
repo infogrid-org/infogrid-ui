@@ -17,7 +17,7 @@ package org.infogrid.scene;
 import java.util.EventObject;
 
 /**
- * This event indicates that a new Scene was added to an ActiveSceneSet.
+ * Indicates that a new Scene was added to an ActiveSceneSet.
  */
 public class SceneAddedEvent
     extends

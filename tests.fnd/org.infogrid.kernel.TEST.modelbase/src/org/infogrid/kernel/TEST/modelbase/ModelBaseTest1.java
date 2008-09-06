@@ -29,7 +29,7 @@ import org.infogrid.util.logging.Log;
 import java.util.Iterator;
 
 /**
- * This tests the MMeshBase's ability to store and retrive MeshTypes.
+ * Tests the MMeshBase's ability to store and retrive MeshTypes.
  */
 public class ModelBaseTest1
         extends
@@ -38,7 +38,7 @@ public class ModelBaseTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws

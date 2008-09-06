@@ -21,7 +21,7 @@ import org.infogrid.util.MSmartFactory;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests the basic behavior of the SimpleSmartFactory.
+ * Tests the basic behavior of the MSimpleSmartFactory.
  */
 public class SmartFactoryTest1
         extends

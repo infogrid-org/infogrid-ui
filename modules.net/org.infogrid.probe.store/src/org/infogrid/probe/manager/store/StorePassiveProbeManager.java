@@ -15,14 +15,11 @@
 package org.infogrid.probe.manager.store;
 
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
+import org.infogrid.store.IterableStore;
+import org.infogrid.probe.manager.PassiveProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
-import org.infogrid.probe.manager.PassiveProbeManager;
-
-import org.infogrid.store.IterableStore;
 import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
-
 import org.infogrid.util.AbstractSwappingHashMapListener;
 import org.infogrid.util.SwappingHashMap;
 
@@ -36,8 +33,9 @@ public class StorePassiveProbeManager
     /**
      * Factory method.
      *
-     * @param delegate the underlying Factory
+     * @param delegate the underlying factory for StoreShadowMeshBases
      * @param shadowStore the Store in which serialized ShadowMeshBases are kept
+     * @return the created StorePassiveProbeManager
      */
     public static StorePassiveProbeManager create(
             StoreShadowMeshBaseFactory delegate,
@@ -53,10 +51,13 @@ public class StorePassiveProbeManager
     }
 
     /**
-     * Constructor.
+     * Private constructor, use factory method.
+     * 
+     * @param delegate the underlying factory for StoreShadowMeshBases
+     * @param storage the storage to use
      */
     protected StorePassiveProbeManager(
-            StoreShadowMeshBaseFactory                                   delegate,
+            StoreShadowMeshBaseFactory                                               delegate,
             IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,ShadowMeshBase> storage )
     {
         super( delegate, storage );

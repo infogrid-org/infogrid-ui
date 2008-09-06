@@ -14,15 +14,23 @@
 
 package org.infogrid.probe.feeds;
 
-import org.infogrid.mesh.MeshObjectIdentifier;
+import java.awt.Color;
+import java.net.URISyntaxException;
+import org.infogrid.mesh.EntityBlessedAlreadyException;
+import org.infogrid.mesh.EntityNotBlessedException;
+import org.infogrid.mesh.IllegalPropertyTypeException;
+import org.infogrid.mesh.IllegalPropertyValueException;
+import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.mesh.NotRelatedException;
+import org.infogrid.mesh.RelatedAlreadyException;
+import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
-
+import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.TransactionException;
-
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.ColorValue;
@@ -39,34 +47,20 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimePeriodValue;
 import org.infogrid.model.primitives.TimeStampValue;
-import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
-
+import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.xml.MeshObjectSetProbeTags;
 import org.infogrid.probe.xml.XmlDOMProbe;
-
 import org.infogrid.util.logging.Log;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.awt.Color;
-import java.net.URISyntaxException;
-import org.infogrid.mesh.EntityBlessedAlreadyException;
-import org.infogrid.mesh.EntityNotBlessedException;
-import org.infogrid.mesh.IllegalPropertyTypeException;
-import org.infogrid.mesh.IllegalPropertyValueException;
-import org.infogrid.mesh.IsAbstractException;
-import org.infogrid.mesh.NotRelatedException;
-import org.infogrid.mesh.RelatedAlreadyException;
-import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
-
 /**
- * Factors out common functionality for Atom and RSS feeds.
+ * Factors out common functionality for Web feed probes, such as Atom and RSS probes.
  */
 public abstract class AbstractFeedProbe
         implements
@@ -75,26 +69,42 @@ public abstract class AbstractFeedProbe
     private static final Log log = Log.getLogInstance( AbstractFeedProbe.class );
 
     /**
-     * Constructor for subclasses only.
+     * Private constructor for subclasses only.
      */
     protected AbstractFeedProbe()
     {
     }
     
     /**
-     * Invoked by subclasses to instantiate the InfoGrid-specific extensions on RSS/Atom feeds.
+     * Invoked by subclasses to instantiate the InfoGrid-specific extensions on either the RSS/Atom feeds themselves
+     * or the feed elements.
      *
-     * @param top the top DOM node of the feed (channel in RSS, feed in Atom)
+     * @param dataSourceIdentifier identifier of the data source being read
+     * @param theDocument the XML document being read
+     * @param here the current Element
+     * @param current the NetMeshObject for which the InfoGrid-specific extensions are instantiated
+     * @throws TransactionException should never be thrown
+     * @throws NotPermittedException should never be thrown
+     * @throws org.infogrid.probe.ProbeException.SyntaxError a syntax error was found
+     * @throws URISyntaxException an identifier had illegal syntax
+     * @throws IsAbstractException a MeshType was agstract and could not be instantiated
+     * @throws EntityBlessedAlreadyException thrown if a NetMeshObject was blessed with an EntityType already
+     * @throws EntityNotBlessedException thrown if a NetMeshObject needed to be blessed with an EntityType but was not
+     * @throws RelatedAlreadyException thrown if two NetMeshObjects were related already
+     * @throws RoleTypeBlessedAlreadyException thrown if a relationship between two NetMeshObject was already blessed with a RoleType
+     * @throws NotRelatedException thrown if a two NetMeshObjects were not related
+     * @throws IllegalPropertyTypeException thrown if a PropertyType could not be used with a NetMeshObject
+     * @throws IllegalPropertyValueException thrown if a PropertyValue could not be used with a NetMeshObject and a PropertyType
      */
     protected void handleInfoGridFeedExtensions(
-            NetMeshBaseIdentifier networkId,
-            Document          theDocument,
-            Element           here,
-            NetMeshObject     current )
+            NetMeshBaseIdentifier dataSourceIdentifier,
+            Document              theDocument,
+            Element               here,
+            NetMeshObject         current )
         throws
             TransactionException,
             NotPermittedException,
-            ProbeException,
+            ProbeException.SyntaxError,
             URISyntaxException,
             IsAbstractException,
             EntityBlessedAlreadyException,
@@ -102,15 +112,8 @@ public abstract class AbstractFeedProbe
             RelatedAlreadyException,
             RoleTypeBlessedAlreadyException,
             NotRelatedException,
-//            MeshObjectIdentifierNotUniqueException,
             IllegalPropertyTypeException,
             IllegalPropertyValueException
-//            TransactionException,
-//            NotPermittedException,
-//            ProbeException,
-//            IOException,
-//            ModuleException,
-//            URISyntaxException;
     {
         if( here == null ) {
             return;
@@ -162,12 +165,12 @@ public abstract class AbstractFeedProbe
                         PropertyType  type  = modelBase.findPropertyTypeByIdentifier(
                                 modelBase.getMeshTypeIdentifierFactory().fromExternalForm( typeString ));
 
-                        PropertyValue value = determinePropertyValue( networkId, type, realChild );
+                        PropertyValue value = determinePropertyValue( dataSourceIdentifier, type, realChild );
                         
                         current.setPropertyValue( type, value );
                         
                     } catch( MeshTypeWithIdentifierNotFoundException ex ) {
-                        throw new ProbeException.SyntaxError( networkId, ex );
+                        throw new ProbeException.SyntaxError( dataSourceIdentifier, ex );
                     }
                 }
 
@@ -188,15 +191,37 @@ public abstract class AbstractFeedProbe
     }
     
     /**
-     * Invoked by subclasses to instantiate the InfoGrid-specific extensions on RSS/Atom feeds.
+     * Invoked by subclasses to instantiate a feed object including any InfoGrid-specific extensions on the
+     * feed objects.
+     * 
+     * @param dataSourceIdentifier identifier of the data source, for error reporting
+     * @param theDocument the XML Document that is being parsed
+     * @param here the current XML Element
+     * @param identifier identifier of the NetMeshObject that needs to be created
+     * @param type the primary EntityType with which the new NetMeshObject shall be blessed
+     * @param freshMeshBase the StagingMeshBase in which to instantiate the NetMeshObject
+     * @return the newly instantiated feed object
+     * @throws TransactionException should never be thrown
+     * @throws NotPermittedException should never be thrown
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the identifier for the new NetMeshObject was not unique
+     * @throws org.infogrid.probe.ProbeException.SyntaxError a syntax error was found
+     * @throws URISyntaxException an identifier had illegal syntax
+     * @throws IsAbstractException a MeshType was agstract and could not be instantiated
+     * @throws EntityBlessedAlreadyException thrown if a NetMeshObject was blessed with an EntityType already
+     * @throws EntityNotBlessedException thrown if a NetMeshObject needed to be blessed with an EntityType but was not
+     * @throws RelatedAlreadyException thrown if two NetMeshObjects were related already
+     * @throws RoleTypeBlessedAlreadyException thrown if a relationship between two NetMeshObject was already blessed with a RoleType
+     * @throws NotRelatedException thrown if a two NetMeshObjects were not related
+     * @throws IllegalPropertyTypeException thrown if a PropertyType could not be used with a NetMeshObject
+     * @throws IllegalPropertyValueException thrown if a PropertyValue could not be used with a NetMeshObject and a PropertyType
      */
     protected NetMeshObject createExtendedInfoGridFeedEntryObject(
-            NetMeshBaseIdentifier networkId,
-            Document          theDocument,
-            Element           here,
-            MeshObjectIdentifier   identifier,
-            EntityType        type,
-            StagingMeshBase   mb )
+            NetMeshBaseIdentifier   dataSourceIdentifier,
+            Document                theDocument,
+            Element                 here,
+            NetMeshObjectIdentifier identifier,
+            EntityType              type,
+            StagingMeshBase         freshMeshBase )
         throws
             TransactionException,
             EntityNotBlessedException,
@@ -205,34 +230,36 @@ public abstract class AbstractFeedProbe
             NotRelatedException,
             NotPermittedException,
             MeshObjectIdentifierNotUniqueException,
-            ProbeException,
+            ProbeException.SyntaxError,
             URISyntaxException,
             IsAbstractException,
             EntityBlessedAlreadyException,
             IllegalPropertyTypeException,
             IllegalPropertyValueException
     {
-        NetMeshObject ret = mb.getMeshBaseLifecycleManager().createMeshObject( identifier, type );
+        NetMeshObject ret = freshMeshBase.getMeshBaseLifecycleManager().createMeshObject( identifier, type );
         
-        handleInfoGridFeedExtensions( networkId, theDocument, here, ret );
+        handleInfoGridFeedExtensions( dataSourceIdentifier, theDocument, here, ret );
         
         return ret;
     }
 
     /**
-     * Helper method to determine a PropertyValue encoded in the InfoGrid XML.
+     * Helper method to read a PropertyValue encoded in the InfoGrid XML.
      *
-     * @param current the NetMeshObject
+     * @param dataSourceIdentifier the dataSourceIdentifier of the data source, for error reporting
+     * @param type the PropertyType one of whose values is being read
      * @param here the enclosing DOM element
+     * @return the instantiated PropertyValue
+     * @throws org.infogrid.probe.ProbeException.SyntaxError thrown if a PropertyValue was formatted incorrectly
      */
     protected PropertyValue determinePropertyValue(
-            NetMeshBaseIdentifier networkId,
-            PropertyType      type,
-            Element           here )
+            NetMeshBaseIdentifier dataSourceIdentifier,
+            PropertyType          type,
+            Element               here    )
         throws
-            ProbeException
+            ProbeException.SyntaxError
     {
-        
         NodeList children = here.getChildNodes();
         for( int i=0 ; i<children.getLength() ; ++i ) {
             Node child = children.item( i );
@@ -252,6 +279,8 @@ public abstract class AbstractFeedProbe
                 
                 if( loadFrom != null ) {
                     PropertyValue ret = BlobValue.createByLoadingFrom( loadFrom, mime );
+                    return ret;
+
                 } else {                
                     String content = realChild.getTextContent();
 
@@ -261,11 +290,12 @@ public abstract class AbstractFeedProbe
                         ret = BlobValue.create( content, mime );
                     } else {
                         if( !content.startsWith( "x\'" ) || !content.endsWith( "\'" )) {
-                            throw new ProbeException.SyntaxError( networkId, "hex-encoded binary BlobValue must be encapsulated in x'...'", null );
+                            throw new ProbeException.SyntaxError( dataSourceIdentifier, "hex-encoded binary BlobValue must be encapsulated in x'...'", null    );
                         }
                         content = content.substring( 2, content.length()-1 );
                         ret = BlobValue.create( BlobValue.decodeHex( content ), mime );
-                    }                    
+                    }
+                    return ret;
                 }
                 
             } else if( MeshObjectSetProbeTags.BOOLEAN_VALUE_TAG.equals( localName )) {
@@ -294,7 +324,7 @@ public abstract class AbstractFeedProbe
                 
             } else if( MeshObjectSetProbeTags.ENUMERATED_VALUE_TAG.equals( localName )) {
                 if( !( type.getDataType() instanceof EnumeratedDataType )) {
-                    throw new ProbeException.SyntaxError( networkId, "Data type not an EnumeratedDataType: " + type, null );
+                    throw new ProbeException.SyntaxError( dataSourceIdentifier, "Data type not an EnumeratedDataType: " + type, null    );
                 }
                 EnumeratedDataType realType = (EnumeratedDataType) type.getDataType();
                 
@@ -397,6 +427,23 @@ public abstract class AbstractFeedProbe
         throw new IllegalArgumentException( "Invalid Property statement" );
     }
 
+    /**
+     * Establish a relationship between a current NetMeshObject with a partner NetMeshObject, blessed with the appropriate
+     * RoleTypes.
+     * 
+     * @param current the current NetMeshObject
+     * @param partnerId String form of the Identifier for the partner NetMeshObject
+     * @param here the XML DOM element containing the description of the relationship
+     * @throws TransactionException should never be thrown
+     * @throws URISyntaxException an dataSourceIdentifier was misformed
+     * @throws RelatedAlreadyException thrown if the two NetMeshObjects were related already
+     * @throws RoleTypeBlessedAlreadyException thrown if the relationship between the two NetMeshObject was already blessed with this RoleType
+     * @throws EntityNotBlessedException thrown if the relationship cannot be blessed with a RoleType
+     *         because one of the NetMeshObject was not blessed with a required type
+     * @throws NotRelatedException should never be thrown
+     * @throws IsAbstractException thrown if a RoleType is abstract and cannot be instantiated
+     * @throws NotPermittedException should never be thrown
+     */
     protected void establishRelationship(
             NetMeshObject current,
             String        partnerId,
@@ -491,7 +538,7 @@ public abstract class AbstractFeedProbe
  
     /**
      * Helper method to obtain an attribute value in a child tag with a particular tag name.
-     * This uses the same algorithm as getChildNodeValue to find the respective node.
+     * This uses the same algorithm as {@link #getChildNodeValue} to find the respective node.
      *
      * @param node the DOM node
      * @param tag the tag name of the child node

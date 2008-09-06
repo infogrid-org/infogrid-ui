@@ -14,20 +14,17 @@
 
 package org.infogrid.scene;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetListener;
 import org.infogrid.mesh.set.active.MeshObjectAddedEvent;
 import org.infogrid.mesh.set.active.MeshObjectRemovedEvent;
 import org.infogrid.mesh.set.active.OrderedActiveMeshObjectSetReorderedEvent;
-
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
-
 import org.infogrid.util.logging.Log;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 
 /**
  * Abstract superclass for objects that create dependent Scenes based on some event. This

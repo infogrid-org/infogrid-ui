@@ -18,12 +18,11 @@ import org.infogrid.probe.feeds.TEST.atom.AtomTest1;
 import org.infogrid.probe.feeds.TEST.atom.AtomTest2;
 import org.infogrid.probe.feeds.TEST.rss.RssTest1;
 import org.infogrid.probe.feeds.TEST.rss.RssTest2;
-
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- * Tests the Feed Probes.
+ * Runs all tests.
  */
 public class AllTests
         extends
