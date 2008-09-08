@@ -26,7 +26,6 @@ import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RoleType;
-import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
@@ -36,7 +35,7 @@ import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 
 /**
- * Superclass for all tests in this package.
+ * Factors out common functionality for the tests in this package.
  */
 public abstract class AbstractXprisoTest
         extends
@@ -44,11 +43,11 @@ public abstract class AbstractXprisoTest
 {
     /**
      * Constructor.
+     * 
+     * @param testClass the class to be tested
      */
     protected AbstractXprisoTest(
             Class testClass )
-        throws
-            MeshTypeNotFoundException
     {
         super( localFileName( testClass, "/ResourceHelper" ),
                localFileName( testClass, "/Log.properties" ));
@@ -63,6 +62,7 @@ public abstract class AbstractXprisoTest
      * @param two second replica to compare
      * @param msg message to print when replicas' properties aren't equal
      * @return true if check passed
+     * @throws Exception all kinds of things can go wrong in tests
      */
     protected boolean checkPropertiesReplication(
             NetMeshObject one,
@@ -115,6 +115,7 @@ public abstract class AbstractXprisoTest
      * @param two second replica to compare
      * @param msg message to print when neighbors aren't equal
      * @return true if check passed
+     * @throws NotRelatedException all kinds of things can go wrong in tests
      */
     protected boolean checkNeighborsReplication(
             NetMeshObject one,
@@ -148,7 +149,7 @@ public abstract class AbstractXprisoTest
     }
 
     /**
-     * Check the position of the Proxies
+     * Check the position of the Proxies.
      *
      * @param obj the NetMeshObject whose proxies are checked
      * @param proxiesTowards the NetMeshBases to which the proxies are supposed to be pointing

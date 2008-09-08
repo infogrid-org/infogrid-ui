@@ -52,7 +52,7 @@ public class WritableProbeTest2
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public void run()
         throws
@@ -244,7 +244,7 @@ public class WritableProbeTest2
         super.run( cases );
     }
     
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -282,7 +282,7 @@ public class WritableProbeTest2
      * Constructor.
      *
      * @param args the command-line arguments
-     * @throws Exception many kinds of things can happen in a test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public WritableProbeTest2(
             String [] args )
@@ -305,7 +305,7 @@ public class WritableProbeTest2
     protected static ChangeSet theChangeSet;
     
     /**
-     * Abstract Probe class for this set of tests
+     * Abstract Probe class for this set of tests.
      */
     public abstract static class AbstractWritableTestProbe
         implements
@@ -360,6 +360,7 @@ public class WritableProbeTest2
          */
         protected EntityType theNextValue = OLD_VALUE;
     }
+
     /**
      * The non-Writable Probe class.
      */

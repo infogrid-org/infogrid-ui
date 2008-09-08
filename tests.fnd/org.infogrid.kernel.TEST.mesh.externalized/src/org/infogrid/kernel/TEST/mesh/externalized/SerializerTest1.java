@@ -14,7 +14,9 @@
 
 package org.infogrid.kernel.TEST.mesh.externalized;
 
-
+import com.sun.org.apache.xerces.internal.util.XMLChar;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanDataType;
@@ -45,10 +47,6 @@ import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.model.primitives.externalized.xml.PropertyValueXmlEncoder;
 import org.infogrid.util.logging.Log;
 
-import com.sun.org.apache.xerces.internal.util.XMLChar;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-
 /**
  * Tests PropertyValue serialization and deserialization.
  *
@@ -60,7 +58,9 @@ public class SerializerTest1
             AbstractSerializerTest
 {
     /**
-     * Run the test
+     * Run the test.
+     * 
+     * @throws Exception all sorts of things may go wrong in a test
      */
     public void run()
             throws
@@ -143,10 +143,11 @@ public class SerializerTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws all sorts of things may go wrong in a test
+     */
     public SerializerTest1(
             String [] args )
         throws
@@ -403,7 +404,7 @@ public class SerializerTest1
                     } )
     };
 
-   /**
+    /**
      * The test cases for BlobValue
      */
     protected static byte [] testBytesShort = new byte[ 17 ]; // one more than 16
@@ -448,7 +449,7 @@ public class SerializerTest1
                 } ),
     };
 
-   /**
+    /**
      * The test cases for TimeStampValue.
      */
     protected static TestCase [] timeStampValueTestData = new TestCase[] {
@@ -483,7 +484,7 @@ public class SerializerTest1
             } )
     };
 
-   /**
+    /**
      * The test cases for TimeStampValue.
      */
     protected static TestCase [] timePeriodValueTestData = new TestCase[] {
@@ -536,9 +537,8 @@ public class SerializerTest1
             timePeriodValueTestData
     };
 
-
     /**
-     * the serializer that we are testing
+     * The serializer that we are testing
      */
     protected PropertyValueXmlEncoder theSerializer = new PropertyValueXmlEncoder();
 
@@ -550,6 +550,9 @@ public class SerializerTest1
     {
         /**
          * Constructor.
+         * 
+         * @param type the DataType to test
+         * @param values the PropertyValues to be tested with this DataType.
          */
         public TestCase(
                 DataType         type,
@@ -579,6 +582,8 @@ public class SerializerTest1
     {
         /**
          * Constructor.
+         * 
+         * @param type the EnumeratedDataType to test, which also defines the PropertyValues
          */
         public EnumeratedTestCase(
                 EnumeratedDataType type )

@@ -17,7 +17,7 @@ package org.infogrid.kernel.TEST.mesh.externalized;
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- * Tests the externalization of MeshObjectIdentifiers and PropertyValues.
+ * Runs all tests in this module.
  */
 public abstract class AllTests
         extends

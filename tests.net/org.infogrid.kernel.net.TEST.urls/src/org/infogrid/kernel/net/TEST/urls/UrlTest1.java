@@ -31,7 +31,6 @@ import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
-
 /**
  * Tests conversion of NetMeshObjectIdentifiers into URLs.
  */
@@ -42,7 +41,7 @@ public class UrlTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong in a test
      */
     public void run()
         throws
@@ -108,7 +107,7 @@ public class UrlTest1
                 "obj2_mb1_different_nonDefault is wrong" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -146,7 +145,7 @@ public class UrlTest1
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all kinds of things may happen during tests
+     * @throws Exception all sorts of things may go wrong in a test
      */
     public UrlTest1(
             String [] args )

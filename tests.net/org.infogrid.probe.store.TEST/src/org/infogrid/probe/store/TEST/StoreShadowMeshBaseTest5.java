@@ -136,7 +136,7 @@ public class StoreShadowMeshBaseTest5
         checkCondition( home2.isBlessedBy( TestSubjectArea.AA ), "Home object 2 incorrectly not blessed" );
     }
         
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

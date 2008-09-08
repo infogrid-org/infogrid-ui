@@ -30,7 +30,7 @@ import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests expiration of MeshObjects in the context of Shadows.
+ * Tests expiration of MeshObjects in the context of ShadowMeshBases.
  */
 public class ProbeTest6
         extends
@@ -39,7 +39,7 @@ public class ProbeTest6
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -144,7 +144,7 @@ public class ProbeTest6
         checkEquals( base.getAllShadowMeshBases().size(), 0, "Wrong number of shadows after second probe call" );
     }
     
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -182,7 +182,7 @@ public class ProbeTest6
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all kinds of things can happen in a test
+     * @throws Exception all sorts of things may happen during a test
      */
     public ProbeTest6(
             String [] args )

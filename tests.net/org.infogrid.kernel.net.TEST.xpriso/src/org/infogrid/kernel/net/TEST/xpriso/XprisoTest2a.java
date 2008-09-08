@@ -40,7 +40,7 @@ public class XprisoTest2a
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws
@@ -93,7 +93,7 @@ public class XprisoTest2a
         checkProxies( obj2_mb3, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj2_mb3 has wrong proxies" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -131,7 +131,7 @@ public class XprisoTest2a
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all kinds of things can go wrong in tests
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public XprisoTest2a(
             String [] args )

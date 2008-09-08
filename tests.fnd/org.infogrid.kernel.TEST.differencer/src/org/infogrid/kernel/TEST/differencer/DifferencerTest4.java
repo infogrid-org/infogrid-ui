@@ -125,7 +125,7 @@ public class DifferencerTest4
         }
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

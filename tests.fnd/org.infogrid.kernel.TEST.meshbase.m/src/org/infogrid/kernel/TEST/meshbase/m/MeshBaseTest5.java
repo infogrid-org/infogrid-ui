@@ -14,22 +14,19 @@
 
 package org.infogrid.kernel.TEST.meshbase.m;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-
 /**
- * This tests that unrelating MeshObjects creates the right events.
+ * Tests that unrelating MeshObjects creates the right events.
  */
 public class MeshBaseTest5
         extends
@@ -38,7 +35,7 @@ public class MeshBaseTest5
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -117,10 +114,11 @@ public class MeshBaseTest5
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public MeshBaseTest5(
             String [] args )
         throws
@@ -145,11 +143,6 @@ public class MeshBaseTest5
     }
 
     /**
-     * The ModelBase.
-     */
-    protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-
-    /**
      * The MeshBase for the test.
      */
     protected MeshBase theMeshBase;
@@ -164,12 +157,22 @@ public class MeshBaseTest5
             implements
                 PropertyChangeListener
     {
+        /**
+         * Event callback.
+         * 
+         * @param event the event
+         */
         public void propertyChange(
                 PropertyChangeEvent event )
         {
             theEvents.add( event );
         }
         
+        /**
+         * Convert to String, for debugging.
+         * 
+         * @return String representation
+         */
         @Override
         public String toString()
         {
@@ -182,6 +185,9 @@ public class MeshBaseTest5
             return buf.toString();
         }
 
+        /**
+         * The received events.
+         */
         protected ArrayList<PropertyChangeEvent> theEvents = new ArrayList<PropertyChangeEvent>();
     }
 }

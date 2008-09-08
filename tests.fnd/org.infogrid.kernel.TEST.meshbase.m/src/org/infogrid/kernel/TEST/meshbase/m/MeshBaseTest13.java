@@ -23,8 +23,6 @@ import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.RelationshipType;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -38,14 +36,12 @@ public class MeshBaseTest13
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
             Exception
     {
-        ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-
         EntityType       typeAA = theModelBase.findEntityType( "org.infogrid.model.Test", null, "AA" );
         EntityType       typeB  = theModelBase.findEntityType( "org.infogrid.model.Test", null, "B" );
         RelationshipType typeR  = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "R" );
@@ -55,8 +51,6 @@ public class MeshBaseTest13
         //
 
         log.info( "Creating MeshBase" );
-
-        long t1 = System.currentTimeMillis();
 
         MeshBase theMeshBase = MMeshBase.create(
                 MeshBaseIdentifier.create( "MeshBase" ), 
@@ -174,10 +168,11 @@ public class MeshBaseTest13
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseTest13(
             String [] args )
         throws

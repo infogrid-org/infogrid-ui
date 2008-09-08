@@ -129,7 +129,7 @@ public class StoreShadowMeshBaseTest6
         checkCondition( home2.isBlessedBy( TestSubjectArea.AA ), "Home object 2 not blessed" );
     }
         
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

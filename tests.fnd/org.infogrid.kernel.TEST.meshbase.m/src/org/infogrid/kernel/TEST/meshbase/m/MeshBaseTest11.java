@@ -21,8 +21,6 @@ import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
 
@@ -46,16 +44,14 @@ public class MeshBaseTest11
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
             Exception
     {
-        ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-        MeshBase  theMeshBase  = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase" ), theModelBase, null, rootContext );
-
-        MeshBaseLifecycleManager life = theMeshBase.getMeshBaseLifecycleManager();
+        MeshBase                 theMeshBase = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase" ), theModelBase, null, rootContext );
+        MeshBaseLifecycleManager life        = theMeshBase.getMeshBaseLifecycleManager();
 
         //
         
@@ -191,10 +187,11 @@ public class MeshBaseTest11
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseTest11(
             String [] args )
         throws

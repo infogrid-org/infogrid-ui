@@ -184,7 +184,7 @@ public class StoreShadowMeshBaseTest8
         checkCondition( foundInShadow2.isBlessedBy( TestSubjectArea.AA ), "Not blessed correctly in shadow" );
     }
         
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

@@ -20,7 +20,6 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.AclBasedSecurity.AclBasedSecuritySubjectArea;
 import org.infogrid.util.logging.Log;
 
-
 /**
  * Tests that only owners can assign new owners to MeshObjects.
  */
@@ -188,10 +187,11 @@ public class MeshBaseSecurityTest2
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseSecurityTest2(
             String [] args )
         throws

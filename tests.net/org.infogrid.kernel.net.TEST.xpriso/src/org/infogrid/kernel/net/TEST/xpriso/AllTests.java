@@ -17,7 +17,7 @@ package org.infogrid.kernel.net.TEST.xpriso;
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- *
+ * Runs all tests in this package.
  */
 public class AllTests
         extends

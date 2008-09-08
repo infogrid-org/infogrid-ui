@@ -52,7 +52,7 @@ public class WritableProbeTest4
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public void run()
         throws
@@ -274,7 +274,7 @@ public class WritableProbeTest4
         super.run( cases );
     }
     
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -312,7 +312,7 @@ public class WritableProbeTest4
      * Constructor.
      *
      * @param args the command-line arguments
-     * @throws Exception many kinds of things can happen in a test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public WritableProbeTest4(
             String [] args )

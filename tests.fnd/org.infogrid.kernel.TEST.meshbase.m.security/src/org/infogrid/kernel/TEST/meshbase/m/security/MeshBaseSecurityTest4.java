@@ -32,7 +32,7 @@ public class MeshBaseSecurityTest4
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -136,10 +136,11 @@ public class MeshBaseSecurityTest4
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseSecurityTest4(
             String [] args )
         throws

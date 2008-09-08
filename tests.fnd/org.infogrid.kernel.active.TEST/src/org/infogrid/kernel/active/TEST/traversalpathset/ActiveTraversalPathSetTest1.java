@@ -25,7 +25,7 @@ import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests the TraversalActiveTraversalPathSet.
+ * Tests the TraversalActiveTraversalPathSet over a sequence of two RoleTypes.
  */
 public class ActiveTraversalPathSetTest1
     extends

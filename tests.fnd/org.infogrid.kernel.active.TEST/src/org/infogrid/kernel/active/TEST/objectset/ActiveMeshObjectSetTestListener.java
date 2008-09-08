@@ -14,6 +14,9 @@
 
 package org.infogrid.kernel.active.TEST.objectset;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetListener;
 import org.infogrid.mesh.set.active.MeshObjectAddedEvent;
@@ -23,10 +26,6 @@ import org.infogrid.meshbase.transaction.MeshObjectNeighborChangeEvent;
 import org.infogrid.meshbase.transaction.MeshObjectPropertyChangeEvent;
 import org.infogrid.meshbase.transaction.MeshObjectRoleChangeEvent;
 import org.infogrid.util.logging.Log;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
 /**
  * Receive and track callbacks in ActiveMeshObjectSetTests.
@@ -154,6 +153,8 @@ public class ActiveMeshObjectSetTestListener
 
     /**
      * ActiveMeshObjectSetListener interface method.
+     * 
+     * @param event the event
      */
     public void orderedMeshObjectSetReordered(
             OrderedActiveMeshObjectSetReorderedEvent event )

@@ -49,7 +49,7 @@ public class ProbeTest8
     /**
      * Run the test.
      * 
-     * @throws Exception all kinds of things can go wrong in tests
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -187,7 +187,7 @@ public class ProbeTest8
         return ret;
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -225,7 +225,7 @@ public class ProbeTest8
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all sorts of things may go wrong in a test
+     * @throws Exception all sorts of things may happen during a test
      */
     public ProbeTest8(
             String [] args )

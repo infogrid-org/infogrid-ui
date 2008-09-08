@@ -14,6 +14,12 @@
 
 package org.infogrid.probe.TEST;
 
+import java.io.File;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.IterableMeshBaseDifferencer;
@@ -22,11 +28,12 @@ import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.Transaction;
-import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.model.primitives.StringValue;
-import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.model.Test.TestSubjectArea;
+import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.manager.PassiveProbeManager;
 import org.infogrid.probe.manager.m.MPassiveProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
@@ -34,16 +41,8 @@ import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
 import org.infogrid.probe.shadow.m.MShadowMeshBaseFactory;
 import org.infogrid.util.logging.Log;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.probe.m.MProbeDirectory;
-
 /**
- * Tests the reading of file probetest1.xml.
+ * Tests reading file probetest1.xml via the probe framework.
  */
 public class ProbeTest1
         extends
@@ -52,7 +51,7 @@ public class ProbeTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -127,7 +126,7 @@ public class ProbeTest1
         }
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -165,6 +164,7 @@ public class ProbeTest1
      * Constructor.
      *
      * @param args the command-line arguments
+     * @throws Exception all sorts of things may happen during a test
      */
     public ProbeTest1(
             String [] args )

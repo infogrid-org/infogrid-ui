@@ -40,7 +40,7 @@ public class XprisoTest2b
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -93,7 +93,7 @@ public class XprisoTest2b
         checkProxies( obj2_mb3, new NetMeshBase[] { mb2 },      mb2,  mb2,  "obj2_mb3 has wrong proxies" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

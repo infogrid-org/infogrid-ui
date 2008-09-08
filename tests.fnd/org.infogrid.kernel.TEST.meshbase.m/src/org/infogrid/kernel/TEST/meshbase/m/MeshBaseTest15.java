@@ -25,8 +25,6 @@ import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.StringValue;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -39,7 +37,7 @@ public class MeshBaseTest15
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -121,10 +119,11 @@ public class MeshBaseTest15
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseTest15(
             String [] args )
         throws
@@ -147,11 +146,6 @@ public class MeshBaseTest15
     {
         theMeshBase.die();
     }
-
-    /**
-     * The ModelBase.
-     */
-    protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
 
     /**
      * The MeshBase for the test.

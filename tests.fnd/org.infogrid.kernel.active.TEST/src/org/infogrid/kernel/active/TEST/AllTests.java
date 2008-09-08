@@ -28,7 +28,7 @@ import org.infogrid.kernel.active.TEST.traversalpathset.ActiveTraversalPathSetTe
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- * Tests ActiveMeshObjectSet and ActiveTraversalPathSet.
+ * Runs all ActiveMeshObjectSetTests and ActiveTraversalPathSetTests.
  */
 public class AllTests
         extends

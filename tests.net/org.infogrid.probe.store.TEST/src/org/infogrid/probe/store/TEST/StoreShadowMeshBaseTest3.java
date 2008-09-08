@@ -105,7 +105,7 @@ public class StoreShadowMeshBaseTest3
         checkEquals( others2.size(), 2, "wrong number of neighbors found" );
     }
         
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

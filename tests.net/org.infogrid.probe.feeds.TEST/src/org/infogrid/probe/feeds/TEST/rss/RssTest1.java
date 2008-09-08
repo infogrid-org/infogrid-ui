@@ -85,7 +85,7 @@ public class RssTest1
         checkEquals( entry11.getPropertyValue( FeedsSubjectArea.FEEDITEM_TITLE ), BlobValue.create( "This entry title 1 is plain text", "text/plain" ), "wrong entry title" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

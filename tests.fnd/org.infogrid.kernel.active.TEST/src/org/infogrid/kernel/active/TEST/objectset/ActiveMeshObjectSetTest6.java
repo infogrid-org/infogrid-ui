@@ -25,7 +25,7 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests CompositeActiveMeshObjectSet.
+ * Tests CompositeActiveMeshObjectSet as a union of two TraversalActiveMeshObjectSets.
  */
 public class ActiveMeshObjectSetTest6
     extends

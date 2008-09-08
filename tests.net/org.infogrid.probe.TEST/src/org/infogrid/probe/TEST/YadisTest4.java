@@ -14,6 +14,8 @@
 
 package org.infogrid.probe.TEST;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import org.infogrid.httpd.HttpEntity;
 import org.infogrid.httpd.HttpEntityResponse;
 import org.infogrid.httpd.HttpErrorResponse;
@@ -24,9 +26,6 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 
 /**
  * Tests pseudo-XRDS discovery via the OpenID link rel tags.
@@ -56,7 +55,7 @@ public class YadisTest4
         checkYadisResults( home, 1 );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -91,8 +90,11 @@ public class YadisTest4
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception thrown if an Exception occurred during the test
+     */
     public YadisTest4(
             String [] args )
         throws
@@ -120,8 +122,6 @@ public class YadisTest4
         public HttpResponse createResponse(
                 HttpRequest request )
         {
-            String accept = request.getHttpParameters().get( "Accept" );
-            
             if( "GET".equals( request.getMethod() ) && "/".equals( request.getRelativeBaseUri() )) {             
                 HttpEntity entity = new HttpEntity() {
                         public boolean canRead() {

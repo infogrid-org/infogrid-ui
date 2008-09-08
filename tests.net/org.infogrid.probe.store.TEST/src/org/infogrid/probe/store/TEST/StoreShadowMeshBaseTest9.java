@@ -147,7 +147,7 @@ public class StoreShadowMeshBaseTest9
         checkEquals( found2.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_PROBERUNCOUNTER ), IntegerValue.create( 2 ), "Wrong ProbeRunCounter" );
     }
         
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

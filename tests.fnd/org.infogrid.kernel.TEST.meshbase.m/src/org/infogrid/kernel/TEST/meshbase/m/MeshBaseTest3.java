@@ -14,6 +14,10 @@
 
 package org.infogrid.kernel.TEST.meshbase.m;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
@@ -24,17 +28,10 @@ import org.infogrid.model.Test.B;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.StringValue;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import org.infogrid.mesh.IllegalPropertyTypeException;
-
 /**
- * This tests the firing of PropertyChangeEvents upon the changing properties, and blessing of MeshObjects.
+ * Tests the firing of PropertyChangeEvents upon the changing properties, and blessing of MeshObjects.
  */
 public class MeshBaseTest3
         extends
@@ -43,7 +40,7 @@ public class MeshBaseTest3
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -51,8 +48,8 @@ public class MeshBaseTest3
     {
         log.info( "Looking up MeshTypes" );
 
-        EntityType typeB  = theModelBase.findEntityType(   "org.infogrid.model.Test", null, "B" );
-        PropertyType ptU  = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "B",  "U" );
+        EntityType   typeB = theModelBase.findEntityType(   "org.infogrid.model.Test", null, "B" );
+        PropertyType ptU   = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "B",  "U" );
 
         //
         
@@ -194,10 +191,11 @@ public class MeshBaseTest3
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseTest3(
             String [] args )
         throws
@@ -222,11 +220,6 @@ public class MeshBaseTest3
     }
 
     /**
-     * The ModelBase.
-     */
-    protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-
-    /**
      * The MeshBase for the test.
      */
     protected MeshBase theMeshBase;
@@ -241,12 +234,20 @@ public class MeshBaseTest3
             implements
                 PropertyChangeListener
     {
+        /**
+         * Event callback.
+         * 
+         * @param event the vent
+         */
         public void propertyChange(
                 PropertyChangeEvent event )
         {
             theEvents.add( event );
         }
         
+        /**
+         * The received events.
+         */
         protected ArrayList<PropertyChangeEvent> theEvents = new ArrayList<PropertyChangeEvent>();
     }
 }

@@ -30,7 +30,7 @@ public class EquivalenceSetComparatorTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -196,10 +196,11 @@ public class EquivalenceSetComparatorTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things can go wrong in a test
+     */
     public EquivalenceSetComparatorTest1(
             String [] args )
         throws
@@ -221,6 +222,8 @@ public class EquivalenceSetComparatorTest1
     {
         /**
          * Constructor.
+         * 
+         * @param s the underlying String
          */
         public TestMeshObjectIdentifier(
                 String s )
@@ -306,6 +309,8 @@ public class EquivalenceSetComparatorTest1
 
         /**
          * Test for equality.
+         * 
+         * @param other the Object to compare with
          */
         @Override
         public boolean equals(
@@ -320,7 +325,9 @@ public class EquivalenceSetComparatorTest1
             return ret;
         }
         
+        /**
+         * The underlying String.
+         */
         protected String theString;
-                
     }
 }

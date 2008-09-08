@@ -14,6 +14,7 @@
 
 package org.infogrid.kernel.net.TEST.xpriso;
 
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBase;
@@ -21,8 +22,6 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.util.logging.Log;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Tests when a remote object cannot be accessed because it does not exist.
@@ -35,7 +34,7 @@ public class XprisoTest1a
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -52,7 +51,7 @@ public class XprisoTest1a
         checkCondition( missing_mb2 == null, "Object was unexpectedly found" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -87,10 +86,11 @@ public class XprisoTest1a
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all kinds of things can go wrong in tests
+     */
     public XprisoTest1a(
             String [] args )
         throws

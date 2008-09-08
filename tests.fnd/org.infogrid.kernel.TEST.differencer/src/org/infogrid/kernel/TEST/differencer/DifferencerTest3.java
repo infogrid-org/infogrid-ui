@@ -115,7 +115,7 @@ public class DifferencerTest3
         }
      }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

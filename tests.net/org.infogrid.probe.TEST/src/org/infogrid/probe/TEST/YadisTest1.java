@@ -14,6 +14,8 @@
 
 package org.infogrid.probe.TEST;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import org.infogrid.httpd.HttpEntity;
 import org.infogrid.httpd.HttpEntityResponse;
 import org.infogrid.httpd.HttpErrorResponse;
@@ -25,9 +27,6 @@ import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 /**
  * Tests XRDS discovery via MIME type.
  */
@@ -38,7 +37,7 @@ public class YadisTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -56,7 +55,7 @@ public class YadisTest1
         checkYadisResults( home, 2 );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -91,8 +90,11 @@ public class YadisTest1
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may happen during a test
+     */
     public YadisTest1(
             String [] args )
         throws

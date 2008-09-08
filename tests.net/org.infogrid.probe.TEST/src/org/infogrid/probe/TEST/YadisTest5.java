@@ -74,7 +74,7 @@ public class YadisTest5
         }
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -109,8 +109,11 @@ public class YadisTest5
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception thrown if an Exception occurred during the test
+     */
     public YadisTest5(
             String [] args )
         throws

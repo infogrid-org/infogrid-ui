@@ -36,7 +36,7 @@ public class XprisoTest5
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -114,7 +114,7 @@ public class XprisoTest5
         
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -149,10 +149,11 @@ public class XprisoTest5
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all kinds of things can go wrong in tests
+     */
     public XprisoTest5(
             String [] args )
         throws

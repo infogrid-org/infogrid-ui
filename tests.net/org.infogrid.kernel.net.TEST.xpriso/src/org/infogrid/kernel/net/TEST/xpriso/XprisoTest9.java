@@ -14,6 +14,7 @@
 
 package org.infogrid.kernel.net.TEST.xpriso;
 
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBase;
@@ -26,8 +27,6 @@ import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.util.logging.Log;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
   * <p>Tests the expiration part of the replication mechanism.</p>
@@ -43,7 +42,7 @@ public class XprisoTest9
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -116,7 +115,7 @@ public class XprisoTest9
         checkCondition( obj1_mb2.getIsDead(), "obj1_mb2 not dead" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -151,10 +150,11 @@ public class XprisoTest9
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all kinds of things can go wrong in tests
+     */
     public XprisoTest9(
             String [] args )
         throws

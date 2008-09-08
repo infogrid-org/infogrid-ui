@@ -16,19 +16,13 @@ package org.infogrid.kernel.TEST.meshbase.m;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
-
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
-
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.RelationshipType;
-
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
-
 import org.infogrid.util.logging.Log;
 
 /**
@@ -41,7 +35,7 @@ public class MeshBaseTest9
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -49,7 +43,6 @@ public class MeshBaseTest9
     {
         EntityType       typeAA = theModelBase.findEntityType( "org.infogrid.model.Test", null, "AA" );
         EntityType       typeB  = theModelBase.findEntityType( "org.infogrid.model.Test", null, "B" );
-        RelationshipType typeR  = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "R" );
         RelationshipType typeRR = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "RR" );
 
         MeshBaseLifecycleManager life = theMeshBase.getMeshBaseLifecycleManager();
@@ -107,7 +100,7 @@ public class MeshBaseTest9
         checkEqualsOutOfSequence( new Object[] { a, c }, fromB1_aa.getMeshObjects(), "wrong destinations from B1 (all)" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -142,10 +135,11 @@ public class MeshBaseTest9
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseTest9(
             String [] args )
         throws
@@ -168,11 +162,6 @@ public class MeshBaseTest9
     {
         theMeshBase.die();
     }
-
-    /**
-     * The ModelBase.
-     */
-    protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
 
     /**
      * The MeshBase for the test.

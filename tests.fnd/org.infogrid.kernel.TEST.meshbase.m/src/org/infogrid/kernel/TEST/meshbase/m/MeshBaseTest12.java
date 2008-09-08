@@ -24,20 +24,18 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.SubjectArea;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
 
-
 /**
- * Tests the "common neighbors" functionality with RoleTypes
- *
+ * <p>Tests the "common neighbors" functionality with RoleTypes.</p>
+ * <pre>
  * obj1(AA) -R- obj2(B) -R- objCenter(AA) -R- obj4(B) -R- obj3(AA)
  *                             | (RR)
  *                           obj6(B)
  *                             | (R)
  *                           obj5(AA)
+ * </pre>
  */
 public class MeshBaseTest12
         extends
@@ -46,26 +44,24 @@ public class MeshBaseTest12
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
             Exception
     {
-        ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-        MeshBase  theMeshBase  = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase" ), theModelBase, null, rootContext );
-
-        MeshBaseLifecycleManager life = theMeshBase.getMeshBaseLifecycleManager();
+        MeshBase                 theMeshBase = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase" ), theModelBase, null, rootContext );
+        MeshBaseLifecycleManager life        = theMeshBase.getMeshBaseLifecycleManager();
 
         //
         
         log.info( "Looking up MeshTypes" );
 
-        SubjectArea sa = theModelBase.findSubjectArea( "org.infogrid.model.Test", null );
-        EntityType typeAA = theModelBase.findEntityType( sa, "AA" );
-        EntityType typeB  = theModelBase.findEntityType( sa, "B" );
-        RelationshipType typeR    = theModelBase.findRelationshipType( sa, "R" );
-        RelationshipType typeRR   = theModelBase.findRelationshipType( sa, "RR" );
+        SubjectArea      sa     = theModelBase.findSubjectArea( "org.infogrid.model.Test", null );
+        EntityType       typeAA = theModelBase.findEntityType( sa, "AA" );
+        EntityType       typeB  = theModelBase.findEntityType( sa, "B" );
+        RelationshipType typeR  = theModelBase.findRelationshipType( sa, "R" );
+        RelationshipType typeRR = theModelBase.findRelationshipType( sa, "RR" );
 
         //
         
@@ -217,10 +213,11 @@ public class MeshBaseTest12
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public MeshBaseTest12(
             String [] args )
         throws

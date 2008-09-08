@@ -55,7 +55,7 @@ public class ForwardReferenceTest2
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public void run()
         throws
@@ -136,8 +136,8 @@ public class ForwardReferenceTest2
     /**
      * Constructor.
      * 
-     * @param command-line arguments
-     * @throws Exception all kinds of things may happen in tests
+     * @param args command-line arguments
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public ForwardReferenceTest2(
             String [] args )

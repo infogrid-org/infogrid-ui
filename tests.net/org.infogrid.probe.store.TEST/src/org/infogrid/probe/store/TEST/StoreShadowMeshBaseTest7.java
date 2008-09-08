@@ -135,7 +135,7 @@ public class StoreShadowMeshBaseTest7
         checkEquals( theShadowProxyStore.size(), 1, "ShadowProxyStore content wrong" );
     }
         
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

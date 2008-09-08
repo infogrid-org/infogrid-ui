@@ -156,7 +156,7 @@ public class DifferencerTest9
         log.info( "Empty ChangeSet is " + theEmptyChangeSet );        
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

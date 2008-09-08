@@ -25,7 +25,8 @@ import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests TraversalActiveMeshObjectSet.
+ * Tests that TraversalActiveMeshObjectSet has set semantics (any object only contained once),
+ * even if multiple traversal paths lead to the same object.
  */
 public class ActiveMeshObjectSetTest5
     extends

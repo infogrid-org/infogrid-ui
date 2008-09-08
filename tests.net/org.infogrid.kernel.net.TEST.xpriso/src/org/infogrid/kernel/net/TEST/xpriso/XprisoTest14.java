@@ -14,6 +14,7 @@
 
 package org.infogrid.kernel.net.TEST.xpriso;
 
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -23,8 +24,6 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.util.logging.Log;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Tests moving the homeReplica around.
@@ -36,7 +35,7 @@ public class XprisoTest14
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -115,7 +114,7 @@ public class XprisoTest14
         checkProxies( obj_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj_mb2 has wrong proxies" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -153,7 +152,7 @@ public class XprisoTest14
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all sorts of things may happen during a test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public XprisoTest14(
             String [] args )

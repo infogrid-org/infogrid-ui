@@ -40,7 +40,7 @@ public class ShadowTest3
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -145,8 +145,11 @@ public class ShadowTest3
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may happen during a test
+     */
     public ShadowTest3(
             String [] args )
         throws

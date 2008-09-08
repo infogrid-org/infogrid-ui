@@ -46,7 +46,8 @@ import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests that ForwardReferences blessed with type X can resolve into MeshObjects that don't carry that type.
+ * Tests that ForwardReferences blessed with type X can resolve into MeshObjects that aren't
+ * blessed with type X.
  */
 public class ForwardReferenceTest4
         extends
@@ -55,7 +56,7 @@ public class ForwardReferenceTest4
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public void run()
         throws
@@ -136,7 +137,7 @@ public class ForwardReferenceTest4
      * Constructor.
      * 
      * @param args command-line arguments
-     * @throws Exception all kinds of things may happen in tests
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public ForwardReferenceTest4(
             String [] args )

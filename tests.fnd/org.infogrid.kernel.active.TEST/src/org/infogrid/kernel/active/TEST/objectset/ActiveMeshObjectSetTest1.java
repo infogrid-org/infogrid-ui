@@ -23,7 +23,7 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests TraversalActiveMeshObjectSet.
+ * Tests TraversalActiveMeshObjectSet contents and events, traversing over a single RoleType.
  */
 public class ActiveMeshObjectSetTest1
     extends

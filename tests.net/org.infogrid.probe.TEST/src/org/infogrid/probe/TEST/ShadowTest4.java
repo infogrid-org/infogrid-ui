@@ -43,7 +43,7 @@ import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
- * Relates a Shadow-producted MeshObject A to another MeshObject B outside of the Shadow,
+ * Relates a ShadowMeshBase-producted MeshObject A to another MeshObject B outside of the ShadowMeshBase,
  * and re-runs the Probe.
  */
 public class ShadowTest4
@@ -53,7 +53,7 @@ public class ShadowTest4
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -119,7 +119,7 @@ public class ShadowTest4
         
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -157,7 +157,7 @@ public class ShadowTest4
      * Constructor.
      *
      * @param args the command-line arguments
-     * @throws Exception all kinds of things may happen in a test
+     * @throws Exception all sorts of things may happen during a test
      */
     public ShadowTest4(
             String [] args )
@@ -222,38 +222,6 @@ public class ShadowTest4
             implements
                 ApiProbe
     {
-        /**
-         * Read from the API and instantiate corresponding MeshObjects.
-         * 
-         * @param dataSourceIdentifier identifies the data source that is being accessed
-         * @param coherenceSpecification the type of data coherence that is requested by the application. Probe
-         *         implementors may ignore this parameter, letting the Probe framework choose its own policy.
-         *         If the Probe chooses to define its own policy (considering or ignoring this parameter), the
-         *         Probe must bless the Probe's HomeObject with a subtype of ProbeUpdateSpecification (defined
-         *         in the <code>org.infogrid.model.Probe</code> Subject Area) that reflects the policy.
-         * @param mb the StagingMeshBase in which the corresponding MeshObjects are to be instantiated by the Probe
-         * @throws IsAbstractException thrown if an EntityType or a Relationship could not be instantiated because
-         *         it was abstract. Throwing this typically indicates a programming error.
-         * @throws EntityBlessedAlreadyException thrown if a MeshObject was incorrectly blessed twice with the same
-         *         EntityType. Throwing this typically indicates a programming error.
-         * @throws EntityNotBlessedException thrown if a MeshObject was not blessed with a required EntityType.
-         *         Throwing this typically indicates a programming error.
-         * @throws IllegalPropertyTypeException thrown if a MeshObject did not carry a PropertyType that it needed
-         *         to carry. Throwing this typically indicates a programming error.
-         * @throws IllegalPropertyValueException thrown if a PropertyValue was assigned to a property that was
-         *         outside of the allowed range. Throwing this typically indicates a programming error.
-         * @throws MeshObjectIdentifierNotUniqueException thrown if the Probe developer incorrectly
-         *         assigned duplicate MeshObjectsIdentifiers to created MeshObjects.
-         *         Throwing this typically indicates a programming error.
-         * @throws NotPermittedException thrown if an operation performed by the Probe was not permitted
-         * @throws NotRelatedException thrown if a relationship was supposed to be blessed, but the relationship
-         *         did not exist. Throwing this typically indicates a programming error.
-         * @throws RelatedAlreadyException thrown if the Probe developer incorrectly attempted to
-         *         relate two already-related MeshObjects. Throwing this typically indicates a programming error.
-         * @throws TransactionException this Exception is declared to make programming easier,
-         *         although actually throwing it would be a programming error. Throwing this typically indicates a programming error.
-         * @throws URISyntaxException thrown if a URI was constructed in an invalid way
-         */
         public void readFromApi(
                 NetMeshBaseIdentifier  dataSourceIdentifier,
                 CoherenceSpecification coherenceSpecification,

@@ -14,6 +14,8 @@
 
 package org.infogrid.kernel.TEST.meshbase.m;
 
+import java.lang.ref.WeakReference;
+import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotBlessedException;
@@ -33,9 +35,6 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
-import java.lang.ref.WeakReference;
-import org.infogrid.mesh.IllegalPropertyTypeException;
-
 /**
  * This tests the blessing of MeshObjects, unblessing, and Facade-based access. This does not test
  * relationships between MeshObjects.
@@ -47,7 +46,7 @@ public class MeshBaseTest2
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -238,10 +237,11 @@ public class MeshBaseTest2
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseTest2(
             String [] args )
         throws
@@ -264,11 +264,6 @@ public class MeshBaseTest2
     {
         theMeshBase.die();
     }
-
-    /**
-     * The ModelBase.
-     */
-    protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
 
     /**
      * The MeshBase for the test.

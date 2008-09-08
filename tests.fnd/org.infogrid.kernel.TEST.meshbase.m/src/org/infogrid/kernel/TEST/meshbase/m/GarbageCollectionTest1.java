@@ -14,6 +14,7 @@
 
 package org.infogrid.kernel.TEST.meshbase.m;
 
+import java.lang.ref.WeakReference;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
@@ -25,11 +26,7 @@ import org.infogrid.model.primitives.EnumeratedDataType;
 import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.RelationshipType;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Tests whether MeshBases are deallocated when not needed any more.
@@ -41,20 +38,18 @@ public class GarbageCollectionTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
-    public void run()
+     public void run()
         throws
             Exception
     {
-        ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-        
-        EntityType       typeAA = theModelBase.findEntityType( "org.infogrid.model.Test", null, "AA" );
-        EntityType       typeB  = theModelBase.findEntityType( "org.infogrid.model.Test", null, "B" );
-        RelationshipType typeR  = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "R" );
-        PropertyType     typeY  = theModelBase.findPropertyType( typeAA, "Y" );
-        PropertyType     typeZ  = theModelBase.findPropertyType( typeB,  "Z" );
-        EnumeratedDataType zType = (EnumeratedDataType) typeZ.getDataType();
+        EntityType         typeAA = theModelBase.findEntityType( "org.infogrid.model.Test", null, "AA" );
+        EntityType         typeB  = theModelBase.findEntityType( "org.infogrid.model.Test", null, "B" );
+        RelationshipType   typeR  = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "R" );
+        PropertyType       typeY  = theModelBase.findPropertyType( typeAA, "Y" );
+        PropertyType       typeZ  = theModelBase.findPropertyType( typeB,  "Z" );
+        EnumeratedDataType zType  = (EnumeratedDataType) typeZ.getDataType();
 
         //
         
@@ -200,10 +195,11 @@ public class GarbageCollectionTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public GarbageCollectionTest1(
             String [] args )
         throws

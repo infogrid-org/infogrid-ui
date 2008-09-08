@@ -16,26 +16,6 @@ package org.infogrid.probe.TEST;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
-import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.mesh.RelatedAlreadyException;
-import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.model.Test.TestSubjectArea;
-import org.infogrid.model.primitives.StringValue;
-import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
-import org.infogrid.probe.ApiProbe;
-import org.infogrid.probe.ProbeDirectory;
-import org.infogrid.probe.ProbeException;
-import org.infogrid.probe.StagingMeshBase;
-import org.infogrid.probe.manager.PassiveProbeManager;
-import org.infogrid.probe.manager.m.MPassiveProbeManager;
-import org.infogrid.probe.shadow.ShadowMeshBase;
-import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
-import org.infogrid.probe.shadow.m.MShadowMeshBaseFactory;
-import org.infogrid.util.logging.Log;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.regex.Pattern;
@@ -44,9 +24,28 @@ import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.IsAbstractException;
+import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
+import org.infogrid.mesh.RelatedAlreadyException;
+import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.StringValue;
+import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.module.ModuleException;
+import org.infogrid.probe.ApiProbe;
+import org.infogrid.probe.ProbeDirectory;
+import org.infogrid.probe.ProbeException;
+import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.m.MProbeDirectory;
+import org.infogrid.probe.manager.PassiveProbeManager;
+import org.infogrid.probe.manager.m.MPassiveProbeManager;
+import org.infogrid.probe.shadow.ShadowMeshBase;
+import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
+import org.infogrid.probe.shadow.m.MShadowMeshBaseFactory;
+import org.infogrid.util.logging.Log;
 
 /**
  * Tests exact and pattern-based URL matching.
@@ -58,7 +57,7 @@ public class ProbeMatchTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public void run()
         throws
@@ -96,7 +95,7 @@ public class ProbeMatchTest1
         checkEquals( meshBase3.getHomeObject().getPropertyValue( TestSubjectArea.A_X ), TestProbe3.class.getName(), "Wrong probe invoked for " + id3 );        
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -134,6 +133,7 @@ public class ProbeMatchTest1
      * Constructor.
      *
      * @param args the command-line arguments
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public ProbeMatchTest1(
             String [] args )
@@ -180,9 +180,9 @@ public class ProbeMatchTest1
     protected PassiveProbeManager theProbeManager1;
     
     /**
-     * The test Probe. This needs to be declared public otherwise the Probe framework cannot access it
+     * The abstract test Probe. This needs to be declared public otherwise the Probe framework cannot access it.
      */
-    public static abstract class TestProbe
+    static abstract class AbstractTestProbe
             implements
                 ApiProbe
     {
@@ -211,18 +211,27 @@ public class ProbeMatchTest1
         }
     }
 
+    /**
+     * Test Probe 1. This is just renamed from AbstractTestProbe.
+     */
     public static class TestProbe1
             extends
-                TestProbe
+                AbstractTestProbe
     {}
     
+    /**
+     * Test Probe 2. This is just renamed from AbstractTestProbe.
+     */
     public static class TestProbe2
             extends
-                TestProbe
+                AbstractTestProbe
     {}
 
+    /**
+     * Test Probe 3. This is just renamed from AbstractTestProbe.
+     */
     public static class TestProbe3
             extends
-                TestProbe
+                AbstractTestProbe
     {}
 }

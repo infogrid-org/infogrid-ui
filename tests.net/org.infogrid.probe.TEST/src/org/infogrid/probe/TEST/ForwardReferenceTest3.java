@@ -61,7 +61,7 @@ public class ForwardReferenceTest3
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public void run()
         throws
@@ -158,7 +158,7 @@ public class ForwardReferenceTest3
      * Constructor.
      * 
      * @param args command-line arguments
-     * @throws Exception all kinds of things may happen in tests
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public ForwardReferenceTest3(
             String [] args )
@@ -254,7 +254,7 @@ public class ForwardReferenceTest3
     }
 
     /**
-     * The Probe to the inner data feed. This always throws an exception
+     * The Probe to the inner data feed. This always throws an Exception.
      */
     public static class InnerTestApiProbe
             implements

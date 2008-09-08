@@ -22,7 +22,7 @@ import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 
 /**
- * Factors out common functionality of VCardProbeTests.
+ * Factors out common functionality of tests in this package.
  */
 public abstract class AbstractShadowEventTest
         extends

@@ -55,8 +55,7 @@ import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests that the right events are generated in the NetMeshBase when the data accessed
- * by the Probe changes.
+ * Tests that an ActiveMeshObjectSet gets updated correctly based on changes in data source read by a Probe.
  */
 public class ShadowEventTest1
         extends
@@ -65,7 +64,7 @@ public class ShadowEventTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong in a test
      */
     public void run()
         throws
@@ -182,8 +181,11 @@ public class ShadowEventTest1
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things can go wrong in a test
+     */
     public ShadowEventTest1(
             String [] args )
         throws
@@ -259,28 +261,6 @@ public class ShadowEventTest1
             implements
                 ApiProbe
     {
-        /**
-         * Read from the API and instantiate corresponding MeshObjects.
-         * 
-         * @param networkId the NetworkIdentifier that is being accessed
-         * @param coherenceSpecification the type of data coherence that is requested by the application. Probe
-         *         implementors may ignore this parameter, letting the Probe framework choose its own policy.
-         *         If the Probe chooses to define its own policy (considering or ignoring this parameter), the
-         *         Probe must bless the Probe's HomeObject with a subtype of ProbeUpdateSpecification (defined
-         *         in the <code>org.infogrid.model.Probe</code>) that reflects the policy.
-         * @param mb the StagingMeshBase in which the corresponding MeshObjects are instantiated by the Probe
-         * @throws IdentifierNotUniqueException thrown if the Probe developer incorrectly
-         *         assigned duplicate Identifiers to created MeshObjects
-         * @throws RelatedAlreadyException thrown if the Probe developer incorrectly attempted to
-         *         relate two already-related MeshObjects
-         * @throws TransactionException this Exception is declared to make programming easier,
-         *         although actually throwing it would be a programming error
-         * @throws NotPermittedException thrown if an operation performed by the Probe was not permitted
-         * @throws ProbeException a Probe error occurred per the possible subclasses defined in ProbeException
-         * @throws IOException an input/output error occurred during execution of the Probe
-         * @throws ModuleException thrown if a Module required by the Probe could not be loaded
-         * @throws URISyntaxException thrown if a URI was constructed in an invalid way
-         */
        public void readFromApi(
                 NetMeshBaseIdentifier  networkId,
                 CoherenceSpecification coherence,

@@ -96,7 +96,7 @@ public class StoreShadowMeshBaseTest4
         checkEquals( home2.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_PROBERUNCOUNTER ), IntegerValue.create( 4 ), "Wrong number of probe runs" );
     }
         
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

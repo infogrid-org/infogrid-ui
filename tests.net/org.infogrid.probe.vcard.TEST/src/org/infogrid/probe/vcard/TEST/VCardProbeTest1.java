@@ -72,7 +72,7 @@ public class VCardProbeTest1
            // 3 Phone numbers
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

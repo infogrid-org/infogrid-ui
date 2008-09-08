@@ -14,11 +14,10 @@
 
 package org.infogrid.probe.TEST;
 
+import java.util.ArrayList;
 import org.infogrid.probe.shadow.ShadowMeshBaseEvent;
 import org.infogrid.probe.shadow.ShadowMeshBaseListener;
 import org.infogrid.testharness.AbstractTest;
-
-import java.util.ArrayList;
 
 /**
  * Listen to Shadow events.
@@ -30,7 +29,7 @@ public class ProbeTestShadowListener
     /**
      * Constructor.
      *
-     * @param id identifying this particular listener
+     * @param id distinguishes this particular listener
      */
     public ProbeTestShadowListener(
             String id )
@@ -87,6 +86,8 @@ public class ProbeTestShadowListener
 
     /**
      * Add an event. This is factored out so we can easily set a breakpoint.
+     * 
+     * @param s String representing the event
      */
     protected void addEvent(
             String s )
@@ -130,7 +131,7 @@ public class ProbeTestShadowListener
     }
 
     /**
-     * identifier for this particular listener
+     * Distinguishes this particular listener.
      */
     protected String identifier;
     

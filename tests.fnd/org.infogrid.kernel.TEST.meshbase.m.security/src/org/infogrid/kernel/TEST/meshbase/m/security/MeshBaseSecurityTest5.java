@@ -173,7 +173,7 @@ public class MeshBaseSecurityTest5
 
         //
         
- /** This currently does not work. I'm not sure it should work.
+ /** This currently does not work. I'm not sure it should work. FIXME?
        log.info( "Testing deleter" );
         
         ThreadIdentityManager.setCaller( actorMayDelete );
@@ -247,10 +247,11 @@ public class MeshBaseSecurityTest5
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseSecurityTest5(
             String [] args )
         throws

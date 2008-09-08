@@ -48,7 +48,7 @@ public abstract class AbstractWritableProbeTest
      * Run the tests.
      *
      * @param testCases the test cases to run
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public void run(
             WritableProbeTestCase [] testCases )

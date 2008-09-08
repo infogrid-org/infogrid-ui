@@ -22,7 +22,7 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests the TraversalActiveTraversalPathSet.
+ * Tests a sequence of two TraversalActiveTraversalPathSets.
  */
 public class ActiveTraversalPathSetTest2
     extends

@@ -17,7 +17,7 @@ package org.infogrid.kernel.TEST.meshbase.m.security;
 import org.infogrid.testharness.AbstractTestGroup;
 
 /**
- * Tests the security aspects of the in-memory implementation of MeshBase.
+ * Runs all tests in this package.
  */
 public abstract class AllTests
         extends

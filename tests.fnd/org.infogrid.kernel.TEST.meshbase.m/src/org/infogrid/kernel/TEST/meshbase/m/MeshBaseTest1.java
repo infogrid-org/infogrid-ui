@@ -22,8 +22,6 @@ import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -36,16 +34,12 @@ public class MeshBaseTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
             Exception
     {
-        ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-
-        //
-
         log.info( "Creating MeshBase" );
 
         long t1 = System.currentTimeMillis();
@@ -160,10 +154,11 @@ public class MeshBaseTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public MeshBaseTest1(
             String [] args )
         throws

@@ -110,7 +110,7 @@ public class AtomTest2
         checkEquals( abc.getPropertyValue( TestSubjectArea.B_Z ), "Value3", "wrong property value" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

@@ -19,7 +19,7 @@ import org.infogrid.testharness.AbstractTestGroup;
 import org.infogrid.testharness.AbstractTestGroup.TestSpec;
 
 /**
- * Tests the Probe framework.
+ * Runs all tests in this package.
  */
 public class AllTests
         extends
@@ -33,8 +33,6 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        String [] noArgs = {};
-        
         TestSpec [] tests = {
 
                 new TestSpec(

@@ -14,6 +14,7 @@
 
 package org.infogrid.kernel.net.TEST.xpriso;
 
+import java.io.ByteArrayInputStream;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
@@ -23,7 +24,6 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
-import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectNeighborAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectNeighborRemovedEvent;
@@ -36,17 +36,13 @@ import org.infogrid.meshbase.net.xpriso.ParserFriendlyXprisoMessage;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.net.xpriso.xml.XprisoMessageXmlEncoder;
 import org.infogrid.model.primitives.FloatValue;
-import org.infogrid.model.primitives.IntegerValue;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimePeriodValue;
-import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.modelbase.m.MMeshTypeIdentifierFactory;
 import org.infogrid.util.logging.Log;
-
-import java.io.ByteArrayInputStream;
 
 /**
  * Tests XprisoMessage serialization.
@@ -58,7 +54,7 @@ public class XprisoMessageSerializationTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     public void run()
         throws
@@ -73,6 +69,10 @@ public class XprisoMessageSerializationTest1
 
     /**
      * Run a single test.
+     * 
+     * @param index the index of the test
+     * @param message the XprisoMessage to test
+     * @throws Exception all sorts of things may go wrong during a test
      */
     protected void runOne(
             int           index,
@@ -104,6 +104,9 @@ public class XprisoMessageSerializationTest1
 
     /**
      * Construct the test messages.
+     * 
+     * @return the constructed test messages
+     * @throws Exception all sorts of things may go wrong during a test
      */
     protected XprisoMessage [] constructTestMessages()
         throws
@@ -323,7 +326,7 @@ public class XprisoMessageSerializationTest1
         };
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -358,10 +361,11 @@ public class XprisoMessageSerializationTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test
+     */
     public XprisoMessageSerializationTest1(
             String [] args )
         throws
@@ -372,23 +376,15 @@ public class XprisoMessageSerializationTest1
 
     // Our Logger
     private static Log log = Log.getLogInstance( XprisoMessageSerializationTest1.class );
-    
-    /**
-     * The test NetMeshBaseIdentifier.
-     */
-    private static NetMeshBaseIdentifier theMeshBaseIdentifier;
-    static {
-        NetMeshBaseIdentifier temp = null;
-        try {
-            temp = NetMeshBaseIdentifier.create( "http://example.com/" );
-        } catch( Throwable t ) {
-            log.error( t );
-        }
-        theMeshBaseIdentifier = temp;
-    }
 
+    /**
+     * A NetMeshBaseIdentifier.
+     */
     protected NetMeshBaseIdentifier nmbid1 = NetMeshBaseIdentifier.fromExternalForm( "https://foo.exampe.com/%27" );
 
+    /**
+     * Factory for ExternalizedMeshObjects.
+     */
     protected ParserFriendlyExternalizedNetMeshObjectFactory theExternalizedMeshObjectFactory
             = new ParserFriendlyExternalizedNetMeshObjectFactory() {
                     public ParserFriendlyExternalizedNetMeshObject createParserFriendlyExternalizedMeshObject() {
@@ -396,9 +392,15 @@ public class XprisoMessageSerializationTest1
                     }
             };
     
+    /**
+     * Factory for NetMeshObjectIdentifiers.
+     */
     protected NetMeshObjectIdentifierFactory theNetMeshObjectIdentifierFactory
             = DefaultAnetMeshObjectIdentifierFactory.create( nmbid1 );
 
+    /**
+     * Factory for MeshTypeIdentifiers.
+     */
     protected MeshTypeIdentifierFactory theMeshTypeIdentifierFactory
             = MMeshTypeIdentifierFactory.create();
 }

@@ -41,7 +41,7 @@ public class ProbeTest3
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -150,7 +150,7 @@ public class ProbeTest3
         }
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -186,8 +186,11 @@ public class ProbeTest3
 
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may happen during a test
+     */
     public ProbeTest3(
             String [] args )
         throws
@@ -195,13 +198,13 @@ public class ProbeTest3
     {
         super( ProbeTest3.class );
 
-        testFile0    = args[0];
-        testFile1    = args[1];
-        testFile2    = args[2];
+        testFile0   = args[0];
+        testFile1   = args[1];
+        testFile2   = args[2];
 
-        testFile0Id    = NetMeshBaseIdentifier.create( new File( testFile0 ) );
-        testFile1Id    = NetMeshBaseIdentifier.create( new File( testFile1 ) );
-        testFile2Id    = NetMeshBaseIdentifier.create( new File( testFile2 ) );
+        testFile0Id = NetMeshBaseIdentifier.create( new File( testFile0 ) );
+        testFile1Id = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile2Id = NetMeshBaseIdentifier.create( new File( testFile2 ) );
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactoryA = MPingPongNetMessageEndpointFactory.create( exec );
         MPingPongNetMessageEndpointFactory shadowEndpointFactoryB = MPingPongNetMessageEndpointFactory.create( exec );

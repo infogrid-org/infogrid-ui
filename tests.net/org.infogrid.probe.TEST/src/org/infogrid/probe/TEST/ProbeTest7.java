@@ -62,7 +62,7 @@ public class ProbeTest7
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -160,7 +160,7 @@ public class ProbeTest7
         checkEquals( theListener.getDisablingErrors().size(), 0, "PingPong was disabled" );
     }
  
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -198,7 +198,7 @@ public class ProbeTest7
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all kinds of things may go wrong in tests
+     * @throws Exception all sorts of things may happen during a test
      */
     public ProbeTest7(
             String [] args )

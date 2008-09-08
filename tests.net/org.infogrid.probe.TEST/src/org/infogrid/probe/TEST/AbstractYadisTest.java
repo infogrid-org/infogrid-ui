@@ -16,7 +16,6 @@ package org.infogrid.probe.TEST;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.httpd.HttpResponseFactory;
@@ -32,7 +31,6 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.Probe.ProbeSubjectArea;
-import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.probe.m.MProbeDirectory;
@@ -54,14 +52,16 @@ public abstract class AbstractYadisTest
 
     /**
      * Constructor.
+     * 
+     * @param testClass the class to test
+     * @param factory the factory for HttpResponses
+     * @throws IOException thrown if the HttpServer could not be started
      */
     protected AbstractYadisTest(
             Class               testClass,
             HttpResponseFactory factory )
         throws
-            MeshTypeNotFoundException,
-            IOException,
-            URISyntaxException
+            IOException
     {
         super( testClass );
 
@@ -95,6 +95,10 @@ public abstract class AbstractYadisTest
 
     /**
      * Common method to check for the correct results, regardless of which test was run.
+     * 
+     * @param home the home MeshObject corresponding to the accessed URL
+     * @param nServices the number of XRDS services expected
+     * @throws Exception thrown if an Exception occurred during the test
      */
     protected void checkYadisResults(
             MeshObject home,
@@ -168,7 +172,7 @@ public abstract class AbstractYadisTest
     protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
 
     /**
-     * The NetworkIdentifer of the first test file.
+     * The NetMeshBaseIdentifier of the first test file.
      */
     protected static final NetMeshBaseIdentifier theNetworkIdentifier;
     static {

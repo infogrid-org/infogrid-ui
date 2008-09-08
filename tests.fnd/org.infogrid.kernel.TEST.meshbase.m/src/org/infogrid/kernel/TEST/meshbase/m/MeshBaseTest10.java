@@ -35,8 +35,6 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimePeriodValue;
 import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.model.Test.TestSubjectArea;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -49,14 +47,12 @@ public class MeshBaseTest10
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
             Exception
     {
-        ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-
         MeshBase theMeshBase = MMeshBase.create(
                 MeshBaseIdentifier.create( "MeshBase" ),
                 theModelBase,
@@ -73,32 +69,32 @@ public class MeshBaseTest10
         //
         
         PropertyValue [] testValues = {
-            BlobValue.create( "test", "text/plain" ),
-            BooleanValue.TRUE,
-            ColorValue.create( 0x202020 ),
-            TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE_type.select( "Value3" ),
-            ExtentValue.create( 1.2, 3.4 ),
-            FloatValue.create( 56.78 ),
-            IntegerValue.create( 99 ),
-            MultiplicityValue.create( 2, 7 ),
-            PointValue.create( 9.8, 7.6 ),
-            StringValue.create( "some string" ),
-            TimePeriodValue.create( (short) 1, (short) 2, (short) 3, (short)  4, (short)  5, (float)  6. ),
-            TimeStampValue.create(  (short) 7, (short) 8, (short) 9, (short) 10, (short) 11, (float) 12. )
+                BlobValue.create( "test", "text/plain" ),
+                BooleanValue.TRUE,
+                ColorValue.create( 0x202020 ),
+                TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE_type.select( "Value3" ),
+                ExtentValue.create( 1.2, 3.4 ),
+                FloatValue.create( 56.78 ),
+                IntegerValue.create( 99 ),
+                MultiplicityValue.create( 2, 7 ),
+                PointValue.create( 9.8, 7.6 ),
+                StringValue.create( "some string" ),
+                TimePeriodValue.create( (short) 1, (short) 2, (short) 3, (short)  4, (short)  5, (float)  6. ),
+                TimeStampValue.create(  (short) 7, (short) 8, (short) 9, (short) 10, (short) 11, (float) 12. )
         };
         PropertyType [] testProperties = {
-            TestSubjectArea.PROPERTYTEST_WHATABLOBDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATABOOLEANDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATACOLORDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATAEXTENTDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATAFLOATDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATAINTEGERDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATAMULTIPLICITYDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATAPOINTDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATASTRINGDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATATIMEPERIODDATATYPE,
-            TestSubjectArea.PROPERTYTEST_WHATATIMESTAMPDATATYPE
+                TestSubjectArea.PROPERTYTEST_WHATABLOBDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATABOOLEANDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATACOLORDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATAEXTENTDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATAFLOATDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATAINTEGERDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATAMULTIPLICITYDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATAPOINTDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATASTRINGDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATATIMEPERIODDATATYPE,
+                TestSubjectArea.PROPERTYTEST_WHATATIMESTAMPDATATYPE
         };
         checkEquals( testValues.length, testProperties.length, "inconsistency in test data" );
         
@@ -167,10 +163,11 @@ public class MeshBaseTest10
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseTest10(
             String [] args )
         throws

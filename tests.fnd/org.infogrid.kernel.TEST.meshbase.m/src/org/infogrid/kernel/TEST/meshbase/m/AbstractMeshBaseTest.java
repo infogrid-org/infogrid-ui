@@ -14,12 +14,14 @@
 
 package org.infogrid.kernel.TEST.meshbase.m;
 
+import org.infogrid.modelbase.ModelBase;
+import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 
 /**
- *
+ * Factors out common features of tests in this package.
  */
 public abstract class AbstractMeshBaseTest
         extends
@@ -39,4 +41,9 @@ public abstract class AbstractMeshBaseTest
      * The root context for these tests.
      */
     protected static final Context rootContext = SimpleContext.createRoot( "root-context" );
+
+    /**
+     * The ModelBase to use.
+     */
+    protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
 }

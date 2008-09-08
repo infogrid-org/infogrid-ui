@@ -15,6 +15,7 @@
 package org.infogrid.kernel.TEST.mesh.externalized;
 
 import org.infogrid.testharness.AbstractTest;
+
 /**
  * Factors out common functionality of SerializerTests.
  */

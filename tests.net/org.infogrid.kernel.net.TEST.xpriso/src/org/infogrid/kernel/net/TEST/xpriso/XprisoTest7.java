@@ -14,7 +14,6 @@
 
 package org.infogrid.kernel.net.TEST.xpriso;
 
-
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
@@ -32,7 +31,7 @@ import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests the capability to create relationships between
+ * Tests that we can create relationships between
  * MeshObjects which are held by other MeshBases, and the correct propagation.
  */
 public class XprisoTest7
@@ -42,7 +41,7 @@ public class XprisoTest7
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -263,7 +262,7 @@ public class XprisoTest7
         checkProxies( obj2_mb4, new NetMeshBase[] { mb2 },           mb2,  mb2,  "obj2_mb4 has wrong proxies" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -301,7 +300,7 @@ public class XprisoTest7
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all kinds of things can happen in a test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public XprisoTest7(
             String [] args )

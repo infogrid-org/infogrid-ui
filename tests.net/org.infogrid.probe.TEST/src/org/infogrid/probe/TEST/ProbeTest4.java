@@ -26,9 +26,8 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.util.logging.Log;
 
-
 /**
-  * Tests that all MeshObjects from the same probe have the same timeCreated and timeUpdated values.
+  * Tests that all MeshObjects from the same Probe have the same timeCreated and timeUpdated values.
   */
 public class ProbeTest4
         extends
@@ -37,7 +36,7 @@ public class ProbeTest4
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -145,6 +144,7 @@ public class ProbeTest4
      * Constructor.
      *
      * @param args command-line arguments
+     * @throws Exception all sorts of things may happen during a test
      */
     public ProbeTest4(
             String [] args )

@@ -40,6 +40,10 @@ public abstract class AbstractMeshBaseSecurityTest
 {
     /**
      * Constructor.
+     * 
+     * @param testClass the class to be tested
+     * @throws MeshTypeNotFoundException thrown if a MeshType could not be found
+     * @throws URISyntaxException thrown if a URI String was misformed
      */
     public AbstractMeshBaseSecurityTest(
             Class testClass )

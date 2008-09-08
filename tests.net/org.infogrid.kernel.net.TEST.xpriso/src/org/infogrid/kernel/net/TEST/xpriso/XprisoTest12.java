@@ -29,7 +29,7 @@ import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests that the replication graph is kept as tight as possible: if Replica C is
+ * Tests that the replication graph is kept as tight as possible. If Replica C is
  * created as replica of Replica B, which in turn is a replica of Replica A,
  * Replica C attempts to become a replica of Replica A directly.
  */
@@ -40,7 +40,7 @@ public class XprisoTest12
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -86,7 +86,7 @@ public class XprisoTest12
         checkProxies( obj1_mb3, new NetMeshBase[] { mb1 },       mb1,  mb1,  "obj1_mb3 has wrong proxies" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments

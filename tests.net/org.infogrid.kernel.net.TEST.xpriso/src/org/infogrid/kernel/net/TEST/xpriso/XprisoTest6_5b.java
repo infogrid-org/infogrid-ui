@@ -40,7 +40,7 @@ public class XprisoTest6_5b
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -148,7 +148,7 @@ public class XprisoTest6_5b
         checkEquals( related2_mb1.size(),   1, "obj2 in mb1 has wrong number of relationships" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -186,7 +186,7 @@ public class XprisoTest6_5b
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all kinds of things can happen in a test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public XprisoTest6_5b(
             String [] args )

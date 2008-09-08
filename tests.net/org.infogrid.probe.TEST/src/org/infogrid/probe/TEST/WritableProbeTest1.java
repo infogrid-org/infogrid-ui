@@ -245,7 +245,7 @@ public class WritableProbeTest1
         super.run( cases );
     }
     
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -283,7 +283,7 @@ public class WritableProbeTest1
      * Constructor.
      *
      * @param args the command-line arguments
-     * @throws Exception many kinds of things can happen in a test
+     * @throws Exception thrown if an Exception occurred during the test
      */
     public WritableProbeTest1(
             String [] args )

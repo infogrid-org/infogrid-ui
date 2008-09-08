@@ -44,10 +44,10 @@ import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
- * Relates a Shadow-producted MeshObject A to another MeshObject B outside of the Shadow,
+ * Relates a ShadowMeshBase-producted MeshObject A to another MeshObject B outside of the ShadowMeshBase,
  * and makes sure that the relationship goes away without error if B disappears on the
  * next Probe run. This uses blessed MeshObjects and relationships in the Probe
- * (compare with ShadowTest5 and ShadowTest7)
+ * (compare with ShadowTest5 and ShadowTest7).
  */
 public class ShadowTest6
         extends
@@ -56,7 +56,7 @@ public class ShadowTest6
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may happen during a test
      */
     public void run()
         throws
@@ -122,7 +122,7 @@ public class ShadowTest6
         
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -160,7 +160,7 @@ public class ShadowTest6
      * Constructor.
      *
      * @param args the command-line arguments
-     * @throws Exception all kinds of things may happen in a test
+     * @throws Exception all sorts of things may happen during a test
      */
     public ShadowTest6(
             String [] args )
@@ -224,7 +224,7 @@ public class ShadowTest6
     protected static int theProbeRunCounter = 0;
 
     /**
-     * The test Probe superclass.
+     * The test Probe.
      */
     public static class TestApiProbe
             implements

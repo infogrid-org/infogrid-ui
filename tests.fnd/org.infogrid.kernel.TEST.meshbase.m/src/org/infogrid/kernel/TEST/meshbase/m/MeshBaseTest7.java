@@ -25,12 +25,10 @@ import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.RelationshipType;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
- * This tests that unrelating MeshObjects with blessed relationships creates the right
+ * Tests that unrelating MeshObjects with blessed relationships creates the right
  * events.
  */
 public class MeshBaseTest7
@@ -40,7 +38,7 @@ public class MeshBaseTest7
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -127,10 +125,11 @@ public class MeshBaseTest7
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during a test.
+     */
     public MeshBaseTest7(
             String [] args )
         throws
@@ -155,11 +154,6 @@ public class MeshBaseTest7
     }
 
     /**
-     * The ModelBase.
-     */
-    protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
-
-    /**
      * The MeshBase for the test.
      */
     protected MeshBase theMeshBase;
@@ -174,12 +168,22 @@ public class MeshBaseTest7
             implements
                 PropertyChangeListener
     {
+        /**
+         * Event callback.
+         * 
+         * @param event the event
+         */
         public void propertyChange(
                 PropertyChangeEvent event )
         {
             theEvents.add( event );
         }
      
+        /**
+         * Convert to String representation, for debugging.
+         * 
+         * @return String representation
+         */
         @Override
         public String toString()
         {
@@ -192,6 +196,9 @@ public class MeshBaseTest7
             return buf.toString();
         }
 
+        /**
+         * The received events.
+         */
         protected ArrayList<PropertyChangeEvent> theEvents = new ArrayList<PropertyChangeEvent>();
     }
 }

@@ -39,7 +39,7 @@ public class XprisoTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public void run()
         throws
@@ -148,7 +148,7 @@ public class XprisoTest1
         checkNeighborsReplication( obj3_mb1, obj3_mb2, "replica 3 RPT replication didn't work" );
     }
 
-    /*
+    /**
      * Main program.
      *
      * @param args command-line arguments
@@ -186,7 +186,7 @@ public class XprisoTest1
      * Constructor.
      *
      * @param args command-line arguments
-     * @throws Exception all kinds of things may be wrong in tests
+     * @throws Exception all kinds of things can go wrong in tests
      */
     public XprisoTest1(
             String [] args )

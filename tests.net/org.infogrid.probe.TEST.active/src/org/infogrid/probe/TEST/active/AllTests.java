@@ -19,7 +19,7 @@ import org.infogrid.testharness.AbstractTestGroup;
 import org.infogrid.testharness.AbstractTestGroup.TestSpec;
 
 /**
- * Tests the VCard Probe.
+ * Runs all tests in this package.
  */
 public class AllTests
         extends

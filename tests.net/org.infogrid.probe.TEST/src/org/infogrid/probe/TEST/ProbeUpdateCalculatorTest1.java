@@ -16,25 +16,6 @@ package org.infogrid.probe.TEST;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.model.Probe.ProbeSubjectArea;
-import org.infogrid.model.Test.TestSubjectArea;
-import org.infogrid.model.primitives.EntityType;
-import org.infogrid.model.primitives.FloatValue;
-import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
-import org.infogrid.probe.ApiProbe;
-import org.infogrid.probe.ProbeDirectory;
-import org.infogrid.probe.StagingMeshBase;
-import org.infogrid.probe.manager.ScheduledExecutorProbeManager;
-import org.infogrid.probe.manager.m.MScheduledExecutorProbeManager;
-import org.infogrid.probe.shadow.ShadowMeshBase;
-import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
-import org.infogrid.probe.shadow.m.MShadowMeshBaseFactory;
-import org.infogrid.util.logging.Log;
-
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,11 +25,29 @@ import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
+import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.Probe.ProbeSubjectArea;
+import org.infogrid.model.Test.TestSubjectArea;
+import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.module.ModuleException;
+import org.infogrid.probe.ApiProbe;
+import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.ProbeException;
+import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.m.MProbeDirectory;
+import org.infogrid.probe.manager.ScheduledExecutorProbeManager;
+import org.infogrid.probe.manager.m.MScheduledExecutorProbeManager;
+import org.infogrid.probe.shadow.ShadowMeshBase;
+import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
+import org.infogrid.probe.shadow.m.MShadowMeshBaseFactory;
+import org.infogrid.util.logging.Log;
 
 /**
   * Tests the standard ProbeUpdateCalculator implementations.
@@ -60,7 +59,7 @@ public class ProbeUpdateCalculatorTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     public void run()
         throws
@@ -99,6 +98,11 @@ public class ProbeUpdateCalculatorTest1
 
     /**
      * Run one test, behavior is expected to be the same for the NoChange and the WithChange cases.
+     * 
+     * @param coherence the CoherenceSpecification to use when creating the Probe
+     * @param homeObjectType the expected EntityType of the home MeshObject
+     * @param points time points when to test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     protected void testOne(
             CoherenceSpecification coherence,
@@ -111,7 +115,13 @@ public class ProbeUpdateCalculatorTest1
     }
 
     /**
-     * Run one test, behavior is expected to be different for the NoChange and the WithChange cases.
+     * Run one test. The behavior is expected to be different for the NoChange and the WithChange cases.
+     * 
+     * @param coherence the CoherenceSpecification to use when creating the Probe
+     * @param homeObjectType the expected EntityType of the home MeshObject
+     * @param noChangePoints time points when to test
+     * @param changePoints time points when to test
+     * @throws Exception all sorts of things can go wrong during a test
      */
     protected void testOne(
             CoherenceSpecification coherence,
@@ -168,7 +178,10 @@ public class ProbeUpdateCalculatorTest1
     }
 
     /**
-     * Helper method.
+     * Helper method to copy an ArrayList of Long into a long array.
+     * 
+     * @param data the ArrayList of Long
+     * @return the array of long
      */
     protected static long [] copyIntoNewLongArray(
             ArrayList<Long> data )
@@ -215,8 +228,11 @@ public class ProbeUpdateCalculatorTest1
     }
 
     /**
-      * constructor
-      */
+     * Constructor.
+     * 
+     * @param args command-line arguments
+     * @throws Exception all sorts of things can go wrong during a test
+     */
     public ProbeUpdateCalculatorTest1(
             String [] args )
         throws
@@ -261,33 +277,12 @@ public class ProbeUpdateCalculatorTest1
     protected NetMeshBaseIdentifier theUnchangingDataSource = NetMeshBaseIdentifier.createUnresolvable( "proto://here.local/nochange" );
 
     /**
-     * The test Probe.
+     * The first test Probe.
      */
     public static class UnchangingProbe
             implements
                 ApiProbe
     {
-        /**
-         * Read from the API and instantiate corresponding MeshObjects.
-         * 
-         * @param networkId the NetMeshBaseIdentifier that is being accessed
-         * @param coherenceSpecification the type of data coherence that is requested by the application. Probe
-         *         implementors may ignore this parameter, letting the Probe framework choose its own policy.
-         *         If the Probe chooses to define its own policy (considering or ignoring this parameter), the
-         *         Probe must bless the Probe's HomeObject with a subtype of ProbeUpdateSpecification (defined
-         *         in the <code>org.infogrid.model.Probe</code>) that reflects the policy.
-         * @param mb the StagingMeshBase in which the corresponding MeshObjects are instantiated by the Probe
-         * @throws IdentifierNotUniqueException thrown if the Probe developer incorrectly
-         *         assigned duplicate Identifiers to created MeshObjects
-         * @throws RelatedAlreadyException thrown if the Probe developer incorrectly attempted to
-         *         relate two already-related MeshObjects
-         * @throws TransactionException this Exception is declared to make programming easier,
-         *         although actually throwing it would be a programming error
-         * @throws NotPermittedException thrown if an operation performed by the Probe was not permitted
-         * @throws ProbeException a Probe error occurred per the possible subclasses defined in ProbeException
-         * @throws IOException an input/output error occurred during execution of the Probe
-         * @throws ModuleException thrown if a Module required by the Probe could not be loaded
-         */
         public void readFromApi(
                 NetMeshBaseIdentifier      networkId,
                 CoherenceSpecification coherence,
@@ -318,33 +313,12 @@ public class ProbeUpdateCalculatorTest1
     }
 
     /**
-     * The test Probe.
+     * The second 4test Probe.
      */
     public static class ChangingProbe
             implements
                 ApiProbe
     {
-        /**
-         * Read from the API and instantiate corresponding MeshObjects.
-         * 
-         * @param networkId the NetMeshBaseIdentifier that is being accessed
-         * @param coherenceSpecification the type of data coherence that is requested by the application. Probe
-         *         implementors may ignore this parameter, letting the Probe framework choose its own policy.
-         *         If the Probe chooses to define its own policy (considering or ignoring this parameter), the
-         *         Probe must bless the Probe's HomeObject with a subtype of ProbeUpdateSpecification (defined
-         *         in the <code>org.infogrid.model.Probe</code>) that reflects the policy.
-         * @param mb the StagingMeshBase in which the corresponding MeshObjects are instantiated by the Probe
-         * @throws IdentifierNotUniqueException thrown if the Probe developer incorrectly
-         *         assigned duplicate Identifiers to created MeshObjects
-         * @throws RelatedAlreadyException thrown if the Probe developer incorrectly attempted to
-         *         relate two already-related MeshObjects
-         * @throws TransactionException this Exception is declared to make programming easier,
-         *         although actually throwing it would be a programming error
-         * @throws NotPermittedException thrown if an operation performed by the Probe was not permitted
-         * @throws ProbeException a Probe error occurred per the possible subclasses defined in ProbeException
-         * @throws IOException an input/output error occurred during execution of the Probe
-         * @throws ModuleException thrown if a Module required by the Probe could not be loaded
-         */
         public void readFromApi(
                 NetMeshBaseIdentifier      networkId,
                 CoherenceSpecification coherence,

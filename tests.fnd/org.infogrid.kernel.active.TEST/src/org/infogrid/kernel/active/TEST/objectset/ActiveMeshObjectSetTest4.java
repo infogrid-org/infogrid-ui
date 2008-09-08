@@ -23,7 +23,7 @@ import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests TraversalActiveMeshObjectSet.
+ * Tests sending of PropertyChangeEvents by the TraversalActiveMeshObjectSet, traversing across a sequence of RoleTypes.
  */
 public class ActiveMeshObjectSetTest4
     extends

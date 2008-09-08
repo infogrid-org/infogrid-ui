@@ -23,12 +23,10 @@ import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
- * Testing the equivalence mechanism. We create two chains of equivalences, make sure they work, then
+ * Tests the equivalence mechanism. We create two chains of equivalences, make sure they work, then
  * make the equivalent, and remove some objects.
  */
 public class MeshBaseTest8
@@ -38,7 +36,7 @@ public class MeshBaseTest8
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong during a test.
      */
     public void run()
         throws
@@ -310,11 +308,6 @@ public class MeshBaseTest8
     {
         theMeshBase.die();
     }
-
-    /**
-     * The ModelBase.
-     */
-    protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
 
     /**
      * The MeshBase for the test.
