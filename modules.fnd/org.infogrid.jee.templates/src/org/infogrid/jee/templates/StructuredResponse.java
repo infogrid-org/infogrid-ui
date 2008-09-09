@@ -119,6 +119,27 @@ public class StructuredResponse
     }
 
     /**
+     * Set the location header.
+     * 
+     * @param newValue the new value
+     */
+    public void setLocation(
+            String newValue )
+    {
+        theLocation = newValue;
+    }
+    
+    /**
+     * Obtain the location header.
+     * 
+     * @return the currently set location header
+     */
+    public String getLocation()
+    {
+        return theLocation;
+    }
+
+    /**
      * Add a header to the response.
      * 
      * @param key the header key
@@ -361,6 +382,27 @@ public class StructuredResponse
     }
 
     /**
+     * Set the name of the template that is being requested. Null represents "default".
+     * 
+     * @param newValue the name of the template that is being requested
+     */
+    public void setRequestedTemplateName(
+            String newValue )
+    {
+        theRequestedTemplateName = newValue;
+    }
+    
+    /**
+     * Obtain the name of the template that is being requested. Null represents "default".
+     * 
+     * @return the name of the template that is being requested
+     */
+    public String getRequestedTemplateName()
+    {
+        return theRequestedTemplateName;
+    }
+
+    /**
      * Determine whether this StructuredResponse is empty.
      * 
      * @return true if it is empty
@@ -394,6 +436,11 @@ public class StructuredResponse
      * The mime type of the response. HTML is default
      */
     protected String theMimeType = "text/html";
+
+    /**
+     * The location header, if any.
+     */
+    protected String theLocation;
 
     /**
      * The cookies to be sent. This is represented as a HashMap in order to easily be
@@ -432,6 +479,11 @@ public class StructuredResponse
      * The ServletContext within which this response is assembled.
      */
     protected ServletContext theServletContext;
+
+    /**
+     * Name of the template that is being requested, if any.
+     */
+    protected String theRequestedTemplateName;
 
     /**
      * Name of the request attribute that contains the StructuredResponse. Make sure

@@ -18,8 +18,10 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.lid.AbortProcessingException;
 import org.infogrid.lid.AbstractLidService;
+import org.infogrid.lid.LidLocalPersona;
 import org.infogrid.lid.LidService;
 import org.infogrid.util.context.Context;
 
@@ -61,11 +63,13 @@ public class YadisProcessor
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
+     * @param localPersona the localPersona to which the request refers
      * @throws AbortProcessingException thrown if processing is complete
      */
     public void processRequest(
             SaneServletRequest lidRequest,
-            StructuredResponse lidResponse )
+            StructuredResponse lidResponse,
+            LidLocalPersona    localPersona )
         throws
             AbortProcessingException
     {
@@ -73,12 +77,15 @@ public class YadisProcessor
         if( meta == null ) {
             meta = lidRequest.getArgument( "meta" );
         }
+        String acceptHeader = lidRequest.getDelegate().getHeader( "Accept" );
 
-        if( "capabilities".equals( meta )) {
-            StringBuilder ret = new StringBuilder( 256 );
-            ret.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" );
-            ret.append( "<XRDS xmlns=\"xri://$xrds\" xmlns:xrd=\"xri://$xrd*($v*2.0)\">\n" );
-            ret.append( " <xrd:XRD>\n" );
+        if(    "capabilities".equals( meta )
+            || ( acceptHeader != null && acceptHeader.indexOf( "application/xrds+xml" ) >= 0 ))
+        {
+            StringBuilder content = new StringBuilder( 256 );
+            content.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" );
+            content.append( "<XRDS xmlns=\"xri://$xrds\" xmlns:xrd=\"xri://$xrd*($v*2.0)\">\n" );
+            content.append( " <xrd:XRD>\n" );
 
             String thisUrl = lidRequest.getAbsoluteBaseUri();
             
@@ -90,22 +97,25 @@ public class YadisProcessor
                 String frag  = service.getParameterizedYadisFragment();
                 String frag2 = MessageFormat.format( frag, thisUrl );
 
-                ret.append( "  <xrd:Service priority=\"" ).append( i ).append( "\">\n" );
-                ret.append( frag2 );
-                ret.append( "  </xrd:Service>\n" );
+                content.append( "  <xrd:Service priority=\"" ).append( i ).append( "\">\n" );
+                content.append( frag2 );
+                content.append( "  </xrd:Service>\n" );
             }
-            ret.append( " </xrd:XRD>\n" );
-            ret.append( "</XRDS>\n" );
+            content.append( " </xrd:XRD>\n" );
+            content.append( "</XRDS>\n" );
 
-            throw new EmitYadisAbortProcessingException(
+            lidResponse.setDefaultSectionContent( content.toString() );
+            lidResponse.setHttpResponseCode( 200 );
+            lidResponse.setMimeType( "application/xrds+xml");
+            lidResponse.setRequestedTemplateName( StructuredResponseTemplateFactory.VERBATIM_TEXT_NAME );
+            
+            throw new AbortProcessingException(
                     this,
-                    lidRequest,
-                    lidResponse,
-                    ret.toString() );
+                    null, null );
         }
 
         // add the HTTP header
-        lidResponse.addAdditionalHeader( "X-XRDS-Location:", lidRequest.getAbsoluteBaseUri() + "?meta=capabilities" );
+        lidResponse.addAdditionalHeader( "X-XRDS-Location", lidRequest.getAbsoluteBaseUri() + "?lid-meta=capabilities" );
     }
     
     /**

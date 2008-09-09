@@ -117,6 +117,9 @@ public class InitializationFilter
             chain.doFilter( request, response );
 
         } catch( Throwable t ) {
+            if( log != null ) {
+                log.error( t );
+            }
             try {
                 processException( realRequest, realResponse, t ); // may throw again
             } catch( ServletException t2 ) {
@@ -205,6 +208,7 @@ public class InitializationFilter
             } catch( IllegalStateException ex ) {
                 // have one already, that's fine (a parallel thread was faster)
             }
+            log = Log.getLogInstance( getClass() );
         }
     }
 

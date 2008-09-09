@@ -76,9 +76,9 @@ public class VerbatimStructuredResponseTemplate
         throws
             IOException
     {
-        defaultOutputStatusCode( delegate, structured );
-        defaultOutputCookies(    delegate, structured );
-        defaultOutputMimeType(   delegate, structured );
+        outputStatusCode( delegate, structured );
+        outputCookies(    delegate, structured );
+        outputMimeType(   delegate, structured );
         
         // stream default section(s)
         

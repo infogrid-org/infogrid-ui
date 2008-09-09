@@ -16,6 +16,7 @@ package org.infogrid.jee.templates;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.CarriesHttpStatusCodeException;
@@ -73,7 +74,7 @@ public abstract class AbstractStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      * @throws IOException thrown if an I/O error occurred
      */
-    protected void defaultOutputStatusCode(
+    protected void outputStatusCode(
             HttpServletResponse delegate,
             StructuredResponse  structured )
         throws
@@ -99,7 +100,7 @@ public abstract class AbstractStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      * @throws IOException thrown if an I/O error occurred
      */
-    protected void defaultOutputCookies(
+    protected void outputCookies(
             HttpServletResponse delegate,
             StructuredResponse  structured )
         throws
@@ -124,17 +125,60 @@ public abstract class AbstractStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      * @throws IOException thrown if an I/O error occurred
      */
-    protected void defaultOutputMimeType(
+    protected void outputMimeType(
             HttpServletResponse delegate,
             StructuredResponse  structured )
         throws
             IOException
-    {        
+    {
         String mime = structured.getMimeType();
         if( mime == null ) {
             mime = "text/plain";
         }
         delegate.setContentType( mime );
+    }
+
+    /**
+     * Default implementation for how to handle a location header.
+     * 
+     * @param delegate the underlying HttpServletResponse
+     * @param structured the StructuredResponse that contains the response
+     * @throws IOException thrown if an I/O error occurred
+     */
+    protected void outputLocation(
+            HttpServletResponse delegate,
+            StructuredResponse  structured )
+        throws
+            IOException
+    {        
+        String location = structured.getLocation();
+        if( location != null ) {
+            delegate.setHeader( "Location", location );
+            // don't use delegate.sendRedirect as it also sets the status code
+        }
+    }
+
+    /**
+     * Default implementatino for how to handle additional HTTP headers.
+     * 
+     * @param delegate the underlying HttpServletResponse
+     * @param structured the StructuredResponse that contains the response
+     * @throws IOException thrown if an I/O error occurred
+     */
+    protected void outputAdditionalHeaders(
+            HttpServletResponse delegate,
+            StructuredResponse  structured )
+        throws
+            IOException
+    {
+        Map<String,String> headers = theStructured.additionalHeaders();
+        if( headers != null ) {
+            for( String key : headers.keySet()) {
+                String value = headers.get( key );
+                
+                delegate.setHeader( key, value );
+            }
+        }
     }
 
     /**

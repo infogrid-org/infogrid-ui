@@ -80,7 +80,7 @@ public class DefaultStructuredResponseTemplateFactory
             FactoryException
     {
         String mime         = structured.getMimeType();
-        String templateName = getRequestedTemplate( request );
+        String templateName = getRequestedTemplate( request, structured );
 
         RequestDispatcher dispatcher = findRequestDispatcher( request, structured, templateName, mime );
         
@@ -100,15 +100,21 @@ public class DefaultStructuredResponseTemplateFactory
     }
     
     /**
-     * Obtain the name of the requested layout, if any.
+     * Obtain the name of the requested layout template, if any.
      * 
      * @param request the incoming HTTP request for which the response is being created
-     * @return class name of the requested layout, if any
+     * @param structured the StructuredResponse that contains the content to be returned
+     * @return class name of the requested layout template, if any
      */
     public String getRequestedTemplate(
-            SaneServletRequest request )
+            SaneServletRequest request,
+            StructuredResponse structured )
     {
-        String ret = request.getArgument( StructuredResponseTemplate.LID_TEMPLATE_PARAMETER_NAME );
+        String ret = structured.getRequestedTemplateName();
+        
+        if( ret == null ) {
+            ret = request.getArgument( StructuredResponseTemplate.LID_TEMPLATE_PARAMETER_NAME );
+        }
 
         if( ret == null ) {
             ret = request.getCookieValue( StructuredResponseTemplate.LID_TEMPLATE_COOKIE_NAME );                

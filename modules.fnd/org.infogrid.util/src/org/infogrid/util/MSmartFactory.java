@@ -197,7 +197,7 @@ public class MSmartFactory<K,V,A>
 
         synchronized( theKeyValueMap ) {
             ret = theKeyValueMap.get( key );
-            if( ret == null ) {
+            if( ret == null && theDelegateFactory != null ) {
                 weAreCreating = true;
                 ret = theDelegateFactory.obtainFor( key, argument );
                 

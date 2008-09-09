@@ -17,6 +17,7 @@ package org.infogrid.lid;
 import java.util.Iterator;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.lid.gpg.LidGpgLocalPersonaAttributes;
 import org.infogrid.util.context.Context;
 
@@ -78,19 +79,21 @@ public class MinimumLidProcessor
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
-     * @param persona the LidLocalPersona that is the subject of this request, if any
+     * @param localPersona the localPersona to which the request refers
      * @throws AbortProcessingException thrown if processing is complete
      */
     public void processRequest(
             SaneServletRequest lidRequest,
             StructuredResponse lidResponse,
-            LidLocalPersona    persona )
+            LidLocalPersona    localPersona  )
         throws
             AbortProcessingException
     {
         String  lidMeta     = lidRequest.getArgument( "lid-meta" );
         String  meta        = lidRequest.getArgument( "meta" );
 
+        String responseString = null;
+        
         if( "lid".equals( meta )) {
             StringBuilder versionString = new StringBuilder( 256 );
             versionString.append( "protocol: http://lid.netmesh.org/\n" );
@@ -104,34 +107,39 @@ public class MinimumLidProcessor
                 versionString.append( "profile: " ).append( service.getLidProfileName()    ).append( "\n" );
                 versionString.append( "version: " ).append( service.getLidProfileVersion() ).append( "\n" );
             }
-            throw new EmitLidProfilesAbortProcessingException(
-                    this,
-                    lidRequest,
-                    lidResponse,
-                    versionString.toString() );
+            responseString = versionString.toString();
 
         } else if(    "gpg --export --armor".equals( lidMeta )
                    || "gpg -export --armor".equals( lidMeta )
                    || "gpg --export --armor".equals( meta )
                    || "gpg -export --armor".equals( meta ) )
         {
-            String publicKey = persona.getAttribute( LID_GPG_PERSONA_PUBLIC_KEY_ATTRIBUTE );
+            String publicKey = localPersona.getAttribute( LID_GPG_PERSONA_PUBLIC_KEY_ATTRIBUTE );
 
             if( publicKey != null ) {
                 publicKey = publicKey.trim();
             }
             if( publicKey != null && publicKey.length() > 0 ) {
-                throw new EmitPublicKeyAbortProcessingException(
-                        this,
-                        lidRequest,
-                        lidResponse,
-                        publicKey );
+                responseString = publicKey;
+
             } else {
                 lidResponse.reportProblem(
                         new UnsupportedLidOperationException(
                                 this,
                                 "lid-meta=" + lidMeta ));
             }
+        }
+        
+        if( responseString != null ) {
+            lidResponse.setDefaultSectionContent( responseString );
+            lidResponse.setHttpResponseCode( 200 );
+            lidResponse.setMimeType( "text/plain");
+            lidResponse.setRequestedTemplateName( StructuredResponseTemplateFactory.VERBATIM_TEXT_NAME );
+
+            throw new AbortProcessingException(
+                    this,
+                    null,
+                    null );
         }
     }
     

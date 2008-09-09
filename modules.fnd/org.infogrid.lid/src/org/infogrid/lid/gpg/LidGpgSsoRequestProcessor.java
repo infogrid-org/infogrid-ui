@@ -17,15 +17,12 @@ package org.infogrid.lid.gpg;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.lid.AbortProcessingException;
 import org.infogrid.lid.AbstractLidService;
-import org.infogrid.lid.AuthenticationNeededAbortProcessingException;
 import org.infogrid.lid.LidLocalPersona;
 import org.infogrid.lid.LidService;
-import org.infogrid.lid.RedirectAbortProcessingException;
 import org.infogrid.lid.UnsupportedLidOperationException;
 import org.infogrid.util.context.Context;
 
@@ -69,14 +66,14 @@ public class LidGpgSsoRequestProcessor
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
-     * @param persona the LidLocalPersona that is the subject of this request, if any
+     * @param localPersona the localPersona to which the request refers
      * @throws AbortProcessingException thrown if processing is complete
      * @throws IOException thrown if an input/output error occurred
      */
     public void processRequest(
             SaneServletRequest lidRequest,
             StructuredResponse lidResponse,
-            LidLocalPersona    persona )
+            LidLocalPersona    localPersona  )
         throws
             AbortProcessingException,
             IOException
@@ -89,7 +86,7 @@ public class LidGpgSsoRequestProcessor
         if( !"sso-approve".equals( action )) {
             return;
         }
-        if( persona == null ) {
+        if( localPersona == null ) {
             return;
         }
 
@@ -109,17 +106,17 @@ public class LidGpgSsoRequestProcessor
 
         String localLid = lidRequest.getAbsoluteBaseUri();
 
-        boolean isAuthenticatedAsOwner = lidRequest.getAbsoluteBaseUri().startsWith( persona.getIdentifier() )
-                                && (    lidRequest.getAbsoluteBaseUri().length() == persona.getIdentifier().length()
-                                     || lidRequest.getAbsoluteBaseUri().substring( persona.getIdentifier().length(), 1 ).equals( "/" ));
+        boolean isAuthenticatedAsOwner = lidRequest.getAbsoluteBaseUri().startsWith( localPersona.getIdentifier() )
+                                && (    lidRequest.getAbsoluteBaseUri().length() == localPersona.getIdentifier().length()
+                                     || lidRequest.getAbsoluteBaseUri().substring( localPersona.getIdentifier().length(), 1 ).equals( "/" ));
         
         if( !isAuthenticatedAsOwner ) {
-            throw new AuthenticationNeededAbortProcessingException(
-                    this,
-                    lidRequest,
-                    lidResponse,
-                    persona,
-                    target );
+            throw new AbortProcessingException(
+                    this, null, null );
+//                    lidRequest,
+//                    lidResponse,
+//                    localPersona,
+//                    target );
         }
         Matcher m = lidCredTypePattern.matcher( target );
         if( m.find() ) {
@@ -162,7 +159,7 @@ public class LidGpgSsoRequestProcessor
 
         LidGpg theGpg = getContext().findContextObjectOrThrow( LidGpg.class );
 
-        String privateKey = persona.getAttribute( LID_GPG_PERSONA_PRIVATE_KEY_ATTRIBUTE );
+        String privateKey = localPersona.getAttribute( LID_GPG_PERSONA_PRIVATE_KEY_ATTRIBUTE );
 
         if( privateKey != null ) {
             privateKey = privateKey.trim();
@@ -180,7 +177,10 @@ public class LidGpgSsoRequestProcessor
         String append = theGpg.signUrl( localLid, target, lidVersion );
         target += append;
 
-        throw new RedirectAbortProcessingException( this, lidRequest, lidResponse, HttpServletResponse.SC_TEMPORARY_REDIRECT, target );        
+        lidResponse.setHttpResponseCode( 302 );
+        lidResponse.setLocation( target );
+        
+        throw new AbortProcessingException( this, null, null );        
     }
 
     /**

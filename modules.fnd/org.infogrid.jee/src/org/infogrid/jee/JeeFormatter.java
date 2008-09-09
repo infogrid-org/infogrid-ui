@@ -1069,11 +1069,13 @@ public class JeeFormatter
             temp.append( in.substring( 1 ).toLowerCase() );
             sanitized = temp.toString();
         }
-        StringRepresentation ret;
+        StringRepresentation ret = null;
         try {
             ret = theStringRepresentationDirectory.obtainFor( sanitized );
         } catch( FactoryException ex ) {
             log.info( ex );
+        }
+        if( ret == null ) {
             ret = theStringRepresentationDirectory.getFallback();
         }
         return ret;
