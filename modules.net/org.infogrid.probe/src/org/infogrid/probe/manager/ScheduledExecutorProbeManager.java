@@ -141,7 +141,7 @@ public abstract class ScheduledExecutorProbeManager
             CoherenceSpecification argument )
     {
         long nextTime = value.getDelayUntilNextUpdate();
-        if( nextTime >= 0 ) { // allow 0 for immediate execution
+        if( nextTime >= 0 && theExecutorService != null ) { // allow 0 for immediate execution
             ScheduledFuture<Long> newFuture = theExecutorService.schedule(
                     new ExecutorAdapter( new WeakReference<ScheduledExecutorProbeManager>( this ), key, nextTime ),
                     nextTime,
