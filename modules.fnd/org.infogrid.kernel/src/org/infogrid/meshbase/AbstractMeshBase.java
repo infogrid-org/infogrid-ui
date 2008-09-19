@@ -25,9 +25,11 @@ import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.security.AccessManager;
 import org.infogrid.meshbase.security.IdentityChangeException;
-import org.infogrid.meshbase.transaction.AbstractMeshObjectLifecycleEvent;
 import org.infogrid.meshbase.transaction.DefaultTransaction;
 import org.infogrid.meshbase.transaction.IllegalTransactionThreadException;
+import org.infogrid.meshbase.transaction.MeshObjectCreatedEvent;
+import org.infogrid.meshbase.transaction.MeshObjectDeletedEvent;
+import org.infogrid.meshbase.transaction.MeshObjectLifecycleEvent;
 import org.infogrid.meshbase.transaction.MeshObjectLifecycleListener;
 import org.infogrid.meshbase.transaction.NotWithinTransactionBoundariesException;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -1026,17 +1028,19 @@ public abstract class AbstractMeshBase
     protected void instantiateLifecycleEventListenersIfNeeded()
     {
         if( theLifecycleEventListeners == null ) {
-            theLifecycleEventListeners = new FlexibleListenerSet<MeshObjectLifecycleListener,AbstractMeshObjectLifecycleEvent,Integer>()
+            theLifecycleEventListeners = new FlexibleListenerSet<MeshObjectLifecycleListener,MeshObjectLifecycleEvent,Integer>()
             {
                 public void fireEventToListener(
                         MeshObjectLifecycleListener listener,
-                        AbstractMeshObjectLifecycleEvent         event,
-                        Integer                          flag )
+                        MeshObjectLifecycleEvent    event,
+                        Integer                     flag )
                 {
-                    if( flag.intValue() == 0 ) {
-                        listener.meshObjectCreated( event );
+                    if( event instanceof MeshObjectCreatedEvent ) {
+                        listener.meshObjectCreated( (MeshObjectCreatedEvent) event );
+                    } else if( event instanceof MeshObjectDeletedEvent ) {
+                        listener.meshObjectDeleted( (MeshObjectDeletedEvent) event );
                     } else {
-                        listener.meshObjectDeleted( event );
+                        log.error( "Unexpected event: " + event );
                     }
                 }
             };
@@ -1228,37 +1232,20 @@ public abstract class AbstractMeshBase
     }
 
     /**
-     * Notify MeshObjectLifecycleListeners that a MeshObject was created.
+     * Notify MeshObjectLifecycleListeners that a MeshObjectLifecycleEvent occurred.
      * This shall not be invoked by the application programmer.
      * 
      * @param theEvent the MAbstractMeshObjectLifecycleEvent
      */
-    public final void notifyMasterAdded(
-            AbstractMeshObjectLifecycleEvent theEvent )
+    public final void notifyLifecycleEvent(
+            MeshObjectLifecycleEvent theEvent )
     {
-        FlexibleListenerSet<MeshObjectLifecycleListener,AbstractMeshObjectLifecycleEvent,Integer> listeners = theLifecycleEventListeners;
+        FlexibleListenerSet<MeshObjectLifecycleListener,MeshObjectLifecycleEvent,Integer> listeners = theLifecycleEventListeners;
         
         if( listeners != null ) {
-            listeners.fireEvent( theEvent, 0 );
+            listeners.fireEvent( theEvent );
         }
     }
-
-    /**
-     * Notify MeshObjectLifecycleEventListeners that a MeshObject was deleted.
-     * This shall not be invoked by the application programmer.
-     * 
-     * @param theEvent the MAbstractMeshObjectLifecycleEvent
-     */
-    public final void notifyDeleted(
-            AbstractMeshObjectLifecycleEvent theEvent )
-    {
-        FlexibleListenerSet<MeshObjectLifecycleListener,AbstractMeshObjectLifecycleEvent,Integer> listeners = theLifecycleEventListeners;
-        
-        if( listeners != null ) {
-            listeners.fireEvent( theEvent, 1 );
-        }
-    }
-
 
     /**
      * The identifier of this MeshBase.
@@ -1314,7 +1301,7 @@ public abstract class AbstractMeshBase
     /**
       * The MeshObjectLifecycleEventListeners (if any).
       */
-    private FlexibleListenerSet<MeshObjectLifecycleListener, AbstractMeshObjectLifecycleEvent, Integer> theLifecycleEventListeners = null;
+    private FlexibleListenerSet<MeshObjectLifecycleListener, MeshObjectLifecycleEvent, Integer> theLifecycleEventListeners = null;
 
     /**
       * The current Transaction, if any.

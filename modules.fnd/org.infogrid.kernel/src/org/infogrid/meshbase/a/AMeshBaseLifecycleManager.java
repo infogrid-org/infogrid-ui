@@ -168,9 +168,7 @@ public class AMeshBaseLifecycleManager
                 timeRead,
                 timeExpires );
 
-        putIntoStore( ret );
-
-        tx.addChange( createCreatedEvent( ret ));
+        putIntoMeshBase( ret, createCreatedEvent( ret ));
 
         assignOwner( ret );
 
@@ -252,9 +250,9 @@ public class AMeshBaseLifecycleManager
             ExternalizedMeshObject currentExternalized = current.asExternalized();
             
             current.delete();
-            removeFromStore( current.getIdentifier() );
-
-            tx.addChange( createDeletedEvent( current, currentIdentifier, currentExternalized, now ));
+            removeFromMeshBase(
+                    current.getIdentifier(),
+                    createDeletedEvent( current, currentIdentifier, currentExternalized, now ));
         }
     }
 
@@ -547,8 +545,7 @@ public class AMeshBaseLifecycleManager
             init.initialize( ret.getTimeUpdated() );
         }
 
-        putIntoStore( ret );
-        tx.addChange( createCreatedEvent( ret ));
+        putIntoMeshBase( ret, createCreatedEvent( ret ));
         
         return ret;
     }

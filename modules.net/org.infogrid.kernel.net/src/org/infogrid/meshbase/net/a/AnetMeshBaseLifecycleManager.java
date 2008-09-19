@@ -531,16 +531,16 @@ public class AnetMeshBaseLifecycleManager
             }
         }
 
-        putIntoStore( ret );
-
         Proxy                 incomingProxy           = realBase.determineIncomingProxy();
         NetMeshBaseIdentifier incomingProxyIdentifier = incomingProxy != null ? incomingProxy.getPartnerMeshBaseIdentifier() : null;
 
-        tx.addChange( new NetMeshObjectCreatedEvent(
-                realBase,
-                realBase.getIdentifier(),
+        putIntoMeshBase(
                 ret,
-                incomingProxyIdentifier ));
+                new NetMeshObjectCreatedEvent(
+                        realBase,
+                        realBase.getIdentifier(),
+                        ret,
+                        incomingProxyIdentifier ));
 
         assignOwner( ret );
 
@@ -631,9 +631,9 @@ public class AnetMeshBaseLifecycleManager
             ExternalizedMeshObject externalized         = current.asExternalized( true );
             
             current.delete();
-            removeFromStore( current.getIdentifier() );
-
-            tx.addChange( createDeletedEvent( current, currentCanonicalName, externalized, now ));
+            removeFromMeshBase(
+                    current.getIdentifier(),
+                    createDeletedEvent( current, currentCanonicalName, externalized, now ));
         }
     }
 
@@ -854,16 +854,16 @@ public class AnetMeshBaseLifecycleManager
 
                 ((AnetMeshObject) current).purge();
                 
-                removeFromStore( identifier );
-                
-                tx.addChange( new ReplicaPurgedEvent(
-                        realBase,
-                        realBase.getIdentifier(),
-                        current,
+                removeFromMeshBase(
                         identifier,
-                        incomingProxyIdentifier,
-                        externalized,
-                        time ));
+                        new ReplicaPurgedEvent(
+                                realBase,
+                                realBase.getIdentifier(),
+                                current,
+                                identifier,
+                                incomingProxyIdentifier,
+                                externalized,
+                                time ));
 
             } catch( NotPermittedException ex ) {
                 log.error( ex );
@@ -902,20 +902,20 @@ public class AnetMeshBaseLifecycleManager
             // we don't do that here because it's the slave replica
             // theObject.checkPermittedDelete(); // this may throw NotPermittedException
 
-            theObject.delete();
-            removeFromStore( theObject.getIdentifier() );
-
             Proxy                 incomingProxy           = realBase.determineIncomingProxy();
             NetMeshBaseIdentifier incomingProxyIdentifier = incomingProxy != null ? incomingProxy.getPartnerMeshBaseIdentifier() : null;
 
-            tx.addChange( new NetMeshObjectDeletedEvent(
-                    realBase,
-                    realBase.getIdentifier(),
-                    theObject,
-                    realIdentifier,
-                    incomingProxyIdentifier,
-                    externalized,
-                    timeEventOccurred ));
+            theObject.delete();
+            removeFromMeshBase(
+                    theObject.getIdentifier(),
+                    new NetMeshObjectDeletedEvent(
+                            realBase,
+                            realBase.getIdentifier(),
+                            theObject,
+                            realIdentifier,
+                            incomingProxyIdentifier,
+                            externalized,
+                            timeEventOccurred ));
         }
         return theObject;
     }
@@ -1027,17 +1027,17 @@ public class AnetMeshBaseLifecycleManager
             }
         }
 
-        putIntoStore( ret );
-
         Proxy                 incomingProxy           = realBase.determineIncomingProxy();
         NetMeshBaseIdentifier incomingProxyIdentifier = incomingProxy != null ? incomingProxy.getPartnerMeshBaseIdentifier() : null;
 
-        tx.addChange( new ReplicaCreatedEvent(
-                realBase,
-                realBase.getIdentifier(),
+        putIntoMeshBase(
                 ret,
-                incomingProxyIdentifier,
-                now ));
+                new ReplicaCreatedEvent(
+                        realBase,
+                        realBase.getIdentifier(),
+                        ret,
+                        incomingProxyIdentifier,
+                        now ));
         
         // don't assign owner, that comes via replication
 

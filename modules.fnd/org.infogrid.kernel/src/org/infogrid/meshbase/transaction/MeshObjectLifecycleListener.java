@@ -27,7 +27,7 @@ public interface MeshObjectLifecycleListener
      * @param theEvent the AbstractMeshObjectLifecycleEvent
      */
     public void meshObjectCreated(
-            AbstractMeshObjectLifecycleEvent theEvent );
+            MeshObjectCreatedEvent theEvent );
 
     /**
      * A MeshObject has been deleted. This indicates a "semantic delete".
@@ -35,5 +35,5 @@ public interface MeshObjectLifecycleListener
      * @param theEvent the MAbstractMeshObjectLifecycleEvent
      */
     public void meshObjectDeleted(
-            AbstractMeshObjectLifecycleEvent theEvent );
+            MeshObjectDeletedEvent theEvent );
 }

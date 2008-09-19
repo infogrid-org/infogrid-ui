@@ -202,7 +202,7 @@ public class StoreShadowMeshBaseLifecycleManager
                 proxyTowardsHomeIndex,
                 proxyTowardsLockIndex );
 
-        putIntoStore( ret );
+        putIntoMeshBase( ret, null ); // this does not create an event
 
         // no transaction
         return ret;        

@@ -27,6 +27,7 @@ import org.infogrid.meshbase.security.AccessManager;
 
 import org.infogrid.meshbase.transaction.MeshObjectCreatedEvent;
 import org.infogrid.meshbase.transaction.MeshObjectDeletedEvent;
+import org.infogrid.meshbase.transaction.MeshObjectLifecycleEvent;
 import org.infogrid.meshbase.transaction.TransactionException;
 
 import org.infogrid.model.primitives.EntityType;
@@ -488,13 +489,21 @@ public abstract class AbstractMeshBaseLifecycleManager
      * Helper method that allows our subclasses to access the internal storage without having to expose it publicly.
      *
      * @param obj the MeshObject to put into the storage
+     * @param event the MeshObjectLifeCycleEvent
      * @return the MeshObject in the store previously with the same identifier
      */
-    protected MeshObject putIntoStore(
-            AbstractMeshObject obj )
+    protected MeshObject putIntoMeshBase(
+            AbstractMeshObject       obj,
+            MeshObjectLifecycleEvent event )
     {
         AbstractMeshBase realBase = (AbstractMeshBase) theMeshBase;
         MeshObject       ret      = realBase.theCache.put( obj.getIdentifier(), obj );
+        
+        if( event != null ) {
+            realBase.getCurrentTransaction().addChange( event );
+            realBase.notifyLifecycleEvent( event );
+        }
+        
         return ret;
     }
 
@@ -502,13 +511,20 @@ public abstract class AbstractMeshBaseLifecycleManager
      * Helper method that allows our subclasses to access the internal storage without having to expose it publicly.
      * 
      * @param identifier the identifier of the MeshObject
+     * @param event the MeshObjectLifeCycleEvent
      * @return the removed MeshObject, or null
      */
-    protected MeshObject removeFromStore(
-            MeshObjectIdentifier identifier )
+    protected MeshObject removeFromMeshBase(
+            MeshObjectIdentifier     identifier,
+            MeshObjectLifecycleEvent event )
     {
         AbstractMeshBase realBase = (AbstractMeshBase) theMeshBase;
         MeshObject       ret      = realBase.theCache.remove( identifier );
+        
+        if( event != null ) {
+            realBase.getCurrentTransaction().addChange( event );
+            realBase.notifyLifecycleEvent( event );
+        }
         return ret;
     }
 

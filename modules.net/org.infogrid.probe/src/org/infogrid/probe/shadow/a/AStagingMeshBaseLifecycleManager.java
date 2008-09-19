@@ -422,16 +422,16 @@ public class AStagingMeshBaseLifecycleManager
                 }
             }
 
-            putIntoStore( ret );
-
             Proxy                 incomingProxy           = realBase.determineIncomingProxy();
             NetMeshBaseIdentifier incomingProxyIdentifier = incomingProxy != null ? incomingProxy.getPartnerMeshBaseIdentifier() : null;
 
-            tx.addChange( new NetMeshObjectCreatedEvent(
-                    realBase,
-                    realBase.getIdentifier(),
+            putIntoMeshBase(
                     ret,
-                    incomingProxyIdentifier ));
+                    new NetMeshObjectCreatedEvent(
+                            realBase,
+                            realBase.getIdentifier(),
+                            ret,
+                            incomingProxyIdentifier ));
 
             assignOwner( ret );
 
