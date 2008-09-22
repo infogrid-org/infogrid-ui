@@ -19,7 +19,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 import javax.servlet.jsp.JspException;
 
 /**
- * <p>Abstract superclass for all tags that .</p>
+ * <p>Abstract superclass.</p>
  */
 public abstract class AbstractHrefOrInlineTag
     extends

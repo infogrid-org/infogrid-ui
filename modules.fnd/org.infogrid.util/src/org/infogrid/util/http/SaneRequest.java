@@ -24,6 +24,14 @@ import java.util.Map;
 public abstract class SaneRequest
 {
     /**
+     * Private constructor, for subclasses only.
+     */
+    protected SaneRequest()
+    {
+        // nothing
+    }
+
+    /**
      * Determine the HTTP method (such as GET).
      *
      * @return the HTTP method

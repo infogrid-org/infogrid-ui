@@ -14,6 +14,10 @@
 
 package org.infogrid.probe.store.TEST;
 
+import java.io.File;
+import java.lang.ref.WeakReference;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.CoherenceSpecification;
@@ -28,11 +32,6 @@ import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.util.logging.Log;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
 /**
  * Tests that ProbeManagers resume Shadows correctly with manual trigger
  * after having been swapped out.
@@ -45,7 +44,7 @@ public class StoreShadowMeshBaseTest3
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public void run()
         throws
@@ -143,6 +142,7 @@ public class StoreShadowMeshBaseTest3
      * Constructor.
      *
      * @param args the command-line arguments
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public StoreShadowMeshBaseTest3(
             String [] args )

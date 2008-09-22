@@ -19,7 +19,8 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.TextHtmlStructuredResponseSection;
+import org.infogrid.jee.templates.TextHtmlStructuredResponseSectionTemplate;
+import org.infogrid.jee.templates.TextStructuredResponseSection;
 
 /**
  * <p>Abstract superclass for all tags that insert additional information into the HTML header
@@ -81,8 +82,9 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
             IOException
     {
         String text = determineText();
-        
-        theResponse.appendToSectionContent( TextHtmlStructuredResponseSection.HTML_HEAD_SECTION, text );
+
+        TextStructuredResponseSection section = theResponse.getTextSection( TextHtmlStructuredResponseSectionTemplate.HTML_HEAD_SECTION );
+        section.appendContent( text );
         
         return SKIP_BODY; // that should mean that nothing inside our tag gets written
     }

@@ -368,6 +368,7 @@ public class MSmartFactory<K,V,A>
      * @param object the FactoryCreatedObject
      */
     @SuppressWarnings(value={"unchecked"})
+    @Override
     public void factoryCreatedObjectUpdated(
             FactoryCreatedObject<K,V,A> object )
     {

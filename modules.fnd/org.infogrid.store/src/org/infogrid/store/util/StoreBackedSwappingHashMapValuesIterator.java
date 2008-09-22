@@ -157,7 +157,7 @@ public class StoreBackedSwappingHashMapValuesIterator<K,V>
      * Returns the next element in the iteration.
      *
      * @return the next element in the iteration.
-     * @exception NoSuchElementException iteration has no more elements.
+     * @throws NoSuchElementException iteration has no more elements.
      */
     public V next()
     {

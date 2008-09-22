@@ -14,10 +14,10 @@
 
 package org.infogrid.lid.openid.store;
 
-import org.infogrid.lid.openid.AssociationNegotiationParameters;
-import org.infogrid.lid.openid.RelyingPartySideAssociation;
-import org.infogrid.lid.openid.RelyingPartySideAssociationManager;
-import org.infogrid.lid.openid.RelyingPartySideAssociationNegotiator;
+import org.infogrid.lid.openid.OpenIdAssociationNegotiationParameters;
+import org.infogrid.lid.openid.OpenIdRelyingPartySideAssociation;
+import org.infogrid.lid.openid.OpenIdRelyingPartySideAssociationManager;
+import org.infogrid.lid.openid.OpenIdRelyingPartySideAssociationNegotiator;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.CachingMap;
@@ -25,13 +25,13 @@ import org.infogrid.util.Factory;
 import org.infogrid.util.PatientSmartFactory;
 
 /**
- * A RelyingPartySideAssociationManager implemented using Store.
+ * A OpenIdRelyingPartySideAssociationManager implemented using Store.
  */
 public class StoreRelyingPartySideAssociationManager
         extends
-            PatientSmartFactory<String,RelyingPartySideAssociation,AssociationNegotiationParameters>
+            PatientSmartFactory<String,OpenIdRelyingPartySideAssociation,OpenIdAssociationNegotiationParameters>
         implements
-            RelyingPartySideAssociationManager
+            OpenIdRelyingPartySideAssociationManager
 {
     /**
      * Factory method.
@@ -43,8 +43,8 @@ public class StoreRelyingPartySideAssociationManager
             Store store )
     {
         RelyingPartySideAssociationMapper                  mapper          = RelyingPartySideAssociationMapper.create();
-        StoreBackedSwappingHashMap<String,RelyingPartySideAssociation> storage         = StoreBackedSwappingHashMap.createWeak( mapper, store );
-        RelyingPartySideAssociationNegotiator              delegateFactory = RelyingPartySideAssociationNegotiator.create();
+        StoreBackedSwappingHashMap<String,OpenIdRelyingPartySideAssociation> storage         = StoreBackedSwappingHashMap.createWeak( mapper, store );
+        OpenIdRelyingPartySideAssociationNegotiator              delegateFactory = OpenIdRelyingPartySideAssociationNegotiator.create();
         
         return new StoreRelyingPartySideAssociationManager( delegateFactory, storage );
     }
@@ -56,8 +56,8 @@ public class StoreRelyingPartySideAssociationManager
      * @param storage the storage for the RelyingPartySideAssociations
      */
     protected StoreRelyingPartySideAssociationManager(
-            Factory<String,RelyingPartySideAssociation,AssociationNegotiationParameters> delegateFactory,
-            CachingMap<String,RelyingPartySideAssociation>                               storage )
+            Factory<String,OpenIdRelyingPartySideAssociation,OpenIdAssociationNegotiationParameters> delegateFactory,
+            CachingMap<String,OpenIdRelyingPartySideAssociation>                               storage )
     {
         super( delegateFactory, storage );
     }
@@ -75,7 +75,7 @@ public class StoreRelyingPartySideAssociationManager
      */
     protected boolean isStillGood(
             String                      key,
-            RelyingPartySideAssociation value,
+            OpenIdRelyingPartySideAssociation value,
             Object                      argument )
     {
         boolean ret = value.isCurrentlyValid();

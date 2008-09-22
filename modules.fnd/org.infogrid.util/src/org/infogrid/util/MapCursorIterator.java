@@ -316,7 +316,7 @@ public abstract class MapCursorIterator<K,V>
     
     /**
      * Move the cursor to just before the first element, i.e. return the first element when
-     * {@link #next next} is invoked right afterwards.
+     * {@link CursorIterator#next() next} is invoked right afterwards.
      *
      * @return the number of steps that were taken to move. Positive number means
      *         forward, negative backward
@@ -329,7 +329,7 @@ public abstract class MapCursorIterator<K,V>
 
     /**
      * Move the cursor to just after the last element, i.e. return the last element when
-     * {@link #previous previous} is invoked right afterwards.
+     * {@link CursorIterator#previous previous} is invoked right afterwards.
      *
      * @return the number of steps that were taken to move. Positive number means
      *         forward, negative backward
@@ -400,7 +400,7 @@ public abstract class MapCursorIterator<K,V>
          * Obtain the next element, without iterating forward.
          *
          * @return the next element
-         * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+         * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
          */
         public K peekNext()
         {
@@ -411,7 +411,7 @@ public abstract class MapCursorIterator<K,V>
          * Obtain the previous element, without iterating backwards.
          *
          * @return the previous element
-         * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+         * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
          */
         public K peekPrevious()
         {
@@ -422,7 +422,7 @@ public abstract class MapCursorIterator<K,V>
          * Returns the next element in the iteration.
          *
          * @return the next element in the iteration.
-         * @exception NoSuchElementException iteration has no more elements.
+         * @throws NoSuchElementException iteration has no more elements.
          */
         public K next()
         {
@@ -447,7 +447,7 @@ public abstract class MapCursorIterator<K,V>
          * Returns the previous element in the iteration.
          *
          * @return the previous element in the iteration.
-         * @exception NoSuchElementException iteration has no more elements.
+         * @throws NoSuchElementException iteration has no more elements.
          * @see #next()
          */
         public K previous()
@@ -480,7 +480,7 @@ public abstract class MapCursorIterator<K,V>
          *
          * @param pos the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToBefore(
                 K pos )
@@ -505,7 +505,7 @@ public abstract class MapCursorIterator<K,V>
          *
          * @param pos the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToAfter(
                 K pos )
@@ -617,7 +617,7 @@ public abstract class MapCursorIterator<K,V>
          * Obtain the next element, without iterating forward.
          *
          * @return the next element
-         * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+         * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
          */
         public V peekNext()
         {
@@ -628,7 +628,7 @@ public abstract class MapCursorIterator<K,V>
          * Obtain the previous element, without iterating backwards.
          *
          * @return the previous element
-         * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+         * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
          */
         public V peekPrevious()
         {
@@ -639,7 +639,7 @@ public abstract class MapCursorIterator<K,V>
          * Returns the next element in the iteration.
          *
          * @return the next element in the iteration.
-         * @exception NoSuchElementException iteration has no more elements.
+         * @throws NoSuchElementException iteration has no more elements.
          */
         public V next()
         {
@@ -664,7 +664,7 @@ public abstract class MapCursorIterator<K,V>
          * Returns the previous element in the iteration.
          *
          * @return the previous element in the iteration.
-         * @exception NoSuchElementException iteration has no more elements.
+         * @throws NoSuchElementException iteration has no more elements.
          * @see #next()
          */
         public V previous()
@@ -697,7 +697,7 @@ public abstract class MapCursorIterator<K,V>
          *
          * @param pos the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToBefore(
                 V pos )
@@ -722,7 +722,7 @@ public abstract class MapCursorIterator<K,V>
          *
          * @param pos the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToAfter(
                 V pos )

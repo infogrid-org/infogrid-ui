@@ -32,6 +32,26 @@ public abstract class StringHelper
     private static final Log log = Log.getLogInstance( StringHelper.class ); // our own, private logger
 
     /**
+     * Compare two Strings.
+     * 
+     * @param one the first String
+     * @param two the second String
+     * @return comparison value, according to String.compareTo
+     */
+    public static int compareTo(
+            String one,
+            String two )
+    {
+        int ret;
+        if( one == null ) {
+            ret = two == null ? 0 : -1;
+        } else {
+            ret = one.compareTo( two );
+        }
+        return ret;
+    }
+
+    /**
      * We use backslashes as escape.
      */
     static final char ESCAPE = '\\';

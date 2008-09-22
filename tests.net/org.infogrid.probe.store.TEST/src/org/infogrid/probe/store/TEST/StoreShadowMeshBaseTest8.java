@@ -43,7 +43,7 @@ public class StoreShadowMeshBaseTest8
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public void run()
         throws
@@ -222,7 +222,7 @@ public class StoreShadowMeshBaseTest8
      * Constructor.
      *
      * @param args the command-line arguments
-     * @throws Exception tests can throw all kinds of Exceptions
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public StoreShadowMeshBaseTest8(
             String [] args )

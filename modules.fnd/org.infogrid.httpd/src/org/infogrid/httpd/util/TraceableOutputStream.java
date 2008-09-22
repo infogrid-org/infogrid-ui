@@ -58,7 +58,7 @@ public class TraceableOutputStream
      * Closes this output stream and releases any system resources
      * associated with this stream.
      *
-     * @exception  IOException  if an I/O error occurs.
+     * @throws  IOException  if an I/O error occurs.
      */
     @Override
     public void close()
@@ -75,7 +75,7 @@ public class TraceableOutputStream
      * Flushes this output stream and forces any buffered output bytes
      * to be written out.
      *
-     * @exception  IOException  if an I/O error occurs.
+     * @throws  IOException  if an I/O error occurs.
      */
     @Override
     public void flush()
@@ -93,7 +93,7 @@ public class TraceableOutputStream
      * to this output stream.
      *
      * @param      b   the data.
-     * @exception  IOException  if an I/O error occurs.
+     * @throws  IOException  if an I/O error occurs.
      * @see        java.io.OutputStream#write(byte[], int, int)
      */
     @Override
@@ -116,7 +116,7 @@ public class TraceableOutputStream
      * @param      b     the data.
      * @param      off   the start offset in the data.
      * @param      len   the number of bytes to write.
-     * @exception  IOException  if an I/O error occurs. In particular,
+     * @throws  IOException  if an I/O error occurs. In particular,
      *             an <code>IOException</code> is thrown if the output
      *             stream is closed.
      */
@@ -146,7 +146,7 @@ public class TraceableOutputStream
      * implementation for this method.
      *
      * @param      b   the <code>byte</code>.
-     * @exception  IOException  if an I/O error occurs. In particular,
+     * @throws  IOException  if an I/O error occurs. In particular,
      *             an <code>IOException</code> may be thrown if the
      *             output stream has been closed.
      */

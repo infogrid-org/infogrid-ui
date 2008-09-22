@@ -128,13 +128,41 @@ public final class ResourceHelper
     public static ResourceHelper getInstance(
             Class channel )
     {
+        return getInstance( channel, false );
+    }
+
+    /**
+      * <p>Method for getting hold of the ResourceHelper instance for a particular
+      * Class. It employs as smart factory pattern. We pass in a channel,
+      * which typically is the name of the class/component that wants
+      * a resource, or the central name for a set of related classes.</p>
+      *
+      * <p>This method is guaranteed to return non-null, even if the
+      * ResourceHelper does not find any "resources" to speak of.</p>
+      *
+      * @param channel the channel determining the ResourceHelper instance we obtain
+      * @param recursive if true, look for missing resources by walking up the inheritance hierarchy
+      * @return the created/found ResourceHelper
+      */
+    public static ResourceHelper getInstance(
+            Class   channel,
+            boolean recursive )
+    {
         // we need to get the outer class in case this is an inner class
         String channelName = channel.getName();
         int    dollar      = channelName.indexOf( '$' );
         if( dollar > 0 ) {
             channelName = channelName.substring( 0, dollar );
         }
-        return getInstance( channelName, channel.getClassLoader(), null );
+        ResourceHelper supRh = null;
+        if( recursive ) {
+            Class          supCl = channel.getSuperclass();
+            if( supCl != null && supCl != Object.class ) {
+                supRh = getInstance( supCl, true );
+            }
+        }
+        
+        return getInstance( channelName, channel.getClassLoader(), supRh );
     }
 
     /**

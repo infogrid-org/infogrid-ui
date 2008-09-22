@@ -76,9 +76,12 @@ public class VerbatimStructuredResponseTemplate
         throws
             IOException
     {
-        outputStatusCode( delegate, structured );
-        outputCookies(    delegate, structured );
-        outputMimeType(   delegate, structured );
+        outputStatusCode(  delegate, structured );
+        outputLocale(      delegate, structured );
+        outputCookies(     delegate, structured );
+        outputMimeType(    delegate, structured );
+        outputLocation(    delegate, structured );
+        outputYadisHeader( delegate, structured );
         
         // stream default section(s)
         
@@ -92,14 +95,14 @@ public class VerbatimStructuredResponseTemplate
             w.flush();
         }
 
-        String textContent = structured.getSectionContent( TextStructuredResponseSection.DEFAULT_SECTION );
+        String textContent = structured.getDefaultTextSection().getContent();
         if( textContent != null ) {
             Writer w = delegate.getWriter();
             w.write( textContent );
             w.flush();
         }
 
-        byte [] binaryContent = structured.getSectionContent( BinaryStructuredResponseSection.DEFAULT_SECTION );
+        byte [] binaryContent = structured.getDefaultBinarySection().getContent();
         if( binaryContent != null ) {
             OutputStream o = delegate.getOutputStream();
             o.write( binaryContent );

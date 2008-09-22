@@ -32,7 +32,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
 /**
- * A "fake" Store implementation that keeps the {@link Store} content in memory only.
+ * A "fake" Store implementation that keeps the {@link org.infogrid.store.Store} content in memory only.
  * While there might be few production uses of this class, there are many
  * during software development and for testing.
  */
@@ -78,6 +78,7 @@ public class MStore
      * @see #update if a data element with this key exists already
      * @see #putOrUpdate if a data element with this key may exist already
      */
+    @Override
     public void put(
             String  key,
             String  encodingId,
@@ -90,6 +91,10 @@ public class MStore
             StoreKeyExistsAlreadyException,
             IOException
     {
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+
         put( new StoreValue( key, encodingId, timeCreated, timeUpdated, timeRead, timeExpires, data ));
     }
 
@@ -142,6 +147,7 @@ public class MStore
      * @see #put if a data element with this key does not exist already
      * @see #putOrUpdate if a data element with this key may exist already
      */
+    @Override
     public void update(
             String  key,
             String  encodingId,
@@ -154,6 +160,10 @@ public class MStore
             StoreKeyDoesNotExistException,
             IOException
     {
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+
         update( new StoreValue( key, encodingId, timeCreated, timeUpdated, timeRead, timeExpires, data ));
     }
 
@@ -205,6 +215,7 @@ public class MStore
      * @see #put if a data element with this key does not exist already
      * @see #update if a data element with this key exists already
      */
+    @Override
     public boolean putOrUpdate(
             String  key,
             String  encodingId,
@@ -216,6 +227,10 @@ public class MStore
         throws
             IOException
     {
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+
         return putOrUpdate( new StoreValue( key, encodingId, timeCreated, timeUpdated, timeRead, timeExpires, data ));
     }
 
@@ -266,6 +281,8 @@ public class MStore
             StoreKeyDoesNotExistException,
             IOException
     {
+        checkKey( key );
+
         StoreValue ret = theDelegate.get( key );
 
         if( log.isDebugEnabled() ) {
@@ -296,6 +313,8 @@ public class MStore
             StoreKeyDoesNotExistException,
             IOException
     {
+        checkKey( key );
+
         if( log.isDebugEnabled() ) {
             log.debug( this + ".delete( " + key + " )" );
         }
@@ -315,6 +334,7 @@ public class MStore
      *
      * @throws IOException thrown if an I/O error occurred
      */
+    @Override
     public synchronized void deleteAll()
         throws
             IOException
@@ -338,6 +358,8 @@ public class MStore
         throws
             IOException
     {
+        checkKey( startsWith );
+
         if( log.isDebugEnabled() ) {
             log.debug( this + ".deleteAll( " + startsWith + " )" );
         }
@@ -461,7 +483,7 @@ public class MStore
          *
          * @param key the key of the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToBefore(
                 String key )
@@ -488,7 +510,7 @@ public class MStore
          *
          * @param key the key of the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToAfter(
                 String key )

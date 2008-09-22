@@ -188,7 +188,7 @@ public class TreeFacadeCursorIterator<T>
      * @param start the current node
      * @return the next node
      * @throws NoSuchElementException iteration has no more elements.
-     * @see #goBackward()
+     * @see #goBackward
      */
     protected T goForward(
             T start )
@@ -233,7 +233,7 @@ public class TreeFacadeCursorIterator<T>
      * @param start the current node
      * @return the previous node
      * @throws NoSuchElementException iteration has no more elements.
-     * @see #goForward()
+     * @see #goForward
      */
     protected T goBackward(
             T start )

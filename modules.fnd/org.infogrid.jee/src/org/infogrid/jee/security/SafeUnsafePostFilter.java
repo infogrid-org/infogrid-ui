@@ -23,6 +23,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -48,8 +49,8 @@ public class SafeUnsafePostFilter
      * @param response The servlet response we are creating
      * @param chain The filter chain we are processing
      *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
+     * @throws IOException if an input/output error occurs
+     * @throws ServletException if a servlet error occurs
      */
     public void doFilter(
             ServletRequest  request,
@@ -68,7 +69,7 @@ public class SafeUnsafePostFilter
         {
             HttpServletRequest realRequest = (HttpServletRequest) request;
             if( "POST".equalsIgnoreCase( realRequest.getMethod() )) {
-                SaneRequest sane  = (SaneRequest) realRequest.getAttribute( SaneRequest.class.getName() );
+                SaneRequest sane  = (SaneRequest) realRequest.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME  );
                 String      token = sane.getPostArgument( INPUT_FIELD_NAME );
                 
                 isSafe = theFormTokenService.validateToken( token );
@@ -148,7 +149,8 @@ public class SafeUnsafePostFilter
     /**
      * Name of the attribute in the incoming request that indicates whether this is a safe request or not.
      */
-    public static final String SAFE_UNSAFE_FLAG = SafeUnsafePostFilter.class.getName() + "-safeunsafe";
+    public static final String SAFE_UNSAFE_FLAG
+            = SaneServletRequest.classToAttributeName( SafeUnsafePostFilter.class, "safeunsafe" );
 
     /**
      * Name of the hidden field in the form.

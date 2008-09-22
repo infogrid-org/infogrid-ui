@@ -32,11 +32,25 @@ public abstract class AbstractFactory<K,V,A>
      * @return the created object
      * @throws FactoryException catch-all Exception, consider its cause
      */
-    public final V obtainFor(
+    public V obtainFor(
             K key )
         throws
             FactoryException
     {
         return obtainFor( key, null );
+    }
+
+    /**
+     * Invoked only by objects that have been created by this SmartFactory, this enables
+     * the created objects to indicate to the SmartFactory that they have been updated.
+     * Depending on the implementation of the SmartFactory, that may cause the
+     * SmartFactory to write changes to disk, for example.
+     *
+     * @param object the FactoryCreatedObject
+     */
+    public void factoryCreatedObjectUpdated(
+            FactoryCreatedObject<K,V,A> object )
+    {
+        // no nothing by default
     }
 }

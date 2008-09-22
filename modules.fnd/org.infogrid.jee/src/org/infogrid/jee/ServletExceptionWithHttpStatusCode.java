@@ -30,7 +30,7 @@ public class ServletExceptionWithHttpStatusCode
     /**
      * Constructor.
      * 
-     * @param status the desired HTTP status code
+     * @param status the desired HTTP status code, or -1 if none
      */
     public ServletExceptionWithHttpStatusCode(
             int status )

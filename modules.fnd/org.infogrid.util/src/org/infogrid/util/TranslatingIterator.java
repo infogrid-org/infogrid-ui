@@ -64,7 +64,7 @@ public abstract class TranslatingIterator<E1,E2>
      * Returns the next element in the iteration.
      *
      * @return the next element in the iteration.
-     * @exception NoSuchElementException iteration has no more elements.
+     * @throws NoSuchElementException iteration has no more elements.
      */
     public E1 next()
         throws
@@ -79,10 +79,10 @@ public abstract class TranslatingIterator<E1,E2>
      * Removes from the underlying collection the last element returned by the
      * iterator (optional operation).
      *
-     * @exception UnsupportedOperationException if the <tt>remove</tt>
+     * @throws UnsupportedOperationException if the <tt>remove</tt>
      *		  operation is not supported by this Iterator.
      
-     * @exception IllegalStateException if the <tt>next</tt> method has not
+     * @throws IllegalStateException if the <tt>next</tt> method has not
      *		  yet been called, or the <tt>remove</tt> method has already
      *		  been called after the last call to the <tt>next</tt>
      *		  method.
@@ -109,7 +109,7 @@ public abstract class TranslatingIterator<E1,E2>
      * object has at least one more element to provide.
      *
      * @return     the next element of this enumeration.
-     * @exception  NoSuchElementException  if no more elements exist.
+     * @throws  NoSuchElementException  if no more elements exist.
      */
     public final E1 nextElement()
     {

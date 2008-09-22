@@ -54,6 +54,10 @@ public abstract class AbstractStore
             StoreKeyExistsAlreadyException,
             IOException
     {
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+
         StoreValue toPut = new StoreValue( key, encodingId, timeCreated, timeUpdated, timeRead, timeExpires, data );
 
         put( toPut );
@@ -88,6 +92,10 @@ public abstract class AbstractStore
             StoreKeyDoesNotExistException,
             IOException
     {
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+
         StoreValue toPut = new StoreValue( key, encodingId, timeCreated, timeUpdated, timeRead, timeExpires, data );
 
         update( toPut );
@@ -121,6 +129,10 @@ public abstract class AbstractStore
         throws
             IOException
     {
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+
         StoreValue toPutOrUpdate = new StoreValue( key, encodingId, timeCreated, timeUpdated, timeRead, timeExpires, data );
 
         boolean ret = putOrUpdate( toPutOrUpdate );
@@ -153,6 +165,57 @@ public abstract class AbstractStore
             StoreListener newListener )
     {
         theStoreListeners.addDirect( newListener );
+    }
+
+    /**
+     * Throw an IllegalArgumentException if an invalid key was handed to the Store API.
+     * This may be overridden by subclasses.
+     * 
+     * @param key the candidate key
+     * @throws IllegalArgumentException if the candidate key is invalid
+     */
+    protected void checkKey(
+            String key )
+        throws
+            IllegalArgumentException
+    {
+        if( key == null ) {
+            throw new IllegalArgumentException( "key must not be null" );
+        }
+    }
+
+    /**
+     * Throw an IllegalArgumentException if an invalid encoding was handed to the Store API.
+     * This may be overridden by subclasses.
+     * 
+     * @param encoding the candidate encoding
+     * @throws IllegalArgumentException if the candidate encoding is invalid
+     */
+    protected void checkEncoding(
+            String encoding )
+        throws
+            IllegalArgumentException
+    {
+        if( encoding == null ) {
+            throw new IllegalArgumentException( "encoding must not be null" );
+        }
+    }
+
+    /**
+     * Throw an IllegalArgumentException if  invalid data was handed to the Store API.
+     * This may be overridden by subclasses.
+     * 
+     * @param data the candidate data
+     * @throws IllegalArgumentException if the candidate data is invalid
+     */
+    protected void checkData(
+            byte [] data )
+        throws
+            IllegalArgumentException
+    {
+        if( data == null ) {
+            throw new IllegalArgumentException( "data must not be null" );
+        }
     }
 
     /**

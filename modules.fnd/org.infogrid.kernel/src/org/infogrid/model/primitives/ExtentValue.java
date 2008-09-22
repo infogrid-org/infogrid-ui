@@ -16,7 +16,6 @@ package org.infogrid.model.primitives;
 
 import java.awt.geom.Dimension2D;
 import org.infogrid.util.DoubleDimension;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -62,8 +61,8 @@ public final class ExtentValue
     /**
      * Factory method.
      *
-     * @param theWidth the theWidth of the extent
-     * @param theHeight the theHeight of the extent
+     * @param width the theWidth of the extent
+     * @param height the theHeight of the extent
      * @return the created ExtentValue
      */
     public static ExtentValue create(
@@ -76,8 +75,8 @@ public final class ExtentValue
     /**
       * Private constructor, use factory method.
       *
-      * @param theWidth the theWidth of the extent
-      * @param theHeight the theHeight of the extent
+      * @param width the theWidth of the extent
+      * @param height the theHeight of the extent
       */
     private ExtentValue(
             double width,

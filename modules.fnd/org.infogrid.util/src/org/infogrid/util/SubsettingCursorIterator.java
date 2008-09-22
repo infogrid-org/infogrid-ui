@@ -50,7 +50,7 @@ public class SubsettingCursorIterator<E>
      * Obtain the next element, without iterating forward.
      *
      * @return the next element
-     * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+     * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
      */
     @Override
     public E peekNext()
@@ -67,7 +67,7 @@ public class SubsettingCursorIterator<E>
      * Obtain the previous element, without iterating backwards.
      *
      * @return the previous element
-     * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+     * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
      */
     @Override
     public E peekPrevious()
@@ -166,7 +166,7 @@ public class SubsettingCursorIterator<E>
      * Returns the next element in the iteration.
      *
      * @return the next element in the iteration.
-     * @exception NoSuchElementException iteration has no more elements.
+     * @throws NoSuchElementException iteration has no more elements.
      */
     public E next()
     {
@@ -209,7 +209,7 @@ public class SubsettingCursorIterator<E>
      * Returns the previous element in the iteration.
      *
      * @return the previous element in the iteration.
-     * @exception NoSuchElementException iteration has no more elements.
+     * @throws NoSuchElementException iteration has no more elements.
      * @see #next()
      */
     public E previous()
@@ -261,7 +261,7 @@ public class SubsettingCursorIterator<E>
      * Throws NoSuchElementException if the position does not exist.
      *
      * @param n the number of positions to move
-     * @exception NoSuchElementException
+     * @throws NoSuchElementException
      */
     @Override
     public void moveBy(
@@ -294,7 +294,7 @@ public class SubsettingCursorIterator<E>
      *
      * @param pos the element to move the cursor to
      * @return the number of steps that were taken to move. Positive number means forward, negative backward
-     * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+     * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
      */
     @Override
     public int moveToBefore(
@@ -338,7 +338,7 @@ public class SubsettingCursorIterator<E>
      *
      * @param pos the element to move the cursor to
      * @return the number of steps that were taken to move. Positive number means forward, negative backward
-     * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+     * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
      */
     @Override
     public int moveToAfter(
@@ -381,10 +381,10 @@ public class SubsettingCursorIterator<E>
      * Removes from the underlying collection the last element returned by the
      * iterator (optional operation). This is the same as the current element.
      *
-     * @exception UnsupportedOperationException if the <tt>remove</tt>
+     * @throws UnsupportedOperationException if the <tt>remove</tt>
      *		  operation is not supported by this Iterator.
 
-     * @exception IllegalStateException if the <tt>next</tt> method has not
+     * @throws IllegalStateException if the <tt>next</tt> method has not
      *		  yet been called, or the <tt>remove</tt> method has already
      *		  been called after the last call to the <tt>next</tt>
      *		  method.

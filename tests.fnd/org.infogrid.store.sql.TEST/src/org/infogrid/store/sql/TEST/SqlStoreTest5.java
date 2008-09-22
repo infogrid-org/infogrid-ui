@@ -275,7 +275,7 @@ public class SqlStoreTest5
          * DynamicLoadFromStoreMap to write changes to disk, for example.
          *
          * @param key the key
-         * @Param value the value
+         * @param value the value
          */
         public void valueUpdated(
                 Integer key,

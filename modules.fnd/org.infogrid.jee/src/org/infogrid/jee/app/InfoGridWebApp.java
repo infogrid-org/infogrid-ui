@@ -23,6 +23,7 @@ import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -70,7 +71,7 @@ public abstract class InfoGridWebApp
     /**
      * Constructor, for subclasses.
      *
-     * @param applicationContext the main application Context. THis context holds all the
+     * @param applicationContext the main application Context. This context holds all the
      *        well-known objects needed by the application
      */
     protected InfoGridWebApp(
@@ -104,6 +105,9 @@ public abstract class InfoGridWebApp
             Iterator<Locale> localeIterator,
             ServletContext   context )
     {
+        if( servletName == null ) {
+            throw new NullPointerException( "Cannot find servlet with null name" );
+        }
         String found = null;
         
         String servletBaseName;
@@ -282,7 +286,8 @@ public abstract class InfoGridWebApp
      * Name of a Request-level attribute that contains the problems that have occurred, as a
      * List&lt;Throwable&gt;.
      */
-    public static final String PROCESSING_PROBLEM_EXCEPTION_NAME = InfoGridWebApp.class.getName() + "-RequestProblems";
+    public static final String PROCESSING_PROBLEM_EXCEPTION_NAME
+            = SaneServletRequest.classToAttributeName( InfoGridWebApp.class, "RequestProblems" );
 
     /**
      * The application context.

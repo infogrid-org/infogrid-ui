@@ -244,7 +244,7 @@ public class FilesystemStoreIterator
      * <p>Note that the elements
      * will be ordered in the opposite direction as you might expect: they are
      * returned in the sequence in which the CursorIterator visits them, not in the
-     * sequence in which the underlying {@link CursorIterable} stores them.</p>
+     * sequence in which the underlying <code>CursorIterable</code> stores them.</p>
      *
      * @param n the number of elements to return
      * @return the previous no more than N elements
@@ -290,7 +290,7 @@ public class FilesystemStoreIterator
      * @return the number of steps that were taken to move. Positive number means
      *         forward, negative backward
      * @throws NoSuchElementException thrown if this element is not actually part
-     *         of the underlying {@link CursorIterable}
+     *         of the underlying <code>CursorIterable</code>
      */
     public int moveToBefore(
             StoreValue pos )
@@ -308,7 +308,7 @@ public class FilesystemStoreIterator
      * @return the number of steps that were taken to move. Positive number means
      *         forward, negative backward
      * @throws NoSuchElementException thrown if this element is not actually part
-     *         of the underlying {@link CursorIterable}
+     *         of the underlying <code>CursorIterable</code>
      */
     public int moveToAfter(
             StoreValue pos )
@@ -372,7 +372,7 @@ public class FilesystemStoreIterator
      *
      * @param key the key of the element to move the cursor to
      * @return the number of steps that were taken to move. Positive number means forward, negative backward
-     * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+     * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
      */
     public int moveToBefore(
             String key )
@@ -391,7 +391,7 @@ public class FilesystemStoreIterator
      *
      * @param key the key of the element to move the cursor to
      * @return the number of steps that were taken to move. Positive number means forward, negative backward
-     * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+     * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
      */
     public int moveToAfter(
             String key )
@@ -459,7 +459,7 @@ public class FilesystemStoreIterator
      * object has at least one more element to provide.
      *
      * @return     the next element of this enumeration.
-     * @exception  NoSuchElementException  if no more elements exist.
+     * @throws  NoSuchElementException  if no more elements exist.
      */
     public StoreValue nextElement()
     {

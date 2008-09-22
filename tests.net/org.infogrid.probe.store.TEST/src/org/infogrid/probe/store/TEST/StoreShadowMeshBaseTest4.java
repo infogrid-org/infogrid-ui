@@ -14,6 +14,10 @@
 
 package org.infogrid.probe.store.TEST;
 
+import java.io.File;
+import java.lang.ref.WeakReference;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -27,11 +31,6 @@ import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.util.logging.Log;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
 /**
  * Tests that shadows that are not currently in memory are still being updated.
  */
@@ -42,7 +41,7 @@ public class StoreShadowMeshBaseTest4
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public void run()
         throws
@@ -134,6 +133,7 @@ public class StoreShadowMeshBaseTest4
      * Constructor.
      *
      * @param args the command-line arguments
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public StoreShadowMeshBaseTest4(
             String [] args )

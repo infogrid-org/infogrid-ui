@@ -14,99 +14,24 @@
 
 package org.infogrid.lid.credential;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Map;
 import org.infogrid.util.Factory;
-import org.infogrid.util.logging.Log;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Factory for LidCredentialTypes based on their names.
  */
-public class LidCredentialTypeFactory
-    implements
+public interface LidCredentialTypeFactory
+    extends
         Factory<String,LidCredentialType,Void>
 {
-    private static final Log log = Log.getLogInstance( LidCredentialTypeFactory.class ); // our own, private logger
-
     /**
-     * Factory method.
+     * Determine the LidCredentialTypes referenced in this incoming request.
+     * This method makes no statement about whether or not credentials provided in this
+     * request are valid, only which types were used.
      * 
-     * @param mappings the mappings from credential type name to Class that can be instantiated of that credential type
-     * @return the created LidCredentialTypeFactory
+     * @param request the incoming request
+     * @return the referenced LidCredentiapTypes
      */
-    public static LidCredentialTypeFactory create(
-            Map<String,Class<? extends LidCredentialType>> mappings )
-    {
-        LidCredentialTypeFactory ret = new LidCredentialTypeFactory( mappings );
-        return ret;
-    }
-
-    /**
-     * Constructor for subclasses only, use factory method.
-     * 
-     * @param mappings the mappings from credential type name to Class that can be instantiated of that credential type
-     */
-    protected LidCredentialTypeFactory(
-            Map<String,Class<? extends LidCredentialType>> mappings )
-    {
-        theMappings = mappings;
-    }
-
-    /**
-     * Factory method. This is equivalent to specifying a null argument.
-     *
-     * @param key the key information required for object creation, if any
-     * @return the created object
-     * @throws UnknownLidCredentialTypeException thrown if the given credential type is not known
-     */
-    public LidCredentialType obtainFor(
-            String key )
-        throws
-            UnknownLidCredentialTypeException
-    {
-        return obtainFor( key, null );
-    }
-
-    /**
-     * Factory method.
-     *
-     * @param key the key information required for object creation, if any
-     * @param argument any argument-style information required for object creation, if any
-     * @return the created object
-     * @throws UnknownLidCredentialTypeException thrown if the given credential type is not known
-     */
-    public LidCredentialType obtainFor(
-            String key,
-            Void   argument )
-        throws
-            UnknownLidCredentialTypeException
-    {
-        Class<? extends LidCredentialType> type = theMappings.get( key );
-        if( type == null ) {
-            throw new UnknownLidCredentialTypeException( key );
-        }
-        
-        try {
-            Method factoryMethod = type.getDeclaredMethod( "create", String.class );
-            Object ret           = factoryMethod.invoke( null, key );
-        
-            return (LidCredentialType) ret;
-
-        } catch( NoSuchMethodException ex ) {
-            log.error( ex );
-        } catch( IllegalAccessException ex ) {
-            log.error( ex );
-        } catch( InvocationTargetException ex ) {
-            log.error( ex );
-        } catch( ClassCastException ex ) {
-            log.error( ex );
-        }
-        return null;
-    }
-    
-    /**
-     * The mappings from name to LidCredentialType classes.
-     */
-    protected Map<String,Class<? extends LidCredentialType>> theMappings;
+    public LidCredentialType [] determineReferencedCredentialTypes(
+            SaneRequest request );
 }

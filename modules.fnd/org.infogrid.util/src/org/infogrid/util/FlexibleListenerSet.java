@@ -104,7 +104,7 @@ public abstract class FlexibleListenerSet<T,E,P>
      * @param newListener the listener to be added to this set
      * @see #addSoft
      * @see #addDirect
-     * @see remove
+     * @see #remove
      */
     public void addWeak(
             T newListener )
@@ -118,7 +118,7 @@ public abstract class FlexibleListenerSet<T,E,P>
      * @param newListener the listener to be added to this set
      * @see #addWeak
      * @see #addDirect
-     * @see remove
+     * @see #remove
      */
     public void addSoft(
             T newListener )
@@ -132,7 +132,7 @@ public abstract class FlexibleListenerSet<T,E,P>
      * @param newListener the listener to be added to this set
      * @see #addSoft
      * @see #addWeak
-     * @see remove
+     * @see #remove
      */
     public void addDirect(
             T newListener )

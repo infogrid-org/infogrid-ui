@@ -15,26 +15,22 @@
 package org.infogrid.probe.manager;
 
 import java.lang.ref.Reference;
-import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.probe.shadow.ShadowMeshBase;
-import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
-
-import org.infogrid.util.CachingMap;
-import org.infogrid.util.IsDeadException;
-import org.infogrid.util.StringHelper;
-import org.infogrid.util.logging.Log;
-
 import java.lang.ref.WeakReference;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.probe.shadow.ShadowMeshBase;
+import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
+import org.infogrid.util.CachingMap;
+import org.infogrid.util.IsDeadException;
+import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.Log;
 
 /**
  * A ProbeManager implementation that uses a ScheduledExecutorService to schedule

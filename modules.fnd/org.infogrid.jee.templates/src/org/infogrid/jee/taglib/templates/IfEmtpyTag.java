@@ -18,7 +18,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponseSection;
 
 /**
- * Tests whether a named StructuredResponseSection is empty.
+ * Tests whether a named StructuredResponseSectionTemplate is empty.
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfEmtpyTag

@@ -183,6 +183,10 @@ public class SqlStore
         if( log.isInfoEnabled() ) {
             log.info( this + ".put( " + key + " -> " + new String( data ) + " )" );
         }
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+        
         try {
             boolean success = new SqlExecutionAction<Boolean>( thePutPreparedStatement ) {
                 protected Boolean perform(
@@ -312,6 +316,10 @@ public class SqlStore
         if( log.isInfoEnabled() ) {
             log.info( this + ".update( " + key + " -> " + new String( data ) + " )" );
         }
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+
         try {
             boolean success = new SqlExecutionAction<Boolean>( theUpdatePreparedStatement ) {
                 protected Boolean perform(
@@ -438,6 +446,11 @@ public class SqlStore
         if( log.isInfoEnabled() ) {
             log.info( this + ".putOrUpdate( " + key + " -> " + new String( data ) + " )" );
         }
+
+        checkKey(      key );
+        checkEncoding( encodingId );
+        checkData(     data );
+
         boolean ret = false;
         try {
             ret = new SqlExecutionAction<Boolean>( thePutOrUpdatePreparedStatement ) {
@@ -574,6 +587,8 @@ public class SqlStore
             log.info( this + ".get( " + key + " )" );
         }
 
+        checkKey( key );
+
         StoreValue ret = null;
         try {
             ret = new SqlExecutionAction<StoreValue>( theGetPreparedStatement ) {
@@ -655,6 +670,9 @@ public class SqlStore
         if( log.isInfoEnabled() ) {
             log.info( this + ".delete( " + key + " )" );
         }
+
+        checkKey( key );
+
         try {
             boolean success = new SqlExecutionAction<Boolean>( theDeletePreparedStatement ) {
                 protected Boolean perform(
@@ -727,6 +745,8 @@ public class SqlStore
         if( log.isDebugEnabled() ) {
             log.debug( this + ".deleteAll()" );
         }
+        checkKey( startsWith );
+
         try {
             new SqlExecutionAction<Object>( theDeleteAllPreparedStatement ) {
                 protected Object perform(
@@ -1220,6 +1240,8 @@ public class SqlStore
         throws
             IOException
     {
+        checkKey( startsWith );
+
         try {
             int ret = new SqlExecutionAction<Integer>( theSizePreparedStatement ) {
                 protected Integer perform(

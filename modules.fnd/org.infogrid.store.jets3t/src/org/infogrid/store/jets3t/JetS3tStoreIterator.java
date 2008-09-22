@@ -69,7 +69,7 @@ public class JetS3tStoreIterator
      * Obtain the next element, without iterating forward.
      *
      * @return the next element
-     * @throw NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+     * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
      */
     public StoreValue peekNext()
     {
@@ -94,7 +94,7 @@ public class JetS3tStoreIterator
      * Obtain the previous element, without iterating backwards.
      *
      * @return the previous element
-     * @throw NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+     * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
      */
     public StoreValue peekPrevious()
     {

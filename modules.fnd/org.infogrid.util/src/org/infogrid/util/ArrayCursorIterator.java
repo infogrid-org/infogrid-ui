@@ -185,7 +185,7 @@ public class ArrayCursorIterator<E>
      * Returns the next element in the iteration.
      *
      * @return the next element in the iteration.
-     * @exception NoSuchElementException iteration has no more elements.
+     * @throws NoSuchElementException iteration has no more elements.
      */
     public E next()
     {
@@ -201,7 +201,7 @@ public class ArrayCursorIterator<E>
      * Returns the previous element in the iteration.
      *
      * @return the previous element in the iteration.
-     * @exception NoSuchElementException iteration has no more elements.
+     * @throws NoSuchElementException iteration has no more elements.
      * @see #next()
      */
     public E previous()
@@ -229,7 +229,7 @@ public class ArrayCursorIterator<E>
      * Set the new position. Throws NoSuchElementException if the position does not exist.
      *
      * @param n the new position
-     * @exception NoSuchElementException
+     * @throws NoSuchElementException
      */
     public void setPosition(
             int n )
@@ -248,7 +248,7 @@ public class ArrayCursorIterator<E>
      * Throws NoSuchElementException if the position does not exist.
      *
      * @param n the number of positions to move
-     * @exception NoSuchElementException
+     * @throws NoSuchElementException
      */
     @Override
     public void moveBy(
@@ -269,7 +269,7 @@ public class ArrayCursorIterator<E>
      *
      * @param pos the element to move the cursor to
      * @return the number of steps that were taken to move. Positive number means forward, negative backward
-     * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+     * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
      */
     public int moveTo(
             E pos )

@@ -548,7 +548,7 @@ public class L10MapImpl
          * Removes from the underlying collection the last element returned by the
          * iterator (optional operation).
          *
-         * @exception UnsupportedOperationException always thrown
+         * @throws UnsupportedOperationException always thrown
          */
         public void remove()
         {
@@ -607,7 +607,7 @@ public class L10MapImpl
          * return each element in the underlying collection exactly once.
          *
          * @return the next element in the iteration.
-         * @exception NoSuchElementException iteration has no more elements.
+         * @throws NoSuchElementException iteration has no more elements.
          */
         public String next()
         {
@@ -642,7 +642,7 @@ public class L10MapImpl
          * return each element in the underlying collection exactly once.
          *
          * @return the next element in the iteration.
-         * @exception NoSuchElementException iteration has no more elements.
+         * @throws NoSuchElementException iteration has no more elements.
          */
         public NameValuePair<PropertyValue> next()
         {

@@ -29,14 +29,5 @@ public interface SmartFactory<K,V,A>
             Factory<K,V,A>,
             WritableNameServer<K,V>
 {
-    /**
-     * Invoked only by objects that have been created by this SmartFactory, this enables
-     * the created objects to indicate to the SmartFactory that they have been updated.
-     * Depending on the implementation of the SmartFactory, that may cause the
-     * SmartFactory to write changes to disk, for example.
-     *
-     * @param object the FactoryCreatedObject
-     */
-    public void factoryCreatedObjectUpdated(
-            FactoryCreatedObject<K,V,A> object );    
+    // nothing
 }

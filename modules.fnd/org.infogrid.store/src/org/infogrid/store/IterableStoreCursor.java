@@ -31,7 +31,7 @@ public interface IterableStoreCursor
      *
      * @param key the key of the element to move the cursor to
      * @return the number of steps that were taken to move. Positive number means forward, negative backward
-     * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+     * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
      */
     public int moveToBefore(
             String key )
@@ -44,7 +44,7 @@ public interface IterableStoreCursor
      *
      * @param key the key of the element to move the cursor to
      * @return the number of steps that were taken to move. Positive number means forward, negative backward
-     * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+     * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
      */
     public int moveToAfter(
             String key )

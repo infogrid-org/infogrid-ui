@@ -14,13 +14,11 @@
 
 package org.infogrid.jee.taglib.candy;
 
+import java.io.IOException;
+import javax.servlet.jsp.JspException;
 import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
-
-import javax.servlet.jsp.JspException;
-
-import java.io.IOException;
 
 /**
  * Generates an HTML overlay in a consistent manner.

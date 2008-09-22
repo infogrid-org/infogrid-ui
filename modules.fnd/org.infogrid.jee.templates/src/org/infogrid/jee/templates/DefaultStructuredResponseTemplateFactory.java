@@ -19,6 +19,7 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -79,21 +80,38 @@ public class DefaultStructuredResponseTemplateFactory
         throws
             FactoryException
     {
-        String mime         = structured.getMimeType();
+        TextStructuredResponseSection   defaultTextSection   = structured.getDefaultTextSection();
+        BinaryStructuredResponseSection defaultBinarySection = structured.getDefaultBinarySection();
+
+        String mime;
+        if( defaultTextSection.isEmpty() ) {
+            mime = defaultBinarySection.getMimeType();
+        } else {
+            mime = defaultTextSection.getMimeType();
+        }
+
         String templateName = getRequestedTemplate( request, structured );
 
         RequestDispatcher dispatcher = findRequestDispatcher( request, structured, templateName, mime );
         
         if( dispatcher == null && ( templateName != null && templateName.length() > 0 )) {
             // try default template if named template did not work
-            dispatcher = findRequestDispatcher( request, structured, "default", mime );
+            dispatcher = findRequestDispatcher( request, structured, theDefaultTemplateName, mime );
+        }
+        if( dispatcher == null && mime == null ) {
+            // if no mime type is specified, default to html
+            dispatcher = findRequestDispatcher( request, structured, templateName, "text/html" );
+            if( dispatcher == null && ( templateName != null && templateName.length() > 0 )) {
+                // try default template if named template did not work
+                dispatcher = findRequestDispatcher( request, structured, theDefaultTemplateName, "text/html" );
+            }
         }
         
         StructuredResponseTemplate ret;
         if( dispatcher != null ) {
             ret = JspStructuredResponseTemplate.create( dispatcher, request, templateName, structured );
         } else {
-            // if none is there, we stream verbatim
+            // all hope is lost, we have to stream verbatim whatever it is that is in structured
             ret = VerbatimStructuredResponseTemplate.create( request, templateName, structured );
         }
         return ret;
@@ -143,12 +161,12 @@ public class DefaultStructuredResponseTemplateFactory
         }
 
         StringBuilder jspPath = new StringBuilder();
-        jspPath.append( "/s/templates/" );
+        jspPath.append( PATH_TO_TEMPLATES );
         jspPath.append( templateName ).append( "/" );
         if( mime != null && mime.length() > 0 ) {
             jspPath.append( mime ).append( "/" );
         }
-        jspPath.append( DEFAULT_JSP_NAME );
+        jspPath.append( TEMPLATE_JSP_NAME );
 
         InfoGridWebApp    app        = InfoGridWebApp.getSingleton();
         RequestDispatcher dispatcher = app.findLocalizedRequestDispatcher(
@@ -165,12 +183,22 @@ public class DefaultStructuredResponseTemplateFactory
     protected String theDefaultTemplateName;
     
     /**
-     * Name of the default template, if no other has been specified in ther constructor or the request.
+     * Our ResourceHelper.
      */
-    public static final String DEFAULT_TEMPLATE_NAME = "default";
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( DefaultStructuredResponseTemplateFactory.class );
     
     /**
-     * Name of the default JSP for each template.
+     * Name of the default template, if no other has been specified in ther constructor or the request.
      */
-    public static final String DEFAULT_JSP_NAME = "template.jsp";
+    public static final String DEFAULT_TEMPLATE_NAME = theResourceHelper.getResourceStringOrDefault( "DefaultTemplateName", "default" );
+    
+    /**
+     * Name of the JSP that contains the template.
+     */
+    public static final String TEMPLATE_JSP_NAME = theResourceHelper.getResourceStringOrDefault( "TemplateJspName", "template.jsp" );
+    
+    /**
+     * Path to the directory containing the default template jsp.
+     */
+    public static final String PATH_TO_TEMPLATES = theResourceHelper.getResourceStringOrDefault( "PathToTemplates", "/s/templates/" );
 }

@@ -68,4 +68,9 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+
+    <tag>
+        <name>title</name>
+        <tag-class>org.infogrid.jee.taglib.templates.TitleTag</tag-class>
+    </tag>
 </taglib>

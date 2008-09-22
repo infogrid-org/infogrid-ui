@@ -16,7 +16,6 @@ package org.infogrid.jee.taglib;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
@@ -274,24 +273,6 @@ public abstract class AbstractInfoGridBodyTag
         return EVAL_PAGE; // reasonable default
     }
 
-//    /**
-//     * Format a PropertyValue.
-//     *
-//     * @param pageContext the PageContext in which to format the PropertyValue
-//     * @param value the PropertyValue
-//     * @param nullString the String to display of the value is null
-//     * @param stringRepresentation the StringRepresentation for PropertyValues
-//     * @return the String to display
-//     */
-//    protected final String formatValue(
-//            PageContext   pageContext,
-//            PropertyValue value,
-//            String        nullString,
-//            String        stringRepresentation )
-//    {
-//        return theFormatter.formatPropertyValue( pageContext, value, nullString, stringRepresentation );
-//    }
-    
     /**
      * Look up a bean in the scope given by the scope attribute.
      *
@@ -367,25 +348,6 @@ public abstract class AbstractInfoGridBodyTag
         }
         return ret;
     }
-
-//    /**
-//     * Find a PropertyType, or throw an Exception. This will consider the
-//     * EntityTypes that the MeshObject is currently blessed with, and look for
-//     * a PropertyType with the given name.
-//     *
-//     * @param obj the MeshObject
-//     * @param name name of the PropertyType
-//     * @return the found PropertyType
-//     * @throws JspException thrown if the PropertyType could not be found
-//     */
-//    protected PropertyType findPropertyTypeOrThrow(
-//            MeshObject obj,
-//            String     name )
-//        throws
-//            JspException
-//    {
-//        return theFormatter.findPropertyTypeOrThrow( obj, name );
-//    }
 
     /**
      * Print out some text.

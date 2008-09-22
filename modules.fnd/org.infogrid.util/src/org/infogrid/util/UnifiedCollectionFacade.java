@@ -180,7 +180,7 @@ public class UnifiedCollectionFacade<E>
          * Removes from the underlying collection the last element returned by the
          * iterator.
          *
-         * @exception UnsupportedOperationException always thrown
+         * @throws UnsupportedOperationException always thrown
          */
         public void remove()
         {

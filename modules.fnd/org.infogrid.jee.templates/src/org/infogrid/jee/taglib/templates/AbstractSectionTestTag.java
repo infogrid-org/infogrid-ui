@@ -15,17 +15,14 @@
 package org.infogrid.jee.taglib.templates;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.StructuredResponseSection;
 
 /**
- * <p>Abstract superclass for all tags evaluating a <code>StructuredResponseSection</code>.</p>
+ * <p>Abstract superclass for all tags evaluating a <code>StructuredResponseSectionTemplate</code>.</p>
  */
 public abstract class AbstractSectionTestTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractSectionTag
 {
     /**
      * Constructor.
@@ -41,34 +38,9 @@ public abstract class AbstractSectionTestTag
     @Override
     protected void initializeToDefaults()
     {
-        theName = null;
-
         super.initializeToDefaults();
     }
     
-    /**
-     * Obtain value of the name property.
-     *
-     * @return value of the name property
-     * @see #setName
-     */
-    public final String getName()
-    {
-        return theName;
-    }
-
-    /**
-     * Set value of the name property.
-     *
-     * @param newValue new value of the name property
-     * @see #getName
-     */
-    public final void setName(
-            String newValue )
-    {
-        theName = newValue;
-    }
-
     /**
      * Our implementation of doStartTag().
      *
@@ -103,30 +75,4 @@ public abstract class AbstractSectionTestTag
         throws
             JspException,
             IgnoreException;
-
-    /**
-     * Determine the PropertyValue to be used in the test.
-     *
-     * @return the PropertyValue
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    protected StructuredResponseSection evaluate()
-        throws
-            JspException,
-            IgnoreException
-    {
-        StructuredResponse response = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-        if( response == null ) {
-            return null;
-        }
-        StructuredResponseSection ret  = response.findSectionByName( theName );
-
-        return ret;
-    }
-
-    /**
-     * The name of the section in the StructuredResponse that is being evaluated.
-     */
-    protected String theName;
 }

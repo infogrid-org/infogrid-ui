@@ -23,12 +23,11 @@ import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 
 /**
- * A ViewletFactoryChoice that instantiates the SimpleJeeViewlet as default, pretending to
- * be a Viewlet class with a certain name, called the <code>pseudoClassName</code>. This
- * is identical to creating a DefaultViewletFactoryChoice with a Viewlet class named
- * pseudoClassName that does not add any functionality itself.
- * 
- * The main purpose of this class is to avoid having to write empty Viewlet classes.
+ * <p>A ViewletFactoryChoice that instantiates the SimpleJeeViewlet as default, pretending to
+ *    be a Viewlet class with a certain name, called the <code>pseudoClassName</code>. This
+ *    is identical to creating a DefaultViewletFactoryChoice with a Viewlet class named
+ *    pseudoClassName that does not add any functionality itself.</p>
+ * <p>The main purpose of this class is to avoid having to write empty Viewlet classes.</p>
  */
 public class PseudoJspViewletFactoryChoice
         extends
@@ -37,7 +36,7 @@ public class PseudoJspViewletFactoryChoice
     /**
      * Factory method.
      *
-     * @param pseudoClassName
+     * @param pseudoClassName the name of the (non-exististing) Viewlet class
      * @return the created PseudoJspViewletFactoryChoice
      */
     public static PseudoJspViewletFactoryChoice create(
@@ -50,7 +49,7 @@ public class PseudoJspViewletFactoryChoice
     /**
      * Factory method.
      *
-     * @param pseudoClassName
+     * @param pseudoClassName the name of the (non-exististing) Viewlet class
      * @param matchQuality the match quality
      * @return the created PseudoJspViewletFactoryChoice
      */
@@ -65,8 +64,7 @@ public class PseudoJspViewletFactoryChoice
     /**
      * Constructor for subclasses only, use factory method.
      * 
-     * @param jspPath the path to the JSP file
-     * @param rh the ResourceHelper to use. By convention, it should be named analogously to the JSP file
+     * @param pseudoClassName the name of the (non-exististing) Viewlet class
      * @param matchQuality the match quality
      */
     protected PseudoJspViewletFactoryChoice(

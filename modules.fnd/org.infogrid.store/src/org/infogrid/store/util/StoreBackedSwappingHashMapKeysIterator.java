@@ -68,7 +68,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
      * Obtain the next element, without iterating forward.
      *
      * @return the next element
-     * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+     * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
      */
     @Override
     public K peekNext()
@@ -83,7 +83,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
      * Obtain the previous element, without iterating backwards.
      *
      * @return the previous element
-     * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+     * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
      */
     @Override
     public K peekPrevious()
@@ -156,7 +156,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
      * Returns the next element in the iteration.
      *
      * @return the next element in the iteration.
-     * @exception NoSuchElementException iteration has no more elements.
+     * @throws NoSuchElementException iteration has no more elements.
      */
     public K next()
     {
@@ -233,7 +233,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
      * Throws NoSuchElementException if the position does not exist.
      *
      * @param n the number of positions to move
-     * @exception NoSuchElementException
+     * @throws NoSuchElementException
      */
     @Override
     public void moveBy(

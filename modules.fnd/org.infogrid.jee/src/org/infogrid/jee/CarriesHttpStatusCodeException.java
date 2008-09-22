@@ -23,7 +23,7 @@ public interface CarriesHttpStatusCodeException
     /**
      * Obtain the HTTP status code desired by this exception.
      * 
-     * @return the desired HTTP status code
+     * @return the desired HTTP status code, or -1 if none
      */
     public int getDesiredHttpStatusCode();
 }

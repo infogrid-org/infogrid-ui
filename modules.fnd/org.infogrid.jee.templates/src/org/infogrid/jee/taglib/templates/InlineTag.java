@@ -21,7 +21,6 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.BinaryStructuredResponseSection;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.StructuredResponseSection;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 
 /**
@@ -94,26 +93,28 @@ public class InlineTag
             throw new JspException( "Cannot find StructuredResponse in the request context" );
         }
 
-        StructuredResponseSection section = structured.findSectionByName( theName );
-        if( section instanceof TextStructuredResponseSection ) {
-            TextStructuredResponseSection realSection = (TextStructuredResponseSection) section;
+        TextStructuredResponseSection   textSection   = structured.findTextSectionByName(   theName );
+        BinaryStructuredResponseSection binarySection = structured.findBinarySectionByName( theName );
 
-            String content = structured.getSectionContent( realSection );
-            print( content );
+        if( textSection != null ) {
+            String content = textSection.getContent();
+            if( content != null && content.length() > 0 ) {
+                print( content );
+            }
+        
+        } else if( binarySection != null ) {
+            byte [] content = binarySection.getContent();
+            
+            if( content != null && content.length > 0 ) {
+                try {
+                    pageContext.getOut().flush();
 
-        } else if( section instanceof BinaryStructuredResponseSection ) {
-            BinaryStructuredResponseSection realSection = (BinaryStructuredResponseSection) section;
+                    ServletOutputStream o = pageContext.getResponse().getOutputStream();
+                    o.write( content );
 
-            byte [] content = structured.getSectionContent( realSection );
-
-            try {
-                pageContext.getOut().flush();
-
-                ServletOutputStream o = pageContext.getResponse().getOutputStream();
-                o.write( content );
-
-            } catch( IOException ex ) {
-                throw new JspException( ex );
+                } catch( IOException ex ) {
+                    throw new JspException( ex );
+                }
             }
 
         } else {

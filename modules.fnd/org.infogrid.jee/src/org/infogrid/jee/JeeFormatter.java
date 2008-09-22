@@ -86,7 +86,7 @@ public class JeeFormatter
      * @param scopeName scope to be searched (page, request, session, application)
      *        or <code>null</code> to use <code>PageContext.findAttribute()</code> instead
      * @return Object in the specified page context
-     * @exception JspException if an invalid scope name is requested
+     * @throws JspException if an invalid scope name is requested
      */
     public Object simpleLookup(
             PageContext pageContext,
@@ -116,7 +116,7 @@ public class JeeFormatter
      * @param scopeName scope to be searched (page, request, session, application)
      *        or <code>null</code> to use <code>PageContext.findAttribute()</code> instead
      * @return property of specified JavaBean
-     * @exception JspException if an invalid scope name is requested
+     * @throws JspException if an invalid scope name is requested
      */
     public Object simpleLookup(
             PageContext pageContext,
@@ -144,7 +144,7 @@ public class JeeFormatter
      * @param scopeName scope to be searched (page, request, session, application)
      *        or <code>null</code> to use <code>PageContext.findAttribute()</code> instead
      * @return Object in the specified page context
-     * @exception JspException if an invalid scope name is requested, or the Object could not be found
+     * @throws JspException if an invalid scope name is requested, or the Object could not be found
      */
     public Object simpleLookupOrThrow(
             PageContext pageContext,
@@ -173,7 +173,7 @@ public class JeeFormatter
      * @param scopeName scope to be searched (page, request, session, application)
      *        or <code>null</code> to use <code>PageContext.findAttribute()</code> instead
      * @return property of specified JavaBean
-     * @exception JspException if an invalid scope name is requested, the Object could not be found, or the property could not be found
+     * @throws JspException if an invalid scope name is requested, the Object could not be found, or the property could not be found
      */
     public Object simpleLookupOrThrow(
             PageContext pageContext,
@@ -203,7 +203,7 @@ public class JeeFormatter
      * @param scopeName scope to be searched (page, request, session, application)
      *        or <code>null</code> to use <code>PageContext.findAttribute()</code> instead
      * @return found Object, or null
-     * @exception JspException if an invalid scope name is requested
+     * @throws JspException if an invalid scope name is requested
      */
     public Object nestedLookup(
             PageContext pageContext,
@@ -252,7 +252,7 @@ public class JeeFormatter
      * @param scopeName scope to be searched (page, request, session, application)
      *        or <code>null</code> to use <code>PageContext.findAttribute()</code> instead
      * @return found Object, or null
-     * @exception JspException if an invalid scope name is requested
+     * @throws JspException if an invalid scope name is requested
      */
     public Object nestedLookup(
             PageContext pageContext,
@@ -281,7 +281,7 @@ public class JeeFormatter
      * @param scopeName scope to be searched (page, request, session, application)
      *        or <code>null</code> to use <code>findAttribute()</code> instead
      * @return found Object
-     * @exception JspException if an invalid scope name is requested, or the Object could not be found
+     * @throws JspException if an invalid scope name is requested, or the Object could not be found
      */
     public Object nestedLookupOrThrow(
             PageContext pageContext,
@@ -311,7 +311,7 @@ public class JeeFormatter
      * @param scopeName scope to be searched (page, request, session, application)
      *        or <code>null</code> to use <code>PageContext.findAttribute()</code> instead
      * @return found Object, or null
-     * @exception JspException if an invalid scope name is requested
+     * @throws JspException if an invalid scope name is requested
      */
     public Object nestedLookupOrThrow(
             PageContext pageContext,
@@ -643,7 +643,7 @@ public class JeeFormatter
      * @param pageContext fhe PageContext object for this page
      * @param filter if true, the specified text will first be filtered (see {@link #filter filter()})
      * @param text the text to be written
-     * @exception JspException if an input/output error occurs
+     * @throws JspException if an input/output error occurs
      */
     public void print(
             PageContext pageContext,
@@ -676,7 +676,7 @@ public class JeeFormatter
      * @param pageContext fhe PageContext object for this page
      * @param filter if true, the specified text will first be filtered (see {@link #filter filter()})
      * @param text the text to be written
-     * @exception JspException if an input/output error occurs
+     * @throws JspException if an input/output error occurs
      */
     public void println(
             PageContext pageContext,

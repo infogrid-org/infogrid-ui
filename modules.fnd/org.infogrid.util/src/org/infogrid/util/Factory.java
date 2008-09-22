@@ -48,4 +48,15 @@ public interface Factory<K,V,A>
             K key )
         throws
             FactoryException;
+
+    /**
+     * Invoked only by objects that have been created by this Factory, this enables
+     * the created objects to indicate to the Factory that they have been updated.
+     * Depending on the implementation of the Factory, that may cause a
+     * SmartFactory to write changes to disk, for example.
+     *
+     * @param object the FactoryCreatedObject
+     */
+    public void factoryCreatedObjectUpdated(
+            FactoryCreatedObject<K,V,A> object );    
 }

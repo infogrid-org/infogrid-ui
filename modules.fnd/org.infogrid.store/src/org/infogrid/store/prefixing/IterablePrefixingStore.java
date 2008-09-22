@@ -173,7 +173,7 @@ public class IterablePrefixingStore
          * Obtain the next element, without iterating forward.
          *
          * @return the next element
-         * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+         * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
          */
         public StoreValue peekNext()
         {
@@ -185,7 +185,7 @@ public class IterablePrefixingStore
          * Obtain the previous element, without iterating backwards.
          *
          * @return the previous element
-         * @exception NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
+         * @throws NoSuchElementException iteration has no current element (e.g. because the end of the iteration was reached)
          */
         public StoreValue peekPrevious()
         {
@@ -253,7 +253,7 @@ public class IterablePrefixingStore
          * Returns the next element in the iteration.
          *
          * @return the next element in the iteration.
-         * @exception NoSuchElementException iteration has no more elements.
+         * @throws NoSuchElementException iteration has no more elements.
          */
         public StoreValue next()
         {
@@ -322,7 +322,7 @@ public class IterablePrefixingStore
          * Throws NoSuchElementException if the position does not exist.
          *
          * @param n the number of positions to move
-         * @exception NoSuchElementException
+         * @throws NoSuchElementException
          */
         public void moveBy(
                 int n )
@@ -338,7 +338,7 @@ public class IterablePrefixingStore
          *
          * @param pos the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToBefore(
                 StoreValue pos )
@@ -357,7 +357,7 @@ public class IterablePrefixingStore
          *
          * @param pos the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToAfter(
                 StoreValue pos )
@@ -375,10 +375,10 @@ public class IterablePrefixingStore
          * Removes from the underlying collection the last element returned by the
          * iterator (optional operation). This is the same as the current element.
          *
-         * @exception UnsupportedOperationException if the <tt>remove</tt>
+         * @throws UnsupportedOperationException if the <tt>remove</tt>
          *		  operation is not supported by this Iterator.
 
-         * @exception IllegalStateException if the <tt>next</tt> method has not
+         * @throws IllegalStateException if the <tt>next</tt> method has not
          *		  yet been called, or the <tt>remove</tt> method has already
          *		  been called after the last call to the <tt>next</tt>
          *		  method.
@@ -421,7 +421,7 @@ public class IterablePrefixingStore
          *
          * @param key the key of the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToBefore(
                 String key )
@@ -440,7 +440,7 @@ public class IterablePrefixingStore
          *
          * @param key the key of the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToAfter(
                 String key )
@@ -553,7 +553,7 @@ public class IterablePrefixingStore
          *
          * @param pos the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToBefore(
                 String pos )
@@ -593,7 +593,7 @@ public class IterablePrefixingStore
          *
          * @param pos the element to move the cursor to
          * @return the number of steps that were taken to move. Positive number means forward, negative backward
-         * @exception NoSuchElementException thrown if this element is not actually part of the collection to iterate over
+         * @throws NoSuchElementException thrown if this element is not actually part of the collection to iterate over
          */
         public int moveToAfter(
                 String pos )

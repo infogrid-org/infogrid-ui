@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.Cookie;
 
 /**
  * Replaces text in a response. This filter only filters content types that start with "text/"
@@ -59,8 +60,8 @@ public class TextSubstitutionFilter
      * @param response The servlet response we are creating
      * @param chain The filter chain we are processing
      *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
+     * @throws IOException if an input/output error occurs
+     * @throws ServletException if a servlet error occurs
      */
     public void doFilter(
             ServletRequest  request,
@@ -71,8 +72,8 @@ public class TextSubstitutionFilter
             ServletException
     {
         if( response instanceof HttpServletResponse ) {
-            
-            BufferedServletResponse delegatedResponse = new BufferedServletResponse( (HttpServletResponse) response );
+            HttpServletResponse     realResponse      = (HttpServletResponse) response;
+            BufferedServletResponse delegatedResponse = new BufferedServletResponse( realResponse );
             
             try {
                 chain.doFilter( request, delegatedResponse );
@@ -85,6 +86,25 @@ public class TextSubstitutionFilter
 
             } finally {
 
+                realResponse.setContentType( delegatedResponse.getContentType() );
+                realResponse.setLocale(      delegatedResponse.getLocale() );
+                realResponse.setStatus(      delegatedResponse.getStatus() );
+                
+                for( Cookie current : delegatedResponse.getCookies() ) {
+                    realResponse.addCookie( current );
+                }
+                for( String key : delegatedResponse.getHttpHeaderKeySet() ) {
+                    if( BufferedServletResponse.LOCATION_HEADER.equals( key )) {
+                        continue;
+                    }
+                    String [] values = delegatedResponse.getHttpHeaderValues( key );
+                    if( values != null ) {
+                        for( String value : values ) {
+                            realResponse.addHeader( key, value );
+                        }
+                    }
+                }
+                
                 byte [] bufferedBytes  = delegatedResponse.getBufferedServletOutputStreamOutput();
                 String  bufferedString = delegatedResponse.getBufferedPrintWriterOutput();
                 

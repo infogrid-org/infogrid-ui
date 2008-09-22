@@ -14,7 +14,7 @@
 
 package org.infogrid.jee.security.store;
 
-import org.infogrid.jee.security.*;
+import org.infogrid.jee.security.FormTokenService;
 import org.infogrid.store.Store;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
@@ -77,6 +77,10 @@ public class StoreFormTokenService
     public boolean validateToken(
             String key )
     {
+        if( key == null ) {
+            return false;
+        }
+
         // regardless, we remove tokens passed into here
         StoredFormToken token = theMap.remove( key );
         if( token == null ) {

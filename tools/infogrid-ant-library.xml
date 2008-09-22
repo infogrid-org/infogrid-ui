@@ -212,7 +212,7 @@
 <!-- override javadoc so we don't have to set the additional parameters in each module -->
     <target depends="init" name="-javadoc-build">
         <mkdir dir="${dist.javadoc.dir}"/>
-	<javadoc additionalparam="${javadoc.additionalparam} -stylesheetfile ${infogrid.org.tools}/module-stylesheet.css -doctitle Module ${ant.project.name} -overview ${basedir}/${build.dir}/module-description.html"
+	<javadoc additionalparam="${javadoc.additionalparam} -stylesheetfile ${infogrid.org.tools}/module-stylesheet.css -doctitle &quot;Module ${ant.project.name}&quot; -overview ${basedir}/${build.dir}/module-description.html"
                  author="${javadoc.author}"
                  charset="UTF-8"
                  destdir="${dist.javadoc.dir}"

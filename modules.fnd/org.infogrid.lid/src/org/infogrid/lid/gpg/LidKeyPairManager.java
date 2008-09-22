@@ -14,6 +14,7 @@
 
 package org.infogrid.lid.gpg;
 
+import org.infogrid.lid.gpg.LidKeyPair;
 import org.infogrid.util.SmartFactory;
 
 /**

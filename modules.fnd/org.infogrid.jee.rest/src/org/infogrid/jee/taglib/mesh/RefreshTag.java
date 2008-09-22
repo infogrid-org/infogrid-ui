@@ -14,15 +14,16 @@
 
 package org.infogrid.jee.taglib.mesh;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.TextHtmlStructuredResponseSection;
-        
+import org.infogrid.jee.templates.TextHtmlStructuredResponseSectionTemplate;
+import org.infogrid.jee.templates.TextStructuredResponseSection;
+import org.infogrid.util.http.SaneRequest;
+   
 /**
  * <p>Generates a consistent refresh button.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
@@ -64,21 +65,11 @@ public class RefreshTag
     {
         StructuredResponse theResponse = (StructuredResponse) lookupOrThrow(
                 StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+        RestfulRequest restful = (RestfulRequest) lookupOrThrow(
+                RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
+        SaneRequest saneRequest = restful.getSaneRequest();
 
-        // this needs to be simple lookup so the periods in the class name don't trigger nestedLookup
-        RestfulRequest restful = (RestfulRequest) theFormatter.simpleLookup(
-                pageContext,
-                RestfulRequest.class.getName(),
-                getScope() );
-
-        HttpServletRequest realRequest = ((HttpServletRequest)pageContext.getRequest());
-        
-        String href  = realRequest.getRequestURI();
-        String query = realRequest.getQueryString();
-        
-        if( query != null && query.length() > 0 ) {
-            href = href + '?' + query;
-        }
+        String href = saneRequest.getAbsoluteFullUri();
         href = theFormatter.filter( href );
         
         StringBuilder buf = new StringBuilder();
@@ -95,7 +86,8 @@ public class RefreshTag
         css.append( ".css" );
         css.append( "\" />\n" );
 
-        theResponse.appendToSectionContent( TextHtmlStructuredResponseSection.HTML_HEAD_SECTION, css.toString() );
+        TextStructuredResponseSection headSection = theResponse.getTextSection( TextHtmlStructuredResponseSectionTemplate.HTML_HEAD_SECTION );
+        headSection.appendContent( css.toString() );
 
         return EVAL_BODY_INCLUDE;
     }

@@ -51,21 +51,21 @@ public abstract class AbstractIfNetMeshBaseHasProxiesTag
     }
     
     /**
-     * Obtain value of the meshObjectName property.
+     * Obtain value of the mesBaseName property.
      * 
-     * @return value of the meshObjectName property
-     * @see #setNetMeshBaseName
+     * @return value of the mesBaseName property
+     * @see #setMeshBaseName
      */
-    public final String getMeshbaseName()
+    public final String getMeshBaseName()
     {
         return theNetMeshBaseName;
     }
 
     /**
-     * Set value of the meshObjectBean property.
+     * Set value of the mesBaseName property.
      * 
-     * @param newValue new value of the meshObjectName property
-     * @see #getMeshbaseName
+     * @param newValue new value of the mesBaseName property
+     * @see #getMeshBaseName
      */
     public final void setMeshBaseName(
             String newValue )

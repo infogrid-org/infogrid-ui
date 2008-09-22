@@ -74,21 +74,19 @@ public class ViewletDispatcherServlet
             IOException
     {
         HttpServletRequest  servletRequest = (HttpServletRequest) request;
-        SaneServletRequest  saneRequest    = (SaneServletRequest) request.getAttribute( SaneServletRequest.class.getName() );
+        SaneServletRequest  saneRequest    = (SaneServletRequest) request.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME  );
         StructuredResponse  structured     = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-
-        Context context = InfoGridWebApp.getSingleton().getApplicationContext();
-        
-        RestfulRequest restfulRequest = createRestfulRequest(
-                saneRequest,
-                servletRequest.getContextPath(),
-                context.findContextObjectOrThrow( MeshBase.class ).getIdentifier().toExternalForm() );
-
-        servletRequest.setAttribute( RestfulRequest.class.getName(), restfulRequest );
 
         InfoGridWebApp      app     = InfoGridWebApp.getSingleton();
         Context             c       = app.getApplicationContext();
         TraversalDictionary dict    = c.findContextObject( TraversalDictionary.class ); // optional
+
+        RestfulRequest restfulRequest = createRestfulRequest(
+                saneRequest,
+                servletRequest.getContextPath(),
+                c.findContextObjectOrThrow( MeshBase.class ).getIdentifier().toExternalForm() );
+
+        servletRequest.setAttribute( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME, restfulRequest );
 
         MeshObject          subject;
         MeshObjectsToView   toView;
@@ -113,7 +111,7 @@ public class ViewletDispatcherServlet
             throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_BAD_REQUEST ); // 400
         }
 
-        JeeViewlet     viewlet        = null;
+        JeeViewlet viewlet = null;
 
         if( subject != null ) {
             servletRequest.setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME, subject );

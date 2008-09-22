@@ -82,11 +82,12 @@ public class JspStructuredResponseTemplate
             ServletException,
             IOException
     {
-        outputStatusCode(        delegate, structured );
-        outputCookies(           delegate, structured );
-        outputMimeType(          delegate, structured );
-        outputLocation(          delegate, structured );
-        outputAdditionalHeaders( delegate, structured );
+        outputStatusCode(  delegate, structured );
+        outputLocale(      delegate, structured );
+        outputCookies(     delegate, structured );
+        outputMimeType(    delegate, structured );
+        outputLocation(    delegate, structured );
+        outputYadisHeader( delegate, structured );
 
         HttpServletRequest servletRequest = theRequest.getDelegate();
         
@@ -94,7 +95,7 @@ public class JspStructuredResponseTemplate
         try {
             servletRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
 
-            theRequestDispatcher.include( theRequest.getDelegate(), delegate );
+            theRequestDispatcher.include( servletRequest, delegate );
 
         } finally {
             servletRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, oldStructured );

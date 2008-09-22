@@ -54,13 +54,107 @@ public class SaneServletRequest
     public static SaneServletRequest create(
              HttpServletRequest sRequest )
     {
-        SaneServletRequest ret = (SaneServletRequest) sRequest.getAttribute( SaneServletRequest.class.getName() );
+        SaneServletRequest ret = (SaneServletRequest) sRequest.getAttribute( SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
         if( ret == null ) {
-            ret = new SaneServletRequest( sRequest );
-            sRequest.setAttribute( SaneServletRequest.class.getName(), ret );
-            sRequest.setAttribute( SaneRequest.class.getName(), ret );
+            ret = SaneServletRequest.internalCreate( sRequest );
+            sRequest.setAttribute( SANE_SERVLET_REQUEST_ATTRIBUTE_NAME, ret );
         }
 
+        return ret;
+    }
+
+    /**
+      * Internal factory method.
+      * 
+      * @param sRequest the HttpServletRequest from which to create a SaneRequest.
+      * @return the created SaneServletRequest
+      */
+    protected static SaneServletRequest internalCreate(
+             HttpServletRequest sRequest )
+    {
+        HashMap<String,String[]> arguments     = new HashMap<String,String[]>();
+        HashMap<String,String[]> postArguments = new HashMap<String,String[]>();
+        
+        String postData = null;
+
+        String serverProtocol = sRequest.getScheme();
+        String queryString    = sRequest.getQueryString();
+        String method         = sRequest.getMethod();
+        String server         = sRequest.getServerName();
+        int    port           = sRequest.getServerPort();
+
+        String httpHostOnly = sRequest.getServerName();
+        String httpHost     = sRequest.getServerName();
+        String protocol     = serverProtocol.equalsIgnoreCase( "https" ) ? "https" : "http";
+        String contextPath  = sRequest.getContextPath();
+        
+        String relativeBaseUri;
+        String relativeFullUri;
+        
+        SaneCookie [] cookies;
+        
+        if( "http".equals( protocol )) {
+            if( port != 80 ) {
+                httpHost += ":" + port;
+            }
+        } else {
+            if( port != 443 ) {
+                httpHost += ":" + port;
+            }
+        }
+        
+        relativeBaseUri = sRequest.getRequestURI();
+        relativeFullUri = relativeBaseUri;
+
+        if( queryString != null && queryString.length() != 0 ) {
+            relativeFullUri += "?" + queryString;
+        }
+
+        Cookie [] servletCookies = sRequest.getCookies();
+        if( servletCookies != null ) {
+            cookies = new SaneCookie[ servletCookies.length ];
+            for( int i=0 ; i<servletCookies.length ; ++i ) {
+                cookies[i] = new CookieAdapter( servletCookies[i] );
+            }
+        } else {
+            cookies = new SaneCookie[0];
+        }
+        // URL parameters override POSTed fields: more intuitive for the user
+        if( "POST".equalsIgnoreCase( method ) ) { // we do our own parsing
+            try {
+                int length = sRequest.getContentLength();
+                byte [] buf = StreamUtils.slurp( sRequest.getInputStream(), length );
+
+                postData = new String( buf, "utf-8" );
+                addToArguments( postData, true, arguments, postArguments );
+
+            } catch( IOException ex ) {
+                log.error( ex );
+            }
+        }
+
+        addToArguments( queryString, false, arguments, postArguments );
+     
+        String clientIp = sRequest.getRemoteAddr();
+
+        SaneServletRequest ret = new SaneServletRequest(
+                sRequest,
+                method,
+                server,
+                port,
+                httpHostOnly,
+                httpHost,
+                protocol,
+                relativeBaseUri,
+                relativeFullUri,
+                contextPath,
+                postData,
+                arguments,
+                postArguments,
+                queryString,
+                cookies,
+                clientIp );
+        
         return ret;
     }
 
@@ -68,76 +162,71 @@ public class SaneServletRequest
      * Constructor.
      *
      * @param sRequest the HttpServletRequest from which the SaneServletRequest is created
+     * @param method the HTTP method
+     * @param server the HTTP server
+     * @param port the HTTP server port
+     * @param httpHostOnly the HTTP host, without port
+     * @param httpHost the HTTP host with port
+     * @param protocol http or https
+     * @param relativeBaseUri the relative base URI
+     * @param relativeFullUri the relative full URI
+     * @param contextPath the JEE context path
+     * @param postData the data HTTP POST'd, if any
+     * @param arguments the arguments given, if any
+     * @param postArguments the arguments given via HTTP POST, if any
+     * @param queryString the string past the ? in the URL
+     * @param cookies the sent cookies
+     * @param clientIp the client's IP address
      */
     protected SaneServletRequest(
-            HttpServletRequest sRequest )
+            HttpServletRequest   sRequest,
+            String               method,
+            String               server,
+            int                  port,
+            String               httpHostOnly,
+            String               httpHost,
+            String               protocol,
+            String               relativeBaseUri,
+            String               relativeFullUri,
+            String               contextPath,
+            String               postData,
+            Map<String,String[]> arguments,
+            Map<String,String[]> postArguments,
+            String               queryString,
+            SaneCookie []        cookies,
+            String               clientIp )
     {
-        theDelegate = sRequest;
-
-        String serverProtocol = sRequest.getScheme();
-        String queryString    = sRequest.getQueryString();
-        theMethod             = sRequest.getMethod();
-        theServer             = sRequest.getServerName();
-        thePort               = sRequest.getServerPort();
-
-        theHttpHostOnly       = sRequest.getServerName();
-        theHttpHost           = sRequest.getServerName();
-        theProtocol = serverProtocol.equalsIgnoreCase( "https" ) ? "https" : "http";
-
-        if( "http".equals( theProtocol )) {
-            if( thePort != 80 ) {
-                theHttpHost += ":" + thePort;
-            }
-        } else {
-            if( thePort != 443 ) {
-                theHttpHost += ":" + thePort;
-            }
-        }
-        
-        theRelativeBaseUri = sRequest.getRequestURI();
-        theRelativeFullUri = theRelativeBaseUri;
-
-        if( queryString != null && queryString.length() != 0 ) {
-            theRelativeFullUri += "?" + queryString;
-        }
-
-        Cookie [] servletCookies = sRequest.getCookies();
-        if( servletCookies != null ) {
-            theCookies = new SaneCookie[ servletCookies.length ];
-            for( int i=0 ; i<servletCookies.length ; ++i ) {
-                theCookies[i] = new CookieAdapter( servletCookies[i] );
-            }
-        } else {
-            theCookies = new SaneCookie[0];
-        }
-        // URL parameters override POSTed fields: more intuitive for the user
-        if( "POST".equalsIgnoreCase( theMethod ) ) { // we do our own parsing
-            try {
-                int length = sRequest.getContentLength();
-                byte [] postData = StreamUtils.slurp( sRequest.getInputStream(), length );
-
-                thePostData = new String( postData, "utf-8" );
-                addToArguments( thePostData, true );
-
-            } catch( IOException ex ) {
-                log.error( ex );
-            }
-        }
-
-        addToArguments( queryString, false );
-        
-        theQueryString = queryString;
+        theDelegate        = sRequest;
+        theMethod          = method;
+        theServer          = server;
+        thePort            = port;
+        theHttpHostOnly    = httpHostOnly;
+        theHttpHost        = httpHost;
+        theProtocol        = protocol;
+        theRelativeBaseUri = relativeBaseUri;
+        theRelativeFullUri = relativeFullUri;
+        theContextPath     = contextPath;
+        thePostData        = postData;
+        theArguments       = arguments;
+        thePostArguments   = postArguments;
+        theQueryString     = queryString;
+        theCookies         = cookies;
+        theClientIp        = clientIp;
     }
 
     /**
      * Helper to parse URL and POST data, and put them in the right places.
      *
      * @param data the data to add
-     * @param isPost true of this argument was provided in an HTTP Post.
+     * @param isPost true of this argument was provided in an HTTP POST
+     * @param arguments the URL arguments in the process of being assembled
+     * @param postArguments the URL POST arguments in the process of being assembled
      */
-    protected void addToArguments(
-            String  data,
-            boolean isPost )
+    protected static void addToArguments(
+            String               data,
+            boolean              isPost,
+            Map<String,String[]> arguments,
+            Map<String,String[]> postArguments )
     {
         if( data == null || data.length() == 0 ) {
             return;
@@ -146,8 +235,8 @@ public class SaneServletRequest
             data = data.substring( 1 );
         }
 
-        if( isPost && thePostArguments == null ) {
-            thePostArguments = new HashMap<String,String[]>();
+        if( isPost && postArguments == null ) {
+            postArguments = new HashMap<String,String[]>();
         }
 
         char sep = '?';
@@ -162,24 +251,24 @@ public class SaneServletRequest
             if( !"lid-submit".equalsIgnoreCase( key )) {
                 // We need to remove the submit button's contribution
                 
-                String [] haveAlready = theArguments.get( key );
+                String [] haveAlready = arguments.get( key );
                 String [] newValue;
                 if( haveAlready == null ) {
                     newValue = new String[] { value };
                 } else {
                     newValue = ArrayHelper.append( haveAlready, value, String.class );
                 }
-                theArguments.put( key, newValue );
+                arguments.put( key, newValue );
 
                 if( isPost ) {
-                    haveAlready = thePostArguments.get( key );
+                    haveAlready = postArguments.get( key );
 
                     if( haveAlready == null ) {
                         newValue = new String[] { value };
                     } else {
                         newValue = ArrayHelper.append( haveAlready, value, String.class );
                     }
-                    thePostArguments.put( key, newValue );
+                    postArguments.put( key, newValue );
                 }
             }
         }
@@ -325,11 +414,13 @@ public class SaneServletRequest
      */
     public String getAbsoluteContextUri()
     {
-        StringBuilder buf = new StringBuilder();
-        buf.append( getRootUri() );
-        buf.append( theDelegate.getContextPath() );
-
-        return buf.toString();
+        if( theAbsoluteContextUri == null ) {
+            StringBuilder buf = new StringBuilder();
+            buf.append( getRootUri() );
+            buf.append( theContextPath );
+            theAbsoluteContextUri = buf.toString();
+        }
+        return theAbsoluteContextUri;
     }
 
     /**
@@ -368,6 +459,16 @@ public class SaneServletRequest
     public String getQueryString()
     {
         return theQueryString;
+    }
+
+    /**
+     * Obtain the client IP address.
+     * 
+     * @return the client IP address
+     */
+    public String getClientIp()
+    {
+        return theClientIp;
     }
 
     /**
@@ -480,6 +581,37 @@ public class SaneServletRequest
     }
 
     /**
+     * Helper method to convert a class name into a suitable attribute name.
+     * 
+     * @param clazz the Class
+     * @return the attribute name
+     */
+    public static String classToAttributeName(
+            Class<?> clazz )
+    {
+        String ret = clazz.getName();
+        ret = ret.replaceAll( "\\.", "_" );
+        return ret;
+    }
+
+    /**
+     * Helper method to convert a class name and a local fragment into a suitable attribute name.
+     * 
+     * @param clazz the Class
+     * @param fragment the fragment, or local id
+     * @return the attribute name
+     */
+    public static String classToAttributeName(
+            Class<?> clazz,
+            String   fragment )
+    {
+        String ret = clazz.getName();
+        ret = ret.replaceAll( "\\.", "_" );
+        ret = ret + "__" + fragment;
+        return ret;
+    }
+
+    /**
      * The underlying HttpServletRequest.
      */
     protected HttpServletRequest theDelegate;
@@ -535,6 +667,16 @@ public class SaneServletRequest
     protected String theQueryString;
 
     /**
+     * The full absolute context URI.
+     */
+    protected String theAbsoluteContextUri;
+
+    /**
+     * The relative Jee context path.
+     */
+    protected String theContextPath;
+    
+    /**
      * The data that was posted, if any.
      */
     protected String thePostData;
@@ -542,17 +684,27 @@ public class SaneServletRequest
     /**
      * The arguments to the Request, mapping from argument name to argument value.
      */
-    protected Map<String,String[]> theArguments = new HashMap<String,String[]>();
+    protected Map<String,String[]> theArguments;
 
     /**
      * The arguments to the Request that were POST'd, if any.
      */
-    protected Map<String,String[]> thePostArguments = null;
+    protected Map<String,String[]> thePostArguments;
+
+    /**
+     * Name of the request attribute that contains an instance of SaneServletRequest.
+     */
+    public static final String SANE_SERVLET_REQUEST_ATTRIBUTE_NAME = classToAttributeName( SaneServletRequest.class );
 
     /**
      * The requested MIME types, in sequence of prioritization. Allocated as needed.
      */
     protected String [] theRequestedMimeTypes;
+
+    /**
+     * The IP address of the client.
+     */
+    protected String theClientIp;
 
     /**
      * Bridges the SaneCookie interface into the servlet cookies.

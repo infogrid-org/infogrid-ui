@@ -14,23 +14,21 @@
 
 package org.infogrid.lid.openid.store;
 
+import java.io.UnsupportedEncodingException;
+import java.util.StringTokenizer;
 import org.infogrid.lid.openid.CryptUtils;
-import org.infogrid.lid.openid.RelyingPartySideAssociation;
-
+import org.infogrid.lid.openid.OpenIdRelyingPartySideAssociation;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
-
-import java.io.UnsupportedEncodingException;
-import java.util.StringTokenizer;
 
 /**
  * Maps RelyingPartySideAssociations into StoreValues and vice versa.
  */
 public class RelyingPartySideAssociationMapper
         implements
-            StoreEntryMapper<String,RelyingPartySideAssociation>
+            StoreEntryMapper<String,OpenIdRelyingPartySideAssociation>
 {
     /**
      * Factory method.
@@ -81,7 +79,7 @@ public class RelyingPartySideAssociationMapper
      * @return the value
      * @throws StoreValueDecodingException thrown if the StoreValue could not be decoded
      */
-    public RelyingPartySideAssociation decodeValue(
+    public OpenIdRelyingPartySideAssociation decodeValue(
             String     key,
             StoreValue value )
         throws
@@ -117,7 +115,7 @@ public class RelyingPartySideAssociationMapper
             }
             byte [] sharedSecret = CryptUtils.dehex( sharedSecretInHex );
 
-            RelyingPartySideAssociation ret = RelyingPartySideAssociation.create(
+            OpenIdRelyingPartySideAssociation ret = OpenIdRelyingPartySideAssociation.create(
                     serverUrl,
                     associationHandle,
                     sharedSecret,
@@ -146,49 +144,49 @@ public class RelyingPartySideAssociationMapper
     }
 
     /**
-     * Obtain the time a RelyingPartySideAssociation was created.
+     * Obtain the time a OpenIdRelyingPartySideAssociation was created.
      *
-     * @param value the time a RelyingPartySideAssociation was created.
+     * @param value the time a OpenIdRelyingPartySideAssociation was created.
      * @return the time created, in System.currentTimeMillis() format
      */
     public long getTimeCreated(
-            RelyingPartySideAssociation value )
+            OpenIdRelyingPartySideAssociation value )
     {
         return value.getTimeCreated();
     }
 
     /**
-     * Obtain the time a RelyingPartySideAssociation was last updated.
+     * Obtain the time a OpenIdRelyingPartySideAssociation was last updated.
      *
-     * @param value the time a RelyingPartySideAssociation was last updated.
+     * @param value the time a OpenIdRelyingPartySideAssociation was last updated.
      * @return the time updated, in System.currentTimeMillis() format
      */
     public long getTimeUpdated(
-            RelyingPartySideAssociation value )
+            OpenIdRelyingPartySideAssociation value )
     {
         return getTimeCreated( value );
     }
 
     /**
-     * Obtain the time a RelyingPartySideAssociation was last read.
+     * Obtain the time a OpenIdRelyingPartySideAssociation was last read.
      *
-     * @param value the time a RelyingPartySideAssociation was last read.
+     * @param value the time a OpenIdRelyingPartySideAssociation was last read.
      * @return the time read, in System.currentTimeMillis() format
      */
     public long getTimeRead(
-            RelyingPartySideAssociation value )
+            OpenIdRelyingPartySideAssociation value )
     {
         return value.getTimeRead();
     }
 
     /**
-     * Obtain the time a RelyingPartySideAssociation will expire.
+     * Obtain the time a OpenIdRelyingPartySideAssociation will expire.
      *
-     * @param value the time a RelyingPartySideAssociation will expire.
+     * @param value the time a OpenIdRelyingPartySideAssociation will expire.
      * @return the time will expire, in System.currentTimeMillis() format
      */
     public long getTimeExpires(
-            RelyingPartySideAssociation value )
+            OpenIdRelyingPartySideAssociation value )
     {
         return value.getTimeExpires();
     }
@@ -199,7 +197,7 @@ public class RelyingPartySideAssociationMapper
      * @return the byte array
      */
     public byte [] asBytes(
-            RelyingPartySideAssociation value )
+            OpenIdRelyingPartySideAssociation value )
         throws
             StoreValueEncodingException
     {

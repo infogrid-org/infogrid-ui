@@ -115,8 +115,8 @@ public class HttpShellFilter
      * @param response The servlet response to assemble
      * @param chain The filter chain this Filter is part of
      *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
+     * @throws IOException if an input/output error occurs
+     * @throws ServletException if a servlet error occurs
      */
     public void doFilter(
             ServletRequest  request,
@@ -128,7 +128,7 @@ public class HttpShellFilter
     {
         HttpServletRequest  realRequest  = (HttpServletRequest)  request;
         HttpServletResponse realResponse = (HttpServletResponse) response;
-        SaneServletRequest  lidRequest   = (SaneServletRequest) realRequest.getAttribute( SaneServletRequest.class.getName() );
+        SaneServletRequest  lidRequest   = (SaneServletRequest)  realRequest.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME  );
 
         try {
             performFactoryOperations( lidRequest );

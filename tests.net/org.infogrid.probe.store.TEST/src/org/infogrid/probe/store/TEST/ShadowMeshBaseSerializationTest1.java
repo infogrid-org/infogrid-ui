@@ -14,6 +14,8 @@
 
 package org.infogrid.probe.store.TEST;
 
+import java.io.File;
+import java.io.FileInputStream;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
@@ -31,9 +33,6 @@ import org.infogrid.testharness.AbstractTest;
 import org.infogrid.testharness.ModuleRegistryContext;
 import org.infogrid.util.logging.Log;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 /**
  * Tests ShadowMeshBase serialization.
  */
@@ -44,7 +43,7 @@ public class ShadowMeshBaseSerializationTest1
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public void run()
         throws
@@ -92,6 +91,7 @@ public class ShadowMeshBaseSerializationTest1
      * 
      * @param parentDir the parent directory
      * @param testCase the test case to run
+     * @throws Exception all sorts of things may go wrong in tests
      */
     protected void runTest(
             File     parentDir,
@@ -152,10 +152,11 @@ public class ShadowMeshBaseSerializationTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong in tests
+     */
     public ShadowMeshBaseSerializationTest1(
             String [] args )
         throws

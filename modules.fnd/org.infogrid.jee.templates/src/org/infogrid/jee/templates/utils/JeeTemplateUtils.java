@@ -15,11 +15,19 @@
 package org.infogrid.jee.templates.utils;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.servlet.BufferedServletResponse;
+import org.infogrid.jee.templates.BinaryStructuredResponseSection;
+import org.infogrid.jee.templates.BinaryStructuredResponseSectionTemplate;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.StructuredResponseSection;
+import org.infogrid.jee.templates.TextStructuredResponseSection;
+import org.infogrid.jee.templates.TextStructuredResponseSectionTemplate;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -54,28 +62,116 @@ public abstract class JeeTemplateUtils
             ServletException,
             IOException
     {
+        runRequestDispatcher(
+                dispatcher,
+                TextStructuredResponseSectionTemplate.DEFAULT_SECTION,
+                BinaryStructuredResponseSectionTemplate.DEFAULT_SECTION,
+                request,
+                structured );
+    }
+
+    /**
+     * Invoke the RequestDispatcher and put the results in a specified section.
+     * 
+     * @param dispatcher the RequestDispatcher to invoke
+     * @param textSectionTemplate the section to put text results into
+     * @param binarySectionTemplate the section to put binary results into
+     * @param request the incoming request
+     * @param structured the outgoing response
+     * @throws javax.servlet.ServletException processing failed
+     * @throws java.io.IOException I/O error
+     */
+    public static void runRequestDispatcher(
+            RequestDispatcher                       dispatcher,
+            TextStructuredResponseSectionTemplate   textSectionTemplate,
+            BinaryStructuredResponseSectionTemplate binarySectionTemplate,
+            SaneServletRequest                      request,
+            StructuredResponse                      structured )
+        throws
+            ServletException,
+            IOException
+    {
         BufferedServletResponse bufferedResponse = new BufferedServletResponse( structured.getDelegate() );
+        Throwable               lastException    = null;
+        try {
+            // This must be .forward instead of .include because the Java spec, in its wisdom,
+            // requires containers to ignore the declared content (Mime) type of included content.
+            // It does process is for forwarded requests. We do need the content type to drive the
+            // selection of the right template.
+            dispatcher.forward( request.getDelegate(), bufferedResponse );
 
-        dispatcher.include( request.getDelegate(), bufferedResponse );
+        } catch( Throwable ex ) {
+            lastException = ex;
 
-        byte [] bufferedBytes  = bufferedResponse.getBufferedServletOutputStreamOutput();
-        String  bufferedString = bufferedResponse.getBufferedPrintWriterOutput();
+        } finally {
+            byte [] bufferedBytes  = bufferedResponse.getBufferedServletOutputStreamOutput();
+            String  bufferedString = bufferedResponse.getBufferedPrintWriterOutput();
 
-        if( bufferedBytes != null ) {
-            if( bufferedString != null ) {
-                // don't know what to do here -- defaults to "string gets processed, bytes ignore"
-                log.warn( "Have both String and byte content, don't know what to do: " + request );
-                structured.setDefaultSectionContent( bufferedString ); // do something is better than nothing
+            StructuredResponseSection section;
+            if( bufferedBytes != null ) {
+                if( bufferedString != null ) {
+                    // don't know what to do here -- defaults to "string gets processed, bytes ignore"
+                    log.warn( "Have both String and byte content, don't know what to do: " + request );
+
+                    TextStructuredResponseSection textSection = structured.getTextSection( textSectionTemplate );
+                    textSection.setContent( bufferedString ); // do something is better than nothing
+                    section = textSection;
+
+                } else {
+                    BinaryStructuredResponseSection binarySection = structured.getBinarySection( binarySectionTemplate );
+                    binarySection.setContent( bufferedBytes );
+                    section = binarySection;
+                }
+
+            } else if( bufferedString != null ) {
+                TextStructuredResponseSection textSection = structured.getTextSection( textSectionTemplate );
+                textSection.setContent( bufferedString );
+                section = textSection;
 
             } else {
-                structured.setDefaultSectionContent( bufferedBytes );
+                // empty section, but keep redirect status etc.
+                TextStructuredResponseSection textSection = structured.getTextSection( textSectionTemplate );
+                section = textSection;
             }
 
-        } else if( bufferedString != null ) {
-            structured.setDefaultSectionContent( bufferedString );
-        } else {
-            // do nothing
+            if( section != null ) {
+                @SuppressWarnings( "unchecked" )
+                List<Throwable> problems = (List<Throwable>) request.getDelegate().getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
+
+                if( problems != null ) {
+                    for( Throwable current : problems ) {
+                        section.reportProblem( current );
+                    }
+                }
+                if( lastException != null ) {
+                    section.reportProblem( lastException );
+                }
+                request.getDelegate().removeAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
+
+                if( bufferedResponse.getStatus() > 0 ) {
+                    section.setHttpResponseCode( bufferedResponse.getStatus());
+                }
+                if( bufferedResponse.getContentType() != null ) {
+                    section.setMimeType( bufferedResponse.getContentType() );
+                }
+                if( bufferedResponse.getLocale() != null ) {
+                    section.setLocale( bufferedResponse.getLocale() );
+                }
+                if( bufferedResponse.getCharacterEncoding() != null ) {
+                    section.setCharacterEncoding( bufferedResponse.getCharacterEncoding() );
+                }
+                if( bufferedResponse.getLocation() != null ) {
+                    section.setLocation( bufferedResponse.getLocation() );
+                }
+                for( Cookie current : bufferedResponse.getCookies() ) {
+                    section.addCookie( current );
+                }
+                // FIXME: we do not currently deal with additional headers that might have been written
+                // into the bufferedResponse. Most importantly, we don't pass on ETag etc.
+
+            } else {
+                log.info( "No StructuredResponseSection was written" + request );
+            }
         }
-        structured.setMimeType( bufferedResponse.getContentType() );
     }
 }

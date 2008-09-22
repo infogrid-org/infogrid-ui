@@ -14,9 +14,9 @@
 
 package org.infogrid.lid.gpg.store;
 
-import org.infogrid.lid.gpg.LidGpgKeyPairFactory;
 import org.infogrid.lid.gpg.LidKeyPair;
 import org.infogrid.lid.gpg.LidKeyPairManager;
+import org.infogrid.lid.gpg.LidGpgKeyPairFactory;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.CachingMap;

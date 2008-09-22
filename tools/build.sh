@@ -212,6 +212,8 @@ run_command()
 			cat ${TMPFILE};
 			echo FAILED: $*
 			return 1;
+		else
+			grep -i warning ${TMPFILE}
 		fi
 	fi
 	return 0;

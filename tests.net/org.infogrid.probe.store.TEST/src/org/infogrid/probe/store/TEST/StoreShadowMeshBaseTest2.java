@@ -15,27 +15,6 @@
 package org.infogrid.probe.store.TEST;
 
 import java.io.IOException;
-import org.infogrid.mesh.MeshObject;
-import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
-import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.model.primitives.IntegerValue;
-import org.infogrid.model.primitives.StringValue;
-import org.infogrid.model.Probe.ProbeSubjectArea;
-import org.infogrid.model.Test.TestSubjectArea;
-import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
-import org.infogrid.probe.ApiProbe;
-import org.infogrid.probe.ProbeDirectory;
-import org.infogrid.probe.StagingMeshBase;
-import org.infogrid.probe.manager.PassiveProbeManager;
-import org.infogrid.probe.manager.store.StorePassiveProbeManager;
-import org.infogrid.probe.shadow.ShadowMeshBase;
-import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
-import org.infogrid.store.prefixing.IterablePrefixingStore;
-import org.infogrid.util.logging.Log;
-
 import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
@@ -45,11 +24,31 @@ import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.IsAbstractException;
+import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
+import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.IntegerValue;
+import org.infogrid.model.primitives.StringValue;
+import org.infogrid.model.Probe.ProbeSubjectArea;
+import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.module.ModuleException;
+import org.infogrid.probe.ApiProbe;
+import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.ProbeException;
+import org.infogrid.probe.StagingMeshBase;
+import org.infogrid.probe.manager.PassiveProbeManager;
+import org.infogrid.probe.manager.store.StorePassiveProbeManager;
+import org.infogrid.probe.shadow.ShadowMeshBase;
+import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
+import org.infogrid.store.prefixing.IterablePrefixingStore;
+import org.infogrid.util.logging.Log;
 
 /**
  * Tests ProbeManager restore of StoreShadowMeshBase with a Periodic CoherenceSpecification.
@@ -61,7 +60,7 @@ public class StoreShadowMeshBaseTest2
     /**
      * Run the test.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public void run()
         throws
@@ -153,10 +152,11 @@ public class StoreShadowMeshBaseTest2
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong in tests
+     */
     public StoreShadowMeshBaseTest2(
             String [] args )
         throws
@@ -235,27 +235,6 @@ public class StoreShadowMeshBaseTest2
             implements
                 ApiProbe
     {
-        /**
-         * Read from the API and instantiate corresponding MeshObjects.
-         * 
-         * @param networkId the NetMeshBaseIdentifier that is being accessed
-         * @param coherence the type of data coherence that is requested by the application. Probe
-         *         implementors may ignore this parameter, letting the Probe framework choose its own policy.
-         *         If the Probe chooses to define its own policy (considering or ignoring this parameter), the
-         *         Probe must bless the Probe's HomeObject with a subtype of ProbeUpdateSpecification (defined
-         *         in the <code>org.infogrid.model.Probe</code>) that reflects the policy.
-         * @param mb the StagingMeshBase in which the corresponding MeshObjects are instantiated by the Probe
-         * @throws IdeMeshObjectIdentifierNotUniqueExceptionrown if the Probe developer incorrectly
-         *         assigned duplicate Identifiers to created MeshObjects
-         * @throws RelatedAlreadyException thrown if the Probe developer incorrectly attempted to
-         *         relate two already-related MeshObjects
-         * @throws TransactionException this Exception is declared to make programming easier,
-         *         although actually throwing it would be a programming error
-         * @throws NotPermittedException thrown if an operation performed by the Probe was not permitted
-         * @throws ProbeException a Probe error occurred per the possible subclasses defined in ProbeException
-         * @throws IOException an input/output error occurred during execution of the Probe
-         * @throws ModuleException thrown if a Module required by the Probe could not be loaded
-         */
         public void readFromApi(
                 NetMeshBaseIdentifier  networkId,
                 CoherenceSpecification coherence,

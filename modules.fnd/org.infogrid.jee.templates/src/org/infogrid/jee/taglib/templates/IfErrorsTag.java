@@ -15,9 +15,9 @@
 package org.infogrid.jee.taglib.templates;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.StructuredResponseSection;
 
 /**
  * Tests whether one or more errors has been reported.
@@ -25,7 +25,7 @@ import org.infogrid.jee.templates.StructuredResponse;
  */
 public class IfErrorsTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractSectionTestTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -35,26 +35,6 @@ public class IfErrorsTag
     public IfErrorsTag()
     {
         // noop
-    }
-
-    /**
-     * Our implementation of doStartTag().
-     *
-     * @return evaluate or skip body
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    @Override
-    protected int realDoStartTag()
-        throws
-            JspException,
-            IgnoreException
-    {
-        if( evaluateTest() ) {
-            return EVAL_BODY_INCLUDE;
-        } else {
-            return SKIP_BODY;
-        }
     }
 
     /**
@@ -72,12 +52,19 @@ public class IfErrorsTag
             JspException,
             IgnoreException
     {
-        StructuredResponse response = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-        if( response == null ) {
-            return false;
+        boolean ret;
+        
+        StructuredResponseSection section = evaluate();
+        if( section != null ) {
+            ret = section.haveProblemsBeenReported();
+        } else {
+            StructuredResponse response = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+            if( response != null ) {
+                ret = response.haveProblemsBeenReportedAggregate();
+            } else {
+                ret = false;
+            }
         }
-        boolean ret = response.haveProblemsBeenReported();
-
         return ret;
     }
 }

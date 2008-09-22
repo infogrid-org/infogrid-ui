@@ -15,10 +15,11 @@
 package org.infogrid.jee.templates;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 /**
- * A section in a StructuredResponse that contains text.
+ * An actual section in a StructuredResponse that contains text.
  */
 public class TextStructuredResponseSection
         extends
@@ -27,55 +28,127 @@ public class TextStructuredResponseSection
     /**
      * Factory method.
      *
-     * @param name the name of the section
-     * @return the created StructuredResponseSection
+     * @param sectionTemplate the template that defines this section
+     * @return the created TextStructuredResponseSection
      */
     public static TextStructuredResponseSection create(
-            String name )
+            TextStructuredResponseSectionTemplate sectionTemplate )
     {
-        TextStructuredResponseSection ret = new TextStructuredResponseSection( name );
+        TextStructuredResponseSection ret = new TextStructuredResponseSection( sectionTemplate );
         return ret;
     }
 
     /**
      * Constructor for subclasses only, use factory method.
      * 
-     * @param name the name of the section
+     * @param sectionTemplate the template that defines this section
      */
     protected TextStructuredResponseSection(
-            String name )
+            TextStructuredResponseSectionTemplate sectionTemplate )
     {
-        super( name );
+        super( sectionTemplate );
     }
 
     /**
-     * Stream the StructuredResponse to an HttpResponse.
+     * Obtain the StructuredResponseSectionTemplate that defines this section.
      * 
-     * @param w the Writer to write to
-     * @param structured the StructuredResponse that holds the data
+     * @return the StructuredResponseSectionTemplate
+     */
+    @Override
+    public TextStructuredResponseSectionTemplate getSectionTemplate()
+    {
+        return (TextStructuredResponseSectionTemplate) super.getSectionTemplate();
+    }
+
+    /**
+     * Determine whether this section is empty.
+     * 
+     * @return true if this section is empty
+     */
+    public boolean isEmpty()
+    {
+        if( theHttpResponseCode > 0 && theHttpResponseCode != 200 ) {
+            return false;
+        }
+        if( theContent != null ) {
+            return false;
+        }
+        if( !theOutgoingCookies.isEmpty() ) {
+            return false;
+        }
+        if( !theCurrentProblems.isEmpty() ) {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Stream this StructuredResponseSection to an OutputStream.
+     * 
+     * @param s the OutputStream to write to
      * @return true if something was output, false otherwise
      * @throws IOException thrown if an I/O error occurred
      */
     public boolean doOutput(
-            Writer             w,
-            StructuredResponse structured )
+            OutputStream s )
         throws
             IOException
     {
-        String sectionContent = structured.getSectionContent( this );
-        if( sectionContent == null ) {
+        if( theContent != null && theContent.length() > 0 ) {
+            OutputStreamWriter w;
+            if( theCharacterEncoding != null ) {
+                w = new OutputStreamWriter( s, theCharacterEncoding );
+            } else {
+                w = new OutputStreamWriter( s );
+            }
+            w.write( theContent );
+            w.flush();
+            return true;
+
+        } else {
             return false;
         }
+    }
 
-        w.append( sectionContent );
-        
-        return true;
+
+    /**
+     * Obtain the current content of this section.
+     * 
+     * @return the current content of this section, or null
+     */
+    public String getContent()
+    {
+        return theContent;
     }
 
     /**
-     * The single default section for text content. Output will be written into this section
-     * unless otherwise specified.
+     * Set the content of this section.
+     * 
+     * @param newValue the new content of this section
      */
-    public static final TextStructuredResponseSection DEFAULT_SECTION
-            = TextStructuredResponseSection.create( "default" );
+    public void setContent(
+            String newValue )
+    {
+        theContent = newValue;
+    }
+    
+    /**
+     * Append to the content of this section.
+     * 
+     * @param toAppend the content to append to this section
+     */
+    public void appendContent(
+            String toAppend )
+    {
+        if( theContent == null ) {
+            theContent = toAppend;
+        } else {
+            theContent += toAppend;
+        }
+    }
+
+    /**
+     * Content of this section, if any.
+     */
+    protected String theContent;
 }

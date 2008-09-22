@@ -499,7 +499,7 @@ public class ModuleClassLoader
          * object has at least one more element to provide.
          *
          * @return     the next element of this enumeration.
-         * @exception  NoSuchElementException  if no more elements exist.
+         * @throws  NoSuchElementException  if no more elements exist.
          */
         public T nextElement()
         {

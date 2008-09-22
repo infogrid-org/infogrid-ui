@@ -66,7 +66,6 @@ public class TestStoreListener
      * A get operation was performed.
      *
      * @param store the Store that emitted this event
-     * @param key the key with which the data element was stored
      * @param value the StoreValue that was obtained
      */
     public void getPerformed(

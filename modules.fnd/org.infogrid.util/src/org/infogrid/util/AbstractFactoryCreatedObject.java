@@ -58,6 +58,18 @@ public abstract class AbstractFactoryCreatedObject<K,V,A>
     }
     
     /**
+     * Subclasses can invoke this method whenever they are updated. This will cause
+     * the Factory to be notified of the update.
+     */
+    protected void factoryCreatedObjectUpdated()
+    {
+        Factory<K,V,A> factory = theFactory; // trick allows us to not use a synchronized
+        if( factory != null ) {
+            factory.factoryCreatedObjectUpdated( this );
+        }
+    }
+
+    /**
      * The Factory that created this FactoryCreatedObject.
      */
     private Factory<K,V,A> theFactory;

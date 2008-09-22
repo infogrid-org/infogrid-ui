@@ -130,7 +130,7 @@ public abstract class SoftwareInstallation
      *
      * @param relativeTo the ClassLoader to use when attempting the load the property file
      * @return the log4j properties
-     * @exception IOException could not read the properties
+     * @throws IOException could not read the properties
      */
     public Properties getLog4jProperties(
             ClassLoader relativeTo )

@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -66,7 +65,7 @@ public class InitializationFilter
         implements
             Filter
 {
-    private static Log log; // initialized later
+    protected static Log log; // initialized later
 
     /**
      * Constructor.
@@ -99,9 +98,8 @@ public class InitializationFilter
         try {
             initializeInfoGridWebApp();
 
-            SaneRequest lidRequest = SaneServletRequest.create( realRequest );
             // SaneServletRequest adds itself as a request attribute
-        
+            SaneServletRequest lidRequest  = SaneServletRequest.create( realRequest );
             request.setAttribute( CONTEXT_PARAMETER, realRequest.getContextPath() );
 
             StringBuilder fullContext = new StringBuilder();
@@ -185,7 +183,7 @@ public class InitializationFilter
 
             try {                
                 Class  appClass      = Class.forName( className );
-                Method factoryMethod = appClass.getMethod( "create", String.class );
+                Method factoryMethod = appClass.getMethod( "create", String.class);
 
                 theApp = (InfoGridWebApp) factoryMethod.invoke( null, theDefaultMeshBaseIdentifier );
 
@@ -193,13 +191,13 @@ public class InitializationFilter
                 throw new ServletException( "Cannot find class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex  );
 
             } catch( NoSuchMethodException ex ) {
-                throw new ServletException( "Cannot find method \"create\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
+                throw new ServletException( "Cannot find method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
 
             } catch( IllegalAccessException ex ) {
-                throw new ServletException( "Cannot access method \"create\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
+                throw new ServletException( "Cannot access method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
 
             } catch( InvocationTargetException ex ) {
-                throw new ServletException( "Cannot execute method \"create\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex.getTargetException() );
+                throw new ServletException( "Cannot execute method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex.getTargetException() );
             }
 
             try {
@@ -250,7 +248,7 @@ public class InitializationFilter
      * Name of the String in the RequestContext that is the context path of the application.
      * Having this makes the development of path-independent JSPs much simpler. This
      * is a fully-qualified path from the root of the current host, not including the host.
-     * @see FULLCONTEXT_PARAMETER
+     * @see #FULLCONTEXT_PARAMETER
      */
     public static final String CONTEXT_PARAMETER = "CONTEXT";
     
@@ -258,14 +256,15 @@ public class InitializationFilter
      * Name of the String in the RequestContext that is the contextPath of the application.
      * Having this makes the development of path-independent JSPs much simpler. This
      * is a fully-qualified path including protocol, host and port.
-     * @see CONTEXT_PARAMETER
+     * @see #CONTEXT_PARAMETER
      */
     public static final String FULLCONTEXT_PARAMETER = "FULLCONTEXT";
     
     /**
      * Name of the default StringRepresentationContext in the RequestContext.
      */
-    public static final String STRING_REPRESENTATION_CONTEXT_PARAMETER = StringRepresentationContext.class.getName().replaceAll( "\\.", "_" );
+    public static final String STRING_REPRESENTATION_CONTEXT_PARAMETER
+            = SaneServletRequest.classToAttributeName( StringRepresentationContext.class );
 
     /**
      * The Filter configuration object.

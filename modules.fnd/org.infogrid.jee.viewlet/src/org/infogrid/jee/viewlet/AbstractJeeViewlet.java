@@ -182,11 +182,9 @@ public abstract class AbstractJeeViewlet
      */
     public String getRequestURI()
     {
-        RestfulRequest request = theCurrentRequest;
-        String         ret;
-
-        if( request != null ) {
-            ret = request.getSaneRequest().getAbsoluteFullUri();
+        String ret;
+        if( theCurrentRequest != null ) {
+            ret = theCurrentRequest.getSaneRequest().getAbsoluteFullUri();
         } else {
             ret = null;
         }
@@ -247,9 +245,7 @@ public abstract class AbstractJeeViewlet
      */
     public String getPostUrl()
     {
-        String relativePath  = theCurrentRequest.getDelegate().getRequestURI();
-
-        String ret = HTTP.encodeToValidUrl( relativePath );
+        String ret = getRequestURI();
         
         // append lid-xpath
         String xpath = theCurrentRequest.getDelegate().getParameter( "lid-xpath" );

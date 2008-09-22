@@ -375,7 +375,7 @@ public abstract class StoreBackedSwappingHashMap<K,V>
      * CachingMap to write changes to disk, for example.
      *
      * @param key the key
-     * @Param value the value
+     * @param value the value
      */
     public void valueUpdated(
             K key,

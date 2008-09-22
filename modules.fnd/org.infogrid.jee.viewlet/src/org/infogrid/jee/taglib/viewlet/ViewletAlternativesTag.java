@@ -14,9 +14,15 @@
 
 package org.infogrid.jee.taglib.viewlet;
 
+import javax.servlet.jsp.JspException;
+import java.util.HashMap;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.TextHtmlStructuredResponseSectionTemplate;
+import org.infogrid.jee.templates.TextStructuredResponseSection;
+import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
@@ -26,12 +32,6 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.ResourceHelper;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
-import java.util.HashMap;
-import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.TextHtmlStructuredResponseSection;
-import org.infogrid.jee.viewlet.JeeViewlet;
 
 /**
  * Allows the user to select an alternate JeeViewlet to display the current subject.
@@ -77,10 +77,8 @@ public class ViewletAlternativesTag
                 StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
         // this needs to be simple lookup so the periods in the class name don't trigger nestedLookup
-        RestfulRequest restful = (RestfulRequest) theFormatter.simpleLookup(
-                pageContext,
-                RestfulRequest.class.getName(),
-                getScope() );
+        RestfulRequest restful = (RestfulRequest) lookupOrThrow(
+                RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
 
         Viewlet currentViewlet = (Viewlet) lookupOrThrow(
                 JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
@@ -103,7 +101,7 @@ public class ViewletAlternativesTag
                 println( "</a></h3>" );
                 println( "<ul>" );
 
-                String                 url = ((HttpServletRequest)pageContext.getRequest()).getRequestURI();
+                String                 url = restful.getSaneRequest().getAbsoluteBaseUri();
                 HashMap<String,String> map = new HashMap<String,String>();
                 
                 for( int i=0 ; i<candidates.length ; ++i ) {
@@ -139,9 +137,9 @@ public class ViewletAlternativesTag
                 css.append( ".css" );
                 css.append( "\" />\n" );
                 
-                theResponse.appendToSectionContent( TextHtmlStructuredResponseSection.HTML_HEAD_SECTION, js.toString() );
-                theResponse.appendToSectionContent( TextHtmlStructuredResponseSection.HTML_HEAD_SECTION, css.toString() );
-            
+                TextStructuredResponseSection headSection = theResponse.getTextSection( TextHtmlStructuredResponseSectionTemplate.HTML_HEAD_SECTION );
+                headSection.appendContent( js.toString() );
+                headSection.appendContent( css.toString() );
             }
 
         } catch( CannotViewException ex ) {

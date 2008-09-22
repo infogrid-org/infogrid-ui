@@ -28,9 +28,9 @@ public class HtmlStacktraceStringifier
      */
     public static HtmlStacktraceStringifier create()
     {
-        String start  = "<div class=\"stacktrace\"><div class=\"stacktrace-element\">";
+        String start  = "<div class=\"stacktrace\">\n<div class=\"stacktrace-element\">";
         String middle = "</div>\n<div class=\"stacktrace-element\">";
-        String end    = "</div></div>";
+        String end    = "</div>\n</div>";
         String empty  = "<div class=\"stacktrace stacktrace-empty\">empty</div>";
                
         return new HtmlStacktraceStringifier( start, middle, end, empty );

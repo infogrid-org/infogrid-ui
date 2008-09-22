@@ -469,7 +469,7 @@ public abstract class HTTP
      *
      * @param s the String
      * @return the escaped String
-     * @see AbstractMethodError#decodeUrl
+     * @see #decodeUrl
      */
     public static String encodeToValidUrl(
             String s )

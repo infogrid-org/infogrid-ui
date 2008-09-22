@@ -17,6 +17,7 @@ package org.infogrid.jee.taglib.util;
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.FormTokenService;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
@@ -586,7 +587,7 @@ public class SafeFormTag
                     value = service.generateNewToken();
                 }
                 if( value != null ) {
-                    pageContext.setAttribute(  FORM_TOKEN_NAME, value );
+                    pageContext.setAttribute( FORM_TOKEN_NAME, value );
                 }
             }
             if( value != null ) {
@@ -732,5 +733,6 @@ public class SafeFormTag
     /**
      * Name of the buffered token in the page context.
      */
-    public static final String FORM_TOKEN_NAME = SafeFormTag.class.getName() + "-token";
+    public static final String FORM_TOKEN_NAME
+            = SaneServletRequest.classToAttributeName( SafeFormTag.class, "token" );
 }

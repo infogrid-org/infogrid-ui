@@ -15,5 +15,6 @@
 
 <project name="org.infogrid.module.commandline" default="default" basedir=".">
     <description>Builds, tests, and runs the project org.infogrid.module.commandline.</description>
+    <import file="../../tools/infogrid-nomodule-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
 </project>

@@ -87,6 +87,8 @@ public class ProbeTestShadowListener
 
     /**
      * Add an event. This is factored out so we can easily set a breakpoint.
+     * 
+     * @param s the String representation of an event
      */
     protected void addEvent(
             String s )
