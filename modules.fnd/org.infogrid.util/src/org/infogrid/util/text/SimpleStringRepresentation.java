@@ -147,7 +147,7 @@ public class SimpleStringRepresentation
             String                                   entry,
             Object...                                args )
     {
-        ResourceHelper rh = ResourceHelper.getInstance( classOfFormattedObject );
+        ResourceHelper rh = ResourceHelper.getInstance( classOfFormattedObject, true );
         try {
             String                formatString = rh.getResourceString( theName + entry );
             AnyMessageStringifier stringifier  = AnyMessageStringifier.create( formatString, theStringifierMap );

@@ -191,13 +191,13 @@ public class InitializationFilter
                 throw new ServletException( "Cannot find class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex  );
 
             } catch( NoSuchMethodException ex ) {
-                throw new ServletException( "Cannot find method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
+                throw new ServletException( "Cannot find method \"create( String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
 
             } catch( IllegalAccessException ex ) {
-                throw new ServletException( "Cannot access method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
+                throw new ServletException( "Cannot access method \"create( String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
 
             } catch( InvocationTargetException ex ) {
-                throw new ServletException( "Cannot execute method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex.getTargetException() );
+                throw new ServletException( "Cannot execute method \"create( String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex.getTargetException() );
             }
 
             try {
