@@ -31,6 +31,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.Base64;
 import org.infogrid.util.StreamUtils;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.logging.Log;
 
 /**
  * The place from where to interact with a Tomcat instance. It contains methods
@@ -38,6 +39,8 @@ import org.infogrid.util.http.HTTP;
  */
 public abstract class TomcatProxy
 {
+    private static final Log log = Log.getLogInstance( TomcatProxy.class ); // our own, private logger
+
     /**
      * Constructor for subclasses only.
      * 
@@ -112,27 +115,30 @@ public abstract class TomcatProxy
         if( path == null ) {
             throw new NullPointerException( "Must not provide null path" );
         }
-        Module              thisModule = Init.getModule();
-        ModuleRegistry      registry   = thisModule.getModuleRegistry();
-        ModuleAdvertisement candidate  = registry.determineSingleResolutionCandidate( moduleReq );
-        Module              toDeploy   = registry.resolve( candidate );
-        
-        File [] jars = toDeploy.getModuleJars();
-        if( jars.length != 1 ) {
-            throw new RuntimeException( "Wrong number of JARs found: " + ArrayHelper.join( jars ));
+        if( theManagerUrl != null ) {
+            Module              thisModule = Init.getModule();
+            ModuleRegistry      registry   = thisModule.getModuleRegistry();
+            ModuleAdvertisement candidate  = registry.determineSingleResolutionCandidate( moduleReq );
+            Module              toDeploy   = registry.resolve( candidate );
+
+            File [] jars = toDeploy.getModuleJars();
+            if( jars.length != 1 ) {
+                throw new RuntimeException( "Wrong number of JARs found: " + ArrayHelper.join( jars ));
+            }
+
+            byte [] content = StreamUtils.slurp( jars[0] );
+
+            StringBuilder buf = new StringBuilder();
+            buf.append( theManagerUrl.toExternalForm() );
+            buf.append( "/deploy?update=true" );
+            buf.append( "&path=" ).append( HTTP.encodeToValidUrlArgument( path ));
+
+            URL endpoint = new URL( buf.toString() );
+
+            doHttpPut( endpoint, "application/octet-stream", content );
+        } else {
+            log.warn( "No Tomcat Manager URL defined: skip automatic deployment" ); 
         }
-        
-        byte [] content = StreamUtils.slurp( jars[0] );
-
-        StringBuilder buf = new StringBuilder();
-        buf.append( theManagerUrl.toExternalForm() );
-        buf.append( "/deploy?update=true" );
-        buf.append( "&path=" ).append( HTTP.encodeToValidUrlArgument( path ));
-        
-        URL endpoint = new URL( buf.toString() );
-
-        doHttpPut( endpoint, "application/octet-stream", content );
-        
         URL ret = new URL( theTopServerUrl, path );
         
         return ret;

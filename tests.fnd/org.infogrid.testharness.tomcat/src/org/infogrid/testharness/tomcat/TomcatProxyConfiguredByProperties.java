@@ -69,8 +69,11 @@ public class TomcatProxyConfiguredByProperties
         Properties props = new Properties();
         props.load( propertiesStream );
         
-        URL    topServerUrl    = new URL( props.getProperty( SERVER_URL_PROPERTY_NAME ));
-        URL    managerUrl      = new URL( props.getProperty( MANAGER_URL_PROPERTY_NAME ));
+        String topServer = props.getProperty( SERVER_URL_PROPERTY_NAME );  // mandatory
+        String manager   = props.getProperty( MANAGER_URL_PROPERTY_NAME ); // optional
+
+        URL    topServerUrl    = new URL( topServer );
+        URL    managerUrl      = manager != null ? new URL( manager ) : null;
         String applicationPath = props.getProperty( APPLICATION_PATH_PROPERTY_NAME, null );
         String adminUser       = props.getProperty( ADMIN_USER_PROPERTY_NAME, null );
         String adminPassword   = props.getProperty( ADMIN_PASSWORD_PROPERTY_NAME, null );

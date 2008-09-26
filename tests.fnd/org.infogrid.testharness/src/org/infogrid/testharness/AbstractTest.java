@@ -495,6 +495,25 @@ public abstract class AbstractTest
     }
 
     /**
+     * Report error if the argument is not null.
+     *
+     * @param one the object to test
+     * @param msg message to print when the argument is not null
+     * @return true if check passed
+     */
+    public final boolean checkNotObject(
+            Object one,
+            String msg )
+    {
+        if( one != null ) {
+            reportError( msg, String.valueOf( one ));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Report error if the object is not of a certain type.
      *
      * @param one the object whose type we test
@@ -716,6 +735,10 @@ public abstract class AbstractTest
             String candidate,
             String msg )
     {
+        if( candidate == null ) {
+            reportError( msg + ": cannot match null against regex '" + regex + "'" );
+            return false;
+        }
         Pattern p = Pattern.compile( regex );
         Matcher m = p.matcher( candidate );
         if( !m.matches() ) {
@@ -740,6 +763,10 @@ public abstract class AbstractTest
             String candidate,
             String msg )
     {
+        if( candidate == null ) {
+            reportError( msg + ": cannot match null against regex '" + regex + "'" );
+            return false;
+        }
         Pattern p = Pattern.compile( regex, flags );
         Matcher m = p.matcher( candidate );
         if( !m.matches() ) {
@@ -762,6 +789,10 @@ public abstract class AbstractTest
             String candidate,
             String msg )
     {
+        if( candidate == null ) {
+            reportError( msg + ": cannot match null against regex '" + regex + "'" );
+            return false;
+        }
         Pattern p = Pattern.compile( regex );
         Matcher m = p.matcher( candidate );
         if( m.matches() ) {
@@ -786,6 +817,10 @@ public abstract class AbstractTest
             String candidate,
             String msg )
     {
+        if( candidate == null ) {
+            reportError( msg + ": cannot match null against regex '" + regex + "'" );
+            return false;
+        }
         Pattern p = Pattern.compile( regex, flags );
         Matcher m = p.matcher( candidate );
         if( m.matches() ) {

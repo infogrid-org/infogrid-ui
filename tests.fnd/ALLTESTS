@@ -1,4 +1,5 @@
 org.infogrid.testharness [norun]
+org.infogrid.testharness.tomcat [norun]
 org.infogrid.util.TEST
 org.infogrid.comm.pingpong.TEST
 org.infogrid.comm.smtp.TEST [norun]

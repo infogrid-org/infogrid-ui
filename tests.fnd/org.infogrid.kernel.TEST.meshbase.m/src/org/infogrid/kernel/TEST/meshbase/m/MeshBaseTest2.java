@@ -31,8 +31,6 @@ import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.StringValue;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
