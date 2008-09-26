@@ -133,7 +133,11 @@ public abstract class AbstractLocalizedException
             c = c.getSuperclass();
 
             theHelper = ResourceHelper.getInstance( c );
-            message   = theHelper.getResourceStringOrDefault( MESSAGE_PARAMETER, null );
+            if( theHelper == null ) {
+                // built-in JDK classes
+                break;
+            }
+            message = theHelper.getResourceStringOrDefault( MESSAGE_PARAMETER, null );
         }
         if( message == null ) {
             message = ex.getClass().getName();

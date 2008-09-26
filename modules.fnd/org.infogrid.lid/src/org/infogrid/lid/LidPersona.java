@@ -14,6 +14,7 @@
 
 package org.infogrid.lid;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -45,4 +46,12 @@ public interface LidPersona
      * @return the keys into the set of attributes
      */
     public Set<String> getAttributeKeys();
+    
+    /**
+     * Obtain the map of attributes. This breaks encapsulation, but works much better
+     * for JSP pages.
+     * 
+     * @return the map of attributes
+     */
+    public Map<String,String> getAttributes();
 }

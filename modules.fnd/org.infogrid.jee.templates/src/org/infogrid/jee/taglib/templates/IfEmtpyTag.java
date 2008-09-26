@@ -48,7 +48,16 @@ public class IfEmtpyTag
             IgnoreException
     {
         StructuredResponseSection value = evaluate();
-        
-        return value == null;
+
+        boolean ret;        
+        if( value == null ) {
+            ret = true;
+        } else if( value.isEmpty() ) {
+            ret = true;
+        } else {
+            ret = false;
+        }
+        return ret;
+
     }
 }

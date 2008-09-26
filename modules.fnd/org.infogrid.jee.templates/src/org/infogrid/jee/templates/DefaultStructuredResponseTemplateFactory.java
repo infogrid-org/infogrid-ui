@@ -90,29 +90,42 @@ public class DefaultStructuredResponseTemplateFactory
             mime = defaultTextSection.getMimeType();
         }
 
-        String templateName = getRequestedTemplate( request, structured );
-
-        RequestDispatcher dispatcher = findRequestDispatcher( request, structured, templateName, mime );
-        
-        if( dispatcher == null && ( templateName != null && templateName.length() > 0 )) {
-            // try default template if named template did not work
-            dispatcher = findRequestDispatcher( request, structured, theDefaultTemplateName, mime );
-        }
-        if( dispatcher == null && mime == null ) {
-            // if no mime type is specified, default to html
-            dispatcher = findRequestDispatcher( request, structured, templateName, "text/html" );
-            if( dispatcher == null && ( templateName != null && templateName.length() > 0 )) {
-                // try default template if named template did not work
-                dispatcher = findRequestDispatcher( request, structured, theDefaultTemplateName, "text/html" );
-            }
-        }
-        
         StructuredResponseTemplate ret;
-        if( dispatcher != null ) {
-            ret = JspStructuredResponseTemplate.create( dispatcher, request, templateName, structured );
+
+        String requestedTemplateName     = structured.getRequestedTemplateName();
+        String userRequestedTemplateName = getUserRequestedTemplate( request );
+        
+        if( requestedTemplateName == null ) {
+            // internally requested template overrides user-requested template
+            requestedTemplateName = userRequestedTemplateName;
+        }
+        
+        if( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME.equals( requestedTemplateName )) {
+            ret = NoContentStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured );
+
         } else {
-            // all hope is lost, we have to stream verbatim whatever it is that is in structured
-            ret = VerbatimStructuredResponseTemplate.create( request, templateName, structured );
+            RequestDispatcher dispatcher = findRequestDispatcher( request, structured, requestedTemplateName, mime );
+
+            if( dispatcher == null && ( requestedTemplateName != null && requestedTemplateName.length() > 0 )) {
+                // try default template if named template did not work
+                dispatcher = findRequestDispatcher( request, structured, theDefaultTemplateName, mime );
+            }
+            if( dispatcher == null && mime == null ) {
+                // if no mime type is specified, default to html
+                dispatcher = findRequestDispatcher( request, structured, requestedTemplateName, "text/html" );
+                if( dispatcher == null && ( requestedTemplateName != null && requestedTemplateName.length() > 0 )) {
+                    // try default template if named template did not work
+                    dispatcher = findRequestDispatcher( request, structured, theDefaultTemplateName, "text/html" );
+                }
+            }
+
+            if( dispatcher != null ) {
+                ret = JspStructuredResponseTemplate.create( dispatcher, request, requestedTemplateName, userRequestedTemplateName, structured );
+
+            } else {
+                // all hope is lost, we have to stream verbatim whatever it is that is in structured
+                ret = VerbatimStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured );
+            }
         }
         return ret;
     }
@@ -121,18 +134,12 @@ public class DefaultStructuredResponseTemplateFactory
      * Obtain the name of the requested layout template, if any.
      * 
      * @param request the incoming HTTP request for which the response is being created
-     * @param structured the StructuredResponse that contains the content to be returned
      * @return class name of the requested layout template, if any
      */
-    public String getRequestedTemplate(
-            SaneServletRequest request,
-            StructuredResponse structured )
+    public String getUserRequestedTemplate(
+            SaneServletRequest request )
     {
-        String ret = structured.getRequestedTemplateName();
-        
-        if( ret == null ) {
-            ret = request.getArgument( StructuredResponseTemplate.LID_TEMPLATE_PARAMETER_NAME );
-        }
+        String ret = request.getArgument( StructuredResponseTemplate.LID_TEMPLATE_PARAMETER_NAME );
 
         if( ret == null ) {
             ret = request.getCookieValue( StructuredResponseTemplate.LID_TEMPLATE_COOKIE_NAME );                

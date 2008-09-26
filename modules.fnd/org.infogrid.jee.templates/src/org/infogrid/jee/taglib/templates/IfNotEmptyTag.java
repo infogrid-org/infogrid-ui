@@ -49,7 +49,15 @@ public class IfNotEmptyTag
             IgnoreException
     {
         StructuredResponseSection value = evaluate();
-        
-        return value != null;
+
+        boolean ret;        
+        if( value == null ) {
+            ret = false;
+        } else if( value.isEmpty() ) {
+            ret = false;
+        } else {
+            ret = true;
+        }
+        return ret;
     }
 }

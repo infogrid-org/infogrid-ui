@@ -45,6 +45,15 @@ public interface LidClientAuthenticationStatus
     public abstract boolean isClaimedOnly();
     
     /**
+     * <p>Returns true of the client of this request claimed an identifier that could not be resolved into
+     *    a valid LidPersona.</p>
+     * 
+     * @return true if the client claimed an identifier as part of this request that could not be resolved into
+     *         a valid LidPersona
+     */
+    public abstract boolean isInvalidIdentity();
+    
+    /**
      * <p>Returns true if the client of this request merely presented an identifier and an expired session id (e.g.
      *    via a cookie) as  credential to back up the claim.</p>
      * <p>For this to return true, the session id must have been valid in the past. If the session id is not recognized,
@@ -156,32 +165,52 @@ public interface LidClientAuthenticationStatus
     public abstract Date getSessionExpired();
 
     /**
-     * Obtain the identifier of the client. To determine whether to trust that the client indeed
+     * Obtain the identifier provided by the client. To determine whether to trust that the client indeed
      * owns this identifier, other methods need to be consulted. This method makes no statement 
-     * about trustworthiness.
+     * about trustworthiness. If this returns a non-null value, and {@link #getClientPersona} returns
+     * <code>null</code>, this indicates that the client persona is not known or not valid.
      * 
      * @return the claimed client identifier
+     * @see #getClientPersona
      */
     public abstract String getClientIdentifier();
     
     /**
-     * Obtain what we know about the client with this client identifier here locally.
+     * Obtain what we know about the client with this client identifier here locally. If the persona
+     * is not known locally, this will return <code>null</code>.
      * 
      * @return the LidPersona
+     * @see #getClientIdentifier
      */
     public abstract LidPersona getClientPersona();
     
     /**
      * Determine whether the client has indicated its desire to cancel the active session, if any.
+     * This does not mean the client wishes to become anonymous (that would be expressed as getClientPersona()==null
+     * with a non-null getSessionBelongsToPersona()) but that the client wishes to move from authenticated
+     * status to claimed only.
      * 
      * @return true if the client wishes to cancel the active session.
      */
     public abstract boolean clientWishesCancelSession();
     
     /**
-     * Determine whether the client has indicated its desire to become fully anonymous again.
+     * Determine the client of any authenticated session that was brought into this request. This may be
+     * null in case the client just now authenticated. It may identify a different client if the client
+     * logged off, or changed personas, with this request.
      * 
-     * @return true if the client wishes to become fully anonymous again
+     * @return LidPersona representing the client identified by the session going into this request, if any
+     * @see #getSessionBelongsToIdentifier() 
      */
-    public abstract boolean clientWishesAnonymous();
+    public abstract LidPersona getSessionBelongsToPersona();
+
+    /**
+     * Determine the identifier of the client of any authenticated session that was brought into this request.
+     * This may be null in case the client just now authenticated. It may identify a different client if the
+     * client logged off, or changed personas, with this request.
+     * 
+     * @return the identifier of the valid session going into this request, if any
+     * @see #getSessionBelongsToPersona() 
+     */
+    public abstract String getSessionBelongsToIdentifier();
 }

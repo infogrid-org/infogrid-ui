@@ -15,19 +15,13 @@
 package org.infogrid.jee.templates;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-import org.infogrid.jee.JeeFormatter;
-import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 
 /**
- * A ResponseTemplate that returns the default sections in the StructuredResponse without
- * any changes, one after each other.
+ * A ResponseTemplate that emits nothing, regardless of what content has been set.
  */
-public class VerbatimStructuredResponseTemplate
+public class NoContentStructuredResponseTemplate
         extends
             AbstractStructuredResponseTemplate
 {
@@ -40,17 +34,18 @@ public class VerbatimStructuredResponseTemplate
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @return the created JspStructuredResponseTemplate
      */
-    public static VerbatimStructuredResponseTemplate create(
+    public static NoContentStructuredResponseTemplate create(
             SaneServletRequest request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured )
     {
-        VerbatimStructuredResponseTemplate ret = new VerbatimStructuredResponseTemplate(
+        NoContentStructuredResponseTemplate ret = new NoContentStructuredResponseTemplate(
                 request,
                 requestedTemplate,
                 userRequestedTemplate,
                 structured );
+
         return ret;
     }
 
@@ -62,7 +57,7 @@ public class VerbatimStructuredResponseTemplate
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
      */
-    protected VerbatimStructuredResponseTemplate(
+    protected NoContentStructuredResponseTemplate(
             SaneServletRequest request,
             String             requestedTemplate,
             String             userRequestedTemplate,
@@ -91,30 +86,11 @@ public class VerbatimStructuredResponseTemplate
         outputLocation(    delegate, structured );
         outputYadisHeader( delegate, structured );
         
-        // stream default section(s)
-        
-        JeeFormatter theFormatter = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( JeeFormatter.class );
-        
-        List<Throwable> reportedProblems = structured.problems();
-        String errorContent = theFormatter.formatProblems( theRequest.getDelegate(), reportedProblems, "Text" );                
-        if( errorContent != null ) {
-            Writer w = delegate.getWriter();
-            w.write( errorContent );
-            w.flush();
-        }
-
-        String textContent = structured.getDefaultTextSection().getContent();
-        if( textContent != null ) {
-            Writer w = delegate.getWriter();
-            w.write( textContent );
-            w.flush();
-        }
-
-        byte [] binaryContent = structured.getDefaultBinarySection().getContent();
-        if( binaryContent != null ) {
-            OutputStream o = delegate.getOutputStream();
-            o.write( binaryContent );
-            o.flush();
-        }
+        // stream nothing
     }
+
+    /**
+     * Name of the template that represents a response that has no content.
+     */
+    public static final String NO_CONTENT_TEMPLATE_NAME = "no-content";
 }

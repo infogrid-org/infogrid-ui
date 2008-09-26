@@ -42,7 +42,14 @@ public interface LidProcessingPipeline
      */
     public static final String CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME
             = SaneServletRequest.classToAttributeName( LidClientAuthenticationStatus.class );
-    
+
+    /**
+     * Name of the LidPersona instance representing the client, and found in the request after the
+     * pipeline has been processed.
+     */
+    public static final String CLIENT_PERSONA_ATTRIBUTE_NAME
+            = SaneServletRequest.classToAttributeName( LidPersona.class );
+
     /**
      * Name of the LidResource instance found in the request after the pipeline has
      * been processed.

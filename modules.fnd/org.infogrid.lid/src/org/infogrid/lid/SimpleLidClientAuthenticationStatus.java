@@ -27,61 +27,74 @@ public class SimpleLidClientAuthenticationStatus
     /**
      * Factory method.
      * 
+     * @param clientIdentifier the normalized identifier provided by the client, if any
      * @param clientPersona the client LidPersona that was found, if any
      * @param session the client LidSession that was found, if any
      * @param carriedValidCredentialTypes the credential types carried as part of this request that validated successfully, if any
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
+     * @param sessionClientIdentifier the normalized identifier of the client according to a currently valid session
+     * @param sessionClientPersona the client LidPersona according to the currently valid session
      * @param wishesCancelSession the client wishes to cancel the session
-     * @param wishesAnonymous the client wishes to become anonymous
      * @return the created SimpleLidClientAuthenticationStatus
      */
     public static SimpleLidClientAuthenticationStatus create(
+            String                           clientIdentifier,
             LidPersona                       clientPersona,
             LidSession                       session,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
-            boolean                          wishesCancelSession,
-            boolean                          wishesAnonymous )
+            String                           sessionClientIdentifier,
+            LidPersona                       sessionClientPersona,
+            boolean                          wishesCancelSession )
     {
         SimpleLidClientAuthenticationStatus ret = new SimpleLidClientAuthenticationStatus(
+                clientIdentifier,
                 clientPersona,
                 session,
                 carriedValidCredentialTypes,
                 carriedInvalidCredentialTypes,
                 invalidCredentialExceptions,
-                wishesCancelSession,
-                wishesAnonymous );
+                sessionClientIdentifier,
+                sessionClientPersona,
+                wishesCancelSession );
+        
         return ret;
     }
 
     /**
      * Constructor for subclasses only, use factory method.
      * 
+     * @param clientIdentifier the normalized identifier provided by the client, if any
      * @param clientPersona the client LidPersona that was found, if any
      * @param session the client LidSession that was found, if any
      * @param carriedValidCredentialTypes the credential types carried as part of this request that validated successfully, if any
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
+     * @param sessionClientIdentifier the normalized identifier of the client according to a currently valid session
+     * @param sessionClientPersona the client LidPersona according to the currently valid session
      * @param wishesCancelSession the client wishes to cancel the session
-     * @param wishesAnonymous the client wishes to become anonymous
      */
     protected SimpleLidClientAuthenticationStatus(
+            String                           clientIdentifier,
             LidPersona                       clientPersona,
             LidSession                       session,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
-            boolean                          wishesCancelSession,
-            boolean                          wishesAnonymous )
+            String                           sessionClientIdentifier,
+            LidPersona                       sessionClientPersona,
+            boolean                          wishesCancelSession )
     {
-        super(  clientPersona,
+        super(  clientIdentifier,
+                clientPersona,
                 session,
                 carriedValidCredentialTypes,
                 carriedInvalidCredentialTypes,
                 invalidCredentialExceptions,
-                wishesCancelSession,
-                wishesAnonymous );
+                sessionClientIdentifier,
+                sessionClientPersona,
+                wishesCancelSession );
     }
 }

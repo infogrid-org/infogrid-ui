@@ -125,7 +125,7 @@ public abstract class JeeTemplateUtils
 
             } else if( bufferedString != null ) {
                 TextStructuredResponseSection textSection = structured.getTextSection( textSectionTemplate );
-                textSection.setContent( bufferedString );
+                textSection.appendContent( bufferedString );
                 section = textSection;
 
             } else {

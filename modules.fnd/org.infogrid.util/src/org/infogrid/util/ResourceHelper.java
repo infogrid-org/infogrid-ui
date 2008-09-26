@@ -156,8 +156,8 @@ public final class ResourceHelper
         }
         ResourceHelper supRh = null;
         if( recursive ) {
-            Class          supCl = channel.getSuperclass();
-            if( supCl != null && supCl != Object.class ) {
+            Class supCl = channel.getSuperclass();
+            if( supCl != null && supCl.getClassLoader() != null ) { // don't delegate to ResourceHelpers for JDK classes
                 supRh = getInstance( supCl, true );
             }
         }
@@ -458,7 +458,8 @@ public final class ResourceHelper
             }
         }
 
-        if( !found ) {
+        if( !found && theClassLoader != null ) { // make sure we don't accidentally look up resources for JDK classes, that
+                                                 // would throw an Exception in ResourceBundle.getBundle()
             ResourceBundle bundle = getResourceBundle();
             if( bundle != null ) {
                 try {
@@ -659,6 +660,9 @@ public final class ResourceHelper
                 if( ret != null ) {
                     theBundleReference = new WeakReference<ResourceBundle>( ret );
                 }
+            } catch( NullPointerException ex ) {
+                theBundleReference = null;
+                
             } catch( MissingResourceException ex ) {
                 // don't do error reporting here
 

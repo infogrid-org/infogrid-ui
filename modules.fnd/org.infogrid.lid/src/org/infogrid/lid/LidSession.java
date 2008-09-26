@@ -35,28 +35,9 @@ public class LidSession
      * Factory method.
      *
      * @param lid the LID identifier of the user
-     * @param creationClientIp the IP address of the client that created the session
-     * @return the created LidSession
-     */
-    public static LidSession create(
-            String lid,
-            String creationClientIp )
-    {
-        long timeCreated = System.currentTimeMillis();
-        long timeRead    = timeCreated;
-        long timeExpires = timeCreated + DEFAULT_SESSION_DURATION;
-
-        String     cookieValue = createNewCookieValue();
-        LidSession ret         = new LidSession( lid, cookieValue, timeCreated, timeRead, timeExpires, creationClientIp );
-        return ret;
-    }
-
-    /**
-     * Factory method.
-     *
-     * @param lid the LID identifier of the user
      * @param cookieValue the value identifying this session in a browser cookie
      * @param timeCreated the time the session was created, in System.currentTimeMillis() format
+     * @param timeUpdated the time the session was last updated, in System.currentTimeMillis() format
      * @param timeRead the time the session was last read, in System.currentTimeMillis() format
      * @param timeExpires the time the session was or will expire, in System.currentTimeMillis() format
      * @param creationClientIp the IP address of the client that created the session
@@ -66,11 +47,12 @@ public class LidSession
             String lid,
             String cookieValue,
             long   timeCreated,
+            long   timeUpdated,
             long   timeRead,
             long   timeExpires,
             String creationClientIp )
     {
-        LidSession ret = new LidSession( lid, cookieValue, timeCreated, timeRead, timeExpires, creationClientIp );
+        LidSession ret = new LidSession( lid, cookieValue, timeCreated, timeUpdated, timeRead, timeExpires, creationClientIp );
         return ret;
     }
 
@@ -80,6 +62,7 @@ public class LidSession
      * @param lid the LID identifier of the user
      * @param cookieValue the value identifying this session in a browser cookie
      * @param timeCreated the time the session was created, in System.currentTimeMillis() format
+     * @param timeUpdated the time the session was last updated, in System.currentTimeMillis() format
      * @param timeRead the time the session was last read, in System.currentTimeMillis() format
      * @param timeExpires the time the session was or will expire, in System.currentTimeMillis() format
      * @param creationClientIp the IP address of the client that created the session
@@ -88,6 +71,7 @@ public class LidSession
             String lid,
             String cookieValue,
             long   timeCreated,
+            long   timeUpdated,
             long   timeRead,
             long   timeExpires,
             String creationClientIp )
@@ -95,6 +79,7 @@ public class LidSession
         theLid              = lid;
         theCookieValue      = cookieValue;
         theTimeCreated      = timeCreated;
+        theTimeUpdated      = timeUpdated;
         theTimeRead         = timeRead;
         theTimeExpires      = timeExpires;
         theCreationClientIp = creationClientIp;
@@ -105,7 +90,7 @@ public class LidSession
      * 
      * @return the cookie value
      */
-    protected static String createNewCookieValue()
+    public static String createNewCookieValue()
     {
         char [] buf  = new char[ COOKIE_LENGTH ];
 
@@ -140,6 +125,16 @@ public class LidSession
     }
 
     /**
+     * Obtain the time the token was last updated.
+     * 
+     * @return the time the token was updated, in System.currentTimeMillis() format
+     */
+    public long getTimeUpdated()
+    {
+        return theTimeUpdated;
+    }
+
+    /**
      * Obtain the time the token was last used.
      * 
      * @return the time the token was last used, in System.currentTimeMillis() format
@@ -166,6 +161,19 @@ public class LidSession
      */
     public String getCookieValue()
     {
+        if( !updating ) {
+            try {
+                updating = true;
+                long now = System.currentTimeMillis();
+        
+                theTimeRead = now;
+            
+                factoryCreatedObjectUpdated();
+            } finally {
+                updating = false;
+            }
+        }
+        
         return theCookieValue;
     }
     
@@ -176,6 +184,14 @@ public class LidSession
     {
         theCookieValue = createNewCookieValue();
         
+        LidSessionManager manager = (LidSessionManager) getFactory();
+
+        long duration = manager.getSessionDuration();
+        long now      = System.currentTimeMillis();
+        
+        theTimeUpdated = now;
+        theTimeExpires = now + duration;
+
         factoryCreatedObjectUpdated();
     }
 
@@ -203,6 +219,17 @@ public class LidSession
             return false;
         }
     }
+    
+    /**
+     * Invalidate this session.
+     */
+    public void cancel()
+    {
+        theTimeExpires = System.currentTimeMillis()-1L; // subtract one to be safe on fast machines
+
+        factoryCreatedObjectUpdated();
+    }
+
     /**
      * The LID identifier of the user
      */
@@ -217,6 +244,11 @@ public class LidSession
      * The time the session was created, in System.currentTimeMillis() format.
      */
     protected long theTimeCreated;
+    
+    /**
+     * The time the session was last updated, in System.currenTimeMillis() format.
+     */
+    protected long theTimeUpdated;
     
     /**
      * The time the session was last accessed, in System.currentTimeMillis() format.
@@ -234,6 +266,11 @@ public class LidSession
     protected String theCreationClientIp;
     
     /**
+     * Flag that avoids endless recursion when attempting to update the lastRead value.
+     */
+    protected boolean updating = false;
+
+    /**
      * The Random generator we use.
      */
     protected static final Random theGenerator = new Random();
@@ -243,13 +280,6 @@ public class LidSession
      */
     private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( LidSession.class );
     
-    /**
-     * The default lifetime of a session, in milliseconds.
-     */
-    public static final long DEFAULT_SESSION_DURATION = theResourceHelper.getResourceLongOrDefault( 
-            "DefaultSessionDuration",
-            8L*60L*60L*1000L ); // 8 hours
-
     /**
      * The characters that are allowed in the token.
      */

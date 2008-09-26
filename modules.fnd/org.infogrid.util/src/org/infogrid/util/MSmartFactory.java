@@ -201,10 +201,13 @@ public class MSmartFactory<K,V,A>
                 weAreCreating = true;
                 ret = theDelegateFactory.obtainFor( key, argument );
                 
-                if( ret instanceof FactoryCreatedObject ) {
-                    ((FactoryCreatedObject<K,V,A>) ret).setFactory( this );
-                }
                 theKeyValueMap.put( key, ret );
+            }
+            if( ret instanceof FactoryCreatedObject ) {
+                FactoryCreatedObject<K,V,A> realRet = (FactoryCreatedObject<K,V,A>) ret;
+                if( realRet.getFactory() == null ) {
+                    realRet.setFactory( this );
+                }
             }
         }
         if( weAreCreating ) {

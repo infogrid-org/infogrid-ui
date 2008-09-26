@@ -63,11 +63,11 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
         theResponse = (StructuredResponse) lookupOrThrow(
                 StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
-        return EVAL_BODY_INCLUDE;
+        return EVAL_BODY_BUFFERED;
     }
 
     /**
-     * Our implementation of doEndTag().
+     * Our implementation of doAfterBody().
      *
      * @return evaluate or skip body
      * @throws JspException thrown if an evaluation error occurred
@@ -75,7 +75,7 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
      * @throws IOException thrown if an I/O Exception occurred
      */
     @Override
-    protected int realDoEndTag()
+    protected int realDoAfterBody()
         throws
             JspException,
             IgnoreException,

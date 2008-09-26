@@ -89,7 +89,7 @@ public class RegexDispatcherFilter
             IOException,
             ServletException
     {
-        HttpServletRequest  realRequest  = (HttpServletRequest)  request;
+        HttpServletRequest  realRequest  = (HttpServletRequest) request;
         SaneServletRequest  lidRequest   = (SaneServletRequest) request.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
 
         String relativePath;
@@ -127,7 +127,7 @@ public class RegexDispatcherFilter
             ServletException
     {
         ServletContext    context    = theFilterConfig.getServletContext();
-        RequestDispatcher dispatcher = context.getNamedDispatcher( theServletName  );
+        RequestDispatcher dispatcher = context.getNamedDispatcher( theServletName );
 
         if( dispatcher == null ) {
             throw new ServletException( "Named dispatcher '" + theServletName + "' could not be found" );

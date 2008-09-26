@@ -14,6 +14,7 @@
 
 package org.infogrid.lid;
 
+import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.lid.yadis.YadisPipelineProcessingStage;
@@ -75,7 +76,8 @@ public class DefaultLidProcessingPipeline
             LidAbortProcessingPipelineException
     {
         LidResource                   requestedResource = null;
-        LidClientAuthenticationStatus authStatus        = null;
+        LidClientAuthenticationStatus clientAuthStatus  = null;
+        LidPersona                    clientPersona     = null;
         
         try {
             requestedResource = theResourceFinder.findLidResource( lidRequest );
@@ -90,11 +92,18 @@ public class DefaultLidProcessingPipeline
         }
         
         if( theAuthenticationStage != null ) {
-            authStatus = theAuthenticationStage.determineAuthenticationStatus( lidRequest, lidResponse );
+            clientAuthStatus = theAuthenticationStage.determineAuthenticationStatus( lidRequest, lidResponse );
         }
         
-        lidRequest.getDelegate().setAttribute( CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME, authStatus );
-        lidRequest.getDelegate().setAttribute( REQUESTED_RESOURCE_ATTRIBUTE_NAME,           requestedResource );
+        if( clientAuthStatus != null ) {
+            clientPersona = clientAuthStatus.getClientPersona();
+        }
+
+        HttpServletRequest realRequest = lidRequest.getDelegate();
+        
+        realRequest.setAttribute( CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME, clientAuthStatus );
+        realRequest.setAttribute( CLIENT_PERSONA_ATTRIBUTE_NAME,               clientPersona );
+        realRequest.setAttribute( REQUESTED_RESOURCE_ATTRIBUTE_NAME,           requestedResource );
     }
     
     /**

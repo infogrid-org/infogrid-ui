@@ -178,6 +178,30 @@ public abstract class SaneRequest
     public abstract Map<String,String[]> getArguments();
 
     /**
+     * Determine whether a named argument has the given value. This method is useful
+     * in case several arguments have been given with the same name.
+     * 
+     * @param name the name of the argument
+     * @param value the desired value of the argument
+     * @return true if the request contains an argument with this name and value
+     */
+    public boolean matchArgument(
+            String name,
+            String value )
+    {
+        String [] found = getMultivaluedArgument( name );
+        if( found == null ) {
+            return false;
+        }
+        for( String current : found ) {
+            if( value.equals( current )) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Obtain a POST'd argument. If more than one argument is given by this name,
      * this will throw an IllegalStateException.
      *

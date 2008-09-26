@@ -14,21 +14,19 @@
 
 package org.infogrid.lid.store;
 
+import org.infogrid.lid.AbstractLidSessionManager;
 import org.infogrid.lid.LidSession;
 import org.infogrid.lid.LidSessionManager;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
-import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.Factory;
-import org.infogrid.util.FactoryException;
-import org.infogrid.util.MSmartFactory;
 
 /**
  * Implements LidSessionManager using the Store abstraction.
  */
 public class StoreLidSessionManager
         extends
-            MSmartFactory<String,LidSession,String>
+            AbstractLidSessionManager
         implements
             LidSessionManager
 {
@@ -41,27 +39,31 @@ public class StoreLidSessionManager
     public static StoreLidSessionManager create(
             Store store )
     {
+        return create( store, DEFAULT_SESSION_DURATION );
+    }
+
+    /**
+     * Factory method.
+     * 
+     * @param store the Store to use
+     * @param sessionDuration the duration of the session, in milliseconds
+     * @return the created StoreLidSessionManager
+     */
+    public static StoreLidSessionManager create(
+            Store store,
+            long  sessionDuration )
+    {
         StoreLidSessionMapper mapper = new StoreLidSessionMapper();
         
         StoreBackedSwappingHashMap<String,LidSession> storage = StoreBackedSwappingHashMap.createWeak( 
                 mapper,
                 store );
         
-        Factory<String,LidSession,String> delegateFactory = new AbstractFactory<String,LidSession,String>() {
-            public LidSession obtainFor(
-                    String lid,
-                    String clientIp )
-                throws
-                    FactoryException
-            {
-                LidSession ret = LidSession.create( lid, clientIp );
-                
-                return ret;
-            }
-
-        };
-
-        StoreLidSessionManager ret = new StoreLidSessionManager( delegateFactory, storage );
+        MyDelegateFactory delegateFactory = new MyDelegateFactory();
+        
+        StoreLidSessionManager ret = new StoreLidSessionManager( delegateFactory, storage, sessionDuration );
+        delegateFactory.setLidSessionManager( ret );
+        
         return ret;
     }
 
@@ -70,11 +72,14 @@ public class StoreLidSessionManager
      * 
      * @param delegateFactory the underlying factory for LidSessions
      * @param storage the storage to use
+     * @param sessionDuration the duration of new or renewed sessions in milli-seconds
      */
     protected StoreLidSessionManager(
             Factory<String,LidSession,String>             delegateFactory,
-            StoreBackedSwappingHashMap<String,LidSession> storage )
+            StoreBackedSwappingHashMap<String,LidSession> storage,
+            long                                          sessionDuration )
     {
-        super( delegateFactory, storage );
-    }
+        super( delegateFactory, storage, sessionDuration );
+    }    
 }
+

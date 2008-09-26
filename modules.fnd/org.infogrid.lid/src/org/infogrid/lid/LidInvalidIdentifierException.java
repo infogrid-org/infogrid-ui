@@ -68,7 +68,7 @@ public class LidInvalidIdentifierException
      */    
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theInvalidIdentifier  };
+        return new Object[] { theInvalidIdentifier };
     }
 
     /**

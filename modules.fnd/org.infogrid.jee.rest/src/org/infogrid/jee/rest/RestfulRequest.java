@@ -22,9 +22,7 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshObjectAccessException;
-
 import org.infogrid.util.http.SaneRequest;
-
 
 /**
  * Encapsulates parameter parsing according to InfoGrid REST conventions.
@@ -122,4 +120,29 @@ public interface RestfulRequest
      */
     public static final String RESTFUL_REQUEST_ATTRIBUTE_NAME
             = SaneServletRequest.classToAttributeName( RestfulRequest.class );
+
+    /**
+     * Name of the LID format parameter.
+     */
+    public static final String LID_FORMAT_PARAMETER_NAME = "lid-format";
+
+    /**
+     * The prefix in the lid-format string that indicates the name of a viewlet.
+     */
+    public static final String VIEWLET_PREFIX = "viewlet:";
+    
+    /**
+     * The prefix in the lid-format string that indicates the name of a MIME type.
+     */
+    public static final String MIME_PREFIX = "mime:";
+
+    /**
+     * Name of the LID traversal parameter.
+     */
+    public static final String LID_TRAVERSAL_PARAMETER_NAME = "lid-traversal";
+    
+    /**
+     * The prefix in the lid-traversal string that indicates an Xpath.
+     */
+    public static final String XPATH_PREFIX = "xpath:";
 }

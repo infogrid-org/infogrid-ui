@@ -20,6 +20,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.CarriesHttpStatusCodeException;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -35,17 +36,20 @@ public abstract class AbstractStructuredResponseTemplate
      * Constructor for subclasses only.
      * 
      * @param request the incoming HTTP request
-     * @param requestedTemplate the requested ResponseTemplate, if any
+     * @param requestedTemplate the requested ResponseTemplate that will be used, if any
+     * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
      */
     protected AbstractStructuredResponseTemplate(
             SaneServletRequest request,
             String             requestedTemplate,
+            String             userRequestedTemplate,
             StructuredResponse structured )
     {
-        theRequest           = request;
-        theStructured        = structured;
-        theRequestedTemplate = requestedTemplate;
+        theRequest               = request;
+        theStructured            = structured;
+        theRequestedTemplate     = requestedTemplate;
+        theUserRequestedTemplate = userRequestedTemplate;
     }
     
     /**
@@ -158,16 +162,14 @@ public abstract class AbstractStructuredResponseTemplate
         throws
             IOException
     {
-        Cookie toSend;
-        if( theRequestedTemplate == null ) {
-            toSend = new Cookie( LID_TEMPLATE_COOKIE_NAME, "**deleted**" );
-            toSend.setMaxAge( 0 ); // delete cookie
-        } else {
-            toSend = new Cookie( LID_TEMPLATE_COOKIE_NAME, theRequestedTemplate );
+        if( theUserRequestedTemplate != null ) {
+            
+            Cookie toSend = new Cookie( LID_TEMPLATE_COOKIE_NAME, HTTP.encodeToValidUrlArgument( theRequestedTemplate ));
             toSend.setPath( theRequest.getDelegate().getContextPath() );
             toSend.setMaxAge( 60 * 60 * 24 * 365 * 10 ); // 10 years
+            
+            delegate.addCookie( toSend );
         }
-        delegate.addCookie( toSend );
         
         for( HasHeaderPreferences current : toConsider( structured ) ) {
             for( Cookie c : current.getCookies()) {
@@ -256,4 +258,9 @@ public abstract class AbstractStructuredResponseTemplate
      * The requested formatting template, if any.
      */
     protected String theRequestedTemplate;
+    
+    /**
+     * The formatting template requested by the user, if any.
+     */
+    protected String theUserRequestedTemplate;
 }

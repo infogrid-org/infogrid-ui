@@ -153,6 +153,18 @@ public class LidLocalPersonaVO
         return theAttributes.keySet();
     }
     
+    
+    /**
+     * Obtain the map of attributes. This breaks encapsulation, but works much better
+     * for JSP pages.
+     * 
+     * @return the map of attributes
+     */
+    public Map<String,String> getAttributes()
+    {
+        return theAttributes;
+    }
+
     /**
      * Obtain the credential for a given credential type.
      * 

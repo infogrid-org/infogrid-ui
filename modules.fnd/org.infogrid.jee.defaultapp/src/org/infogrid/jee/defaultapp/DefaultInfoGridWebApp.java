@@ -12,26 +12,27 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.jee.defaultapp;
 
-import org.infogrid.util.SmartFactory;
+import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.util.context.Context;
 
 /**
- * Defines the concept of a session manager. The arguments are as follows:
- * <ul>
- *  <li>String: the identifier of the user whose session we look for</li>
- *  <li>LidSession: the session</li>
- *  <li>String: IP address of the user at the time the session was created</li>
- * </ul>
+ * The InfoGridWebApp when using the defaultapp template.
  */
-public interface LidSessionManager
+public class DefaultInfoGridWebApp
         extends
-            SmartFactory<String,LidSession,String>
+            InfoGridWebApp
 {
     /**
-     * Obtain the session duration for newly created or renewed sessions.
-     * 
-     * @return the session duration, in milliseconds
+     * Constructor.
+     *
+     * @param applicationContext the main application Context. This context holds all the
+     *        well-known objects needed by the application
      */
-    public long getSessionDuration();
+    protected DefaultInfoGridWebApp(
+            Context applicationContext )
+    {
+        super( applicationContext );
+    }
 }

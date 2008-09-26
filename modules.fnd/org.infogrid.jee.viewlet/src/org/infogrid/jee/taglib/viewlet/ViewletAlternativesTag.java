@@ -105,7 +105,7 @@ public class ViewletAlternativesTag
                 HashMap<String,String> map = new HashMap<String,String>();
                 
                 for( int i=0 ; i<candidates.length ; ++i ) {
-                    map.put( "lid-format", "viewlet:" + candidates[i].getName() );
+                    map.put( RestfulRequest.LID_FORMAT_PARAMETER_NAME, RestfulRequest.VIEWLET_PREFIX + candidates[i].getName() );
                     print( "<li" );
                     if( candidates[i].getName().equals( currentViewlet.getName() )) {
                         print( " class=\"selected\"" );

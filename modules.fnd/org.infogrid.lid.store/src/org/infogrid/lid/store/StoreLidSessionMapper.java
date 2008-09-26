@@ -77,7 +77,15 @@ public class StoreLidSessionMapper
             String cookieValue      = data.substring( 0, sep );
             String creationClientIp = data.substring( sep+1 );
             
-            LidSession ret = LidSession.create( lid, cookieValue, value.getTimeCreated(), value.getTimeRead(), value.getTimeExpires(), creationClientIp );
+            LidSession ret = LidSession.create(
+                    lid,
+                    cookieValue,
+                    value.getTimeCreated(),
+                    value.getTimeUpdated(),
+                    value.getTimeRead(),
+                    value.getTimeExpires(),
+                    creationClientIp );
+            
             return ret;
 
         } catch( UnsupportedEncodingException ex ) {
@@ -116,7 +124,7 @@ public class StoreLidSessionMapper
     public long getTimeUpdated(
             LidSession value )
     {
-        return -1L;
+        return value.getTimeUpdated();
     }
 
     /**

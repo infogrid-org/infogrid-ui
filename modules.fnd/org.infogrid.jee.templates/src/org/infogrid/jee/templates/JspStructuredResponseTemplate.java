@@ -34,7 +34,8 @@ public class JspStructuredResponseTemplate
      *
      * @param dispatcher identifies the JSP file
      * @param request the incoming HTTP request
-     * @param requestedTemplate the requested ResponseTemplate, if any
+     * @param requestedTemplate the requested ResponseTemplate that will be used, if any
+     * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
      * @return the created JspStructuredResponseTemplate
      */
@@ -42,9 +43,15 @@ public class JspStructuredResponseTemplate
             RequestDispatcher  dispatcher,
             SaneServletRequest request,
             String             requestedTemplate,
+            String             userRequestedTemplate,
             StructuredResponse structured )
     {
-        JspStructuredResponseTemplate ret = new JspStructuredResponseTemplate( dispatcher, request, requestedTemplate, structured );
+        JspStructuredResponseTemplate ret = new JspStructuredResponseTemplate(
+                dispatcher,
+                request,
+                requestedTemplate,
+                userRequestedTemplate,
+                structured );
         return ret;
     }
 
@@ -53,16 +60,18 @@ public class JspStructuredResponseTemplate
      * 
      * @param dispatcher identifies the JSP file
      * @param request the incoming HTTP request
-     * @param requestedTemplate the requested ResponseTemplate, if any
+     * @param requestedTemplate the requested ResponseTemplate that will be used, if any
+     * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
      */
     protected JspStructuredResponseTemplate(
             RequestDispatcher  dispatcher,
             SaneServletRequest request,
             String             requestedTemplate,
+            String             userRequestedTemplate,
             StructuredResponse structured )
     {
-        super( request, requestedTemplate, structured );
+        super( request, requestedTemplate, userRequestedTemplate, structured );
 
         theRequestDispatcher = dispatcher;
     }
