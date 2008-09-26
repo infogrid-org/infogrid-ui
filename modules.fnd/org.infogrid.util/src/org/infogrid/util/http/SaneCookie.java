@@ -17,11 +17,15 @@ package org.infogrid.util.http;
 import java.util.Date;
 
 /**
- * Interface to HTTP Cookies. This is an interface so we can implement a delegation
+ * <p>Interface to HTTP Cookies. This is an interface so we can implement a delegation
  * model to the Java servlet cookies. This interface can be used both for incoming
- * and outgoing cookies.
+ * and outgoing cookies.</p>
+ * <p>Making this a subtype of CharSequence allows us to also treat it as a String,
+ * which is its value. This simplifies the API.</p>
  */
 public interface SaneCookie
+        extends
+            CharSequence
 {
     /**
      * Obtain the name of the Cookie.
@@ -62,4 +66,11 @@ public interface SaneCookie
      * Set this cookie to "please remove this cookie".
      */
     public void setRemoved();
+    
+    /**
+     * Determine whether this cookie is supposed to be removed.
+     * 
+     * @return true if this cookie is removed or expired
+     */
+    public boolean getIsRemovedOrExpired();
 }

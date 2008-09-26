@@ -787,6 +787,53 @@ public class SaneServletRequest
         {
             // no op
         }
+        
+        /**
+         * Return character of value.
+         * 
+         * @param index of the character
+         * @return the character
+         */
+        public char charAt(
+                int index )
+        {
+            return theValue.charAt( index );
+        }
+
+        /**
+         * Length of value.
+         * 
+         * @return length
+         */
+        public int length()
+        {
+            return theValue.length();
+        }
+
+        /**
+         * Sub-sequence of value.
+         * 
+         * @param start start index
+         * @param end end index
+         * @return sub-sequence
+         */
+        public CharSequence subSequence(
+                int start,
+                int end )
+        {
+            return theValue.subSequence( start, end );
+        }
+
+        /**
+         * String form. Here, the value.
+         * 
+         * @return the value
+         */
+        @Override
+        public String toString()
+        {
+            return theValue;
+        }
 
         /**
          * The Servlet Cookie we delegate to.
