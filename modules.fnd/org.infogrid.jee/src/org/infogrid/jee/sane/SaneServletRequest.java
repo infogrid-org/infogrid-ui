@@ -787,7 +787,17 @@ public class SaneServletRequest
         {
             // no op
         }
-        
+     
+        /**
+         * Determine whether this cookie is supposed to be removed.
+         * 
+         * @return true if this cookie is removed or expired
+         */
+        public boolean getIsRemovedOrExpired()
+        {
+            return false; // does not apply here
+        }
+       
         /**
          * Return character of value.
          * 
