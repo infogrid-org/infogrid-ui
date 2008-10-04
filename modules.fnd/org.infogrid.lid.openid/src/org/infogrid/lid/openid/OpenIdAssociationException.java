@@ -14,23 +14,28 @@
 
 package org.infogrid.lid.openid;
 
+import org.infogrid.lid.LidAbortProcessingPipelineException;
+import org.infogrid.lid.LidProcessingPipelineStage;
+
 /**
  * This Exception is thrown when an error occurred while attempting to set up or
  * renew an OpenID Association.
  */
 public abstract class OpenIdAssociationException
     extends
-        Exception
+        LidAbortProcessingPipelineException
 {
     /**
      * Constructor.
      *
+     * @param source the LidProcessingPipelineStage that threw this exception
      * @param cause the Exception that caused this Exception
      */
     protected OpenIdAssociationException(
-            Exception cause )
+            LidProcessingPipelineStage source,
+            Throwable                  cause )
     {
-        super( cause );
+        super( source, cause );
     }
 
     /**
@@ -45,12 +50,14 @@ public abstract class OpenIdAssociationException
         /**
          * Constructor.
          *
+         * @param source the LidProcessingPipelineStage that threw this exception
          * @param unknownType the type of Association that was unknown
          */
         public UnknownAssociationType(
-                String unknownType )
+                LidProcessingPipelineStage source,
+                String                     unknownType )
         {
-            super( null );
+            super( source, null );
             
             theUnknownType = unknownType;
         }
@@ -73,12 +80,14 @@ public abstract class OpenIdAssociationException
         /**
          * Constructor.
          *
+         * @param source the LidProcessingPipelineStage that threw this exception
          * @param unknownType the type of session that was unknown
          */
         public UnknownSessionType(
-                String unknownType )
+                LidProcessingPipelineStage source,
+                String                     unknownType )
         {
-            super( null );
+            super( source, null );
             
             theUnknownType = unknownType;
         }
@@ -101,10 +110,13 @@ public abstract class OpenIdAssociationException
 
         /**
          * Constructor.
+         * 
+         * @param source the LidProcessingPipelineStage that threw this exception
          */
-        public InvalidExpiration()
+        public InvalidExpiration(
+                LidProcessingPipelineStage source )
         {
-            super( null );
+            super( source, null );
         }
     }
 
@@ -119,10 +131,13 @@ public abstract class OpenIdAssociationException
 
         /**
          * Constructor.
+         * 
+         * @param source the LidProcessingPipelineStage that threw this exception
          */
-        public InvalidSecret()
+        public InvalidSecret(
+                LidProcessingPipelineStage source )
         {
-            super( null );
+            super( source, null );
         }
     }
 
@@ -138,12 +153,35 @@ public abstract class OpenIdAssociationException
         /**
          * Constructor.
          *
-         * @param cause the Exception that caused this Exception
+         * @param source the LidProcessingPipelineStage that threw this exception
+         * @param cause the cause of this Exception
          */
         public SyntaxError(
-                Exception cause )
+                LidProcessingPipelineStage source,
+                Throwable                  cause )
         {
-            super( cause );
+            super( source, cause );
+        }
+    }
+    
+    /**
+     * This Exception is thrown if there was an invalid public key.
+     */
+    public static class InvalidPublicKey
+        extends
+            OpenIdAssociationException
+    {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
+        /**
+         * Constructor.
+         * 
+         * @param source the LidProcessingPipelineStage that threw this exception
+         */
+        public InvalidPublicKey(
+                LidProcessingPipelineStage source )
+        {
+            super( source, null );
         }
     }
 }

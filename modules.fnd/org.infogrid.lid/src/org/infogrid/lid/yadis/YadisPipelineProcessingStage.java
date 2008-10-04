@@ -18,8 +18,8 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
+import org.infogrid.jee.templates.VerbatimStructuredResponseTemplate;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
 import org.infogrid.lid.LidResource;
 import org.infogrid.util.context.Context;
@@ -110,7 +110,7 @@ public class YadisPipelineProcessingStage
                 section.setContent( content.toString() );
                 section.setHttpResponseCode( 200 );
                 section.setMimeType( "application/xrds+xml");
-                lidResponse.setRequestedTemplateName( StructuredResponseTemplateFactory.VERBATIM_TEXT_NAME );
+                lidResponse.setRequestedTemplateName( VerbatimStructuredResponseTemplate.VERBATIM_TEXT_TEMPLATE_NAME );
 
             } else {
                 section.setHttpResponseCode( 404 );

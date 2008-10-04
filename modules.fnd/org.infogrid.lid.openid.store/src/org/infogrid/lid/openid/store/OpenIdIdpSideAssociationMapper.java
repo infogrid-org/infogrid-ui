@@ -17,33 +17,33 @@ package org.infogrid.lid.openid.store;
 import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 import org.infogrid.lid.openid.CryptUtils;
-import org.infogrid.lid.openid.OpenIdRelyingPartySideAssociation;
+import org.infogrid.lid.openid.OpenIdIdpSideAssociation;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
 
 /**
- * Maps RelyingPartySideAssociations into StoreValues and vice versa.
+ * Maps OpenIdIdpSideAssociations into StoreValues and vice versa.
  */
-public class RelyingPartySideAssociationMapper
+public class OpenIdIdpSideAssociationMapper
         implements
-            StoreEntryMapper<String,OpenIdRelyingPartySideAssociation>
+            StoreEntryMapper<String,OpenIdIdpSideAssociation>
 {
     /**
      * Factory method.
      * 
-     * @return the created RelyingPartySideAssociationMapper
+     * @return the created OpenIdRpSideAssociationMapper
      */
-    public static RelyingPartySideAssociationMapper create()
+    public static OpenIdIdpSideAssociationMapper create()
     {
-        return new RelyingPartySideAssociationMapper();
+        return new OpenIdIdpSideAssociationMapper();
     }
 
     /**
      * Constructor.
      */
-    protected RelyingPartySideAssociationMapper()
+    protected OpenIdIdpSideAssociationMapper()
     {
     }
     
@@ -79,7 +79,7 @@ public class RelyingPartySideAssociationMapper
      * @return the value
      * @throws StoreValueDecodingException thrown if the StoreValue could not be decoded
      */
-    public OpenIdRelyingPartySideAssociation decodeValue(
+    public OpenIdIdpSideAssociation decodeValue(
             String     key,
             StoreValue value )
         throws
@@ -90,7 +90,6 @@ public class RelyingPartySideAssociationMapper
             StringTokenizer token = new StringTokenizer( s, "\n" );
 
             String associationHandle = null;
-            String serverUrl         = null;
             String sharedSecretInHex = null;
 
             while( token.hasMoreTokens() ) {
@@ -98,9 +97,6 @@ public class RelyingPartySideAssociationMapper
 
                 if( line.startsWith( ASSOCIATION_HANDLE_TAG )) {
                     associationHandle = line.substring( ASSOCIATION_HANDLE_TAG.length() );
-
-                } else if( line.startsWith( SERVER_URL_TAG )) {
-                    serverUrl = line.substring( SERVER_URL_TAG.length() );
 
                 } else if( line.startsWith( SHARED_SECRET_TAG )) {
                     sharedSecretInHex = line.substring( SHARED_SECRET_TAG.length() );
@@ -115,8 +111,7 @@ public class RelyingPartySideAssociationMapper
             }
             byte [] sharedSecret = CryptUtils.dehex( sharedSecretInHex );
 
-            OpenIdRelyingPartySideAssociation ret = OpenIdRelyingPartySideAssociation.create(
-                    serverUrl,
+            OpenIdIdpSideAssociation ret = OpenIdIdpSideAssociation.create(
                     associationHandle,
                     sharedSecret,
                     value.getTimeCreated(),
@@ -144,49 +139,49 @@ public class RelyingPartySideAssociationMapper
     }
 
     /**
-     * Obtain the time a OpenIdRelyingPartySideAssociation was created.
+     * Obtain the time a OpenIdRpSideAssociation was created.
      *
-     * @param value the time a OpenIdRelyingPartySideAssociation was created.
+     * @param value the time a OpenIdRpSideAssociation was created.
      * @return the time created, in System.currentTimeMillis() format
      */
     public long getTimeCreated(
-            OpenIdRelyingPartySideAssociation value )
+            OpenIdIdpSideAssociation value )
     {
         return value.getTimeCreated();
     }
 
     /**
-     * Obtain the time a OpenIdRelyingPartySideAssociation was last updated.
+     * Obtain the time a OpenIdRpSideAssociation was last updated.
      *
-     * @param value the time a OpenIdRelyingPartySideAssociation was last updated.
+     * @param value the time a OpenIdRpSideAssociation was last updated.
      * @return the time updated, in System.currentTimeMillis() format
      */
     public long getTimeUpdated(
-            OpenIdRelyingPartySideAssociation value )
+            OpenIdIdpSideAssociation value )
     {
         return getTimeCreated( value );
     }
 
     /**
-     * Obtain the time a OpenIdRelyingPartySideAssociation was last read.
+     * Obtain the time a OpenIdRpSideAssociation was last read.
      *
-     * @param value the time a OpenIdRelyingPartySideAssociation was last read.
+     * @param value the time a OpenIdRpSideAssociation was last read.
      * @return the time read, in System.currentTimeMillis() format
      */
     public long getTimeRead(
-            OpenIdRelyingPartySideAssociation value )
+            OpenIdIdpSideAssociation value )
     {
         return value.getTimeRead();
     }
 
     /**
-     * Obtain the time a OpenIdRelyingPartySideAssociation will expire.
+     * Obtain the time a OpenIdIdpSideAssociation will expire.
      *
-     * @param value the time a OpenIdRelyingPartySideAssociation will expire.
+     * @param value the time a OpenIdIdpSideAssociation will expire.
      * @return the time will expire, in System.currentTimeMillis() format
      */
     public long getTimeExpires(
-            OpenIdRelyingPartySideAssociation value )
+            OpenIdIdpSideAssociation value )
     {
         return value.getTimeExpires();
     }
@@ -197,7 +192,7 @@ public class RelyingPartySideAssociationMapper
      * @return the byte array
      */
     public byte [] asBytes(
-            OpenIdRelyingPartySideAssociation value )
+            OpenIdIdpSideAssociation value )
         throws
             StoreValueEncodingException
     {
@@ -206,7 +201,6 @@ public class RelyingPartySideAssociationMapper
 
             StringBuilder buf = new StringBuilder();
             buf.append( ASSOCIATION_HANDLE_TAG ).append( value.getAssociationHandle() ).append( "\n" );
-            buf.append(         SERVER_URL_TAG ).append( value.getServerUrl()         ).append( "\n" );
             buf.append(      SHARED_SECRET_TAG ).append( sharedSecretInHex            ).append( "\n" );
 
             byte [] ret = buf.toString().getBytes( ENCODING );
@@ -221,7 +215,6 @@ public class RelyingPartySideAssociationMapper
      * Tags for our serialization syntax.
      */
     protected static final String ASSOCIATION_HANDLE_TAG = "associationHandle:";
-    protected static final String         SERVER_URL_TAG = "serverUrl:";
     protected static final String      SHARED_SECRET_TAG = "sharedSecret:";
     
     /**

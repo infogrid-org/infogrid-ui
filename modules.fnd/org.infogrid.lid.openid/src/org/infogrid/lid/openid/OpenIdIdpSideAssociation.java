@@ -15,61 +15,45 @@
 package org.infogrid.lid.openid;
 
 /**
- * An association, as held by a RelyingParty.
+ * An association, as held by an OpenID identity provider.
  */
-public class OpenIdRelyingPartySideAssociation
+public class OpenIdIdpSideAssociation
         extends
             OpenIdEitherSideAssociation
 {
     /**
      * Factory method.
      *
-     * @param serverUrl URL of the identity server with which we have this Association
      * @param associationHandle the unique identifier for the association
      * @param sharedSecret the secret negotiated for the association
      * @param issuedTime the time the association was created
      * @param expiryTime the time the association will expire
-     * @return the created OpenIdRelyingPartySideAssociation
+     * @return the created OpenIdRpSideAssociation
      */
-    public static OpenIdRelyingPartySideAssociation create(
-            String  serverUrl,
+    public static OpenIdIdpSideAssociation create(
             String  associationHandle,
             byte [] sharedSecret,
             long    issuedTime,
             long    expiryTime )
     {
-        return new OpenIdRelyingPartySideAssociation( serverUrl, associationHandle, sharedSecret, issuedTime, expiryTime );
+        return new OpenIdIdpSideAssociation( associationHandle, sharedSecret, issuedTime, expiryTime );
     }
 
     /**
      * Constructor.
      * 
-     * @param serverUrl URL of the identity server with which we have this Association
      * @param associationHandle the unique identifier for the association
      * @param sharedSecret the secret negotiated for the association
      * @param issuedTime the time the association was created
      * @param expiryTime the time the association will expire
      */
-    protected OpenIdRelyingPartySideAssociation(
-            String  serverUrl,
+    protected OpenIdIdpSideAssociation(
             String  associationHandle,
             byte [] sharedSecret,
             long    issuedTime,
             long    expiryTime )
     {
         super( associationHandle, sharedSecret, issuedTime, expiryTime );
-
-        theServerUrl = serverUrl;
-    }
-
-    /**
-     * Obtain the URL of the server.
-     *
-     * @return the URL of the server
-     */
-    public String getServerUrl()
-    {
-        return theServerUrl;
     }
 
     /**
@@ -84,10 +68,6 @@ public class OpenIdRelyingPartySideAssociation
         StringBuilder error = new StringBuilder();
         String        sep   = "";
         
-        if( theServerUrl == null ) {
-            error.append( "Have no serverUrl." );
-            sep = " ";
-        }
         if( theAssociationHandle == null ) {
             error.append( sep );
             error.append( "Have no associationHandle. " );
@@ -119,9 +99,4 @@ public class OpenIdRelyingPartySideAssociation
             throw new IllegalStateException( errorString );
         }
     }
-    
-    /**
-     * The URL of our server.
-     */
-    protected String theServerUrl;
 }

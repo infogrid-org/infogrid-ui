@@ -12,17 +12,15 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.templates;
+package org.infogrid.lid.openid;
 
-import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.util.Factory;
+import org.infogrid.util.SmartFactory;
 
 /**
- * Marks classes that know how to create StructuredResponseTemplates.
+ * Knows how to manage RelyingParty-side OpenID associations.
  */
-public interface StructuredResponseTemplateFactory
+public interface OpenIdRpSideAssociationManager
     extends
-        Factory<SaneServletRequest,StructuredResponseTemplate,StructuredResponse>
+        SmartFactory<String,OpenIdRpSideAssociation,OpenIdRpSideAssociationNegotiationParameters>
 {
-    // no op
 }

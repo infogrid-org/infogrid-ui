@@ -72,19 +72,31 @@ public class LidProcessingPipelineServlet
         SaneServletRequest lidRequest  = SaneServletRequest.create( realRequest );
         StructuredResponse lidResponse = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
-        if( thePipeline == null ) {
-            // not multi-threaded
-            thePipeline = DefaultLidProcessingPipeline.create( appContext );
-        }
+        LidProcessingPipeline pipe = obtainLidProcessingPipeline( appContext );
 
         try {
-            thePipeline.processPipeline( lidRequest, lidResponse );
+            pipe.processPipeline( lidRequest, lidResponse );
 
             invokeServlet( lidRequest, lidResponse );
 
         } catch( LidAbortProcessingPipelineException ex ) {
-            
+            handleException( lidRequest, lidResponse, ex );
         }
+    }
+    
+    /**
+     * Overridable method to create the LidProcessingPipeline.
+     * 
+     * @param c Context for the pipeline
+     * @return the created LidProcessingPipeline
+     */
+    protected LidProcessingPipeline obtainLidProcessingPipeline(
+            Context c )
+    {
+        if( thePipeline == null ) {
+            thePipeline = DefaultLidProcessingPipeline.create( c );
+        }
+        return thePipeline;
     }
     
     /**
@@ -113,8 +125,26 @@ public class LidProcessingPipelineServlet
             log.error( "Could not find RequestDispatcher (servlet) with name " + theServletName );
         }
     }
+    
     /**
-     * The LidProcessingPipeline.
+     * Overridable method to handle Exceptions thrown by the pipeline processing.
+     * 
+     * @param lidRequest the incoming request
+     * @param lidResponse the outgoing response
+     * @param t the exception
+     */
+    protected void handleException(
+            SaneServletRequest lidRequest,
+            StructuredResponse lidResponse,
+            Throwable          t )
+    {
+        if( log.isDebugEnabled() ) {
+            log.debug( t );
+        }
+    }
+
+    /**
+     * Cached LidProcessingPipeline.
      */
     protected LidProcessingPipeline thePipeline;
 }

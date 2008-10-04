@@ -117,4 +117,9 @@ public class VerbatimStructuredResponseTemplate
             o.flush();
         }
     }
+    
+    /**
+     * Name of this template that emits plain text without change.
+     */
+    public static final String VERBATIM_TEXT_TEMPLATE_NAME = "verbatim";
 }

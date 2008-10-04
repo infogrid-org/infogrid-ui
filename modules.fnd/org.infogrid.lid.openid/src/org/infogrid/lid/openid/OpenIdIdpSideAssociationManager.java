@@ -14,13 +14,21 @@
 
 package org.infogrid.lid.openid;
 
-import org.infogrid.util.SmartFactory;
+import org.infogrid.util.WritableNameServer;
 
 /**
- * Knows how to manage RelyingParty-side OpenID associations.
+ * Knows how to manage Identity-Provider-side OpenID associations. This does not
+ * distinguish between smart and dumb associations; to do so, instantiate two
+ * objects of this type.
  */
-public interface OpenIdRelyingPartySideAssociationManager
+public interface OpenIdIdpSideAssociationManager
     extends
-        SmartFactory<String,OpenIdRelyingPartySideAssociation,OpenIdAssociationNegotiationParameters>
+        WritableNameServer<String,OpenIdIdpSideAssociation>
 {
+    /**
+     * Create a new association.
+     * 
+     * @return the created association
+     */
+    public OpenIdIdpSideAssociation create();
 }

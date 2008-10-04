@@ -14,7 +14,6 @@
 
 package org.infogrid.lid;
 
-import org.infogrid.lid.yadis.DeclaresYadisFragment;
 import javax.servlet.RequestDispatcher;
 
 /**
@@ -35,19 +34,79 @@ public class LidAbortProcessingPipelineException
     public LidAbortProcessingPipelineException(
             LidProcessingPipelineStage source )
     {
-        this( source, null );
+        this( source, null, null, null );
     }
 
     /**
      * Constructor.
      *
      * @param source the LidProcessingPipelineStage that threw this exception
-     * @param dispatcherToRun the RequestDispatcher to run as a result of this Exception, if any
+     * @param message the message, if any
      */
     public LidAbortProcessingPipelineException(
             LidProcessingPipelineStage source,
-            RequestDispatcher          dispatcherToRun )
+            String                     message )
     {
+        this( source, null, message, null );
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param source the LidProcessingPipelineStage that threw this exception
+     * @param message the message, if any
+     * @param cause the underlying cause
+     */
+    public LidAbortProcessingPipelineException(
+            LidProcessingPipelineStage source,
+            String                     message,
+            Throwable                  cause )
+    {
+        this( source, null, message, cause );
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param source the LidProcessingPipelineStage that threw this exception
+     * @param cause the underlying cause
+     */
+    public LidAbortProcessingPipelineException(
+            LidProcessingPipelineStage source,
+            Throwable                  cause )
+    {
+        this( source, null, null, cause );
+    }
+
+//    /**
+//     * Constructor.
+//     *
+//     * @param source the LidProcessingPipelineStage that threw this exception
+//     * @param dispatcherToRun the RequestDispatcher to run as a result of this Exception, if any
+//     */
+//    public LidAbortProcessingPipelineException(
+//            LidProcessingPipelineStage source,
+//            RequestDispatcher          dispatcherToRun )
+//    {
+//        this( source, dispatcherToRun, null );
+//    }
+
+    /**
+     * Constructor.
+     *
+     * @param source the LidProcessingPipelineStage that threw this exception
+     * @param dispatcherToRun the RequestDispatcher to run as a result of this Exception, if any
+     * @param message the message, if any
+     * @param cause the underlying cause
+     */
+    public LidAbortProcessingPipelineException(
+            LidProcessingPipelineStage source,
+            RequestDispatcher          dispatcherToRun,
+            String                     message,
+            Throwable                  cause )
+    {
+        super( message, cause );
+        
         theSource          = source;
         theDispatcherToRun = dispatcherToRun;
     }

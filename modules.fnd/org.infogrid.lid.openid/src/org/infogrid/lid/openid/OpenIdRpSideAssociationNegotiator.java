@@ -29,22 +29,56 @@ import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 
 /**
- * Negotiates a new OpenIdRelyingPartySideAssociation by acting as a Factory for RelyingPartySideAssociations.
+ * Negotiates a new OpenIdRpSideAssociation by acting as a Factory for OpenIdRpSideAssociations.
  */
-public class OpenIdRelyingPartySideAssociationNegotiator
+public class OpenIdRpSideAssociationNegotiator
         extends
-            AbstractFactory<String,OpenIdRelyingPartySideAssociation,OpenIdAssociationNegotiationParameters>
+            AbstractFactory<String,OpenIdRpSideAssociation,OpenIdRpSideAssociationNegotiationParameters>
+        implements
+            OpenIdConstants
 {
-    private static final Log log = Log.getLogInstance( OpenIdRelyingPartySideAssociationNegotiator.class  ); // our own, private logger
+    private static final Log log = Log.getLogInstance( OpenIdRpSideAssociationNegotiator.class    ); // our own, private logger
 
     /**
      * Factory method.
      * 
-     * @return the created OpenIdRelyingPartySideAssociationNegotiator
+     * @return the created OpenIdRpSideAssociationNegotiator
      */
-    public static OpenIdRelyingPartySideAssociationNegotiator create()
+    public static OpenIdRpSideAssociationNegotiator create()
     {
-        return new OpenIdRelyingPartySideAssociationNegotiator();
+        return new OpenIdRpSideAssociationNegotiator(
+                DEFAULT_P,
+                DEFAULT_G );
+    }
+
+    /**
+     * Factory method.
+     * 
+     * @param dhP the Diffie-Hellman P parameter
+     * @param dhG the Diffie-Hellman G parameter
+     * @return the created OpenIdRpSideAssociationNegotiator
+     */
+    public static OpenIdRpSideAssociationNegotiator create(
+            BigInteger dhP,
+            BigInteger dhG )
+    {
+        return new OpenIdRpSideAssociationNegotiator(
+                dhP,
+                dhG );
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param dhP the Diffie-Hellman P parameter
+     * @param dhG the Diffie-Hellman G parameter
+     */
+    protected OpenIdRpSideAssociationNegotiator(
+            BigInteger dhP,
+            BigInteger dhG )
+    {
+        theDhP = dhP;
+        theDhG = dhG;
     }
 
     /**
@@ -54,34 +88,35 @@ public class OpenIdRelyingPartySideAssociationNegotiator
      * @param parameters any information required for object creation, if any
      * @return the created object
      */
-    public OpenIdRelyingPartySideAssociation obtainFor(
-            String                           serverUrl,
-            OpenIdAssociationNegotiationParameters parameters )
+    public OpenIdRpSideAssociation obtainFor(
+            String                                       serverUrl,
+            OpenIdRpSideAssociationNegotiationParameters parameters )
         throws
             FactoryException
     {
         if( parameters == null ) {
-            parameters = OpenIdAssociationNegotiationParameters.createWithDefaults();
+            throw new NullPointerException( "OpenIdRpSideAssociationNegotiationParameters is null" );
         }
         StringBuffer sentContentBuf = new StringBuffer( 512 );
 
+        DiffieHellmanEndpoint localDh = DiffieHellmanEndpoint.create( theDhP, theDhG );
+        
         sentContentBuf.append(  "openid.mode="         ).append( "associate" );
         sentContentBuf.append( "&openid.assoc_type="   ).append( parameters.getWantedAssociationType() );
 
-        DiffieHellmanEndpoint dh = null;
+        if( DH_SHA1.equals( parameters.getWantedSessionType() )) {
+            sentContentBuf.append( "&openid.session_type=" ).append( DH_SHA1 );
 
-        if( OpenIdAssociationNegotiationParameters.DH_SHA1.equals( parameters.getWantedSessionType() )) {
-            sentContentBuf.append( "&openid.session_type=" ).append( OpenIdAssociationNegotiationParameters.DH_SHA1 );
-
-            dh = parameters.getWantedDiffieHellmanEndpoint();
-
-            if( !OpenIdAssociationNegotiationParameters.DEFAULT_P.equals( dh.getP() )) {
-                sentContentBuf.append( "&openid.modulus=" ).append( HTTP.encodeToValidUrlArgument( Base64.base64encodeNoCr( dh.getP().toByteArray() )));
+            if( !DEFAULT_P.equals( localDh.getP() )) {
+                sentContentBuf.append( "&openid.modulus=" );
+                sentContentBuf.append( HTTP.encodeToValidUrlArgument( Base64.base64encodeNoCr( localDh.getP().toByteArray() )));
             }
-            if( !OpenIdAssociationNegotiationParameters.DEFAULT_G.equals( dh.getG() )) {
-                sentContentBuf.append( "&openid.dh_gen=" ).append( HTTP.encodeToValidUrlArgument( Base64.base64encodeNoCr( dh.getG().toByteArray() )));
+            if( !DEFAULT_G.equals( localDh.getG() )) {
+                sentContentBuf.append( "&openid.dh_gen=" );
+                sentContentBuf.append( HTTP.encodeToValidUrlArgument( Base64.base64encodeNoCr( localDh.getG().toByteArray() )));
             }
-            sentContentBuf.append( "&openid.dh_consumer_public=" ).append( HTTP.encodeToValidUrlArgument( Base64.base64encodeNoCr( dh.getPublicKey().toByteArray() )));
+            sentContentBuf.append( "&openid.dh_consumer_public=" );
+            sentContentBuf.append( HTTP.encodeToValidUrlArgument( Base64.base64encodeNoCr( localDh.getPublicKey().toByteArray() )));
         }
 
         HTTP.Response response    = null;
@@ -153,11 +188,11 @@ public class OpenIdRelyingPartySideAssociationNegotiator
                 throw new FactoryException( ex );
             }
         }
-        if( theAssociationType != null && !OpenIdAssociationNegotiationParameters.HMAC_SHA1.equals( theAssociationType )) {
-            throw new FactoryException( new OpenIdAssociationException.UnknownAssociationType( theAssociationType ));
+        if( theAssociationType != null && !OpenIdRpSideAssociationNegotiationParameters.HMAC_SHA1.equals( theAssociationType )) {
+            throw new FactoryException( new OpenIdAssociationException.UnknownAssociationType( parameters.getLidProcessingPipelineStage(), theAssociationType ));
         }
-        if( theSessionType != null && !OpenIdAssociationNegotiationParameters.DH_SHA1.equals( theSessionType )) {
-            throw new FactoryException( new OpenIdAssociationException.UnknownSessionType( theSessionType ));
+        if( theSessionType != null && !OpenIdRpSideAssociationNegotiationParameters.DH_SHA1.equals( theSessionType )) {
+            throw new FactoryException( new OpenIdAssociationException.UnknownSessionType( parameters.getLidProcessingPipelineStage(), theSessionType ));
         }
         if( expires_in == Long.MIN_VALUE ) {
             if( replace_after != null ) {
@@ -167,7 +202,7 @@ public class OpenIdRelyingPartySideAssociationNegotiator
             }
         }
         if( expires_in < 0 ) {
-            throw new FactoryException( new OpenIdAssociationException.InvalidExpiration());
+            throw new FactoryException( new OpenIdAssociationException.InvalidExpiration( parameters.getLidProcessingPipelineStage() ));
         }
 
         if( issued != null ) {
@@ -179,8 +214,8 @@ public class OpenIdRelyingPartySideAssociationNegotiator
             expiryTime = now + 1000L*expires_in;
         }
 
-        if( OpenIdAssociationNegotiationParameters.DH_SHA1.equals( theSessionType )) {
-            BigInteger dhSharedSecret = dh.computeSharedSecret( theServerPublicKey );
+        if( OpenIdRpSideAssociationNegotiationParameters.DH_SHA1.equals( theSessionType )) {
+            BigInteger dhSharedSecret = localDh.computeSharedSecret( theServerPublicKey );
 
             byte [] dhSharedSecretSha1 = CryptUtils.calculateSha1( dhSharedSecret );
 
@@ -189,7 +224,7 @@ public class OpenIdRelyingPartySideAssociationNegotiator
                     dhSharedSecretSha1 );
         }
 
-        OpenIdRelyingPartySideAssociation ret = OpenIdRelyingPartySideAssociation.create( serverUrl, theAssociationHandle, theSharedSecret, issuedTime, expiryTime );
+        OpenIdRpSideAssociation ret = OpenIdRpSideAssociation.create( serverUrl, theAssociationHandle, theSharedSecret, issuedTime, expiryTime );
         ret.checkCompleteness();        
         return ret;
     }
@@ -198,4 +233,14 @@ public class OpenIdRelyingPartySideAssociationNegotiator
      * The OpenID V1.0 timestamp format.
      */
     protected static final DateFormat theDateFormat = new SimpleDateFormat( "yyyy-MM-dd'T'hh:mm:ss'Z'" );
+
+    /**
+     * The Diffie-Hellman P parameter to use.
+     */
+    protected BigInteger theDhP;
+    
+    /**
+     * The Diffie-Hellman G parameter to use.
+     */
+    protected BigInteger theDhG;    
 }

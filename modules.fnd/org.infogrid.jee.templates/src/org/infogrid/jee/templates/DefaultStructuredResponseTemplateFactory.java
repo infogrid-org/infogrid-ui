@@ -103,6 +103,9 @@ public class DefaultStructuredResponseTemplateFactory
         if( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME.equals( requestedTemplateName )) {
             ret = NoContentStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured );
 
+        } else if( VerbatimStructuredResponseTemplate.VERBATIM_TEXT_TEMPLATE_NAME.equals( requestedTemplateName )) {
+            ret = VerbatimStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured );
+
         } else {
             RequestDispatcher dispatcher = findRequestDispatcher( request, structured, requestedTemplateName, mime );
 

@@ -70,12 +70,12 @@
             org.infogrid.mesh.NotPermittedException,
             org.infogrid.util.FactoryException
     {
-        org.infogrid.lid.openid.OpenIdRelyingPartySideAssociationManager assocMgr
-                = (org.infogrid.lid.openid.OpenIdRelyingPartySideAssociationManager) context.findContextObjectOrThrow(
-                        org.infogrid.lid.openid.OpenIdRelyingPartySideAssociationManager.class );
+        org.infogrid.lid.openid.OpenIdRpSideAssociationManager assocMgr
+                = context.findContextObjectOrThrow(
+                        org.infogrid.lid.openid.OpenIdRpSideAssociationManager.class );
                         
         org.infogrid.lid.LidNonceManager nonceMgr
-                = (org.infogrid.lid.LidNonceManager) context.findContextObjectOrThrow(
+                = context.findContextObjectOrThrow(
                         org.infogrid.lid.LidNonceManager.class );
 
         org.infogrid.mesh.set.MeshObjectSet endpoints = traverse(
@@ -110,7 +110,7 @@
         ret.append( "&openid.return_to="  ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( here ));
         ret.append( "&openid.trust_root=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( trustRoot ));
 
-        org.infogrid.lid.openid.OpenIdRelyingPartySideAssociation association = assocMgr.obtainFor( endpointUrl );
+        org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
                 // may throw exception
 
         if( association != null ) {
@@ -136,9 +136,9 @@
             org.infogrid.mesh.NotPermittedException,
             org.infogrid.util.FactoryException
     {
-        org.infogrid.lid.openid.OpenIdRelyingPartySideAssociationManager assocMgr
-                = (org.infogrid.lid.openid.OpenIdRelyingPartySideAssociationManager) context.findContextObjectOrThrow(
-                        org.infogrid.lid.openid.OpenIdRelyingPartySideAssociationManager.class );
+        org.infogrid.lid.openid.OpenIdRpSideAssociationManager assocMgr
+                = context.findContextObjectOrThrow(
+                        org.infogrid.lid.openid.OpenIdRpSideAssociationManager.class );
                         
         org.infogrid.lid.LidNonceManager nonceMgr
                 = (org.infogrid.lid.LidNonceManager) context.findContextObjectOrThrow(
@@ -176,7 +176,7 @@
         ret.append( "&openid.return_to="  ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( here ));
         ret.append( "&openid.trust_root=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( trustRoot ));
 
-        org.infogrid.lid.openid.OpenIdRelyingPartySideAssociation association = assocMgr.obtainFor( endpointUrl );
+        org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
                 // may throw exception
 
         if( association != null ) {
