@@ -137,10 +137,15 @@ public class ViewletDispatcherServlet
                 Throwable thrown  = null;
                 try {
                     viewlet.view( toView );
-                    if( SafeUnsafePostFilter.isSafePost( servletRequest ) ) {                        
+                    if( SafeUnsafePostFilter.isSafePost( servletRequest ) ) {
                         viewlet.performBeforeSafePost( restfulRequest, structured );
+
                     } else if( SafeUnsafePostFilter.isUnsafePost( servletRequest ) ) {
                         viewlet.performBeforeUnsafePost( restfulRequest, structured );
+                        
+                    } else if( SafeUnsafePostFilter.mayBeSafeOrUnsafePost( servletRequest ) ) {
+                        viewlet.performBeforeMaybeSafeOrUnsafePost( restfulRequest, structured );
+                        
                     } else {
                         viewlet.performBeforeGet( restfulRequest, structured );
                     }

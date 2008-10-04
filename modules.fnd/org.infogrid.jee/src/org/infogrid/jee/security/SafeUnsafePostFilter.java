@@ -134,13 +134,32 @@ public class SafeUnsafePostFilter
         boolean ret = false;
         if( "POST".equalsIgnoreCase( request.getMethod() )) {
             Boolean safeUnsafe = (Boolean) request.getAttribute( SafeUnsafePostFilter.SAFE_UNSAFE_FLAG );
-            if( safeUnsafe == null || !safeUnsafe.booleanValue() ) {
+            if( safeUnsafe != null && !safeUnsafe.booleanValue() ) {
                 ret = true;
             }
         }
         return ret;
     }
 
+    /**
+     * Determine whether this incoming request has not run through the SafeUnsafePostFilter, and thus
+     * it cannot be determined whether the HTTP POST is safe or not.
+     * 
+     * @param request the incoming request
+     * @return true if this is an HTTP POST and it is unclear whether it is safe or not
+     */
+    public static boolean mayBeSafeOrUnsafePost(
+            HttpServletRequest request )
+    {
+        boolean ret = false;
+        if( "POST".equalsIgnoreCase( request.getMethod() )) {
+            Boolean safeUnsafe = (Boolean) request.getAttribute( SafeUnsafePostFilter.SAFE_UNSAFE_FLAG );
+            if( safeUnsafe == null ) {
+                ret = true;
+            }
+        }
+        return ret;
+    }
     /**
      * The filter configuration object this Filter is associated with.
      */

@@ -167,15 +167,9 @@ public class HttpShellFilter
             return;
         }
 
-        boolean isSafePost;
-        Boolean safeUnsafe = (Boolean) lidRequest.getDelegate().getAttribute( SafeUnsafePostFilter.SAFE_UNSAFE_FLAG );
-        if( safeUnsafe != null && !safeUnsafe.booleanValue() ) {
-            isSafePost = false;
-        } else {
-            isSafePost = true;
-        }
-
-        if( isSafePost ) {
+        if(    SafeUnsafePostFilter.isSafePost( lidRequest.getDelegate() )
+            || SafeUnsafePostFilter.mayBeSafeOrUnsafePost( lidRequest.getDelegate()))
+        {
             HttpShellVerb v = HttpShellVerb.findApplicableVerb( lidRequest );
             if( v == null ) {
                 return;

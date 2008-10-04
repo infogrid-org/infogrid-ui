@@ -140,6 +140,30 @@ public abstract class AbstractJeeViewlet
     }
 
     /**
+     * <p>Invoked prior to the execution of the Servlet if the POST method has been requested
+     *    and no FormTokenService has been used.
+     *    It is the hook by which the JeeViewlet can perform whatever operations needed prior to
+     *    the POST execution of the servlet.</p>
+     * <p>It is strongly recommended that JeeViewlets do not regularly process the incoming
+     *    POST data, as the request is likely unsafe (e.g. a Cross-Site Request Forgery).</p>
+     * 
+     * @param request the incoming request
+     * @param response the response to be assembled
+     * @throws ServletException thrown if an error occurred
+     * @see #performBeforeGet
+     * @see #performBeforeSafePost
+     * @see #performAfter
+     */
+    public void performBeforeMaybeSafeOrUnsafePost(
+            RestfulRequest     request,
+            StructuredResponse response )
+        throws
+            ServletException
+    {
+        // no op on this level
+    }
+    
+    /**
      * <p>Invoked after to the execution of the Servlet. It is the hook by which
      * the JeeViewlet can perform whatever operations needed after to the execution of the servlet, e.g.
      * logging. Subclasses will often override this.</p>

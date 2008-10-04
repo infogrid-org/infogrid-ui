@@ -111,6 +111,25 @@ public class WikiObjectEditViewlet
     }
     
     /**
+     * <p>Invoked prior to the execution of the Servlet if the POST method has been requested
+     *    and no FormTokenService has been used.
+     *    It is the hook by which the JeeViewlet can perform whatever operations needed prior to
+     *    the POST execution of the servlet.</p>
+     * 
+     * @param request the incoming request
+     * @param response the response to be assembled
+     * @throws ServletException thrown if an error occurred
+     */
+    public void performBeforeSafeOrUnsafePost(
+            RestfulRequest     request,
+            StructuredResponse response )
+        throws
+            ServletException
+    {
+        preprocess( request, response );
+    }
+
+    /**
      * Internal helper to set up prior to rendering.
      * 
      * @param request the incoming request
