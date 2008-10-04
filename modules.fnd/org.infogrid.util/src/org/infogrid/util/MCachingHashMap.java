@@ -14,14 +14,16 @@
 
 package org.infogrid.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
  * A degenerate implementation of {@link CachingMap} that uses a memory-only <code>HashMap</code>.
  * 
- * @param K the type of key
- * @param V the type of value
+ * @param <K> the type of key
+ * @param <V> the type of value
  */
 public class MCachingHashMap<K,V>
         extends
@@ -29,10 +31,14 @@ public class MCachingHashMap<K,V>
         implements
             CachingMap<K,V>
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
      * Factory method.
      * 
      * @return the created MCachingHashMap
+     * @param <K> the type of key
+     * @param <V> the type of value
      */
     public static <K,V> MCachingHashMap<K, V> create()
     {
@@ -44,6 +50,8 @@ public class MCachingHashMap<K,V>
      * 
      * @param delegate the Map whose mappings are to be placed in this map.
      * @return the created MCachingHashMap
+     * @param <K> the type of key
+     * @param <V> the type of value
      */
     public static <K,V> MCachingHashMap<K, V> create(
             HashMap<? extends K, ? extends V> delegate )
@@ -56,6 +64,8 @@ public class MCachingHashMap<K,V>
      * 
      * @param initialCapacity the initial capacity of the CachingHashMap
      * @return the created MCachingHashMap
+     * @param <K> the type of key
+     * @param <V> the type of value
      */
     public static <K,V> MCachingHashMap<K, V> create(
             int initialCapacity )
@@ -69,6 +79,8 @@ public class MCachingHashMap<K,V>
      * @param initialCapacity the initial capacity of the CachingHashMap
      * @param loadFactor the load factor
      * @return the created MCachingHashMap
+     * @param <K> the type of key
+     * @param <V> the type of value
      */
     public static <K,V> MCachingHashMap<K, V> create(
             int   initialCapacity,
@@ -168,6 +180,33 @@ public class MCachingHashMap<K,V>
         return ret;
     }
 
+    /**
+     * Remove a key-value pair that was previously created. This does not affect
+     * values that are currently still being constructed. The semantics of
+     * &quot;remove&quot; for a SmartFactory imply &quot;deletion&quot; of the
+     * object as well. The provided cleanupCode can be used to implement those
+     * semantics, e.g. in order to invoke the die() method.
+     *
+     * @param key the key of the key-value pair to be removed
+     * @param cleanupCode the cleanup code to run, if any
+     * @return the value of the key-value pair to be removed, if found
+     */
+    @SuppressWarnings( "unchecked" )
+    public V remove(
+            K                 key,
+            Invocable<V,Void> cleanupCode )
+    {
+        V ret = super.remove( key );
+
+        if( cleanupCode != null && ret != null ) {
+            cleanupCode.invoke( ret );
+        }
+        
+        if( ret != null ) {
+            theListeners.fireEvent( new CachingMapEvent.Removed( this, key ), 1 );
+        }
+        return ret;
+    }
 
     /**
      * Clear the local cache.
@@ -211,6 +250,28 @@ public class MCachingHashMap<K,V>
     {
         CursorIterator<V> ret = MapCursorIterator.<K,V>createForValues( this, keyArrayComponentType, valueArrayComponentType );
         return ret;
+    }
+
+    /**
+     * Obtain the keys for an existing value. This is the opposite operation
+     * of {@link #get}. Depending on the implementation of this interface,
+     * this operation may take a long time.
+     * 
+     * @param value the value whose keys need to be found
+     * @return an Iterator over the keys
+     */
+    public Iterator<K> reverseGet(
+            V value )
+    {
+        ArrayList<K> ret = new ArrayList<K>();
+
+        for( K key : keySet() ) {
+            V found = get( key );
+            if( value == found ) {
+                ret.add( key );
+            }
+        }
+        return ret.iterator();
     }
 
     /**

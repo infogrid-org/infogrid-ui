@@ -14,6 +14,7 @@
 
 package org.infogrid.util;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -60,6 +61,32 @@ public interface CachingMap<K,V>
     public abstract CursorIterator<V> valuesIterator(
             Class<K> keyArrayComponentType,
             Class<V> valueArrayComponentType );
+
+    /**
+     * Obtain the keys for an existing value. This is the opposite operation
+     * of {@link #get}. Depending on the implementation of this interface,
+     * this operation may take a long time.
+     * 
+     * @param value the value whose keys need to be found
+     * @return an Iterator over the keys
+     */
+    public abstract Iterator<K> reverseGet(
+            V value );
+
+    /**
+     * Remove a key-value pair that was previously created. This does not affect
+     * values that are currently still being constructed. The semantics of
+     * &quot;remove&quot; for a SmartFactory imply &quot;deletion&quot; of the
+     * object as well. The provided cleanupCode can be used to implement those
+     * semantics, e.g. in order to invoke the die() method.
+     *
+     * @param key the key of the key-value pair to be removed
+     * @param cleanupCode the cleanup code to run, if any
+     * @return the value of the key-value pair to be removed, if found
+     */
+    public abstract V remove(
+            K                 key,
+            Invocable<V,Void> cleanupCode );
 
     /**
      * Invoked only by objects held in this CachingMap, this enables

@@ -18,6 +18,9 @@ import java.util.EventObject;
 
 /**
  * Event sent by the SwappingHashMap. Specific subclasses are defined as inner classes.
+ * 
+ * @param <K> type for the key
+ * @param <V> type for the value
  */
 public abstract class CachingMapEvent<K,V>
         extends
@@ -67,11 +70,16 @@ public abstract class CachingMapEvent<K,V>
     
     /**
      * This event indicates that a value was added to the values held by the CachingMap.
+     * 
+     * @param <K> type for the key
+     * @param <V> type for the value
      */
     public static class Added<K,V>
             extends
-                CachingMapEvent<K, V>
+                CachingMapEvent<K,V>
     {
+        private static final long serialVersionUID = 1L;
+
         /**
          * Constructor.
          *
@@ -107,11 +115,16 @@ public abstract class CachingMapEvent<K,V>
     
     /**
      * This event indicates that a value was removed from the values held by the SmartFactory.
+     * 
+     * @param <K> type for the key
+     * @param <V> type for the value
      */
     public static class Removed<K,V>
             extends
                 CachingMapEvent<K,V>
     {
+        private static final long serialVersionUID = 1L;
+
         /**
          * Constructor.
          *
@@ -129,11 +142,16 @@ public abstract class CachingMapEvent<K,V>
     /**
      * This event indicates that a value was removed from the cache, but can still be retrieved
      * by swapping it back in.
+     * 
+     * @param <K> type for the key
+     * @param <V> type for the value
      */
     public static class Expired<K,V>
             extends
                 CachingMapEvent<K,V>
     {
+        private static final long serialVersionUID = 1L;
+
         /**
          * Constructor.
          *

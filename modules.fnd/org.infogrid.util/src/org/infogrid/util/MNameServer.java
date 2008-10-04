@@ -27,8 +27,8 @@ import org.infogrid.util.logging.Log;
  * keeps mappings locally, and if not found, it will delegate to (optional) delegate
  * NameServers.
  * 
- * @param K the type of key
- * @param V the type of value
+ * @param <K> the type of key
+ * @param <V> the type of value
  */
 public class MNameServer<K,V>
         implements
@@ -40,6 +40,8 @@ public class MNameServer<K,V>
      * Factory method.
      *
      * @return the created MNameServer
+     * @param <K> the type of key
+     * @param <V> the type of value
      */
     public static <K,V> MNameServer<K,V> create()
     {
@@ -52,6 +54,8 @@ public class MNameServer<K,V>
      *
      * @param newDelegate the delegate
      * @return the created MNameServer
+     * @param <K> the type of key
+     * @param <V> the type of value
      */
     public static <K,V> MNameServer<K,V> create(
             NameServer<K,? extends V> newDelegate )

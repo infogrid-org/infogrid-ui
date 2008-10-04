@@ -14,6 +14,9 @@
 
 package org.infogrid.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * Factors out common functionality for {@link CachingMap} implementations.
  * 
@@ -24,6 +27,50 @@ public abstract class AbstractCachingMap<K,V>
         implements
             CachingMap<K,V>
 {
+    /**
+     * Obtain the keys for an existing value. This is the opposite operation
+     * of {@link #get}. Depending on the implementation of this interface,
+     * this operation may take a long time. This is the (slow) default implementation.
+     * 
+     * @param value the value whose keys need to be found
+     * @return an Iterator over the keys
+     */
+    public Iterator<K> reverseGet(
+            V value )
+    {
+        ArrayList<K> ret = new ArrayList<K>();
+
+        for( K key : keySet() ) {
+            V found = get( key );
+            if( value == found ) {
+                ret.add( key );
+            }
+        }
+        return ret.iterator();
+    }
+
+    /**
+     * Remove a key-value pair that was previously created. This does not affect
+     * values that are currently still being constructed. The semantics of
+     * &quot;remove&quot; for a SmartFactory imply &quot;deletion&quot; of the
+     * object as well. The provided cleanupCode can be used to implement those
+     * semantics, e.g. in order to invoke the die() method.
+     *
+     * @param key the key of the key-value pair to be removed
+     * @param cleanupCode the cleanup code to run, if any
+     * @return the value of the key-value pair to be removed, if found
+     */
+    public V remove(
+            K                 key,
+            Invocable<V,Void> cleanupCode )
+    {
+        V ret = remove( key );
+        if( cleanupCode != null && ret != null ) {
+            cleanupCode.invoke( ret );
+        }
+        return ret;
+    }
+
     /**
       * Add a listener.
       * This listener is added directly to the listener list, which prevents the

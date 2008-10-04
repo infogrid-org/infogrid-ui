@@ -14,9 +14,9 @@
 
 package org.infogrid.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.infogrid.util.logging.Log;
-
-import java.util.*;
 
 /**
  * <p>A {@link SmartFactory SmartFactory} specifically for there case where the creation of a
@@ -81,9 +81,6 @@ public class PatientSmartFactory<K,V,A>
 
         synchronized( theKeyValueMap ) {
             ret = theKeyValueMap.get( key );
-            if( ret != null && !isStillGood( key, ret, argument )) {
-                ret = null;
-            }
             if( ret == null ) {
                 creationSyncObject = theOngoingObjectCreations.get( key );
                 if( creationSyncObject == null ) {
@@ -134,25 +131,6 @@ public class PatientSmartFactory<K,V,A>
         return ret;
     }
     
-    /**
-     * This overridable method allows our subclasses to judge whether a value retrieved
-     * from cache is still good. If not, it will be discarded and the factory proceeeds
-     * as if no value had been found in the cache in the first place. This method should
-     * return quickly.
-     *
-     * @param key the key that was passed into the obtainFor method
-     * @param value the found value, which is being looked at
-     * @param argument the argument that was passed into the obtainFor method
-     * @return true if this value is still good
-     */
-    protected boolean isStillGood(
-            K key,
-            V value,
-            A argument )
-    {
-        return true;
-    }
-
     /**
      * The currently ongoing creations of value. This is important
      * to avoid to create a value twice if two concurrent Threads

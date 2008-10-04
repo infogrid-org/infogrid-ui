@@ -29,6 +29,8 @@ import org.infogrid.util.logging.Log;
 
 import java.io.IOException;
 import java.lang.ref.Reference;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * This is a <code>java.util.Map</code> that stores the values in the <code>Store</code>

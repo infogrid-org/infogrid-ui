@@ -136,7 +136,7 @@ public abstract class MSwappingHashMap<K,V,A>
     {
         CursorIterator<V> ret = MapCursorIterator.<K,V>createForValues( this, keyArrayComponentType, valueArrayComponentType );
         return ret;
-    }    
+    }
 
     /**
      * Invoked only by objects held in this CachingMap, this enables

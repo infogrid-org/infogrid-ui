@@ -14,7 +14,6 @@
 
 package org.infogrid.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -155,21 +154,7 @@ public class MSmartFactory<K,V,A>
     public Iterator<K> reverseGet(
             V value )
     {
-        // Default implementation
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".reverseGet( " + value + " )" );
-        }
-        ArrayList<K> ret = new ArrayList<K>();
-
-        synchronized( theKeyValueMap ) {
-            for( K key : theKeyValueMap.keySet() ) {
-                V found = theKeyValueMap.get( key );
-                if( value == found ) {
-                    ret.add( key );
-                }
-            }
-        }
-        return ret.iterator();
+        return theKeyValueMap.reverseGet( value );
     }
 
     /**
