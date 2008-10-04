@@ -494,9 +494,9 @@ public class ProbeDispatcher
                 httpResponse = HTTP.http_get( url, HTTP_GET_ACCEPT_HEADER );
 
             } else {
-                String yadisUrl = httpResponse.getHttpHeaderField( "X-XRDS-Location" );
+                String yadisUrl = httpResponse.getSingleHttpHeaderField( "X-XRDS-Location" );
                 if( yadisUrl == null ) {
-                    yadisUrl = httpResponse.getHttpHeaderField( "X-YADIS-Location" );
+                    yadisUrl = httpResponse.getSingleHttpHeaderField( "X-YADIS-Location" );
                 }
                 if( yadisUrl != null ) {
                     HTTP.Response yadisResponse = HTTP.http_get( yadisUrl );
