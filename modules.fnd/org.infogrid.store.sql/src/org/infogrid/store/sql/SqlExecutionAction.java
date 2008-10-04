@@ -27,7 +27,7 @@ import java.sql.SQLException;
  *
  * <p>This class is parameterized with the return type of the execution command.</p>
  * 
- * @param R the type of return value of the execution
+ * @param <R> the type of return value of the execution
  */
 abstract class SqlExecutionAction<R>
 {

@@ -53,7 +53,7 @@ public class SqlStorePreparedStatement
         throws
             SQLException
     {
-        if( conn != theConnection ) {
+        if( conn != theConnection || thePreparedStatement == null ) {
             theConnection        = conn;
             thePreparedStatement = theConnection.prepareStatement( theSql ); 
         }
