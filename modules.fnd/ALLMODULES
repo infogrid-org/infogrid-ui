@@ -3,6 +3,7 @@ org.infogrid.module.moduleadvertisementserializer
 org.infogrid.module.commandline
 org.infogrid.module.servlet
 org.infogrid.vendors.com.mysql.jdbc
+org.infogrid.vendors.org.postgresql.jdbc
 org.infogrid.vendors.org.apache.hadoop
 org.infogrid.vendors.org.jets3t
 org.infogrid.util
@@ -30,6 +31,8 @@ org.infogrid.store.hadoop
 org.infogrid.store.jets3t
 org.infogrid.store.keystore
 org.infogrid.store.sql
+org.infogrid.store.sql.mysql
+org.infogrid.store.sql.postgresql
 org.infogrid.meshbase.store
 org.infogrid.viewlet
 org.infogrid.jee
