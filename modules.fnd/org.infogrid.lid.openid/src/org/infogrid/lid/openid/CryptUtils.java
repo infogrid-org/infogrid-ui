@@ -14,17 +14,15 @@
 
 package org.infogrid.lid.openid;
 
-import org.infogrid.util.logging.Log;
-import org.infogrid.util.ArrayHelper;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
+import org.infogrid.util.logging.Log;
+import org.infogrid.util.ArrayHelper;
 
 /**
  * Cryptographic utilities needed for OpenID.
