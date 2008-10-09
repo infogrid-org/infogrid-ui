@@ -150,8 +150,8 @@ public class SqlStoreTest4
     {
         SqlStoreTest4 test = null;
         try {
-            if( args.length < 0 ) { // well, not quite possible but to stay with the general outline
-                System.err.println( "Synopsis: <no arguments>" );
+            if( args.length != 1 ) {
+                System.err.println( "Synopsis: <database engine>" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -185,7 +185,7 @@ public class SqlStoreTest4
         throws
             Exception
     {
-        super( SqlStoreTest4.class );
+        super( args[0], SqlStoreTest4.class );
         
         theTestStore = theSqlStore;
     }
@@ -193,19 +193,21 @@ public class SqlStoreTest4
     /**
      * Constructor for subclasses.
      *
+     * @param dataBaseEngine the name of the database engine to use for testing
      * @param c test class
      * @throws Exception all sorts of things may go wrong in a test
      */
     protected SqlStoreTest4(
-            Class c )
+            String dataBaseEngine,
+            Class  c )
         throws
             Exception
     {
-        super( c );
+        super( dataBaseEngine, c );
     }
 
     // Our Logger
-    private static Log log = Log.getLogInstance( SqlStoreTest4.class);
+    private static Log log = Log.getLogInstance( SqlStoreTest4.class );
     
     /**
      * Test data.

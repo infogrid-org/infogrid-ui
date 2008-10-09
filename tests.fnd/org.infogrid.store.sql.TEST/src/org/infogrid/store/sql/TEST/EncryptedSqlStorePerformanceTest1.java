@@ -38,8 +38,8 @@ public class EncryptedSqlStorePerformanceTest1
     {
         EncryptedSqlStorePerformanceTest1 test = null;
         try {
-            if( args.length != 1 ) {
-                System.err.println( "Synopsis: <encryption transformation>" );
+            if( args.length != 2 ) {
+                System.err.println( "Synopsis: <database engine> <encryption transformation>" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -63,18 +63,19 @@ public class EncryptedSqlStorePerformanceTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong during tests
+     */
     public EncryptedSqlStorePerformanceTest1(
             String [] args )
         throws
             Exception
     {
-        super( EncryptedSqlStorePerformanceTest1.class );
+        super( args[0], EncryptedSqlStorePerformanceTest1.class );
         
-        theTransformation = args[0];
+        theTransformation = args[1];
         
         theSecretKey      = KeyGenerator.getInstance( theTransformation ).generateKey();
         theEncryptedStore = IterableEncryptedStore.create( theTransformation, theSecretKey, theSqlStore );

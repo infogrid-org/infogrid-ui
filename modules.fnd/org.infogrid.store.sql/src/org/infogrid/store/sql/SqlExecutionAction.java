@@ -14,11 +14,10 @@
 
 package org.infogrid.store.sql;
 
-import org.infogrid.util.logging.Log;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import org.infogrid.util.logging.Log;
 
 /**
  * <p>This class wraps SQL execution, and helps us with obtaining a new Connection
@@ -29,14 +28,14 @@ import java.sql.SQLException;
  * 
  * @param <R> the type of return value of the execution
  */
-abstract class SqlExecutionAction<R>
+public abstract class SqlExecutionAction<R>
 {
     private static final Log log = Log.getLogInstance( SqlExecutionAction.class ); // our own, private logger
 
     /**
      * Constructor.
      *
-     * @param stm the SqlStorePreparedStatement to execute
+     * @param stm the single SqlStorePreparedStatement to execute
      */
     protected SqlExecutionAction(
             SqlStorePreparedStatement stm )
@@ -54,27 +53,60 @@ abstract class SqlExecutionAction<R>
         throws
             SQLException
     {
-        SqlStore   store = theStatement.getStore();        
-        Connection conn  = store.obtainConnection();
+        AbstractSqlStore store = theStatement.getStore();        
+
+        R ret = execute( store.theAutoCommit );
+        return ret;
+    }
+    
+    /**
+     * Execute the action. Use the provided argument as the value indicating whether or not auto-commit should take place.
+     *
+     * @param autoCommit if given, and false, performs a commit or rollback. If not given or true, do nothing after an operation
+     * @return the return value, if any
+     * @throws SQLException a SQL exception occurred
+     */
+    public R execute(
+            Boolean autoCommit )
+        throws
+            SQLException
+    {
+        AbstractSqlStore store = theStatement.getStore();        
+        Connection       conn  = store.obtainConnection();
         
         synchronized( conn ) {
             track();
 
-            PreparedStatement stm = null;
+            PreparedStatement stm   = null;
+            boolean           error = true;
             try {
                 stm = theStatement.obtain( conn );
                 R ret = perform( stm, conn );
 
+                error = false;
+                
                 return ret;
 
             } catch( SQLException ex ) {
                 theStatement.close();
+            } finally {
+                if( autoCommit != null && !autoCommit.booleanValue() ) {
+                    try {
+                        if( error ) {
+                            conn.rollback();
+                        } else {
+                            conn.commit();
+                        }
+                    } catch( SQLException ex ) {
+                        // do nothing
+                    }
+                }
             }
 
             conn = store.obtainNewConnection();
 
             // Get a new connection and try again. This time pass on any Exceptions.
-            boolean error = true;
+            error = true;
 
             try {
                 stm = theStatement.obtain( conn );
@@ -91,6 +123,17 @@ abstract class SqlExecutionAction<R>
                 if( error ) {
                     theStatement.close();
                 }
+                if( autoCommit != null && !autoCommit.booleanValue() ) {
+                    try {
+                        if( error ) {
+                            conn.rollback();
+                        } else {
+                            conn.commit();
+                        }
+                    } catch( SQLException ex ) {
+                        // do nothing
+                    }
+                }                
             }
         }
     }

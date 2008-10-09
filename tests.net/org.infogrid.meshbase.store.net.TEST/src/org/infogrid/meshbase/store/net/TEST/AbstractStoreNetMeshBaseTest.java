@@ -29,7 +29,8 @@ import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
-import org.infogrid.store.sql.SqlStore;
+import org.infogrid.store.sql.AbstractSqlStore;
+import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
@@ -55,7 +56,7 @@ public abstract class AbstractStoreNetMeshBaseTest
         theDataSource = new MysqlDataSource();
         theDataSource.setDatabaseName( TEST_DATABASE_NAME );
         
-        theSqlStore = SqlStore.create( theDataSource, TEST_TABLE_NAME );
+        theSqlStore = MysqlStore.create( theDataSource, TEST_TABLE_NAME );
     }
     
     /**
@@ -243,9 +244,9 @@ public abstract class AbstractStoreNetMeshBaseTest
     protected MysqlDataSource theDataSource;
 
     /**
-     * The SqlStore to be tested.
+     * The AbstractSqlStore to be tested.
      */
-    protected SqlStore theSqlStore;
+    protected AbstractSqlStore theSqlStore;
 
     /**
      * The name of the database that we use to store test data.

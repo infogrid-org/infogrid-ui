@@ -22,8 +22,9 @@ import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.m.MProbeDirectory;
-import org.infogrid.store.sql.SqlStore;
+import org.infogrid.store.sql.AbstractSqlStore;
 import org.infogrid.store.sql.SqlStoreIOException;
+import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
@@ -49,7 +50,7 @@ public abstract class AbstractStoreProbeTest
         theDataSource = new MysqlDataSource();
         theDataSource.setDatabaseName( TEST_DATABASE_NAME );
         
-        theSqlStore = SqlStore.create( theDataSource, TEST_TABLE_NAME );
+        theSqlStore = MysqlStore.create( theDataSource, TEST_TABLE_NAME );
 
         try {
             theSqlStore.deleteStore();
@@ -177,9 +178,9 @@ public abstract class AbstractStoreProbeTest
     protected MysqlDataSource theDataSource;
 
     /**
-     * The SqlStore to be tested.
+     * The AbstractSqlStore to be tested.
      */
-    protected SqlStore theSqlStore;
+    protected AbstractSqlStore theSqlStore;
 
     /**
      * The ProbeDirectory.

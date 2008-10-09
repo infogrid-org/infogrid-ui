@@ -28,8 +28,7 @@
   <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.model.Viewlet"/>
   <requires name="org.infogrid.model.Wiki"/>
-  <requires name="org.infogrid.store"/>
-  <requires name="org.infogrid.store.sql"/>
+  <requires name="org.infogrid.store.sql.mysql"/>
   <requires name="org.infogrid.jee.viewlet.bulk"/>
   <requires name="org.infogrid.jee.viewlet.wikiobject"/>
   <requires name="org.infogrid.util"/>

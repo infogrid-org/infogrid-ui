@@ -16,18 +16,18 @@
 <standardmodule>
  <name>org.infogrid.store.sql.TEST</name>
  <username>SQL-based Store test Module</username>
- <userdescription>Tests the SQL-based Store implementation.</userdescription>
+ <userdescription>Tests the SQL-based Store implementation using MySQL and Postgresql.</userdescription>
  <runclass>org.infogrid.store.sql.TEST.AllTests</runclass>
  <provides>
   <jar>org.infogrid.store.sql.TEST.jar</jar>
  </provides>
  <dependencies>
   <requires name="org.infogrid.util.logging.log4j"/>
-  <requires name="org.infogrid.store"/>
-  <requires name="org.infogrid.store.sql"/>
+  <requires name="org.infogrid.store.sql.mysql"/>
+  <requires name="org.infogrid.store.sql.postgresql"/>
   <requires name="org.infogrid.store.keystore"/>
-  <requires name="org.infogrid.util"/>
   <requires name="org.infogrid.testharness"/>
   <requires name="org.infogrid.vendors.com.mysql.jdbc"/>
+  <requires name="org.infogrid.vendors.org.postgresql.jdbc"/>
  </dependencies>
 </standardmodule>

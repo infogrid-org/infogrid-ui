@@ -33,8 +33,7 @@
   <requires name="org.infogrid.model.Probe"/>
   <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.probe.store"/>
-  <requires name="org.infogrid.store.sql"/>
-  <requires name="org.infogrid.lid"/>
+  <requires name="org.infogrid.store.sql.mysql"/>
   <requires name="org.infogrid.lid.model.lid"/>
   <requires name="org.infogrid.lid.openid"/>
   <requires name="org.infogrid.lid.model.openid"/>

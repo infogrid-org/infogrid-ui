@@ -33,24 +33,31 @@ public abstract class AllTests
     {
         String encryption = "DES";
 
-        TestSpec [] tests = {
-                new TestSpec( SqlStoreTest1.class ),
-                new TestSpec( SqlStoreTest2.class ),
-                new TestSpec( SqlStoreTest3.class ),
-                new TestSpec( SqlStoreTest4.class ),
-                new TestSpec( SqlStoreTest5.class ),
-                new TestSpec( SqlStoreTest6.class ),
-
-                new TestSpec( SqlKeyStoreTest1.class, "test-keystore.key", "asdfgh" ),
-                new TestSpec( SqlStorePerformanceTest1.class ),
-
-                new TestSpec( EncryptedSqlStoreTest1.class, encryption ),
-                new TestSpec( EncryptedSqlStoreTest2.class, encryption ),
-                new TestSpec( EncryptedSqlStoreTest3.class, encryption ),
-
-                new TestSpec( EncryptedSqlStorePerformanceTest1.class, encryption )
+        String [] dataBaseEngines = {
+            "mysql",
+            "postgresql",
         };
+        
+        for( String dbEngine : dataBaseEngines ) {
+            TestSpec [] tests = {
+                    new TestSpec( SqlStoreTest1.class, dbEngine ),
+                    new TestSpec( SqlStoreTest2.class, dbEngine ),
+                    new TestSpec( SqlStoreTest3.class, dbEngine ),
+                    new TestSpec( SqlStoreTest4.class, dbEngine ),
+                    new TestSpec( SqlStoreTest5.class, dbEngine ),
+                    new TestSpec( SqlStoreTest6.class, dbEngine ),
 
-        runTests( tests );
+                    new TestSpec( SqlKeyStoreTest1.class, dbEngine, "test-keystore.key", "asdfgh" ),
+                    new TestSpec( SqlStorePerformanceTest1.class, dbEngine ),
+
+                    new TestSpec( EncryptedSqlStoreTest1.class, dbEngine, encryption ),
+                    new TestSpec( EncryptedSqlStoreTest2.class, dbEngine, encryption ),
+                    new TestSpec( EncryptedSqlStoreTest3.class, dbEngine, encryption ),
+
+                    new TestSpec( EncryptedSqlStorePerformanceTest1.class, dbEngine, encryption )
+            };
+
+            runTests( dbEngine, tests );
+        }
     }
 }

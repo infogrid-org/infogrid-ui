@@ -41,7 +41,8 @@ import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleRequirement;
 import org.infogrid.module.SoftwareInstallation;
 import org.infogrid.module.servlet.ServletBootLoader;
-import org.infogrid.store.sql.SqlStore;
+import org.infogrid.store.sql.AbstractSqlStore;
+import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.util.MNameServer;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.SimpleContext;
@@ -132,8 +133,8 @@ public class MeshWorldApp
         InitialContext ctx           = new InitialContext();
         DataSource     theDataSource = (DataSource) ctx.lookup( "java:comp/env/jdbc/meshworldDB" );        
 
-        SqlStore meshStore      = SqlStore.create( theDataSource, theResourceHelper.getResourceString( "MeshObjectTable" ) );
-        SqlStore formTokenStore = SqlStore.create( theDataSource, theResourceHelper.getResourceString( "FormTokenTable" ) );
+        AbstractSqlStore meshStore      = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "MeshObjectTable" ) );
+        AbstractSqlStore formTokenStore = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "FormTokenTable" ) );
 
         meshStore.initializeIfNecessary();
         formTokenStore.initializeIfNecessary();

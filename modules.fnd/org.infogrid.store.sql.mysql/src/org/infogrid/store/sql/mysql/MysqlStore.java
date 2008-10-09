@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.store.sql;
+package org.infogrid.store.sql.mysql;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -22,54 +22,51 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import javax.sql.DataSource;
-import org.infogrid.store.AbstractStore;
-import org.infogrid.store.IterableStore;
-import org.infogrid.store.IterableStoreCursor;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
 import org.infogrid.store.StoreValue;
+import org.infogrid.store.sql.AbstractSqlStore;
+import org.infogrid.store.sql.SqlExecutionAction;
+import org.infogrid.store.sql.SqlStoreIOException;
+import org.infogrid.store.sql.SqlStorePreparedStatement;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 
 /**
- * SQL implementation of the Store interface.
+ * SqlStore implementation using MySQL.
  */
-public class SqlStore
+public class MysqlStore
         extends
-            AbstractStore
-        implements
-            IterableStore
+            AbstractSqlStore
 {
-    private static final Log log = Log.getLogInstance( SqlStore.class ); // our own, private logger
+    private static final Log log = Log.getLogInstance( MysqlStore.class ); // our own, private logger
 
     /**
      * Factory method.
      *
-     * @param ds the SQL DataSource 
+     * @param ds the SQL DataSource
      * @param tableName the name of the table in the SQL DataSource in which the data will be stored
-     * @return the created SqlStore
+     * @return the created AbstractSqlStore
      */
-    public static SqlStore create(
+    public static MysqlStore create(
             DataSource ds,
             String     tableName )
     {
-        return new SqlStore( ds, tableName );
+        return new MysqlStore( ds, tableName );
     }
 
     /**
-     * Constructor.
+     * Constructor for subclasses only, use factory method.
      *
      * @param ds the SQL DataSource 
      * @param tableName the name of the table in the SQL DataSource in which the data will be stored
      */
-    protected SqlStore(
+    protected MysqlStore(
             DataSource ds,
             String     tableName )
     {
-        theDataSource = ds;
-        theTableName  = tableName;
-
+        super( ds, tableName, null );
+        
         theInitializationPreparedStatement        = new SqlStorePreparedStatement( this, INITIALIZATION_SQL,          tableName );
         thePutPreparedStatement                   = new SqlStorePreparedStatement( this, PUT_SQL,                     tableName );
         theUpdatePreparedStatement                = new SqlStorePreparedStatement( this, UPDATE_SQL,                  tableName );
@@ -126,30 +123,6 @@ public class SqlStore
         }
     }
 
-    /**
-     * Create the database if it does not exist yet.
-     */
-    public void initializeIfNecessary()
-    {
-        // perhaps there is a better way of doing this?
-        
-        try {
-            initialize();
-
-        } catch( SqlStoreIOException ex ) {
-            
-            SQLException cause = ex.getCause();
-            Throwable    cause2 = cause.getCause();
-            if( cause2 != null && cause2 instanceof RuntimeException ) {
-                throw (RuntimeException) cause2.getCause();
-            }
-            // do nothing
-            if( log.isDebugEnabled() ) {
-                log.debug( "Already initialized.", ex );
-            }
-        }
-    }
-    
     /**
      * Put a data element into the Store for the first time. Throw an Exception if a data
      * element has already been store using the same key.
@@ -256,33 +229,7 @@ public class SqlStore
             firePutPerformed( value );
         }
     }
-
-    /**
-     * Put a data element into the Store for the first time. Throw an Exception if a data
-     * element has already been store using the same key.
-     *
-     * @param toStore the StoreValue to store
-     * @throws StoreKeyExistsAlreadyException thrown if a data element is already stored in the Store using this key
-     * @throws IOException thrown if an I/O error occurred
-     *
-     * @see #update if a data element with this key exists already
-     * @see #putOrUpdate if a data element with this key may exist already
-     */
-    public void put(
-            StoreValue toStore )
-        throws
-            StoreKeyExistsAlreadyException,
-            IOException
-    {
-        put(    toStore.getKey(),
-                toStore.getEncodingId(),
-                toStore.getTimeCreated(),
-                toStore.getTimeUpdated(),
-                toStore.getTimeRead(),
-                toStore.getTimeExpires(),
-                toStore.getData() );
-    }
-
+    
     /**
      * Update a data element that already exists in the Store, by overwriting it with a new value. Throw an
      * Exception if a data element with this key does not exist already.
@@ -377,7 +324,7 @@ public class SqlStore
             }.execute();
             
             if( !success ) {
-                throw new StoreKeyDoesNotExistException( SqlStore.this, key );
+                throw new StoreKeyDoesNotExistException( MysqlStore.this, key  );
             }
         } catch( SQLException ex ) {
             throw new SqlStoreIOException( ex );
@@ -387,32 +334,6 @@ public class SqlStore
 
             fireUpdatePerformed( value );
         }
-    }
-
-    /**
-     * Update a data element that already exists in the Store, by overwriting it with a new value. Throw an
-     * Exception if a data element with this key does not exist already.
-     *
-     * @param toUpdate the StoreValue to update
-     * @throws StoreKeyDoesNotExistException thrown if no data element exists in the Store using this key
-     * @throws IOException thrown if an I/O error occurred
-     *
-     * @see #put if a data element with this key does not exist already
-     * @see #putOrUpdate if a data element with this key may exist already
-     */
-    public void update(
-            StoreValue toUpdate )
-        throws
-            StoreKeyDoesNotExistException,
-            IOException
-    {
-        update( toUpdate.getKey(),
-                toUpdate.getEncodingId(),
-                toUpdate.getTimeCreated(),
-                toUpdate.getTimeUpdated(),
-                toUpdate.getTimeRead(),
-                toUpdate.getTimeExpires(),
-                toUpdate.getData() );
     }
 
     /**
@@ -545,31 +466,6 @@ public class SqlStore
     }
     
     /**
-     * Put (if does not exist already) or update (if it does exist) a data element in the Store.
-     *
-     * @param toStoreOrUpdate the StoreValue to store or update
-     * @return true if the value was updated, false if it was put
-     * @throws IOException thrown if an I/O error occurred
-     *
-     * @see #put if a data element with this key does not exist already
-     * @see #update if a data element with this key exists already
-     */
-    public boolean putOrUpdate(
-            StoreValue toStoreOrUpdate )
-        throws
-            IOException
-    {
-        return putOrUpdate(
-                toStoreOrUpdate.getKey(),
-                toStoreOrUpdate.getEncodingId(),
-                toStoreOrUpdate.getTimeCreated(),
-                toStoreOrUpdate.getTimeUpdated(),
-                toStoreOrUpdate.getTimeRead(),
-                toStoreOrUpdate.getTimeExpires(),
-                toStoreOrUpdate.getData() );
-    }
-
-    /**
      * Obtain a data element and associated meta-data from the Store, given a key.
      *
      * @param key the key to the data element in the Store
@@ -638,7 +534,7 @@ public class SqlStore
 
 
             if( ret == null ) {
-                throw new StoreKeyDoesNotExistException( SqlStore.this, key );
+                throw new StoreKeyDoesNotExistException( MysqlStore.this, key  );
             }
             return ret;
 
@@ -767,26 +663,6 @@ public class SqlStore
     }
     
     /**
-     * Obtain an Iterator over the content of this Store.
-     *
-     * @return the Iterator
-     */
-    public IterableStoreCursor iterator()
-    {
-        return new SqlStoreIterator( this );
-    }
-
-    /**
-     * Obtain an Iterator over the content of this Store.
-     *
-     * @return the Iterator
-     */
-    public IterableStoreCursor getIterator()
-    {
-        return iterator();
-    }
-
-    /**
      * Find the next n StoreValues, including the StoreValue for key. This method
      * will return fewer values if only fewer values could be found.
      *
@@ -794,7 +670,7 @@ public class SqlStore
      * @param n the number of StoreValues to find
      * @return the found StoreValues
      */
-    StoreValue [] findNextIncluding(
+    protected StoreValue [] findNextIncluding(
             final String key,
             final int    n )
     {
@@ -805,27 +681,6 @@ public class SqlStore
     }
     
     /**
-     * Find the next n keys, including key. This method
-     * will return fewer values if only fewer values could be found.
-     *
-     * @param key the first key
-     * @param n the number of keys to find
-     * @return the found keys
-     */
-    String [] findNextKeyIncluding(
-            String key,
-            int    n )
-    {
-        // FIXME, this can be made more efficient
-        StoreValue [] values = findNextIncluding( key, n );
-        String     [] ret    = new String[0];
-        for( int i=0 ; i<values.length ; ++i ) {
-            ret[i] = values[i].getKey();
-        }
-        return ret;
-    }
-
-    /**
      * Find the previous n StoreValues, excluding the StoreValue for key. This method
      * will return fewer values if only fewer values could be found.
      *
@@ -833,7 +688,7 @@ public class SqlStore
      * @param n the number of StoreValues to find
      * @return the found StoreValues
      */
-    StoreValue [] findPreviousExcluding(
+    protected StoreValue [] findPreviousExcluding(
             final String key,
             final int    n )
     {
@@ -893,28 +748,7 @@ public class SqlStore
         }
         return ret;           
     }
-
-    /**
-     * Find the previous n keys, excluding the key for key. This method
-     * will return fewer values if only fewer values could be found.
-     *
-     * @param key the first key NOT to be returned
-     * @param n the number of keys to find
-     * @return the found keys
-     */
-    String [] findPreviousKeyExcluding(
-            String key,
-            int    n )
-    {
-        // FIXME, this can be made more efficient
-        StoreValue [] values = findPreviousExcluding( key, n );
-        String     [] ret    = new String[0];
-        for( int i=0 ; i<values.length ; ++i ) {
-            ret[i] = values[i].getKey();
-        }
-        return ret;
-    }
-
+    
     /**
      * Find the next n StoreValues, using the provided PreparedStatement.
      *
@@ -993,7 +827,7 @@ public class SqlStore
      * @param key the key
      * @return the number of rows
      */
-    int hasNextIncluding(
+    protected int hasNextIncluding(
             String key )
     {
         if( key == null ) {
@@ -1008,7 +842,7 @@ public class SqlStore
      * @param key the key
      * @return the number of rows
      */
-    int hasPreviousExcluding(
+    protected int hasPreviousExcluding(
             String key )
     {
         if( key == null ) {
@@ -1066,13 +900,13 @@ public class SqlStore
     }
 
     /**
-     * Find the key N rows up or down from the current key
+     * Find the key N rows up or down from the current key.
      *
      * @param key the current key
      * @param delta the number of rows up (positive) or down (negative)
      * @return the found key, or null
      */
-    String findKeyAt(
+    protected String findKeyAt(
             final String key,
             final int    delta )
     {
@@ -1161,7 +995,7 @@ public class SqlStore
      * @param to the end key
      * @return the distance
      */
-    int determineDistance(
+    protected int determineDistance(
             final String from,
             final String to )
     {
@@ -1197,37 +1031,6 @@ public class SqlStore
         return Integer.MAX_VALUE; // Is this a reasonable default?
     }
 
-    /**
-     * Helper method to convert the SQL values back into System.currentTimeMillis() format.
-     *
-     * @param stamp the SQL timestamp
-     * @param millis milli-seconds to be added to the SQL timestamp
-     * @return Java time
-     */
-    protected static long reconstructTime(
-            Timestamp stamp,
-            int       millis )
-    {
-        if( stamp == null ) {
-            return -1L;
-        }
-        long ret = ( stamp.getTime() / 1000 ) * 1000 + millis;
-        return ret;
-    }
-
-    /**
-     * Determine the number of StoreValues in this Store.
-     *
-     * @return the number of StoreValues in this Store
-     * @throws IOException thrown if an I/O error occurred
-     */
-    public int size()
-        throws
-            IOException
-    {
-        return size( "" );
-    }
-    
     /**
      * Determine the number of StoreValues in this Store whose key starts with this String.
      *
@@ -1272,107 +1075,6 @@ public class SqlStore
         }
         return Integer.MAX_VALUE; // Is this a reasonable default?
     }
-
-    /**
-     * Determine whether this Store is empty.
-     *
-     * @return true if this Store is empty
-     * @throws IOException thrown if an I/O error occurred
-     */
-    public boolean isEmpty()
-        throws
-            IOException
-    {
-        return size() == 0;
-    }
-
-    /**
-     * Obtain a connection to the database. This is a smart factory method,
-     * returning an already-existing one if there is one instead of creating
-     * a new one.
-     *
-     * @return the Connection
-     * @throws SQLException thrown if the database could not be contacted
-     */
-    protected synchronized Connection obtainConnection()
-        throws
-            SQLException
-    {
-        if( theConnection == null ) {
-            theConnection = theDataSource.getConnection();
-        }
-        return theConnection;
-    }
-
-    /**
-     * Obtain a new connection to the database. This discards whatever old
-     * Connection there may be already.
-     *
-     * @return the Connection
-     * @throws SQLException thrown if the database could not be contacted
-     */
-    protected synchronized Connection obtainNewConnection()
-        throws
-            SQLException
-    {
-        if( theConnection != null ) {
-            theConnection.close();
-        }
-        theConnection = theDataSource.getConnection();
-        return theConnection;
-    }
-
-    /**
-     * Close the connection to the database.
-     */
-    public void closeConnection()
-    {
-        if( theConnection != null ) {
-            try {
-                theConnection.close();
-            } catch( SQLException ex2 ) {
-                // noop
-            }
-            theConnection = null;
-        }        
-    }
-
-    /**
-     * Convert to String, for debugging.
-     *
-     * @return String form
-     */
-    @Override
-    public String toString()
-    {
-        return StringHelper.objectLogString(
-                this,
-                new String[] {
-                    "dataSource",
-                    "tableName"
-                },
-                new Object[] {
-                    theDataSource,
-                    theTableName
-                });
-    }
-
-    /**
-     * The JDBC data source.
-     */
-    protected DataSource theDataSource;
-    
-    /**
-     * Name of the table in the JDBC data source. While we don't need this, it is
-     * very useful in debugging.
-     */
-    protected String theTableName;
-
-    /**
-     * The most-recently used Connection, if any. This is private, so we are forced to
-     * go through factory methods.
-     */
-    private Connection theConnection;
 
     /**
      * The initialization PreparedStatement.
@@ -1469,8 +1171,8 @@ public class SqlStore
      */
     protected static final String INITIALIZATION_SQL
             = "CREATE TABLE {0} (\n"
-            + "    id                    VARCHAR(511) NOT NULL,\n"
-            + "    encodingId            VARCHAR(128) BINARY,\n"
+            + "    id                    VARCHAR(511) NOT NULL PRIMARY KEY,\n" // this automatically creates an index
+            + "    encodingId            VARCHAR(128),\n"
             + "    timeCreated           DATETIME,\n"
             + "    timeCreatedMillis     SMALLINT,\n"
             + "    timeUpdated           DATETIME,\n"
@@ -1479,8 +1181,7 @@ public class SqlStore
             + "    timeReadMillis        SMALLINT,\n"
             + "    timeExpires           DATETIME,\n"
             + "    timeExpiresMillis     SMALLINT,\n"
-            + "    content               LONGBLOB,\n"
-            + "    CONSTRAINT UNIQUE INDEX( id )\n"
+            + "    content               LONGBLOB"
             + ");";
     
     /**
@@ -1542,8 +1243,8 @@ public class SqlStore
             + "    timeUpdatedMillis,\n"     // 6
             + "    timeRead,\n"              // 7
             + "    timeReadMillis,\n"        // 8
-            + "    timeExpires,\n"       // 9
-            + "    timeExpiresMillis,\n" // 10
+            + "    timeExpires,\n"           // 9
+            + "    timeExpiresMillis,\n"     // 10
             + "    content )\n"              // 11
             + "VALUES(\n"
             + "    ?,\n"  // 1
@@ -1603,13 +1304,13 @@ public class SqlStore
      * The SQL to obtain the number of rows including and after this key.
      */
     protected static final String HAS_NEXT_INCLUDING_SQL
-            = "SELECT COUNT(*) from {0} WHERE id >= ? ORDER BY id;";
+            = "SELECT COUNT(*) from {0} WHERE id >= ?;";
             
     /**
      * The SQL to obtain the number of rows excluding and before this key.
      */
     protected static final String HAS_PREVIOUS_EXCLUDING_SQL
-            = "SELECT COUNT(*) from {0} WHERE id < ? ORDER BY id;";
+            = "SELECT COUNT(*) from {0} WHERE id < ?;";
             
     /**
      * The SQL to find the key N rows ahead.

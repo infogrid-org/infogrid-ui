@@ -19,7 +19,7 @@ import org.infogrid.store.StoreValue;
 import org.infogrid.util.logging.Log;
 
 /**
- * Iterator implementation for the StoreValues in the SqlStore.
+ * Iterator implementation for the StoreValues in the AbstractSqlStore.
  * FIXME: This currently does not deal very well with moving to the very beginning or the very end of the Store.
  */
 class SqlStoreIterator
@@ -31,10 +31,10 @@ class SqlStoreIterator
     /**
      * Constructor. Start at the beginning.
      *
-     * @param store the SqlStore to iterate over
+     * @param store the AbstractSqlStore to iterate over
      */
     protected SqlStoreIterator(
-            SqlStore store )
+            AbstractSqlStore store )
     {
         this( store, "" );
     }
@@ -42,11 +42,11 @@ class SqlStoreIterator
     /**
      * Constructor. Start at a defined place.
      *
-     * @param store the SqlStore to iterate over
+     * @param store the AbstractSqlStore to iterate over
      * @param position the key of the current position
      */
     protected SqlStoreIterator(
-            SqlStore   store,
+            AbstractSqlStore   store,
             String     position )
     {
         super( store, position );
@@ -64,7 +64,7 @@ class SqlStoreIterator
             String key,
             int    n )
     {
-        StoreValue [] ret = ((SqlStore)theStore).findNextIncluding( key, n );
+        StoreValue [] ret = ((AbstractSqlStore)theStore).findNextIncluding( key, n );
         return ret;
     }
     
@@ -80,7 +80,7 @@ class SqlStoreIterator
             String key,
             int    n )
     {
-        String [] ret = ((SqlStore)theStore).findNextKeyIncluding( key, n );
+        String [] ret = ((AbstractSqlStore)theStore).findNextKeyIncluding( key, n );
         return ret;
     }
 
@@ -96,7 +96,7 @@ class SqlStoreIterator
             String key,
             int    n )
     {
-        StoreValue [] ret = ((SqlStore)theStore).findPreviousExcluding( key, n );
+        StoreValue [] ret = ((AbstractSqlStore)theStore).findPreviousExcluding( key, n );
         return ret;
     }
 
@@ -112,7 +112,7 @@ class SqlStoreIterator
             String key,
             int    n )
     {
-        String [] ret = ((SqlStore)theStore).findPreviousKeyExcluding( key, n );
+        String [] ret = ((AbstractSqlStore)theStore).findPreviousKeyExcluding( key, n );
         return ret;
     }
     
@@ -125,7 +125,7 @@ class SqlStoreIterator
     protected int hasNextIncluding(
             String key )
     {
-        int ret = ((SqlStore)theStore).hasNextIncluding(  key );
+        int ret = ((AbstractSqlStore)theStore).hasNextIncluding( key );
         return ret;
     }
 
@@ -138,7 +138,7 @@ class SqlStoreIterator
     protected int hasPreviousExcluding(
             String key )
     {
-        int ret = ((SqlStore)theStore).hasPreviousExcluding(  key );
+        int ret = ((AbstractSqlStore)theStore).hasPreviousExcluding( key );
         return ret;
     }
 
@@ -153,7 +153,7 @@ class SqlStoreIterator
             String key,
             int    delta )
     {
-        String ret = ((SqlStore)theStore).findKeyAt( key, delta );
+        String ret = ((AbstractSqlStore)theStore).findKeyAt( key, delta );
         return ret;
     }
 
@@ -168,7 +168,7 @@ class SqlStoreIterator
             String from,
             String to )
     {
-        int ret = ((SqlStore)theStore).determineDistance( from, to );
+        int ret = ((AbstractSqlStore)theStore).determineDistance( from, to );
         return ret;
     }
     
@@ -199,6 +199,6 @@ class SqlStoreIterator
      */
     public SqlStoreIterator createCopy()
     {
-        return new SqlStoreIterator( (SqlStore) theStore, thePosition );
+        return new SqlStoreIterator( (AbstractSqlStore) theStore, thePosition );
     }
 }

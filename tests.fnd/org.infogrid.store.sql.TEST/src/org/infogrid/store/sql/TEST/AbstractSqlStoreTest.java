@@ -17,8 +17,11 @@ package org.infogrid.store.sql.TEST;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.sql.SQLException;
 import org.infogrid.store.IterableStore;
-import org.infogrid.store.sql.SqlStore;
+import org.infogrid.store.sql.AbstractSqlStore;
+import org.infogrid.store.sql.mysql.MysqlStore;
+import org.infogrid.store.sql.postgresql.PostgresqlStore;
 import org.infogrid.testharness.AbstractTest;
+import org.postgresql.ds.PGSimpleDataSource;
 
 /**
  * Factors out common functionality of SqlStoreTests.
@@ -30,32 +33,42 @@ public abstract class AbstractSqlStoreTest
     /**
      * Constructor.
      * 
+     * @param dataBaseEngine the name of the database engine to use for testing
      * @param testClass the actual test Class
-     * @throws SQLException thrown if the SqlStore could not be accessed
+     * @throws SQLException thrown if the AbstractSqlStore could not be accessed
      */
     public AbstractSqlStoreTest(
-            Class testClass )
+            String dataBaseEngine,
+            Class  testClass )
         throws
             SQLException
     {
         super( localFileName( testClass, "/ResourceHelper" ),
                localFileName( testClass, "/Log.properties" ));
         
-        theDataSource = new MysqlDataSource();
-        theDataSource.setDatabaseName( TEST_DATABASE_NAME );
+        if( "mysql".equalsIgnoreCase( dataBaseEngine ) ) {
+            MysqlDataSource theDataSource = new MysqlDataSource();
+            theDataSource.setDatabaseName( TEST_DATABASE_NAME );
+            
+            theSqlStore = MysqlStore.create( theDataSource, TEST_TABLE_NAME );
         
-        theSqlStore = SqlStore.create( theDataSource, TEST_TABLE_NAME );
+        } else if( "postgresql".equalsIgnoreCase( dataBaseEngine )) {
+            PGSimpleDataSource theDataSource = new PGSimpleDataSource();
+            theDataSource.setDatabaseName( TEST_DATABASE_NAME );
+            theDataSource.setUser( "test" );
+            theDataSource.setPassword( "" );
+            
+            theSqlStore = PostgresqlStore.create( theDataSource, TEST_TABLE_NAME );
+            
+        } else {
+            throw new IllegalArgumentException( "Don't know about a database engine called " + dataBaseEngine );
+        }
     }
 
     /**
-     * The Database connection.
+     * The AbstractSqlStore to be tested.
      */
-    protected MysqlDataSource theDataSource;
-
-    /**
-     * The SqlStore to be tested.
-     */
-    protected SqlStore theSqlStore;
+    protected AbstractSqlStore theSqlStore;
     
     /**
      * The actual Store to be tested. This may or may not be pointed to theSqlStore

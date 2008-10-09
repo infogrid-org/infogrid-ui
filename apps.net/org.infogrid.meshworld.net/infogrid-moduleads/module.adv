@@ -54,8 +54,7 @@
   <requires name="org.infogrid.lid.openid"/>
   <requires name="org.infogrid.lid.model.openid"/>
   <requires name="org.infogrid.lid.model.yadis"/>
-  <requires name="org.infogrid.store"/>
-  <requires name="org.infogrid.store.sql"/>
+  <requires name="org.infogrid.store.sql.mysql"/>
   <requires name="org.infogrid.util"/>
  </dependencies>
 </standardmodule>

@@ -90,8 +90,8 @@ public class SqlKeyStoreTest1
     {
         SqlKeyStoreTest1 test = null;
         try {
-            if( args.length != 2 ) { // well, not quite possible but to stay with the general outline
-                System.err.println( "Synopsis: <key store file name> <key store password>" );
+            if( args.length != 3 ) {
+                System.err.println( "Synopsis: <database engine> <key store file name> <key store password>" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -115,19 +115,20 @@ public class SqlKeyStoreTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may happen in a test
+     */
     public SqlKeyStoreTest1(
             String [] args )
         throws
             Exception
     {
-        super( SqlKeyStoreTest1.class );
+        super( args[0], SqlKeyStoreTest1.class );
         
-        theKeyStoreFile     = args[0];
-        theKeyStorePassword = args[1];
+        theKeyStoreFile     = args[1];
+        theKeyStorePassword = args[2];
 
         theTestStore = theSqlStore;
     }

@@ -318,10 +318,13 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_store_sql}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module_commandline}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_store_sql_postgresql}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_testharness}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_vendors_com_mysql_jdbc}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_vendors_org_postgresql_jdbc}/build.xml" inheritall="false" target="jar"/>
     </target>
     <target depends="init,deps-jar" name="-pre-pre-compile">
         <mkdir dir="${build.classes.dir}"/>
@@ -638,10 +641,13 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_store_sql}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module_commandline}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_store_sql_postgresql}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_testharness}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_vendors_com_mysql_jdbc}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_vendors_org_postgresql_jdbc}/build.xml" inheritall="false" target="clean"/>
     </target>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>

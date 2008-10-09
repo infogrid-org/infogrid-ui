@@ -28,12 +28,12 @@ public class SqlStorePreparedStatement
     /**
      * Constructor.
      *
-     * @param store the SqlStore this belongs to
+     * @param store the AbstractSqlStore this belongs to
      * @param sql the parameterized SQL for the PreparedStatement
      * @param arguments the open parameters for the SQL
      */
     public SqlStorePreparedStatement(
-            SqlStore  store,
+            AbstractSqlStore  store,
             String    sql,
             Object... arguments )
     {
@@ -61,11 +61,11 @@ public class SqlStorePreparedStatement
     }
     
     /**
-     * Obtain the SqlStore that we belong to.
+     * Obtain the AbstractSqlStore that we belong to.
      *
-     * @return the SqlStore
+     * @return the AbstractSqlStore
      */
-    public SqlStore getStore()
+    public AbstractSqlStore getStore()
     {
         return theStore;
     }
@@ -96,9 +96,9 @@ public class SqlStorePreparedStatement
     }
 
     /**
-     * The SqlStore we belong to.
+     * The AbstractSqlStore we belong to.
      */
-    protected SqlStore theStore;
+    protected AbstractSqlStore theStore;
 
     /**
      * The SQL for this statement.

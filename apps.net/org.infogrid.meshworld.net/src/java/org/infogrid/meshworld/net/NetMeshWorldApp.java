@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.net.NetRestfulJeeFormatter;
@@ -43,7 +42,8 @@ import org.infogrid.module.SoftwareInstallation;
 import org.infogrid.module.servlet.ServletBootLoader;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
-import org.infogrid.store.sql.SqlStore;
+import org.infogrid.store.sql.AbstractSqlStore;
+import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.SimpleContext;
@@ -134,11 +134,11 @@ public class NetMeshWorldApp
         InitialContext ctx           = new InitialContext();
         DataSource     theDataSource = (DataSource) ctx.lookup( "java:comp/env/jdbc/netmeshworldDB" );        
 
-        SqlStore meshStore        = SqlStore.create( theDataSource, theResourceHelper.getResourceString( "MeshObjectTable" ) );
-        SqlStore proxyStore       = SqlStore.create( theDataSource, theResourceHelper.getResourceString( "ProxyStoreTable" ));
-        SqlStore shadowStore      = SqlStore.create( theDataSource, theResourceHelper.getResourceString( "ShadowTable" ) );
-        SqlStore shadowProxyStore = SqlStore.create( theDataSource, theResourceHelper.getResourceString( "ShadowProxyTable" ));
-        SqlStore formTokenStore   = SqlStore.create( theDataSource, theResourceHelper.getResourceString( "FormTokenTable" ) );
+        AbstractSqlStore meshStore        = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "MeshObjectTable" ) );
+        AbstractSqlStore proxyStore       = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ProxyStoreTable" ));
+        AbstractSqlStore shadowStore      = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ShadowTable" ) );
+        AbstractSqlStore shadowProxyStore = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ShadowProxyTable" ));
+        AbstractSqlStore formTokenStore   = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "FormTokenTable" ) );
 
         meshStore.initializeIfNecessary();
         proxyStore.initializeIfNecessary();

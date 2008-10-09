@@ -325,6 +325,7 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_store_sql}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module_commandline}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_testharness}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="jar"/>
@@ -652,6 +653,7 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_store_sql}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module_commandline}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_testharness}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="clean"/>
