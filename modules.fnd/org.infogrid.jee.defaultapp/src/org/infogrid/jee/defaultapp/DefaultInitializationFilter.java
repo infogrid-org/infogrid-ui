@@ -207,7 +207,7 @@ public class DefaultInitializationFilter
         rootContext.addContextObject( formatter );
 
         // StructuredResponseTemplateFactory
-        StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create( "acceptid" );
+        StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create( "default" );
         rootContext.addContextObject( tmplFactory );
 
         StringRepresentationDirectory srepdir = SimpleStringRepresentationDirectory.create();

@@ -24,7 +24,6 @@ import org.infogrid.jee.templates.TextHtmlStructuredResponseSectionTemplate;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactory;
@@ -32,6 +31,7 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.viewlet.NoViewletFoundException;
 
 /**
  * Allows the user to select an alternate JeeViewlet to display the current subject.
@@ -142,7 +142,7 @@ public class ViewletAlternativesTag
                 headSection.appendContent( css.toString() );
             }
 
-        } catch( CannotViewException ex ) {
+        } catch( NoViewletFoundException ex ) {
             log.warn( ex );
         }
         return SKIP_BODY;

@@ -166,7 +166,7 @@ public abstract class SaneRequest
         } else if( almost.length == 1 ) {
             return almost[0];
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException( "Argument " + name + " has " + almost.length + " values" );
         }
     }
     
