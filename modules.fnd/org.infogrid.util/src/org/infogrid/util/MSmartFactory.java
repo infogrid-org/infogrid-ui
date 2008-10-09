@@ -31,7 +31,7 @@ import org.infogrid.util.logging.Log;
  */
 public class MSmartFactory<K,V,A>
         extends
-            AbstractFactory<K,V,A>
+            AbstractSmartFactory<K,V,A>
         implements
             SmartFactory<K,V,A>
 {
@@ -189,6 +189,54 @@ public class MSmartFactory<K,V,A>
                 theKeyValueMap.put( key, ret );
             }
             if( ret instanceof FactoryCreatedObject ) {
+                FactoryCreatedObject<K,V,A> realRet = (FactoryCreatedObject<K,V,A>) ret;
+                if( realRet.getFactory() == null ) {
+                    realRet.setFactory( this );
+                }
+            }
+        }
+        if( weAreCreating ) {
+            createdHook( key, ret, argument );
+        }
+        return ret;
+    }
+
+    /**
+     * Factory method. This method will only be successful if the SmartFactory does not have
+     * an object with the key yet; otherwise it throws an ObjectExistsAlreadyFactoryException.
+     *
+     * @param key the key information required for object creation, if any
+     * @param argument any argument-style information required for object creation, if any
+     * @return the created object
+     * @throws ObjectExistsAlreadyFactoryException an object with this key existed already
+     * @throws FactoryException catch-all Exception, consider its cause
+     */
+    public V obtainNewFor(
+            K key,
+            A argument )
+        throws
+            ObjectExistsAlreadyFactoryException,
+            FactoryException
+    {
+        if( log.isDebugEnabled() ) {
+            log.debug( this + ".obtainNewFor( " + key + ", " + argument + " )" );
+        }
+
+        V ret;
+        boolean weAreCreating = false;
+
+        synchronized( theKeyValueMap ) {
+            ret = theKeyValueMap.get( key );
+            if( ret == null && theDelegateFactory != null ) {
+                weAreCreating = true;
+                ret = theDelegateFactory.obtainFor( key, argument );
+                
+                theKeyValueMap.put( key, ret );
+            } else {
+                throw new ObjectExistsAlreadyFactoryException( this, ret );
+            }
+            if( ret instanceof FactoryCreatedObject ) {
+                @SuppressWarnings( "unchecked" )
                 FactoryCreatedObject<K,V,A> realRet = (FactoryCreatedObject<K,V,A>) ret;
                 if( realRet.getFactory() == null ) {
                     realRet.setFactory( this );

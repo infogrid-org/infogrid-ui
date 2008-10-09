@@ -17,6 +17,7 @@ package org.infogrid.probe.shadow.store;
 import java.util.HashMap;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
@@ -33,7 +34,6 @@ import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.shadow.a.AStagingMeshBaseLifecycleManager;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.FactoryException;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -71,16 +71,16 @@ public class StoreShadowMeshBaseLifecycleManager
      * 
      * @param externalized the externalized form of the NetMeshObject
      * @return the recreated NetMeshObject
-     * @throws FactoryException thrown if the NetMeshObject could not be recreated
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a MeshObject with this identifier existed already
      */
     public NetMeshObject restore(
             ExternalizedNetMeshObject externalized )
         throws
-            FactoryException
+            MeshObjectIdentifierNotUniqueException
     {
         MeshObject existing = findInStore( externalized.getIdentifier() );
         if( existing != null ) {
-            throw new FactoryException( "MeshObject exists already: " + existing );
+            throw new MeshObjectIdentifierNotUniqueException( existing );
         }
         
         StoreShadowMeshBase realBase  = (StoreShadowMeshBase) theMeshBase;

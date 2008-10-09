@@ -47,20 +47,20 @@ public class LidGpgPublicKeyNegotiator
 
             HTTP.Response response = HTTP.http_get( url );
             if( !response.isSuccess() ) {
-                throw new FactoryException( "Could not obtain public key at " + url + ", http status: " + response.getResponseCode() );
+                throw new FactoryException( this, "Could not obtain public key at " + url + ", http status: " + response.getResponseCode() );
             }
             String ret = response.getContentAsString();
 
             if( ret != null ) {
                 Matcher m = publicKeyPattern.matcher( ret );
                 if( !m.matches() ) {
-                    throw new FactoryException( "Could not obtain public key at " + url + ", wrong format" );
+                    throw new FactoryException( this, "Could not obtain public key at " + url + ", wrong format" );
                 }
             }
             return ret;
 
         } catch( IOException ex ) {
-            throw new FactoryException( ex );
+            throw new FactoryException( this, ex );
         }
     }
 

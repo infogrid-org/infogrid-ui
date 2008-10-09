@@ -17,7 +17,6 @@ package org.infogrid.lid;
 import java.util.Map;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.lid.credential.LidCredentialType;
-import org.infogrid.util.FactoryException;
 
 /**
  * Manages locally provisioned identities.
@@ -35,7 +34,6 @@ public interface LidLocalPersonaManager
      * @return the LocalPersona that was created
      * @throws LidLocalPersonaExistsAlreadyException thrown if a LidLocalPersona with this identifier exists already
      * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the creation of new LidLocalPersonas
-     * @throws FactoryException if the creation of a LidLocalPersona failed for some other reason
      */
     public LidLocalPersona createLocalPersona(
             String                        identifier,
@@ -43,8 +41,7 @@ public interface LidLocalPersonaManager
             Map<LidCredentialType,String> credentials )
         throws
             LidLocalPersonaExistsAlreadyException,
-            UnsupportedOperationException,
-            FactoryException;
+            UnsupportedOperationException;
 
 //    /**
 //     * Determine whether a a credential is valid for a given identifier.

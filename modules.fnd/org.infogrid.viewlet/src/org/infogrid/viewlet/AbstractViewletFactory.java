@@ -71,10 +71,15 @@ public abstract class AbstractViewletFactory
         ViewletFactoryChoice [] candidates = determineFactoryChoicesOrderedByMatchQuality( theObjectsToView );
 
         if( candidates.length == 0 ) {
-            throw new CannotViewException.NoViewletFound( theObjectsToView );
+            throw new NoViewletFoundException( this, theObjectsToView );
         }
 
-        return candidates[0].instantiateViewlet( theObjectsToView, c );
+        try {
+            return candidates[0].instantiateViewlet( theObjectsToView, c );
+
+        } catch( CannotViewException ex ) {
+            throw new FactoryException( this, ex );
+        }
     }
 
     /**
@@ -83,13 +88,13 @@ public abstract class AbstractViewletFactory
      *
      * @param theObjectsToView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
-     * @throws CannotViewException.NoViewletFound thrown if no Viewlet could be found that can meet the
+     * @throws NoViewletFoundException thrown if no Viewlet could be found that can meet the
      *         requirements expressed in the theObjectsToView
      */
     public ViewletFactoryChoice [] determineFactoryChoicesOrderedByMatchQuality(
             MeshObjectsToView theObjectsToView )
         throws
-            CannotViewException.NoViewletFound
+            NoViewletFoundException
     {
         ViewletFactoryChoice [] ret = determineFactoryChoices( theObjectsToView );
         
@@ -103,12 +108,13 @@ public abstract class AbstractViewletFactory
      *
      * @param theObjectsToView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
-     * @throws CannotViewException.NoViewletFound thrown if no Viewlet could be found
+     * @throws NoViewletFoundException thrown if no Viewlet could be found that can meet the
+     *         requirements expressed in the theObjectsToView
      */
     public ViewletFactoryChoice [] determineFactoryChoices(
             MeshObjectsToView theObjectsToView )
         throws
-            CannotViewException.NoViewletFound
+            NoViewletFoundException
     {
         // find substitute viewlet type name if none given
         MeshObject subject         = theObjectsToView.getSubject();

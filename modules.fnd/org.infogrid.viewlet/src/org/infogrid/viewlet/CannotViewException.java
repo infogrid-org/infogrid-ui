@@ -15,10 +15,7 @@
 package org.infogrid.viewlet;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
-
 import org.infogrid.module.ModuleRegistry;
-
-import org.infogrid.util.FactoryException;
 import org.infogrid.util.LocalizedException;
 import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.ResourceHelper;
@@ -30,7 +27,7 @@ import org.infogrid.util.StringHelper;
  */
 public abstract class CannotViewException
         extends
-            FactoryException
+            Exception
         implements
             LocalizedException
 {
@@ -210,106 +207,6 @@ public abstract class CannotViewException
             }
             return ret;
         }
-    }
-
-    /**
-     * No Viewlet could be found with the the required Viewlet type.
-     */
-    public static class NoViewletFound
-            extends
-                CannotViewException
-    {
-        private static final long serialVersionUID = 1L; // helps with serialization
-
-        /**
-         * Constructor.
-         *
-         * @param o which MeshObjectsToView it could not view
-         */
-        public NoViewletFound(
-                MeshObjectsToView o )
-        {
-            super( null, o, null, null );
-            
-            theModuleRegistry = null;
-        }
-
-        /**
-         * Constructor.
-         *
-         * @param o which MeshObjectsToView it could not view
-         * @param registry the ModuleRegistry in which the Viewlet was not found
-         */
-        public NoViewletFound(
-                MeshObjectsToView o,
-                ModuleRegistry    registry )
-        {
-            super( null, o, null, null );
-            
-            theModuleRegistry = registry;
-        }
-
-        /**
-         * For debugging.
-         *
-         * @return String representation of this object.
-         */
-        @Override
-        public String toString()
-        {
-            return StringHelper.objectLogString(
-                    this,
-                    new String[] {
-                        "viewlet",
-                        "objectsToView",
-                        "moduleRegistry content"
-                    },
-                    new Object[] {
-                        theViewlet,
-                        theObjectsToView,
-                        theModuleRegistry
-            } );
-        }
-    
-        /**
-         * Determine the correct internationalized string that can be shown to the
-         * user when the LocalizedException is thrown.
-         *
-         * @param formatter the formatter to use for data objects to be displayed as part of the message
-         * @return the internationalized string
-         */
-        public String getLocalizedMessage(
-                LocalizedObjectFormatter formatter )
-        {
-            String ret;
-            if( theObjectsToView.getViewletTypeName() == null ) {
-                if( formatter != null ) {
-                    ret = theResourceHelper.getResourceStringWithArguments(
-                            "NoViewletFoundWithoutTypeMessage",
-                            formatter.asLocalizedString( theObjectsToView.getSubject() ));
-                } else {
-                    ret = theResourceHelper.getResourceStringWithArguments(
-                            "NoViewletFoundWithoutTypeMessage",
-                            theObjectsToView.getSubject() );
-                }
-            } else {
-                if( formatter != null ) {
-                    ret = theResourceHelper.getResourceStringWithArguments(
-                            "NoViewletFoundWithTypeMessage",
-                            formatter.asLocalizedString( theObjectsToView.getSubject() ));
-                } else {
-                    ret = theResourceHelper.getResourceStringWithArguments(
-                            "NoViewletFoundWithTypeMessage",
-                            theObjectsToView.getSubject() );
-                }
-            }
-            return ret;
-        }
-        
-        /**
-         * The ModuleRegistry that did not contain a suitable Viewlet.
-         */
-        protected transient ModuleRegistry theModuleRegistry;
     }
 
     /**

@@ -14,7 +14,6 @@
 
 package org.infogrid.lid.gpg;
 
-import org.infogrid.lid.gpg.LidKeyPair;
 import org.infogrid.util.SmartFactory;
 
 /**
@@ -22,6 +21,7 @@ import org.infogrid.util.SmartFactory;
  */
 public interface LidKeyPairManager
         extends
+            LidGpgKeyPairFactory,
             SmartFactory<String,LidKeyPair,Void>
 {
     // nothing

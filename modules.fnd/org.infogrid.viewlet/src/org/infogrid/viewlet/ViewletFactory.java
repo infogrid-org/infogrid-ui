@@ -58,13 +58,13 @@ public interface ViewletFactory
      *
      * @param theObjectsToView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
-     * @throws CannotViewException.NoViewletFound thrown if no Viewlet could be found that can meet the
+     * @throws NoViewletFoundException thrown if no Viewlet could be found that can meet the
      *         requirements expressed in the theObjectsToView
      */
     public ViewletFactoryChoice [] determineFactoryChoices(
             MeshObjectsToView theObjectsToView )
         throws
-            CannotViewException.NoViewletFound;
+            NoViewletFoundException;
 
     /**
      * Find the ViewletFactoryChoices that apply to these MeshObjectsToView, and return them in
@@ -72,11 +72,11 @@ public interface ViewletFactory
      *
      * @param theObjectsToView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
-     * @throws CannotViewException.NoViewletFound thrown if no Viewlet could be found that can meet the
+     * @throws NoViewletFoundException thrown if no Viewlet could be found that can meet the
      *         requirements expressed in the theObjectsToView
      */
     public ViewletFactoryChoice [] determineFactoryChoicesOrderedByMatchQuality(
             MeshObjectsToView theObjectsToView )
         throws
-            CannotViewException.NoViewletFound;
+            NoViewletFoundException;
 }

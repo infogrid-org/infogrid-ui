@@ -107,7 +107,7 @@ public class StoreShadowMeshBaseFactory
             Long next = ret.doUpdateNow( argument );
 
         } catch( Throwable ex ) {
-            throw new FactoryException( ex );
+            throw new FactoryException( this, ex );
         }
         
         return ret;
@@ -123,8 +123,6 @@ public class StoreShadowMeshBaseFactory
     public ShadowMeshBase restore(
             NetMeshBaseIdentifier      key,
             ExternalizedShadowMeshBase externalized )
-        throws
-            FactoryException
     {
         IterablePrefixingStore          thisProxyStore     = IterablePrefixingStore.create( key.toExternalForm(), theShadowProxyStore );
         DefaultShadowProxyPolicyFactory proxyPolicyFactory = DefaultShadowProxyPolicyFactory.create();

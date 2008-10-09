@@ -120,70 +120,59 @@ public class ViewletDispatcherServlet
             try {
                 viewlet = (JeeViewlet) viewletFact.obtainFor( toView, c );
 
-            } catch( CannotViewException ex ) {
-                throw new ServletException( ex ); // pass on
-
             } catch( FactoryException ex ) {
-                log.info( ex );
+                throw new ServletException( ex ); // pass on
             }
         }
 
-        if( viewlet != null ) {
-            // create a stack of Viewlets
-            JeeViewlet oldViewlet = (JeeViewlet) servletRequest.getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
-            servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, viewlet );
+        // create a stack of Viewlets
+        JeeViewlet oldViewlet = (JeeViewlet) servletRequest.getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+        servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, viewlet );
 
-            synchronized( viewlet ) {
-                Throwable thrown  = null;
-                try {
-                    viewlet.view( toView );
-                    if( SafeUnsafePostFilter.isSafePost( servletRequest ) ) {
-                        viewlet.performBeforeSafePost( restfulRequest, structured );
+        synchronized( viewlet ) {
+            Throwable thrown  = null;
+            try {
+                viewlet.view( toView );
+                if( SafeUnsafePostFilter.isSafePost( servletRequest ) ) {
+                    viewlet.performBeforeSafePost( restfulRequest, structured );
 
-                    } else if( SafeUnsafePostFilter.isUnsafePost( servletRequest ) ) {
-                        viewlet.performBeforeUnsafePost( restfulRequest, structured );
-                        
-                    } else if( SafeUnsafePostFilter.mayBeSafeOrUnsafePost( servletRequest ) ) {
-                        viewlet.performBeforeMaybeSafeOrUnsafePost( restfulRequest, structured );
-                        
-                    } else {
-                        viewlet.performBeforeGet( restfulRequest, structured );
-                    }
+                } else if( SafeUnsafePostFilter.isUnsafePost( servletRequest ) ) {
+                    viewlet.performBeforeUnsafePost( restfulRequest, structured );
 
-                    viewlet.processRequest( restfulRequest, structured );
+                } else if( SafeUnsafePostFilter.mayBeSafeOrUnsafePost( servletRequest ) ) {
+                    viewlet.performBeforeMaybeSafeOrUnsafePost( restfulRequest, structured );
 
-                } catch( RuntimeException t ) {
-                    thrown = t;
-                    throw (RuntimeException) thrown; // notice the finally block
-
-                } catch( CannotViewException t ) {
-                    thrown = t;
-                    throw new ServletException( thrown ); // notice the finally block
-
-                } catch( UnsafePostException t ) {
-                    thrown = t;
-                    throw new ServletException( thrown ); // notice the finally block
-
-                } catch( ServletException t ) {
-                    thrown = t;
-                    throw (ServletException) thrown; // notice the finally block
-
-                } catch( IOException t ) {
-                    thrown = t;
-                    throw (IOException) thrown; // notice the finally block
-
-                } finally {
-                    viewlet.performAfter( restfulRequest, structured, thrown );
-
-                    servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, oldViewlet );
+                } else {
+                    viewlet.performBeforeGet( restfulRequest, structured );
                 }
+
+                viewlet.processRequest( restfulRequest, structured );
+
+            } catch( RuntimeException t ) {
+                thrown = t;
+                throw (RuntimeException) thrown; // notice the finally block
+
+            } catch( CannotViewException t ) {
+                thrown = t;
+                throw new ServletException( thrown ); // notice the finally block
+
+            } catch( UnsafePostException t ) {
+                thrown = t;
+                throw new ServletException( thrown ); // notice the finally block
+
+            } catch( ServletException t ) {
+                thrown = t;
+                throw (ServletException) thrown; // notice the finally block
+
+            } catch( IOException t ) {
+                thrown = t;
+                throw (IOException) thrown; // notice the finally block
+
+            } finally {
+                viewlet.performAfter( restfulRequest, structured, thrown );
+
+                servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, oldViewlet );
             }
-
-        } else if( viewlet != null ) {
-            throw new ServletException( new CannotViewException.InvalidViewlet( viewlet, toView ));
-
-        } else {
-            throw new ServletException( new CannotViewException.NoViewletFound( toView ));
         }
     }
 

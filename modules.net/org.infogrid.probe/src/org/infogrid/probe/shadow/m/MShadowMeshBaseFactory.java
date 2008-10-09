@@ -105,7 +105,7 @@ public class MShadowMeshBaseFactory
             next = ret.doUpdateNow( argument );
 
         } catch( Throwable ex ) {
-            throw new FactoryException( ex );
+            throw new FactoryException( this, ex );
         }
         
         return ret;

@@ -130,7 +130,7 @@ public class OpenIdRpSideAssociationNegotiator
             thrownEx = ex;
         }
         if( thrownEx != null || response == null || !response.isSuccess() ) {
-            throw new FactoryException( thrownEx );
+            throw new FactoryException( this, thrownEx );
         }
 
         String     theAssociationHandle     = null;
@@ -185,14 +185,18 @@ public class OpenIdRpSideAssociationNegotiator
                     }
                 }
             } catch( ParseException ex ) {
-                throw new FactoryException( ex );
+                throw new FactoryException( this, ex );
             }
         }
         if( theAssociationType != null && !OpenIdRpSideAssociationNegotiationParameters.HMAC_SHA1.equals( theAssociationType )) {
-            throw new FactoryException( new OpenIdAssociationException.UnknownAssociationType( parameters.getLidProcessingPipelineStage(), theAssociationType ));
+            throw new FactoryException(
+                    this,
+                    new OpenIdAssociationException.UnknownAssociationType( parameters.getLidProcessingPipelineStage(), theAssociationType ));
         }
         if( theSessionType != null && !OpenIdRpSideAssociationNegotiationParameters.DH_SHA1.equals( theSessionType )) {
-            throw new FactoryException( new OpenIdAssociationException.UnknownSessionType( parameters.getLidProcessingPipelineStage(), theSessionType ));
+            throw new FactoryException(
+                    this,
+                    new OpenIdAssociationException.UnknownSessionType( parameters.getLidProcessingPipelineStage(), theSessionType ));
         }
         if( expires_in == Long.MIN_VALUE ) {
             if( replace_after != null ) {
@@ -202,7 +206,9 @@ public class OpenIdRpSideAssociationNegotiator
             }
         }
         if( expires_in < 0 ) {
-            throw new FactoryException( new OpenIdAssociationException.InvalidExpiration( parameters.getLidProcessingPipelineStage() ));
+            throw new FactoryException(
+                    this,
+                    new OpenIdAssociationException.InvalidExpiration( parameters.getLidProcessingPipelineStage() ));
         }
 
         if( issued != null ) {

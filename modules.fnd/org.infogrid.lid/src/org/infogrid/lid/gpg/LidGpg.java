@@ -21,8 +21,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.infogrid.lid.gpg.LidKeyPair;
 import org.infogrid.lid.LidNonceManager;
+import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.http.HTTP;
@@ -34,6 +34,10 @@ import org.infogrid.util.logging.Log;
  * FIXME: This should be re-implemented with a native GPG library in Java.
  */
 public class LidGpg
+        extends
+            AbstractFactory<String,LidKeyPair,Void>
+        implements
+            LidGpgKeyPairFactory
 {
     protected static final Log log = Log.getLogInstance( LidGpg.class ); // our own, private logger
 
@@ -65,11 +69,13 @@ public class LidGpg
      * Generate private/public key pair for this LID.
      *
      * @param key the LID URL for which a key pair needs to be generated
+     * @param arg ignored
      * @return the generated LidKeyPair
      * @throws FactoryException thrown if the LidKeyPair could not be created
      */
-    public static LidKeyPair createKeyPair(
-            String key )
+    public LidKeyPair obtainFor(
+            String key,
+            Void   arg )
         throws
             FactoryException
     {
@@ -114,7 +120,7 @@ public class LidGpg
             return ret;
 
         } catch( IOException ex ) {
-            throw new FactoryException( ex );
+            throw new FactoryException( this, ex );
         }
     }
 

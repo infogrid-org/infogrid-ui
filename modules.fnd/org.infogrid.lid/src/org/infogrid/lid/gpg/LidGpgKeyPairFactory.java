@@ -14,32 +14,14 @@
 
 package org.infogrid.lid.gpg;
 
-import org.infogrid.lid.gpg.LidKeyPair;
-import org.infogrid.util.AbstractFactory;
-import org.infogrid.util.FactoryException;
+import org.infogrid.util.Factory;
 
 /**
  * Obtains and manages LID key pairs for given identities that are maintained locally.
  */
-public class LidGpgKeyPairFactory
+public interface LidGpgKeyPairFactory
         extends
-            AbstractFactory<String,LidKeyPair,Void>
+            Factory<String,LidKeyPair,Void>
 {
-    /**
-     * Factory method.
-     *
-     * @param key the key information required for object creation, if any
-     * @param argument any argument-style information required for object creation, if any
-     * @return the created object
-     * @throws FactoryException catch-all Exception, consider its cause
-     */
-    public LidKeyPair obtainFor(
-            String key,
-            Void   argument )
-        throws
-            FactoryException
-    {
-        LidKeyPair ret = LidGpg.createKeyPair( key );
-        return ret;
-    }
+    // nothing
 }

@@ -26,45 +26,54 @@ public abstract class AbstractLocalizedFactoryException
 {
     /**
      * Constructor.
+     * 
+     * @param sender the Factory that threw this exception
      */
-    public AbstractLocalizedFactoryException()
+    public AbstractLocalizedFactoryException(
+            Factory<?,?,?> sender )
     {
-        super( null, null );
+        super( sender, null, null );
     }
 
     /**
      * Constructor with a message.
      *
+     * @param sender the Factory that threw this exception
      * @param msg the message
      */
     public AbstractLocalizedFactoryException(
-            String msg )
+            Factory<?,?,?> sender,
+            String         msg )
     {
-        super( msg );
+        super( sender, msg );
     }
 
     /**
      * Constructor with no message but a cause.
      *
+     * @param sender the Factory that threw this exception
      * @param cause the Throwable that caused this Exception
      */
     public AbstractLocalizedFactoryException(
-            Throwable cause )
+            Factory<?,?,?> sender,
+            Throwable      cause )
     {
-        super( cause );
+        super( sender, cause );
     }
 
     /**
      * Constructor with a message and a cause.
      *
+     * @param sender the Factory that threw this exception
      * @param msg the message
      * @param cause the Exception that caused this Exception
      */
     public AbstractLocalizedFactoryException(
-            String    msg,
-            Throwable cause )
+            Factory<?,?,?> sender,
+            String         msg,
+            Throwable      cause )
     {
-        super( msg, cause );
+        super( sender, msg, cause );
     }
 
     /**

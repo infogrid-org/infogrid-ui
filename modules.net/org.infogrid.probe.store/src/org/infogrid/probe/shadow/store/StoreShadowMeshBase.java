@@ -38,7 +38,6 @@ import org.infogrid.probe.shadow.proxy.DefaultShadowProxyPolicyFactory;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
 import org.infogrid.util.CachingMap;
-import org.infogrid.util.FactoryException;
 import org.infogrid.util.MCachingHashMap;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
@@ -227,7 +226,8 @@ public class StoreShadowMeshBase
             try {
                 life.restore( current );
 
-            } catch( FactoryException ex ) {
+            } catch( Throwable ex ) {
+                // just in case
                 log.error( ex );
             }
         }

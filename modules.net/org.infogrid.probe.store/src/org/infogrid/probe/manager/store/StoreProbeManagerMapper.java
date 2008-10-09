@@ -106,9 +106,6 @@ public class StoreProbeManagerMapper
             
             ret = (StoreShadowMeshBase) theFactory.restore( key, externalized );
 
-        } catch( FactoryException ex ) {
-            throw new StoreValueDecodingException( ex );
-
         } catch( DecodingException ex ) {
             throw new StoreValueDecodingException( ex );
 

@@ -26,35 +26,75 @@ public class FactoryException
     /**
      * Constructor.
      *
+     * @param sender the Factory that threw this exception
      * @param cause the actual underlying cause
      */
     public FactoryException(
-            Throwable cause )
+            Factory<?,?,?> sender,
+            Throwable      cause )
     {
         super( cause );
+
+        theSender = sender;
     }
 
     /**
      * Constructor.
      *
+     * @param sender the Factory that threw this exception
      * @param message the message
      */
     public FactoryException(
-            String message )
+            Factory<?,?,?> sender,
+            String         message )
     {
         super( message );
+
+        theSender = sender;
     }
 
     /**
      * Constructor.
      *
+     * @param sender the Factory that threw this exception
      * @param message the message
      * @param cause the actual underlying cause
      */
     public FactoryException(
-            String    message,
-            Throwable cause )
+            Factory<?,?,?> sender,
+            String         message,
+            Throwable      cause )
     {
         super( message, cause );
+
+        theSender = sender;
     }
+
+    /**
+     * Constructor for subclasses only.
+     * 
+     * @param sender the Factory that threw this exception
+     */
+    protected FactoryException(
+            Factory<?,?,?> sender )
+    {
+        super();
+
+        theSender = sender;
+    }
+    
+    /**
+     * Obtain the Factory that threw this exception.
+     * 
+     * @return the Factory
+     */
+    public Factory<?,?,?> getSender()
+    {
+        return theSender;
+    }
+
+    /**
+     * The Factory that throw this exception.
+     */
+    protected Factory<?,?,?> theSender;
 }

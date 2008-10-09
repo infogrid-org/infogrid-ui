@@ -28,11 +28,15 @@ public class UnknownLidCredentialTypeException
     /**
      * Constructor.
      * 
+     * @param sender the Factory that threw this exception
      * @param credentialType name of the credential type that was not known
      */
     public UnknownLidCredentialTypeException(
-            String credentialType )
+            LidCredentialTypeFactory sender,
+            String                   credentialType )
     {
+        super( sender );
+        
         theCredentialType = credentialType;
     }
     

@@ -15,37 +15,18 @@
 package org.infogrid.util;
 
 /**
- * This interface is implemented by objects that support the smart factory pattern.
- * This has many methods that are almost the same as <code>java.util.Map</code>.
- * However, I don't like that that interface isn't type-safe with respect to keys,
- * and so we are currently not inheriting from there.
+ * Saves a bit of code to map the simplified factory method onto the more general one.
  * 
  * @param <K> the type of key
  * @param <V> the type of value
  * @param <A> the type of argument
  */
-public interface SmartFactory<K,V,A>
+public abstract class AbstractSmartFactory<K,V,A>
         extends
-            Factory<K,V,A>,
-            WritableNameServer<K,V>
+            AbstractFactory<K,V,A>
+        implements
+            SmartFactory<K,V,A>
 {
-    /**
-     * Factory method. This method will only be successful if the SmartFactory does not have
-     * an object with the key yet; otherwise it throws an ObjectExistsAlreadyFactoryException.
-     *
-     * @param key the key information required for object creation, if any
-     * @param argument any argument-style information required for object creation, if any
-     * @return the created object
-     * @throws ObjectExistsAlreadyFactoryException an object with this key existed already
-     * @throws FactoryException catch-all Exception, consider its cause
-     */
-    public abstract V obtainNewFor(
-            K key,
-            A argument )
-        throws
-            ObjectExistsAlreadyFactoryException,
-            FactoryException;
-
     /**
      * Factory method. This method will only be successful if the SmartFactory does not have
      * an object with the key yet; otherwise it throws an ObjectExistsAlreadyFactoryException.
@@ -56,9 +37,12 @@ public interface SmartFactory<K,V,A>
      * @throws ObjectExistsAlreadyFactoryException an object with this key existed already
      * @throws FactoryException catch-all Exception, consider its cause
      */
-    public abstract V obtainNewFor(
+    public V obtainNewFor(
             K key )
         throws
             ObjectExistsAlreadyFactoryException,
-            FactoryException;
+            FactoryException
+    {
+        return obtainNewFor( key, null );
+    }
 }

@@ -14,6 +14,8 @@
 
 package org.infogrid.lid.gpg.store;
 
+import org.infogrid.lid.LidNonceManager;
+import org.infogrid.lid.gpg.LidGpg;
 import org.infogrid.lid.gpg.LidKeyPair;
 import org.infogrid.lid.gpg.LidKeyPairManager;
 import org.infogrid.lid.gpg.LidGpgKeyPairFactory;
@@ -36,15 +38,17 @@ public class StoreLidKeyPairManager
     /**
      * Factory method.
      *
+     * @param nonceManager manages nonces for LID GPG operations
      * @param store the Store to use
      * @return the created StoreLidKeyPairManager
      */
     public static StoreLidKeyPairManager create(
-            Store store )
+            LidNonceManager nonceManager,
+            Store           store )
     {
         StoreLidKeyPairMapper mapper = new StoreLidKeyPairMapper();
         
-        LidGpgKeyPairFactory delegateFactory = new LidGpgKeyPairFactory();
+        LidGpgKeyPairFactory delegateFactory = LidGpg.create( nonceManager );
         StoreBackedSwappingHashMap<String,LidKeyPair> storage = StoreBackedSwappingHashMap.createWeak( mapper, store );
         
         StoreLidKeyPairManager ret = new StoreLidKeyPairManager( delegateFactory, storage );
