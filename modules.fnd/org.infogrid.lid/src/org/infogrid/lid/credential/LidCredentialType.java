@@ -41,18 +41,18 @@ public interface LidCredentialType
      */
     public abstract String getFullName();
 
-    /**
-     * Perform a check of the validity of a presented credential.
-     * 
-     * @param identifier the identifier for which credential was presented
-     * @param request the incoming request carrying the presented credential
-     * @param persona what is known locally about the persona
-     * @throws LidInvalidCredentialException thrown if the credential was invalid
-     */
-    public abstract void checkCredential(
-            String          identifier,
-            SaneRequest     request,
-            LidLocalPersona persona )
-        throws
-            LidInvalidCredentialException;
+//    /**
+//     * Perform a check of the validity of a presented credential.
+//     * 
+//     * @param identifier the identifier for which credential was presented
+//     * @param request the incoming request carrying the presented credential
+//     * @param persona what is known locally about the persona
+//     * @throws LidInvalidCredentialException thrown if the credential was invalid
+//     */
+//    public abstract void checkCredential(
+//            String          identifier,
+//            SaneRequest     request,
+//            LidLocalPersona persona )
+//        throws
+//            LidInvalidCredentialException;
 }

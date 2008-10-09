@@ -15,9 +15,11 @@
 package org.infogrid.lid;
 
 import java.util.Map;
+import java.util.Set;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Implements the LidLocalPersonaManager interface by delegating to another LidLocalPersonaManager
@@ -48,7 +50,6 @@ public abstract class TranslatingLidLocalPersonaManager
      * @return the LocalPersona that was created
      * @throws LidLocalPersonaExistsAlreadyException thrown if a LidLocalPersona with this identifier exists already
      * @throws UnsupportedOperationException thrown if this LidIdentityManager does not permit the creation of new LidLocalPersonas
-     * @throws FactoryException if the creation of a LidLocalPersona failed for some other reason
      */
     public LidLocalPersona createLocalPersona(
             String                        identifier,
@@ -56,8 +57,7 @@ public abstract class TranslatingLidLocalPersonaManager
             Map<LidCredentialType,String> credentials )
         throws
             LidLocalPersonaExistsAlreadyException,
-            UnsupportedOperationException,
-            FactoryException
+            UnsupportedOperationException
     {
         if( identifier == null ) {
             throw new NullPointerException( "identifier must not be null" );
@@ -77,9 +77,6 @@ public abstract class TranslatingLidLocalPersonaManager
 
             LidLocalPersona ret = translatePersonaBackward( ex.getPersona() );
             throw new LidLocalPersonaExistsAlreadyException( ret, ex );
-
-        } catch( FactoryException ex ) {
-            throw new FactoryException( ex );
         }        
     }
 
@@ -235,7 +232,7 @@ public abstract class TranslatingLidLocalPersonaManager
         }
         String delegateIdentifier = translateIdentifierForward( persona.getIdentifier() );
         
-        LidLocalPersona ret = LidLocalPersonaVO.create( delegateIdentifier, persona );
+        LidLocalPersona ret = new TranslatingLidLocalPersona( delegateIdentifier, persona );
 
         return ret;
     }
@@ -254,7 +251,7 @@ public abstract class TranslatingLidLocalPersonaManager
         }
         String delegateIdentifier = translateIdentifierBackward( persona.getIdentifier() );
         
-        LidLocalPersona ret = LidLocalPersonaVO.create( delegateIdentifier, persona );
+        LidLocalPersona ret = new TranslatingLidLocalPersona( delegateIdentifier, persona );
 
         return ret;
     }    
@@ -263,4 +260,118 @@ public abstract class TranslatingLidLocalPersonaManager
      * The delegate LidLocalPersonaManager.
      */
     protected LidLocalPersonaManager theDelegate;
+
+   /**
+     * Implementation of LidLocalPersona for this LidLocalPersonaManager.
+     */
+    static class TranslatingLidLocalPersona
+            extends
+                AbstractLidResource
+            implements
+                LidLocalPersona
+    {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
+        /**
+         * Constructor.
+         * 
+         * @param identifier the unique identifier of the persona, e.g. their identity URL
+         * @param delegate the underlying LidLocalPersona from/to which we translate
+         */
+        protected TranslatingLidLocalPersona(
+                String          identifier,
+                LidLocalPersona delegate )
+        {
+            super( identifier );
+            
+            theDelegate = delegate;
+        }
+
+        /**
+         * Determine whether this LidPersona is hosted locally or remotely.
+         * 
+         * @return true if the LidPersona is hosted locally
+         */
+        public boolean isHostedLocally()
+        {
+            return theDelegate.isHostedLocally();
+        }
+
+        /**
+         * Obtain an attribute of the persona.
+         * 
+         * @param key the name of the attribute
+         * @return the value of the attribute, or null
+         */
+        public String getAttribute(
+                String key )
+        {
+            return theDelegate.getAttribute( key );
+        }
+
+        /**
+         * Get the set of keys into the set of attributes.
+         * 
+         * @return the keys into the set of attributes
+         */
+        public Set<String> getAttributeKeys()
+        {
+            return theDelegate.getAttributeKeys();
+        }
+
+        /**
+         * Obtain the map of attributes. This breaks encapsulation, but works much better
+         * for JSP pages.
+         * 
+         * @return the map of attributes
+         */
+        public Map<String,String> getAttributes()
+        {
+            return theDelegate.getAttributes();
+        }
+
+        /**
+         * Set an attribute of the persona.
+         * 
+         * @param key the name of the attribute
+         * @param value the value of the attribute
+         */
+        public void setAttribute(
+                String key,
+                String value )
+        {
+            theDelegate.setAttribute( key, value );
+        }
+
+        /**
+         * Obtain the credential types available.
+         * 
+         * @return the credential types
+         */
+        public Set<LidCredentialType> getCredentialTypes()
+        {
+            return theDelegate.getCredentialTypes();
+        }
+
+        /**
+         * Perform a check of the validity of a presented credential.
+         * 
+         * @param credType the LidCredentialType to check
+         * @param request the incoming request carrying the presented credential
+         * @throws LidInvalidCredentialException thrown if the credential was invalid
+         */
+        public void checkCredential(
+                LidCredentialType credType,
+                SaneRequest       request )
+            throws
+                LidInvalidCredentialException
+        {
+            theDelegate.checkCredential( credType, request );
+        }
+        
+        /**
+         * The underlying LidLocalPersona from/to which we translate.
+         */
+        protected LidLocalPersona theDelegate;
+    }
 }

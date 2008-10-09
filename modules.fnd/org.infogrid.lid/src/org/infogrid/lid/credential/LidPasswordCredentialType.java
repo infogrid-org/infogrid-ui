@@ -63,30 +63,30 @@ public class LidPasswordCredentialType
         return getClass().getName();
     }
 
-    /**
-     * Perform a check of the validity of a presented credential.
-     * 
-     * @param identifier the identifier for which credential was presented
-     * @param request the incoming request carrying the presented credential
-     * @param persona what is known locally about the persona
-     * @throws LidInvalidCredentialException thrown if the credential was invalid
-     */
-    public void checkCredential(
-            String      identifier,
-            SaneRequest request,
-            LidLocalPersona  persona )
-        throws
-            LidInvalidCredentialException
-    {
-        String givenCredential   = request.getArgument( "lid-credential" );
-        String correctCredential = persona.getCredentialFor( this );
-        
-        int result = StringHelper.compareTo( givenCredential, correctCredential );
-        if( result != 0 ) {
-            throw new LidInvalidCredentialException( identifier, this );
-        }
-    }
-
+//    /**
+//     * Perform a check of the validity of a presented credential.
+//     * 
+//     * @param identifier the identifier for which credential was presented
+//     * @param request the incoming request carrying the presented credential
+//     * @param persona what is known locally about the persona
+//     * @throws LidInvalidCredentialException thrown if the credential was invalid
+//     */
+//    public void checkCredential(
+//            String      identifier,
+//            SaneRequest request,
+//            LidLocalPersona  persona )
+//        throws
+//            LidInvalidCredentialException
+//    {
+//        String givenCredential   = request.getArgument( "lid-credential" );
+//        String correctCredential = persona.getCredentialFor( this );
+//        
+//        int result = StringHelper.compareTo( givenCredential, correctCredential );
+//        if( result != 0 ) {
+//            throw new LidInvalidCredentialException( identifier, this );
+//        }
+//    }
+//
     /**
      * Determine the correct internationalized string that can be shown to the
      * user.
@@ -111,4 +111,3 @@ public class LidPasswordCredentialType
      */
     private static LidPasswordCredentialType theSingleton;
 }
-

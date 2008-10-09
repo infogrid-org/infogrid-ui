@@ -15,12 +15,17 @@
 package org.infogrid.lid;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.lid.credential.LidCredentialType;
+import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.lid.credential.LidPasswordCredentialType;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.StringHelper;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * A LidLocalPersonaManager that compares user name and password against regular expressions.
@@ -90,7 +95,6 @@ public class RegexLidLocalPersonaManager
      * @return the LocalPersona that was created
      * @throws LidLocalPersonaExistsAlreadyException thrown if a LidLocalPersona with this identifier exists already
      * @throws UnsupportedOperationException thrown if this LidIdentityManager does not permit the creation of new LidLocalPersonas
-     * @throws FactoryException if the creation of a LidLocalPersona failed for some other reason
      */
     public LidLocalPersona createLocalPersona(
             String                        identifier,
@@ -98,8 +102,7 @@ public class RegexLidLocalPersonaManager
             Map<LidCredentialType,String> credentials )
         throws
             LidLocalPersonaExistsAlreadyException,
-            UnsupportedOperationException,
-            FactoryException
+            UnsupportedOperationException
     {
         throw new UnsupportedOperationException();
     }
@@ -174,13 +177,10 @@ public class RegexLidLocalPersonaManager
             LidLocalPersonaUnknownException
     {
         if( isUser( identifier )) {
-            HashMap<String,String>            attributes  = new HashMap<String,String>();
-            HashMap<LidCredentialType,String> credentials = new HashMap<LidCredentialType,String>();
-        
+            HashMap<String,String> attributes  = new HashMap<String,String>();
             attributes.put( LidLocalPersona.IDENTIFIER_ATTRIBUTE_NAME, identifier );
-            credentials.put( LidPasswordCredentialType.create(), identifier + "pass" );
             
-            LidLocalPersona ret = LidLocalPersonaVO.create( identifier, attributes, credentials );
+            LidLocalPersona ret = new RegexLidLocalPersona( identifier, attributes );
         
             return ret;
 
@@ -236,4 +236,63 @@ public class RegexLidLocalPersonaManager
      * The password regular expression.
      */
     protected Pattern thePasswordRegex;
+    
+    /**
+     * The Set of LidCredentialTypes available for LidLocalPersonas hosted by this LidLocalPersonaManager.
+     */
+    protected static final Set<LidCredentialType> CREDENTIAL_TYPES = new HashSet<LidCredentialType>();
+    static {
+            CREDENTIAL_TYPES.add( LidPasswordCredentialType.create());
+    };
+
+    /**
+     * Implementation of LidLocalPersona for this LidLocalPersonaManager.
+     */
+    class RegexLidLocalPersona
+            extends
+                AbstractLidLocalPersona
+    {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
+        /**
+         * Constructor.
+         * 
+         * @param identifier the unique identifier of the persona, e.g. their identity URL
+         * @param attributes attributes of the persona, e.g. first name
+         */
+        protected RegexLidLocalPersona(
+                String                        identifier,
+                Map<String,String>            attributes )
+        {
+            super( identifier, attributes, CREDENTIAL_TYPES );
+        }
+
+        /**
+         * Perform a check of the validity of a presented credential.
+         * 
+         * @param credType the LidCredentialType to check
+         * @param request the incoming request carrying the presented credential
+         * @throws LidInvalidCredentialException thrown if the credential was invalid
+         */
+        public void checkCredential(
+                LidCredentialType credType,
+                SaneRequest       request )
+            throws
+                LidInvalidCredentialException
+        {
+            if( !theCredentialTypes.contains( credType )) {
+                throw new LidInvalidCredentialException( theIdentifier, credType );
+            }
+            if( !request.matchArgument( "lid-credtype", "simple-password" )) {
+                throw new LidInvalidCredentialException( theIdentifier, credType );
+            }
+            String givenPassword = request.getArgument( "lid-credential" );
+            String correctPassword = theIdentifier + "pass";
+
+            int result = StringHelper.compareTo( givenPassword, correctPassword );
+            if( result != 0 ) {
+                throw new LidInvalidCredentialException( theIdentifier, credType );
+            }
+        }
+    }
 }

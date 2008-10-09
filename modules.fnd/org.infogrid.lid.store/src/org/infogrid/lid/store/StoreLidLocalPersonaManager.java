@@ -19,13 +19,13 @@ import org.infogrid.lid.AbstractLidLocalPersonaManager;
 import org.infogrid.lid.LidLocalPersona;
 import org.infogrid.lid.LidLocalPersonaExistsAlreadyException;
 import org.infogrid.lid.LidLocalPersonaUnknownException;
-import org.infogrid.lid.LidLocalPersonaVO;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.Factory;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.ObjectExistsAlreadyFactoryException;
 import org.infogrid.util.PatientSmartFactory;
 import org.infogrid.util.SmartFactory;
 
@@ -49,13 +49,13 @@ public class StoreLidLocalPersonaManager
     {
         LidLocalPersonaMapper mapper = new LidLocalPersonaMapper( credentialTypeClassLoader );
         
-        Factory<String,LidLocalPersona,AttributesCredentials> delegateFactory
-                = new AbstractFactory<String,LidLocalPersona,AttributesCredentials>() {
-                    public LidLocalPersona obtainFor(
+        Factory<String,StoreLidLocalPersona,AttributesCredentials> delegateFactory
+                = new AbstractFactory<String,StoreLidLocalPersona,AttributesCredentials>() {
+                    public StoreLidLocalPersona obtainFor(
                             String                identifier,
                             AttributesCredentials attCred )
                     {
-                        LidLocalPersona ret = LidLocalPersonaVO.create(
+                        StoreLidLocalPersona ret = new StoreLidLocalPersona(
                                 identifier,
                                 attCred.getAttributes(),
                                 attCred.getCredentials() );
@@ -63,10 +63,10 @@ public class StoreLidLocalPersonaManager
                     }
                 };
 
-        StoreBackedSwappingHashMap<String,LidLocalPersona> storage = StoreBackedSwappingHashMap.createWeak( mapper, store );
+        StoreBackedSwappingHashMap<String,StoreLidLocalPersona> storage = StoreBackedSwappingHashMap.createWeak( mapper, store );
         
-        SmartFactory<String,LidLocalPersona,AttributesCredentials> smartFactory
-                = new PatientSmartFactory<String,LidLocalPersona,AttributesCredentials>( delegateFactory, storage );
+        SmartFactory<String,StoreLidLocalPersona,AttributesCredentials> smartFactory
+                = new PatientSmartFactory<String,StoreLidLocalPersona,AttributesCredentials>( delegateFactory, storage );
         
         StoreLidLocalPersonaManager ret = new StoreLidLocalPersonaManager( smartFactory );
         return ret;
@@ -78,7 +78,7 @@ public class StoreLidLocalPersonaManager
      * @param delegateFactory the underlying SmartFactory
      */
     protected StoreLidLocalPersonaManager(
-            SmartFactory<String,LidLocalPersona,AttributesCredentials> delegateFactory )
+            SmartFactory<String,StoreLidLocalPersona,AttributesCredentials> delegateFactory )
     {
         theDelegateFactory = delegateFactory;
     }
@@ -92,7 +92,6 @@ public class StoreLidLocalPersonaManager
      * @return the LocalPersona that was created
      * @throws LidLocalPersonaExistsAlreadyException thrown if a LidLocalPersona with this identifier exists already
      * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the creation of new LidLocalPersonas
-     * @throws FactoryException if the creation of a LidLocalPersona failed for some other reason
      */
     public LidLocalPersona createLocalPersona(
             String                        identifier,
@@ -100,13 +99,20 @@ public class StoreLidLocalPersonaManager
             Map<LidCredentialType,String> credentials )
         throws
             LidLocalPersonaExistsAlreadyException,
-            UnsupportedOperationException,
-            FactoryException
+            UnsupportedOperationException
     {
         AttributesCredentials attCred = new AttributesCredentials( attributes, credentials );
         
-        LidLocalPersona ret = theDelegateFactory.obtainFor( identifier, attCred );
-        return ret;
+        try {
+            LidLocalPersona ret = theDelegateFactory.obtainNewFor( identifier, attCred );
+            return ret;
+
+        } catch( ObjectExistsAlreadyFactoryException ex ) {
+            throw new LidLocalPersonaExistsAlreadyException( (LidLocalPersona) ex.getExisting(), ex );
+
+        } catch( FactoryException ex ) {
+            throw new RuntimeException( ex );
+        }
     }
 
 //    /**
@@ -201,5 +207,5 @@ public class StoreLidLocalPersonaManager
      * The underlying SmartFactory. This is hidden so we can do access control and
      * expose the API we want.
      */
-    protected SmartFactory<String,LidLocalPersona,AttributesCredentials> theDelegateFactory;
+    protected SmartFactory<String,StoreLidLocalPersona,AttributesCredentials> theDelegateFactory;
 }

@@ -14,14 +14,27 @@
 
 package org.infogrid.lid.store;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.infogrid.lid.credential.LidCredentialType;
+import org.infogrid.util.logging.Log;
 
 /**
  * Helper class to package attributes and credentials into the same instance.
  */
 public class AttributesCredentials
 {
+    private static final Log log = Log.getLogInstance( AttributesCredentials.class ); // our own, private logger
+
+    /**
+     * Constructor.
+     */
+    public AttributesCredentials()
+    {
+        theAttributes  = new HashMap<String,String>();
+        theCredentials = new HashMap<LidCredentialType,String>();
+    }
+
     /**
      * Constructor.
      * 
@@ -55,6 +68,39 @@ public class AttributesCredentials
     {
         return theCredentials;
     }
+    
+    /**
+     * Add an attribute.
+     * 
+     * @param name the name of the attribute
+     * @param value the value of the attribute
+     */
+    protected void addAttribute(
+            String name,
+            String value )
+    {
+        String ret = theAttributes.put( name, value );
+        if( ret != null ) {
+            log.error( "Overwriting attribute " + name + " with new value " + value + ", was " + ret );
+        }
+    }
+
+    /**
+     * Add a credential.
+     * 
+     * @param credentialType the credential type
+     * @param value the value of the attribute
+     */
+    protected void addCredential(
+            LidCredentialType credentialType,
+            String            value )
+    {
+        String ret = theCredentials.put( credentialType, value );
+        if( ret != null ) {
+            log.error( "Overwriting credentialType " + credentialType + " with new value " + value + ", was " + ret );
+        }
+    }
+
     /**
      * Attributes of the persona.
      */
@@ -63,5 +109,5 @@ public class AttributesCredentials
     /**
      * Credentials of the persona, keyed by credential type.
      */
-    protected Map<LidCredentialType,String> theCredentials;    
+    protected Map<LidCredentialType,String> theCredentials;
 }

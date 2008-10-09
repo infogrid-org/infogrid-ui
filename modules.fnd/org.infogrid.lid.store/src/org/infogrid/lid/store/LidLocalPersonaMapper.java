@@ -17,12 +17,11 @@ package org.infogrid.lid.store;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Stack;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.infogrid.lid.LidLocalPersona;
-import org.infogrid.lid.LidLocalPersonaVO;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
@@ -43,7 +42,7 @@ public class LidLocalPersonaMapper
         extends
             DefaultHandler
         implements
-            StoreEntryMapper<String,LidLocalPersona>,
+            StoreEntryMapper<String,StoreLidLocalPersona>,
             LidLocalPersonaTags
 {
     private static final Log log = Log.getLogInstance( LidLocalPersonaMapper.class  ); // our own, private logger
@@ -98,7 +97,7 @@ public class LidLocalPersonaMapper
      * @return the value
      * @throws StoreValueDecodingException thrown if the StoreValue could not been decoded
      */
-    public LidLocalPersona decodeValue(
+    public StoreLidLocalPersona decodeValue(
             String     key,
             StoreValue value )
         throws
@@ -108,7 +107,13 @@ public class LidLocalPersonaMapper
             InputStream contentAsStream = value.getDataAsStream();
 
             theParser.parse( contentAsStream, this );
-            return theObjectBeingParsed;
+            
+            StoreLidLocalPersona ret = new StoreLidLocalPersona(
+                    theCurrentIdentifier,
+                    theCurrentAttCreds.getAttributes(),
+                    theCurrentAttCreds.getCredentials() );
+            
+            return ret;
 
         } catch( SAXException ex ) {
             throw new StoreValueDecodingException( ex );
@@ -182,13 +187,11 @@ public class LidLocalPersonaMapper
         theCharacters = null; // if we haven't processed them so far, we never will
 
         if( PERSONA_TAG.equals( qName )) {
-            if( theObjectBeingParsed != null ) {
+            if( theCurrentIdentifier != null ) {
                 throw new SAXParseException( "Repeated tag " + PERSONA_TAG, theLocator );
             }
-            theObjectBeingParsed = LidLocalPersonaVO.create(
-                    attrs.getValue( IDENTIFIER_TAG ),
-                    new HashMap<String,String>(),
-                    new HashMap<LidCredentialType,String>());
+            theCurrentIdentifier = attrs.getValue( IDENTIFIER_TAG );
+            theCurrentAttCreds = new AttributesCredentials();
 
         } else if( ATTRIBUTE_TAG.equals( qName )) {
             if( theCurrentAttribute != null ) {
@@ -251,13 +254,13 @@ public class LidLocalPersonaMapper
             // no op
 
         } else if( ATTRIBUTE_TAG.equals( qName )) {
-            theObjectBeingParsed.setAttribute(
+            theCurrentAttCreds.addAttribute(
                     theCurrentAttribute,
                     theCharacters != null ? XmlUtils.cdataDescape( theCharacters.toString()) : "" );
             theCurrentAttribute = null;
 
         } else if( CREDENTIAL_TAG.equals( qName )) {
-            theObjectBeingParsed.setCredentialFor(
+            theCurrentAttCreds.addCredential(
                     theCurrentCredentialType,
                     theCharacters != null ? XmlUtils.cdataDescape( theCharacters.toString()) : ""  );
             theCurrentCredentialType = null;
@@ -290,9 +293,10 @@ public class LidLocalPersonaMapper
      */
     public void clearState()
     {
-        theCharacters        = null;
-        theObjectBeingParsed = null;
-        theCurrentAttribute  = null;
+        theCharacters            = null;
+        theCurrentIdentifier     = null;
+        theCurrentAttCreds       = null;
+        theCurrentAttribute      = null;
         theCurrentCredentialType = null;
 
         theStack.clear();
@@ -329,11 +333,23 @@ public class LidLocalPersonaMapper
             SAXParseException
     {
         try {
-            Object ret = Class.forName( className, true, theCredentialTypeClassLoader );
+            Class<?> foundClass    = Class.forName( className, true, theCredentialTypeClassLoader );
+            Method   factoryMethod = foundClass.getMethod( "create" );
+            
+            Object ret = factoryMethod.invoke( null );
             return (LidCredentialType) ret;
 
         } catch( ClassNotFoundException ex ) {
             throw new FixedSAXParseException( "Could not find class " + className, theLocator, ex );
+
+        } catch( NoSuchMethodException ex ) {
+            throw new FixedSAXParseException( "Could not find method 'create' in class " + className, theLocator, ex );
+
+        } catch( IllegalAccessException ex ) {
+            throw new FixedSAXParseException( "Could not access method 'create' in class " + className, theLocator, ex );
+
+        } catch( InvocationTargetException ex ) {
+            throw new FixedSAXParseException( "Could not invoke method 'create' in class " + className, theLocator, ex );
         }
     }
 
@@ -354,7 +370,7 @@ public class LidLocalPersonaMapper
      * @return the time created, in System.currentTimeMillis() format
      */
     public long getTimeCreated(
-            LidLocalPersona value )
+            StoreLidLocalPersona value )
     {
         return -1L;
     }
@@ -366,7 +382,7 @@ public class LidLocalPersonaMapper
      * @return the time updated, in System.currentTimeMillis() format
      */
     public long getTimeUpdated(
-            LidLocalPersona value )
+            StoreLidLocalPersona value )
     {
         return -1L;
     }
@@ -378,7 +394,7 @@ public class LidLocalPersonaMapper
      * @return the time read, in System.currentTimeMillis() format
      */
     public long getTimeRead(
-            LidLocalPersona value )
+            StoreLidLocalPersona value )
     {
         return -1L;
     }
@@ -390,7 +406,7 @@ public class LidLocalPersonaMapper
      * @return the time will expire, in System.currentTimeMillis() format
      */
     public long getTimeExpires(
-            LidLocalPersona value )
+            StoreLidLocalPersona value )
     {
         return -1L;
     }
@@ -403,7 +419,7 @@ public class LidLocalPersonaMapper
      * @throws StoreValueEncodingException thrown if the value could not been encoded
      */
     public byte [] asBytes(
-            LidLocalPersona persona )
+            StoreLidLocalPersona persona )
         throws
             StoreValueEncodingException
     {
@@ -467,9 +483,14 @@ public class LidLocalPersonaMapper
     protected ClassLoader theCredentialTypeClassLoader;
 
     /**
-     * The LidLocalPersona instance currently being parsed.
+     * The identifier of the LidLocalPersona currently being parsed.
      */
-    protected LidLocalPersona theObjectBeingParsed;
+    protected String theCurrentIdentifier;
+    
+    /**
+     * The AttributesCredentials of the LidLocalPersona currently being parsed.
+     */
+    protected AttributesCredentials theCurrentAttCreds;
     
     /**
      * The name of the currently being parsed attribute in theObjectBeingParsed.
