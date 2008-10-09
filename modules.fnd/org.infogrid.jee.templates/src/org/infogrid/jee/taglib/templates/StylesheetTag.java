@@ -14,13 +14,16 @@
 
 package org.infogrid.jee.taglib.templates;
 
+import javax.servlet.jsp.JspException;
+import org.infogrid.jee.taglib.IgnoreException;
+
 /**
  * <p>Insert a href'd or inline'd style sheet into the HTML header.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class StylesheetTag
     extends
-        AbstractHrefOrInlineTag
+        AbstractInsertIntoHtmlHeaderTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -33,41 +36,65 @@ public class StylesheetTag
     }
 
     /**
-     * Initialize all default values. To be invoked by subclasses.
+     * Initialize all default values.
      */
     @Override
     protected void initializeToDefaults()
     {
+        theHref = null;
+
         super.initializeToDefaults();
     }
     
     /**
-     * Enable subclass to format the Href properly.
-     * 
-     * @param href the Href
-     * @return formatted String
+     * Obtain value of the href property.
+     *
+     * @return value of the href property
+     * @see #setHref
      */
-    protected String formatHref(
-            String href )
+    public final String getHref()
     {
+        return theHref;
+    }
+
+    /**
+     * Set value of the href property.
+     *
+     * @param newValue new value of the href property
+     * @see #getHref
+     */
+    public final void setHref(
+            String newValue )
+    {
+        theHref = newValue;
+    }
+    
+    /**
+     * Determine the text to insert into the header when the tag is opened.
+     *
+     * @return text to insert
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     */
+    @Override
+    protected String determineStartText()
+        throws
+            JspException,
+            IgnoreException
+    {
+        if( theHref == null || theHref.length() == 0 ) {
+            throw new JspException( "Href attribute on tag " + this + " must not be empty" );
+        }
         StringBuilder ret = new StringBuilder();
         ret.append( "<link rel=\"stylesheet\" href=\"" );
-        ret.append( href );
+        ret.append( theHref );
         ret.append( "\" />" );
         
         return ret.toString();
     }
 
     /**
-     * Enable subclass to format the inlined text properly.
-     * 
-     * @param text the inlined text
-     * @return formatted String
+     * The optional href attribute.
      */
-    protected String formatInline(
-            String text )
-    {
-        return text;
-    }
-    
+    protected String theHref;
 }

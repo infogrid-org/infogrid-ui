@@ -14,13 +14,17 @@
 
 package org.infogrid.jee.taglib.templates;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyContent;
+import org.infogrid.jee.taglib.IgnoreException;
+
 /**
  * <p>Insert a href'd or inline'd script into the HTML header.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class ScriptTag
     extends
-        AbstractHrefOrInlineTag
+        AbstractInsertIntoHtmlHeaderTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -33,40 +37,115 @@ public class ScriptTag
     }
 
     /**
-     * Initialize all default values. To be invoked by subclasses.
+     * Initialize all default values.
      */
     @Override
     protected void initializeToDefaults()
     {
+        theSrc = null;
+
         super.initializeToDefaults();
     }
     
     /**
-     * Enable subclass to format the Href properly.
-     * 
-     * @param href the Href
-     * @return formatted String
+     * Obtain value of the src property.
+     *
+     * @return value of the src property
+     * @see #setSrc
      */
-    protected String formatHref(
-            String href )
+    public final String getSrc()
+    {
+        return theSrc;
+    }
+
+    /**
+     * Set value of the src property.
+     *
+     * @param newValue new value of the src property
+     * @see #getSrc
+     */
+    public final void setSrc(
+            String newValue )
+    {
+        theSrc = newValue;
+    }
+    
+    /**
+     * Determine the text to insert into the header when the tag is opened.
+     *
+     * @return text to insert
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     */
+    @Override
+    protected String determineStartText()
+        throws
+            JspException,
+            IgnoreException
     {
         StringBuilder ret = new StringBuilder();
-        ret.append( "<script src=\"" );
-        ret.append( href );
-        ret.append( "\" type=\"text/javascript\"></script>" );
-        
+        ret.append( "<script type=\"text/javascript\"" );
+
+        if( theSrc != null && theSrc.length() > 0 ) {
+            // must be in the attribute
+            ret.append( " src=\"" );
+            ret.append( theSrc );
+            ret.append( "\"" );
+        }
+        ret.append( ">" );
+
         return ret.toString();
     }
 
     /**
-     * Enable subclass to format the inlined text properly.
-     * 
-     * @param text the inlined text
-     * @return formatted String
+     * Determine the text to insert into the header when the tag's body has been processed.
+     *
+     * @return text to insert
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
      */
-    protected String formatInline(
-            String text )
+    @Override
+    protected String determineBodyText()
+        throws
+            JspException,
+            IgnoreException
     {
-        return text;
+        BodyContent body       = getBodyContent();
+        String      bodyString = body != null ? body.getString() : null;
+        
+        if( bodyString != null && bodyString.length() == 0 ) {
+            bodyString = null;
+        }
+
+        if( bodyString == null ) {
+            if( theSrc != null && theSrc.length() > 0 ) {
+                return null;
+            } else {
+                throw new JspException( "Tag " + this + " must have either src attribute or body" );
+            }
+        }
+        return bodyString;
     }
+
+    /**
+     * Determine the text to insert into the header when the tag is closed.
+     *
+     * @return text to insert
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     */
+    @Override
+    protected String determineEndText()
+        throws
+            JspException,
+            IgnoreException
+    {
+        return "</script>";
+    }
+    
+    /**
+     * The optional src attribute.
+     */
+    protected String theSrc;
+    
 }

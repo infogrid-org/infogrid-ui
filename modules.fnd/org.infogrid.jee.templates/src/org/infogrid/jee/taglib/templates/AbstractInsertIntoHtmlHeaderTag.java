@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.templates;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyContent;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
@@ -23,7 +24,7 @@ import org.infogrid.jee.templates.TextHtmlStructuredResponseSectionTemplate;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 
 /**
- * <p>Abstract superclass for all tags that insert additional information into the HTML header
+ * <p>Abstract superclass for all tags that insert tag body content into the HTML header
  *    via a StructuredResponse object.</p>
  */
 public abstract class AbstractInsertIntoHtmlHeaderTag
@@ -62,7 +63,13 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
     {
         theResponse = (StructuredResponse) lookupOrThrow(
                 StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+        theHtmlHeadSection = theResponse.getTextSection( TextHtmlStructuredResponseSectionTemplate.HTML_HEAD_SECTION );
 
+        String text = determineStartText();
+        if( text != null ) {
+            theHtmlHeadSection.appendContent( text );
+        }
+        
         return EVAL_BODY_BUFFERED;
     }
 
@@ -81,28 +88,99 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
             IgnoreException,
             IOException
     {
-        String text = determineText();
-
-        TextStructuredResponseSection section = theResponse.getTextSection( TextHtmlStructuredResponseSectionTemplate.HTML_HEAD_SECTION );
-        section.appendContent( text );
+        String text = determineBodyText();
+        if( text != null ) {
+            theHtmlHeadSection.appendContent( text );
+        }
         
-        return SKIP_BODY; // that should mean that nothing inside our tag gets written
+        return SKIP_BODY;
     }
 
     /**
-     * Determine the text to insert into the header.
+     * Our implementation of doEndTag(), to be provided by subclasses.
+     *
+     * @return evaluate or skip body
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     * @throws IOException thrown if an I/O Exception occurred
+     */
+    @Override
+    protected int realDoEndTag()
+        throws
+            JspException,
+            IgnoreException,
+            IOException
+    {
+        String text = determineEndText();
+        if( text != null ) {
+            theHtmlHeadSection.appendContent( text );
+        }
+        return EVAL_PAGE; // reasonable default
+    }
+
+    /**
+     * Determine the text to insert into the header when the tag is opened.
      *
      * @return text to insert
      * @throws JspException thrown if an evaluation error occurred
      * @throws IgnoreException thrown to abort processing without an error
      */
-    protected abstract String determineText()
+    protected String determineStartText()
         throws
             JspException,
-            IgnoreException;
+            IgnoreException
+    {
+        return null; // default
+    }
+
+    /**
+     * Determine the text to insert into the header when the tag's body has been processed.
+     *
+     * @return text to insert
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     */
+    protected String determineBodyText()
+        throws
+            JspException,
+            IgnoreException
+    {
+        BodyContent body = getBodyContent();
+        if( body == null ) {
+            return null;
+        }
+        String bodyString = body.getString();
+        if( bodyString == null ) {
+            return null;
+        }
+        if( bodyString.length() == 0 ) {
+            return null;
+        }
+        throw new JspException( "Tag " + this + " must not contain body content" );
+    }
+
+    /**
+     * Determine the text to insert into the header when the tag is closed.
+     *
+     * @return text to insert
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     */
+    protected String determineEndText()
+        throws
+            JspException,
+            IgnoreException
+    {
+        return null; // default
+    }
 
     /**
      * The StructuredResponse to which we write.
      */
     protected StructuredResponse theResponse;
+    
+    /**
+     * The HTML head section in the StructuredResponse to which we write.
+     */
+    protected TextStructuredResponseSection theHtmlHeadSection;
 }

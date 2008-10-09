@@ -52,7 +52,8 @@ public class TitleTag
      * @throws JspException thrown if an evaluation error occurred
      * @throws IgnoreException thrown to abort processing without an error
      */
-    protected String determineText()
+    @Override
+    protected String determineBodyText()
         throws
             JspException,
             IgnoreException
@@ -68,7 +69,7 @@ public class TitleTag
             return buf.toString();
 
         } else {
-            return "";
+            return null;
         }
     }
 }

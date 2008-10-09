@@ -389,6 +389,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_store_sql}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_vendors_com_mysql_jdbc}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_viewlet}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module_servlet}/build.xml" inheritall="false" target="jar"/>
@@ -413,6 +414,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_store_sql}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_vendors_com_mysql_jdbc}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_viewlet}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module_servlet}/build.xml" inheritall="false" target="jar"/>
@@ -597,6 +599,8 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${reference.org_infogrid_store_sql.jar}" propname="included.lib.reference.org_infogrid_store_sql.jar.X"/>
         <basename file="${reference.org_infogrid_store_sql_mysql.jar}" property="included.lib.reference.org_infogrid_store_sql_mysql.jar"/>
         <copy-ear-war file="${reference.org_infogrid_store_sql_mysql.jar}" propname="included.lib.reference.org_infogrid_store_sql_mysql.jar.X"/>
+        <basename file="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" property="included.lib.reference.org_infogrid_vendors_com_mysql_jdbc.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" propname="included.lib.reference.org_infogrid_vendors_com_mysql_jdbc.jar.X"/>
         <basename file="${reference.org_infogrid_util.jar}" property="included.lib.reference.org_infogrid_util.jar"/>
         <copy-ear-war file="${reference.org_infogrid_util.jar}" propname="included.lib.reference.org_infogrid_util.jar.X"/>
         <basename file="${reference.org_infogrid_module.jar}" property="included.lib.reference.org_infogrid_module.jar"/>
@@ -613,7 +617,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${libs.JSTL.classpath.libfile.1}" propname="included.lib.libs.JSTL.classpath.1.X"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.reference.org_infogrid_util_logging_log4j.jar} ${included.lib.reference.org_infogrid_model_Test.jar} ${included.lib.reference.org_infogrid_model_Wiki.jar} ${included.lib.reference.org_infogrid_model_Viewlet.jar} ${included.lib.reference.org_infogrid_jee.jar} ${included.lib.reference.org_infogrid_jee_rest.jar} ${included.lib.reference.org_infogrid_jee_store.jar} ${included.lib.reference.org_infogrid_jee_viewlet.jar} ${included.lib.reference.org_infogrid_jee_templates.jar} ${included.lib.reference.org_infogrid_jee_shell_http.jar} ${included.lib.reference.org_infogrid_viewlet.jar} ${included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar} ${included.lib.reference.org_infogrid_jee_viewlet_bulk.jar} ${included.lib.reference.org_infogrid_kernel.jar} ${included.lib.reference.org_infogrid_meshbase_store.jar} ${included.lib.reference.org_infogrid_modelbase_m.jar} ${included.lib.reference.org_infogrid_store.jar} ${included.lib.reference.org_infogrid_store_sql.jar} ${included.lib.reference.org_infogrid_store_sql_mysql.jar} ${included.lib.reference.org_infogrid_util.jar} ${included.lib.reference.org_infogrid_module.jar} ${included.lib.reference.org_infogrid_module_servlet.jar} ${included.lib.libs.Log4j.classpath} ${included.lib.libs.J2EE.classpath} ${included.lib.libs.JSTL.classpath.1.X} ${included.lib.libs.JSTL.classpath.2.X} "/>
+            <attribute name="Class-Path" value="${included.lib.reference.org_infogrid_util_logging_log4j.jar} ${included.lib.reference.org_infogrid_model_Test.jar} ${included.lib.reference.org_infogrid_model_Wiki.jar} ${included.lib.reference.org_infogrid_model_Viewlet.jar} ${included.lib.reference.org_infogrid_jee.jar} ${included.lib.reference.org_infogrid_jee_rest.jar} ${included.lib.reference.org_infogrid_jee_store.jar} ${included.lib.reference.org_infogrid_jee_viewlet.jar} ${included.lib.reference.org_infogrid_jee_templates.jar} ${included.lib.reference.org_infogrid_jee_shell_http.jar} ${included.lib.reference.org_infogrid_viewlet.jar} ${included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar} ${included.lib.reference.org_infogrid_jee_viewlet_bulk.jar} ${included.lib.reference.org_infogrid_kernel.jar} ${included.lib.reference.org_infogrid_meshbase_store.jar} ${included.lib.reference.org_infogrid_modelbase_m.jar} ${included.lib.reference.org_infogrid_store.jar} ${included.lib.reference.org_infogrid_store_sql.jar} ${included.lib.reference.org_infogrid_store_sql_mysql.jar} ${included.lib.reference.org_infogrid_vendors_com_mysql_jdbc.jar} ${included.lib.reference.org_infogrid_util.jar} ${included.lib.reference.org_infogrid_module.jar} ${included.lib.reference.org_infogrid_module_servlet.jar} ${included.lib.libs.Log4j.classpath} ${included.lib.libs.J2EE.classpath} ${included.lib.libs.JSTL.classpath.1.X} ${included.lib.libs.JSTL.classpath.2.X} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
@@ -637,6 +641,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy file="${reference.org_infogrid_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_store_sql.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_store_sql_mysql.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_util.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_module.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_module_servlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -947,6 +952,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_store_sql}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_vendors_com_mysql_jdbc}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_viewlet}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module_servlet}/build.xml" inheritall="false" target="clean"/>
