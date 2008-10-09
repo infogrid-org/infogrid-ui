@@ -15,7 +15,6 @@
 package org.infogrid.util.http;
 
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -240,8 +239,8 @@ public abstract class HTTP
         InputStream input;
         try {
             input = conn.getInputStream();
-        } catch( FileNotFoundException ex ) {
-            // Sun, in its wisdom, doesn't let us get at the actual response in case of 404 or 410.
+        } catch( IOException ex ) {
+            // Sun, in its wisdom, doesn't let us get at the actual response in case of 404 or 410 or 500.
             input = null;
         }
         int                      status       = (conn instanceof HttpURLConnection) ? ((HttpURLConnection)conn).getResponseCode() : 200;
@@ -480,7 +479,14 @@ public abstract class HTTP
         outStream.write( payload );
         outStream.flush();
 
-        InputStream              input        = conn.getInputStream();
+        InputStream input;
+        try {
+            input = conn.getInputStream();
+        } catch( IOException ex ) {
+            // Sun, in its wisdom, doesn't let us get at the actual response in case of 404 or 410 or 500.
+            input = null;
+        }
+
         int                      status       = conn.getResponseCode();
         long                     lastModified = conn.getLastModified();
         Map<String,List<String>> headers      = conn.getHeaderFields();
@@ -488,7 +494,9 @@ public abstract class HTTP
         Response ret = new Response( url, String.valueOf( status ), input, lastModified, headers );
         
         outStream.close();
-        input.close();
+        if( input != null ) {
+            input.close();
+        }
         
         return ret;
     }
