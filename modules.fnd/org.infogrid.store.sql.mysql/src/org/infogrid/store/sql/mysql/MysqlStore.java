@@ -67,14 +67,15 @@ public class MysqlStore
     {
         super( ds, tableName, null );
         
-        theInitializationPreparedStatement        = new SqlStorePreparedStatement( this, INITIALIZATION_SQL,          tableName );
+        theCreateTablesPreparedStatement          = new SqlStorePreparedStatement( this, CREATE_TABLES_SQL,           tableName );
+        theDropTablesPreparedStatement            = new SqlStorePreparedStatement( this, DROP_TABLES_SQL,             tableName );
+        theHasTablesPreparedStatement             = new SqlStorePreparedStatement( this, HAS_TABLES_SQL,              tableName );
         thePutPreparedStatement                   = new SqlStorePreparedStatement( this, PUT_SQL,                     tableName );
         theUpdatePreparedStatement                = new SqlStorePreparedStatement( this, UPDATE_SQL,                  tableName );
         thePutOrUpdatePreparedStatement           = new SqlStorePreparedStatement( this, PUT_OR_UPDATE_SQL,           tableName );
         theGetPreparedStatement                   = new SqlStorePreparedStatement( this, GET_SQL,                     tableName );
         theDeletePreparedStatement                = new SqlStorePreparedStatement( this, DELETE_SQL,                  tableName );
         theDeleteAllPreparedStatement             = new SqlStorePreparedStatement( this, DELETE_ALL_SQL,              tableName );
-        theDeleteStorePreparedStatement           = new SqlStorePreparedStatement( this, DELETE_STORE_SQL,            tableName );
         theSizePreparedStatement                  = new SqlStorePreparedStatement( this, SIZE_SQL,                    tableName );
 
         theFindNextIncludingPreparedStatement     = new SqlStorePreparedStatement( this, FIND_NEXT_INCLUDING_SQL,     tableName );
@@ -93,20 +94,85 @@ public class MysqlStore
     }
 
     /**
-     * Create the database.
-     *
-     * @throws SqlStoreIOException thrown if the database could not be created for some reason
+     * Determine whether the SqlStore has the SQL tables it needs.
+     * 
+     * @return true if the Store yhas the SQL tables it needs
      */
-    public void initialize()
-        throws
-            SqlStoreIOException
+    protected boolean hasTables()
     {
         if( log.isDebugEnabled() ) {
-            log.debug( this + ".initialize()" );
+            log.debug( this + ".hasTables()" );
         }
 
         try {
-            new SqlExecutionAction<Object>( theInitializationPreparedStatement ) {
+            new SqlExecutionAction<Object>( theHasTablesPreparedStatement ) {
+                protected Object perform(
+                        PreparedStatement stm,
+                        Connection        conn )
+                    throws
+                        SQLException
+                {
+                    stm.execute();
+                    return null;
+                }
+            }.execute();
+            
+            return true;
+                    
+        } catch( Throwable ex ) {
+            // ignore
+            if( log.isDebugEnabled() ) {
+                log.debug( ex );
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Drop all tables that this SqlStore needs. Do nothing if there are none.
+     */
+    protected void dropTables()
+    {
+        if( log.isDebugEnabled() ) {
+            log.debug( this + ".dropTables()" );
+        }
+
+        try {
+            new SqlExecutionAction<Object>( theDropTablesPreparedStatement ) {
+                protected Object perform(
+                        PreparedStatement stm,
+                        Connection        conn )
+                    throws
+                        SQLException
+                {
+                    stm.execute();
+                    return null;
+                }
+            }.execute();
+            
+        } catch( Throwable ex ) {
+            // ignore
+            if( log.isInfoEnabled() ) {
+                log.info( ex );
+            }
+        }        
+    }
+    
+    /**
+     * Create all tables that this SqlStore needs.
+     * 
+     * @throws IOException thrown if creating the tables was not possible
+     */
+    protected void createTables()
+            throws
+                IOException
+    {
+        if( log.isDebugEnabled() ) {
+            log.debug( this + ".createTables()" );
+        }
+
+        try {
+            new SqlExecutionAction<Object>( theCreateTablesPreparedStatement ) {
                 protected Object perform(
                         PreparedStatement stm,
                         Connection        conn )
@@ -598,36 +664,6 @@ public class MysqlStore
     }
 
     /**
-     * Delete the underlying SQL table(s).
-     *
-     * @throws SqlStoreIOException thrown if the table could not be deleted
-     */
-    public void deleteStore()
-        throws
-            SqlStoreIOException
-    {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".deleteStore()" );
-        }
-        try {
-            new SqlExecutionAction<Object>( theDeleteStorePreparedStatement ) {
-                protected Object perform(
-                        PreparedStatement stm,
-                        Connection        conn )
-                    throws
-                        SQLException
-                {
-                    stm.execute();
-                    return null;
-                }
-            }.execute();
-            
-        } catch( SQLException ex ) {
-            throw new SqlStoreIOException( ex );
-        }
-    }
-
-    /**
      * Remove all data in this Store whose key starts with this string.
      *
      * @param startsWith the String the key starts with
@@ -1077,10 +1113,20 @@ public class MysqlStore
     }
 
     /**
-     * The initialization PreparedStatement.
+     * The createTables PreparedStatement.
      */
-    protected SqlStorePreparedStatement theInitializationPreparedStatement;
+    protected SqlStorePreparedStatement theCreateTablesPreparedStatement;
 
+    /**
+     * The dropTables PreparedStatement.
+     */
+    protected SqlStorePreparedStatement theDropTablesPreparedStatement;
+
+    /**
+     * The hasTables PreparedStatement.
+     */
+    protected SqlStorePreparedStatement theHasTablesPreparedStatement;
+    
     /**
      * The put PreparedStatement.
      */
@@ -1110,11 +1156,6 @@ public class MysqlStore
      * The delete-all PreparedStatement.
      */
     protected SqlStorePreparedStatement theDeleteAllPreparedStatement;
-
-    /**
-     * The delete-store PreparedStatement.
-     */
-    protected SqlStorePreparedStatement theDeleteStorePreparedStatement;
 
     /**
      * The size PreparedStatement.
@@ -1167,9 +1208,9 @@ public class MysqlStore
     protected SqlStorePreparedStatement theDetermineDistancePreparedStatement;
     
     /**
-     * The SQL to initialize the database.
+     * The SQL to create the tables in the database.
      */
-    protected static final String INITIALIZATION_SQL
+    protected static final String CREATE_TABLES_SQL
             = "CREATE TABLE {0} (\n"
             + "    id                    VARCHAR(511) NOT NULL PRIMARY KEY,\n" // this automatically creates an index
             + "    encodingId            VARCHAR(128),\n"
@@ -1184,6 +1225,18 @@ public class MysqlStore
             + "    content               LONGBLOB"
             + ");";
     
+    /**
+     * The SQL to drop the tables in the database.
+     */
+    protected static final String DROP_TABLES_SQL
+            = "DROP TABLE {0};";
+    
+    /**
+     * The SQL to detect whether or not the tables exist in the database.
+     */
+    protected static final String HAS_TABLES_SQL
+            = "SELECT COUNT(*) from TABLE {0} WHERE id = '';";
+
     /**
      * The SQL to put data into the Store.
      */
@@ -1342,12 +1395,6 @@ public class MysqlStore
     protected static final String DELETE_ALL_SQL
             = "DELETE FROM {0} WHERE id LIKE ?;";
 
-    /**
-     * The SQL to delete the entire Store.
-     */
-    protected static final String DELETE_STORE_SQL
-            = "DROP TABLE {0};";
-    
     /**
      * The SQL to determine the number of entries in the entire Store.
      */

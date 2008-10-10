@@ -116,7 +116,7 @@ public class StoreShadowMeshBaseTest2
         
         checkEquals( probeRunCounter, 1, "Probe run wrong number of times" ); // this proves that it was recreated from disk
     }
-
+ 
     /**
      * Main program.
      *
@@ -171,9 +171,8 @@ public class StoreShadowMeshBaseTest2
         //
         
         log.info( "Deleting old database and creating new database" );
-        
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();
+
+        theSqlStore.initializeHard();
 
         IterablePrefixingStore theShadowStore      = IterablePrefixingStore.create( "Shadow",      theSqlStore );
         IterablePrefixingStore theShadowProxyStore = IterablePrefixingStore.create( "ShadowProxy", theSqlStore );

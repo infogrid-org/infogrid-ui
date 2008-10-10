@@ -153,6 +153,33 @@ public class JetS3tStore
     }
 
     /**
+     * Initialize the Store. If the Store was initialized earlier, this will delete all
+     * contained information. This operation is similar to unconditionally formatting a hard drive.
+     * 
+     * @throws IOException thrown if an I/O error occurred
+     */
+    public void initializeHard()
+            throws
+                IOException
+    {
+        deleteAll();
+    }
+    
+    /**
+     * Initialize the Store if needed. If the Store was initialized earlier, this will do
+     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * the Store had not been initialized earlier.
+     * 
+     * @throws IOException thrown if an I/O error occurred
+     */
+    public void initializeIfNecessary()
+            throws
+                IOException
+    {
+        // do nothing
+    }
+    
+    /**
      * Obtain the S3 Service.
      * 
      * @return the S3 Service

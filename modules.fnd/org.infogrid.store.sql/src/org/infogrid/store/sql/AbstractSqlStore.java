@@ -26,7 +26,6 @@ import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
 import org.infogrid.store.StoreValue;
 import org.infogrid.util.StringHelper;
-import org.infogrid.util.logging.Log;
 
 /**
  * SQL implementation of the Store interface.
@@ -37,8 +36,6 @@ public abstract class AbstractSqlStore
         implements
             IterableStore
 {
-    private static final Log log = Log.getLogInstance( AbstractSqlStore.class ); // our own, private logger
-
     /**
      * Constructor for subclasses only.
      *
@@ -57,39 +54,56 @@ public abstract class AbstractSqlStore
     }
 
     /**
-     * Create the database.
-     *
-     * @throws SqlStoreIOException thrown if the database could not be created for some reason
+     * Initialize the Store. If the Store was initialized earlier, this will delete all
+     * contained information. This operation is similar to unconditionally formatting a hard drive.
+     * 
+     * @throws IOException thrown if an I/O error occurred
      */
-    public abstract void initialize()
-        throws
-            SqlStoreIOException;
+    public void initializeHard()
+            throws
+                IOException
+    {
+        dropTables();
+        createTables();
+    }
     
     /**
-     * Create the database if it does not exist yet.
+     * Initialize the Store if needed. If the Store was initialized earlier, this will do
+     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * the Store had not been initialized earlier.
+     * 
+     * @throws IOException thrown if an I/O error occurred
      */
-    public void initializeIfNecessary()
+    public synchronized void initializeIfNecessary()
+            throws
+                IOException
     {
-        // perhaps there is a better way of doing this?
-        
-        try {
-            initialize();
-
-        } catch( SqlStoreIOException ex ) {
-            
-            SQLException cause = ex.getCause();
-            Throwable    cause2 = cause.getCause();
-            if( cause2 != null && cause2 instanceof RuntimeException ) {
-                throw (RuntimeException) cause2.getCause();
-            }
-            // do nothing
-            if( log.isDebugEnabled() ) {
-                log.debug( "Already initialized.", ex );
-            }
+        if( !hasTables() ) {
+            createTables();
         }
     }
-   
 
+    /**
+     * Determine whether the SqlStore has the SQL tables it needs.
+     * 
+     * @return true if the Store yhas the SQL tables it needs
+     */
+    protected abstract boolean hasTables();
+    
+    /**
+     * Drop all tables that this SqlStore needs. Do nothing if there are none.
+     */
+    protected abstract void dropTables();
+    
+    /**
+     * Create all tables that this SqlStore needs.
+     * 
+     * @throws IOException thrown if creating the tables was not possible
+     */
+    protected abstract void createTables()
+            throws
+                IOException;
+    
     /**
      * Put a data element into the Store for the first time. Throw an Exception if a data
      * element has already been store using the same key.
@@ -396,15 +410,6 @@ public abstract class AbstractSqlStore
             theConnection = null;
         }        
     }
-
-    /**
-     * Delete the underlying SQL table(s).
-     *
-     * @throws SqlStoreIOException thrown if the table could not be deleted
-     */
-    public abstract void deleteStore()
-        throws
-            SqlStoreIOException;
 
     /**
      * Convert to String, for debugging.

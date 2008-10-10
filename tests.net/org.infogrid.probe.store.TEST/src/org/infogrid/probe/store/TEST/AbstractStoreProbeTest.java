@@ -23,7 +23,6 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.store.sql.AbstractSqlStore;
-import org.infogrid.store.sql.SqlStoreIOException;
 import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.context.Context;
@@ -40,9 +39,12 @@ public abstract class AbstractStoreProbeTest
      * Constructor.
      * 
      * @param testClass identifies the actual test to be run
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public AbstractStoreProbeTest(
             Class testClass )
+        throws
+            Exception
     {
         super( localFileName( testClass, "/ResourceHelper" ),
                localFileName( testClass, "/Log.properties" ));
@@ -51,17 +53,7 @@ public abstract class AbstractStoreProbeTest
         theDataSource.setDatabaseName( TEST_DATABASE_NAME );
         
         theSqlStore = MysqlStore.create( theDataSource, TEST_TABLE_NAME );
-
-        try {
-            theSqlStore.deleteStore();
-        } catch( SqlStoreIOException ex ) {
-            // ignore this one
-        }
-        try {
-            theSqlStore.initialize();
-        } catch( SqlStoreIOException ex ) {
-            // ignore this one
-        }
+        theSqlStore.initializeHard();
     }
 
     /**

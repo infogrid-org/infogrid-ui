@@ -190,9 +190,8 @@ public class StoreNetMeshBaseTest1
         theTestSize = Integer.parseInt( args[0] );
 
         log.info( "Deleting old database and creating new database" );
-        
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();        
+
+        theSqlStore.initializeHard();
     }
 
     /**

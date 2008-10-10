@@ -56,13 +56,8 @@ public class StoreMeshBaseTest1
         //
         
         log.info( "Deleting old database and creating new database" );
-        
-        try {
-            theSqlStore.deleteStore();
-        } catch( SqlStoreIOException ex ) {
-            // ignore this one
-        }
-        theSqlStore.initialize();
+
+        theSqlStore.initializeHard();
         
         MyListener listener = new MyListener();
         theSqlStore.addDirectStoreListener( listener );

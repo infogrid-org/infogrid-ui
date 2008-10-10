@@ -36,9 +36,8 @@ public class SqlStorePerformanceTest1
         //
         
         log.info( "Deleting old database and creating new database" );
-        
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();
+
+        theSqlStore.initializeHard();
         
         // 
         

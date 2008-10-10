@@ -41,8 +41,7 @@ public class StoreMeshBaseTest5
         throws
             Exception
     {
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();
+        theSqlStore.initializeHard();
 
         StoreMeshBase mb = StoreMeshBase.create(
                 MeshBaseIdentifier.create( "mb" ),

@@ -42,7 +42,7 @@ import org.infogrid.module.SoftwareInstallation;
 import org.infogrid.module.servlet.ServletBootLoader;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
-import org.infogrid.store.sql.AbstractSqlStore;
+import org.infogrid.store.IterableStore;
 import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
@@ -134,11 +134,11 @@ public class NetMeshWorldApp
         InitialContext ctx           = new InitialContext();
         DataSource     theDataSource = (DataSource) ctx.lookup( "java:comp/env/jdbc/netmeshworldDB" );        
 
-        AbstractSqlStore meshStore        = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "MeshObjectTable" ) );
-        AbstractSqlStore proxyStore       = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ProxyStoreTable" ));
-        AbstractSqlStore shadowStore      = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ShadowTable" ) );
-        AbstractSqlStore shadowProxyStore = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ShadowProxyTable" ));
-        AbstractSqlStore formTokenStore   = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "FormTokenTable" ) );
+        IterableStore meshStore        = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "MeshObjectTable" ) );
+        IterableStore proxyStore       = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ProxyStoreTable" ));
+        IterableStore shadowStore      = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ShadowTable" ) );
+        IterableStore shadowProxyStore = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "ShadowProxyTable" ));
+        IterableStore formTokenStore   = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "FormTokenTable" ) );
 
         meshStore.initializeIfNecessary();
         proxyStore.initializeIfNecessary();

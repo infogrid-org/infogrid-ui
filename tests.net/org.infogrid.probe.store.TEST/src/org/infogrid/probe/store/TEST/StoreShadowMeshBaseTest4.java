@@ -151,9 +151,8 @@ public class StoreShadowMeshBaseTest4
         //
         
         log.info( "Deleting old database and creating new database" );
-        
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();
+
+        theSqlStore.initializeHard();
 
         theSqlStore.addDirectStoreListener( theTestStoreListener );
         

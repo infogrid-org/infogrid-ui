@@ -98,6 +98,49 @@ public class FilesystemStore
     }
 
     /**
+     * Initialize the Store. If the Store was initialized earlier, this will delete all
+     * contained information. This operation is similar to unconditionally formatting a hard drive.
+     * 
+     * @throws IOException thrown if an I/O error occurred
+     */
+    public void initializeHard()
+            throws
+                IOException
+    {
+        if( !theSubDir.exists() ) {
+            theSubDir.mkdirs();
+
+        } else if( !theSubDir.isDirectory() ) {
+            throw new IOException( "Cannot initialize FilesystemStore at " + theSubDir.getAbsolutePath() + ": file is in the way" );
+
+        } else {
+            File [] found = theSubDir.listFiles();
+            for( int i = 0 ; i<found.length ; ++i ) {
+                deleteRecursively( found[i] );
+            }
+        }
+    }
+    
+    /**
+     * Initialize the Store if needed. If the Store was initialized earlier, this will do
+     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * the Store had not been initialized earlier.
+     * 
+     * @throws IOException thrown if an I/O error occurred
+     */
+    public void initializeIfNecessary()
+            throws
+                IOException
+    {
+        if( !theSubDir.exists() ) {
+            theSubDir.mkdirs();
+            
+        } else if( !theSubDir.isDirectory() ) {
+            throw new IOException( "Cannot initialize FilesystemStore at " + theSubDir.getAbsolutePath() + ": file is in the way" );
+        }
+    }
+    
+    /**
      * Obtain the top-level directory underneath which all data is stored.
      * 
      * @return the top-level directory
@@ -365,14 +408,14 @@ public class FilesystemStore
      * @param root the root file
      * @throws IOException thrown if one or more files could not be deleted
      */
-    public static void deleteDir(
+    public static void deleteRecursively(
             File root )
         throws
             IOException
     {
         if( root.isDirectory() ) {
             for( File current : root.listFiles() ) {
-                deleteDir( current );
+                deleteRecursively( current );
             }
         }
     

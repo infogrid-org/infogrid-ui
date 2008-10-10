@@ -188,9 +188,8 @@ public class StoreShadowMeshBaseTest7
         //
         
         log.info( "Deleting old database and creating new database" );
-        
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();
+
+        theSqlStore.initializeHard();
     }
 
     /**

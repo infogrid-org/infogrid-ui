@@ -41,7 +41,7 @@ import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleRequirement;
 import org.infogrid.module.SoftwareInstallation;
 import org.infogrid.module.servlet.ServletBootLoader;
-import org.infogrid.store.sql.AbstractSqlStore;
+import org.infogrid.store.IterableStore;
 import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.util.MNameServer;
 import org.infogrid.util.ResourceHelper;
@@ -133,8 +133,8 @@ public class MeshWorldApp
         InitialContext ctx           = new InitialContext();
         DataSource     theDataSource = (DataSource) ctx.lookup( "java:comp/env/jdbc/meshworldDB" );        
 
-        AbstractSqlStore meshStore      = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "MeshObjectTable" ) );
-        AbstractSqlStore formTokenStore = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "FormTokenTable" ) );
+        IterableStore meshStore      = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "MeshObjectTable" ) );
+        IterableStore formTokenStore = MysqlStore.create( theDataSource, theResourceHelper.getResourceString( "FormTokenTable" ) );
 
         meshStore.initializeIfNecessary();
         formTokenStore.initializeIfNecessary();
@@ -155,7 +155,7 @@ public class MeshWorldApp
         // AccessManager
         AccessManager accessMgr = null;
 
-        IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, meshStore, rootContext    );
+        IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, meshStore, rootContext );
         rootContext.addContextObject( meshBase );
 
         // Name Server

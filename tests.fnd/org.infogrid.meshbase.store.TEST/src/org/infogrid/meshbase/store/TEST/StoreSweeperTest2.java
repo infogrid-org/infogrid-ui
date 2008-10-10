@@ -40,8 +40,7 @@ public class StoreSweeperTest2
         throws
             Exception
     {
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();
+        theSqlStore.initializeHard();
 
         StoreMeshBase theMeshBase  = StoreMeshBase.create(
                 MeshBaseIdentifier.create( "MB" ),

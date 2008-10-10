@@ -16,7 +16,6 @@ package org.infogrid.store.sql.TEST;
 
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
-import org.infogrid.store.sql.SqlStoreIOException;
 
 import org.infogrid.util.logging.Log;
 
@@ -40,12 +39,7 @@ public class SqlStoreTest6
         
         log.info( "Deleting old database and creating new database" );
         
-        try {
-            theSqlStore.deleteStore();
-        } catch( SqlStoreIOException ex ) {
-            // ignore this one
-        }
-        theSqlStore.initialize();
+        theSqlStore.initializeHard();
         
         final String prefix1 = "one-";
         final String prefix2 = "two-";

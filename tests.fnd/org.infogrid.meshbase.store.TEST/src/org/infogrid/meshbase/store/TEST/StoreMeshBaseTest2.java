@@ -60,9 +60,8 @@ public class StoreMeshBaseTest2
         //
         
         log.info( "Deleting old database and creating new database" );
-        
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();
+
+        theSqlStore.initializeHard();
         
         //
 

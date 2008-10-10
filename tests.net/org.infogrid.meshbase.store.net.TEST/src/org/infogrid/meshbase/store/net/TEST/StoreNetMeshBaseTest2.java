@@ -191,9 +191,8 @@ public class StoreNetMeshBaseTest2
         endpointFactory.setNameServer( theNameServer );
 
         log.info( "Deleting old database and creating new database" );
-        
-        theSqlStore.deleteStore();
-        theSqlStore.initialize();
+
+        theSqlStore.initializeHard();
 
         mb1MeshStore  = IterablePrefixingStore.create( "mb1-mesh-",  theSqlStore );
         mb1ProxyStore = IterablePrefixingStore.create( "mb1-proxy-", theSqlStore );

@@ -62,6 +62,33 @@ public class MStore
     }
 
     /**
+     * Initialize the Store. If the Store was initialized earlier, this will delete all
+     * contained information. This operation is similar to unconditionally formatting a hard drive.
+     * 
+     * @throws IOException thrown if an I/O error occurred
+     */
+    public void initializeHard()
+            throws
+                IOException
+    {
+        theDelegate.clear();
+    }
+    
+    /**
+     * Initialize the Store if needed. If the Store was initialized earlier, this will do
+     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * the Store had not been initialized earlier.
+     * 
+     * @throws IOException thrown if an I/O error occurred
+     */
+    public void initializeIfNecessary()
+            throws
+                IOException
+    {
+        // no nothing
+    }
+
+    /**
      * Put a data element into the Store for the first time. Throw an Exception if a data
      * element has already been store using the same key.
      *

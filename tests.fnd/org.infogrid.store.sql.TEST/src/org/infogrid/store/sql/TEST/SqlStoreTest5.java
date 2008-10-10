@@ -47,12 +47,7 @@ public class SqlStoreTest5
         
         log.info( "Deleting old database and creating new database" );
         
-        try {
-            theSqlStore.deleteStore();
-        } catch( SqlStoreIOException ex ) {
-            // ignore this one
-        }
-        theSqlStore.initialize();
+        theSqlStore.initializeHard();
         
         //
         

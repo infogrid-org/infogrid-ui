@@ -87,6 +87,33 @@ public class EncryptedStore
     }
     
     /**
+     * Initialize the Store. If the Store was initialized earlier, this will delete all
+     * contained information. This operation is similar to unconditionally formatting a hard drive.
+     * 
+     * @throws IOException thrown if an I/O error occurred
+     */
+    public void initializeHard()
+            throws
+                IOException
+    {
+        throw new UnsupportedOperationException( "Cannot initialize EncryptedStore; initialize underlying Store instead." );
+    }
+    
+    /**
+     * Initialize the Store if needed. If the Store was initialized earlier, this will do
+     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * the Store had not been initialized earlier.
+     * 
+     * @throws IOException thrown if an I/O error occurred
+     */
+    public void initializeIfNecessary()
+            throws
+                IOException
+    {
+        throw new UnsupportedOperationException( "Cannot initialize EncryptedStore; initialize underlying Store instead." );
+    }
+
+    /**
      * Put a data element into the Store for the first time.
      *
      * @param key the key under which the data element will be stored
