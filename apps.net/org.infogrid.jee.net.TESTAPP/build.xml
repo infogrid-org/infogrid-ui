@@ -1,66 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- You may freely edit this file. See commented blocks below for -->
-<!-- some examples of how to customize the build. -->
-<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!--
+    This file is part of InfoGrid(tm). You may not use this file except in
+    compliance with the InfoGrid license. The InfoGrid license and important
+    disclaimers are contained in the file LICENSE.InfoGrid.txt that you should
+    have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
+    or you do not consent to all aspects of the license and the disclaimers,
+    no license is granted; do not use this file.
+ 
+    For more information about InfoGrid go to http://infogrid.org/
+
+    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    All rights reserved.
+-->
+
 <project name="org.infogrid.jee.net.TESTAPP" default="default" basedir=".">
     <description>Builds, tests, and runs the project org.infogrid.jee.net.TESTAPP.</description>
+    <import file="../../tools/infogrid-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
-    <!--
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
+    <target name="-pre-compile" depends="-module-setup"/>
 
-      -pre-init:                 called before initialization of project properties 
-      -post-init:                called after initialization of project properties 
-      -pre-compile:              called before javac compilation 
-      -post-compile:             called after javac compilation 
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-dist:                 called before archive building 
-      -post-dist:                called after archive building 
-      -post-clean:               called after cleaning build products 
-      -pre-run-deploy:           called before deploying
-      -post-run-deploy:          called after deploying
+    <!-- take out all the dependencies for the debug & run targets, so no automatic recompile etc.  -->
+    <target depends="init" description="Debug project in IDE." if="netbeans.home" name="debug">
+        <nbdeploy clientUrlPart="${client.urlPart}" debugmode="true"/>
+        <antcall target="connect-debugger"/>
+        <antcall target="debug-display-browser"/>
+        <antcall target="connect-client-debugger"/>
+    </target>
+    <target name="run-deploy" depends="init,-pre-run-deploy,-pre-nbmodule-run-deploy,-run-deploy-nb,-init-deploy-ant,-deploy-ant,-run-deploy-am,-post-nbmodule-run-deploy,-post-run-deploy"/>
 
-    Example of pluging an obfuscator after the compilation could look like 
+    <property file="production.properties"/>
 
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
+    <target name="production-deploy" description="Install WAR on production server" depends="-init-project">
+      <taskdef name="deploy"    classname="org.apache.catalina.ant.DeployTask"/>
+      <echo message="Deploying file ${dist.war}"/>
+      <deploy url="${production.manager.url}" path="/" war="${dist.war}" username="${production.secrets.username}" password="${production.secrets.password}" />
+    </target>
 
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
+    <target name="production-undeploy" description="Uninstall WAR on production server" depends="-init-project">
+      <taskdef name="undeploy"    classname="org.apache.catalina.ant.UndeployTask"/>
+      <echo message="Undeploying"/>
+      <undeploy url="${production.manager.url}" path="/" username="${production.secrets.username}" password="${production.secrets.password}" />
+    </target>
 
-
-    Other way how to customize the build is by overriding existing main targets.
-    The target of interest are: 
-
-      init-macrodef-javac:    defines macro for javac compilation
-      init-macrodef-junit:   defines macro for junit execution
-      init-macrodef-debug:    defines macro for class debugging
-      do-dist:                archive building
-      run:                    execution of project 
-      javadoc-build:          javadoc generation 
-
-    Example of overriding the target for project execution could look like 
-
-        <target name="run" depends="<PROJNAME>-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that overridden target depends on jar target and not only on 
-    compile target as regular run target does. Again, for list of available 
-    properties which you can use check the target you are overriding in 
-    nbproject/build-impl.xml file. 
-
-    -->
+    <target name="production-redeploy" description="Uninstall and re-install WAR on production server" depends="production-undeploy,production-deploy"/>
 </project>
