@@ -24,7 +24,7 @@ import org.infogrid.util.AbstractSwappingHashMapListener;
 import org.infogrid.util.SwappingHashMap;
 
 /**
- *
+ * A ScheduledExecutorProbeManager that stores ShadowMeshBases in a Store.
  */
 public class StoreScheduledExecutorProbeManager
         extends

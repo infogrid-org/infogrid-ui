@@ -42,7 +42,7 @@ public class MShadowMeshBaseFactory
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
      * @param context the Context in which this all created MShadowMeshBases will run.
-     * @return MShadowMeshBaseFactory the created MShadowMeshBaseFactory
+     * @return the created MShadowMeshBaseFactory
      */
     public static MShadowMeshBaseFactory create(
             ModelBase                 modelBase,

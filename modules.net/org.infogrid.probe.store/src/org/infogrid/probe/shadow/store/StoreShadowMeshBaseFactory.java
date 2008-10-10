@@ -44,33 +44,63 @@ public class StoreShadowMeshBaseFactory
             ShadowMeshBaseFactory
 {
     /**
-     * Factory method.
+     * Factory method for the StoreShadowMeshBaseFactory itself.
+     * 
+     * @param modelBase the ModelBase containing type information to be used by all created StoreShadowMeshBases
+     * @param endpointFactory factory for communications endpoints, to be used by all created StoreShadowMeshBase
+     * @param probeDirectory the ProbeDirectory to use for all Probes
+     * @param shadowStore the Store in which the ShadowMeshBases will be stored
+     * @param shadowProxyStore the Store in which the ShadowMeshBases' Proxies will be stored
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created StoreShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param context the Context in which this all created MShadowMeshBases will run.
+     * @return the created StoreShadowMeshBaseFactory
      */
     public static StoreShadowMeshBaseFactory create(
-            ModelBase                 modelBase,
+            ModelBase                   modelBase,
             ProxyMessageEndpointFactory endpointFactory,
-            ProbeDirectory            probeDirectory,
-            IterableStore             shadowStore,
-            IterableStore             shadowProxyStore,
-            long                      timeNotNeededTillExpires,
-            Context                   c )
+            ProbeDirectory              probeDirectory,
+            IterableStore               shadowStore,
+            IterableStore               shadowProxyStore,
+            long                        timeNotNeededTillExpires,
+            Context                     context )
     {
-        return new StoreShadowMeshBaseFactory( modelBase, endpointFactory, probeDirectory, shadowStore, shadowProxyStore, timeNotNeededTillExpires, c );
+        return new StoreShadowMeshBaseFactory(
+                modelBase,
+                endpointFactory,
+                probeDirectory,
+                shadowStore,
+                shadowProxyStore,
+                timeNotNeededTillExpires,
+                context );
     }
 
     /**
      * Constructor.
+     * 
+     * @param modelBase the ModelBase containing type information to be used by all created StoreShadowMeshBases
+     * @param endpointFactory factory for communications endpoints, to be used by all created StoreShadowMeshBase
+     * @param probeDirectory the ProbeDirectory to use for all Probes
+     * @param shadowStore the Store in which the ShadowMeshBases will be stored
+     * @param shadowProxyStore the Store in which the ShadowMeshBases' Proxies will be stored
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created StoreShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param context the Context in which this all created MShadowMeshBases will run.
      */
     protected StoreShadowMeshBaseFactory(
-            ModelBase                 modelBase,
+            ModelBase                   modelBase,
             ProxyMessageEndpointFactory endpointFactory,
-            ProbeDirectory            probeDirectory,
-            IterableStore             shadowStore,
-            IterableStore             shadowProxyStore,
-            long                      timeNotNeededTillExpires,
-            Context                   c )
+            ProbeDirectory              probeDirectory,
+            IterableStore               shadowStore,
+            IterableStore               shadowProxyStore,
+            long                        timeNotNeededTillExpires,
+            Context                     context )
     {
-        super( modelBase, endpointFactory, probeDirectory, timeNotNeededTillExpires, c );
+        super( modelBase, endpointFactory, probeDirectory, timeNotNeededTillExpires, context );
         
         theShadowStore      = shadowStore;
         theShadowProxyStore = shadowProxyStore;
@@ -144,6 +174,11 @@ public class StoreShadowMeshBaseFactory
         return ret;
     }
 
+    /**
+     * Obtain a factory to create ParserFriendlyExternalizedNetMeshObjects.
+     * 
+     * @return the factory
+     */
     public ParserFriendlyExternalizedNetMeshObjectFactory getExternalizedMeshObjectFactory()
     {
         return new ParserFriendlyExternalizedNetMeshObjectFactory() {
@@ -159,12 +194,23 @@ public class StoreShadowMeshBaseFactory
         };
     }
     
+    /**
+     * Obtain a factory for NetMeshObjectIdentifiers.
+     * 
+     * @param key the NetMeshBaseIdentifier that represents the context for the NetMeshObjectIdentifiers
+     * @return the factory
+     */
     public NetMeshObjectIdentifierFactory getNetMeshObjectIdentifierFactory(
             NetMeshBaseIdentifier key )
     {
         return DefaultAnetMeshObjectIdentifierFactory.create( key );
     }
     
+    /**
+     * Obtain a factory for MeshTypeIdentifiers.
+     * 
+     * @return the factory
+     */
     public MeshTypeIdentifierFactory getMeshTypeIdentifierFactory()
     {
         return theModelBase.getMeshTypeIdentifierFactory();
