@@ -15,6 +15,7 @@
 package org.infogrid.meshbase.net.local.m;
 
 import java.util.HashMap;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
@@ -65,16 +66,14 @@ public class LocalNetMMeshBase
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
-     * @param exec the ScheduledExecutorService to schedule timed tasks
-     * @param probeDirectory the ProbeDirectory to use for all Probes
-     * @param context the Context in which this NetMeshBase runs.
-     * @return the created LocalNetMMeshBase
+     * @param probeDirectory the ProbeDirectory to use
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
      */
     public static LocalNetMMeshBase create(
             NetMeshBaseIdentifier    identifier,
             ModelBase                modelBase,
             NetAccessManager         accessMgr,
-            ScheduledExecutorService exec,
             ProbeDirectory           probeDirectory,
             Context                  context )
     {
@@ -85,9 +84,42 @@ public class LocalNetMMeshBase
                 proxyPolicyFactory,
                 modelBase,
                 accessMgr,
-                exec,
                 probeDirectory,
                 DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES,
+                context );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param probeDirectory the ProbeDirectory to use
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
+    public static LocalNetMMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            ProbeDirectory           probeDirectory,
+            long                     timeNotNeededTillExpires,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                modelBase,
+                accessMgr,
+                probeDirectory,
+                timeNotNeededTillExpires,
                 context );
     }
 
@@ -98,31 +130,73 @@ public class LocalNetMMeshBase
      * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
-     * @param exec the ScheduledExecutorService to schedule timed tasks
-     * @param probeDirectory the ProbeDirectory to use for all Probes
-     * @param context the Context in which this NetMeshBase runs.
-     * @return the created LocalNetMMeshBase
+     * @param probeDirectory the ProbeDirectory to use
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
      */
     public static LocalNetMMeshBase create(
             NetMeshBaseIdentifier    identifier,
             ProxyPolicyFactory       proxyPolicyFactory,
             ModelBase                modelBase,
             NetAccessManager         accessMgr,
-            ScheduledExecutorService exec,
             ProbeDirectory           probeDirectory,
+            long                     timeNotNeededTillExpires,
             Context                  context )
     {
+        ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+
         return create(
                 identifier,
                 proxyPolicyFactory,
                 modelBase,
                 accessMgr,
-                exec,
                 probeDirectory,
-                DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES,
+                exec,
+                timeNotNeededTillExpires,
                 context );
     }
 
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param probeDirectory the ProbeDirectory to use
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
+    public static LocalNetMMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            MeshObjectSetFactory     setFactory,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            ProbeDirectory           probeDirectory,
+            long                     timeNotNeededTillExpires,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                setFactory,
+                modelBase,
+                accessMgr,
+                probeDirectory,
+                timeNotNeededTillExpires,
+                context );
+    }
+    
     /**
      * Factory method.
      *
@@ -130,33 +204,36 @@ public class LocalNetMMeshBase
      * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
-     * @param life the MeshBaseLifecycleManager to use
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
-     * @param exec the ScheduledExecutorService to schedule timed tasks
-     * @param probeDirectory the ProbeDirectory to use for all Probes
-     * @param context the Context in which this NetMeshBase runs.
-     * @return the created LocalNetMMeshBase
-      */
+     * @param probeDirectory the ProbeDirectory to use
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
     public static LocalNetMMeshBase create(
-            NetMeshBaseIdentifier        identifier,
-            ProxyPolicyFactory           proxyPolicyFactory,
-            MeshObjectSetFactory         setFactory,
-            ModelBase                    modelBase,
-            AnetMeshBaseLifecycleManager life,
-            NetAccessManager             accessMgr,
-            ScheduledExecutorService     exec,
-            ProbeDirectory               probeDirectory,
-            Context                      context )
+            NetMeshBaseIdentifier    identifier,
+            ProxyPolicyFactory       proxyPolicyFactory,
+            MeshObjectSetFactory     setFactory,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            ProbeDirectory           probeDirectory,
+            long                     timeNotNeededTillExpires,
+            Context                  context )
     {
+        ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+
         return create(
                 identifier,
-                setFactory,
                 proxyPolicyFactory,
+                setFactory,
                 modelBase,
                 accessMgr,
-                exec,
                 probeDirectory,
-                DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES,
+                exec,
+                timeNotNeededTillExpires,
                 context );
     }
 
@@ -164,34 +241,107 @@ public class LocalNetMMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
-     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
-     * @param exec the ScheduledExecutorService to schedule timed tasks
-     * @param probeDirectory the ProbeDirectory to use for all Probes
+     * @param probeDirectory the ProbeDirectory to use
+     * @param exec the ScheduledExecutorService to use
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
+    public static LocalNetMMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            ProbeDirectory           probeDirectory,
+            ScheduledExecutorService exec,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                modelBase,
+                accessMgr,
+                probeDirectory,
+                exec,
+                DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES,
+                context );
+    }
+    
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param probeDirectory the ProbeDirectory to use
+     * @param exec the ScheduledExecutorService to use
      * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
      *         not very useful.
-     * @param context the Context in which this NetMeshBase runs.
-     * @return the created LocalNetMMeshBase
-      */
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
+    public static LocalNetMMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            ProbeDirectory           probeDirectory,
+            ScheduledExecutorService exec,
+            long                     timeNotNeededTillExpires,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                modelBase,
+                accessMgr,
+                probeDirectory,
+                exec,
+                timeNotNeededTillExpires,
+                context );
+    }
+    
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param probeDirectory the ProbeDirectory to use
+     * @param exec the ScheduledExecutorService to use
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
     public static LocalNetMMeshBase create(
             NetMeshBaseIdentifier    identifier,
             ProxyPolicyFactory       proxyPolicyFactory,
             ModelBase                modelBase,
             NetAccessManager         accessMgr,
-            ScheduledExecutorService exec,
             ProbeDirectory           probeDirectory,
+            ScheduledExecutorService exec,
             long                     timeNotNeededTillExpires,
             Context                  context )
     {
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
-        ShadowMeshBaseFactory delegate
-                = MShadowMeshBaseFactory.create( modelBase, shadowEndpointFactory, probeDirectory, timeNotNeededTillExpires, context );
+        MShadowMeshBaseFactory delegate = MShadowMeshBaseFactory.create(
+                modelBase,
+                shadowEndpointFactory,
+                probeDirectory,
+                timeNotNeededTillExpires,
+                context );
 
-        ScheduledExecutorProbeManager probeManager = MScheduledExecutorProbeManager.create( delegate );
+        MScheduledExecutorProbeManager probeManager = MScheduledExecutorProbeManager.create( delegate );
         shadowEndpointFactory.setNameServer( probeManager.getNetMeshBaseNameServer() );
 
         MPingPongNetMessageEndpointFactory endpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
@@ -199,19 +349,20 @@ public class LocalNetMMeshBase
         
         LocalNetMMeshBase ret = create(
                 identifier,
-                endpointFactory,
                 proxyPolicyFactory,
                 modelBase,
                 accessMgr,
                 probeManager,
+                endpointFactory,
                 context );
         
         probeManager.setMainNetMeshBase( ret );
-        probeManager.start( exec );
+        probeManager.start( exec ); // no if( doStart ) here -- does not make sense for MMeshBase
 
         return ret;
     }
-
+    
+   
     /**
      * Factory method.
      *
@@ -220,8 +371,8 @@ public class LocalNetMMeshBase
      * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
-     * @param exec the ScheduledExecutorService to schedule timed tasks
      * @param probeDirectory the ProbeDirectory to use for all Probes
+     * @param exec the ScheduledExecutorService to schedule timed tasks
      * @param timeNotNeededTillExpires the time, in milliseconds, that all created ShadowMeshBases will continue operating
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
@@ -231,19 +382,23 @@ public class LocalNetMMeshBase
      */
     public static LocalNetMMeshBase create(
             NetMeshBaseIdentifier    identifier,
-            MeshObjectSetFactory     setFactory,
             ProxyPolicyFactory       proxyPolicyFactory,
+            MeshObjectSetFactory     setFactory,
             ModelBase                modelBase,
             NetAccessManager         accessMgr,
-            ScheduledExecutorService exec,
             ProbeDirectory           probeDirectory,
+            ScheduledExecutorService exec,
             long                     timeNotNeededTillExpires,
             Context                  context )
     {
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
-        ShadowMeshBaseFactory delegate
-                = MShadowMeshBaseFactory.create( modelBase, shadowEndpointFactory, probeDirectory, timeNotNeededTillExpires, context );
+        ShadowMeshBaseFactory delegate = MShadowMeshBaseFactory.create(
+                modelBase,
+                shadowEndpointFactory,
+                probeDirectory,
+                timeNotNeededTillExpires,
+                context );
 
         ScheduledExecutorProbeManager probeManager = MScheduledExecutorProbeManager.create( delegate );
         shadowEndpointFactory.setNameServer( probeManager.getNetMeshBaseNameServer() );
@@ -253,12 +408,12 @@ public class LocalNetMMeshBase
         
         LocalNetMMeshBase ret = create(
                 identifier,
-                endpointFactory,
                 proxyPolicyFactory,
                 setFactory,
                 modelBase,
                 accessMgr,
                 probeManager,
+                endpointFactory,
                 context );
         
         probeManager.setMainNetMeshBase( ret );
@@ -271,33 +426,33 @@ public class LocalNetMMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
-     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
      * @param probeManager the ProbeManager for this LocalNetMeshBase
+     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param context the Context in which this NetMeshBase runs.
      * @return the created LocalNetMMeshBase
      */
     public static LocalNetMMeshBase create(
-            NetMeshBaseIdentifier     identifier,
+            NetMeshBaseIdentifier       identifier,
+            ProxyPolicyFactory          proxyPolicyFactory,
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            ProbeManager                probeManager,
             ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            ProbeManager              probeManager,
-            Context                   context )
+            Context                     context )
     {
         ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
 
         LocalNetMMeshBase ret = LocalNetMMeshBase.create(
                 identifier,
-                endpointFactory,
                 proxyPolicyFactory,
                 setFactory,
                 modelBase,
                 accessMgr,
                 probeManager,
+                endpointFactory,
                 context );
 
         return ret;
@@ -307,24 +462,24 @@ public class LocalNetMMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
-     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
      * @param probeManager the ProbeManager for this LocalNetMeshBase
+     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param context the Context in which this NetMeshBase runs.
      * @return the created LocalNetMMeshBase
      */
     public static LocalNetMMeshBase create(
-            NetMeshBaseIdentifier     identifier,
+            NetMeshBaseIdentifier       identifier,
+            ProxyPolicyFactory          proxyPolicyFactory,
+            MeshObjectSetFactory        setFactory,
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            ProbeManager                probeManager,
             ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            MeshObjectSetFactory      setFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            ProbeManager              probeManager,
-            Context                   context )
+            Context                     context )
     {
         MCachingHashMap<MeshObjectIdentifier,MeshObject> objectStorage = MCachingHashMap.create();
         MCachingHashMap<NetMeshBaseIdentifier,Proxy>     proxyStorage  = MCachingHashMap.create();
@@ -383,7 +538,16 @@ public class LocalNetMMeshBase
             ProbeManager                                probeManager,
             Context                                     context )
     {
-        super( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, proxyManager, probeManager, context );
+        super(  identifier,
+                identifierFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                cache,
+                proxyManager,
+                probeManager,
+                context );
     }
 
     /**
@@ -400,7 +564,7 @@ public class LocalNetMMeshBase
                 MeshObject.class );
         return ret;
     }
-    
+
     /**
      * Our ResourceHelper.
      */
@@ -410,5 +574,6 @@ public class LocalNetMMeshBase
      * The default for the time, in milliseconds, that all created ShadowMeshBases will continue operating
      * even if none of their MeshObjects are replicated to another NetMeshBase. 
      */
-    public static final long DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES = theResourceHelper.getResourceLongOrDefault( "ShadowTimeNotNeededTillExpires", 300000L ); // 5 min
+    public static final long DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES
+            = theResourceHelper.getResourceLongOrDefault( "ShadowTimeNotNeededTillExpires", 300000L ); // 5 min
 }

@@ -246,7 +246,7 @@ public class ProbeTest8
 
         NetMeshBaseIdentifier here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
 
-        theMeshBase = LocalNetMMeshBase.create( here, theModelBase, null, exec, theProbeDirectory, rootContext );
+        theMeshBase = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
     }
 
     /**

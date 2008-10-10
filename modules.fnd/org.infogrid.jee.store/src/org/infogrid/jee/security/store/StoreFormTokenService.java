@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.security.store;
 
+import org.infogrid.jee.security.FormToken;
 import org.infogrid.jee.security.FormTokenService;
 import org.infogrid.store.Store;
 import org.infogrid.store.StoreEntryMapper;
@@ -35,8 +36,8 @@ public class StoreFormTokenService
     public static StoreFormTokenService create(
             Store store )
     {
-        StoreEntryMapper<String,StoredFormToken> mapper = StoredFormTokenMapper.create();
-        StoreBackedSwappingHashMap<String,StoredFormToken>   map    = StoreBackedSwappingHashMap.createWeak( mapper, store );
+        StoreEntryMapper<String,FormToken>           mapper = StoreFormTokenMapper.create();
+        StoreBackedSwappingHashMap<String,FormToken> map    = StoreBackedSwappingHashMap.createWeak( mapper, store );
 
         StoreFormTokenService ret = new StoreFormTokenService( map );
         return ret;
@@ -48,7 +49,7 @@ public class StoreFormTokenService
      * @param map manages the storage of tokens
      */
     protected StoreFormTokenService(
-            StoreBackedSwappingHashMap<String,StoredFormToken> map )
+            StoreBackedSwappingHashMap<String,FormToken> map )
     {
         theMap = map;
     }
@@ -60,7 +61,7 @@ public class StoreFormTokenService
      */
     public String generateNewToken()
     {
-        StoredFormToken token = StoredFormToken.createNew();
+        FormToken token = FormToken.createNew();
 
         theMap.put( token.getKey(), token );
 
@@ -82,7 +83,7 @@ public class StoreFormTokenService
         }
 
         // regardless, we remove tokens passed into here
-        StoredFormToken token = theMap.remove( key );
+        FormToken token = theMap.remove( key );
         if( token == null ) {
             return false;
         }
@@ -95,5 +96,5 @@ public class StoreFormTokenService
     /**
      * The Map that delegates to the Store.
      */
-    protected StoreBackedSwappingHashMap<String,StoredFormToken> theMap;
+    protected StoreBackedSwappingHashMap<String,FormToken> theMap;
 }

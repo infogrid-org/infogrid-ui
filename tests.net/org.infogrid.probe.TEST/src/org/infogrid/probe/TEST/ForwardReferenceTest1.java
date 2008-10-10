@@ -47,7 +47,7 @@ public class ForwardReferenceTest1
         
         NetMeshBaseIdentifier    here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
         ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
-        LocalNetMMeshBase        base = LocalNetMMeshBase.create( here, theModelBase, null, exec, theProbeDirectory, rootContext );
+        LocalNetMMeshBase        base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
 
         //
         

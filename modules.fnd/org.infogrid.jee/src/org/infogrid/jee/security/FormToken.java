@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.security.store;
+package org.infogrid.jee.security;
 
 import java.util.Random;
 import org.infogrid.util.ResourceHelper;
@@ -20,14 +20,14 @@ import org.infogrid.util.ResourceHelper;
 /**
  * Captures all information in a form token.
  */
-public class StoredFormToken
+public class FormToken
 {
     /**
      * Factory method. Use default expiration time.
      *
-     * @return the created StoredFormToken
+     * @return the created StoreFormToken
      */
-    public static StoredFormToken createNew()
+    public static FormToken createNew()
     {
         return createNew( DEFAULT_EXPIRES );
     }
@@ -36,9 +36,9 @@ public class StoredFormToken
      * Factory method.
      *
      * @param relativeTimeExpires the time, relative to now, when the newly created token is supposed to expire
-     * @return the created StoredFormToken
+     * @return the created StoreFormToken
      */
-    public static StoredFormToken createNew(
+    public static FormToken createNew(
             long relativeTimeExpires )
     {
         char [] buf  = new char[ TOKEN_LENGTH ];
@@ -52,7 +52,7 @@ public class StoredFormToken
         String key = new String( buf );
         long   now = System.currentTimeMillis();
 
-        StoredFormToken ret = new StoredFormToken( key, now, now + relativeTimeExpires );
+        FormToken ret = new FormToken( key, now, now + relativeTimeExpires );
         return ret;
     }
 
@@ -62,14 +62,14 @@ public class StoredFormToken
      * @param key the token's key
      * @param timeCreated the absolute time when the token was created
      * @param timeExpires the absolute time when the newly created token is supposed to expire
-     * @return the recreated StoredFormToken
+     * @return the recreated StoreFormToken
      */
-    public static StoredFormToken restore(
+    public static FormToken restore(
             String key,
             long   timeCreated,
             long   timeExpires )
     {
-        StoredFormToken ret = new StoredFormToken( key, timeCreated, timeExpires );
+        FormToken ret = new FormToken( key, timeCreated, timeExpires );
         return ret;
     }
 
@@ -80,7 +80,7 @@ public class StoredFormToken
      * @param timeCreated the absolute time when the token was created
      * @param timeExpires the absolute time when the newly created token is supposed to expire
      */
-    protected StoredFormToken(
+    protected FormToken(
             String key,
             long   timeCreated,
             long   timeExpires )
@@ -153,7 +153,7 @@ public class StoredFormToken
     /**
      * Our ResourceHelper.
      */
-    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( StoredFormToken.class );
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( FormToken.class  );
     
     /**
      * The length of the token.

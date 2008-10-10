@@ -51,7 +51,7 @@ public class ShadowTest1
         
         ProbeDirectory        dir  = MProbeDirectory.create();
         NetMeshBaseIdentifier here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
-        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, exec, dir, rootContext );
+        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, dir, exec, rootContext );
 
         //
         

@@ -73,6 +73,41 @@ public class LocalNetStoreMeshBase
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
      * @param store the single Store used for all data managed by this NetMeshBase
      * @param probeDirectory the ProbeDirectory to use
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
+    public static LocalNetStoreMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            IterableStore            store,
+            ProbeDirectory           probeDirectory,
+            boolean                  doStart,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                modelBase,
+                accessMgr,
+                store,
+                probeDirectory,
+                DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES,
+                doStart,
+                context );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param store the single Store used for all data managed by this NetMeshBase
+     * @param probeDirectory the ProbeDirectory to use
      * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
@@ -160,6 +195,49 @@ public class LocalNetStoreMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param store the single Store used for all data managed by this NetMeshBase
+     * @param probeDirectory the ProbeDirectory to use
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
+    public static LocalNetStoreMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            MeshObjectSetFactory     setFactory,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            IterableStore            store,
+            ProbeDirectory           probeDirectory,
+            long                     timeNotNeededTillExpires,
+            boolean                  doStart,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                setFactory,
+                modelBase,
+                accessMgr,
+                store,
+                probeDirectory,
+                timeNotNeededTillExpires,
+                doStart,
+                context );
+    }
+    
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
      * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
@@ -210,6 +288,105 @@ public class LocalNetStoreMeshBase
                 context );
     }
 
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param meshObjectStore the Store in which to store the MeshObjects
+     * @param proxyStore the Store in which to store the Proxies
+     * @param shadowStore the Store in which to store the managed ShadowMeshBases
+     * @param shadowProxyStore the Store in which to store the proxies of the managed ShadowMeshBases
+     * @param probeDirectory the ProbeDirectory to use
+     * @param exec the ScheduledExecutorService to use
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
+    public static LocalNetStoreMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            IterableStore            meshObjectStore,
+            IterableStore            proxyStore,
+            IterableStore            shadowStore,
+            IterableStore            shadowProxyStore,
+            ProbeDirectory           probeDirectory,
+            ScheduledExecutorService exec,
+            boolean                  doStart,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                modelBase,
+                accessMgr,
+                meshObjectStore,
+                proxyStore,
+                shadowStore,
+                shadowProxyStore,
+                probeDirectory,
+                exec,
+                DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES,
+                doStart,
+                context );
+    }
+    
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param meshObjectStore the Store in which to store the MeshObjects
+     * @param proxyStore the Store in which to store the Proxies
+     * @param shadowStore the Store in which to store the managed ShadowMeshBases
+     * @param shadowProxyStore the Store in which to store the proxies of the managed ShadowMeshBases
+     * @param probeDirectory the ProbeDirectory to use
+     * @param exec the ScheduledExecutorService to use
+     * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
+     *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
+     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
+     *         not very useful.
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created LocalNetStoreMeshBase
+     */
+    public static LocalNetStoreMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            IterableStore            meshObjectStore,
+            IterableStore            proxyStore,
+            IterableStore            shadowStore,
+            IterableStore            shadowProxyStore,
+            ProbeDirectory           probeDirectory,
+            ScheduledExecutorService exec,
+            long                     timeNotNeededTillExpires,
+            boolean                  doStart,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                modelBase,
+                accessMgr,
+                meshObjectStore,
+                proxyStore,
+                shadowStore,
+                shadowProxyStore,
+                probeDirectory,
+                exec,
+                timeNotNeededTillExpires,
+                doStart,
+                context );
+    }
+    
     /**
      * Factory method.
      *
@@ -479,16 +656,16 @@ public class LocalNetStoreMeshBase
      * @param context the Context in which this NetMeshBase runs.
      */
     protected LocalNetStoreMeshBase(
-            NetMeshBaseIdentifier                           identifier,
-            NetMeshObjectIdentifierFactory                  identifierFactory,
-            MeshObjectSetFactory                            setFactory,
-            ModelBase                                       modelBase,
-            AnetMeshBaseLifecycleManager                    life,
-            NetAccessManager                                accessMgr,
+            NetMeshBaseIdentifier                                       identifier,
+            NetMeshObjectIdentifierFactory                              identifierFactory,
+            MeshObjectSetFactory                                        setFactory,
+            ModelBase                                                   modelBase,
+            AnetMeshBaseLifecycleManager                                life,
+            NetAccessManager                                            accessMgr,
             StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> cache,
-            StoreProxyManager                               proxyManager,
-            ProbeManager                                    probeManager,
-            Context                                         context )
+            StoreProxyManager                                           proxyManager,
+            ProbeManager                                                probeManager,
+            Context                                                     context )
     {
         super(  identifier,
                 identifierFactory,
@@ -508,7 +685,9 @@ public class LocalNetStoreMeshBase
     private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( LocalNetStoreMeshBase.class );
 
     /**
-     * The time until unneeded Shadows expire.
+     * The default for the time, in milliseconds, that all created ShadowMeshBases will continue operating
+     * even if none of their MeshObjects are replicated to another NetMeshBase. 
      */
-    protected static long theTimeNotNeededTillExpires = theResourceHelper.getResourceLongOrDefault( "theTimeNotNeededTillExpires", 10000L );
+    public static final long DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES
+            = theResourceHelper.getResourceLongOrDefault( "ShadowTimeNotNeededTillExpires", 300000L ); // 5 min
 }

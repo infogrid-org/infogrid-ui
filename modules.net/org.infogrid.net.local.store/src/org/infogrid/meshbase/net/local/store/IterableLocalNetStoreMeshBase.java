@@ -51,6 +51,7 @@ import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.CursorIterator;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
@@ -74,6 +75,41 @@ public class IterableLocalNetStoreMeshBase
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
      * @param store the single Store used for all data managed by this NetMeshBase
      * @param probeDirectory the ProbeDirectory to use
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created IterableLocalNetStoreMeshBase
+     */
+    public static IterableLocalNetStoreMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            IterableStore            store,
+            ProbeDirectory           probeDirectory,
+            boolean                  doStart,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                modelBase,
+                accessMgr,
+                store,
+                probeDirectory,
+                DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES,
+                doStart,
+                context );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param store the single Store used for all data managed by this NetMeshBase
+     * @param probeDirectory the ProbeDirectory to use
      * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
      *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
@@ -250,6 +286,53 @@ public class IterableLocalNetStoreMeshBase
                 probeDirectory,
                 exec,
                 timeNotNeededTillExpires,
+                doStart,
+                context );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param meshObjectStore the Store in which to store the MeshObjects
+     * @param proxyStore the Store in which to store the Proxies
+     * @param shadowStore the Store in which to store the managed ShadowMeshBases
+     * @param shadowProxyStore the Store in which to store the proxies of the managed ShadowMeshBases
+     * @param probeDirectory the ProbeDirectory to use
+     * @param exec the ScheduledExecutorService to use
+     * @param doStart if true, start Probe processing. If false, processing needs to be started manually through the ProbeManager
+     * @param context the Context in which this NetMeshBase runs
+     * @return the created IterableLocalNetStoreMeshBase
+     */
+    public static IterableLocalNetStoreMeshBase create(
+            NetMeshBaseIdentifier    identifier,
+            ModelBase                modelBase,
+            NetAccessManager         accessMgr,
+            IterableStore            meshObjectStore,
+            IterableStore            proxyStore,
+            IterableStore            shadowStore,
+            IterableStore            shadowProxyStore,
+            ProbeDirectory           probeDirectory,
+            ScheduledExecutorService exec,
+            boolean                  doStart,
+            Context                  context )
+    {
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
+        return create(
+                identifier,
+                proxyPolicyFactory,
+                modelBase,
+                accessMgr,
+                meshObjectStore,
+                proxyStore,
+                shadowStore,
+                shadowProxyStore,
+                probeDirectory,
+                exec,
+                DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES,
                 doStart,
                 context );
     }
@@ -468,15 +551,15 @@ public class IterableLocalNetStoreMeshBase
      * @return the created IterableLocalNetStoreMeshBase
      */
     public static IterableLocalNetStoreMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            IterableStore             meshObjectStore,
-            IterableStore             proxyStore,
-            ProbeManager              probeManager,
+            NetMeshBaseIdentifier       identifier,
+            ProxyPolicyFactory          proxyPolicyFactory,
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            IterableStore               meshObjectStore,
+            IterableStore               proxyStore,
+            ProbeManager                probeManager,
             ProxyMessageEndpointFactory endpointFactory,
-            Context                   context )
+            Context                     context )
     {
         ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
 
@@ -511,16 +594,16 @@ public class IterableLocalNetStoreMeshBase
      * @return the created IterableLocalNetStoreMeshBase
      */
     public static IterableLocalNetStoreMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            MeshObjectSetFactory      setFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            IterableStore             meshObjectStore,
-            IterableStore             proxyStore,
-            ProbeManager              probeManager,
+            NetMeshBaseIdentifier       identifier,
+            ProxyPolicyFactory          proxyPolicyFactory,
+            MeshObjectSetFactory        setFactory,
+            ModelBase                   modelBase,
+            NetAccessManager            accessMgr,
+            IterableStore               meshObjectStore,
+            IterableStore               proxyStore,
+            ProbeManager                probeManager,
             ProxyMessageEndpointFactory endpointFactory,
-            Context                   context )
+            Context                     context )
     {
         DefaultProxyFactory proxyFactory = DefaultProxyFactory.create( endpointFactory, proxyPolicyFactory );
 
@@ -575,18 +658,27 @@ public class IterableLocalNetStoreMeshBase
      * @param context the Context in which this NetMeshBase runs.
      */
     protected IterableLocalNetStoreMeshBase(
-            NetMeshBaseIdentifier                           identifier,
-            NetMeshObjectIdentifierFactory                  identifierFactory,
-            MeshObjectSetFactory                            setFactory,
-            ModelBase                                       modelBase,
-            AnetMeshBaseLifecycleManager                    life,
-            NetAccessManager                                accessMgr,
+            NetMeshBaseIdentifier                                       identifier,
+            NetMeshObjectIdentifierFactory                              identifierFactory,
+            MeshObjectSetFactory                                        setFactory,
+            ModelBase                                                   modelBase,
+            AnetMeshBaseLifecycleManager                                life,
+            NetAccessManager                                            accessMgr,
             StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> cache,
-            StoreProxyManager                               proxyManager,
-            ProbeManager                                    probeManager,
-            Context                                         context )
+            StoreProxyManager                                           proxyManager,
+            ProbeManager                                                probeManager,
+            Context                                                     context )
     {
-        super( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, proxyManager, probeManager, context );
+        super(  identifier,
+                identifierFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                cache,
+                proxyManager,
+                probeManager,
+                context );
     }
 
     /**
@@ -722,4 +814,16 @@ public class IterableLocalNetStoreMeshBase
      * The next background Sweep task, if any.
      */
     protected SweepStep theNextSweepStep;
+
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( IterableLocalNetStoreMeshBase.class );
+
+    /**
+     * The default for the time, in milliseconds, that all created ShadowMeshBases will continue operating
+     * even if none of their MeshObjects are replicated to another NetMeshBase. 
+     */
+    public static final long DEFAULT_TIME_NOT_NEEDED_TILL_EXPIRES
+            = theResourceHelper.getResourceLongOrDefault( "ShadowTimeNotNeededTillExpires", 300000L ); // 5 min
 }

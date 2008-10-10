@@ -13,6 +13,7 @@
 //
 package org.infogrid.jee.security.store;
 
+import org.infogrid.jee.security.FormToken;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
@@ -22,25 +23,25 @@ import org.infogrid.store.StoreValueEncodingException;
  * Knows how to encode/decode StoredFormTokens. Currently, the token actually does
  * not carry any data other than key, timeCreated, timeExpires.
  */
-public class StoredFormTokenMapper
+public class StoreFormTokenMapper
         implements
-            StoreEntryMapper<String,StoredFormToken>
+            StoreEntryMapper<String,FormToken>
 {
     /**
      * Factory method.
      *
-     * @return the created StoredFormTokenMapper
+     * @return the created StoreFormTokenMapper
      */
-    public static StoredFormTokenMapper create()
+    public static StoreFormTokenMapper create()
     {
-        StoredFormTokenMapper ret = new StoredFormTokenMapper();
+        StoreFormTokenMapper ret = new StoreFormTokenMapper();
         return ret;
     }
 
     /**
      * Constructor for subclasses only, use factory method.
      */
-    protected StoredFormTokenMapper()
+    protected StoreFormTokenMapper()
     {
         // nothing right now
     }
@@ -77,13 +78,13 @@ public class StoredFormTokenMapper
      * @return the value
      * @throws StoreValueDecodingException thrown if the StoreValue could not been decoded
      */
-    public StoredFormToken decodeValue(
+    public FormToken decodeValue(
             String     key,
             StoreValue value )
         throws
             StoreValueDecodingException
     {
-        StoredFormToken ret = StoredFormToken.restore( key, value.getTimeCreated(), value.getTimeExpires() );
+        FormToken ret = FormToken.restore( key, value.getTimeCreated(), value.getTimeExpires() );
         return ret;
     }
     
@@ -104,7 +105,7 @@ public class StoredFormTokenMapper
      * @return the time created, in System.currentTimeMillis() format
      */
     public long getTimeCreated(
-            StoredFormToken value )
+            FormToken value )
     {
         return value.getTimeCreated();
     }
@@ -116,7 +117,7 @@ public class StoredFormTokenMapper
      * @return the time updated, in System.currentTimeMillis() format
      */
     public long getTimeUpdated(
-            StoredFormToken value )
+            FormToken value )
     {
         return value.getTimeCreated();
     }
@@ -128,7 +129,7 @@ public class StoredFormTokenMapper
      * @return the time read, in System.currentTimeMillis() format
      */
     public long getTimeRead(
-            StoredFormToken value )
+            FormToken value )
     {
         return -1L; // FIXME?
     }
@@ -140,7 +141,7 @@ public class StoredFormTokenMapper
      * @return the time will expire, in System.currentTimeMillis() format
      */
     public long getTimeExpires(
-            StoredFormToken value )
+            FormToken value )
     {
         return value.getTimeExpires();
     }
@@ -153,7 +154,7 @@ public class StoredFormTokenMapper
      * @throws StoreValueEncodingException thrown if the value could not been encoded
      */
     public byte [] asBytes(
-            StoredFormToken value )
+            FormToken value )
         throws
             StoreValueEncodingException
     {

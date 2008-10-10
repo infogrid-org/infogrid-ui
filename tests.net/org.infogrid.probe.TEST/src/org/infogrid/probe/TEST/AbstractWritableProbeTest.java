@@ -72,7 +72,7 @@ public abstract class AbstractWritableProbeTest
                                 testCases[i].theProbeClass ));
 
                 // create MeshBase and run Probe
-                base = LocalNetMMeshBase.create( here, theModelBase, null, exec, theProbeDirectory, rootContext );
+                base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
 
                 myLog.info( "Performing accessLocally" );
 

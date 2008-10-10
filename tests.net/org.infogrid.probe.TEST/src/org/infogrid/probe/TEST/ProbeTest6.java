@@ -47,7 +47,7 @@ public class ProbeTest6
     {
         NetMeshBaseIdentifier here               = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
         ProxyPolicyFactory    proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
-        LocalNetMMeshBase     base               = LocalNetMMeshBase.create( here, proxyPolicyFactory, theModelBase, null, exec, theProbeDirectory, 3000L, rootContext );
+        LocalNetMMeshBase     base               = LocalNetMMeshBase.create( here, proxyPolicyFactory, theModelBase, null, theProbeDirectory, exec, 3000L, rootContext );
         
         base.setSweeper( UnnecessaryReplicasSweeper.create( 500L ));
         
