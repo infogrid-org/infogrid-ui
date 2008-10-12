@@ -549,7 +549,7 @@ public class BufferedServletResponse
         //     destination.setCharacterEncoding( theCharacterEncoding );
         // The version of JEE I have does not seem to have this method
         // }
-        if( theContentLength >= 0 ) {
+        if( theContentLength > 0 ) {
             destination.setContentLength( theContentLength );
         }
         for( String key : theHeaders.keySet() ) {
