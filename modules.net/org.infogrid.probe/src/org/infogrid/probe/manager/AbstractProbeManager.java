@@ -17,13 +17,11 @@ package org.infogrid.probe.manager;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
+import org.infogrid.meshbase.net.NetMeshBaseNameServer;
+import org.infogrid.meshbase.net.m.NetMMeshBaseNameServer;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
-
 import org.infogrid.util.CachingMap;
-import org.infogrid.util.MNameServer;
-import org.infogrid.util.NameServer;
 import org.infogrid.util.PatientSmartFactory;
 
 /**
@@ -72,10 +70,10 @@ public abstract class AbstractProbeManager
      * 
      * @return the NameServer
      */
-    public synchronized NameServer<NetMeshBaseIdentifier,NetMeshBase> getNetMeshBaseNameServer()
+    public synchronized NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> getNetMeshBaseNameServer()
     {
         if( theNameServer == null ) {
-            theNameServer = MNameServer.<NetMeshBaseIdentifier,NetMeshBase>create( this );
+            theNameServer = NetMMeshBaseNameServer.<NetMeshBaseIdentifier,NetMeshBase>create( this );
             if( theMainNetMeshBase != null ) {
                 theNameServer.put( theMainNetMeshBase.getIdentifier(), theMainNetMeshBase );
             }
@@ -91,5 +89,5 @@ public abstract class AbstractProbeManager
     /**
      * The NameServer, allocated as needed.
      */
-    protected MNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServer;
+    protected NetMMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServer;
 }

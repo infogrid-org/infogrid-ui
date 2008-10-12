@@ -75,5 +75,5 @@ public interface NameServer<K,V>
      *
      * @return the number of known key-value pairs
      */
-    public abstract int size();    
+    public abstract int size();
 }

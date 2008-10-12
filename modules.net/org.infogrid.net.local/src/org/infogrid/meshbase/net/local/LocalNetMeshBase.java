@@ -14,13 +14,11 @@
 
 package org.infogrid.meshbase.net.local;
 
+import java.util.Collection;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.probe.shadow.ShadowMeshBase;
-
-import org.infogrid.util.NameServer;
-
-import java.util.Collection;
 
 /**
  * This NetMeshBase maintains local ShadowMeshBases.
@@ -48,9 +46,9 @@ public interface LocalNetMeshBase
     /**
      * Obtain the NetMeshBases (this one and all ShadowMeshBases) as a NameServer.
      * 
-     * @return NameServer
+     * @return the MeshBaseNameServer
      */
-    public NameServer<NetMeshBaseIdentifier,NetMeshBase> getLocalNameServer();
+    public MeshBaseNameServer getLocalNameServer();
     
     /**
      * The name of the bound property we use to express "the set of all ShadowMeshBases has changed".

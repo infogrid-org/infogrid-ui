@@ -18,12 +18,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.List;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpoint;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.FactoryException;
-import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
 
 /**
@@ -67,7 +67,7 @@ public class MPingPongNetMessageEndpointFactory
      * @param nameServer the NameServer
      */
     public void setNameServer(
-            NameServer<NetMeshBaseIdentifier, ? extends NetMeshBase> nameServer )
+            NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> nameServer )
     {
         theNameServer = nameServer;
     }
@@ -141,7 +141,7 @@ public class MPingPongNetMessageEndpointFactory
     /**
      * The NameServer to find Proxies to communicate with.
      */
-    protected NameServer<NetMeshBaseIdentifier, ? extends NetMeshBase> theNameServer;
+    protected NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServer;
 
     /**
      * Our ResourceHelper.

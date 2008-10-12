@@ -21,13 +21,11 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.AbstractRestfulRequest;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.util.NameServer;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 
@@ -119,11 +117,11 @@ public class DefaultNetRestfulRequest
             }
             theRequestedMeshBaseIdentifier = NetMeshBaseIdentifier.create( meshBaseIdentifierString );
 
-            @SuppressWarnings( "unchecked" )
-            NameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( 
-                    NameServer.class );
+            NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer
+                    = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( 
+                            NetMeshBaseNameServer.class );
 
-            MeshBase mb = meshBaseNameServer.get( theRequestedMeshBaseIdentifier );
+            NetMeshBase mb = meshBaseNameServer.get( (NetMeshBaseIdentifier) theRequestedMeshBaseIdentifier );
 
             if( mb == null ) {
                 throw new URISyntaxException( meshBaseIdentifierString, "Cannot find a MeshBase with this identifier" );

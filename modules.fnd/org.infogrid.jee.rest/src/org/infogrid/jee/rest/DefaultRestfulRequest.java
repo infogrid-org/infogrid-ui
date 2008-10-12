@@ -14,7 +14,6 @@
 
 package org.infogrid.jee.rest;
 
-import org.infogrid.jee.rest.*;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,8 +22,8 @@ import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
-import org.infogrid.util.NameServer;
 import org.infogrid.util.http.HTTP;
 
 /**
@@ -109,8 +108,9 @@ public class DefaultRestfulRequest
             theRequestedMeshBaseIdentifier = MeshBaseIdentifier.create( meshBaseIdentifierString );
             
             @SuppressWarnings( "unchecked" )
-            NameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( 
-                    NameServer.class );
+            MeshBaseNameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer
+                    = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( 
+                            MeshBaseNameServer.class );
             
             MeshBase mb = meshBaseNameServer.get( theRequestedMeshBaseIdentifier );
 

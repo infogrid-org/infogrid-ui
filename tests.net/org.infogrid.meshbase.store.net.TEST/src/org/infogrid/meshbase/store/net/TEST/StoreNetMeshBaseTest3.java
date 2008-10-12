@@ -32,8 +32,6 @@ import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
-import org.infogrid.util.MNameServer;
-import org.infogrid.util.WritableNameServer;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -431,11 +429,6 @@ public class StoreNetMeshBaseTest3
      * The Store storing NetMeshBase mb2's Proxies.
      */
     protected IterablePrefixingStore mb2ProxyStore;
-
-    /**
-     * The name server.
-     */
-    protected WritableNameServer<NetMeshBaseIdentifier, NetMeshBase> theNameServer = MNameServer.create();
 
     /**
      * Our ThreadPool.

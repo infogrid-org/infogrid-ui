@@ -28,8 +28,6 @@ import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.m.MStore;
-import org.infogrid.util.MNameServer;
-import org.infogrid.util.WritableNameServer;
 import org.infogrid.util.logging.Log;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -239,11 +237,6 @@ public class StoreNetMeshBaseTest4
      * The Store storing NetMeshBase mb2's Proxies.
      */
     protected MStore mb2ProxyStore;
-
-    /**
-     * The name server.
-     */
-    protected WritableNameServer<NetMeshBaseIdentifier, NetMeshBase> theNameServer = MNameServer.create();
 
     /**
      * Our ThreadPool.

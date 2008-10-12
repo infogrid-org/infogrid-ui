@@ -23,12 +23,11 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
-import org.infogrid.util.MNameServer;
-import org.infogrid.util.WritableNameServer;
 import org.infogrid.util.logging.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ScheduledExecutorService;
+import org.infogrid.meshbase.net.m.NetMMeshBaseNameServer;
 
 /**
  * Tests recovery from disk after reboot.
@@ -48,7 +47,7 @@ public class StoreNetMeshBaseTest6
     {
         log.info( "Creating Meshbases and instantiating objects" );
 
-        WritableNameServer<NetMeshBaseIdentifier, NetMeshBase> theNameServerA = MNameServer.create();
+        NetMMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServerA = NetMMeshBaseNameServer.create();
         
         MPingPongNetMessageEndpointFactory endpointFactoryA = MPingPongNetMessageEndpointFactory.create( exec );
         endpointFactoryA.setNameServer( theNameServerA );
@@ -102,7 +101,7 @@ public class StoreNetMeshBaseTest6
         
         log.info( "Recreating MeshBases" );
         
-        WritableNameServer<NetMeshBaseIdentifier, NetMeshBase> theNameServerB = MNameServer.create();
+        NetMMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServerB = NetMMeshBaseNameServer.create();
 
         MPingPongNetMessageEndpointFactory endpointFactoryB = MPingPongNetMessageEndpointFactory.create( exec );
         endpointFactoryB.setNameServer( theNameServerB );

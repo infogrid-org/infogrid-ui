@@ -22,6 +22,7 @@ import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.m.NetMMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
@@ -247,6 +248,11 @@ public abstract class AbstractStoreNetMeshBaseTest
      * The AbstractSqlStore to be tested.
      */
     protected AbstractSqlStore theSqlStore;
+
+    /**
+     * The name server.
+     */
+    protected NetMMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServer = NetMMeshBaseNameServer.create();
 
     /**
      * The name of the database that we use to store test data.

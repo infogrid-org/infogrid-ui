@@ -21,6 +21,7 @@ import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.m.NetMMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
@@ -30,7 +31,6 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.MNameServer;
-import org.infogrid.util.WritableNameServer;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 
@@ -52,7 +52,7 @@ public abstract class AbstractXprisoTest
         super( localFileName( testClass, "/ResourceHelper" ),
                localFileName( testClass, "/Log.properties" ));
 
-        theNameServer = MNameServer.create();
+        theNameServer = NetMMeshBaseNameServer.create();
     }
 
     /**
@@ -254,7 +254,7 @@ public abstract class AbstractXprisoTest
     /**
      * The name server.
      */
-    protected WritableNameServer<NetMeshBaseIdentifier, NetMeshBase> theNameServer;
+    protected NetMMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServer;
 
     /**
      * The root context for these tests.

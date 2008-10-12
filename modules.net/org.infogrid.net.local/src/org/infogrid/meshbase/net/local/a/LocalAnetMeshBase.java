@@ -18,8 +18,8 @@ import java.util.Collection;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
@@ -32,7 +32,6 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.manager.ProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.CachingMap;
-import org.infogrid.util.NameServer;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.context.Context;
 
@@ -129,7 +128,7 @@ public abstract class LocalAnetMeshBase
      * 
      * @return NameServer
      */
-    public NameServer<NetMeshBaseIdentifier,NetMeshBase> getLocalNameServer()
+    public MeshBaseNameServer getLocalNameServer()
     {
         return theProbeManager.getNetMeshBaseNameServer();
     }
