@@ -154,7 +154,7 @@ public class SimpleContext
             if( theObjects == null ) {
                 theObjects = new ArrayList<Object>();
             }
-            theObjects.add( theContextObject );
+            theObjects.add( 0, theContextObject ); // add at the beginning, so newer objects override old ones
         }
 
         if( log.isDebugEnabled() ) {
