@@ -7,10 +7,6 @@
             <minimum-ant-version>1.6</minimum-ant-version>
             <web-module-libraries>
                 <library files="1">
-                    <file>${reference.org_infogrid_util_logging_log4j.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library files="1">
                     <file>${reference.org_infogrid_comm.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -19,19 +15,11 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
-                    <file>${reference.org_infogrid_model_Test.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library files="1">
-                    <file>${reference.org_infogrid_model_Viewlet.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library files="1">
-                    <file>${reference.org_infogrid_model_Probe.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library files="1">
                     <file>${reference.org_infogrid_jee.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_jee_defaultapp.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
@@ -43,6 +31,10 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
+                    <file>${reference.org_infogrid_jee_shell_http.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
                     <file>${reference.org_infogrid_jee_templates.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -51,11 +43,11 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
-                    <file>${reference.org_infogrid_jee_viewlet_net.jar}</file>
+                    <file>${reference.org_infogrid_jee_viewlet_bulk.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
-                    <file>${reference.org_infogrid_jee_viewlet_bulk.jar}</file>
+                    <file>${reference.org_infogrid_jee_viewlet_net.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
@@ -63,11 +55,7 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
-                    <file>${reference.org_infogrid_probe.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library files="1">
-                    <file>${reference.org_infogrid_net_local.jar}</file>
+                    <file>${reference.org_infogrid_kernel_net.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
@@ -79,11 +67,35 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
-                    <file>${reference.org_infogrid_kernel_net.jar}</file>
+                    <file>${reference.org_infogrid_lid_model_openid.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
-                    <file>${reference.org_infogrid_viewlet.jar}</file>
+                    <file>${reference.org_infogrid_lid_model_yadis.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_lid_openid.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_model_Blob.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_model_Common.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_model_Probe.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_model_Test.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_model_Viewlet.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
@@ -99,7 +111,23 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
+                    <file>${reference.org_infogrid_net_local.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_probe.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
                     <file>${reference.org_infogrid_util.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_util_logging_log4j.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
+                    <file>${reference.org_infogrid_viewlet.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
@@ -114,6 +142,7 @@
             <web-module-additional-libraries/>
             <source-roots>
                 <root id="src.dir"/>
+                <root id="src.module-generated.dir"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir"/>
@@ -145,6 +174,14 @@
                 <id>jar</id>
             </reference>
             <reference>
+                <foreign-project>org_infogrid_jee_defaultapp</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
                 <foreign-project>org_infogrid_jee_rest</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
@@ -154,6 +191,14 @@
             </reference>
             <reference>
                 <foreign-project>org_infogrid_jee_rest_net</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>org_infogrid_jee_shell_http</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>
@@ -218,6 +263,46 @@
             </reference>
             <reference>
                 <foreign-project>org_infogrid_lid_model_lid</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>org_infogrid_lid_model_openid</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>org_infogrid_lid_model_yadis</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>org_infogrid_lid_openid</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>org_infogrid_model_Blob</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>org_infogrid_model_Common</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

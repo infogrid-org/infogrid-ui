@@ -30,7 +30,7 @@ import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
-import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.net.security.NetAccessManager;
@@ -39,7 +39,6 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.NameServer;
 import org.infogrid.viewlet.ViewletFactory;
 
 /**
@@ -126,7 +125,7 @@ public class TESTAPPInitializationFilter
                     appContext );
             appContext.addContextObject( meshBase );
 
-            NameServer<NetMeshBaseIdentifier,NetMeshBase> nameServer = meshBase.getLocalNameServer();
+            MeshBaseNameServer nameServer = meshBase.getLocalNameServer();
             appContext.addContextObject( nameServer );
 
             // FormTokenService

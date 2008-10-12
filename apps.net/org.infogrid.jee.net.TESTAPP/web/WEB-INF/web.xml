@@ -34,6 +34,10 @@
  <filter>
   <filter-name>ApplicationInitializationFilter</filter-name>
   <filter-class>org.infogrid.jee.net.TESTAPP.TESTAPPInitializationFilter</filter-class>
+  <init-param>
+   <param-name>DefaultMeshBaseIdentifier</param-name>
+   <param-value>http://TESTAPP.infogrid.org/</param-value>
+  </init-param>
  </filter>
 
  <filter>
@@ -88,6 +92,11 @@
 
  <filter-mapping>
   <filter-name>HttpShellFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+ </filter-mapping>
+
+ <filter-mapping>
+  <filter-name>DispatcherFilter</filter-name>
   <url-pattern>/*</url-pattern>
  </filter-mapping>
 </web-app>
