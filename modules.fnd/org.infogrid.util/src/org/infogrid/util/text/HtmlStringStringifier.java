@@ -179,14 +179,18 @@ public class HtmlStringStringifier
      * The set of characters we replace in HTML.
      */
     protected static final char [] htmlChars = {
-        
+            '&',
+            '<',
+            '>'
     };
 
     /**
      * The set of HTML fragments we replace the characters with.
      */
     protected static final String [] htmlFrags = {
-        
+            "&amp;",
+            "&lt;",
+            "&gt;"
     };
     
     static {

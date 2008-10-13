@@ -36,7 +36,18 @@ public interface StringRepresentationContext
      */
     public Object get(
             String key );
-    
+
+    /**
+     * Add or change a specific value.
+     * 
+     * @param key the key
+     * @param value the new value
+     * @return the old value, if any
+     */
+    public Object put(
+            String key,
+            Object value );
+
     /**
      * The key that represents a web application's context path.
      */

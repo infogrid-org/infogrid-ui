@@ -29,7 +29,7 @@ import org.infogrid.jee.security.store.StoreFormTokenService;
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.meshbase.MeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.store.IterableLocalNetStoreMeshBase;
 import org.infogrid.meshbase.net.security.NetAccessManager;
@@ -44,7 +44,6 @@ import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.sql.mysql.MysqlStore;
-import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
@@ -171,7 +170,7 @@ public class NetMeshWorldApp
                 rootContext );
         rootContext.addContextObject( meshBase );
 
-        NameServer<NetMeshBaseIdentifier,NetMeshBase> nameServer = meshBase.getLocalNameServer();
+        MeshBaseNameServer nameServer = meshBase.getLocalNameServer();
         rootContext.addContextObject( nameServer );
         
         // FormTokenService

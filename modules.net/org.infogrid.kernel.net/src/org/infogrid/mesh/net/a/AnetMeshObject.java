@@ -2277,7 +2277,7 @@ public class AnetMeshObject
             StringRepresentationContext context )
     {
         boolean isDefaultMeshBase = context != null ? ( getMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
-        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        String  contextPath       = context != null ? (String) context.get( StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
 
         String key;
         if( isDefaultMeshBase ) {
@@ -2304,7 +2304,28 @@ public class AnetMeshObject
             meshObjectExternalForm = realIdentifier.toExternalForm();
         }
         
-        meshObjectExternalForm = meshObjectExternalForm.replaceAll( "#" , "%23" );
+        StringBuffer buf = new StringBuffer();
+        for( int i=0 ; i<meshObjectExternalForm.length() ; ++i ) {
+            char c = meshObjectExternalForm.charAt( i );
+            switch( c ) {
+                case '#':
+                    buf.append( "%23" );
+                    break;
+                case '?':
+                    buf.append( "%3F" );
+                    break;
+                case '&':
+                    buf.append( "%26" );
+                    break;
+                case ';':
+                    buf.append( "%3B" );
+                    break;
+                default:
+                    buf.append( c );
+                    break;
+            }
+        }
+        meshObjectExternalForm = buf.toString();
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subclass

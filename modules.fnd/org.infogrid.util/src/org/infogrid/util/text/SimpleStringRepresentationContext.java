@@ -31,7 +31,7 @@ public class SimpleStringRepresentationContext
      * @return the created SimpleStringRepresentationContext
      */
     public static SimpleStringRepresentationContext create(
-            Map<String,? extends Object> contextObjects )
+            Map<String,Object> contextObjects )
     {
         return new SimpleStringRepresentationContext( contextObjects, null );
     }
@@ -44,8 +44,8 @@ public class SimpleStringRepresentationContext
      * @return the created SimpleStringRepresentationContext
      */
     public static SimpleStringRepresentationContext create(
-            Map<String,? extends Object> contextObjects,
-            StringRepresentationContext  delegate )
+            Map<String,Object>          contextObjects,
+            StringRepresentationContext delegate )
     {
         return new SimpleStringRepresentationContext( contextObjects, delegate );
     }
@@ -57,8 +57,8 @@ public class SimpleStringRepresentationContext
      * @param delegate the StringRepresentationContext to which to delegate if a context object could not be found locally
      */
     protected SimpleStringRepresentationContext(
-            Map<String,? extends Object> contextObjects,
-            StringRepresentationContext  delegate )
+            Map<String,Object>          contextObjects,
+            StringRepresentationContext delegate )
     {
         theContextObjects = contextObjects;
         theDelegate       = delegate;
@@ -91,9 +91,24 @@ public class SimpleStringRepresentationContext
     }
     
     /**
+     * Add or change a specific value.
+     * 
+     * @param key the key
+     * @param value the new value
+     * @return the old value, if any
+     */
+    public Object put(
+            String key,
+            Object value )
+    {
+        Object ret = theContextObjects.put( key, value );
+        return ret;
+    }
+
+    /**
      * The objects in the context.
      */
-    protected Map<String,? extends Object> theContextObjects;
+    protected Map<String,Object> theContextObjects;
     
     /**
      * The delegate StringRepresentationContext, if any.

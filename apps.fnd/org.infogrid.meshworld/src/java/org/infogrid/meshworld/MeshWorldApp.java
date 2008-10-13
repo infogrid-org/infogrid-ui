@@ -229,8 +229,8 @@ public class MeshWorldApp
         
         HashMap<String,Object> contextObjects = new HashMap<String,Object>();
         contextObjects.put( StringRepresentationContext.WEB_CONTEXT_KEY, request.getContextPath() );
- 
         contextObjects.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, meshBase );
+
         StringRepresentationContext ret = SimpleStringRepresentationContext.create( contextObjects );
         return ret;
     }

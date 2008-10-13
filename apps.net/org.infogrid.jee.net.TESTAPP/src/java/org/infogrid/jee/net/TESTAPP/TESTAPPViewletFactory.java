@@ -15,9 +15,14 @@
 package org.infogrid.jee.net.TESTAPP;
 
 import java.util.ArrayList;
+import org.infogrid.jee.viewlet.PseudoJspViewletFactoryChoice;
+import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
+import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
+import org.infogrid.jee.viewlet.servlet.net.NetViewletDispatcherServlet;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.viewlet.AbstractViewletFactory;
 import org.infogrid.viewlet.DefaultViewletFactoryChoice;
@@ -58,17 +63,17 @@ public class TESTAPPViewletFactory
         if( base.getHomeObject() == subject ) {
             ret.add( DefaultViewletFactoryChoice.create( AllMeshObjectsViewlet.class, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
 //            ret.add( DefaultViewletFactoryChoice.create( AllMeshTypesViewlet.class,   ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-//            ret.add( DefaultViewletFactoryChoice.create( BulkLoaderViewlet.class,     ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( DefaultViewletFactoryChoice.create( BulkLoaderViewlet.class,     ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 //            ret.add( DefaultViewletFactoryChoice.create( ProxiesViewlet.class,        ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 //            ret.add( DefaultViewletFactoryChoice.create( AllMeshBasesViewlet.class,   ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 //
-//            Proxy p = theObjectsToView.getViewletParameters() != null ? (Proxy) theObjectsToView.getViewletParameters().get( NetViewletDispatcherServlet.PROXY_NAME ) : null;
-//            if( p != null ) {
-//                ret.add( DefaultViewletFactoryChoice.create( ProxyViewlet.class, ViewletFactoryChoice.PERFECT_MATCH_QUALITY+1.d )); // not quite perfect
-//            }
+            Proxy p = theObjectsToView.getViewletParameters() != null ? (Proxy) theObjectsToView.getViewletParameters().get( NetViewletDispatcherServlet.PROXY_NAME ) : null;
+            if( p != null ) {
+                ret.add( DefaultViewletFactoryChoice.create( ProxyViewlet.class, ViewletFactoryChoice.PERFECT_MATCH_QUALITY+1.d )); // not quite perfect
+            }
         }
-        
-//        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+
+        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 //        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
 //        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
