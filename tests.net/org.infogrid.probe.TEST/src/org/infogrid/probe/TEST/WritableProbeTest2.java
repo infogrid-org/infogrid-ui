@@ -38,7 +38,7 @@ import org.infogrid.module.ModuleException;
 import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
-import org.infogrid.probe.WriteableProbe;
+import org.infogrid.probe.WritableProbe;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
@@ -382,7 +382,7 @@ public class WritableProbeTest2
         extends
             AbstractWritableTestProbe
         implements
-            WriteableProbe
+            WritableProbe
     {
         public void write(
                 NetMeshBaseIdentifier networkId,
@@ -407,7 +407,7 @@ public class WritableProbeTest2
         extends
             AbstractWritableTestProbe
         implements
-            WriteableProbe
+            WritableProbe
     {
          public void write(
                 NetMeshBaseIdentifier networkId,

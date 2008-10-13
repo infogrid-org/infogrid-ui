@@ -40,7 +40,7 @@ import java.io.IOException;
  * <p>Note: Probes <b>must not</b> store persistent data in any place other than the
  * MeshObjects that they instantiate.</p>
  */
-public interface WriteableProbe
+public interface WritableProbe
         extends
             Probe
 {
