@@ -21,7 +21,7 @@ import java.util.Collection;
  */
 public abstract class AbstractProbeDirectory
         implements
-            ProbeDirectory
+            WritableProbeDirectory
 {
     /**
      * Constructor.

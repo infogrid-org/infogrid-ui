@@ -14,22 +14,19 @@
 
 package org.infogrid.probe;
 
+import java.io.Serializable;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.infogrid.probe.xml.XmlProbe;
 import org.infogrid.probe.xml.XmlDOMProbe;
-
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StringHelper;
 
-import java.io.Serializable;
-import java.util.Map;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
-  * Represents a directory of Probes. This enables the Probe framework to find the
+ * Represents a directory of Probes. This enables the Probe framework to find the
  * right Probe class to instantiate and run, given a to-be-accessed data source.
-  */
+ */
 public interface ProbeDirectory
 {
     /**
@@ -762,8 +759,8 @@ public interface ProbeDirectory
          * @param clazz the actual Probe class that is being matched
          */
         public ExactMatchDescriptor(
-                String                 url,
-                Class<? extends Probe> clazz )
+                String                    url,
+                Class<? extends ApiProbe> clazz )
         {
             this( url, clazz.getName(), clazz, null );
         }
@@ -777,10 +774,10 @@ public interface ProbeDirectory
          * @param parameters the parameters for the Probe, if any
          */
         public ExactMatchDescriptor(
-                String                 url,
-                String                 className,
-                Class<? extends Probe> clazz,
-                Map<String,Object>     parameters )
+                String                    url,
+                String                    className,
+                Class<? extends ApiProbe> clazz,
+                Map<String,Object>        parameters )
         {
             super( className, clazz, parameters );
 
@@ -846,8 +843,8 @@ public interface ProbeDirectory
          * @param clazz the actual Probe class that is being matched
          */
         public PatternMatchDescriptor(
-                Pattern                urlPattern,
-                Class<? extends Probe> clazz )
+                Pattern                   urlPattern,
+                Class<? extends ApiProbe> clazz )
         {
             this( urlPattern, clazz.getName(), clazz, null );
         }
@@ -861,10 +858,10 @@ public interface ProbeDirectory
          * @param parameters the parameters for the Probe, if any
          */
         public PatternMatchDescriptor(
-                Pattern                urlPattern,
-                String                 className,
-                Class<? extends Probe> clazz,
-                Map<String,Object>     parameters )
+                Pattern                   urlPattern,
+                String                    className,
+                Class<? extends ApiProbe> clazz,
+                Map<String,Object>        parameters )
         {
             super( className, clazz, parameters );
 
