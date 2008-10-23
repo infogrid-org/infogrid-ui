@@ -20,14 +20,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
-import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
-import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
 import org.infogrid.meshbase.net.externalized.xml.ExternalizedProxyXmlEncoder;
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
+import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
 import org.infogrid.probe.shadow.externalized.ExternalizedShadowProxy;
 import org.infogrid.probe.shadow.externalized.ParserFriendlyExternalizedShadowMeshBase;
@@ -143,25 +141,19 @@ public class ExternalizedShadowMeshBaseXmlEncoder
      * Deserialize an ExternalizedShadowMeshBase from a stream.
      * 
      * @param contentAsStream the byte [] stream in which the ExternalizedProxy is encoded
-     * @param externalizedMeshObjectFactory the factory to use for ExternalizedMeshObjects
-     * @param meshObjectIdentifierFactory the factory to use for MeshObjectIdentifier
-     * @param meshTypeIdentifierFactory the factory to use for MeshTypes
+     * @param shadow the ShadowMeshBase on whose behalf the decoding is performed
      * @return return the just-instantiated ExternalizedShadowMeshBase
      * @throws DecodingException thrown if a problem occurred during decoding
      * @throws IOException thrown if an I/O error occurred
      */
     public ExternalizedShadowMeshBase decodeShadowMeshBase(
-            InputStream                                    contentAsStream,
-            ParserFriendlyExternalizedNetMeshObjectFactory externalizedMeshObjectFactory,
-            NetMeshObjectIdentifierFactory                 meshObjectIdentifierFactory,
-            MeshTypeIdentifierFactory                      meshTypeIdentifierFactory )
+            InputStream    contentAsStream,
+            ShadowMeshBase shadow )
         throws
             DecodingException,
             IOException
     {
-        theExternalizedMeshObjectFactory = externalizedMeshObjectFactory;
-        theMeshObjectIdentifierFactory   = meshObjectIdentifierFactory;
-        theMeshTypeIdentifierFactory     = meshTypeIdentifierFactory;
+        theMeshBase = shadow;
 
         try {
             theParser.parse( contentAsStream, this );
@@ -201,7 +193,7 @@ public class ExternalizedShadowMeshBaseXmlEncoder
             
             if( id != null && id.length() > 0 ) {
                 try {
-                    theParsedShadowMeshBase.setNetworkIdentifier( NetMeshBaseIdentifier.fromExternalForm( id ));
+                    theParsedShadowMeshBase.setNetworkIdentifier( ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( id ));
 
                 } catch( URISyntaxException ex ) {
                     error( ex );

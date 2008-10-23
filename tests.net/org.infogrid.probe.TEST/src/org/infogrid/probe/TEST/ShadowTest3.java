@@ -51,7 +51,7 @@ public class ShadowTest3
         MProbeDirectory theProbeDirectory = MProbeDirectory.create();
         theProbeDirectory.addStreamProbe( new StreamProbeDescriptor( "text/html", BlobProbe.class ));
 
-        NetMeshBaseIdentifier here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
         LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
 
         //
@@ -159,7 +159,7 @@ public class ShadowTest3
 
         testFile1 = args[0];
 
-        testFile1Id = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
     }
 
     /**

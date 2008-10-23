@@ -21,6 +21,8 @@ import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.set.m.ImmutableMMeshObjectSetFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
@@ -53,6 +55,8 @@ public class MShadowMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param endpointFactory the factory for communications endpoints
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
@@ -65,18 +69,22 @@ public class MShadowMeshBase
      * @return the created MShadowMeshBase
      */
     public static MShadowMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyMessageEndpointFactory endpointFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            ProbeDirectory            directory,
-            long                      timeNotNeededTillExpires,
-            Context                   context )
+            NetMeshBaseIdentifier                   identifier,
+            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProbeDirectory                          directory,
+            long                                    timeNotNeededTillExpires,
+            Context                                 context )
     {
         DefaultShadowProxyPolicyFactory proxyPolicyFactory = DefaultShadowProxyPolicyFactory.create();
 
         MShadowMeshBase ret = create(
                 identifier,
+                meshBaseIdentifierFactory,
+                netMeshObjectAccessSpecificationFactory,
                 endpointFactory,
                 proxyPolicyFactory,
                 modelBase,
@@ -92,6 +100,8 @@ public class MShadowMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param endpointFactory the factory for communications endpoints
      * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param modelBase the ModelBase containing type information
@@ -105,14 +115,16 @@ public class MShadowMeshBase
      * @return the created MShadowMeshBase
      */
     public static MShadowMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            ProbeDirectory            directory,
-            long                      timeNotNeededTillExpires,
-            Context                   context )
+            NetMeshBaseIdentifier                   identifier,
+            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ProxyPolicyFactory                      proxyPolicyFactory,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProbeDirectory                          directory,
+            long                                    timeNotNeededTillExpires,
+            Context                                 context )
     {
         MCachingHashMap<MeshObjectIdentifier,MeshObject> objectStorage = MCachingHashMap.create();
         MCachingHashMap<NetMeshBaseIdentifier,Proxy>     proxyStorage  = MCachingHashMap.create();
@@ -120,13 +132,15 @@ public class MShadowMeshBase
         DefaultShadowProxyFactory proxyFactory = DefaultShadowProxyFactory.create( endpointFactory, proxyPolicyFactory );
         ProxyManager              proxyManager = ProxyManager.create( proxyFactory, proxyStorage );
 
-        NetMeshObjectIdentifierFactory   identifierFactory = DefaultAnetMeshObjectIdentifierFactory.create( identifier );
+        NetMeshObjectIdentifierFactory   identifierFactory = DefaultAnetMeshObjectIdentifierFactory.create( identifier, meshBaseIdentifierFactory );
         ImmutableMMeshObjectSetFactory   setFactory        = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
         AStagingMeshBaseLifecycleManager life              = AStagingMeshBaseLifecycleManager.create();
 
         MShadowMeshBase ret = new MShadowMeshBase(
                 identifier,
                 identifierFactory,
+                meshBaseIdentifierFactory,
+                netMeshObjectAccessSpecificationFactory,
                 setFactory,
                 modelBase,
                 life,
@@ -153,6 +167,8 @@ public class MShadowMeshBase
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
      * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
      * @param life the MeshBaseLifecycleManager to use
@@ -170,6 +186,8 @@ public class MShadowMeshBase
     protected MShadowMeshBase(
             NetMeshBaseIdentifier                       identifier,
             NetMeshObjectIdentifierFactory              identifierFactory,
+            NetMeshBaseIdentifierFactory                meshBaseIdentifierFactory,
+            NetMeshObjectAccessSpecificationFactory     netMeshObjectAccessSpecificationFactory,
             MeshObjectSetFactory                        setFactory,
             ModelBase                                   modelBase,
             AStagingMeshBaseLifecycleManager            life,
@@ -183,6 +201,8 @@ public class MShadowMeshBase
     {
         super(  identifier,
                 identifierFactory,
+                meshBaseIdentifierFactory,
+                netMeshObjectAccessSpecificationFactory,
                 setFactory,
                 modelBase,
                 life,

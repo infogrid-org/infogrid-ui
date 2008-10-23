@@ -617,6 +617,9 @@ public abstract class HTTP
     {
         try {
             String ret = URLEncoder.encode( s, "utf-8" );
+            // but, given Tomcat and http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-0450,
+            // we have to undo escaped slashes
+            ret = ret.replaceAll( "%2[Ff]", "/" );
             
             return ret;
 
@@ -719,6 +722,36 @@ public abstract class HTTP
     }
 
     /**
+     * Helper method to parse a date/time format such as for the cookie expiration.
+     * This is inspired by http://mail-archives.apache.org/mod_mbox/commons-dev/200304.mbox/%3C20030417030031.64641.qmail@icarus.apache.org%3E
+     * 
+     * @param s the String to parse
+     * @return the found Date
+     * @throws ParseException thrown if the String could not be parsed
+     */
+    public static Date parseCookieDateTime(
+            String s )
+        throws
+            ParseException
+    {
+        ParseException firstException = null;
+
+        // we try out formats until one works
+        for( int i= 0 ; i<theCookieDateFormats.length ; ++i ) {
+            try {
+                Date ret = theCookieDateFormats[i].parse( s );
+                return ret;
+
+            } catch( ParseException ex ) {
+                if( firstException == null ) {
+                    firstException = ex;
+                }
+            }
+        }
+        throw firstException;
+    }
+
+    /**
      * Our default HTTP client version.
      */
     protected static final String DEFAULT_VERSION = "current";
@@ -729,9 +762,21 @@ public abstract class HTTP
     protected static final Pattern theContentTypePattern = Pattern.compile( "([^;]*)(;.*charset=(.*))?", Pattern.CASE_INSENSITIVE );
 
     /**
-     * The DateFormat for cookie time stamps.
+     * The several different possible DateFormat for cookie time stamps.
      */
-    public static final DateFormat theCookieDateFormat = new SimpleDateFormat( "EEE, dd-MMM-yyyy hh:mm:ss z" );
+    public static final DateFormat  [] theCookieDateFormats = {
+            new SimpleDateFormat( "EEE, dd-MMM-yyyy hh:mm:ss z" ), // RFC1123,
+            new SimpleDateFormat( "EEEE, dd-MMM-yy HH:mm:ss zzz" ), // RFC1036,
+            new SimpleDateFormat( "EEE MMM d HH:mm:ss yyyy" ),
+            new SimpleDateFormat( "EEE, dd-MMM-yyyy HH:mm:ss z" ),
+            new SimpleDateFormat( "EEE, dd-MMM-yyyy HH-mm-ss z" ),
+            new SimpleDateFormat( "EEE, dd MMM yy HH:mm:ss z" ),
+            new SimpleDateFormat( "EEE dd-MMM-yyyy HH:mm:ss z" ),
+            new SimpleDateFormat( "EEE dd MMM yyyy HH:mm:ss z" ),
+            new SimpleDateFormat( "EEE dd-MMM-yyyy HH-mm-ss z" ),
+            new SimpleDateFormat( "EEE dd-MMM-yy HH:mm:ss z" ),
+            new SimpleDateFormat( "EEE dd MMM yy HH:mm:ss z" ),
+    };
 
     /**
      * Encapsulates the response from an HTTP request.
@@ -803,7 +848,7 @@ public abstract class HTTP
                                     cookiePath = value2;
                                 } else if( "expires".equalsIgnoreCase( key2 )) {
                                     try {
-                                        cookieExpires = theCookieDateFormat.parse( value2 );
+                                        cookieExpires = parseCookieDateTime( value2 );
                                     } catch( ParseException ex ) {
                                         log.error( ex );
                                     }
@@ -824,7 +869,6 @@ public abstract class HTTP
             } else {
                 theContent = null;
             }
-            
         }
 
         /**

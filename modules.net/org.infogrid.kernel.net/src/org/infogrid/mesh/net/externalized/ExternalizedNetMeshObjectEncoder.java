@@ -14,13 +14,11 @@
 
 package org.infogrid.mesh.net.externalized;
 
-import org.infogrid.mesh.externalized.ExternalizedMeshObjectEncoder;
-import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
-import org.infogrid.model.primitives.externalized.DecodingException;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
+import org.infogrid.mesh.externalized.ExternalizedMeshObjectEncoder;
+import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.primitives.externalized.DecodingException;
 
 /**
  * This interface is supported by classes that know how to serialize and deserialize
@@ -31,22 +29,17 @@ public interface ExternalizedNetMeshObjectEncoder
             ExternalizedMeshObjectEncoder // This extends because we only narrow the return type
 {
     /**
-     * Deserialize an ExternalizedMeshObject from a byte stream.
-     *
-     * @param s the InputStream from which to read
-     * @param externalizedMeshObjectFactory the factory for ParserFriendlyExternalizedMeshObjects
-     * @param meshObjectIdentifierFactory the factory for MeshObjectIdentifiers
-     * @param meshTypeIdentifierFactory the factory for MeshTypeIdentifiers
-     * @return return the just-instantiated ExternalizedMeshObject
+     * Deserialize a ExternalizedNetMeshObject from a stream.
+     * 
+     * @param contentAsStream the byte [] stream in which the ExternalizedProxy is encoded
+     * @param mb the NetMeshBase on whose behalf the decoding is performed
+     * @return return the just-instantiated ExternalizedNetMeshObject
      * @throws DecodingException thrown if a problem occurred during decoding
-     * @throws IOException thrown if a problem occurred during writing the output
+     * @throws IOException thrown if an I/O error occurred
      */
-    // Compiler does not like the @Override here
     public ExternalizedNetMeshObject decodeExternalizedMeshObject(
-            InputStream                                    s,
-            ParserFriendlyExternalizedNetMeshObjectFactory externalizedMeshObjectFactory,
-            NetMeshObjectIdentifierFactory                 meshObjectIdentifierFactory,
-            MeshTypeIdentifierFactory                      meshTypeIdentifierFactory )
+            InputStream contentAsStream,
+            MeshBase    mb )
         throws
             DecodingException,
             IOException;

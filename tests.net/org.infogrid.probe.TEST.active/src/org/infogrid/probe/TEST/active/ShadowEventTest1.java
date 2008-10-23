@@ -31,18 +31,17 @@ import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
-import org.infogrid.mesh.set.active.ActiveMeshObjectSetFactory;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetListener;
 import org.infogrid.mesh.set.active.MeshObjectAddedEvent;
 import org.infogrid.mesh.set.active.MeshObjectRemovedEvent;
 import org.infogrid.mesh.set.active.OrderedActiveMeshObjectSetReorderedEvent;
 import org.infogrid.mesh.set.active.m.ActiveMMeshObjectSetFactory;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.a.AnetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
-import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.module.ModuleException;
@@ -70,7 +69,7 @@ public class ShadowEventTest1
         throws
             Exception
     {
-        NetMeshBaseIdentifier here           = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
+        NetMeshBaseIdentifier here           = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
         MProbeDirectory       probeDirectory = MProbeDirectory.create();
 
         probeDirectory.addExactUrlMatch(
@@ -78,12 +77,17 @@ public class ShadowEventTest1
                         TEST1_URL.toExternalForm(),
                         TestApiProbe.class ));
         
-        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
-        ActiveMeshObjectSetFactory        setFactory         = ActiveMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
-        AnetMeshBaseLifecycleManager      life               = AnetMeshBaseLifecycleManager.create();
-
-        LocalNetMMeshBase base = LocalNetMMeshBase.create( here, proxyPolicyFactory, setFactory, theModelBase, life, null, exec, probeDirectory, rootContext );
-
+        LocalNetMMeshBase base = LocalNetMMeshBase.create(
+                here,
+                theModelBase,
+                null,
+                probeDirectory,
+                exec,
+                rootContext );
+        
+        MeshObjectSetFactory passiveFactory = base.getMeshObjectSetFactory();
+        MeshObjectSetFactory activeFactory  = ActiveMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );;
+        
         //
 
         log.info( "Running for probeRunCounter: " + probeRunCounter );
@@ -91,7 +95,10 @@ public class ShadowEventTest1
         MeshObject home = base.accessLocally( TEST1_URL );
 
         MeshObjectSet       destPassiveSet = home.traverse( TestSubjectArea.RR.getSource() );
-        ActiveMeshObjectSet destActiveSet  = setFactory.createActiveMeshObjectSet( home, TestSubjectArea.RR.getSource() );
+        
+        base.setMeshObjectSetFactory( activeFactory );
+        
+        ActiveMeshObjectSet destActiveSet  = (ActiveMeshObjectSet) home.traverse( TestSubjectArea.RR.getSource() );
 
         meshObjectAddedCount   = 1; // we have one element already
         meshObjectRemovedCount = 0;
@@ -223,7 +230,7 @@ public class ShadowEventTest1
 
     static {
         try {
-            TEST1_URL = NetMeshBaseIdentifier.createUnresolvable( PROTOCOL_NAME + "://myhost.local/remainder" );
+            TEST1_URL = DefaultNetMeshBaseIdentifierFactory.create().obtainUnresolvable( PROTOCOL_NAME + "://myhost.local/remainder" );
 
         } catch( Exception ex ) {
             log.error( ex );

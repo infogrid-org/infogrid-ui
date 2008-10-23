@@ -47,6 +47,7 @@ import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.a.AnetMeshBase;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectBecameDeadStateEvent;
@@ -1084,10 +1085,12 @@ public class AnetMeshObject
         if( homeProxy != null ) {
             NetMeshBaseIdentifier networkId = homeProxy.getPartnerMeshBaseIdentifier();
 
-            NetMeshObjectAccessSpecification [] paths = new NetMeshObjectAccessSpecification[ identifiers.length ];
+            NetMeshObjectAccessSpecification []     paths          = new NetMeshObjectAccessSpecification[ identifiers.length ];
+            NetMeshObjectAccessSpecificationFactory accessSpecFact = ((NetMeshBase)theMeshBase).getNetMeshObjectAccessSpecificationFactory();
+            
             for( int i=0 ; i<identifiers.length ; ++i ) {
                 if( identifiers[i] instanceof NetMeshObjectIdentifier ) {
-                    paths[i] = NetMeshObjectAccessSpecification.create( networkId, (NetMeshObjectIdentifier) identifiers[i] );
+                    paths[i] = accessSpecFact.obtain( networkId, (NetMeshObjectIdentifier) identifiers[i] );
                 }
             }
             try {
@@ -1422,7 +1425,7 @@ public class AnetMeshObject
             RelatedAlreadyException,
             TransactionException
     {
-        // we are not trying to accessLocally anything here as this would create a potentially
+        // we are not trying to accessLocally anything here as this would obtain a potentially
         // infinite loop of information becoming replicated in.
         
         // first see whether we have it already
@@ -1530,7 +1533,7 @@ public class AnetMeshObject
             TransactionException,
             NotPermittedException
     {
-        // we are not trying to accessLocally anything here as this would create a potentially
+        // we are not trying to accessLocally anything here as this would obtain a potentially
         // infinite loop of information becoming replicated in.
         
         // FIXME: this does not seem to throw some of the declared exceptions, and that

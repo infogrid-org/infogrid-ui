@@ -41,8 +41,11 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseNameServer;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.NetMeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
@@ -139,28 +142,37 @@ public class TESTAPPInitializationFilter
             // ModelBase
             ModelBase modelBase = ModelBaseSingleton.getSingleton();
 
-            // In-memory MeshBases only.
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create(
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol [] {
+                            new DefaultNetMeshBaseIdentifierFactory.Protocol( "http",   true ),
+                            new DefaultNetMeshBaseIdentifierFactory.Protocol( "https",  true ),
+                            new DefaultNetMeshBaseIdentifierFactory.Protocol( "custom", false ),
+            });
+            appContext.addContextObject( meshBaseIdentifierFactory );
 
             // NetMeshBaseIdentifier
-            NetMeshBaseIdentifier mbId = NetMeshBaseIdentifier.create( theDefaultMeshBaseIdentifier );
+            NetMeshBaseIdentifier mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
 
             // AccessManager
             NetAccessManager accessMgr = null;
 
             WritableProbeDirectory probeDirectory = MProbeDirectory.create();
-            populateProbeDirectory( probeDirectory );
+            populateProbeDirectory( probeDirectory, meshBaseIdentifierFactory );
             
             ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
 
             // MeshBase
             LocalNetMMeshBase meshBase = LocalNetMMeshBase.create(
                     mbId,
+                    DefaultNetMeshObjectAccessSpecificationFactory.create(
+                            mbId,
+                            meshBaseIdentifierFactory ),
                     modelBase,
                     accessMgr,
                     probeDirectory,
                     exec,
-                    120000L, // 2 min
                     appContext );
+
             appContext.addContextObject( meshBase );
 
             populateMeshBase( meshBase );
@@ -251,6 +263,8 @@ public class TESTAPPInitializationFilter
         
         Transaction tx = null;
         try {
+            tx = mb.createTransactionNow();
+            
             NetMeshObject a = life.createMeshObject( fact.fromExternalForm( "#a" ));
             NetMeshObject b = life.createMeshObject( fact.fromExternalForm( "#b" ));
             NetMeshObject c = life.createMeshObject( fact.fromExternalForm( "#c" ));
@@ -278,16 +292,18 @@ public class TESTAPPInitializationFilter
      * Put the right Probes into the ProbeDirectory.
      * 
      * @param dir the ProbeDirectory
+     * @param meshBaseIdentifierFactory factory for NetMeshBaseIdentifiers
      * @throws URISyntaxException coding error
      */
     protected void populateProbeDirectory(
-            WritableProbeDirectory dir )
+            WritableProbeDirectory       dir,
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
         throws
             URISyntaxException
     {
         toAccess = new NetMeshBaseIdentifier[] {
-            NetMeshBaseIdentifier.fromExternalForm( "custom://example.com/" ),
-            NetMeshBaseIdentifier.fromExternalForm( "custom://example.org/a/?foo=bar&argl=brgl" ),
+            meshBaseIdentifierFactory.fromExternalForm( "custom://example.com/" ),
+            meshBaseIdentifierFactory.fromExternalForm( "custom://example.org/a/?foo=bar&argl=brgl" ),
         };
 
         for( NetMeshBaseIdentifier current : toAccess ) {

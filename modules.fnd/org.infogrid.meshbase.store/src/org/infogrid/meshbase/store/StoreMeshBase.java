@@ -42,8 +42,8 @@ public class StoreMeshBase
     private static final Log log = Log.getLogInstance( StoreMeshBase.class ); // our own, private logger
 
     /**
-      * Factory method.
-      *
+     * Factory method.
+     *
      * @param identifier the MeshBaseIdentifier of this MeshBase
      * @param modelBase the ModelBase with the type definitions we use
      * @param accessMgr the AccessManager that controls access to this MeshBase
@@ -60,7 +60,13 @@ public class StoreMeshBase
     {
         ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( MeshObject.class, MeshObjectIdentifier.class );
 
-        StoreMeshBase ret = StoreMeshBase.create( identifier, setFactory, modelBase, accessMgr, meshObjectStore, context );
+        StoreMeshBase ret = StoreMeshBase.create(
+                identifier,
+                setFactory,
+                modelBase,
+                accessMgr,
+                meshObjectStore,
+                context );
 
         return ret;
     }
@@ -86,12 +92,21 @@ public class StoreMeshBase
     {
         StoreMeshBaseEntryMapper objectMapper = new StoreMeshBaseEntryMapper();
         
-        StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> objectStorage = StoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
+        StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> objectStorage
+                = StoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
 
         MeshObjectIdentifierFactory identifierFactory = DefaultAMeshObjectIdentifierFactory.create();
         AMeshBaseLifecycleManager   life              = AMeshBaseLifecycleManager.create();
 
-        StoreMeshBase ret = new StoreMeshBase( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, objectStorage, context );
+        StoreMeshBase ret = new StoreMeshBase(
+                identifier,
+                identifierFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                objectStorage,
+                context );
 
         setFactory.setMeshBase( ret );
         objectMapper.setMeshBase( ret );
@@ -102,7 +117,54 @@ public class StoreMeshBase
         }
         return ret;
     }
-    
+
+    /**
+     * Factory method.
+     *
+     * @param identifier the MeshBaseIdentifier of this MeshBase
+     * @param identifierFactory the factory for MeshObjectIdentifiers appropriate for this MeshBase
+     * @param setFactory the factory for MeshObjectSets appropriate for this MeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this MeshBase
+     * @param meshObjectStore the IterableStore in which to store the MeshObjects
+     * @param context the Context in which this MeshBase runs
+     * @return the created StoreMeshBase
+     */
+    public static StoreMeshBase create(
+            MeshBaseIdentifier          identifier,
+            MeshObjectIdentifierFactory identifierFactory,
+            MeshObjectSetFactory        setFactory,
+            ModelBase                   modelBase,
+            AccessManager               accessMgr,
+            Store                       meshObjectStore,
+            Context                     context )
+    {
+        StoreMeshBaseEntryMapper objectMapper = new StoreMeshBaseEntryMapper();
+        
+        StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> objectStorage
+                = StoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
+
+        AMeshBaseLifecycleManager life = AMeshBaseLifecycleManager.create();
+
+        StoreMeshBase ret = new StoreMeshBase(
+                identifier,
+                identifierFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                objectStorage,
+                context );
+
+        objectMapper.setMeshBase( ret );
+        ret.initializeHomeObject();
+        
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret );
+        }
+        return ret;
+    }
+
     /**
      * Constructor.
      *

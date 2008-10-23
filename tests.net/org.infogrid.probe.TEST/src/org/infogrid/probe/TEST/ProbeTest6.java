@@ -22,8 +22,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
-import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
-import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.meshbase.net.sweeper.UnnecessaryReplicasSweeper;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
@@ -45,9 +43,8 @@ public class ProbeTest6
         throws
             Exception
     {
-        NetMeshBaseIdentifier here               = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
-        ProxyPolicyFactory    proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
-        LocalNetMMeshBase     base               = LocalNetMMeshBase.create( here, proxyPolicyFactory, theModelBase, null, theProbeDirectory, exec, 3000L, rootContext );
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
+        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
         
         base.setSweeper( UnnecessaryReplicasSweeper.create( 500L ));
         
@@ -191,7 +188,7 @@ public class ProbeTest6
     {
         super( ProbeTest6.class );
         
-        theTestUrl = NetMeshBaseIdentifier.create( new File( args[0] ) );
+        theTestUrl = theMeshBaseIdentifierFactory.obtain( new File( args[0] ) );
     }
 
     /**

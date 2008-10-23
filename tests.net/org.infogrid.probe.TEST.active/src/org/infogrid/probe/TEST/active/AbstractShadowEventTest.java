@@ -14,6 +14,8 @@
 
 package org.infogrid.probe.TEST.active;
 
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
@@ -49,6 +51,11 @@ public abstract class AbstractShadowEventTest
      * The ModelBase.
      */
     protected static ModelBase theModelBase = ModelBaseSingleton.getSingleton();
+    
+    /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
 }
 
 

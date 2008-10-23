@@ -28,8 +28,10 @@ import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
@@ -63,6 +65,8 @@ public abstract class AnetMeshBase
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
      * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
      * @param life the MeshBaseLifecycleManager to use
@@ -74,6 +78,8 @@ public abstract class AnetMeshBase
     protected AnetMeshBase(
             NetMeshBaseIdentifier                       identifier,
             NetMeshObjectIdentifierFactory              identifierFactory,
+            NetMeshBaseIdentifierFactory                meshBaseIdentifierFactory,
+            NetMeshObjectAccessSpecificationFactory     netMeshObjectAccessSpecificationFactory,
             MeshObjectSetFactory                        setFactory,
             ModelBase                                   modelBase,
             AnetMeshBaseLifecycleManager                life,
@@ -84,6 +90,8 @@ public abstract class AnetMeshBase
     {
         super( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, context );
         
+        theMeshBaseIdentifierFactory               = meshBaseIdentifierFactory;
+        theNetMeshObjectAccessSpecificationFactory = netMeshObjectAccessSpecificationFactory;
         theProxyManager = proxyManager;
     }
 
@@ -255,7 +263,7 @@ public abstract class AnetMeshBase
     {
         NetMeshObjectAccessSpecification [] specs = new NetMeshObjectAccessSpecification[ identifiers.length ];
         for( int i=0 ; i<identifiers.length ; ++i ) {
-            specs[i] = NetMeshObjectAccessSpecification.createToLocalObject(
+            specs[i] = theNetMeshObjectAccessSpecificationFactory.obtainToLocalObject(
                     (NetMeshObjectIdentifier) identifiers[i] );
         }
         NetMeshObject [] ret = accessLocally( specs );
@@ -279,7 +287,7 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        NetMeshObjectAccessSpecification path = NetMeshObjectAccessSpecification.create(
+        NetMeshObjectAccessSpecification path = theNetMeshObjectAccessSpecificationFactory.obtain(
                 remoteLocation );
 
         return accessLocally( path );
@@ -305,7 +313,7 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        NetMeshObjectAccessSpecification path = NetMeshObjectAccessSpecification.create(
+        NetMeshObjectAccessSpecification path = theNetMeshObjectAccessSpecificationFactory.obtain(
                 remoteLocation );
 
         return accessLocally( path, timeoutInMillis );
@@ -331,8 +339,8 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        NetMeshObjectAccessSpecification path = NetMeshObjectAccessSpecification.create( remoteLocation, coherence );
-        return accessLocally( path, -1L ); // theAccessLocallyTimeout );
+        NetMeshObjectAccessSpecification path = theNetMeshObjectAccessSpecificationFactory.obtain( remoteLocation, coherence );
+        return accessLocally( path, -1L );
     }
     
     /**
@@ -379,7 +387,7 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        NetMeshObjectAccessSpecification path = NetMeshObjectAccessSpecification.create(
+        NetMeshObjectAccessSpecification path = theNetMeshObjectAccessSpecificationFactory.obtain(
                 remoteLocation,
                 objectIdentifier );
         
@@ -408,7 +416,7 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        NetMeshObjectAccessSpecification path = NetMeshObjectAccessSpecification.create(
+        NetMeshObjectAccessSpecification path = theNetMeshObjectAccessSpecificationFactory.obtain(
                 remoteLocation,
                 objectIdentifier,
                 coherence );
@@ -441,7 +449,7 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        NetMeshObjectAccessSpecification path = NetMeshObjectAccessSpecification.create(
+        NetMeshObjectAccessSpecification path = theNetMeshObjectAccessSpecificationFactory.obtain(
                 remoteLocation,
                 objectIdentifier,
                 coherence );
@@ -464,7 +472,7 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        return accessLocally( pathToObject, -1L ); // theAccessLocallyTimeout );
+        return accessLocally( pathToObject, -1L );
     }
 
     /**
@@ -643,10 +651,10 @@ public abstract class AnetMeshBase
                 NetMeshBaseIdentifier          pivotName = pivot.getNetMeshBaseIdentifier();
                 CoherenceSpecification         pivotCalc = pivot.getCoherenceSpecification();
 
-                // create a new set of object names that we still need to get
+                // obtain a new set of object names that we still need to get
                 NetMeshObjectAccessSpecification [] nextObjectPaths = new NetMeshObjectAccessSpecification[ stillToGet ]; // potentially over-allocated
 
-                nextObjectPaths[0] = NetMeshObjectAccessSpecification.create(
+                nextObjectPaths[0] = theNetMeshObjectAccessSpecificationFactory.obtain(
                         ArrayHelper.subarray( correctRemotePaths[ runningIndex ].getAccessPath(), 1, NetMeshBaseAccessSpecification.class ),
                         correctRemotePaths[ runningIndex ].getNetMeshObjectIdentifier() );
 
@@ -662,7 +670,7 @@ public abstract class AnetMeshBase
                         continue; // has different pivot
                     }
 
-                    nextObjectPaths[ nextObjectCount ] = NetMeshObjectAccessSpecification.create(
+                    nextObjectPaths[ nextObjectCount ] = theNetMeshObjectAccessSpecificationFactory.obtain(
                             ArrayHelper.subarray( correctRemotePaths[ runningIndex ].getAccessPath(), 1, NetMeshBaseAccessSpecification.class ),
                             correctRemotePaths[ runningIndex ].getNetMeshObjectIdentifier() );
 
@@ -686,7 +694,7 @@ public abstract class AnetMeshBase
 
                 } catch( FactoryException ex ) {
                     thrownExceptions.add( ex );
-                    failedObjectPaths.add( NetMeshObjectAccessSpecification.withPrefix( pivot, nextObjectPaths ) );
+                    failedObjectPaths.add( withPrefix( pivot, nextObjectPaths ) );
                 }
                 stillToGet -= nextObjectPaths.length;
             }
@@ -779,7 +787,7 @@ public abstract class AnetMeshBase
             NetMeshBaseIdentifier candidateName = path[i].getNetMeshBaseIdentifier();
             if( theMeshBaseIdentifier.equals( candidateName )) {
 
-                return NetMeshObjectAccessSpecification.create(
+                return theNetMeshObjectAccessSpecificationFactory.obtain(
                        ArrayHelper.subarray( path, i+1, NetMeshBaseAccessSpecification.class ),
                        raw.getNetMeshObjectIdentifier() );
             }
@@ -823,6 +831,26 @@ public abstract class AnetMeshBase
         return (NetMeshObjectIdentifierFactory) super.getMeshObjectIdentifierFactory();
     }
 
+    /**
+     * Obtain a factory for NetMeshBaseIdentifiers that is appropriate for this NetMeshBase.
+     * 
+     * @return the factory for NetMeshBaseIdentifiers
+     */
+    public NetMeshBaseIdentifierFactory getMeshBaseIdentifierFactory()
+    {
+        return theMeshBaseIdentifierFactory;
+    }
+    
+    /**
+     * Obtain a factory for NetMeshObjectAccessSpecifications that is appropriate for this NetMeshBase.
+     *
+     * @return the factory for NetMeshObjectAccessSpecifications
+     */
+    public NetMeshObjectAccessSpecificationFactory getNetMeshObjectAccessSpecificationFactory()
+    {
+        return theNetMeshObjectAccessSpecificationFactory;
+    }
+    
     /**
      * Set the default value for a new NetMeshObject's willGiveUpLock property if not otherwise specified.
      *
@@ -870,7 +898,7 @@ public abstract class AnetMeshBase
     }
 
      /**
-     * Obtain or create a Proxy for communication with a NetMeshBase at the specified NetMeshBaseIdentifier.
+     * Obtain or obtain a Proxy for communication with a NetMeshBase at the specified NetMeshBaseIdentifier.
      * 
      * @param networkIdentifier the NetMeshBaseIdentifier
      * @param coherence the CoherenceSpecification to use, if any
@@ -889,7 +917,7 @@ public abstract class AnetMeshBase
 
     /**
      * Obtain an existing Proxy to the specified NetMeshBaseIdentifier. Return null if no such
-     * Proxy exists. Do not attempt to create one.
+     * Proxy exists. Do not attempt to obtain one.
      *
      * @param networkIdentifier the NetMeshBaseIdentifier
      * @return the Proxy
@@ -999,6 +1027,27 @@ public abstract class AnetMeshBase
     }
 
     /**
+     * Helper method to prefix an array of NetMeshObjectAccessSpecifications with
+     * the same NetMeshBaseAccessSpecification.
+     * 
+     * @param prefix the prefix for the NetworkPaths
+     * @param paths the array of NetworkPaths that needs to be prefixed
+     * @return an array with the prefixed paths in the same order
+     */
+    protected NetMeshObjectAccessSpecification [] withPrefix(
+            NetMeshBaseAccessSpecification      prefix,
+            NetMeshObjectAccessSpecification [] paths )
+    {
+        NetMeshObjectAccessSpecification [] ret = new NetMeshObjectAccessSpecification[ paths.length ];
+        for( int i=0 ; i<ret.length ; ++i ) {
+            ret[i] = theNetMeshObjectAccessSpecificationFactory.obtain(
+                    ArrayHelper.append( prefix, paths[i].getAccessPath(), NetMeshBaseAccessSpecification.class ),
+                    paths[i].getNetMeshObjectIdentifier() );
+        }
+        return ret;
+    }
+
+    /**
      * Our ResourceHelper.
      */
     private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( NetMeshBase.class );
@@ -1017,6 +1066,16 @@ public abstract class AnetMeshBase
             "DefaultWillGiveUpHomeReplica",
             true );
 
+    /**
+     * The factory for MeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory;
+
+    /**
+     * The factory for NetMeshObjectAccessSpecifications.
+     */
+    protected NetMeshObjectAccessSpecificationFactory theNetMeshObjectAccessSpecificationFactory;
+    
     /**
      * This object helps us with synchronizing results we are getting asynchronously.
      */

@@ -33,9 +33,10 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-import org.infogrid.mesh.net.a.DefaultAnetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
@@ -173,7 +174,11 @@ public class DomMeshObjectSetProbe
                 theObjectBeingParsed.setGiveUpLock( true );
             }
             if( proxyTowardsHome != null && proxyTowardsHome.length() > 0 ) {
-                theObjectBeingParsed.setProxyTowardsHome( constructNetworkIdentifier( dataSourceIdentifier, proxyTowardsHome ));
+                theObjectBeingParsed.setProxyTowardsHome(
+                        constructNetworkIdentifier(
+                                dataSourceIdentifier,
+                                proxyTowardsHome,
+                                freshMeshBase.getMeshBaseIdentifierFactory() ));
             }
             
             NodeList childNodeList = meshObjectNode.getChildNodes();
@@ -403,10 +408,6 @@ public class DomMeshObjectSetProbe
                     NetMeshBaseIdentifier proxy             = currentObject.getProxyTowardsHome();
                     String                currentIdentifier = currentObject.getIdentifier();
 
-    //                if(    currentObject.getIdentifier().getLocalId() == null
-    //                    && currentObject.getIdentifier().getPrefix()  == null
-    //                    && proxy == null )
-
                     if( currentIdentifier.indexOf( '#' ) < 0 && proxy == null ) {
                         realCurrentObject = freshMeshBase.getHomeObject();
 
@@ -414,7 +415,10 @@ public class DomMeshObjectSetProbe
 
                     } else if( proxy == null ) {
                         realCurrentObject = life.createMeshObject(
-                                constructIdentifier( dataSourceIdentifier, currentObject.getIdentifier()),
+                                constructIdentifier(
+                                        dataSourceIdentifier,
+                                        currentObject.getIdentifier(),
+                                        freshMeshBase.getMeshObjectIdentifierFactory() ),
                                 MeshObjectSetProbeUtils.lookupEntityTypes( currentObject.getMeshTypes(), theModelBase ),
                                 currentObject.getTimeCreated(),
                                 currentObject.getTimeUpdated(),
@@ -424,7 +428,10 @@ public class DomMeshObjectSetProbe
                     } else {
                         // ForwardReference
 
-                        NetMeshObjectIdentifier fwdRefName = constructIdentifier( dataSourceIdentifier, currentObject.getIdentifier() );
+                        NetMeshObjectIdentifier fwdRefName = constructIdentifier(
+                                dataSourceIdentifier,
+                                currentObject.getIdentifier(),
+                                freshMeshBase.getMeshObjectIdentifierFactory() );
 
                         realCurrentObject = life.createForwardReference(
                                 proxy,
@@ -451,12 +458,18 @@ public class DomMeshObjectSetProbe
             // finally relate MeshObjects
 
             for( ExternalizedMeshObject currentObject : theBufferedObjects ) {
-                NetMeshObjectIdentifier currentObjectName = constructIdentifier( dataSourceIdentifier, currentObject.getIdentifier() );
-                MeshObject              realCurrentObject = freshMeshBase.findMeshObjectByIdentifier( currentObjectName );
+                NetMeshObjectIdentifier currentObjectName = constructIdentifier(
+                        dataSourceIdentifier,
+                        currentObject.getIdentifier(),
+                        freshMeshBase.getMeshObjectIdentifierFactory());
+                MeshObject realCurrentObject = freshMeshBase.findMeshObjectByIdentifier( currentObjectName );
 
                 for( ExternalizedMeshObject.ExternalizedRelationship currentRelationship : currentObject.theRelationships ) {
-                    NetMeshObjectIdentifier otherSideName = constructIdentifier( dataSourceIdentifier, currentRelationship.getIdentifier() );
-                    MeshObject              otherSide     = freshMeshBase.findMeshObjectByIdentifier( otherSideName );
+                    NetMeshObjectIdentifier otherSideName = constructIdentifier(
+                            dataSourceIdentifier,
+                            currentRelationship.getIdentifier(),
+                            freshMeshBase.getMeshObjectIdentifierFactory());
+                    MeshObject otherSide = freshMeshBase.findMeshObjectByIdentifier( otherSideName );
 
                     if( otherSide == null ) {
                         throw new ProbeException.SyntaxError( dataSourceIdentifier, "Referenced MeshObject could not be found: " + otherSide, null );
@@ -498,12 +511,14 @@ public class DomMeshObjectSetProbe
      * 
      * @param dataSourceIdentifier identifies the data source
      * @param externalForm the external form of the NetNeshBaseIdentifier
+     * @param meshObjectIdentifierFactory factory for MeshObjectIdentifiers
      * @return the created NetMeshObjectIdentifier
      * @throws org.infogrid.probe.ProbeException.SyntaxError thrown if a syntax error was discovered
      */
     protected NetMeshObjectIdentifier constructIdentifier(
-            NetMeshBaseIdentifier   dataSourceIdentifier,
-            String                  externalForm )
+            NetMeshBaseIdentifier          dataSourceIdentifier,
+            String                         externalForm,
+            NetMeshObjectIdentifierFactory meshObjectIdentifierFactory )
         throws
             ProbeException.SyntaxError
     {
@@ -518,9 +533,9 @@ public class DomMeshObjectSetProbe
                     throw new ProbeException.SyntaxError( dataSourceIdentifier, "Cannot resolve variable " + variable, null );
                 }
                 String newExternalForm = externalForm.replaceAll( VARIABLE_PATTERN.pattern(), replacement );
-                ret = DefaultAnetMeshObjectIdentifier.fromExternalForm( dataSourceIdentifier, newExternalForm );
+                ret = meshObjectIdentifierFactory.fromExternalForm( dataSourceIdentifier, newExternalForm );
             } else {
-                ret = DefaultAnetMeshObjectIdentifier.fromExternalForm( dataSourceIdentifier, externalForm );
+                ret = meshObjectIdentifierFactory.fromExternalForm( dataSourceIdentifier, externalForm );
             }
             return ret;
 
@@ -535,17 +550,19 @@ public class DomMeshObjectSetProbe
      * 
      * @param dataSourceIdentifier identifies the data source
      * @param externalForm the external form of the NetNeshBaseIdentifier
+     * @param meshBaseIdentifierFactory factory for MeshBaseIdentifiers
      * @return the created NetNeshBaseIdentifier
      * @throws org.infogrid.probe.ProbeException.SyntaxError thrown if a syntax error was discovered
      */
     protected NetMeshBaseIdentifier constructNetworkIdentifier(
-            NetMeshBaseIdentifier dataSourceIdentifier,
-            String                externalForm )
+            NetMeshBaseIdentifier        dataSourceIdentifier,
+            String                       externalForm,
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
         throws
             ProbeException.SyntaxError
     {
         try {
-            NetMeshBaseIdentifier ret = NetMeshBaseIdentifier.guessAndCreate( dataSourceIdentifier, externalForm );
+            NetMeshBaseIdentifier ret = meshBaseIdentifierFactory.guessFromExternalForm( dataSourceIdentifier, externalForm );
 
             theVariableReplacements.put( externalForm, ret.toExternalForm() );
             

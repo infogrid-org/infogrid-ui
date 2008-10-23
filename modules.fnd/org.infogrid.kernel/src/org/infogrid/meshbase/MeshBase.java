@@ -236,11 +236,21 @@ public interface MeshBase
     public abstract MeshObjectIdentifierFactory getMeshObjectIdentifierFactory();
 
     /**
-     * Obtain a factory for MeshObjectSets.
+     * Obtain the factory for MeshObjectSets.
      * 
      * @return the factory for MeshObjectSets
+     * @see #setMeshObjectSetFactory
      */
     public abstract MeshObjectSetFactory getMeshObjectSetFactory();
+
+    /**
+     * Set a new factory for MeshObjectSets.
+     * 
+     * @param newValue the new factory
+     * @see #getMeshObjectSetFactory
+     */
+    public abstract void setMeshObjectSetFactory(
+            MeshObjectSetFactory newValue );
 
     /**
      * Create a new Transaction as soon as possible. This means the calling Thread may be suspended

@@ -16,7 +16,6 @@ package org.infogrid.meshbase.store.TEST;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.store.StoreMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -71,7 +70,7 @@ public class StoreMeshBaseTest2
         long t1 = System.currentTimeMillis();
 
         StoreMeshBase mb = StoreMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 theSqlStore,

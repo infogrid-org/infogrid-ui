@@ -18,7 +18,6 @@ import org.infogrid.mesh.EquivalentAlreadyException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -294,7 +293,7 @@ public class MeshBaseTest8
         super( MeshBaseTest8.class );
 
         theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 rootContext );

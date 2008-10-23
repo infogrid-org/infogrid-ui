@@ -125,7 +125,7 @@ public abstract class AbstractTomcatTest
             String     msg )
     {
         String url = theApplicationUrl + relativeUrl;
-        
+
         Log l = Log.getLogInstance( getClass() ); // use right subclass
         if( l.isDebugEnabled() ) {
             l.debug( "Accessing " + url );

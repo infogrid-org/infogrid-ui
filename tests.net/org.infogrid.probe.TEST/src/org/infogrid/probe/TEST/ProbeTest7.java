@@ -27,6 +27,8 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.set.m.ImmutableMMeshObjectSetFactory;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseAccessSpecificationFactory;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.a.AnetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
@@ -68,7 +70,7 @@ public class ProbeTest7
         throws
             Exception
     {
-        NetMeshBaseIdentifier here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
 
         final MyListener theListener = new MyListener();
         
@@ -76,7 +78,7 @@ public class ProbeTest7
         final MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         ShadowMeshBaseFactory delegate
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactory, theProbeDirectory, 12000L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
 
         ScheduledExecutorProbeManager probeManager = MScheduledExecutorProbeManager.create( delegate );
 
@@ -105,13 +107,18 @@ public class ProbeTest7
         ProxyManager proxyManager = ProxyManager.create( proxyFactory, proxyStorage );
                 
         CachingMap<MeshObjectIdentifier,MeshObject> theCache          = MCachingHashMap.create();
-        DefaultAnetMeshObjectIdentifierFactory      identifierFactory = DefaultAnetMeshObjectIdentifierFactory.create( here );
+        DefaultAnetMeshObjectIdentifierFactory      identifierFactory = DefaultAnetMeshObjectIdentifierFactory.create( here, theMeshBaseIdentifierFactory );
         ImmutableMMeshObjectSetFactory              setFactory        = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
         AnetMeshBaseLifecycleManager                life              = AnetMeshBaseLifecycleManager.create();
         
         LocalNetMMeshBase base = new LocalNetMMeshBase(
                 here,
                 identifierFactory,
+                theMeshBaseIdentifierFactory,
+                DefaultNetMeshObjectAccessSpecificationFactory.create(
+                        identifierFactory,
+                        theMeshBaseIdentifierFactory,
+                        DefaultNetMeshBaseAccessSpecificationFactory.create( theMeshBaseIdentifierFactory ) ),
                 setFactory,
                 theModelBase,
                 life,
@@ -241,7 +248,7 @@ public class ProbeTest7
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = NetMeshBaseIdentifier.createUnresolvable( "TEST_NETWORK_IDENTIFIER.local" );
+            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "TEST_NETWORK_IDENTIFIER.local" );
 
         } catch( Throwable t ) {
             log.error( t );

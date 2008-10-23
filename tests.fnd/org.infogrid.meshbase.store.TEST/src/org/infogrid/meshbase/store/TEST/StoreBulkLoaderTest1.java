@@ -16,7 +16,6 @@ package org.infogrid.meshbase.store.TEST;
 
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.externalized.xml.BulkExternalizedMeshObjectXmlEncoder;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.store.IterableStoreMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.modelbase.ModelBaseSingleton;
@@ -52,7 +51,7 @@ public class StoreBulkLoaderTest1
         log.info( "Creating MeshBase" );
 
         IterableStoreMeshBase mb = IterableStoreMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 ModelBaseSingleton.getSingleton(),
                 null,
                 theSqlStore,
@@ -66,9 +65,7 @@ public class StoreBulkLoaderTest1
         
         Iterator<? extends ExternalizedMeshObject> iter = theParser.bulkLoad(
                 inStream,
-                mb.getMeshBaseLifecycleManager(),
-                mb.getMeshObjectIdentifierFactory(),
-                mb.getModelBase().getMeshTypeIdentifierFactory() );
+                mb );
 
         while( iter.hasNext() ) {
             mb.getMeshBaseLifecycleManager().loadExternalizedMeshObject( iter.next() );

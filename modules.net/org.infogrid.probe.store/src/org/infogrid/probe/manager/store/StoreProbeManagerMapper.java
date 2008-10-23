@@ -29,7 +29,6 @@ import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
-import org.infogrid.util.FactoryException;
 
 /**
  * Maps ShadowMeshBases to and from Stores.
@@ -72,7 +71,7 @@ public class StoreProbeManagerMapper
             String stringKey )
     {
         try {
-            NetMeshBaseIdentifier ret = NetMeshBaseIdentifier.fromExternalForm( stringKey );
+            NetMeshBaseIdentifier ret = theFactory.getNetMeshBaseIdentifierFactory().fromExternalForm( stringKey );
             return ret;
 
         } catch( URISyntaxException ex ) {
@@ -98,13 +97,13 @@ public class StoreProbeManagerMapper
         StoreShadowMeshBase ret = null;
         try {
             
+            ret = theFactory.createEmptyForRestore( key );
+            
             ExternalizedShadowMeshBase externalized = theEncoder.decodeShadowMeshBase(
                     value.getDataAsStream(),
-                    theFactory.getExternalizedMeshObjectFactory(),
-                    theFactory.getNetMeshObjectIdentifierFactory( key ),
-                    theFactory.getMeshTypeIdentifierFactory() );
+                    ret );
             
-            ret = (StoreShadowMeshBase) theFactory.restore( key, externalized );
+            ret.restoreTo( externalized );
 
         } catch( DecodingException ex ) {
             throw new StoreValueDecodingException( ex );
@@ -208,7 +207,7 @@ public class StoreProbeManagerMapper
     }
 
     /**
-     * Factory to use to re-create StoreShadowMeshBases.
+     * Factory to use to re-obtain StoreShadowMeshBases.
      */
     protected StoreShadowMeshBaseFactory theFactory;
 

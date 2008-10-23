@@ -14,6 +14,8 @@
 
 package org.infogrid.kernel.TEST.meshbase.m;
 
+import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
@@ -29,9 +31,11 @@ public abstract class AbstractMeshBaseTest
 {
     /**
      * Constructor.
+     * 
+     * @param testClass the class to be tested
      */
     public AbstractMeshBaseTest(
-            Class testClass )
+            Class<? extends AbstractTest> testClass )
     {
         super( localFileName( testClass, "/ResourceHelper" ),
                localFileName( testClass, "/Log.properties" ));
@@ -46,4 +50,9 @@ public abstract class AbstractMeshBaseTest
      * The ModelBase to use.
      */
     protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
+    
+    /**
+     * The MeshBaseIdentifierFactory to use.
+     */
+    protected MeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
 }

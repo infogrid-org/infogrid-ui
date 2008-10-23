@@ -23,6 +23,8 @@ import org.infogrid.meshbase.Sweeper;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.NetSweeper;
 import org.infogrid.meshbase.net.a.AnetMeshBaseLifecycleManager;
@@ -49,6 +51,8 @@ public abstract class LocalAIterableNetMeshBase
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
      * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
      * @param life the MeshBaseLifecycleManager to use
@@ -61,6 +65,8 @@ public abstract class LocalAIterableNetMeshBase
     protected LocalAIterableNetMeshBase(
             NetMeshBaseIdentifier                       identifier,
             NetMeshObjectIdentifierFactory              identifierFactory,
+            NetMeshBaseIdentifierFactory                meshBaseIdentifierFactory,
+            NetMeshObjectAccessSpecificationFactory     netMeshObjectAccessSpecificationFactory,
             MeshObjectSetFactory                        setFactory,
             ModelBase                                   modelBase,
             AnetMeshBaseLifecycleManager                life,
@@ -70,7 +76,18 @@ public abstract class LocalAIterableNetMeshBase
             ProbeManager                                probeManager,
             Context                                     context )
     {
-        super( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, proxyManager, probeManager, context );
+        super(  identifier,
+                identifierFactory,
+                meshBaseIdentifierFactory,
+                netMeshObjectAccessSpecificationFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                cache,
+                proxyManager,
+                probeManager,
+                context );
     }
 
     /**

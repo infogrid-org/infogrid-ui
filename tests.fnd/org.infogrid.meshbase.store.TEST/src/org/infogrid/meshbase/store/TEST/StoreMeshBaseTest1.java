@@ -16,7 +16,6 @@ package org.infogrid.meshbase.store.TEST;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.store.StoreMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -26,7 +25,6 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.store.Store;
 import org.infogrid.store.StoreListener;
 import org.infogrid.store.StoreValue;
-import org.infogrid.store.sql.SqlStoreIOException;
 import org.infogrid.util.logging.Log;
 
 import java.lang.ref.WeakReference;
@@ -49,9 +47,8 @@ public class StoreMeshBaseTest1
         throws
             Exception
     {
-        EntityType typeAA = theModelBase.findEntityType( "org.infogrid.model.Test", null, "AA" );
-        
-        PropertyType ptX  = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "A",  "X" );
+        EntityType   typeAA = theModelBase.findEntityType(   "org.infogrid.model.Test", null, "AA" );
+        PropertyType ptX    = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "A",  "X" );
 
         //
         
@@ -70,7 +67,7 @@ public class StoreMeshBaseTest1
         long t1 = System.currentTimeMillis();
 
         StoreMeshBase mb = StoreMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 theSqlStore,

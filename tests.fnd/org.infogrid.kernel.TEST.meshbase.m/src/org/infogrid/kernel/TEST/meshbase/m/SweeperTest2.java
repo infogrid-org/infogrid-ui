@@ -17,7 +17,6 @@ package org.infogrid.kernel.TEST.meshbase.m;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.Sweeper;
 import org.infogrid.meshbase.m.MMeshBase;
@@ -41,7 +40,7 @@ public class SweeperTest2
         throws
             Exception
     {
-        MeshBase  theMeshBase  = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase"), theModelBase, null, rootContext );
+        MeshBase  theMeshBase  = MMeshBase.create( theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase"), theModelBase, null, rootContext );
 
         MeshBaseLifecycleManager life = theMeshBase.getMeshBaseLifecycleManager();
 

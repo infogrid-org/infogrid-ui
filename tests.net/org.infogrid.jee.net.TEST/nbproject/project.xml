@@ -7,6 +7,7 @@
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <source-roots>
                 <root id="src.dir"/>
+                <root id="src.module-generated.dir"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir"/>
@@ -22,7 +23,7 @@
                 <id>jar</id>
             </reference>
             <reference>
-                <foreign-project>org_infogrid_module_servlet</foreign-project>
+                <foreign-project>org_infogrid_module_commandline</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

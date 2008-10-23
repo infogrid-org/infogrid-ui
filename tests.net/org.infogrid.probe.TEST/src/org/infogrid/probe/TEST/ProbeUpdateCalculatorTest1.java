@@ -249,10 +249,9 @@ public class ProbeUpdateCalculatorTest1
                 ChangingProbe.class ));
 
         theShadowFactory = MShadowMeshBaseFactory.create(
-                theModelBase,
                 theShadowEndpointFactory,
+                theModelBase,
                 theProbeDirectory,
-                16000L, // this must be slightly higher, but not much higher, than the maximum test length, so our Shadows go away automatically
                 rootContext );
         
     }
@@ -273,8 +272,8 @@ public class ProbeUpdateCalculatorTest1
     
     protected static ArrayList<Long> theInvokedAt;
 
-    protected NetMeshBaseIdentifier theChangingDataSource   = NetMeshBaseIdentifier.createUnresolvable( "proto://here.local/change" );
-    protected NetMeshBaseIdentifier theUnchangingDataSource = NetMeshBaseIdentifier.createUnresolvable( "proto://here.local/nochange" );
+    protected NetMeshBaseIdentifier theChangingDataSource   = theMeshBaseIdentifierFactory.obtainUnresolvable( "proto://here.local/change" );
+    protected NetMeshBaseIdentifier theUnchangingDataSource = theMeshBaseIdentifierFactory.obtainUnresolvable( "proto://here.local/nochange" );
 
     /**
      * The first test Probe.
@@ -313,7 +312,7 @@ public class ProbeUpdateCalculatorTest1
     }
 
     /**
-     * The second 4test Probe.
+     * The second test Probe.
      */
     public static class ChangingProbe
             implements

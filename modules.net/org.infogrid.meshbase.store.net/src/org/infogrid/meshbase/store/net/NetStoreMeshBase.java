@@ -16,23 +16,26 @@ package org.infogrid.meshbase.store.net;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.a.DefaultAnetMeshObjectIdentifier;
 import org.infogrid.mesh.set.m.ImmutableMMeshObjectSetFactory;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.a.AnetMeshBase;
 import org.infogrid.meshbase.net.a.AnetMeshBaseLifecycleManager;
-import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.DefaultProxyFactory;
 import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
+import org.infogrid.meshbase.net.proxy.ProxyFactory;
 import org.infogrid.meshbase.net.security.NetAccessManager;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
+import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
@@ -50,39 +53,311 @@ public class NetStoreMeshBase
 {
     private static final Log log = Log.getLogInstance(NetStoreMeshBase.class); // our own, private logger
 
+//    /**
+//     * Factory method.
+//     *
+//     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+//     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
+//     * @param modelBase the ModelBase containing type information
+//     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+//     * @param meshObjectStore the Store in which to store the MeshObjects
+//     * @param proxyStore the Store in which to store the Proxies
+//     * @param context the Context in which this NetMeshBase runs.
+//     * @return the created NetStoreMeshBase
+//      */
+//    public static NetStoreMeshBase obtain(
+//            NetMeshBaseIdentifier                   identifier,
+//            ProxyMessageEndpointFactory             endpointFactory,
+//            ModelBase                               modelBase,
+//            NetAccessManager                        accessMgr,
+//            Store                                   meshObjectStore,
+//            IterableStore                           proxyStore,
+//            Context                                 context )
+//    {
+//        ImmutableMMeshObjectSetFactory    setFactory         = ImmutableMMeshObjectSetFactory.obtain( NetMeshObject.class, NetMeshObjectIdentifier.class );
+//        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.obtain();
+//        
+//        NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.obtain();
+//        NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory = DefaultNetMeshObjectAccessSpecificationFactory.obtain();
+//
+//        NetStoreMeshBase ret = obtain(
+//                identifier,
+//                endpointFactory,
+//                proxyPolicyFactory,
+//                meshBaseIdentifierFactory,
+//                netMeshObjectAccessSpecificationFactory,
+//                setFactory,
+//                modelBase,
+//                accessMgr,
+//                meshObjectStore,
+//                proxyStore,
+//                context );
+//
+//        return ret;
+//    }
+//    
+//    /**
+//     * Factory method.
+//     * 
+//     * @param identifier the NetMeshBaseIdentifier of the to-be-created NetMeshBase
+//     * @param endpointFactory the MessageEndpointFactory to use for proxy communication
+//     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+//     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+//     * @param modelBase the ModelBase with the type definitions we use
+//     * @param accessMgr the AccessManager that controls access to this MeshBase
+//     * @param meshObjectStore the Store in which to store the MeshObjects
+//     * @param proxyStore the Store in which to store the Proxies
+//     * @param context the Context in which this MeshBase will run
+//     * @return the created NetStoreMeshBase
+//     */
+//    public static NetStoreMeshBase obtain(
+//            NetMeshBaseIdentifier                   identifier,
+//            ProxyMessageEndpointFactory             endpointFactory,
+//            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+//            ModelBase                               modelBase,
+//            NetAccessManager                        accessMgr,
+//            Store                                   meshObjectStore,
+//            IterableStore                           proxyStore,
+//            Context                                 context )
+//    {
+//        ImmutableMMeshObjectSetFactory    setFactory         = ImmutableMMeshObjectSetFactory.obtain( NetMeshObject.class, NetMeshObjectIdentifier.class );
+//        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.obtain();
+//
+//        NetStoreMeshBase ret = obtain(
+//                identifier,
+//                endpointFactory,
+//                proxyPolicyFactory,
+//                meshBaseIdentifierFactory,
+//                netMeshObjectAccessSpecificationFactory,
+//                setFactory,
+//                modelBase,
+//                accessMgr,
+//                meshObjectStore,
+//                proxyStore,
+//                context );
+//
+//        return ret;
+//    }
+//    
+//    /**
+//     * Factory method.
+//     * 
+//     * @param identifier the NetMeshBaseIdentifier of the to-be-created NetMeshBase
+//     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
+//     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+//     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+//     * @param modelBase the ModelBase with the type definitions we use
+//     * @param accessMgr the AccessManager that controls access to this MeshBase
+//     * @param meshObjectStore the Store in which to store the MeshObjects
+//     * @param proxyStore the Store in which to store the Proxies
+//     * @param endpointFactory the MessageEndpointFactory to use for proxy communication
+//     * @param context the Context in which this MeshBase runs
+//     * @return the created NetStoreMeshBase
+//     */
+//    public static NetStoreMeshBase obtain(
+//            NetMeshBaseIdentifier                   identifier,
+//            ProxyMessageEndpointFactory             endpointFactory,
+//            ProxyPolicyFactory                      proxyPolicyFactory,
+//            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+//            ModelBase                               modelBase,
+//            NetAccessManager                        accessMgr,
+//            Store                                   meshObjectStore,
+//            IterableStore                           proxyStore,
+//            Context                                 context )
+//    {
+//        ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.obtain( NetMeshObject.class, NetMeshObjectIdentifier.class );
+//        
+//        NetStoreMeshBase ret = NetStoreMeshBase.obtain(
+//                identifier,
+//                endpointFactory,
+//                proxyPolicyFactory,
+//                meshBaseIdentifierFactory,
+//                netMeshObjectAccessSpecificationFactory,
+//                setFactory,
+//                modelBase,
+//                accessMgr,
+//                meshObjectStore,
+//                proxyStore,
+//                context );
+//
+//        return ret;
+//    }
+//
+//    /**
+//     * Factory method.
+//     * 
+//     * @param identifier the NetMeshBaseIdentifier of the to-be-created NetMeshBase
+//     * @param endpointFactory the MessageEndpointFactory to use for proxy communication
+//     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
+//     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+//     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+//     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
+//     * @param modelBase the ModelBase with the type definitions we use
+//     * @param accessMgr the AccessManager that controls access to this MeshBase
+//     * @param meshObjectStore the Store in which to store the MeshObjects
+//     * @param proxyStore the Store in which to store the Proxies
+//     * @param context the Context in which this MeshBase runs
+//     * @return the created NetStoreMeshBase
+//     */
+//    public static NetStoreMeshBase obtain(
+//            NetMeshBaseIdentifier                   identifier,
+//            ProxyMessageEndpointFactory             endpointFactory,
+//            ProxyPolicyFactory                      proxyPolicyFactory,
+//            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+//            MeshObjectSetFactory                    setFactory,
+//            ModelBase                               modelBase,
+//            NetAccessManager                        accessMgr,
+//            Store                                   meshObjectStore,
+//            IterableStore                           proxyStore,
+//            Context                                 context )
+//    {
+//        DefaultProxyFactory proxyFactory = DefaultProxyFactory.obtain( endpointFactory, proxyPolicyFactory );
+//
+//        NetStoreMeshBaseEntryMapper objectMapper = new NetStoreMeshBaseEntryMapper();
+//        StoreProxyEntryMapper       proxyMapper  = new StoreProxyEntryMapper( proxyFactory );
+//        
+//        StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject>     objectStorage = StoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
+//        IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,Proxy> proxyStorage  = IterableStoreBackedSwappingHashMap.createWeak( proxyMapper,  proxyStore );
+//
+//        NetMeshObjectIdentifierFactory identifierFactory = DefaultAnetMeshObjectIdentifierFactory.obtain( identifier, meshBaseIdentifierFactory );
+//        AnetMeshBaseLifecycleManager   life              = AnetMeshBaseLifecycleManager.obtain();
+//        
+//        StoreProxyManager proxyManager = StoreProxyManager.obtain( proxyFactory, proxyStorage );
+//
+//        NetStoreMeshBase ret = new NetStoreMeshBase(
+//                identifier,
+//                identifierFactory,
+//                meshBaseIdentifierFactory,
+//                netMeshObjectAccessSpecificationFactory,
+//                setFactory,
+//                modelBase,
+//                life,
+//                accessMgr,
+//                objectStorage,
+//                proxyManager,
+//                context );
+//
+//        setFactory.setMeshBase( ret );
+//        objectMapper.setMeshBase( ret );
+//        proxyMapper.setMeshBase( ret );
+//        proxyFactory.setNetMeshBase( ret );
+//        ret.initializeHomeObject();
+//        
+//        if( log.isDebugEnabled() ) {
+//            log.debug( "created " + ret );
+//        }
+//        return ret;
+//    }
+//
+//    /**
+//     * Factory method.
+//     * 
+//     * @param identifier the NetMeshBaseIdentifier of the to-be-created NetMeshBase
+//     * @param endpointFactory the MessageEndpointFactory to use for proxy communication
+//     * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
+//     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+//     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+//     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
+//     * @param modelBase the ModelBase with the type definitions we use
+//     * @param accessMgr the AccessManager that controls access to this MeshBase
+//     * @param meshObjectStore the Store in which to store the MeshObjects
+//     * @param proxyStore the Store in which to store the Proxies
+//     * @param proxyFactory factory for Proxies
+//     * @param context the Context in which this MeshBase runs
+//     * @return the created NetStoreMeshBase
+//     */
+//    public static NetStoreMeshBase obtain(
+//            NetMeshBaseIdentifier                   identifier,
+//            ProxyMessageEndpointFactory             endpointFactory,
+//            NetMeshObjectIdentifierFactory          identifierFactory,
+//            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+//            MeshObjectSetFactory                    setFactory,
+//            ModelBase                               modelBase,
+//            NetAccessManager                        accessMgr,
+//            Store                                   meshObjectStore,
+//            IterableStore                           proxyStore,
+//            ProxyFactory                            proxyFactory,
+//            Context                                 context )
+//    {
+//        NetStoreMeshBaseEntryMapper objectMapper = new NetStoreMeshBaseEntryMapper();
+//        StoreProxyEntryMapper       proxyMapper  = new StoreProxyEntryMapper( proxyFactory );
+//        
+//        StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject>     objectStorage = StoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
+//        IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,Proxy> proxyStorage  = IterableStoreBackedSwappingHashMap.createWeak( proxyMapper, proxyStore );
+//
+//        AnetMeshBaseLifecycleManager   life         = AnetMeshBaseLifecycleManager.obtain();        
+//        StoreProxyManager              proxyManager = StoreProxyManager.obtain( proxyFactory, proxyStorage );
+//
+//        NetStoreMeshBase ret = new NetStoreMeshBase(
+//                identifier,
+//                identifierFactory,
+//                meshBaseIdentifierFactory,
+//                netMeshObjectAccessSpecificationFactory,
+//                setFactory,
+//                modelBase,
+//                life,
+//                accessMgr,
+//                objectStorage,
+//                proxyManager,
+//                context );
+//
+//        setFactory.setMeshBase( ret );
+//        objectMapper.setMeshBase( ret );
+//        proxyMapper.setMeshBase( ret );
+//        proxyFactory.setNetMeshBase( ret );
+//        ret.initializeHomeObject();
+//        
+//        if( log.isDebugEnabled() ) {
+//            log.debug( "created " + ret );
+//        }
+//        return ret;
+//    }
+//
+//    
+    
+    
+    
+    
+    
     /**
      * Factory method.
-     * 
-     * @param identifier the NetMeshBaseIdentifier of the to-be-created NetMeshBase
-     * @param modelBase the ModelBase with the type definitions we use
-     * @param accessMgr the AccessManager that controls access to this MeshBase
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param meshObjectStore the Store in which to store the MeshObjects
      * @param proxyStore the Store in which to store the Proxies
-     * @param endpointFactory the MessageEndpointFactory to use for proxy communication
-     * @param context the Context in which this MeshBase runs
+     * @param context the Context in which this NetMeshBase runs.
      * @return the created NetStoreMeshBase
-     */
+      */
     public static NetStoreMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            Store                     meshObjectStore,
-            IterableStore             proxyStore,
-            ProxyMessageEndpointFactory endpointFactory,
-            Context                   context )
+            NetMeshBaseIdentifier                   identifier,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProxyMessageEndpointFactory             endpointFactory,
+            Store                                   meshObjectStore,
+            IterableStore                           proxyStore,
+            Context                                 context )
     {
-        ImmutableMMeshObjectSetFactory    setFactory         = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
+        NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory
+                = DefaultNetMeshObjectAccessSpecificationFactory.create( identifier );
+
         NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
         
-        NetStoreMeshBase ret = NetStoreMeshBase.create(
+        NetStoreMeshBase ret = create(
                 identifier,
-                proxyPolicyFactory,
-                setFactory,
+                netMeshObjectAccessSpecificationFactory,
                 modelBase,
                 accessMgr,
+                endpointFactory,
+                proxyPolicyFactory,
                 meshObjectStore,
                 proxyStore,
-                endpointFactory,
                 context );
 
         return ret;
@@ -90,38 +365,38 @@ public class NetStoreMeshBase
 
     /**
      * Factory method.
-     * 
-     * @param identifier the NetMeshBaseIdentifier of the to-be-created NetMeshBase
-     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
-     * @param modelBase the ModelBase with the type definitions we use
-     * @param accessMgr the AccessManager that controls access to this MeshBase
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param meshObjectStore the Store in which to store the MeshObjects
      * @param proxyStore the Store in which to store the Proxies
-     * @param endpointFactory the MessageEndpointFactory to use for proxy communication
-     * @param context the Context in which this MeshBase runs
+     * @param context the Context in which this NetMeshBase runs.
      * @return the created NetStoreMeshBase
-     */
+      */
     public static NetStoreMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            Store                     meshObjectStore,
-            IterableStore             proxyStore,
-            ProxyMessageEndpointFactory endpointFactory,
-            Context                   context )
+            NetMeshBaseIdentifier                   identifier,
+            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProxyMessageEndpointFactory             endpointFactory,
+            Store                                   meshObjectStore,
+            IterableStore                           proxyStore,
+            Context                                 context )
     {
-        ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
         
-        NetStoreMeshBase ret = NetStoreMeshBase.create(
+        NetStoreMeshBase ret = create(
                 identifier,
-                proxyPolicyFactory,
-                setFactory,
+                netMeshObjectAccessSpecificationFactory,
                 modelBase,
                 accessMgr,
+                endpointFactory,
+                proxyPolicyFactory,
                 meshObjectStore,
                 proxyStore,
-                endpointFactory,
                 context );
 
         return ret;
@@ -129,28 +404,28 @@ public class NetStoreMeshBase
 
     /**
      * Factory method.
-     * 
-     * @param identifier the NetMeshBaseIdentifier of the to-be-created NetMeshBase
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
-     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
-     * @param modelBase the ModelBase with the type definitions we use
-     * @param accessMgr the AccessManager that controls access to this MeshBase
      * @param meshObjectStore the Store in which to store the MeshObjects
      * @param proxyStore the Store in which to store the Proxies
-     * @param endpointFactory the MessageEndpointFactory to use for proxy communication
-     * @param context the Context in which this MeshBase runs
+     * @param context the Context in which this NetMeshBase runs.
      * @return the created NetStoreMeshBase
      */
     public static NetStoreMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            MeshObjectSetFactory      setFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            Store                     meshObjectStore,
-            IterableStore             proxyStore,
-            ProxyMessageEndpointFactory endpointFactory,
-            Context                   context )
+            NetMeshBaseIdentifier                   identifier,
+            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ProxyPolicyFactory                      proxyPolicyFactory,
+            Store                                   meshObjectStore,
+            IterableStore                           proxyStore,
+            Context                                 context )
     {
         DefaultProxyFactory proxyFactory = DefaultProxyFactory.create( endpointFactory, proxyPolicyFactory );
 
@@ -158,16 +433,17 @@ public class NetStoreMeshBase
         StoreProxyEntryMapper       proxyMapper  = new StoreProxyEntryMapper( proxyFactory );
         
         StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject>     objectStorage = StoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
-        IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,Proxy> proxyStorage  = IterableStoreBackedSwappingHashMap.createWeak( proxyMapper,  proxyStore );
-
-        NetMeshObjectIdentifierFactory identifierFactory = DefaultAnetMeshObjectIdentifierFactory.create( identifier );
-        AnetMeshBaseLifecycleManager   life              = AnetMeshBaseLifecycleManager.create();
+        IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,Proxy> proxyStorage  = IterableStoreBackedSwappingHashMap.createWeak( proxyMapper, proxyStore );
         
-        StoreProxyManager proxyManager = StoreProxyManager.create( proxyFactory, proxyStorage );
+        StoreProxyManager              proxyManager = StoreProxyManager.create( proxyFactory, proxyStorage );
+        AnetMeshBaseLifecycleManager   life         = AnetMeshBaseLifecycleManager.create();
+        ImmutableMMeshObjectSetFactory setFactory   = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
 
         NetStoreMeshBase ret = new NetStoreMeshBase(
                 identifier,
-                identifierFactory,
+                netMeshObjectAccessSpecificationFactory.getNetMeshObjectIdentifierFactory(),
+                netMeshObjectAccessSpecificationFactory.getNetMeshBaseIdentifierFactory(),
+                netMeshObjectAccessSpecificationFactory,
                 setFactory,
                 modelBase,
                 life,
@@ -177,9 +453,67 @@ public class NetStoreMeshBase
                 context );
 
         setFactory.setMeshBase( ret );
+        proxyFactory.setNetMeshBase( ret );
         objectMapper.setMeshBase( ret );
         proxyMapper.setMeshBase( ret );
+        ret.initializeHomeObject();
+        
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret );
+        }
+        return ret;
+    }
+    
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param proxyFactory factory for Proxies
+     * @param meshObjectStore the Store in which to store the MeshObjects
+     * @param proxyStore the Store in which to store the Proxies
+     * @param context the Context in which this NetMeshBase runs.
+     * @return the created NetStoreMeshBase
+     */
+    public static NetStoreMeshBase create(
+            NetMeshBaseIdentifier                   identifier,
+            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProxyFactory                            proxyFactory,
+            Store                                   meshObjectStore,
+            IterableStore                           proxyStore,
+            Context                                 context )
+    {
+        NetStoreMeshBaseEntryMapper objectMapper = new NetStoreMeshBaseEntryMapper();
+        StoreProxyEntryMapper       proxyMapper  = new StoreProxyEntryMapper( proxyFactory );
+        
+        StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject>     objectStorage = StoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
+        IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,Proxy> proxyStorage  = IterableStoreBackedSwappingHashMap.createWeak( proxyMapper, proxyStore );
+
+        StoreProxyManager              proxyManager = StoreProxyManager.create( proxyFactory, proxyStorage );
+        AnetMeshBaseLifecycleManager   life         = AnetMeshBaseLifecycleManager.create();        
+        ImmutableMMeshObjectSetFactory setFactory   = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
+
+        NetStoreMeshBase ret = new NetStoreMeshBase(
+                identifier,
+                netMeshObjectAccessSpecificationFactory.getNetMeshObjectIdentifierFactory(),
+                netMeshObjectAccessSpecificationFactory.getNetMeshBaseIdentifierFactory(),
+                netMeshObjectAccessSpecificationFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                objectStorage,
+                proxyManager,
+                context );
+
+        setFactory.setMeshBase( ret );
         proxyFactory.setNetMeshBase( ret );
+        objectMapper.setMeshBase( ret );
+        proxyMapper.setMeshBase( ret );
         ret.initializeHomeObject();
         
         if( log.isDebugEnabled() ) {
@@ -188,49 +522,49 @@ public class NetStoreMeshBase
         return ret;
     }
 
-   /**
-    * Constructor.
-    *
-    * @param identifier the MeshBaseIdentifier of this MeshBase
-    * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
-    * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
-    * @param modelBase the ModelBase containing type information
-    * @param life the MeshBaseLifecycleManager to use
-    * @param accessMgr the AccessManager that controls access to this MeshBase
-    * @param cache the CachingMap that holds the MeshObjects in this MeshBase
-    * @param proxyManager the ProxyManager for this NetMeshBase
-    * @param context the Context in which this MeshBase runs
-    */
+    /**
+     * Constructor.
+     *
+     * @param identifier the MeshBaseIdentifier of this MeshBase
+     * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param life the MeshBaseLifecycleManager to use
+     * @param accessMgr the AccessManager that controls access to this MeshBase
+     * @param cache the CachingMap that holds the MeshObjects in this MeshBase
+     * @param proxyManager the ProxyManager for this NetMeshBase
+     * @param context the Context in which this MeshBase runs
+     */
     protected NetStoreMeshBase(
-            NetMeshBaseIdentifier                           identifier,
-            NetMeshObjectIdentifierFactory                  identifierFactory,
-            MeshObjectSetFactory                            setFactory,
-            ModelBase                                       modelBase,
-            AnetMeshBaseLifecycleManager                    life,
-            NetAccessManager                                accessMgr,
+            NetMeshBaseIdentifier                                       identifier,
+            NetMeshObjectIdentifierFactory                              identifierFactory,
+            NetMeshBaseIdentifierFactory                                meshBaseIdentifierFactory,
+            NetMeshObjectAccessSpecificationFactory                     netMeshObjectAccessSpecificationFactory,
+            MeshObjectSetFactory                                        setFactory,
+            ModelBase                                                   modelBase,
+            AnetMeshBaseLifecycleManager                                life,
+            NetAccessManager                                            accessMgr,
             StoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> cache,
-            StoreProxyManager                               proxyManager,
-            Context                                         context )
+            StoreProxyManager                                           proxyManager,
+            Context                                                     context )
     {
-        super( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, proxyManager, context );
+        super(  identifier,
+                identifierFactory,
+                meshBaseIdentifierFactory,
+                netMeshObjectAccessSpecificationFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                cache,
+                proxyManager,
+                context );
 
         HOME_OBJECT_IDENTIFIER = DefaultAnetMeshObjectIdentifier.create( identifier, "" );
     }
 
-//    /**
-//     * Create an identifier for a MeshObject at held locally at this MeshBase.
-//     *
-//     * @param raw the identifier String
-//     */
-//    public NetMeshObjectIdentifier fromExternalForm(
-//            String raw )
-//        throws
-//            URISyntaxException
-//    {
-//        DefaultAnetMeshObjectIdentifier ret = DefaultAnetMeshObjectIdentifier.fromExternalForm( getIdentifier(), raw );
-//        return ret;
-//    }
-//    
     /**
      * Determine the Identifier of the Home Object.
      *

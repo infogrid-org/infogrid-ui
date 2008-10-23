@@ -52,8 +52,8 @@ public class StoreNetMeshBaseTest6
         MPingPongNetMessageEndpointFactory endpointFactoryA = MPingPongNetMessageEndpointFactory.create( exec );
         endpointFactoryA.setNameServer( theNameServerA );
 
-        mb1A = NetStoreMeshBase.create( net1, theModelBase, null, mb1MeshStore, mb1ProxyStore, endpointFactoryA, rootContext );
-        mb2A = NetStoreMeshBase.create( net2, theModelBase, null, mb2MeshStore, mb2ProxyStore, endpointFactoryA, rootContext );
+        mb1A = NetStoreMeshBase.create( net1, theModelBase, null, endpointFactoryA, mb1MeshStore, mb1ProxyStore, rootContext );
+        mb2A = NetStoreMeshBase.create( net2, theModelBase, null, endpointFactoryA, mb2MeshStore, mb2ProxyStore, rootContext );
         
         theNameServerA.put( mb1A.getIdentifier(), mb1A );
         theNameServerA.put( mb2A.getIdentifier(), mb2A );
@@ -106,8 +106,8 @@ public class StoreNetMeshBaseTest6
         MPingPongNetMessageEndpointFactory endpointFactoryB = MPingPongNetMessageEndpointFactory.create( exec );
         endpointFactoryB.setNameServer( theNameServerB );
 
-        mb1B = NetStoreMeshBase.create( net1, theModelBase, null, mb1MeshStore, mb1ProxyStore, endpointFactoryB, rootContext );
-        mb2B = NetStoreMeshBase.create( net2, theModelBase, null, mb2MeshStore, mb2ProxyStore, endpointFactoryB, rootContext );
+        mb1B = NetStoreMeshBase.create( net1, theModelBase, null, endpointFactoryB, mb1MeshStore, mb1ProxyStore, rootContext );
+        mb2B = NetStoreMeshBase.create( net2, theModelBase, null, endpointFactoryB, mb2MeshStore, mb2ProxyStore, rootContext );
         
         theNameServerB.put( mb1B.getIdentifier(), mb1B );
         theNameServerB.put( mb2B.getIdentifier(), mb2B );
@@ -221,12 +221,12 @@ public class StoreNetMeshBaseTest6
     /**
      * The first NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net1 = NetMeshBaseIdentifier.createUnresolvable( "http://one.local/" );
+    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.obtainUnresolvable( "http://one.local/" );
 
     /**
      * The second NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net2 = NetMeshBaseIdentifier.createUnresolvable( "http://two.local/" );
+    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.obtainUnresolvable( "http://two.local/" );
 
     /**
      * The Store storing NetMeshBase mb1's MeshObjects.

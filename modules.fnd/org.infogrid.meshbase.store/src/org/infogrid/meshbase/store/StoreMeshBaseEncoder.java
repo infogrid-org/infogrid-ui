@@ -16,7 +16,7 @@ package org.infogrid.meshbase.store;
 
 import java.io.InputStream;
 import org.infogrid.mesh.a.AMeshObject;
-import org.infogrid.meshbase.a.AMeshBaseLifecycleManager;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
 
@@ -39,17 +39,16 @@ public interface StoreMeshBaseEncoder
             EncodingException;
 
     /**
-     * Deserialize a MeshObject from a byte stream, and instantiate using the provided
-     * MeshObjectLifecycleManager.
+     * Deserialize a MeshObject from a byte stream.
      *
      * @param contentAsStream the byte [] stream in which the MeshObject is encoded
-     * @param life the StoreMeshObjectLifecycleManager to instantiate the MeshObject
+     * @param mb the NetMeshBase on whose behalf the decoding is performed
      * @return return the just-instantiated MeshObject, as convenience
      * @throws DecodingException thrown if a decoding problem occurred
      */
     public AMeshObject decode(
-            InputStream               contentAsStream,
-            AMeshBaseLifecycleManager life )
+            InputStream contentAsStream,
+            MeshBase    mb )
         throws
             DecodingException;
 }

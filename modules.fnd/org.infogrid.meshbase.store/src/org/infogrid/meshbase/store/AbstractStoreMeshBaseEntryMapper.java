@@ -41,6 +41,14 @@ public abstract class AbstractStoreMeshBaseEntryMapper
     private static final Log log = Log.getLogInstance( AbstractStoreMeshBaseEntryMapper.class ); // our own, private logger
 
     /**
+     * Empty constructor, mostly to enable a breakpoint to be set.
+     */
+    protected AbstractStoreMeshBaseEntryMapper()
+    {
+        // nothing
+    }
+
+    /**
      * Set the MeshBase to which this StoreEntryMapper belongs.
      *
      * @param mb the MeshBase
@@ -173,9 +181,7 @@ public abstract class AbstractStoreMeshBaseEntryMapper
         try {
             ExternalizedMeshObject externalized = encoder.decodeExternalizedMeshObject(
                     stream,
-                    theMeshBase.getMeshBaseLifecycleManager(),
-                    theMeshBase.getMeshObjectIdentifierFactory(),
-                    theMeshBase.getModelBase().getMeshTypeIdentifierFactory() );
+                    theMeshBase );
 
             MeshObject ret = theMeshBase.getMeshBaseLifecycleManager().recreateMeshObject( externalized );
 

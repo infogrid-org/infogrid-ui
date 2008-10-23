@@ -19,9 +19,11 @@ import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
 import org.infogrid.mesh.net.externalized.SimpleExternalizedNetMeshObject;
-import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
@@ -96,7 +98,7 @@ public class XprisoMessageSerializationTest1
         XprisoMessage recovered = encoder.decodeXprisoMessage(
                 inStream,
                 theExternalizedMeshObjectFactory,
-                theNetMeshObjectIdentifierFactory,
+                theNetMeshObjectAccessSpecificationFactory,
                 theMeshTypeIdentifierFactory );
 
         checkEquals( message, recovered, "Recovered XprisoMessage not the same" );
@@ -114,9 +116,9 @@ public class XprisoMessageSerializationTest1
     {
         // some useful data setup
         
-        NetMeshBaseIdentifier id1 = NetMeshBaseIdentifier.create( "http://some.where.example.com/" );
-        NetMeshBaseIdentifier id2 = NetMeshBaseIdentifier.create( "http://foo.net/" ); // FIXME Make this work with plain =foo, too
-        NetMeshBaseIdentifier id3 = NetMeshBaseIdentifier.create( "http://abc.example.net/?some=parameter&other=%20" );
+        NetMeshBaseIdentifier id1 = theMeshBaseIdentifierFactory.fromExternalForm( "http://some.where.example.com/" );
+        NetMeshBaseIdentifier id2 = theMeshBaseIdentifierFactory.fromExternalForm( "http://foo.net/" ); // FIXME Make this work with plain =foo, too
+        NetMeshBaseIdentifier id3 = theMeshBaseIdentifierFactory.fromExternalForm( "http://abc.example.net/?some=parameter&other=%20" );
         
         NetMeshObjectIdentifier nmo_ref1 = theNetMeshObjectIdentifierFactory.fromExternalForm( "" );
         NetMeshObjectIdentifier nmo_ref2 = theNetMeshObjectIdentifierFactory.fromExternalForm( "abc" );
@@ -136,9 +138,9 @@ public class XprisoMessageSerializationTest1
         ParserFriendlyXprisoMessage zero = ParserFriendlyXprisoMessage.create( id1, id2 );
         zero.setRequestId( 0 );
         zero.setResponseId( 33 );
-        zero.addRequestedFirstTimeObject( NetMeshObjectAccessSpecification.create( id2 ));
-        zero.addRequestedFirstTimeObject( NetMeshObjectAccessSpecification.create(
-                NetMeshBaseAccessSpecification.create( new NetMeshBaseIdentifier[] { id3, id1 } )));
+        zero.addRequestedFirstTimeObject( theNetMeshObjectAccessSpecificationFactory.obtain( id2 ));
+        zero.addRequestedFirstTimeObject( theNetMeshObjectAccessSpecificationFactory.obtain(
+                new NetMeshBaseIdentifier[] { id3, id1 } ));
         
         zero.addPushLockObject( nmo_ref3 );
         zero.addPushLockObject( nmo_ref4 );
@@ -378,9 +380,14 @@ public class XprisoMessageSerializationTest1
     private static Log log = Log.getLogInstance( XprisoMessageSerializationTest1.class );
 
     /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theNetMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+
+    /**
      * A NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier nmbid1 = NetMeshBaseIdentifier.fromExternalForm( "https://foo.exampe.com/%27" );
+    protected NetMeshBaseIdentifier nmbid1 = theNetMeshBaseIdentifierFactory.fromExternalForm( "https://foo.exampe.com/%27" );
 
     /**
      * Factory for ExternalizedMeshObjects.
@@ -396,11 +403,17 @@ public class XprisoMessageSerializationTest1
      * Factory for NetMeshObjectIdentifiers.
      */
     protected NetMeshObjectIdentifierFactory theNetMeshObjectIdentifierFactory
-            = DefaultAnetMeshObjectIdentifierFactory.create( nmbid1 );
+            = DefaultAnetMeshObjectIdentifierFactory.create( nmbid1, theNetMeshBaseIdentifierFactory );
 
     /**
      * Factory for MeshTypeIdentifiers.
      */
     protected MeshTypeIdentifierFactory theMeshTypeIdentifierFactory
             = MMeshTypeIdentifierFactory.create();
+    
+    /**
+     * Factory for NetMeshObjectAccessSpecifications.
+     */
+    protected NetMeshObjectAccessSpecificationFactory theNetMeshObjectAccessSpecificationFactory
+            = DefaultNetMeshObjectAccessSpecificationFactory.create( nmbid1 );
 }

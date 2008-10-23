@@ -48,7 +48,8 @@ public class AllTests
         URL appUrl = tomcat.deployModule( toTest );
 
         TestSpec [] tests = {
-                new TestSpec( AllMeshObjectsTest1.class, appUrl.toExternalForm() )
+                new TestSpec( AllMeshObjectsTest1.class, appUrl.toExternalForm() ),
+                new TestSpec( AllMeshObjectsTest2.class, appUrl.toExternalForm() ),
         };
 
         runTests( tests );

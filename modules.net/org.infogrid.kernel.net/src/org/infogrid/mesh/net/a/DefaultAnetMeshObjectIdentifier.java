@@ -14,7 +14,6 @@
 
 package org.infogrid.mesh.net.a;
 
-import java.net.URISyntaxException;
 import org.infogrid.mesh.a.DefaultAMeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -98,49 +97,6 @@ public class DefaultAnetMeshObjectIdentifier
         } else {
             return theNetMeshBaseIdentifier.toExternalForm();
         }
-    }
-    
-    /**
-     * Re-construct a DefaultAnetMeshObjectIdentifier from an external form.
-     *
-     * @param contextIdentifier identifier of the NetMeshBase relative to which the external form is to be evaluated
-     * @param raw the external form of the DefaultAnetMeshObjectIdentifier
-     * @return the created DefaultAnetMeshObjectIdentifier
-     * @throws URISyntaxException thrown if a syntax error was encountered during parsing
-     */
-    public static DefaultAnetMeshObjectIdentifier fromExternalForm(
-            NetMeshBaseIdentifier contextIdentifier,
-            String                raw )
-        throws
-            URISyntaxException
-    {
-        if( raw == null ) {
-            return null;
-        }
-        
-        NetMeshBaseIdentifier meshBase;
-        String                local;
-        
-        DefaultAnetMeshObjectIdentifier ret;
-        
-        int hash = raw.indexOf( SEPARATOR );
-        if( hash == 0 ) {
-            meshBase = contextIdentifier;
-            local    = raw.substring( hash+1 );
-        } else if( hash > 0 ) {
-            meshBase = NetMeshBaseIdentifier.fromExternalForm( raw.substring( 0, hash ));
-            local    = raw.substring( hash+1 );
-        } else if( raw.indexOf( '.' ) >= 0 ) {
-            meshBase = NetMeshBaseIdentifier.fromExternalForm( raw );
-            local    = null;
-        } else {
-            meshBase = contextIdentifier;
-            local    = raw;
-        }
-        ret = DefaultAnetMeshObjectIdentifier.create(
-                meshBase,
-                local );
-        return ret;
     }
 
     /**

@@ -133,7 +133,7 @@ public class RssTest1
         super( RssTest1.class );
 
         testFile1   = args[0];
-        testFile1Id = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
         theProbeDirectory.addXmlDomProbe( new ProbeDirectory.XmlDomProbeDescriptor( null, "rss", RssProbe.class ));
         
@@ -143,7 +143,7 @@ public class RssTest1
 
 
         ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactory, theProbeDirectory, -1L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
         shadowEndpointFactory.setNameServer( theProbeManager1.getNetMeshBaseNameServer() );

@@ -17,7 +17,6 @@ package org.infogrid.kernel.TEST.meshbase.m;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.primitives.BlobValue;
@@ -54,7 +53,7 @@ public class MeshBaseTest10
             Exception
     {
         MeshBase theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 rootContext );

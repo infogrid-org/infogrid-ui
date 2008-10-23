@@ -20,19 +20,22 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.set.m.ImmutableMMeshObjectSetFactory;
-import org.infogrid.meshbase.net.proxy.DefaultProxyFactory;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
 import org.infogrid.meshbase.net.a.AIterableNetMeshBase;
 import org.infogrid.meshbase.net.a.AnetMeshBaseLifecycleManager;
-import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
+import org.infogrid.meshbase.net.proxy.DefaultProxyFactory;
 import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
-import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
+import org.infogrid.meshbase.net.proxy.ProxyFactory;
 import org.infogrid.meshbase.net.security.NetAccessManager;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
+import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.MCachingHashMap;
 import org.infogrid.util.context.Context;
@@ -51,29 +54,27 @@ public class NetMMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
-     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
      * @param context the Context in which this NetMeshBase runs.
      * @return the created NetMMeshBase
       */
     public static NetMMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyMessageEndpointFactory endpointFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            Context                   context )
+            NetMeshBaseIdentifier                   identifier,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProxyMessageEndpointFactory             endpointFactory,
+            Context                                 context )
     {
-        ImmutableMMeshObjectSetFactory    setFactory         = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
         NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
         
         NetMMeshBase ret = create(
                 identifier,
-                endpointFactory,
-                proxyPolicyFactory,
-                setFactory,
                 modelBase,
                 accessMgr,
+                endpointFactory,
+                proxyPolicyFactory,
                 context );
 
         return ret;
@@ -83,30 +84,31 @@ public class NetMMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
-     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
-     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
+     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param context the Context in which this NetMeshBase runs.
      * @return the created NetMMeshBase
       */
     public static NetMMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            Context                   context )
+            NetMeshBaseIdentifier                   identifier,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ProxyPolicyFactory                      proxyPolicyFactory,
+            Context                                 context )
     {
-        ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
-        
+        NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory
+                = DefaultNetMeshObjectAccessSpecificationFactory.create( identifier );
+
         NetMMeshBase ret = create(
                 identifier,
-                endpointFactory,
-                proxyPolicyFactory,
-                setFactory,
+                netMeshObjectAccessSpecificationFactory,
                 modelBase,
                 accessMgr,
+                endpointFactory,
+                proxyPolicyFactory,
                 context );
 
         return ret;
@@ -116,35 +118,85 @@ public class NetMMeshBase
      * Factory method.
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
-     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
-     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
-     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param endpointFactory the factory for NetMessageEndpoints to communicate with other NetMeshBases
+     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
      * @param context the Context in which this NetMeshBase runs.
      * @return the created NetMMeshBase
      */
     public static NetMMeshBase create(
-            NetMeshBaseIdentifier     identifier,
-            ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory,
-            MeshObjectSetFactory      setFactory,
-            ModelBase                 modelBase,
-            NetAccessManager          accessMgr,
-            Context                   context )
+            NetMeshBaseIdentifier                   identifier,
+            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ProxyPolicyFactory                      proxyPolicyFactory,
+            Context                                 context )
     {
         MCachingHashMap<MeshObjectIdentifier,MeshObject> objectStorage = MCachingHashMap.create();
         MCachingHashMap<NetMeshBaseIdentifier,Proxy>     proxyStorage  = MCachingHashMap.create();
-
-        DefaultProxyFactory proxyFactory = DefaultProxyFactory.create( endpointFactory, proxyPolicyFactory );
-        ProxyManager        proxyManager = ProxyManager.create( proxyFactory, proxyStorage );
         
-        NetMeshObjectIdentifierFactory identifierFactory = DefaultAnetMeshObjectIdentifierFactory.create( identifier );
-        AnetMeshBaseLifecycleManager   life              = AnetMeshBaseLifecycleManager.create();
+        DefaultProxyFactory            proxyFactory = DefaultProxyFactory.create( endpointFactory, proxyPolicyFactory );
+        ProxyManager                   proxyManager = ProxyManager.create( proxyFactory, proxyStorage );
+        AnetMeshBaseLifecycleManager   life         = AnetMeshBaseLifecycleManager.create();
+        ImmutableMMeshObjectSetFactory setFactory   = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
 
         NetMMeshBase ret = new NetMMeshBase(
                 identifier,
-                identifierFactory,
+                netMeshObjectAccessSpecificationFactory.getNetMeshObjectIdentifierFactory(),
+                netMeshObjectAccessSpecificationFactory.getNetMeshBaseIdentifierFactory(),
+                netMeshObjectAccessSpecificationFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                objectStorage,
+                proxyManager,
+                context );
+
+        setFactory.setMeshBase( ret );
+        proxyFactory.setNetMeshBase( ret );
+        ret.initializeHomeObject();
+        
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret );
+        }
+        return ret;
+    }
+    
+    /**
+     * Factory method.
+     *
+     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this NetMeshBase
+     * @param proxyFactory factory for Proxies
+     * @param context the Context in which this NetMeshBase runs.
+     * @return the created NetMMeshBase
+     */
+    public static NetMMeshBase create(
+            NetMeshBaseIdentifier                   identifier,
+            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ModelBase                               modelBase,
+            NetAccessManager                        accessMgr,
+            ProxyFactory                            proxyFactory,
+            Context                                 context )
+    {
+        MCachingHashMap<MeshObjectIdentifier,MeshObject> objectStorage = MCachingHashMap.create();
+        MCachingHashMap<NetMeshBaseIdentifier,Proxy>     proxyStorage  = MCachingHashMap.create();
+        
+        ProxyManager                   proxyManager = ProxyManager.create( proxyFactory, proxyStorage );
+        AnetMeshBaseLifecycleManager   life         = AnetMeshBaseLifecycleManager.create();
+        ImmutableMMeshObjectSetFactory setFactory   = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
+
+        NetMMeshBase ret = new NetMMeshBase(
+                identifier,
+                netMeshObjectAccessSpecificationFactory.getNetMeshObjectIdentifierFactory(),
+                netMeshObjectAccessSpecificationFactory.getNetMeshBaseIdentifierFactory(),
+                netMeshObjectAccessSpecificationFactory,
                 setFactory,
                 modelBase,
                 life,
@@ -168,6 +220,8 @@ public class NetMMeshBase
      * 
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
      * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
      * @param life the MeshBaseLifecycleManager to use
@@ -179,6 +233,8 @@ public class NetMMeshBase
     protected NetMMeshBase(
             NetMeshBaseIdentifier                       identifier,
             NetMeshObjectIdentifierFactory              identifierFactory,
+            NetMeshBaseIdentifierFactory                meshBaseIdentifierFactory,
+            NetMeshObjectAccessSpecificationFactory     netMeshObjectAccessSpecificationFactory,
             MeshObjectSetFactory                        setFactory,
             ModelBase                                   modelBase,
             AnetMeshBaseLifecycleManager                life,
@@ -189,6 +245,8 @@ public class NetMMeshBase
     {
         super(  identifier,
                 identifierFactory,
+                meshBaseIdentifierFactory,
+                netMeshObjectAccessSpecificationFactory,
                 setFactory,
                 modelBase,
                 life,

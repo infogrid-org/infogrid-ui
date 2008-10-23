@@ -39,6 +39,7 @@ import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.IntegerValue;
@@ -73,12 +74,15 @@ public class YadisServiceFactory
     /**
      * Constructor.
      *
+     * @param meshBaseIdentifierFactory the factory to use for MeshBaseIdentifiers
      * @param builder the DocumentBuilder to use
      */
     public YadisServiceFactory(
-            DocumentBuilder builder )
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory,
+            DocumentBuilder              builder )
     {
-        theDocumentBuilder = builder;
+        theMeshBaseIdentifierFactory = meshBaseIdentifierFactory;
+        theDocumentBuilder           = builder;
     }
 
     /**
@@ -285,7 +289,7 @@ public class YadisServiceFactory
                 NetMeshObject endpoint = findOrCreateAndBless( endpointIdentifier, YadisSubjectArea.SITE, base );
 
                 // FIXME? endpoint.setPropertyValue( ServiceEndPoint.Priority_PROPERTYTYPE, decodePriorityValue( infoNode ));
-                // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.create( realFound ));
+                // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( realFound ));
                 try {
                     serviceMeshObject.relate( endpoint );
                 } catch( RelatedAlreadyException ex ) {
@@ -525,7 +529,7 @@ public class YadisServiceFactory
                     int yadisLocationStart = yadisHttpEquivMatcher.start( 1 );
 
                     String                yadisLocation          = yadisHttpEquivMatcher.group( 1 );
-                    NetMeshBaseIdentifier yadisNetworkIdentifier = NetMeshBaseIdentifier.guessAndCreate( dataSourceIdentifier, yadisLocation );
+                    NetMeshBaseIdentifier yadisNetworkIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( dataSourceIdentifier, yadisLocation );
 
                     yadisLocation = yadisNetworkIdentifier.getUriString();
 
@@ -561,7 +565,7 @@ public class YadisServiceFactory
                 int openIdServerStart = openIdServerMatcher.start( 1 );
 
                 // String identityServer = openIdServerMatcher.group( 1 );
-                NetMeshBaseIdentifier identityServerIdentifier = NetMeshBaseIdentifier.guessAndCreate( openIdServerMatcher.group( 1 ) );
+                NetMeshBaseIdentifier identityServerIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( openIdServerMatcher.group( 1 ) );
                 NetMeshBaseIdentifier delegateIdentifier = null;
 
                 try {
@@ -580,7 +584,7 @@ public class YadisServiceFactory
                             if( startHeadStart < openIdDelegateStart && openIdDelegateStart < endHeadStart ) {
                                 String delegateUrl = openIdDelegateMatcher.group( 1 );
 
-                                delegateIdentifier = NetMeshBaseIdentifier.guessAndCreate( delegateUrl );
+                                delegateIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( delegateUrl );
                             }
                         }
                     }
@@ -612,7 +616,7 @@ public class YadisServiceFactory
                             identityServerIdentifier,
                             Site._TYPE );
 
-                    // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.create( identityServer ));
+                    // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( identityServer ));
 
                     serviceMeshObject.relateAndBless( Service._Service_IsProvidedAtEndpoint_Site_SOURCE, endpoint );
                     serviceMeshObject.relateAndBless( Service._Site_MakesUseOf_Service_DESTINATION, subject );
@@ -638,6 +642,11 @@ public class YadisServiceFactory
      * The XML DocumentBuilder to use.
      */
     protected DocumentBuilder theDocumentBuilder;
+
+    /**
+     * Factory for MeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory;
 
     /**
      * The pattern that helps us find the beginning the HTML head section.
@@ -695,13 +704,13 @@ public class YadisServiceFactory
     protected static final HashMap<String,MeshTypeIdentifier> theTypeMappingTable = new HashMap<String,MeshTypeIdentifier>();
     static {
         // none of the following lines should be instantiated as long as we haven't defined a subtype of the Yadis generic Service
-        // theTypeMappingTable.put( "http://lid.netmesh.org/minimum-lid/2.0",        MeshTypeIdentifier.create( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/sso/2.0",                MeshTypeIdentifier.create( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/relying-party/2.0",      MeshTypeIdentifier.create( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/traversal/2.0",          MeshTypeIdentifier.create( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/format-negotiation/2.0", MeshTypeIdentifier.create( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/post/sender/2.0",        MeshTypeIdentifier.create( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/post/receiver/2.0",      MeshTypeIdentifier.create( "org.Yadis", "Service" ));
+        // theTypeMappingTable.put( "http://lid.netmesh.org/minimum-lid/2.0",        MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
+        // theTypeMappingTable.put( "http://lid.netmesh.org/sso/2.0",                MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
+        // theTypeMappingTable.put( "http://lid.netmesh.org/relying-party/2.0",      MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
+        // theTypeMappingTable.put( "http://lid.netmesh.org/traversal/2.0",          MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
+        // theTypeMappingTable.put( "http://lid.netmesh.org/format-negotiation/2.0", MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
+        // theTypeMappingTable.put( "http://lid.netmesh.org/post/sender/2.0",        MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
+        // theTypeMappingTable.put( "http://lid.netmesh.org/post/receiver/2.0",      MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
     }
     
     /**

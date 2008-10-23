@@ -65,9 +65,16 @@ public class IterableStoreMeshBase
             IterableStore      meshObjectStore,
             Context            context )
     {
-        ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( MeshObject.class, MeshObjectIdentifier.class );
+        ImmutableMMeshObjectSetFactory setFactory
+                = ImmutableMMeshObjectSetFactory.create( MeshObject.class, MeshObjectIdentifier.class );
 
-        IterableStoreMeshBase ret = IterableStoreMeshBase.create( identifier, setFactory, modelBase, accessMgr, meshObjectStore, context );
+        IterableStoreMeshBase ret = IterableStoreMeshBase.create(
+                identifier,
+                setFactory,
+                modelBase,
+                accessMgr,
+                meshObjectStore,
+                context );
 
         return ret;
     }
@@ -93,12 +100,68 @@ public class IterableStoreMeshBase
     {
         StoreMeshBaseEntryMapper objectMapper = new StoreMeshBaseEntryMapper();
         
-        IterableStoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> objectStorage = IterableStoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
+        IterableStoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> objectStorage
+                = IterableStoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
 
         MeshObjectIdentifierFactory identifierFactory = DefaultAMeshObjectIdentifierFactory.create();
         AMeshBaseLifecycleManager   life              = AMeshBaseLifecycleManager.create();
 
-        IterableStoreMeshBase ret = new IterableStoreMeshBase( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, objectStorage, context );
+        IterableStoreMeshBase ret = new IterableStoreMeshBase(
+                identifier,
+                identifierFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                objectStorage,
+                context );
+
+        objectMapper.setMeshBase( ret );
+        ret.initializeHomeObject();
+        
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret );
+        }
+        return ret;
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param identifier the MeshBaseIdentifier of this MeshBase
+     * @param identifierFactory the factory for MeshObjectIdentifiers appropriate for this MeshBase
+     * @param setFactory the factory for MeshObjectSets appropriate for this MeshBase
+     * @param modelBase the ModelBase containing type information
+     * @param accessMgr the AccessManager that controls access to this MeshBase
+     * @param meshObjectStore the IterableStore in which to store the MeshObjects
+     * @param context the Context in which this MeshBase runs
+     * @return the created IterableStoreMeshBase
+     */
+    public static IterableStoreMeshBase create(
+            MeshBaseIdentifier          identifier,
+            MeshObjectIdentifierFactory identifierFactory,
+            MeshObjectSetFactory        setFactory,
+            ModelBase                   modelBase,
+            AccessManager               accessMgr,
+            IterableStore               meshObjectStore,
+            Context                     context )
+    {
+        StoreMeshBaseEntryMapper objectMapper = new StoreMeshBaseEntryMapper();
+        
+        IterableStoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> objectStorage
+                = IterableStoreBackedSwappingHashMap.createWeak( objectMapper, meshObjectStore );
+
+        AMeshBaseLifecycleManager life = AMeshBaseLifecycleManager.create();
+
+        IterableStoreMeshBase ret = new IterableStoreMeshBase(
+                identifier,
+                identifierFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                objectStorage,
+                context );
 
         objectMapper.setMeshBase( ret );
         ret.initializeHomeObject();
@@ -122,14 +185,14 @@ public class IterableStoreMeshBase
      * @param context the Context in which this MeshBase runs
      */
     protected IterableStoreMeshBase(
-            MeshBaseIdentifier                                      identifier,
-            MeshObjectIdentifierFactory                             identifierFactory,
-            MeshObjectSetFactory                                    setFactory,
-            ModelBase                                               modelBase,
-            AMeshBaseLifecycleManager                               life,
-            AccessManager                                           accessMgr,
+            MeshBaseIdentifier                                                  identifier,
+            MeshObjectIdentifierFactory                                         identifierFactory,
+            MeshObjectSetFactory                                                setFactory,
+            ModelBase                                                           modelBase,
+            AMeshBaseLifecycleManager                                           life,
+            AccessManager                                                       accessMgr,
             IterableStoreBackedSwappingHashMap<MeshObjectIdentifier,MeshObject> cache,
-            Context                                                 context )
+            Context                                                             context )
     {
         super( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, context );
     }

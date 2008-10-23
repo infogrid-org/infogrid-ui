@@ -14,27 +14,22 @@
 
 package org.infogrid.mesh;
 
+import java.beans.PropertyChangeListener;
+import java.util.Iterator;
+import java.util.Map;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
-
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.transaction.TransactionException;
-
 import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.Role;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
-
-import org.infogrid.model.primitives.MeshTypeIdentifier;
-
 import org.infogrid.util.IsDeadException;
-
-import java.beans.PropertyChangeListener;
-import java.util.Iterator;
-import java.util.Map;
 import org.infogrid.util.text.HasStringRepresentation;
 
 /**

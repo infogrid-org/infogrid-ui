@@ -204,7 +204,7 @@ public class MeshBaseTest3
         super( MeshBaseTest3.class );
 
         theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 rootContext );

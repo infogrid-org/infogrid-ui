@@ -14,18 +14,20 @@
 
 package org.infogrid.meshbase.store.net.TEST;
 
-import org.infogrid.mesh.MeshObjectIdentifier;
+import java.io.File;
+import java.io.FileInputStream;
+import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
-import org.infogrid.mesh.net.externalized.SimpleExternalizedNetMeshObject;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
 import org.infogrid.meshbase.net.externalized.xml.ExternalizedProxyXmlEncoder;
-import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectNeighborAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectNeighborRemovedEvent;
@@ -42,10 +44,6 @@ import org.infogrid.module.ModuleRegistry;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.testharness.ModuleRegistryContext;
 import org.infogrid.util.logging.Log;
-
-import java.io.File;
-import java.io.FileInputStream;
-import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 
 /**
  * Tests the ProxyStoreEntryMapper's parsing functionality.
@@ -215,6 +213,7 @@ public class ProxySerializationTest1
         ExternalizedProxy proxy = test.decodeExternalizedProxy(
                 new FileInputStream( theFile ),
                 theExternalizedMeshObjectFactory,
+                theMeshBaseIdentifierFactory,
                 theNetMeshObjectIdentifierFactory,
                 theMeshTypeIdentifierFactory );
 
@@ -282,20 +281,26 @@ public class ProxySerializationTest1
     // Our Logger
     private static Log log = Log.getLogInstance( ProxySerializationTest1.class );
     
+//    /**
+//     * The test NetMeshBaseIdentifier.
+//     */
+//    private static NetMeshBaseIdentifier theMeshBaseIdentifier;
+//    static {
+//        NetMeshBaseIdentifier temp = null;
+//        try {
+//            temp = theMeshBaseIdentifierFactory.fromExternalForm( "http://example.com/" );
+//        } catch( Throwable t ) {
+//            log.error( t );
+//        }
+//        theMeshBaseIdentifier = temp;
+//    }
+//
+    
     /**
-     * The test NetMeshBaseIdentifier.
+     * Factory for NetMeshBaseIdentifiers.
      */
-    private static NetMeshBaseIdentifier theMeshBaseIdentifier;
-    static {
-        NetMeshBaseIdentifier temp = null;
-        try {
-            temp = NetMeshBaseIdentifier.create( "http://example.com/" );
-        } catch( Throwable t ) {
-            log.error( t );
-        }
-        theMeshBaseIdentifier = temp;
-    }
-
+    protected static NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+    
     /**
      * An ExternalizedNetMeshObjectFactory for the test.
      */
@@ -310,7 +315,7 @@ public class ProxySerializationTest1
      * A NetMeshObjectIdentifierFactory for the test.
      */
     protected NetMeshObjectIdentifierFactory theNetMeshObjectIdentifierFactory
-            = DefaultAnetMeshObjectIdentifierFactory.create( null );
+            = DefaultAnetMeshObjectIdentifierFactory.create( null, theMeshBaseIdentifierFactory );
 
     /**
      * A MeshTypeIdentifierFactory for the test.
@@ -347,10 +352,10 @@ public class ProxySerializationTest1
             theTimeExpires   = timeExpires;
 
             if( networkIdentifier != null ) {
-                theNetworkIdentifier = NetMeshBaseIdentifier.fromExternalForm( networkIdentifier );
+                theNetworkIdentifier = theMeshBaseIdentifierFactory.fromExternalForm( networkIdentifier );
             }
             if( networkIdentifierOfPartner != null ) {
-                theNetworkIdentifierOfPartner = NetMeshBaseIdentifier.fromExternalForm( networkIdentifierOfPartner );
+                theNetworkIdentifierOfPartner = theMeshBaseIdentifierFactory.fromExternalForm( networkIdentifierOfPartner );
             }
             theLastSentToken     = lastSentToken;
             theLastReceivedToken = lastReceivedToken;
@@ -420,10 +425,10 @@ public class ProxySerializationTest1
             setResponseId( responseId );
 
             if( senderNetworkIdentifierString != null ) {
-                setSenderIdentifier( NetMeshBaseIdentifier.create( senderNetworkIdentifierString ));
+                setSenderIdentifier( theMeshBaseIdentifierFactory.fromExternalForm( senderNetworkIdentifierString ));
             }
             if( receiverNetworkIdentifierString != null ) {
-                setReceiverIdentifier( NetMeshBaseIdentifier.create( receiverNetworkIdentifierString ));
+                setReceiverIdentifier( theMeshBaseIdentifierFactory.fromExternalForm( receiverNetworkIdentifierString ));
             }
 
             if( requestedFirstTimeObjects != null ) {

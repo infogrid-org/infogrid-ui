@@ -82,11 +82,11 @@ public class NetMeshWorldViewletFactory
         // Type-based rules
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
             ret.add( DefaultViewletFactoryChoice.create( WikiObjectDisplayViewlet.class, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( WikiObjectEditViewlet.class, ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
+            ret.add( DefaultViewletFactoryChoice.create( WikiObjectEditViewlet.class,    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
-        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
         ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
-        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",                ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

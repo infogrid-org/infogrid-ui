@@ -589,7 +589,7 @@ public class ProbeDispatcher
             }
 
             if( theServiceFactory == null && ( yadisServicesXml != null || yadisServicesHtml != null )) {
-                theServiceFactory = new YadisServiceFactory( getDocumentBuilder() );
+                theServiceFactory = new YadisServiceFactory( theShadowMeshBase.getMeshBaseIdentifierFactory(), getDocumentBuilder() );
             }
             if( yadisServicesXml != null ) {
                 theServiceFactory.addYadisServicesFromXml( sourceIdentifier, yadisServicesXml, newBase );

@@ -371,8 +371,8 @@ public class StoreNetMeshBaseTest3
         mb2MeshStore  = IterablePrefixingStore.create( "mb2-mesh-",  theSqlStore );
         mb2ProxyStore = IterablePrefixingStore.create( "mb2-proxy-", theSqlStore );
         
-        mb1 = NetStoreMeshBase.create( net1, theModelBase, null, mb1MeshStore, mb1ProxyStore, endpointFactory, rootContext );
-        mb2 = NetStoreMeshBase.create( net2, theModelBase, null, mb2MeshStore, mb2ProxyStore, endpointFactory, rootContext );
+        mb1 = NetStoreMeshBase.create( net1, theModelBase, null, endpointFactory, mb1MeshStore, mb1ProxyStore, rootContext );
+        mb2 = NetStoreMeshBase.create( net2, theModelBase, null, endpointFactory, mb2MeshStore, mb2ProxyStore, rootContext );
         
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb2.getIdentifier(), mb2 );
@@ -393,12 +393,12 @@ public class StoreNetMeshBaseTest3
     /**
      * The first NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net1 = NetMeshBaseIdentifier.createUnresolvable( "http://one.local/" );
+    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.obtainUnresolvable( "http://one.local/" );
 
     /**
      * The second NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net2 = NetMeshBaseIdentifier.createUnresolvable( "http://two.local/" );
+    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.obtainUnresolvable( "http://two.local/" );
 
     /**
      * The first NetMeshBase.

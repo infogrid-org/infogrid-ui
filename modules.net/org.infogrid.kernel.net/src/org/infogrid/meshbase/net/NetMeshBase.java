@@ -391,6 +391,20 @@ public interface NetMeshBase
     public abstract NetMeshObjectIdentifierFactory getMeshObjectIdentifierFactory();
 
     /**
+     * Obtain a factory for NetMeshBaseIdentifiers that is appropriate for this NetMeshBase.
+     * 
+     * @return the factory for NetMeshBaseIdentifiers
+     */
+    public abstract NetMeshBaseIdentifierFactory getMeshBaseIdentifierFactory();
+    
+    /**
+     * Obtain a factory for NetMeshObjectAccessSpecifications that is appropriate for this NetMeshBase.
+     *
+     * @return the factory for NetMeshObjectAccessSpecifications
+     */
+    public abstract NetMeshObjectAccessSpecificationFactory getNetMeshObjectAccessSpecificationFactory();
+    
+    /**
      * Obtain or create a Proxy for communication with a NetMeshBase at the specified NetMeshBaseIdentifier.
      * 
      * @param networkIdentifier the NetMeshBaseIdentifier

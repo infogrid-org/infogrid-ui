@@ -27,7 +27,6 @@ import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.store.IterableLocalNetStoreMeshBase;
 import org.infogrid.meshbase.net.local.store.LocalNetStoreMeshBase;
-import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
@@ -64,12 +63,10 @@ public class StoreShadowMeshBaseTest8
         
         log.info( "Creating MeshBase" );
         
-        NetMeshBaseIdentifier             baseIdentifier     = NetMeshBaseIdentifier.create(  "http://here.local/" );
-        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+        NetMeshBaseIdentifier             baseIdentifier     = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" );
         
         IterableLocalNetStoreMeshBase base = IterableLocalNetStoreMeshBase.create(
                 baseIdentifier,
-                proxyPolicyFactory,
                 theModelBase,
                 null,
                 theMeshStore,
@@ -78,7 +75,6 @@ public class StoreShadowMeshBaseTest8
                 theShadowProxyStore,
                 theProbeDirectory,
                 exec,
-                100000L, // long time
                 true,
                 rootContext );
         
@@ -142,7 +138,6 @@ public class StoreShadowMeshBaseTest8
 
         IterableLocalNetStoreMeshBase base2 = IterableLocalNetStoreMeshBase.create(
                 baseIdentifier,
-                proxyPolicyFactory,
                 theModelBase,
                 null,
                 theMeshStore,
@@ -151,7 +146,6 @@ public class StoreShadowMeshBaseTest8
                 theShadowProxyStore,
                 theProbeDirectory,
                 exec,
-                100000L, // long time
                 true,
                 rootContext );
         
@@ -237,7 +231,7 @@ public class StoreShadowMeshBaseTest8
         testFile1a   = args[1];
         testFile1b   = args[2];
 
-        testFile1Id    = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile1Id  = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
         //
         

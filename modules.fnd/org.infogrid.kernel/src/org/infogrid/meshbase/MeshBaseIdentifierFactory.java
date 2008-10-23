@@ -16,18 +16,17 @@ package org.infogrid.meshbase;
 
 import java.net.URISyntaxException;
 import org.infogrid.util.IdentifierFactory;
-import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentation;
 
 /**
  * Factory for MeshBaseIdentifiers.
  */
-public class MeshBaseIdentifierFactory
-        implements
+public interface MeshBaseIdentifierFactory
+        extends
              IdentifierFactory
 {
     /**
-     * Recreate a MeshBaseIdentifier from an external form.
+     * Recreate a MeshBaseIdentifier from an external form. Be strict about syntax.
      *
      * @param raw the external form
      * @return the created MeshBaseIdentifier
@@ -36,11 +35,21 @@ public class MeshBaseIdentifierFactory
     public MeshBaseIdentifier fromExternalForm(
             String raw )
         throws
-            URISyntaxException
-    {
-        MeshBaseIdentifier ret = MeshBaseIdentifier.create( raw );
-        return ret;
-    }
+            URISyntaxException;
+
+    /**
+     * Recreate a MeshBaseIdentifier from an external form. Be lenient about syntax and
+     * attempt to interpret what the user meant when entering an invalid or incomplete
+     * raw String.
+     *
+     * @param raw the external form
+     * @return the created MeshBaseIdentifier
+     * @throws URISyntaxException thrown if a parsing error occurred
+     */
+    public MeshBaseIdentifier guessFromExternalForm(
+            String raw )
+        throws
+            URISyntaxException;
 
     /**
      * Convert this StringRepresentation back to a MeshBaseIdentifier.
@@ -54,29 +63,5 @@ public class MeshBaseIdentifierFactory
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException
-    {
-        try {
-            Object [] found = representation.parseEntry( MeshBaseIdentifier.class, MeshBaseIdentifier.DEFAULT_ENTRY, s );
-
-            MeshBaseIdentifier ret;
-            switch( found.length ) {
-                case 1:
-                    ret = fromExternalForm( (String) found[0] );
-                    break;
-
-                default:
-                    throw new URISyntaxException( s, "Cannot parse identifier" );
-            }
-
-            return ret;
-
-        } catch( StringifierException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
-
-        } catch( ClassCastException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
-        }
-        
-    }
+            URISyntaxException;
 }

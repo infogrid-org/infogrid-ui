@@ -14,8 +14,10 @@
 
 package org.infogrid.kernel.TEST.meshbase.m.security;
 
+import java.net.URISyntaxException;
+import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.security.AccessManager;
@@ -28,8 +30,6 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
-
-import java.net.URISyntaxException;
 
 /**
  * Factors out common functionality of the various MeshBaseSecurityTests.
@@ -56,8 +56,10 @@ public abstract class AbstractMeshBaseSecurityTest
 
         theAccessManager = AclBasedAccessManager.create();
         
+        MeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
+        
         theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 theAccessManager,
                 rootContext );

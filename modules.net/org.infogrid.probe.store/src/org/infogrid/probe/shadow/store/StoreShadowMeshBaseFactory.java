@@ -14,25 +14,23 @@
 
 package org.infogrid.probe.shadow.store;
 
-import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
-import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
-import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.shadow.AbstractShadowMeshBaseFactory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
-import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
-import org.infogrid.probe.shadow.proxy.DefaultShadowProxyPolicyFactory;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.logging.Log;
 
 /**
  * Knows how to instantiate StoreShadowMeshBaseFactory.
@@ -43,9 +41,13 @@ public class StoreShadowMeshBaseFactory
         implements
             ShadowMeshBaseFactory
 {
+    private static final Log log = Log.getLogInstance( StoreShadowMeshBaseFactory.class ); // our own, private logger
+
     /**
      * Factory method for the StoreShadowMeshBaseFactory itself.
      * 
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param modelBase the ModelBase containing type information to be used by all created StoreShadowMeshBases
      * @param endpointFactory factory for communications endpoints, to be used by all created StoreShadowMeshBase
      * @param probeDirectory the ProbeDirectory to use for all Probes
@@ -59,27 +61,33 @@ public class StoreShadowMeshBaseFactory
      * @return the created StoreShadowMeshBaseFactory
      */
     public static StoreShadowMeshBaseFactory create(
-            ModelBase                   modelBase,
-            ProxyMessageEndpointFactory endpointFactory,
-            ProbeDirectory              probeDirectory,
-            IterableStore               shadowStore,
-            IterableStore               shadowProxyStore,
-            long                        timeNotNeededTillExpires,
-            Context                     context )
+            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ModelBase                               modelBase,
+            ProbeDirectory                          probeDirectory,
+            IterableStore                           shadowStore,
+            IterableStore                           shadowProxyStore,
+//            long                                    timeNotNeededTillExpires,
+            Context                                 context )
     {
         return new StoreShadowMeshBaseFactory(
-                modelBase,
+                meshBaseIdentifierFactory,
+//                netMeshObjectAccessSpecificationFactory,
                 endpointFactory,
+                modelBase,
                 probeDirectory,
                 shadowStore,
                 shadowProxyStore,
-                timeNotNeededTillExpires,
+//                timeNotNeededTillExpires,
                 context );
     }
 
     /**
      * Constructor.
      * 
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param modelBase the ModelBase containing type information to be used by all created StoreShadowMeshBases
      * @param endpointFactory factory for communications endpoints, to be used by all created StoreShadowMeshBase
      * @param probeDirectory the ProbeDirectory to use for all Probes
@@ -92,15 +100,25 @@ public class StoreShadowMeshBaseFactory
      * @param context the Context in which this all created MShadowMeshBases will run.
      */
     protected StoreShadowMeshBaseFactory(
-            ModelBase                   modelBase,
-            ProxyMessageEndpointFactory endpointFactory,
-            ProbeDirectory              probeDirectory,
-            IterableStore               shadowStore,
-            IterableStore               shadowProxyStore,
-            long                        timeNotNeededTillExpires,
-            Context                     context )
+            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ModelBase                               modelBase,
+            ProbeDirectory                          probeDirectory,
+            IterableStore                           shadowStore,
+            IterableStore                           shadowProxyStore,
+//            long                                    timeNotNeededTillExpires,
+            Context                                 context )
     {
-        super( modelBase, endpointFactory, probeDirectory, timeNotNeededTillExpires, context );
+        super(  endpointFactory,
+                modelBase,
+                probeDirectory,
+                // timeNotNeededTillExpires,
+                theResourceHelper.getResourceLongOrDefault( "TimeNotNeededTillExpires", 10L * 60L * 1000L ), // 10 minutes
+                context );
+        
+        theMeshBaseIdentifierFactory               = meshBaseIdentifierFactory;
+//        theNetMeshObjectAccessSpecificationFactory = netMeshObjectAccessSpecificationFactory;
         
         theShadowStore      = shadowStore;
         theShadowProxyStore = shadowProxyStore;
@@ -119,10 +137,16 @@ public class StoreShadowMeshBaseFactory
         throws
             FactoryException
     {
+        NetMeshObjectAccessSpecificationFactory theNetMeshObjectAccessSpecificationFactory = DefaultNetMeshObjectAccessSpecificationFactory.create(
+                key,
+                theMeshBaseIdentifierFactory );
+
         IterablePrefixingStore thisProxyStore = IterablePrefixingStore.create( key.toExternalForm(), theShadowProxyStore );
 
         StoreShadowMeshBase ret = StoreShadowMeshBase.create(
                 key,
+                theMeshBaseIdentifierFactory,
+                theNetMeshObjectAccessSpecificationFactory,
                 theEndpointFactory,
                 theModelBase,
                 null,
@@ -144,77 +168,93 @@ public class StoreShadowMeshBaseFactory
     }
     
     /**
-     * Factory method to recreate a ShadowMeshBase from an ExternalizedShadowMeshBase object.
+     * Factory method to create an ShadowMeshBase that later will be restored from an ExternalizedShadowMeshBase object.
      *
      * @param key the NetMeshBaseIdentifier for the ShadowMeshBase
-     * @param externalized the ExternalizedShadowMeshBase
      * @return the recreated ShadowMeshBase
      */
-    public ShadowMeshBase restore(
-            NetMeshBaseIdentifier      key,
-            ExternalizedShadowMeshBase externalized )
+    public StoreShadowMeshBase createEmptyForRestore(
+            NetMeshBaseIdentifier key )
     {
-        IterablePrefixingStore          thisProxyStore     = IterablePrefixingStore.create( key.toExternalForm(), theShadowProxyStore );
-        DefaultShadowProxyPolicyFactory proxyPolicyFactory = DefaultShadowProxyPolicyFactory.create();
-
-        ShadowMeshBase ret = StoreShadowMeshBase.restore(
+        NetMeshObjectAccessSpecificationFactory theNetMeshObjectAccessSpecificationFactory = DefaultNetMeshObjectAccessSpecificationFactory.create(
                 key,
-                externalized,
+                theMeshBaseIdentifierFactory );
+
+        IterablePrefixingStore thisProxyStore = IterablePrefixingStore.create( key.toExternalForm(), theShadowProxyStore );
+
+        StoreShadowMeshBase ret = StoreShadowMeshBase.create(
+                key,
+                theMeshBaseIdentifierFactory,
+                theNetMeshObjectAccessSpecificationFactory,
                 theEndpointFactory,
-                proxyPolicyFactory,
                 theModelBase,
                 null,
                 theProbeDirectory,
                 theTimeNotNeededTillExpires,
                 thisProxyStore,
                 theMeshBaseContext );
-
+        
         ret.setFactory( this );
         
         return ret;
     }
 
+//    /**
+//     * Obtain a factory to create ParserFriendlyExternalizedNetMeshObjects.
+//     * 
+//     * @return the factory
+//     */
+//    public ParserFriendlyExternalizedNetMeshObjectFactory getExternalizedMeshObjectFactory()
+//    {
+//        return new ParserFriendlyExternalizedNetMeshObjectFactory() {
+//                /**
+//                 * Factory method.
+//                 *
+//                 * @return the created ParserFriendlyExternalizedMeshObject
+//                 */
+//                public ParserFriendlyExternalizedNetMeshObject createParserFriendlyExternalizedMeshObject()
+//                {
+//                    return new ParserFriendlyExternalizedNetMeshObject();
+//                }
+//        };
+//    }
+//    
+//    /**
+//     * Obtain a factory for NetMeshObjectIdentifiers.
+//     * 
+//     * @param key the NetMeshBaseIdentifier that represents the context for the NetMeshObjectIdentifiers
+//     * @return the factory
+//     */
+//    public NetMeshObjectIdentifierFactory getNetMeshObjectIdentifierFactory(
+//            NetMeshBaseIdentifier key )
+//    {
+//        return DefaultAnetMeshObjectIdentifierFactory.create( key, theMeshBaseIdentifierFactory );
+//    }
+//    
     /**
-     * Obtain a factory to create ParserFriendlyExternalizedNetMeshObjects.
+     * Obtain a factory for NetMeshBaseIdentifiers.
      * 
      * @return the factory
      */
-    public ParserFriendlyExternalizedNetMeshObjectFactory getExternalizedMeshObjectFactory()
+    public NetMeshBaseIdentifierFactory getNetMeshBaseIdentifierFactory()
     {
-        return new ParserFriendlyExternalizedNetMeshObjectFactory() {
-                /**
-                 * Factory method.
-                 *
-                 * @return the created ParserFriendlyExternalizedMeshObject
-                 */
-                public ParserFriendlyExternalizedNetMeshObject createParserFriendlyExternalizedMeshObject()
-                {
-                    return new ParserFriendlyExternalizedNetMeshObject();
-                }
-        };
+        return theMeshBaseIdentifierFactory;
     }
-    
+
+//    /**
+//     * Obtain a factory for MeshTypeIdentifiers.
+//     * 
+//     * @return the factory
+//     */
+//    public MeshTypeIdentifierFactory getMeshTypeIdentifierFactory()
+//    {
+//        return theModelBase.getMeshTypeIdentifierFactory();
+//    }
+
     /**
-     * Obtain a factory for NetMeshObjectIdentifiers.
-     * 
-     * @param key the NetMeshBaseIdentifier that represents the context for the NetMeshObjectIdentifiers
-     * @return the factory
+     * Factory for MeshBaseIdentifiers.
      */
-    public NetMeshObjectIdentifierFactory getNetMeshObjectIdentifierFactory(
-            NetMeshBaseIdentifier key )
-    {
-        return DefaultAnetMeshObjectIdentifierFactory.create( key );
-    }
-    
-    /**
-     * Obtain a factory for MeshTypeIdentifiers.
-     * 
-     * @return the factory
-     */
-    public MeshTypeIdentifierFactory getMeshTypeIdentifierFactory()
-    {
-        return theModelBase.getMeshTypeIdentifierFactory();
-    }
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory;
 
     /**
      * The Store where ShadowMeshBases are stored (but not their Proxies).
@@ -225,4 +265,9 @@ public class StoreShadowMeshBaseFactory
      * The Store in which Shadow proxy data is stored.
      */
     protected IterableStore theShadowProxyStore;
+    
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( StoreShadowMeshBaseFactory.class );
 }

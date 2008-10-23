@@ -20,8 +20,9 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.mesh.set.active.m.ActiveMMeshObjectSetFactory;
+import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.model.primitives.EntityType;
@@ -66,7 +67,9 @@ public abstract class AbstractActiveTraversalPathSetTest
         typeAR2A = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "AR2A" );
         typeX    = theModelBase.findPropertyType( typeAA, "X" );
         
-        theMeshBase = MMeshBase.create( MeshBaseIdentifier.create( "testMeshBase" ), theModelBase, null, rootContext );
+        MeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
+        
+        theMeshBase = MMeshBase.create( theMeshBaseIdentifierFactory.fromExternalForm( "testMeshBase" ), theModelBase, null, rootContext );
 
         theMeshObjectSetFactory = ActiveMMeshObjectSetFactory.create( MeshObject.class, MeshObjectIdentifier.class );
         theMeshObjectSetFactory.setMeshBase( theMeshBase );

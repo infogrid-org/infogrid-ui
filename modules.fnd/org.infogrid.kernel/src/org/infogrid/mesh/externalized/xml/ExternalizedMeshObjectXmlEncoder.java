@@ -24,13 +24,12 @@ import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.externalized.ExternalizedMeshObjectEncoder;
 import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObject;
 import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObjectFactory;
-import org.infogrid.meshbase.MeshObjectIdentifierFactory;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.model.primitives.externalized.xml.PropertyValueXmlEncoder;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
@@ -257,25 +256,19 @@ public class ExternalizedMeshObjectXmlEncoder
      * Deserialize a ExternalizedMeshObject from a stream.
      * 
      * @param contentAsStream the byte [] stream in which the ExternalizedProxy is encoded
-     * @param externalizedMeshObjectFactory the factory to use for ExternalizedMeshObjects
-     * @param meshObjectIdentifierFactory the factory to use for MeshObjectIdentifier
-     * @param meshTypeIdentifierFactory the factory to use for MeshTypes
+     * @param mb the NetMeshBase on whose behalf the decoding is performed
      * @return return the just-instantiated ExternalizedMeshObject
      * @throws DecodingException thrown if a problem occurred during decoding
      * @throws IOException thrown if an I/O error occurred
      */
     public synchronized ExternalizedMeshObject decodeExternalizedMeshObject(
-            InputStream                                 contentAsStream,
-            ParserFriendlyExternalizedMeshObjectFactory externalizedMeshObjectFactory,
-            MeshObjectIdentifierFactory                 meshObjectIdentifierFactory,
-            MeshTypeIdentifierFactory                   meshTypeIdentifierFactory )
+            InputStream contentAsStream,
+            MeshBase    mb )
         throws
             DecodingException,
             IOException
     {
-        theExternalizedMeshObjectFactory = externalizedMeshObjectFactory; // note the synchronized statement
-        theMeshObjectIdentifierFactory   = meshObjectIdentifierFactory;
-        theMeshTypeIdentifierFactory     = meshTypeIdentifierFactory;
+        theMeshBase = mb;
         
         try {
             theParser.parse( contentAsStream, this );
@@ -308,7 +301,7 @@ public class ExternalizedMeshObjectXmlEncoder
             SAXException
     {
         if( MESHOBJECT_TAG.equals( qName )) {
-            theMeshObjectBeingParsed = theExternalizedMeshObjectFactory.createParserFriendlyExternalizedMeshObject();
+            theMeshObjectBeingParsed = theMeshBase.getMeshBaseLifecycleManager().createParserFriendlyExternalizedMeshObject();
 
             String identifier      = attrs.getValue( IDENTIFIER_TAG );
             String timeCreated     = attrs.getValue( TIME_CREATED_TAG );
@@ -319,7 +312,7 @@ public class ExternalizedMeshObjectXmlEncoder
             if( identifier != null ) {
                 try {
                     theMeshObjectBeingParsed.setIdentifier(
-                            theMeshObjectIdentifierFactory.fromExternalForm( XmlUtils.descape( identifier )));
+                            theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( XmlUtils.descape( identifier )));
                 } catch( URISyntaxException ex ) {
                     error( ex );
                 }
@@ -342,7 +335,7 @@ public class ExternalizedMeshObjectXmlEncoder
             String type = attrs.getValue( TYPE_TAG );
 
             if( type != null && type.length() > 0 ) {
-                theMeshObjectBeingParsed.addPropertyType( theMeshTypeIdentifierFactory.fromExternalForm( XmlUtils.descape( type )));
+                theMeshObjectBeingParsed.addPropertyType( theMeshBase.getModelBase().getMeshTypeIdentifierFactory().fromExternalForm( XmlUtils.descape( type )));
             } else {
                 log.error( "empty '" + TYPE_TAG + "' on '" + PROPERTY_TYPE_TAG + "'" );
             }
@@ -354,7 +347,7 @@ public class ExternalizedMeshObjectXmlEncoder
                 try {
                     theHasTypesBeingParsed = new ParserFriendlyExternalizedMeshObject.HasRoleTypes(
                             theMeshObjectBeingParsed.getIdentifier(),
-                            theMeshObjectIdentifierFactory.fromExternalForm( XmlUtils.descape( identifier )),
+                            theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( XmlUtils.descape( identifier )),
                             updated );
                 } catch( URISyntaxException ex ) {
                     error( ex );
@@ -412,10 +405,10 @@ public class ExternalizedMeshObjectXmlEncoder
             // first the "inner" element if present
             if( theHasTypesBeingParsed != null ) {
                 theHasTypesBeingParsed.addType(
-                        theMeshTypeIdentifierFactory.fromExternalForm( theCharacters.toString() ) );
+                        theMeshBase.getModelBase().getMeshTypeIdentifierFactory().fromExternalForm( theCharacters.toString() ) );
             } else if( theMeshObjectBeingParsed != null ) {
                 theMeshObjectBeingParsed.addMeshType(
-                        theMeshTypeIdentifierFactory.fromExternalForm( theCharacters.toString() ) );
+                        theMeshBase.getModelBase().getMeshTypeIdentifierFactory().fromExternalForm( theCharacters.toString() ) );
             } else {
                 log.error( "neither found" );
             }
@@ -431,7 +424,7 @@ public class ExternalizedMeshObjectXmlEncoder
             if( theCharacters != null ) {
                 try {
                     theMeshObjectBeingParsed.addEquivalent(
-                            theMeshObjectIdentifierFactory.fromExternalForm( theCharacters.toString() ));
+                            theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( theCharacters.toString() ));
                 } catch( URISyntaxException ex ) {
                     error( ex );
                 }
@@ -472,19 +465,9 @@ public class ExternalizedMeshObjectXmlEncoder
     }
 
     /**
-     * The factory to use for ParserFriendlyExternalizedMeshObjects.
+     * The MeshBase on whose behalf we work.
      */
-    protected ParserFriendlyExternalizedMeshObjectFactory theExternalizedMeshObjectFactory;
-
-    /**
-     * The factory to use for MeshObjectIdentifiers.
-     */
-    protected MeshObjectIdentifierFactory theMeshObjectIdentifierFactory;
-    
-    /**
-     * The factory to use for MeshTypeIdentifiers.
-     */
-    protected MeshTypeIdentifierFactory theMeshTypeIdentifierFactory;
+    protected MeshBase theMeshBase;
 
     /**
      * The ExternalizedMeshObject that is currently being parsed, if any.

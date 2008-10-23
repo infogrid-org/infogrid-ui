@@ -69,7 +69,7 @@ public class ForwardReferenceTest3
     {
         log.info( "Setting up" );
         
-        NetMeshBaseIdentifier    here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
+        NetMeshBaseIdentifier    here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
         ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
         LocalNetMMeshBase        base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
 
@@ -191,7 +191,7 @@ public class ForwardReferenceTest3
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = NetMeshBaseIdentifier.createUnresolvable( "testing://some.example.com/outer" );
+            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "testing://some.example.com/outer" );
             // temp = NetMeshBaseIdentifier.create( "=foo" );
 
         } catch( URISyntaxException ex ) {
@@ -207,7 +207,7 @@ public class ForwardReferenceTest3
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = NetMeshBaseIdentifier.createUnresolvable( "testing://some.example.com/inner" );
+            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "testing://some.example.com/inner" );
 
         } catch( URISyntaxException ex ) {
             log.error( ex );

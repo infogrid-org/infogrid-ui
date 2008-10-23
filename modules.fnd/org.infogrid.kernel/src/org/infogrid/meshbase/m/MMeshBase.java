@@ -57,36 +57,47 @@ public class MMeshBase
             AccessManager      accessMgr,
             Context            c )
     {
-        ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( MeshObject.class, MeshObjectIdentifier.class );
-        
-        MMeshBase ret = MMeshBase.create( identifier, setFactory, modelBase, accessMgr, c );
+        DefaultAMeshObjectIdentifierFactory identifierFactory = DefaultAMeshObjectIdentifierFactory.create();
 
-        return ret;
+        return create(
+                identifier,
+                identifierFactory,
+                modelBase,
+                accessMgr,
+                c );
     }
 
     /**
      * Factory method.
      *
      * @param identifier the MeshBaseIdentifier of this MeshBase
-     * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
+     * @param identifierFactory the factory for MeshObjectIdentifiers appropriate for this MeshBase
      * @param modelBase the ModelBase with the type definitions we use
      * @param accessMgr the AccessManager that controls access to this MeshBase
      * @param c the Context in which this MeshBase will run
      * @return the created MMeshBase
      */
     public static MMeshBase create(
-            MeshBaseIdentifier   identifier,
-            MeshObjectSetFactory setFactory,
-            ModelBase            modelBase,
-            AccessManager        accessMgr,
-            Context              c )
+            MeshBaseIdentifier          identifier,
+            MeshObjectIdentifierFactory identifierFactory,
+            ModelBase                   modelBase,
+            AccessManager               accessMgr,
+            Context                     c )
     {
         MCachingHashMap<MeshObjectIdentifier,MeshObject> cache = MCachingHashMap.create();
 
-        DefaultAMeshObjectIdentifierFactory identifierFactory = DefaultAMeshObjectIdentifierFactory.create();
-        AMeshBaseLifecycleManager           life              = AMeshBaseLifecycleManager.create();
+        AMeshBaseLifecycleManager      life       = AMeshBaseLifecycleManager.create();
+        ImmutableMMeshObjectSetFactory setFactory = ImmutableMMeshObjectSetFactory.create( MeshObject.class, MeshObjectIdentifier.class );
 
-        MMeshBase ret = new MMeshBase( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, c );
+        MMeshBase ret = new MMeshBase(
+                identifier,
+                identifierFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                cache,
+                c );
 
         setFactory.setMeshBase( ret );
         ret.initializeHomeObject();

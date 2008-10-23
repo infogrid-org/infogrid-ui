@@ -15,6 +15,8 @@
 package org.infogrid.meshbase.store.TEST;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.store.sql.AbstractSqlStore;
@@ -66,6 +68,11 @@ public abstract class AbstractStoreMeshBaseTest
      * The AbstractSqlStore to be tested.
      */
     protected AbstractSqlStore theSqlStore;
+
+    /**
+     * Factory for MeshBaseIdentifiers.
+     */
+    protected MeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
 
     /**
      * The name of the database that we use to store test data.

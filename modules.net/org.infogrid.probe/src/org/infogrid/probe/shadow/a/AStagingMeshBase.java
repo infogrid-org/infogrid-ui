@@ -22,7 +22,9 @@ import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
 import org.infogrid.meshbase.net.a.AnetMeshBase;
@@ -47,6 +49,8 @@ public abstract class AStagingMeshBase
      *
      * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
      * @param identifierFactory the factory for NetMeshObjectIdentifiers appropriate for this NetMeshBase
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param setFactory the factory for MeshObjectSets appropriate for this NetMeshBase
      * @param modelBase the ModelBase containing type information
      * @param life the MeshBaseLifecycleManager to use
@@ -58,6 +62,8 @@ public abstract class AStagingMeshBase
     protected AStagingMeshBase(
             NetMeshBaseIdentifier                       identifier,
             NetMeshObjectIdentifierFactory              identifierFactory,
+            NetMeshBaseIdentifierFactory                meshBaseIdentifierFactory,
+            NetMeshObjectAccessSpecificationFactory     netMeshObjectAccessSpecificationFactory,
             MeshObjectSetFactory                        setFactory,
             ModelBase                                   modelBase,
             AStagingMeshBaseLifecycleManager            life,
@@ -66,10 +72,19 @@ public abstract class AStagingMeshBase
             ProxyManager                                proxyManager,
             Context                                     context )
     {
-        super( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, proxyManager, context );
+        super(  identifier,
+                identifierFactory,
+                meshBaseIdentifierFactory,
+                netMeshObjectAccessSpecificationFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                cache,
+                proxyManager,
+                context );
 
         setDefaultWillGiveUpLock( false ); // a shadow, after all
-        // setDefaultPointsReplicasToItself( false ); // shadow is not authoritative except for its very own objects
     }
 
     /**
@@ -84,7 +99,7 @@ public abstract class AStagingMeshBase
     }
     
     /**
-     * Enable the ProbeDispatcher to create the home object in the StagingMeshBase.
+     * Enable the ProbeDispatcher to obtain the home object in the StagingMeshBase.
      *
      * @param timeCreated the creation date for the home object
      */
@@ -208,7 +223,7 @@ public abstract class AStagingMeshBase
     public NetMeshObject findForwardReference(
             NetMeshBaseIdentifier meshObjectLocation )
     {
-        return findForwardReference( NetMeshObjectAccessSpecification.create( meshObjectLocation ));
+        return findForwardReference( getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation ));
     }
 
     /**
@@ -225,7 +240,7 @@ public abstract class AStagingMeshBase
             NetMeshBaseIdentifier   meshObjectLocation,
             NetMeshObjectIdentifier identifier )
     {
-        return findForwardReference( NetMeshObjectAccessSpecification.create( meshObjectLocation, identifier ));
+        return findForwardReference( getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation, identifier ));
     }
 
     /**

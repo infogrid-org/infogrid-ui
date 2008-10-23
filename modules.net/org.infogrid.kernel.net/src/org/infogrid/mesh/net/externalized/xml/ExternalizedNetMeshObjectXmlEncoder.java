@@ -22,12 +22,11 @@ import org.infogrid.mesh.externalized.xml.ExternalizedMeshObjectXmlEncoder;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObjectEncoder;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
-import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
+import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
-import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.externalized.DecodingException;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
@@ -169,34 +168,26 @@ public class ExternalizedNetMeshObjectXmlEncoder
     }
 
     /**
-     * Deserialize a ExternalizedNetMeshObject from a stream.
+     * Deserialize a ExternalizedMeshObject from a stream.
      * 
      * @param contentAsStream the byte [] stream in which the ExternalizedProxy is encoded
-     * @param externalizedMeshObjectFactory the factory to use for ExternalizedMeshObjects
-     * @param meshObjectIdentifierFactory the factory to use for MeshObjectIdentifier
-     * @param meshTypeIdentifierFactory the factory to use for MeshTypes
-     * @return return the just-instantiated ExternalizedNetMeshObject
+     * @param mb the NetMeshBase on whose behalf the decoding is performed
+     * @return return the just-instantiated ExternalizedMeshObject
      * @throws DecodingException thrown if a problem occurred during decoding
      * @throws IOException thrown if an I/O error occurred
      */
-    public synchronized ExternalizedNetMeshObject decodeExternalizedMeshObject(
-            InputStream                                    contentAsStream,
-            ParserFriendlyExternalizedNetMeshObjectFactory externalizedMeshObjectFactory,
-            NetMeshObjectIdentifierFactory                 meshObjectIdentifierFactory,
-            MeshTypeIdentifierFactory                      meshTypeIdentifierFactory )
+    @Override
+    public ExternalizedNetMeshObject decodeExternalizedMeshObject(
+            InputStream contentAsStream,
+            MeshBase    mb )
         throws
             DecodingException,
             IOException
     {
-        ExternalizedMeshObject ret = super.decodeExternalizedMeshObject(
-                contentAsStream,
-                externalizedMeshObjectFactory,
-                meshObjectIdentifierFactory,
-                meshTypeIdentifierFactory );
-
+        ExternalizedMeshObject ret = super.decodeExternalizedMeshObject( contentAsStream, (NetMeshBase) mb ); // cast to make sure this is invoked right
         return (ExternalizedNetMeshObject) ret;
-    }    
-
+    }
+    
     /**
      * Invoked when no previous start-element parsing rule has matched. Allows subclasses to add to parsing.
      *
@@ -253,7 +244,7 @@ public class ExternalizedNetMeshObjectXmlEncoder
             String lockProxy   = attrs.getValue( PROXY_TOWARDS_LOCK_TAG );
 
             try {
-                NetMeshBaseIdentifier proxyId = NetMeshBaseIdentifier.fromExternalForm( proxyString );
+                NetMeshBaseIdentifier proxyId = ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( proxyString );
             
                 realObjectBeingParsed.addProxyNetworkIdentifier( proxyId, YES_TAG.equals( homeProxy ), YES_TAG.equals( lockProxy ));
 

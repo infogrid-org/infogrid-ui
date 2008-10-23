@@ -88,7 +88,7 @@ public class ShadowStoreProxyEntryMapper
             String stringKey )
     {
         try {
-            NetMeshBaseIdentifier ret = NetMeshBaseIdentifier.createUnresolvable( stringKey );
+            NetMeshBaseIdentifier ret = theMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( stringKey );
             return ret;
 
         } catch( URISyntaxException ex ) {
@@ -129,9 +129,7 @@ public class ShadowStoreProxyEntryMapper
         try {
             ExternalizedProxy externalized = encoder.decodeExternalizedProxy(
                     stream,
-                    theMeshBase.getMeshBaseLifecycleManager(),
-                    theMeshBase.getMeshObjectIdentifierFactory(),
-                    theMeshBase.getModelBase().getMeshTypeIdentifierFactory() );
+                    theMeshBase );
 
             Proxy ret = theProxyFactory.restoreProxy( externalized );
 

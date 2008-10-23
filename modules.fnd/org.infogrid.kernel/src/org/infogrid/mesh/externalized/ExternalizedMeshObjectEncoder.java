@@ -14,15 +14,12 @@
 
 package org.infogrid.mesh.externalized;
 
-import org.infogrid.model.primitives.externalized.DecodingException;
-import org.infogrid.model.primitives.externalized.EncodingException;
-
-import org.infogrid.meshbase.MeshObjectIdentifierFactory;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.primitives.externalized.DecodingException;
+import org.infogrid.model.primitives.externalized.EncodingException;
 
 /**
  * This interface is supported by classes that know how to serialize and deserialize
@@ -49,18 +46,14 @@ public interface ExternalizedMeshObjectEncoder
      * Deserialize an ExternalizedMeshObject from a byte stream.
      *
      * @param s the InputStream from which to read
-     * @param externalizedMeshObjectFactory the factory for ParserFriendlyExternalizedMeshObjects
-     * @param meshObjectIdentifierFactory the factory for MeshObjectIdentifiers
-     * @param meshTypeIdentifierFactory the factory for MeshTypeIdentifiers
+     * @param mb the NetMeshBase on whose behalf the decoding is performed
      * @return return the just-instantiated ExternalizedMeshObject
      * @throws DecodingException thrown if a problem occurred during decoding
      * @throws IOException thrown if a problem occurred during writing the output
      */
     public ExternalizedMeshObject decodeExternalizedMeshObject(
-            InputStream                                 s,
-            ParserFriendlyExternalizedMeshObjectFactory externalizedMeshObjectFactory,
-            MeshObjectIdentifierFactory                 meshObjectIdentifierFactory,
-            MeshTypeIdentifierFactory                   meshTypeIdentifierFactory )
+            InputStream s,
+            MeshBase    mb )
         throws
             DecodingException,
             IOException;

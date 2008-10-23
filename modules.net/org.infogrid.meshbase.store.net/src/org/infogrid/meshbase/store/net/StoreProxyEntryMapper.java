@@ -88,7 +88,7 @@ public class StoreProxyEntryMapper
             String stringKey )
     {
         try {
-            NetMeshBaseIdentifier ret = NetMeshBaseIdentifier.createUnresolvable( stringKey );
+            NetMeshBaseIdentifier ret = theMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( stringKey );
             return ret;
 
         } catch( URISyntaxException ex ) {
@@ -129,9 +129,7 @@ public class StoreProxyEntryMapper
         try {
             ExternalizedProxy externalized = encoder.decodeExternalizedProxy(
                     stream,
-                    theMeshBase.getMeshBaseLifecycleManager(),
-                    theMeshBase.getMeshObjectIdentifierFactory(),
-                    theMeshBase.getModelBase().getMeshTypeIdentifierFactory() );
+                    theMeshBase );
 
             Proxy ret = theProxyFactory.restoreProxy( externalized );
 
@@ -241,6 +239,7 @@ public class StoreProxyEntryMapper
     /**
      * Obtain the ExternalizedProxyEncoder with a certain id.
      *
+     * @param encoderId the id of the encoder
      * @return the ExternalizedProxyEncoder, or null
      */
     protected ExternalizedProxyEncoder getEncoderFor(

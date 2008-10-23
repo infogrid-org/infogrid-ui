@@ -63,7 +63,7 @@ public class ShadowTest2
         throws
             Exception
     {
-        NetMeshBaseIdentifier here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
         LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
 
         //
@@ -228,9 +228,9 @@ public class ShadowTest2
 
     static {
         try {
-            TEST1_URL = NetMeshBaseIdentifier.createUnresolvable( PROTOCOL_NAME + "://myhost.local/remainder" );
-            TEST2_URL = NetMeshBaseIdentifier.createUnresolvable( PROTOCOL_NAME + "://otherhost.local/remainder" );
-            TEST3_URL = NetMeshBaseIdentifier.createUnresolvable( PROTOCOL_NAME + "://otherhost.local/empty" );
+            TEST1_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://myhost.local/remainder" );
+            TEST2_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://otherhost.local/remainder" );
+            TEST3_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://otherhost.local/empty" );
 
         } catch( Exception ex ) {
             log.error( ex );

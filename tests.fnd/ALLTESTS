@@ -7,7 +7,7 @@ org.infogrid.httpd.TEST
 org.infogrid.store.TEST
 org.infogrid.store.filesystem.TEST
 org.infogrid.store.sql.TEST
-org.infogrid.store.hadoop.TEST [nobuild][norun]
+org.infogrid.store.hadoop.TEST [nobuild][norun][nodoc]
 # seems to have a compile problem
 org.infogrid.kernel.TEST.modelbase
 org.infogrid.kernel.TEST.meshbase.m

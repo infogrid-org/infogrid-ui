@@ -202,20 +202,20 @@ public class ProbeTest3
         testFile1   = args[1];
         testFile2   = args[2];
 
-        testFile0Id = NetMeshBaseIdentifier.create( new File( testFile0 ) );
-        testFile1Id = NetMeshBaseIdentifier.create( new File( testFile1 ) );
-        testFile2Id = NetMeshBaseIdentifier.create( new File( testFile2 ) );
+        testFile0Id = theMeshBaseIdentifierFactory.obtain( new File( testFile0 ) );
+        testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
+        testFile2Id = theMeshBaseIdentifierFactory.obtain( new File( testFile2 ) );
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactoryA = MPingPongNetMessageEndpointFactory.create( exec );
         MPingPongNetMessageEndpointFactory shadowEndpointFactoryB = MPingPongNetMessageEndpointFactory.create( exec );
         MPingPongNetMessageEndpointFactory shadowEndpointFactoryC = MPingPongNetMessageEndpointFactory.create( exec );
 
         ShadowMeshBaseFactory theShadowFactoryA
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactoryA, theProbeDirectory, -1L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactoryA, theModelBase, theProbeDirectory, rootContext );
         ShadowMeshBaseFactory theShadowFactoryB
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactoryB, theProbeDirectory, -1L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactoryB, theModelBase, theProbeDirectory, rootContext );
         ShadowMeshBaseFactory theShadowFactoryC
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactoryC, theProbeDirectory, -1L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactoryC, theModelBase, theProbeDirectory, rootContext );
         
         theProbeManagerA = MPassiveProbeManager.create( theShadowFactoryA );
         theProbeManagerB = MPassiveProbeManager.create( theShadowFactoryB );

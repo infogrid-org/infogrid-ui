@@ -29,8 +29,11 @@ import org.infogrid.jee.security.store.StoreFormTokenService;
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.mesh.text.MeshStringRepresentationContext;
+import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
+import org.infogrid.meshbase.m.MMeshBaseNameServer;
 import org.infogrid.meshbase.security.AccessManager;
 import org.infogrid.meshbase.store.IterableStoreMeshBase;
 import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationDirectory;
@@ -43,7 +46,6 @@ import org.infogrid.module.SoftwareInstallation;
 import org.infogrid.module.servlet.ServletBootLoader;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.sql.mysql.MysqlStore;
-import org.infogrid.util.MNameServer;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
@@ -143,10 +145,14 @@ public class MeshWorldApp
         ModelBase modelBase = ModelBaseSingleton.getSingleton();
         rootContext.addContextObject( modelBase );
         
+        // MeshBaseIdentifierFactory
+        MeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
+        rootContext.addContextObject( meshBaseIdentifierFactory );
+        
         // Only one MeshBase
         MeshBaseIdentifier mbId;
         try {
-            mbId = MeshBaseIdentifier.create( defaultMeshBaseIdentifier );
+            mbId = meshBaseIdentifierFactory.fromExternalForm( defaultMeshBaseIdentifier );
 
         } catch( URISyntaxException ex ) {
             throw new RuntimeException( ex );
@@ -159,7 +165,7 @@ public class MeshWorldApp
         rootContext.addContextObject( meshBase );
 
         // Name Server
-        MNameServer<MeshBaseIdentifier,MeshBase> nameServer = MNameServer.create();
+        MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
         nameServer.put( mbId, meshBase );
         rootContext.addContextObject( nameServer );
 
@@ -196,22 +202,6 @@ public class MeshWorldApp
             SimpleContext applicationContext )
     {
         super( applicationContext );
-    }
-
-    /**
-     *  Factory method to create the right subtype MeshBaseIdentifier.
-     * 
-     * @param stringForm the String representation of the MeshBaseIdentifier
-     * @return suitable subtype of MeshBaseIdentifier
-     * @throws URISyntaxException thrown if a syntax error occurred
-     */
-    public MeshBaseIdentifier createMeshBaseIdentifier(
-            String stringForm )
-        throws
-            URISyntaxException
-    {
-        MeshBaseIdentifier ret = MeshBaseIdentifier.create( stringForm );
-        return ret;
     }
 
     /**

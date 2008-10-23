@@ -34,21 +34,21 @@ public abstract class AbstractShadowMeshBaseFactory
     /**
      * Constructor.
      * 
-     * @param modelBase the ModelBase to use for created ShadowMeshBases
      * @param endpointFactory the Context to use for created ShadowMeshBases
+     * @param modelBase the ModelBase to use for created ShadowMeshBases
      * @param probeDirectory the ProbeDirectory to use for the created ShadowMeshBases
      * @param timeNotNeededTillExpires the time until unneeded ShadowMeshBases disappear, in milliseconds
      * @param c the Context to use for created ShadowMeshBases
      */
     protected AbstractShadowMeshBaseFactory(
-            ModelBase                 modelBase,
             ProxyMessageEndpointFactory endpointFactory,
-            ProbeDirectory            probeDirectory,
-            long                      timeNotNeededTillExpires,
-            Context                   c )
+            ModelBase                   modelBase,
+            ProbeDirectory              probeDirectory,
+            long                        timeNotNeededTillExpires,
+            Context                     c )
     {
-        theModelBase                = modelBase;
         theEndpointFactory          = endpointFactory;
+        theModelBase                = modelBase;
         theProbeDirectory           = probeDirectory;
         theTimeNotNeededTillExpires = timeNotNeededTillExpires;
         theMeshBaseContext          = c;

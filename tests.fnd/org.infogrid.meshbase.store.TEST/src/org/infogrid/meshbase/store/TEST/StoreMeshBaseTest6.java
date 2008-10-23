@@ -14,6 +14,8 @@
 
 package org.infogrid.meshbase.store.TEST;
 
+import java.awt.Color;
+import java.util.Date;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifier;
@@ -36,9 +38,6 @@ import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.util.logging.Log;
 
-import java.awt.Color;
-import java.util.Date;
-
 /**
  * Reproduces a StoreMeshBase integrity problem found 2007-06-22.
  */
@@ -58,7 +57,7 @@ public class StoreMeshBaseTest6
         theSqlStore.initializeHard();
 
         StoreMeshBase mb = StoreMeshBase.create(
-                MeshBaseIdentifier.create( "mb" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "mb" ),
                 theModelBase,
                 null,
                 theSqlStore,

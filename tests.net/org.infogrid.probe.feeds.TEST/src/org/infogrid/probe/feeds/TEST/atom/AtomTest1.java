@@ -133,7 +133,7 @@ public class AtomTest1
         super( AtomTest1.class );
 
         testFile1   = args[0];
-        testFile1Id = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
         theProbeDirectory.addXmlDomProbe( new ProbeDirectory.XmlDomProbeDescriptor( null, "feed", AtomProbe.class ));
         
@@ -141,9 +141,8 @@ public class AtomTest1
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
-
         ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactory, theProbeDirectory, -1L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
         shadowEndpointFactory.setNameServer( theProbeManager1.getNetMeshBaseNameServer() );

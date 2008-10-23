@@ -17,7 +17,7 @@
  <name>org.infogrid.jee.net.TESTAPP</name>
  <userdescription>Test application.</userdescription>
  <provides>
-  <jar>org.infogrid.jee.net.TESTAPP.jar</jar>
+  <jar>org.infogrid.jee.net.TESTAPP.war</jar>
  </provides>
  <dependencies>
   <requires name="org.infogrid.util.logging.log4j"/>

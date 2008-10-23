@@ -19,7 +19,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -127,7 +126,7 @@ public class MeshBaseTest5
         super( MeshBaseTest5.class );
 
         theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 rootContext );

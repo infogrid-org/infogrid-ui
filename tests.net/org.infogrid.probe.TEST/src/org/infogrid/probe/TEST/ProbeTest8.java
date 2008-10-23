@@ -244,7 +244,7 @@ public class ProbeTest8
                 TEST3_URL.toExternalForm(),
                 TestApiProbe3.class ));
 
-        NetMeshBaseIdentifier here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
 
         theMeshBase = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
     }
@@ -298,9 +298,9 @@ public class ProbeTest8
 
     static {
         try {
-            TEST1_URL = NetMeshBaseIdentifier.createUnresolvable( PROTOCOL_NAME + "://TEST1_myhost.local/remainder" );
-            TEST2_URL = NetMeshBaseIdentifier.createUnresolvable( PROTOCOL_NAME + "://TEST2_otherhost.local/remainder" );
-            TEST3_URL = NetMeshBaseIdentifier.createUnresolvable( PROTOCOL_NAME + "://TEST3_otherhost.local/empty" );
+            TEST1_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://TEST1_myhost.local/remainder" );
+            TEST2_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://TEST2_otherhost.local/remainder" );
+            TEST3_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://TEST3_otherhost.local/empty" );
 
         } catch( Exception ex ) {
             log.error( ex );

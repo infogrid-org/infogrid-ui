@@ -17,12 +17,10 @@ package org.infogrid.kernel.TEST.meshbase.m;
 import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.MeshObjectCreatedEvent;
 import org.infogrid.meshbase.transaction.MeshObjectDeletedEvent;
-import org.infogrid.meshbase.transaction.MeshObjectLifecycleEvent;
 import org.infogrid.meshbase.transaction.MeshObjectLifecycleListener;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.logging.Log;
@@ -46,7 +44,7 @@ public class MeshBaseTest16
         log.info( "Creating MeshBase and setting up listener" );
 
         MeshBase theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 rootContext );

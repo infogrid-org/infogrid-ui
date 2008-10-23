@@ -155,9 +155,9 @@ public class StoreShadowMeshBaseTest3
         testFile1    = args[1];
         testFile2    = args[2];
 
-        testFile0Id    = NetMeshBaseIdentifier.create( new File( testFile0 ) );
-        testFile1Id    = NetMeshBaseIdentifier.create( new File( testFile1 ) );
-        testFile2Id    = NetMeshBaseIdentifier.create( new File( testFile2 ) );
+        testFile0Id    = theMeshBaseIdentifierFactory.obtain( new File( testFile0 ) );
+        testFile1Id    = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
+        testFile2Id    = theMeshBaseIdentifierFactory.obtain( new File( testFile2 ) );
 
         //
         
@@ -170,15 +170,15 @@ public class StoreShadowMeshBaseTest3
         
         // 
 
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local" );
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         StoreShadowMeshBaseFactory theShadowFactory = StoreShadowMeshBaseFactory.create(
-                theModelBase,
                 shadowEndpointFactory,
+                theModelBase,
                 theProbeDirectory,
                 theShadowStore,
                 theShadowProxyStore,
-                5500L,
                 rootContext );
 
         theProbeManager1 = StoreScheduledExecutorProbeManager.create( theShadowFactory, theSqlStore );

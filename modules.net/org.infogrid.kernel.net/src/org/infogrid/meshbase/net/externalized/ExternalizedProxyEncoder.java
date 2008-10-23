@@ -14,14 +14,12 @@
 
 package org.infogrid.meshbase.net.externalized;
 
-import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
-import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import org.infogrid.meshbase.net.NetMeshBase;
 
 /**
  * Knows how to serialize and deserialize a Proxy.
@@ -47,18 +45,14 @@ public interface ExternalizedProxyEncoder
      * Deserialize a ExternalizedProxy from a stream.
      * 
      * @param contentAsStream the byte [] stream in which the ExternalizedProxy is encoded
-     * @param externalizedMeshObjectFactory the factory to use for ExternalizedMeshObjects
-     * @param meshObjectIdentifierFactory the factory to use for MeshObjectIdentifier
-     * @param meshTypeIdentifierFactory the factory to use for MeshTypes
+     * @param mb the NetMeshBase on whose behalf the decoding is performed
      * @return return the just-instantiated ExternalizedProxy
      * @throws DecodingException thrown if a problem occurred during decoding
      * @throws IOException thrown if an I/O error occurred
      */
     public abstract ExternalizedProxy decodeExternalizedProxy(
-            InputStream                                    contentAsStream,
-            ParserFriendlyExternalizedNetMeshObjectFactory externalizedMeshObjectFactory,
-            NetMeshObjectIdentifierFactory                 meshObjectIdentifierFactory,
-            MeshTypeIdentifierFactory                      meshTypeIdentifierFactory )
+            InputStream contentAsStream,
+            NetMeshBase mb )
         throws
             DecodingException,
             IOException;

@@ -15,6 +15,7 @@
 package org.infogrid.meshbase.net;
 
 import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.MeshObjectAccessException;
 
 /**
@@ -40,7 +41,7 @@ public class NetMeshObjectAccessException
             NetMeshObjectAccessSpecification [] failedPaths,
             Throwable                           cause )
     {
-        super( mb, mb.getIdentifier(), partialResult, NetMeshObjectAccessSpecification.identifiersOf( failedPaths ), cause );
+        super( mb, mb.getIdentifier(), partialResult, identifiersOf( failedPaths ), cause );
         
         theFailedPaths = failedPaths;
     }
@@ -96,6 +97,24 @@ public class NetMeshObjectAccessException
             } else {
                 ret[i] = theFailedPaths[i].getNetMeshObjectIdentifier().toExternalForm();
             }
+        }
+        return ret;
+    }
+
+    /**
+     * Helper method to obtain the remote Identifiers of an array of NetMeshObjectAccessSpecifications.
+     *
+     * @param specs the NetMeshObjectAccessSpecifications
+     * @return the NetMeshObjectIdentifiers contained therein
+     */
+    public static NetMeshObjectIdentifier [] identifiersOf(
+            NetMeshObjectAccessSpecification [] specs )
+    {
+        NetMeshObjectIdentifier [] ret = new NetMeshObjectIdentifier[ specs.length ];
+        for( int i=0 ; i<ret.length ; ++i ) {
+            if( specs[i] != null ) {
+                ret[i] = specs[i].getNetMeshObjectIdentifier();
+            } // else null
         }
         return ret;
     }

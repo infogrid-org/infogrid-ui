@@ -504,13 +504,26 @@ public abstract class AbstractMeshBase
     }
 
     /**
-     * Obtain a factory for MeshObjectSets.
+     * Obtain the factory for MeshObjectSets.
      * 
      * @return the factory for MeshObjectSets
+     * @see #setMeshObjectSetFactory
      */
     public MeshObjectSetFactory getMeshObjectSetFactory()
     {
         return theMeshObjectSetFactory;
+    }
+
+    /**
+     * Set a new factory for MeshObjectSets.
+     * 
+     * @param newValue the new factory
+     * @see #getMeshObjectSetFactory
+     */
+    public void setMeshObjectSetFactory(
+            MeshObjectSetFactory newValue )
+    {
+        theMeshObjectSetFactory = newValue;
     }
 
     /**

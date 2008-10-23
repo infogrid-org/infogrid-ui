@@ -45,7 +45,7 @@ public class SweeperTest1
         log.info( "Creating MeshBase" );
 
         MeshBase theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase"),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase"),
                 theModelBase,
                 null,
                 rootContext );

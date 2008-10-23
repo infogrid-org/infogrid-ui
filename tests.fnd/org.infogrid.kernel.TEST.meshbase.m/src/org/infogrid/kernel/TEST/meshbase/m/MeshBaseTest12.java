@@ -50,7 +50,7 @@ public class MeshBaseTest12
         throws
             Exception
     {
-        MeshBase                 theMeshBase = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase" ), theModelBase, null, rootContext );
+        MeshBase                 theMeshBase = MMeshBase.create( theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ), theModelBase, null, rootContext );
         MeshBaseLifecycleManager life        = theMeshBase.getMeshBaseLifecycleManager();
 
         //

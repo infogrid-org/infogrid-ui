@@ -21,6 +21,7 @@ import org.infogrid.meshbase.a.DefaultAMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentation;
@@ -38,12 +39,15 @@ public class DefaultAnetMeshObjectIdentifierFactory
      * Factory method.
      *
      * @param meshBaseIdentifier the NetMeshBaseIdentifier of the owning NetMeshBase
+     * @param meshBaseIdentifierFactory factory for NetMeshBaseIdentifiers
      * @return the created DefaultAMeshObjectIdentifierFactory
      */
     public static DefaultAnetMeshObjectIdentifierFactory create(
-            NetMeshBaseIdentifier meshBaseIdentifier )
+            NetMeshBaseIdentifier        meshBaseIdentifier,
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
     {
-        DefaultAnetMeshObjectIdentifierFactory ret = new DefaultAnetMeshObjectIdentifierFactory( meshBaseIdentifier );
+        DefaultAnetMeshObjectIdentifierFactory ret
+                = new DefaultAnetMeshObjectIdentifierFactory( meshBaseIdentifier, meshBaseIdentifierFactory );
         return ret;
     }
 
@@ -51,13 +55,16 @@ public class DefaultAnetMeshObjectIdentifierFactory
      * Constructor.
      * 
      * @param meshBaseIdentifier the NetMeshBaseIdentifier of the owning NetMeshBase
+     * @param meshBaseIdentifierFactory factory for NetMeshBaseIdentifiers
      */
     protected DefaultAnetMeshObjectIdentifierFactory(
-            NetMeshBaseIdentifier meshBaseIdentifier )
+            NetMeshBaseIdentifier        meshBaseIdentifier,
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
     {
-        theNetMeshBaseIdentifier = meshBaseIdentifier;
+        theMeshBaseIdentifier     = meshBaseIdentifier;
+        theMeshBaseIdentifierFactory = meshBaseIdentifierFactory;
 
-        NET_HOME_OBJECT = new HomeObject( theNetMeshBaseIdentifier );
+        NET_HOME_OBJECT = new HomeObject( theMeshBaseIdentifier  );
     }
 
     /**
@@ -84,28 +91,54 @@ public class DefaultAnetMeshObjectIdentifierFactory
         throws
             URISyntaxException
     {
-        DefaultAnetMeshObjectIdentifier ret = DefaultAnetMeshObjectIdentifier.fromExternalForm( theNetMeshBaseIdentifier, raw );
+        DefaultAnetMeshObjectIdentifier ret = fromExternalForm( theMeshBaseIdentifier, raw  );
         return ret;
     }
 
     /**
-     * Create an identifier for a MeshObject held at a different MeshBase.
+     * Re-construct a DefaultAnetMeshObjectIdentifier from an external form.
      *
-     * @param meshBaseIdentifier MeshBaseIdentifier of the MeshBase where the object is held
-     * @param raw the identifier String
+     * @param contextIdentifier identifier of the NetMeshBase relative to which the external form is to be evaluated
+     * @param raw the external form of the DefaultAnetMeshObjectIdentifier
      * @return the created DefaultAnetMeshObjectIdentifier
-     * @throws URISyntaxException a parsing error occurred
+     * @throws URISyntaxException thrown if a syntax error was encountered during parsing
      */
     public DefaultAnetMeshObjectIdentifier fromExternalForm(
-            NetMeshBaseIdentifier meshBaseIdentifier,
+            NetMeshBaseIdentifier contextIdentifier,
             String                raw )
         throws
             URISyntaxException
     {
-        DefaultAnetMeshObjectIdentifier ret = DefaultAnetMeshObjectIdentifier.fromExternalForm( meshBaseIdentifier, raw );
+        if( raw == null ) {
+            return null;
+        }
+        
+        NetMeshBaseIdentifier meshBase;
+        String                local;
+        
+        DefaultAnetMeshObjectIdentifier ret;
+        
+        int hash = raw.indexOf( DefaultAnetMeshObjectIdentifier.SEPARATOR );
+        if( hash == 0 ) {
+            meshBase = contextIdentifier;
+            local    = raw.substring( hash+1 );
+        } else if( hash > 0 ) {
+            meshBase = theMeshBaseIdentifierFactory.fromExternalForm( raw.substring( 0, hash ));
+            local    = raw.substring( hash+1 );
+        } else if( raw.indexOf( '.' ) >= 0 ) {
+            meshBase = theMeshBaseIdentifierFactory.fromExternalForm( raw );
+            local    = null;
+        } else {
+            meshBase = contextIdentifier;
+            local    = raw;
+        }
+        ret = DefaultAnetMeshObjectIdentifier.create(
+                meshBase,
+                local );
         return ret;
     }
 
+    
     /**
      * Convert this StringRepresentation back to an Identifier.
      *
@@ -162,73 +195,17 @@ public class DefaultAnetMeshObjectIdentifierFactory
         return NET_HOME_OBJECT;
     }
     
-    /**
-     * Create a NetMeshObjectAccessSpecifiation from an external form.
-     *
-     * The Syntax is as follows:
-     *
-     * <code>NetMeshBaseIdentifier!NetMeshBaseIdentifier!NetMeshBaseIdentifier#NetMeshObjectIdentifier</code>
-     * where <code>NetMeshBaseIdentifier</code> may contain a # itself.
-     *
-     * @param raw the external form
-     * @return the created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException a parsing error occurred
-     */
-    public NetMeshObjectAccessSpecification createNetMeshObjectAccessSpecificationFromExternalForm(
-            String raw )
-        throws
-            URISyntaxException
-    {
-        if( raw == null ) {
-            return null;
-        }
 
-        int hash = raw.indexOf( '#' );
-        
-        String pathString;
-        String objectString;
-        if( hash >= 0 ) {
-            pathString   = raw.substring( 0, hash );
-            objectString = raw.substring( hash+1 );
-
-        } else if( raw.indexOf( '.' ) >= 0 ) {
-            pathString   = raw;
-            objectString = null;
-        } else {
-            pathString   = null;
-            objectString = raw;
-        }
-
-        NetMeshBaseAccessSpecification [] pathElements;
-        
-        if( pathString != null && pathString.length() > 0 ) {
-            String [] pathElementStrings = pathString.split( "!" );
-
-            pathElements = new NetMeshBaseAccessSpecification[ pathElementStrings.length ];
-            for( int i=0 ; i<pathElements.length ; ++i ) {
-                pathElements[i] = NetMeshBaseAccessSpecification.fromExternalForm( pathElementStrings[i] );
-            }
-        } else {
-            pathElements = new NetMeshBaseAccessSpecification[0];
-        }
-        
-        NetMeshObjectIdentifier object = null;
-        if( objectString != null ) {
-            object = fromExternalForm( objectString );
-        }
-        
-        NetMeshObjectAccessSpecification ret = NetMeshObjectAccessSpecification.create(
-                pathElements,
-                object );
-        return ret;        
-    }
-    
-    
     /**
      * Identifies the NetMeshBase to which this factory belongs.
      */
-    protected NetMeshBaseIdentifier theNetMeshBaseIdentifier;
-
+    protected NetMeshBaseIdentifier theMeshBaseIdentifier;
+    
+    /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory;
+    
     /**
      * The home object identifier.
      */

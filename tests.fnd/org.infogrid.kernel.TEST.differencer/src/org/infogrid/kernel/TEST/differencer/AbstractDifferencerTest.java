@@ -19,8 +19,11 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.IterableMeshBase;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
+import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Change;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -28,7 +31,6 @@ import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.SubjectArea;
-import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
@@ -47,12 +49,12 @@ public abstract class AbstractDifferencerTest
      * Constructor.
      * 
      * @param testClass the Class to be tested
-     * @throws MeshTypeNotFoundException a MeshType lookup failed
+     * @throws Exception all sorts of things may go wrong in a test
      */
     protected AbstractDifferencerTest(
             Class<?> testClass )
         throws
-            MeshTypeNotFoundException
+            Exception
     {
         super( localFileName( testClass, "/ResourceHelper" ),
                localFileName( testClass, "/Log.properties" ));
@@ -70,6 +72,17 @@ public abstract class AbstractDifferencerTest
         typeY    = theModelBase.findPropertyType(     typeAA, "Y" );
         typeZ    = theModelBase.findPropertyType(     typeB,  "Z" );
         typeU    = theModelBase.findPropertyType(     typeB,  "U" );
+
+        theMeshBase1 = MMeshBase.create(
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase1" ),
+                ModelBaseSingleton.getSingleton(),
+                null,
+                rootContext );
+        theMeshBase2 = MMeshBase.create(
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase2" ),
+                ModelBaseSingleton.getSingleton(),
+                null,
+                rootContext );
     }
     
     /**
@@ -168,6 +181,26 @@ public abstract class AbstractDifferencerTest
     }
 
     /**
+     * Clean up after the test.
+     */
+    @Override
+    public void cleanup()
+    {
+        theMeshBase2.die();
+        theMeshBase1.die();
+    }
+
+    /**
+     * The first MeshBase for the test.
+     */
+    protected IterableMeshBase theMeshBase1;
+
+    /**
+     * The second MeshBase for the test.
+     */
+    protected IterableMeshBase theMeshBase2;
+
+    /**
      * The ModelBase.
      */
     protected ModelBase theModelBase = ModelBaseSingleton.getSingleton();
@@ -185,6 +218,11 @@ public abstract class AbstractDifferencerTest
     protected PropertyType     typeY;
     protected PropertyType     typeZ;
     protected PropertyType     typeU;
+
+    /**
+     * Factory for MeshBaseIdentifiers.
+     */
+    protected MeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
 
     /**
      * The root context for these tests.

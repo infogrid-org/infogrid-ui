@@ -16,10 +16,9 @@ package org.infogrid.jee.taglib.mesh.net;
 
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
-
 import org.infogrid.mesh.net.NetMeshObject;
-
 import javax.servlet.jsp.JspException;
+import org.infogrid.meshbase.net.proxy.Proxy;
 
 /**
  * <p>Processes body content if a NetMeshObject has a number of Proxies between
@@ -29,6 +28,8 @@ public class IfMeshObjectHasProxiesTag
     extends
         AbstractInfoGridBodyTag
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
      * Constructor.
      */
@@ -132,11 +133,12 @@ public class IfMeshObjectHasProxiesTag
             JspException,
             IgnoreException
     {
-        NetMeshObject obj = (NetMeshObject) lookupOrThrow( theMeshObjectName );
+        NetMeshObject obj     = (NetMeshObject) lookupOrThrow( theMeshObjectName );
+        Proxy []      proxies = obj.getAllProxies();
 
         int min           = theMin != null ? Integer.parseInt( theMin ) : -1;
         int max           = theMax != null ? Integer.parseInt( theMax ) : -1;
-        int numberProxies = obj.getAllProxies().length;
+        int numberProxies = proxies != null ? proxies.length : 0;
 
         int ret;
 

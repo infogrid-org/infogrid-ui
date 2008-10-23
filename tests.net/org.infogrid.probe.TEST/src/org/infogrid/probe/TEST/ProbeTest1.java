@@ -23,7 +23,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.IterableMeshBaseDifferencer;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.net.CoherenceSpecification;
@@ -69,7 +68,7 @@ public class ProbeTest1
 
         log.info( "creating the same data independently" );
         
-        IterableMeshBase         meshBase2 = MMeshBase.create( MeshBaseIdentifier.create( "meshBase2" ), theModelBase, null, rootContext );
+        IterableMeshBase         meshBase2 = MMeshBase.create( theMeshBaseIdentifierFactory.obtainUnresolvable( "meshBase2" ), theModelBase, null, rootContext );
         MeshBaseLifecycleManager life2     = meshBase2.getMeshBaseLifecycleManager();
 
         Transaction tx2 = meshBase2.createTransactionNow();
@@ -174,12 +173,12 @@ public class ProbeTest1
         super( ProbeTest1.class );
 
         testFile1   = args[0];
-        testFile1Id = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactory, theProbeDirectory, -1L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
         shadowEndpointFactory.setNameServer( theProbeManager1.getNetMeshBaseNameServer() );

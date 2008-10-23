@@ -14,15 +14,13 @@
 
 package org.infogrid.probe.shadow;
 
-import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
+import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
-
 import org.infogrid.util.FactoryCreatedObject;
 import org.infogrid.util.IsDeadException;
 

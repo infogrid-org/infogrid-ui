@@ -110,6 +110,7 @@ public class VCardProbeTest1
      * Constructor.
      *
      * @param args the command-line arguments
+     * @throws Exception all sorts of things may go wrong in tests
      */
     public VCardProbeTest1(
             String [] args )
@@ -119,12 +120,12 @@ public class VCardProbeTest1
         super( VCardProbeTest1.class );
 
         testFile1   = args[0];
-        testFile1Id = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactory, theProbeDirectory, -1L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
         shadowEndpointFactory.setNameServer( theProbeManager1.getNetMeshBaseNameServer() );

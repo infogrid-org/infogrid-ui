@@ -20,22 +20,18 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.a.AnetMeshObject;
-
 import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.a.AnetMeshBase;
 import org.infogrid.meshbase.net.a.AnetMeshBaseLifecycleManager;
+import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
-
 import org.infogrid.model.primitives.EntityType;
-
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.probe.shadow.proxy.DefaultShadowProxy;
-
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.logging.Log;
 
@@ -99,8 +95,10 @@ public class AStagingMeshBaseLifecycleManager
             TransactionException,
             MeshObjectIdentifierNotUniqueException
     {
+        AStagingMeshBase realBase = (AStagingMeshBase) theMeshBase;
+
         return createForwardReference(
-                NetMeshObjectAccessSpecification.create( meshObjectLocation ),
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation ),
                 null,
                 -1L,
                 -1L,
@@ -128,8 +126,10 @@ public class AStagingMeshBaseLifecycleManager
             TransactionException,
             MeshObjectIdentifierNotUniqueException
     {
+        AStagingMeshBase realBase = (AStagingMeshBase) theMeshBase;
+
         return createForwardReference(
-                NetMeshObjectAccessSpecification.create( meshObjectLocation ),
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation ),
                 new EntityType [] { type },
                 -1L,
                 -1L,
@@ -157,8 +157,10 @@ public class AStagingMeshBaseLifecycleManager
             TransactionException,
             MeshObjectIdentifierNotUniqueException
     {
+        AStagingMeshBase realBase = (AStagingMeshBase) theMeshBase;
+
         return createForwardReference(
-                NetMeshObjectAccessSpecification.create( meshObjectLocation ),
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation ),
                 types,
                 -1L,
                 -1L,
@@ -183,8 +185,10 @@ public class AStagingMeshBaseLifecycleManager
             TransactionException,
             MeshObjectIdentifierNotUniqueException
     {
+        AStagingMeshBase realBase = (AStagingMeshBase) theMeshBase;
+
         return createForwardReference(
-                NetMeshObjectAccessSpecification.create( meshObjectLocation, identifier ),
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation, identifier ),
                 null,
                 -1L,
                 -1L,
@@ -213,8 +217,10 @@ public class AStagingMeshBaseLifecycleManager
             TransactionException,
             MeshObjectIdentifierNotUniqueException
     {
+        AStagingMeshBase realBase = (AStagingMeshBase) theMeshBase;
+
         return createForwardReference(
-                NetMeshObjectAccessSpecification.create( meshObjectLocation, identifier ),
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation, identifier ),
                 new EntityType[] { type },
                 -1L,
                 -1L,
@@ -243,8 +249,10 @@ public class AStagingMeshBaseLifecycleManager
             TransactionException,
             MeshObjectIdentifierNotUniqueException
     {
+        AStagingMeshBase realBase = (AStagingMeshBase) theMeshBase;
+
         return createForwardReference(
-                NetMeshObjectAccessSpecification.create( meshObjectLocation, identifier ),
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation, identifier ),
                 types,
                 -1L,
                 -1L,

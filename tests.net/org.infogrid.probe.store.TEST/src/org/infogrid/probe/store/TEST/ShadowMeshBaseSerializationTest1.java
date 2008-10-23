@@ -20,7 +20,9 @@ import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
 import org.infogrid.mesh.net.externalized.SimpleExternalizedNetMeshObject;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
@@ -109,6 +111,7 @@ public class ShadowMeshBaseSerializationTest1
                 new FileInputStream( theFile ),
                 theExternalizedMeshObjectFactory,
                 theNetMeshObjectIdentifierFactory,
+                theMeshBaseIdentifierFactory,
                 theMeshTypeIdentifierFactory );
 
         checkEquals( mb.getNetworkIdentifier(), testCase.theNetworkIdentifier, testCase.theInputFile + ": NetworkIdentifier wrong" );
@@ -170,9 +173,14 @@ public class ShadowMeshBaseSerializationTest1
     private static Log log = Log.getLogInstance( ShadowMeshBaseSerializationTest1.class );
     
     /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+    
+    /**
      * A NetMeshBaseIdentifier for the test.
      */
-    protected NetMeshBaseIdentifier nmbid1 = NetMeshBaseIdentifier.fromExternalForm( "https://foo.exampe.com/%27" );
+    protected NetMeshBaseIdentifier nmbid1 = theMeshBaseIdentifierFactory.fromExternalForm( "https://foo.exampe.com/%27" );
 
     /**
      * A ExternalizedNetMeshObjectFactory for the test.
@@ -188,7 +196,7 @@ public class ShadowMeshBaseSerializationTest1
      * A NetMeshObjectIdentifierFactory for the test.
      */
     protected NetMeshObjectIdentifierFactory theNetMeshObjectIdentifierFactory
-            = DefaultAnetMeshObjectIdentifierFactory.create( nmbid1 );
+            = DefaultAnetMeshObjectIdentifierFactory.create( nmbid1, theMeshBaseIdentifierFactory );
 
     /**
      * A MeshTypeIdentifierFactory for the test.

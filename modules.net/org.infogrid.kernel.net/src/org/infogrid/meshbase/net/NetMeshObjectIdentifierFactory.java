@@ -67,16 +67,4 @@ public interface NetMeshObjectIdentifierFactory
             String                raw )
         throws
             URISyntaxException;
-
-    /**
-     * Create a NetMeshObjectAccessSpecifiation from an external form.
-     *
-     * @param raw the external form
-     * @return the created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException a parsing error occurred
-     */
-    public NetMeshObjectAccessSpecification createNetMeshObjectAccessSpecificationFromExternalForm(
-            String raw )
-        throws
-            URISyntaxException;
 }

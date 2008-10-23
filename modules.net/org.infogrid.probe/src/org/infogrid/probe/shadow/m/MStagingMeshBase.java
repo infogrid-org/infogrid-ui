@@ -103,6 +103,8 @@ public class MStagingMeshBase
     {
         super(  shadow.getIdentifier(),
                 shadow.getMeshObjectIdentifierFactory(),
+                shadow.getMeshBaseIdentifierFactory(),
+                shadow.getNetMeshObjectAccessSpecificationFactory(),
                 ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class ),
                 shadow.getModelBase(),
                 life,

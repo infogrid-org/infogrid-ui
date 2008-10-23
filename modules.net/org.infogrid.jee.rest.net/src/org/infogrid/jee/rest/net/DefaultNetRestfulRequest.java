@@ -22,8 +22,10 @@ import org.infogrid.jee.rest.AbstractRestfulRequest;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.util.http.HTTP;
@@ -53,7 +55,13 @@ public class DefaultNetRestfulRequest
             String             contextPath,
             String             defaultMeshBaseIdentifier )
     {
-        return new DefaultNetRestfulRequest( lidRequest, contextPath,defaultMeshBaseIdentifier );
+        NetMeshBaseIdentifierFactory meshBaseIdentifierFactory
+                = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( NetMeshBaseIdentifierFactory.class );
+        
+        if( meshBaseIdentifierFactory == null ) {
+            meshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+        }
+        return new DefaultNetRestfulRequest( lidRequest, contextPath, defaultMeshBaseIdentifier, meshBaseIdentifierFactory );
     }
 
     /**
@@ -62,15 +70,18 @@ public class DefaultNetRestfulRequest
      * @param lidRequest the incoming request
      * @param contextPath the application's JEE context path
      * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
+     * @param meshBaseIdentifierFactory the factory for MeshBaseIdentifiers if any are specified in the request
      */
     protected DefaultNetRestfulRequest(
-            SaneServletRequest lidRequest,
-            String             contextPath,
-            String             defaultMeshBaseIdentifier )
+            SaneServletRequest           lidRequest,
+            String                       contextPath,
+            String                       defaultMeshBaseIdentifier,
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
     {
         super( lidRequest, contextPath );
         
         theDefaultMeshBaseIdentifier = defaultMeshBaseIdentifier;
+        theMeshBaseIdentifierFactory = meshBaseIdentifierFactory;
     }
 
     /**
@@ -115,8 +126,9 @@ public class DefaultNetRestfulRequest
             if( meshObjectIdentifierString == null ) {
                 meshObjectIdentifierString = "";
             }
-            theRequestedMeshBaseIdentifier = NetMeshBaseIdentifier.create( meshBaseIdentifierString );
+            theRequestedMeshBaseIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( meshBaseIdentifierString );
 
+            @SuppressWarnings( "unchecked" )
             NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer
                     = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( 
                             NetMeshBaseNameServer.class );
@@ -131,8 +143,8 @@ public class DefaultNetRestfulRequest
             theRequestedMeshObject           = mb.accessLocally( theRequestedMeshObjectIdentifier );
 
             if( proxyIdentifierString != null ) {
-                theRequestedProxyIdentifier = NetMeshBaseIdentifier.create( proxyIdentifierString );
-                theRequestedProxy           = ((NetMeshBase)mb).getProxyFor( theRequestedProxyIdentifier );
+                theRequestedProxyIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( proxyIdentifierString );
+                theRequestedProxy           = mb.getProxyFor( theRequestedProxyIdentifier );
             }
             
         } else {
@@ -189,6 +201,11 @@ public class DefaultNetRestfulRequest
      * The identifier of the requested Proxy, if any.
      */
     protected NetMeshBaseIdentifier theRequestedProxyIdentifier;
+
+    /**
+     * The factory for MeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory;
 
     /**
      * The requested Proxy, if any.

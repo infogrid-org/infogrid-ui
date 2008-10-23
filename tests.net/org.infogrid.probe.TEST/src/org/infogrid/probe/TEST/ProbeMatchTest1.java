@@ -65,9 +65,9 @@ public class ProbeMatchTest1
     {
         log.info( "Configuring ProbeDirectory" );
         
-        NetMeshBaseIdentifier id1 = NetMeshBaseIdentifier.fromExternalForm( "proto://foo.com/bar" );
-        NetMeshBaseIdentifier id2 = NetMeshBaseIdentifier.fromExternalForm( "proto://foo.com/bar?abc=def" );
-        NetMeshBaseIdentifier id3 = NetMeshBaseIdentifier.fromExternalForm( "proto://foo.com/bar?ghi=klm" );
+        NetMeshBaseIdentifier id1 = theMeshBaseIdentifierFactory.fromExternalForm( "proto://foo.com/bar" );
+        NetMeshBaseIdentifier id2 = theMeshBaseIdentifierFactory.fromExternalForm( "proto://foo.com/bar?abc=def" );
+        NetMeshBaseIdentifier id3 = theMeshBaseIdentifierFactory.fromExternalForm( "proto://foo.com/bar?ghi=klm" );
 
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 id1.toExternalForm(),
@@ -145,7 +145,7 @@ public class ProbeMatchTest1
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( theModelBase, shadowEndpointFactory, theProbeDirectory, -1L, rootContext );
+                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
         shadowEndpointFactory.setNameServer( theProbeManager1.getNetMeshBaseNameServer() );

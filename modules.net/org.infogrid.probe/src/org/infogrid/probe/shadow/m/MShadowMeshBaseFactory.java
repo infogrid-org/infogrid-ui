@@ -15,13 +15,18 @@
 package org.infogrid.probe.shadow.m;
 
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.shadow.AbstractShadowMeshBaseFactory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 
 /**
@@ -34,8 +39,10 @@ public class MShadowMeshBaseFactory
     /**
      * Factory method for the MShadowMeshBaseFactory itself.
      * 
-     * @param modelBase the ModelBase containing type information to be used by all created MShadowMeshBases
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param endpointFactory factory for communications endpoints, to be used by all created MShadowMeshBases
+     * @param modelBase the ModelBase containing type information to be used by all created MShadowMeshBases
      * @param probeDirectory the ProbeDirectory to use for all Probes
      * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
@@ -45,20 +52,31 @@ public class MShadowMeshBaseFactory
      * @return the created MShadowMeshBaseFactory
      */
     public static MShadowMeshBaseFactory create(
-            ModelBase                 modelBase,
-            ProxyMessageEndpointFactory endpointFactory,
-            ProbeDirectory            probeDirectory,
-            long                      timeNotNeededTillExpires,
-            Context                   context )
+            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ModelBase                               modelBase,
+            ProbeDirectory                          probeDirectory,
+//            long                                    timeNotNeededTillExpires,
+            Context                                 context )
     {
-        return new MShadowMeshBaseFactory( modelBase, endpointFactory, probeDirectory, timeNotNeededTillExpires, context );
+        return new MShadowMeshBaseFactory(
+                meshBaseIdentifierFactory,
+//                netMeshObjectAccessSpecificationFactory,
+                endpointFactory,
+                modelBase,
+                probeDirectory,
+               // timeNotNeededTillExpires,
+                context );
     }
 
     /**
      * Constructor.
      * 
-     * @param modelBase the ModelBase containing type information to be used by all created MShadowMeshBases
+     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
+     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
      * @param endpointFactory factory for communications endpoints, to be used by all created MShadowMeshBases
+     * @param modelBase the ModelBase containing type information to be used by all created MShadowMeshBases
      * @param probeDirectory the ProbeDirectory to use for all Probes
      * @param timeNotNeededTillExpires the time, in milliseconds, that all created MShadowMeshBases will continue operating
      *         even if none of their MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
@@ -67,13 +85,23 @@ public class MShadowMeshBaseFactory
      * @param context the Context in which this all created MShadowMeshBases will run.
      */
     protected MShadowMeshBaseFactory(
-            ModelBase                 modelBase,
-            ProxyMessageEndpointFactory endpointFactory,
-            ProbeDirectory            probeDirectory,
-            long                      timeNotNeededTillExpires,
-            Context                   context )
+            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
+//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
+            ProxyMessageEndpointFactory             endpointFactory,
+            ModelBase                               modelBase,
+            ProbeDirectory                          probeDirectory,
+//            long                                    timeNotNeededTillExpires,
+            Context                                 context )
     {
-        super( modelBase, endpointFactory, probeDirectory, timeNotNeededTillExpires, context );
+        super(  endpointFactory,
+                modelBase,
+                probeDirectory,
+                // timeNotNeededTillExpires,
+                theResourceHelper.getResourceLongOrDefault( "TimeNotNeededTillExpires", 10L * 60L * 1000L ), // 10 minutes
+                context );
+        
+        theMeshBaseIdentifierFactory               = meshBaseIdentifierFactory;
+//        theNetMeshObjectAccessSpecificationFactory = netMeshObjectAccessSpecificationFactory;
     }
 
     /**
@@ -89,8 +117,14 @@ public class MShadowMeshBaseFactory
         throws
             FactoryException
     {
+        NetMeshObjectAccessSpecificationFactory theNetMeshObjectAccessSpecificationFactory = DefaultNetMeshObjectAccessSpecificationFactory.create(
+                key,
+                theMeshBaseIdentifierFactory );
+        
         MShadowMeshBase ret = MShadowMeshBase.create(
                 key,
+                theMeshBaseIdentifierFactory,
+                theNetMeshObjectAccessSpecificationFactory,
                 theEndpointFactory,
                 theModelBase,
                 null,
@@ -110,4 +144,19 @@ public class MShadowMeshBaseFactory
         
         return ret;
     }
+    
+    /**
+     * Factory for MeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory;
+    
+//    /**
+//     * Factory for NetMeshObjectAccessSpecifications.
+//     */
+//    protected NetMeshObjectAccessSpecificationFactory theNetMeshObjectAccessSpecificationFactory;
+    
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( MShadowMeshBaseFactory.class );
 }

@@ -51,14 +51,15 @@ public class StoreShadowMeshBaseTest6
         IterablePrefixingStore theShadowStore      = IterablePrefixingStore.create( "Shadow",      theSqlStore );
         IterablePrefixingStore theShadowProxyStore = IterablePrefixingStore.create( "ShadowProxy", theSqlStore );
 
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local" );
+
         StoreShadowMeshBaseFactory theShadowFactory
                 = StoreShadowMeshBaseFactory.create(
-                        theModelBase,
                         shadowEndpointFactory,
+                        theModelBase,
                         theProbeDirectory,
                         theShadowStore,
                         theShadowProxyStore,
-                        100000L, // a long time
                         rootContext );
         //
         
@@ -179,7 +180,7 @@ public class StoreShadowMeshBaseTest6
         testFile1a   = args[1];
         testFile1b   = args[2];
 
-        testFile1Id  = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile1Id  = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
         //
         

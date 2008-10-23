@@ -15,14 +15,10 @@
 package org.infogrid.kernel.TEST.differencer;
 
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.IterableMeshBaseDifferencer;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
-import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.Transaction;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -163,38 +159,7 @@ public class DifferencerTest7
             Exception
     {
         super( DifferencerTest7.class );
-
-        theMeshBase1 = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase1" ),
-                ModelBaseSingleton.getSingleton(),
-                null,
-                rootContext );
-        theMeshBase2 = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase2" ),
-                ModelBaseSingleton.getSingleton(),
-                null,
-                rootContext );
     }
-
-    /**
-     * Clean up after the test.
-     */
-    @Override
-    public void cleanup()
-    {
-        theMeshBase2.die();
-        theMeshBase1.die();
-    }
-
-    /**
-     * The first MeshBase for the test.
-     */
-    protected IterableMeshBase theMeshBase1;
-
-    /**
-     * The second MeshBase for the test.
-     */
-    protected IterableMeshBase theMeshBase2;
 
     // Our Logger
     private static Log log = Log.getLogInstance( DifferencerTest7.class );

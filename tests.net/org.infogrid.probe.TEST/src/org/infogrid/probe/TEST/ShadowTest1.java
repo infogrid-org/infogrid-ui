@@ -22,7 +22,6 @@ import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.probe.ProbeDirectory;
@@ -50,7 +49,7 @@ public class ShadowTest1
         log.info( "Setting up" );
         
         ProbeDirectory        dir  = MProbeDirectory.create();
-        NetMeshBaseIdentifier here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
         LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, dir, exec, rootContext );
 
         //
@@ -58,7 +57,7 @@ public class ShadowTest1
         log.info( "accessing #abc of test file with NetMeshBase" );
         
         MeshObject abc = base.accessLocally(
-                NetMeshObjectAccessSpecification.create(
+                base.getNetMeshObjectAccessSpecificationFactory().obtain(
                         testFile1Id,
                         base.getMeshObjectIdentifierFactory().fromExternalForm( testFile1Id.toExternalForm() + "#abc" ),
                         CoherenceSpecification.ONE_TIME_ONLY ));
@@ -71,7 +70,7 @@ public class ShadowTest1
         log.info( "accessing #def of test file with NetMeshBase" );
         
         MeshObject def = base.accessLocally(
-                NetMeshObjectAccessSpecification.create(
+                base.getNetMeshObjectAccessSpecificationFactory().obtain(
                         testFile1Id,
                         base.getMeshObjectIdentifierFactory().fromExternalForm( testFile1Id.toExternalForm() + "#def" ),
                         CoherenceSpecification.ONE_TIME_ONLY ));
@@ -163,7 +162,7 @@ public class ShadowTest1
 
         testFile1 = args[0];
 
-        testFile1Id = NetMeshBaseIdentifier.create( new File( testFile1 ) );
+        testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
     }
 

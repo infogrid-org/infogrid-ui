@@ -54,7 +54,7 @@ public class StoreMeshBaseTest3
         log.info( "Creating MeshBase" );
 
         StoreMeshBase mb = StoreMeshBase.create(
-                MeshBaseIdentifier.create( "mb" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "mb" ),
                 theModelBase,
                 null,
                 theSqlStore,

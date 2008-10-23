@@ -44,16 +44,16 @@ public class NetSerializerTest2
             Exception
     {
         NetMMeshBase mb = NetMMeshBase.create(
-                NetMeshBaseIdentifier.create( "http://here.local/" ),
+                theFactory.fromExternalForm( "http://here.local/" ),
                 null,
                 null,
                 null,
                 SimpleContext.createRoot( "root" ));
         
         NetMeshBaseIdentifier [] testData = new NetMeshBaseIdentifier [] {
-                NetMeshBaseIdentifier.create( "http://www.r-objects.com/" ),
-                // NetMeshBaseIdentifier.create( "=testing" ),  // FIXME XRI's don't currently work
-                // NetMeshBaseIdentifier.create( "@testing@abc" ),
+                theFactory.fromExternalForm( "http://www.r-objects.com/" ),
+                // NetMeshBaseIdentifier.obtain( "=testing" ),  // FIXME XRI's don't currently work
+                // NetMeshBaseIdentifier.obtain( "@testing@abc" ),
         };
         NetMeshObjectIdentifier [] testIdentifiers = new NetMeshObjectIdentifier[] {
                 null,
@@ -92,10 +92,10 @@ public class NetSerializerTest2
 
                         NetMeshBaseAccessSpecification [] meshBaseAccess = new NetMeshBaseAccessSpecification[ test.length ];
                         for( int j=0 ; j<meshBaseAccess.length ; ++j ) {
-                            meshBaseAccess[j] = NetMeshBaseAccessSpecification.create( test[j], scope, coherence );
+                            meshBaseAccess[j] = mb.getNetMeshObjectAccessSpecificationFactory().getNetMeshBaseAccessSpecificationFactory().obtain( test[j], scope, coherence );
                         }
                         
-                        NetMeshObjectAccessSpecification original = NetMeshObjectAccessSpecification.create( meshBaseAccess );
+                        NetMeshObjectAccessSpecification original = mb.getNetMeshObjectAccessSpecificationFactory().obtain( meshBaseAccess );
                         NetMeshObjectAccessSpecification decoded  = null;
                         String      encoded  = null;
 
@@ -104,7 +104,7 @@ public class NetSerializerTest2
 
                             log.info( "value: \"" + original + "\", serialized: \"" + encoded + "\"" );
 
-                            decoded = mb.getMeshObjectIdentifierFactory().createNetMeshObjectAccessSpecificationFromExternalForm( encoded );
+                            decoded = mb.getNetMeshObjectAccessSpecificationFactory().fromExternalForm( encoded );
 
                             checkEqualsInSequence( original.getAccessPath(), decoded.getAccessPath(), "incorrect paths in deserialization" );
                             checkEquals( original.getNetMeshObjectIdentifier(), decoded.getNetMeshObjectIdentifier(), "incorrect external name in deserialization" );
@@ -169,10 +169,11 @@ public class NetSerializerTest2
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong in tests
+     */
     public NetSerializerTest2(
             String [] args )
         throws

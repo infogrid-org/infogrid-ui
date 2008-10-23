@@ -127,7 +127,7 @@ public class BulkLoaderViewlet
     {
         SaneRequest theSaneRequest = (SaneRequest) request.getDelegate().getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
         
-        String bulkXml = theSaneRequest.getPostArgument( "bulkXml" );
+        String bulkXml = theSaneRequest.getPostArgument( LOAD_CONTENT_ARGUMENT_NAME );
 
         MeshBase    base = getSubject().getMeshBase();
         Transaction tx   = null;
@@ -140,9 +140,7 @@ public class BulkLoaderViewlet
 
             Iterator<? extends ExternalizedMeshObject> iter = theParser.bulkLoad(
                     inStream,
-                    base.getMeshBaseLifecycleManager(),
-                    base.getMeshObjectIdentifierFactory(),
-                    base.getModelBase().getMeshTypeIdentifierFactory() );
+                    base );
 
             while( iter.hasNext() ) {
                 base.getMeshBaseLifecycleManager().loadExternalizedMeshObject( iter.next() );
@@ -181,4 +179,9 @@ public class BulkLoaderViewlet
      * The bulk XML to show.
      */
     protected String theBulkXml;
+    
+    /**
+     * Name of the HTTP Post argument that contains the XML to load.
+     */
+    public static final String LOAD_CONTENT_ARGUMENT_NAME = "bulkXml";
 }

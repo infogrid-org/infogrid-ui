@@ -164,6 +164,7 @@ public abstract class SwappingHashMap<K,V>
      * specified value.
      * 
      * @param value the value to check for
+     * @return true if there is at least one key that maps to this value
      * @throws UnsupportedOperationException this is currently not implemented (FIXME)
      */
     public boolean containsValue(

@@ -54,15 +54,50 @@ public class ActiveMMeshBase
             AccessManager      accessMgr,
             Context            c )
     {
-        MCachingHashMap<MeshObjectIdentifier,MeshObject> cache = MCachingHashMap.create();
-
         DefaultAMeshObjectIdentifierFactory identifierFactory = DefaultAMeshObjectIdentifierFactory.create();
-        ActiveMMeshObjectSetFactory         setFactory        = ActiveMMeshObjectSetFactory.create( MeshObject.class, MeshObjectIdentifier.class );
-        AMeshBaseLifecycleManager           life              = AMeshBaseLifecycleManager.create();
 
-        ActiveMMeshBase ret = new ActiveMMeshBase( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, c );
+        return create(
+                identifier,
+                identifierFactory,
+                modelBase,
+                accessMgr,
+                c );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param identifier the MeshBaseIdentifier of this MeshBase
+     * @param identifierFactory the factory for MeshObjectIdentifiers appropriate for this MeshBase
+     * @param modelBase the ModelBase with the type definitions we use
+     * @param accessMgr the AccessManager that controls access to this MeshBase
+     * @param c the Context in which this MeshBase will run
+     * @return the created MMeshBase
+     */
+    public static ActiveMMeshBase create(
+            MeshBaseIdentifier          identifier,
+            MeshObjectIdentifierFactory identifierFactory,
+            ModelBase                   modelBase,
+            AccessManager               accessMgr,
+            Context                     c )
+    {
+        MCachingHashMap<MeshObjectIdentifier,MeshObject> cache = MCachingHashMap.create();
+        
+        
+        ActiveMMeshObjectSetFactory setFactory = ActiveMMeshObjectSetFactory.create( MeshObject.class, MeshObjectIdentifier.class );
+        AMeshBaseLifecycleManager   life       = AMeshBaseLifecycleManager.create();
+
+        ActiveMMeshBase ret = new ActiveMMeshBase(
+                identifier,
+                identifierFactory,
+                setFactory,
+                modelBase,
+                life,
+                accessMgr,
+                cache,
+                c );
+
         setFactory.setMeshBase( ret );
-
         ret.initializeHomeObject();
 
         if( log.isDebugEnabled() ) {
@@ -71,7 +106,7 @@ public class ActiveMMeshBase
 
         return ret;
     }
-
+    
     /**
      * Constructor.
      *

@@ -33,13 +33,13 @@ public abstract class AllTests
             String [] args )
     {
         TestSpec [] tests = {
-                new TestSpec( ProxySerializationTest1.class ),
-                new TestSpec( StoreNetMeshBaseTest1.class,   "123" ),
+//                new TestSpec( ProxySerializationTest1.class ),
+//                new TestSpec( StoreNetMeshBaseTest1.class,   "123" ),
                 new TestSpec( StoreNetMeshBaseTest2.class ),
-                new TestSpec( StoreNetMeshBaseTest3.class ),
-                new TestSpec( StoreNetMeshBaseTest4.class ),
-                new TestSpec( StoreNetMeshBaseTest5.class ),
-                new TestSpec( StoreNetMeshBaseTest6.class )
+//                new TestSpec( StoreNetMeshBaseTest3.class ),
+//                new TestSpec( StoreNetMeshBaseTest4.class ),
+//                new TestSpec( StoreNetMeshBaseTest5.class ),
+//                new TestSpec( StoreNetMeshBaseTest6.class )
         };
 
         runTests( tests );

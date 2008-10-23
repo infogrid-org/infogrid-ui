@@ -21,7 +21,6 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotBlessedException;
 import org.infogrid.mesh.TypedMeshObjectFacade;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -248,7 +247,7 @@ public class MeshBaseTest2
         super( MeshBaseTest2.class );
 
         theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 rootContext );

@@ -45,7 +45,7 @@ public class NetSerializerTest1
                 
                 log.info( "value: \"" + original + "\", serialized: \"" + encoded + "\"" );
 
-                decoded = NetMeshBaseIdentifier.fromExternalForm( encoded );
+                decoded = theFactory.fromExternalForm( encoded );
 
                 checkEquals( original, decoded, "incorrect deserialization" );
 
@@ -106,10 +106,11 @@ public class NetSerializerTest1
     }
 
     /**
-      * Constructor.
-      *
-      * @param args command-line arguments
-      */
+     * Constructor.
+     *
+     * @param args command-line arguments
+     * @throws Exception all sorts of things may go wrong in tests
+     */
     public NetSerializerTest1(
             String [] args )
         throws
@@ -129,8 +130,8 @@ public class NetSerializerTest1
     static {
         try {
             testData = new NetMeshBaseIdentifier [] {
-                    NetMeshBaseIdentifier.create( "http://www.r-objects.com/" ),
-                    NetMeshBaseIdentifier.create( "http://foo.example.com/abc.jsp&def=ghi,,/&amp;xyz." )
+                    theFactory.fromExternalForm( "http://www.r-objects.com/" ),
+                    theFactory.fromExternalForm( "http://foo.example.com/abc.jsp&def=ghi,,/&amp;xyz." )
             };
         } catch( Throwable t ) {
             log.error( t );

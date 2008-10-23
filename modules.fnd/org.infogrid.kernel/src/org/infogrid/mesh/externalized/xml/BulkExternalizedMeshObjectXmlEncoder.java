@@ -24,12 +24,10 @@ import java.util.Iterator;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObject;
-import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObjectFactory;
 import org.infogrid.meshbase.BulkLoadException;
 import org.infogrid.meshbase.BulkLoader;
-import org.infogrid.meshbase.MeshObjectIdentifierFactory;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.primitives.externalized.EncodingException;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -58,25 +56,19 @@ public class BulkExternalizedMeshObjectXmlEncoder
      * Bulk-load data into this MeshBase.
      *
      * @param inStream the Stream from which to read the data
-     * @param externalizedMeshObjectFactory the ExternalizedMeshObjectFactory to use
-     * @param meshObjectIdentifierFactory the MeshObjectIdentifierFactory to use
-     * @param meshTypeIdentifierFactory the MeshTypeIdentifierFactory to use 
+     * @param mb the MeshBase on whose behalf the loading is performed
      * @return the iterator over the loaded ExternalizedMeshObjects
      * @throws IOException thrown if an I/O error occurred
      * @throws BulkLoadException thrown if a loading exception occurred, for the details check the cause
      */
     public Iterator<? extends ExternalizedMeshObject> bulkLoad(
-            InputStream                                 inStream,
-            ParserFriendlyExternalizedMeshObjectFactory externalizedMeshObjectFactory,
-            MeshObjectIdentifierFactory                 meshObjectIdentifierFactory,
-            MeshTypeIdentifierFactory                   meshTypeIdentifierFactory )
+            InputStream inStream,
+            MeshBase    mb )
         throws
             IOException,
             BulkLoadException
     {
-        theExternalizedMeshObjectFactory = externalizedMeshObjectFactory; // note the synchronized statement
-        theMeshObjectIdentifierFactory   = meshObjectIdentifierFactory;
-        theMeshTypeIdentifierFactory     = meshTypeIdentifierFactory;
+        theMeshBase = mb;
 
         try {
             theParser.parse( inStream, this );

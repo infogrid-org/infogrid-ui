@@ -19,8 +19,10 @@ import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.m.NetMMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.primitives.EntityType;
@@ -30,7 +32,6 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
-import org.infogrid.util.MNameServer;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 
@@ -256,6 +257,11 @@ public abstract class AbstractXprisoTest
      */
     protected NetMMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServer;
 
+    /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+    
     /**
      * The root context for these tests.
      */

@@ -20,7 +20,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.probe.manager.store.StoreScheduledExecutorProbeManager;
@@ -189,8 +191,8 @@ public class StoreShadowMeshBaseTest5
         testFile1b   = args[4];
         testFile2b   = args[5];
 
-        testFile1Id    = NetMeshBaseIdentifier.create( new File( testFile1 ) );
-        testFile2Id    = NetMeshBaseIdentifier.create( new File( testFile2 ) );
+        testFile1Id    = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
+        testFile2Id    = theMeshBaseIdentifierFactory.obtain( new File( testFile2 ) );
 
         //
         
@@ -203,15 +205,15 @@ public class StoreShadowMeshBaseTest5
         
         // 
 
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local" );
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         StoreShadowMeshBaseFactory theShadowFactory = StoreShadowMeshBaseFactory.create(
-                theModelBase,
                 shadowEndpointFactory,
+                theModelBase,
                 theProbeDirectory,
                 theShadowStore,
                 theShadowProxyStore,
-                100000L, // a long time
                 rootContext );
 
         theProbeManager1 = StoreScheduledExecutorProbeManager.create( theShadowFactory, theSqlStore );

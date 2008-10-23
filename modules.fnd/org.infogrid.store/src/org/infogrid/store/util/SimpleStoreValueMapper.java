@@ -24,7 +24,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import org.infogrid.store.StoreValue;
-import org.infogrid.store.util.StoreValueMapper;
 import org.infogrid.util.StreamUtils;
 
 /**

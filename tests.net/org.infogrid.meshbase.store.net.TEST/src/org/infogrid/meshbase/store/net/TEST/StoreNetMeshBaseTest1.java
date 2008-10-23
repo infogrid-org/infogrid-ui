@@ -65,15 +65,13 @@ public class StoreNetMeshBaseTest1
         super.startClock();
         long t1 = System.currentTimeMillis();
 
-        ProxyManager proxyManager = null;
-        
         NetStoreMeshBase mb = NetStoreMeshBase.create(
                 theNetworkIdentifier,
                 theModelBase,
                 null,
+                null,
                 meshObjectStore,
                 proxyStore,
-                null,
                 rootContext );
 
         MeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
@@ -209,7 +207,7 @@ public class StoreNetMeshBaseTest1
     static {
         NetMeshBaseIdentifier id;
         try {
-            id = NetMeshBaseIdentifier.createUnresolvable( "someprotocol://i.am.here" );
+            id = theMeshBaseIdentifierFactory.obtainUnresolvable( "someprotocol://i.am.here" );
 
         } catch( URISyntaxException ex ) {
             log.error( ex );

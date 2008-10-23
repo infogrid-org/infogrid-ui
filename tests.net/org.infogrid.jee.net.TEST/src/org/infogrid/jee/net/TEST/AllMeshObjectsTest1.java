@@ -15,10 +15,11 @@
 package org.infogrid.jee.net.TEST;
 
 import org.infogrid.testharness.tomcat.AbstractTomcatTest;
+import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests that the AllMeshObjectsViewlet renders things properly.
+ * Tests that the AllMeshObjectsViewlet renders MeshObjects in the main NetMeshBase properly.
  */
 public class AllMeshObjectsTest1
         extends
@@ -35,9 +36,24 @@ public class AllMeshObjectsTest1
             throws
                 Exception
     {
-        log.info( "Testing general site setup" );
+        log.info( "Looking at all the MeshObjectIdentifiers" );
         
+        HTTP.Response r = HTTP.http_get( theApplicationUrl );
+        checkRegex( "200",       r.getResponseCode(), "wrong response code" );
+        checkRegex( "text/html", r.getContentType(),  "wrong mime type" );
 
+        String content = r.getContentAsString();
+        
+        String [] objects = {
+            "<a href=\"/org.infogrid.jee.net.TESTAPP/custom://example.org/a/%3Ffoo=bar%26argl=brgl\">custom://example.org/a/?foo=bar&amp;argl=brgl</a>",
+            "<a href=\"/org.infogrid.jee.net.TESTAPP/\">&lt;HOME&gt;</a>",
+            "<a href=\"/org.infogrid.jee.net.TESTAPP/custom://example.com/\">custom://example.com/</a>",
+            "<a href=\"/org.infogrid.jee.net.TESTAPP/custom://example.com/%23xxx\">custom://example.com/#xxx</a>",
+            "<a href=\"/org.infogrid.jee.net.TESTAPP/custom://example.org/a/%3Ffoo=bar%26argl=brgl%23xxx\">custom://example.org/a/?foo=bar&amp;argl=brgl#xxx</a>"
+        };
+        for( int i=0 ; i<objects.length ; ++i ) {
+            checkCondition( content.indexOf( objects[i] ) >=0, "Not found: " + objects[i] );
+        }
     }
 
     /**

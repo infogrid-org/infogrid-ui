@@ -18,8 +18,10 @@ import java.util.HashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
@@ -157,8 +159,8 @@ public class UrlTest1
         MPingPongNetMessageEndpointFactory endpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
         endpointFactory.setNameServer( theNameServer );
 
-        mb1 = NetMMeshBase.create( net1, endpointFactory, theModelBase, null, rootContext );
-        mb2 = NetMMeshBase.create( net2, endpointFactory, theModelBase, null, rootContext );
+        mb1 = NetMMeshBase.create( net1, theModelBase, null, endpointFactory, rootContext );
+        mb2 = NetMMeshBase.create( net2, theModelBase, null, endpointFactory, rootContext );
         
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb2.getIdentifier(), mb2 );
@@ -177,14 +179,19 @@ public class UrlTest1
     }
 
     /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory netFact = DefaultNetMeshBaseIdentifierFactory.create();
+    
+    /**
      * The first NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net1 = NetMeshBaseIdentifier.create( "http://example.com/one/two" );
+    protected NetMeshBaseIdentifier net1 = netFact.fromExternalForm( "http://example.com/one/two" );
 
     /**
      * The second NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net2 = NetMeshBaseIdentifier.createUnresolvable( "http://example.net/three/four" );
+    protected NetMeshBaseIdentifier net2 = netFact.guessFromExternalForm( "http://example.net/three/four" );
 
     /**
      * The first NetMeshBase.

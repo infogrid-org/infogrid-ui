@@ -61,7 +61,7 @@ public class XprisoTest13
 
         //
         
-        NetMeshObjectAccessSpecification spec = NetMeshObjectAccessSpecification.create(
+        NetMeshObjectAccessSpecification spec = mb1.getNetMeshObjectAccessSpecificationFactory().obtain(
                         mb1.getIdentifier(),
                         ida );
                 
@@ -137,9 +137,9 @@ public class XprisoTest13
         MPingPongNetMessageEndpointFactory endpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
         endpointFactory.setNameServer( theNameServer );
 
-        mb1         = NetMMeshBase.create( net1, endpointFactory, theModelBase, null,                rootContext );
-        mb_insecure = NetMMeshBase.create( net2, endpointFactory, theModelBase, null,                rootContext );
-        mb_secure   = NetMMeshBase.create( net3, endpointFactory, theModelBase, secureAccessManager, rootContext );
+        mb1         = NetMMeshBase.create( net1, theModelBase, null,                endpointFactory, rootContext );
+        mb_insecure = NetMMeshBase.create( net2, theModelBase, null,                endpointFactory, rootContext );
+        mb_secure   = NetMMeshBase.create( net3, theModelBase, secureAccessManager, endpointFactory, rootContext );
 
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb_insecure.getIdentifier(), mb_insecure );
@@ -162,17 +162,17 @@ public class XprisoTest13
     /**
      * The first NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net1 = NetMeshBaseIdentifier.createUnresolvable( "one.local" );
+    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.obtainUnresolvable( "one.local" );
 
     /**
      * The second NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net2 = NetMeshBaseIdentifier.createUnresolvable( "two.local" );
+    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.obtainUnresolvable( "two.local" );
 
     /**
      * The third NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net3 = NetMeshBaseIdentifier.createUnresolvable( "three.local" );
+    protected NetMeshBaseIdentifier net3 = theMeshBaseIdentifierFactory.obtainUnresolvable( "three.local" );
 
     /**
      * AccessManager for the secure NetMeshBase.

@@ -16,7 +16,6 @@ package org.infogrid.kernel.TEST.meshbase.m;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -139,7 +138,7 @@ public class MeshBaseTest6
         super( MeshBaseTest6.class );
 
         theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 rootContext );

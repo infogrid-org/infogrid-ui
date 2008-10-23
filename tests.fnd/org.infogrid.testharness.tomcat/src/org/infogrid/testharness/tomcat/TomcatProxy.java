@@ -123,7 +123,7 @@ public abstract class TomcatProxy
 
             File [] jars = toDeploy.getModuleJars();
             if( jars.length != 1 ) {
-                throw new RuntimeException( "Wrong number of JARs found: " + ArrayHelper.join( jars ));
+                throw new RuntimeException( "Wrong number of JARs found: " + ( jars.length > 0 ? ArrayHelper.join( jars ) : "none" ));
             }
 
             byte [] content = StreamUtils.slurp( jars[0] );

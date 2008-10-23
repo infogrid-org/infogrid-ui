@@ -19,7 +19,6 @@ import org.infogrid.mesh.NotBlessedException;
 import org.infogrid.mesh.RoleTypeRequiresEntityTypeException;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -186,7 +185,7 @@ public class MeshBaseTest4
         super( MeshBaseTest4.class );
 
         theMeshBase = MMeshBase.create(
-                MeshBaseIdentifier.create( "MeshBase" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),
                 theModelBase,
                 null,
                 rootContext );

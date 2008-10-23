@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
-import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObjectFactory;
-import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 
 /**
  * Interface implemented by those objects that know how to load bulk information into a MeshBase.
@@ -30,18 +28,14 @@ public interface BulkLoader
      * Bulk-load data into this MeshBase.
      *
      * @param inStream the Stream from which to read the data
-     * @param externalizedMeshObjectFactory the ExternalizedMeshObjectFactory to use
-     * @param meshObjectIdentifierFactory the MeshObjectIdentifierFactory to use
-     * @param meshTypeIdentifierFactory the MeshTypeIdentifierFactory to use 
+     * @param mb the MeshBase on whose behalf the loading is performed
      * @return the iterator over the loaded ExternalizedMeshObjects
      * @throws IOException thrown if an I/O error occurred
      * @throws BulkLoadException thrown if a loading exception occurred, for the details check the cause
      */
     public Iterator<? extends ExternalizedMeshObject> bulkLoad(
-            InputStream                                 inStream,
-            ParserFriendlyExternalizedMeshObjectFactory externalizedMeshObjectFactory,
-            MeshObjectIdentifierFactory                 meshObjectIdentifierFactory,
-            MeshTypeIdentifierFactory                   meshTypeIdentifierFactory )
+            InputStream inStream,
+            MeshBase    mb )
         throws
             IOException,
             BulkLoadException;

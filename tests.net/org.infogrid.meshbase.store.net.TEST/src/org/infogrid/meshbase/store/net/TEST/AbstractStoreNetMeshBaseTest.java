@@ -20,8 +20,10 @@ import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.m.NetMMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.primitives.EntityType;
@@ -254,6 +256,11 @@ public abstract class AbstractStoreNetMeshBaseTest
      */
     protected NetMMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServer = NetMMeshBaseNameServer.create();
 
+    /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected static NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+    
     /**
      * The name of the database that we use to store test data.
      */

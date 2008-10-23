@@ -28,24 +28,6 @@ public class MeshBaseIdentifier
             Identifier
 {
     /**
-     * Factory method.
-     * 
-     * @param canonicalForm the canonical representation of this identifier
-     * @return the created MeshBaseIdentifier
-     * @throws URISyntaxException thrown if the canonical form could not be passed
-     */
-    public static MeshBaseIdentifier create(
-            String canonicalForm )
-        throws
-            URISyntaxException
-    {
-        if( canonicalForm == null ) {
-            throw new URISyntaxException( canonicalForm, "MeshBaseIdentifier's canonical form cannot be null" );
-        }
-        return new MeshBaseIdentifier( canonicalForm );
-    }
-
-    /**
      * Constructor.
      * 
      * @param canonicalForm the canonical representation of this identifier

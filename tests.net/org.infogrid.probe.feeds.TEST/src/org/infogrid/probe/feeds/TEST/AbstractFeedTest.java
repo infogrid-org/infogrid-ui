@@ -17,7 +17,9 @@ package org.infogrid.probe.feeds.TEST;
 import java.util.Iterator;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.modelbase.ModelBase;
@@ -151,4 +153,9 @@ public abstract class AbstractFeedTest
      * The ProbeDirectory.
      */
     protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
+    
+    /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
 }

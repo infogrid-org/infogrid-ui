@@ -19,7 +19,6 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
-import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
 import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
 import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
@@ -61,7 +60,7 @@ public class XprisoTest12
         log.info( "Accessing replica at mb2 from mb1" );
 
         NetMeshObject obj1_mb2 = mb2.accessLocally(
-                NetMeshObjectAccessSpecification.create(
+                mb2.getNetMeshObjectAccessSpecificationFactory().obtain(
                         mb1.getIdentifier(),
                         obj1_mb1.getIdentifier()));
         checkObject( obj1_mb2, "obj1_mb2 not found" );
@@ -74,7 +73,7 @@ public class XprisoTest12
         log.info( "Accessing replica at mb3 from mb2" );
 
         NetMeshObject obj1_mb3 = mb3.accessLocally(
-                NetMeshObjectAccessSpecification.create(
+                mb3.getNetMeshObjectAccessSpecificationFactory().obtain(
                         mb2.getIdentifier(),
                         obj1_mb1.getIdentifier()));
         checkObject( obj1_mb3, "C not found" );
@@ -138,9 +137,9 @@ public class XprisoTest12
 
         ProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create( false );
 
-        mb1 = NetMMeshBase.create( net1, endpointFactory, proxyPolicyFactory, theModelBase, null, rootContext );
-        mb2 = NetMMeshBase.create( net2, endpointFactory, proxyPolicyFactory, theModelBase, null, rootContext );
-        mb3 = NetMMeshBase.create( net3, endpointFactory, proxyPolicyFactory, theModelBase, null, rootContext );
+        mb1 = NetMMeshBase.create( net1, theModelBase, null, endpointFactory, rootContext );
+        mb2 = NetMMeshBase.create( net2, theModelBase, null, endpointFactory, rootContext );
+        mb3 = NetMMeshBase.create( net3, theModelBase, null, endpointFactory, rootContext );
 
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb2.getIdentifier(), mb2 );
@@ -163,17 +162,17 @@ public class XprisoTest12
     /**
      * The first NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net1 = NetMeshBaseIdentifier.createUnresolvable( "one.local" );
+    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.obtainUnresolvable( "one.local" );
 
     /**
      * The second NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net2 = NetMeshBaseIdentifier.createUnresolvable( "two.local" );
+    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.obtainUnresolvable( "two.local" );
 
     /**
      * The third NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net3 = NetMeshBaseIdentifier.createUnresolvable( "three.local" );
+    protected NetMeshBaseIdentifier net3 = theMeshBaseIdentifierFactory.obtainUnresolvable( "three.local" );
 
     /**
      * The first NetMeshBase.

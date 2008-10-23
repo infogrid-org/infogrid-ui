@@ -14,6 +14,8 @@
 
 package org.infogrid.probe.vcard.TEST;
 
+import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.ProbeDirectory.StreamProbeDescriptor;
@@ -59,6 +61,11 @@ public abstract class AbstractVCardProbeTest
      * The ProbeDirectory.
      */
     protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
+    
+    /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
 }
 
 

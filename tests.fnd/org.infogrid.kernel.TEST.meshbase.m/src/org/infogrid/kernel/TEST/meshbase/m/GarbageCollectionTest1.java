@@ -17,7 +17,6 @@ package org.infogrid.kernel.TEST.meshbase.m;
 import java.lang.ref.WeakReference;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -55,9 +54,9 @@ public class GarbageCollectionTest1
         
         log.info( "Creating MeshBases" );
 
-        MeshBase mb1 = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase1" ), theModelBase, null, rootContext );
-        MeshBase mb2 = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase2" ), theModelBase, null, rootContext );
-        MeshBase mb3 = MMeshBase.create( MeshBaseIdentifier.create( "MeshBase3" ), theModelBase, null, rootContext );
+        MeshBase mb1 = MMeshBase.create( theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase1" ), theModelBase, null, rootContext );
+        MeshBase mb2 = MMeshBase.create( theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase2" ), theModelBase, null, rootContext );
+        MeshBase mb3 = MMeshBase.create( theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase3" ), theModelBase, null, rootContext );
         
         //
         

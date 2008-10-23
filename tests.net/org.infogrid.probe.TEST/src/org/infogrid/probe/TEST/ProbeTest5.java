@@ -65,7 +65,7 @@ public class ProbeTest5
         throws
             Exception
     {
-        NetMeshBaseIdentifier    here = NetMeshBaseIdentifier.create( "http://here.local/" ); // this is not going to work for communications
+        NetMeshBaseIdentifier    here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
         LocalNetMMeshBase        base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
 
         Class [] expectedExceptionTypes = {
@@ -201,7 +201,7 @@ public class ProbeTest5
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = NetMeshBaseIdentifier.createUnresolvable( "TEST_NETWORK_IDENTIFIER.local" );
+            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "TEST_NETWORK_IDENTIFIER.local" );
 
         } catch( Throwable t ) {
             log.error( t );

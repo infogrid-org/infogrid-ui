@@ -19,7 +19,6 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.util.logging.Log;
@@ -46,7 +45,7 @@ public class XprisoTest1b
         log.info( "Accessing missing object" );
 
         NetMeshObject missing_mb3 = mb3.accessLocally(
-                NetMeshObjectAccessSpecification.create(
+                mb3.getNetMeshObjectAccessSpecificationFactory().obtain(
                         new NetMeshBaseIdentifier[] {
                             mb2.getIdentifier(),
                             mb1.getIdentifier(),
@@ -106,9 +105,9 @@ public class XprisoTest1b
         MPingPongNetMessageEndpointFactory endpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
         endpointFactory.setNameServer( theNameServer );
 
-        mb1 = NetMMeshBase.create( net1, endpointFactory, theModelBase, null, rootContext );
-        mb2 = NetMMeshBase.create( net2, endpointFactory, theModelBase, null, rootContext );
-        mb3 = NetMMeshBase.create( net3, endpointFactory, theModelBase, null, rootContext );
+        mb1 = NetMMeshBase.create( net1, theModelBase, null, endpointFactory, rootContext );
+        mb2 = NetMMeshBase.create( net2, theModelBase, null, endpointFactory, rootContext );
+        mb3 = NetMMeshBase.create( net3, theModelBase, null, endpointFactory, rootContext );
         
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb2.getIdentifier(), mb2 );
@@ -131,17 +130,17 @@ public class XprisoTest1b
     /**
      * The first NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net1 = NetMeshBaseIdentifier.createUnresolvable( "one.local" );
+    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.obtainUnresolvable( "one.local" );
 
     /**
      * The second NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net2 = NetMeshBaseIdentifier.createUnresolvable( "two.local" );
+    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.obtainUnresolvable( "two.local" );
 
     /**
      * The third NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net3 = NetMeshBaseIdentifier.createUnresolvable( "three.local" );
+    protected NetMeshBaseIdentifier net3 = theMeshBaseIdentifierFactory.obtainUnresolvable( "three.local" );
 
     /**
      * The first NetMeshBase.
