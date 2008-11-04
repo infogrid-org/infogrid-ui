@@ -118,11 +118,6 @@ public abstract class AbstractWritableProbeTest
     private static Log log = Log.getLogInstance( AbstractWritableProbeTest.class  );
 
     /**
-     * the test protocol, in the real world this would be something like "jdbc"
-     */
-    private static final String PROTOCOL_NAME = "AbstractWritableProbeTestProtocol";
-
-    /**
      * The identifier of the main NetMeshBase.
      */
     protected static final NetMeshBaseIdentifier here;
@@ -144,7 +139,7 @@ public abstract class AbstractWritableProbeTest
     static {
         NetMeshBaseIdentifier temp;
         try {
-            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://shadow.some.where/one" );
+            temp = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://shadow.some.where/one" );
         } catch( Exception ex ) {
             log.error( ex );
             temp = null; // make compiler happy

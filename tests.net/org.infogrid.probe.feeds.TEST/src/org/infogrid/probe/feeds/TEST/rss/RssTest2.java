@@ -166,9 +166,12 @@ public class RssTest2
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
-
-        ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
+        ShadowMeshBaseFactory theShadowFactory = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
+                shadowEndpointFactory,
+                theModelBase,
+                theProbeDirectory,
+                rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
         shadowEndpointFactory.setNameServer( theProbeManager1.getNetMeshBaseNameServer() );

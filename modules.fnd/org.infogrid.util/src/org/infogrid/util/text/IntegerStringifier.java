@@ -15,7 +15,7 @@
 package org.infogrid.util.text;
 
 import org.infogrid.util.OneElementIterator;
-import org.infogrid.util.ZeroElementIterator;
+import org.infogrid.util.ZeroElementCursorIterator;
 
 import java.util.Iterator;
 
@@ -118,7 +118,7 @@ public class IntegerStringifier
         if( matchAll ) {
             for( int i = 0 ; i < endIndex-startIndex ; ++i ) {
                 if( !validChar( i+startIndex, startIndex, endIndex, rawString ) ) {
-                    return ZeroElementIterator.<StringifierParsingChoice<Integer>>create();
+                    return ZeroElementCursorIterator.<StringifierParsingChoice<Integer>>create();
                 }
             }
             return OneElementIterator.<StringifierParsingChoice<Integer>>create(

@@ -39,7 +39,6 @@ import org.infogrid.util.logging.Log;
 public class StoreShadowMeshBaseTest3
         extends
             AbstractStoreProbeTest
-            
 {
     /**
      * Run the test.
@@ -170,10 +169,10 @@ public class StoreShadowMeshBaseTest3
         
         // 
 
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local" );
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         StoreShadowMeshBaseFactory theShadowFactory = StoreShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
                 shadowEndpointFactory,
                 theModelBase,
                 theProbeDirectory,

@@ -30,6 +30,7 @@ import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.store.LocalNetStoreMeshBase;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -96,6 +97,9 @@ public class StoreShadowMeshBaseTest7
 
         LocalNetStoreMeshBase base = LocalNetStoreMeshBase.create(
                 baseIdentifier,
+                DefaultNetMeshObjectAccessSpecificationFactory.create(
+                        baseIdentifier,
+                        theMeshBaseIdentifierFactory ),
                 theModelBase,
                 null,
                 theMeshStore,
@@ -212,7 +216,7 @@ public class StoreShadowMeshBaseTest7
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "TEST_NETWORK_IDENTIFIER.local" );
+            temp = theMeshBaseIdentifierFactory.fromExternalForm( "test://TEST_NETWORK_IDENTIFIER.local" );
 
         } catch( Throwable t ) {
             log.error( t );

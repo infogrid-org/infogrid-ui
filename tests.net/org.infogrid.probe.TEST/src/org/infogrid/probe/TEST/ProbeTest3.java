@@ -210,12 +210,24 @@ public class ProbeTest3
         MPingPongNetMessageEndpointFactory shadowEndpointFactoryB = MPingPongNetMessageEndpointFactory.create( exec );
         MPingPongNetMessageEndpointFactory shadowEndpointFactoryC = MPingPongNetMessageEndpointFactory.create( exec );
 
-        ShadowMeshBaseFactory theShadowFactoryA
-                = MShadowMeshBaseFactory.create( shadowEndpointFactoryA, theModelBase, theProbeDirectory, rootContext );
-        ShadowMeshBaseFactory theShadowFactoryB
-                = MShadowMeshBaseFactory.create( shadowEndpointFactoryB, theModelBase, theProbeDirectory, rootContext );
-        ShadowMeshBaseFactory theShadowFactoryC
-                = MShadowMeshBaseFactory.create( shadowEndpointFactoryC, theModelBase, theProbeDirectory, rootContext );
+        ShadowMeshBaseFactory theShadowFactoryA = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
+                shadowEndpointFactoryA,
+                theModelBase,
+                theProbeDirectory,
+                rootContext );
+        ShadowMeshBaseFactory theShadowFactoryB = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
+                shadowEndpointFactoryB,
+                theModelBase,
+                theProbeDirectory,
+                rootContext );
+        ShadowMeshBaseFactory theShadowFactoryC = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
+                shadowEndpointFactoryC,
+                theModelBase,
+                theProbeDirectory,
+                rootContext );
         
         theProbeManagerA = MPassiveProbeManager.create( theShadowFactoryA );
         theProbeManagerB = MPassiveProbeManager.create( theShadowFactoryB );

@@ -80,7 +80,7 @@ public class ShadowTest2
         checkObject( shadow, "cannot find shadow" );
 
         int count = 0;
-        for( ShadowMeshBase current : base.getAllShadowMeshBases() ) {
+        for( ShadowMeshBase current : base.getShadowMeshBases() ) {
             ++count;
         }
         checkEquals( count, 1, "Wrong number of shadows" );
@@ -207,11 +207,6 @@ public class ShadowTest2
     private static Log log = Log.getLogInstance( ShadowTest2.class );
 
     /**
-     * The test protocol. In the real world this would be something like "jdbc".
-     */
-    private static final String PROTOCOL_NAME = "ShadowTest2Protocol";
-
-    /**
      * The first URL that we are accessing.
      */
     private static NetMeshBaseIdentifier TEST1_URL;
@@ -228,9 +223,9 @@ public class ShadowTest2
 
     static {
         try {
-            TEST1_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://myhost.local/remainder" );
-            TEST2_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://otherhost.local/remainder" );
-            TEST3_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://otherhost.local/empty" );
+            TEST1_URL = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://myhost.local/remainder" );
+            TEST2_URL = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://otherhost.local/remainder" );
+            TEST3_URL = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://otherhost.local/empty" );
 
         } catch( Exception ex ) {
             log.error( ex );

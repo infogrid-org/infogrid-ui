@@ -133,7 +133,7 @@ public abstract class LocalAnetMeshBase
      *
      * @return all ShadowMeshBases
      */
-    public Collection<ShadowMeshBase> getAllShadowMeshBases()
+    public Collection<ShadowMeshBase> getShadowMeshBases()
     {
         Collection<ShadowMeshBase> ret = theProbeManager.values();
         return ret;

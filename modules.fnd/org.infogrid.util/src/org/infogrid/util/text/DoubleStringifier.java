@@ -15,7 +15,7 @@
 package org.infogrid.util.text;
 
 import org.infogrid.util.OneElementIterator;
-import org.infogrid.util.ZeroElementIterator;
+import org.infogrid.util.ZeroElementCursorIterator;
 
 import java.util.Iterator;
 
@@ -127,18 +127,18 @@ public class DoubleStringifier
                         new StringifierValueParsingChoice<Double>( startIndex, endIndex, found ));
                 
             } catch( NumberFormatException ex ) {
-                return ZeroElementIterator.<StringifierParsingChoice<Double>>create();
+                return ZeroElementCursorIterator.<StringifierParsingChoice<Double>>create();
             }
             
         } else if( startIndex == endIndex ) {
-            return ZeroElementIterator.<StringifierParsingChoice<Double>>create();
+            return ZeroElementCursorIterator.<StringifierParsingChoice<Double>>create();
             
         } else {
             char first = rawString.charAt( startIndex );
             int  startIndex2 = startIndex;
             if( first == '+' || first == '-' ) {
                 if( startIndex + 1 == endIndex ) {
-                    return ZeroElementIterator.<StringifierParsingChoice<Double>>create();
+                    return ZeroElementCursorIterator.<StringifierParsingChoice<Double>>create();
                 }
                 ++startIndex2;
             }

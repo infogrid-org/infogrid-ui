@@ -135,7 +135,7 @@ public class TESTAPPInitializationFilter
         if( theDefaultMeshBaseIdentifier == null ) {
             SaneServletRequest lidRequest = SaneServletRequest.create( (HttpServletRequest) request );
             
-            theDefaultMeshBaseIdentifier = lidRequest.getAbsoluteContextUri();
+            theDefaultMeshBaseIdentifier = lidRequest.getAbsoluteContextUri() + "/"; // need trailing slash for MeshBase
         }
         
         try {
@@ -265,9 +265,9 @@ public class TESTAPPInitializationFilter
         try {
             tx = mb.createTransactionNow();
             
-            NetMeshObject a = life.createMeshObject( fact.fromExternalForm( "#a" ));
-            NetMeshObject b = life.createMeshObject( fact.fromExternalForm( "#b" ));
-            NetMeshObject c = life.createMeshObject( fact.fromExternalForm( "#c" ));
+            NetMeshObject a = life.createMeshObject( fact.fromExternalForm( "#aaaa" )); // make sure there are long enough to pass the Regex filter
+            NetMeshObject b = life.createMeshObject( fact.fromExternalForm( "#bbbb" ));
+            NetMeshObject c = life.createMeshObject( fact.fromExternalForm( "#cccc" ));
             
             a.relate( b );
             c.relate( mb.getHomeObject() );

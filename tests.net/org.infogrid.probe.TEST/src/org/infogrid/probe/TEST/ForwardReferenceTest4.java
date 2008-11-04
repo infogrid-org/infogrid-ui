@@ -170,7 +170,7 @@ public class ForwardReferenceTest4
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "testing://some.example.com/outer" );
+            temp = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://some.example.com/outer" );
             // temp = NetMeshBaseIdentifier.create( "=foo" );
 
         } catch( URISyntaxException ex ) {
@@ -186,7 +186,7 @@ public class ForwardReferenceTest4
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "testing://some.example.com/inner" );
+            temp = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://some.example.com/inner" );
 
         } catch( URISyntaxException ex ) {
             log.error( ex );

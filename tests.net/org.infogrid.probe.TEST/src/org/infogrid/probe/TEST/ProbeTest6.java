@@ -61,7 +61,7 @@ public class ProbeTest6
         checkEquals( oldMeshObjectCount, 2, "Wrong number of MeshObjects after initial replication" ); // one plus home object
 
         checkEquals( countFromIterator( base.proxies(), log ), 1, "Wrong number of proxies after initial replication" );
-        checkEquals( base.getAllShadowMeshBases().size(), 1, "Wrong number of shadows after initial replication" );
+        checkEquals( base.getShadowMeshBases().size(), 1, "Wrong number of shadows after initial replication" );
         
         //
         
@@ -131,14 +131,14 @@ public class ProbeTest6
         log.info( "Running the probe again should now remove the unnecessary shadow" );
 
         checkEquals( countFromIterator( base.proxies(), log ), 1, "Wrong number of proxies before probe call" );
-        checkEquals( base.getAllShadowMeshBases().size(), 1, "Wrong number of shadows before probe call" );
+        checkEquals( base.getShadowMeshBases().size(), 1, "Wrong number of shadows before probe call" );
         
         shadow.doUpdateNow();
 
         Thread.sleep( 4000L );
         
         checkEquals( countFromIterator( base.proxies(), log ), 0, "Wrong number of proxies after second probe call" );
-        checkEquals( base.getAllShadowMeshBases().size(), 0, "Wrong number of shadows after second probe call" );
+        checkEquals( base.getShadowMeshBases().size(), 0, "Wrong number of shadows after second probe call" );
     }
     
     /**

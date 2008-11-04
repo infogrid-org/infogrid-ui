@@ -51,10 +51,9 @@ public class StoreShadowMeshBaseTest6
         IterablePrefixingStore theShadowStore      = IterablePrefixingStore.create( "Shadow",      theSqlStore );
         IterablePrefixingStore theShadowProxyStore = IterablePrefixingStore.create( "ShadowProxy", theSqlStore );
 
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local" );
-
         StoreShadowMeshBaseFactory theShadowFactory
                 = StoreShadowMeshBaseFactory.create(
+                        theMeshBaseIdentifierFactory,
                         shadowEndpointFactory,
                         theModelBase,
                         theProbeDirectory,

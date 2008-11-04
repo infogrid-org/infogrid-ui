@@ -213,7 +213,7 @@ run_command()
 			echo FAILED: $*
 			return 1;
 		else
-			grep -i warning ${TMPFILE}
+			grep -i warning ${TMPFILE} | egrep -v '_jsp\.java.*unchecked call to add\(E\) as a member of the raw type java\.util\.List' | egrep -v '[0-9]+[ \t]+warnings$'
 		fi
 	fi
 	return 0;

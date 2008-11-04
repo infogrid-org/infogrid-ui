@@ -72,6 +72,7 @@ import org.infogrid.util.CursorIterator;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.RemoteQueryTimeoutException;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -624,7 +625,7 @@ public class AnetMeshObject
     /**
      * Obtain all Proxies applicable to this replica.
      *
-     * @return all Proxies. This may return null.
+     * @return all Proxies. This may return null for efficiency reasons.
      */
     public Proxy [] getAllProxies()
     {
@@ -638,7 +639,12 @@ public class AnetMeshObject
      */
     public CursorIterator<Proxy> proxyIterator()
     {
-        return ArrayCursorIterator.<Proxy>create( theProxies );
+        Proxy [] p = theProxies; // saves us a synchronized
+        if( p != null ) {
+            return ArrayCursorIterator.<Proxy>create( p );
+        } else {
+            return ZeroElementCursorIterator.<Proxy>create();
+        }
     }
 
     /**

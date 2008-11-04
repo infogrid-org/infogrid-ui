@@ -193,18 +193,13 @@ public class ShadowTest7
     private static Log log = Log.getLogInstance( ShadowTest7.class );
 
     /**
-     * The test protocol. In the real world this would be something like "jdbc".
-     */
-    private static final String PROTOCOL_NAME = "ShadowTest7Protocol";
-
-    /**
      * The URL that we are accessing.
      */
     private static NetMeshBaseIdentifier TEST_URL;
 
     static {
         try {
-            TEST_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://myhost.local/remainder" );
+            TEST_URL = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://myhost.local/remainder" );
 
         } catch( Exception ex ) {
             log.error( ex );

@@ -184,7 +184,12 @@ public abstract class AbstractStoreProbeTest
     /**
      * The factory for NetMeshBaseIdentifiers.
      */
-    protected static NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+    protected static NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create(
+            new DefaultNetMeshBaseIdentifierFactory.Protocol [] {
+                new DefaultNetMeshBaseIdentifierFactory.Protocol( "test", false ),
+                new DefaultNetMeshBaseIdentifierFactory.Protocol( "http", true ),
+                new DefaultNetMeshBaseIdentifierFactory.Protocol( "file", true ),
+            });
     
     /**
      * The name of the database that we use to store test data.

@@ -21,11 +21,13 @@ import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjec
 import org.infogrid.mesh.net.externalized.SimpleExternalizedNetMeshObject;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
+import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
+import org.infogrid.meshbase.net.m.NetMMeshBase;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectNeighborAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectNeighborRemovedEvent;
@@ -97,9 +99,7 @@ public class XprisoMessageSerializationTest1
         
         XprisoMessage recovered = encoder.decodeXprisoMessage(
                 inStream,
-                theExternalizedMeshObjectFactory,
-                theNetMeshObjectAccessSpecificationFactory,
-                theMeshTypeIdentifierFactory );
+                theNetMeshBase );
 
         checkEquals( message, recovered, "Recovered XprisoMessage not the same" );
     }
@@ -122,10 +122,10 @@ public class XprisoMessageSerializationTest1
         
         NetMeshObjectIdentifier nmo_ref1 = theNetMeshObjectIdentifierFactory.fromExternalForm( "" );
         NetMeshObjectIdentifier nmo_ref2 = theNetMeshObjectIdentifierFactory.fromExternalForm( "abc" );
-        NetMeshObjectIdentifier nmo_ref3 = theNetMeshObjectIdentifierFactory.fromExternalForm( "example.com" );
+        NetMeshObjectIdentifier nmo_ref3 = theNetMeshObjectIdentifierFactory.fromExternalForm( "def" );
         NetMeshObjectIdentifier nmo_ref4 = theNetMeshObjectIdentifierFactory.fromExternalForm( "http://example.net/foo/bar#abc" );
-        NetMeshObjectIdentifier nmo_ref5 = theNetMeshObjectIdentifierFactory.fromExternalForm( "some.where#abc" );
-        NetMeshObjectIdentifier nmo_ref6 = theNetMeshObjectIdentifierFactory.fromExternalForm( "some.other%20place#123456" );
+        NetMeshObjectIdentifier nmo_ref5 = theNetMeshObjectIdentifierFactory.fromExternalForm( "#abc" );
+        NetMeshObjectIdentifier nmo_ref6 = theNetMeshObjectIdentifierFactory.fromExternalForm( "#123%20456" );
 
         MeshTypeIdentifier mt_ref1 = theMeshTypeIdentifierFactory.fromExternalForm( "org.infogrid.model.Some.Model" );
         MeshTypeIdentifier mt_ref2 = theMeshTypeIdentifierFactory.fromExternalForm( "org.infogrid.model/Some/Model" );
@@ -374,6 +374,8 @@ public class XprisoMessageSerializationTest1
             Exception
     {
         super( XprisoMessageSerializationTest1.class );
+        
+        theNetMeshBase = NetMMeshBase.create( nmbid0, theModelBase, null, null, rootContext );
     }
 
     // Our Logger
@@ -383,6 +385,11 @@ public class XprisoMessageSerializationTest1
      * Factory for NetMeshBaseIdentifiers.
      */
     protected NetMeshBaseIdentifierFactory theNetMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+
+    /**
+     * A NetMeshBaseIdentifier.
+     */
+    protected NetMeshBaseIdentifier nmbid0 = theNetMeshBaseIdentifierFactory.fromExternalForm( "http://here.local" );
 
     /**
      * A NetMeshBaseIdentifier.
@@ -416,4 +423,9 @@ public class XprisoMessageSerializationTest1
      */
     protected NetMeshObjectAccessSpecificationFactory theNetMeshObjectAccessSpecificationFactory
             = DefaultNetMeshObjectAccessSpecificationFactory.create( nmbid1 );
+    
+    /**
+     * The NetMeshBase used to decode incoming messages.
+     */
+    protected NetMeshBase theNetMeshBase;
 }

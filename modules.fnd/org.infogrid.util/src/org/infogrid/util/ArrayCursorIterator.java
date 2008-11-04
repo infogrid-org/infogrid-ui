@@ -36,10 +36,16 @@ public class ArrayCursorIterator<E>
      * @return the created ArrayCursorIterator
      * @param <E> the type of element to iterate over
      */
+    @SuppressWarnings("unchecked")
     public static <E> ArrayCursorIterator<E> create(
             E [] array )
     {
-        return new ArrayCursorIterator<E>( array, 0, 0, array.length );
+        return new ArrayCursorIterator<E>(
+                array,
+                (Class<E>) array.getClass().getComponentType(),
+                0,
+                0,
+                array.length );
     }
 
     /**
@@ -51,11 +57,17 @@ public class ArrayCursorIterator<E>
      * @return the created ArrayCursorIterator
      * @param <E> the type of element to iterate over
      */
+    @SuppressWarnings("unchecked")
     public static <E> ArrayCursorIterator<E> create(
             E [] array,
             int  startPosition )
     {
-        return new ArrayCursorIterator<E>( array, startPosition, 0, array.length );
+        return new ArrayCursorIterator<E>(
+                array,
+                (Class<E>) array.getClass().getComponentType(),
+                startPosition,
+                0,
+                array.length );
     }
 
     /**
@@ -69,13 +81,19 @@ public class ArrayCursorIterator<E>
      * @return the created ArrayCursorIterator
      * @param <E> the type of element to iterate over
      */
+    @SuppressWarnings("unchecked")
     public static <E> ArrayCursorIterator<E> create(
             E [] array,
             int  startPosition,
             int  lowerBound,
             int  upperBound )
     {
-        return new ArrayCursorIterator<E>( array, startPosition, lowerBound, upperBound );
+        return new ArrayCursorIterator<E>(
+                array,
+                (Class<E>) array.getClass().getComponentType(),
+                startPosition,
+                lowerBound,
+                upperBound );
     }
 
     /**
@@ -83,18 +101,19 @@ public class ArrayCursorIterator<E>
      * slice of the array defined by lowerBound (inclusive) and upperBound (exclusive).
      * 
      * @param array the array to iterate over
+     * @param arrayComponentType the <code>Class</code> that should be used to create arrays for return values
      * @param startPosition the start position
      * @param lowerBound the lowest index in the array to return (inclusive)
      * @param upperBound the highest index in the array to return (exclusive)
      */
-    @SuppressWarnings(value={"unchecked"})
     protected ArrayCursorIterator(
-            E [] array,
-            int  startPosition,
-            int  lowerBound,
-            int  upperBound )
+            E []     array,
+            Class<E> arrayComponentType,
+            int      startPosition,
+            int      lowerBound,
+            int      upperBound )
     {
-        super( (Class<E>) array.getClass().getComponentType() );
+        super( arrayComponentType );
 
         if( upperBound > array.length ) {
             throw new IllegalArgumentException( "Upperbound higher than length of array" );
@@ -333,7 +352,12 @@ public class ArrayCursorIterator<E>
     public ArrayCursorIterator<E> createCopy()
     {
         // keep position
-        return new ArrayCursorIterator<E>( theArray, thePosition, theLowerBound, theUpperBound );
+        return new ArrayCursorIterator<E>(
+                theArray,
+                theArrayComponentType,
+                thePosition,
+                theLowerBound,
+                theUpperBound );
     }
 
     /**

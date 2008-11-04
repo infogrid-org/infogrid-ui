@@ -872,7 +872,7 @@ public class LocalNetStoreMeshBase
             ProbeManager                            probeManager,
             Context                                 context )
     {
-        DefaultProxyFactory              proxyFactory = DefaultProxyFactory.create( endpointFactory, proxyPolicyFactory );
+        DefaultProxyFactory proxyFactory = DefaultProxyFactory.create( endpointFactory, proxyPolicyFactory );
 
         NetStoreMeshBaseEntryMapper objectMapper = new NetStoreMeshBaseEntryMapper();
         StoreProxyEntryMapper       proxyMapper  = new StoreProxyEntryMapper( proxyFactory );
@@ -900,6 +900,9 @@ public class LocalNetStoreMeshBase
 
         setFactory.setMeshBase( ret );
         proxyFactory.setNetMeshBase( ret );
+        proxyMapper.setMeshBase( ret );
+        objectMapper.setMeshBase( ret );
+
         ret.initializeHomeObject();
         
         if( log.isDebugEnabled() ) {

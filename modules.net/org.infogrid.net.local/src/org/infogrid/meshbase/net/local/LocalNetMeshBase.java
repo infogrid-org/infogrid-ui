@@ -41,7 +41,7 @@ public interface LocalNetMeshBase
      *
      * @return all ShadowMeshBases
      */
-    public Collection<ShadowMeshBase> getAllShadowMeshBases();
+    public Collection<ShadowMeshBase> getShadowMeshBases();
 
     /**
      * Obtain the NetMeshBases (this one and all ShadowMeshBases) as a NameServer.

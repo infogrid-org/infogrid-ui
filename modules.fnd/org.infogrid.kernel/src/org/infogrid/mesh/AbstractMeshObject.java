@@ -52,7 +52,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FlexiblePropertyChangeListenerSet;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.StringHelper;
-import org.infogrid.util.ZeroElementIterator;
+import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -1661,7 +1661,7 @@ public abstract class AbstractMeshObject
     {
         FlexiblePropertyChangeListenerSet listeners = thePropertyChangeListeners;
         if( listeners == null || listeners.isEmpty() ) {
-            return ZeroElementIterator.<PropertyChangeListener>create();
+            return ZeroElementCursorIterator.<PropertyChangeListener>create();
         }
         return listeners.iterator();
     }

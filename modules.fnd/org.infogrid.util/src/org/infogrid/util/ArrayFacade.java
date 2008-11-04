@@ -17,6 +17,7 @@ package org.infogrid.util;
 /**
  * Wraps a Java array, so we can use it as a proper class, such as a parameter
  * for a generic class.
+ * @param <T> the array's component type
  */
 public class ArrayFacade<T>
 {
@@ -24,6 +25,8 @@ public class ArrayFacade<T>
      * Factory method.
      *
      * @param array the array
+     * @return the created ArrayFacade
+     * @param <T> the array's component type
      */
     public static <T> ArrayFacade<T> create(
             T [] array )
@@ -35,6 +38,8 @@ public class ArrayFacade<T>
      * Factory method.
      *
      * @param n the desired length of the array
+     * @return the created ArrayFacade
+     * @param <T> the array's component type
      */
     @SuppressWarnings(value={"unchecked"})
     public static <T> ArrayFacade<T> create(

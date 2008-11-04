@@ -200,11 +200,11 @@ public class DefaultNetMeshBaseIdentifierFactory
                 return new NetMeshBaseIdentifier( string, new URI( string ), p.getIsRestfullyResolvable() );
             }
         }
-        throw new IllegalArgumentException(
+        throw new URISyntaxException(
+                string,
                 "canonical identifier uses unknown protocol (need one of "
                 + ArrayHelper.join( theSupportedProtocols )
-                + "), is "
-                + string );
+                + ")" );
     }
 
     /**

@@ -40,5 +40,9 @@ public abstract class AbstractNetSerializerTest
     /**
      * The serializer to be tested.
      */
-    protected static NetMeshBaseIdentifierFactory theFactory = DefaultNetMeshBaseIdentifierFactory.create();
+    protected static NetMeshBaseIdentifierFactory theFactory = DefaultNetMeshBaseIdentifierFactory.create(
+            new DefaultNetMeshBaseIdentifierFactory.Protocol [] {
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "http", true ),
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "test", false ),
+    });
 }

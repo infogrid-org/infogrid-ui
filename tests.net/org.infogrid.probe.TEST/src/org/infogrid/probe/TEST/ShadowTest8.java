@@ -161,11 +161,6 @@ public class ShadowTest8
     private static Log log = Log.getLogInstance( ShadowTest8.class );
 
     /**
-     * The test protocol. In the real world this would be something like "jdbc".
-     */
-    private static final String PROTOCOL_NAME = "ShadowTest8Protocol";
-
-    /**
      * Constrants that determine the number of objects created in the probe.
      */
     protected static final int N1 = 5;
@@ -179,7 +174,7 @@ public class ShadowTest8
 
     static {
         try {
-            TEST_URL = theMeshBaseIdentifierFactory.obtainUnresolvable( PROTOCOL_NAME + "://myhost.local/remainder" );
+            TEST_URL = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://myhost.local/remainder" );
 
         } catch( Exception ex ) {
             log.error( ex );

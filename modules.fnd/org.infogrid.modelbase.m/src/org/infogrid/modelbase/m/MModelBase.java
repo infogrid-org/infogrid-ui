@@ -46,6 +46,7 @@ import org.infogrid.modelbase.WrongMeshTypeException;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleActivationException;
 import org.infogrid.module.ModuleAdvertisement;
+import org.infogrid.module.ModuleClassLoader;
 import org.infogrid.module.ModuleException;
 import org.infogrid.module.ModuleNotFoundException;
 import org.infogrid.module.ModuleRegistry;
@@ -68,6 +69,28 @@ public class MModelBase
     /**
      * Factory method.
      *
+     * @return the created ModelBase
+     */
+    public static ModelBase create()
+    {
+        ModuleRegistry registry;
+        ClassLoader    ourLoader = MModelBase.class.getClassLoader();
+        
+        if( ourLoader instanceof ModuleClassLoader ) {
+            ModuleClassLoader realLoader = (ModuleClassLoader) ourLoader;
+            registry = realLoader.getModule().getModuleRegistry();
+        } else {
+            registry = null;
+        }
+
+        MMeshTypeIdentifierFactory meshTypeIdentifierFactory = MMeshTypeIdentifierFactory.create();
+        
+        return new MModelBase( meshTypeIdentifierFactory, registry );
+    }
+
+    /**
+     * Factory method.
+     *
      * @param registry the ModuleRegistry in which we look for ModelModules
      * @return the created ModelBase
      */
@@ -80,10 +103,11 @@ public class MModelBase
     }
 
     /**
-      * Private constructor, use factory method.
-      *
-      * @param registry the ModuleRegistry in which we look for ModelModules
-      */
+     * Private constructor, use factory method.
+     *
+     * @param meshTypeIdentifierFactory the factory for MeshTypeIdentifiers to use
+     * @param registry the ModuleRegistry in which we look for ModelModules
+     */
     protected MModelBase(
             MMeshTypeIdentifierFactory meshTypeIdentifierFactory,
             ModuleRegistry             registry )
@@ -400,7 +424,7 @@ public class MModelBase
      * 
      * @param identifier Identifier of the to-be-found MeshType
      * @return the found MeshType, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if the MeshType could not be found
+     * @throws MeshTypeWithIdentifierNotFoundException if the MeshType could not be found
      */
     public MeshType findMeshTypeByIdentifier(
             MeshTypeIdentifier identifier )
@@ -431,7 +455,8 @@ public class MModelBase
      * 
      * @param identifier Identifier of the to-be-found MeshType
      * @param doResolve if true, attempt to load
-     * @return the found MeshType, or null if not found
+     * @return the found MeshType
+     * @throws MeshTypeWithIdentifierNotFoundException if the MeshType could not be found
      */
     protected MeshType findMeshTypeByIdentifierInternal(
             MeshTypeIdentifier identifier,
@@ -628,10 +653,9 @@ public class MModelBase
     /**
      * Find a SubjectArea by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found SubjectArea
      * @return the found SubjectArea, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if a SubjectArea with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if a SubjectArea with this Identifier cannot be found
      */
     public SubjectArea findSubjectAreaByIdentifier(
             MeshTypeIdentifier identifier )
@@ -645,10 +669,9 @@ public class MModelBase
     /**
      * Find a CollectableMeshType by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found CollectableMeshType
      * @return the found CollectableMeshType, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if a CollectableMeshType with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if a CollectableMeshType with this Identifier cannot be found
      */
     public CollectableMeshType findCollectableMeshTypeByIdentifier(
             MeshTypeIdentifier identifier )
@@ -662,10 +685,9 @@ public class MModelBase
     /**
      * Find an AttributableMeshType by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found AttributableMeshType
      * @return the found AttributableMeshType, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if an AttributableMeshType with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if an AttributableMeshType with this Identifier cannot be found
      */
     public AttributableMeshType findAttributableMeshTypeByIdentifier(
             MeshTypeIdentifier identifier )
@@ -679,10 +701,9 @@ public class MModelBase
     /**
      * Find an EntityType by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found EntityType
      * @return the found EntityType, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if an EntityType with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if an EntityType with this Identifier cannot be found
      */
     public EntityType findEntityTypeByIdentifier(
             MeshTypeIdentifier identifier )
@@ -696,10 +717,9 @@ public class MModelBase
     /**
      * Find a RelationshipType by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found RelationshipType
      * @return the found RelationshipType, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if a RelationshipType with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if a RelationshipType with this Identifier cannot be found
      */
     public RelationshipType findRelationshipTypeByIdentifier(
             MeshTypeIdentifier identifier )
@@ -713,10 +733,9 @@ public class MModelBase
     /**
      * Find a PropertyTypeOrGroup by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found PropertyTypeOrGroup
      * @return the found PropertyTypeOrGroup, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if a PropertyTypeOrGroup with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if a PropertyTypeOrGroup with this Identifier cannot be found
      */
     public PropertyTypeOrGroup findPropertyTypeOrGroupByIdentifier(
             MeshTypeIdentifier identifier )
@@ -730,10 +749,9 @@ public class MModelBase
     /**
      * Find a PropertyType by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found PropertyType
      * @return the found PropertyType, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if a PropertyType with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if a PropertyType with this Identifier cannot be found
      */
     public PropertyType findPropertyTypeByIdentifier(
             MeshTypeIdentifier identifier )
@@ -747,10 +765,9 @@ public class MModelBase
     /**
      * Find a ProjectedPropertyType by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found ProjectedPropertyType
      * @return the found ProjectedPropertyType, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if a ProjectedPropertyType with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if a ProjectedPropertyType with this Identifier cannot be found
      */
     public ProjectedPropertyType findProjectedPropertyTypeByIdentifier(
             MeshTypeIdentifier identifier )
@@ -764,10 +781,9 @@ public class MModelBase
     /**
      * Find a PropertyTypeGroup by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found PropertyTypeGroup
      * @return the found PropertyTypeGroup, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if a PropertyTypeGroup with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if a PropertyTypeGroup with this Identifier cannot be found
      */
     public PropertyTypeGroup findPropertyTypeGroupByIdentifier(
             MeshTypeIdentifier identifier )
@@ -781,10 +797,9 @@ public class MModelBase
     /**
      * Find a RoleType by its unique identifier.
      * 
-     * 
      * @param identifier Identifier of the to-be-found RoleType
      * @return the found RoleType, or null if not found
-     * @throws MesMeshTypeWithIdentifierNotFoundExceptionrown if a RoleType with this Identifier cannot be found
+     * @throws MeshTypeWithIdentifierNotFoundException if a RoleType with this Identifier cannot be found
      */
     public RoleType findRoleTypeByIdentifier(
             MeshTypeIdentifier identifier )
@@ -798,12 +813,12 @@ public class MModelBase
     /**
      * Helper method to check whether the right subtype of MeshType is being returned. If not, throw exception.
      * 
-     * 
      * @param identifier the Identifier of the found type
      * @param type the MeshType
      * @param clazz the Class of MeshType expected
      * @return the subtype of MeshType corresponding to clazz
-     * @throws MeshTMeshTypeWithIdentifierNotFoundExceptionwn if type is not an instance of clazz
+     * @throws MeshTypeWithIdentifierNotFoundException if type is not an instance of clazz
+     * @param <T> the type parameter
      */    
     @SuppressWarnings(value={"unchecked"})
     protected <T> T checkType(

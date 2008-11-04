@@ -48,7 +48,7 @@ public class UrlEncodingTest1
             {
                 "abc/def",
                 "abc/def",
-                "abc%2Fdef"
+                "abc/def" // do not encode "/", Tomcat does not like that at all, it considers it a security issue
             },
             {
                 "abc:def",

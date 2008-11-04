@@ -23,6 +23,7 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.store.IterableLocalNetStoreMeshBase;
@@ -63,10 +64,13 @@ public class StoreShadowMeshBaseTest8
         
         log.info( "Creating MeshBase" );
         
-        NetMeshBaseIdentifier             baseIdentifier     = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" );
+        NetMeshBaseIdentifier baseIdentifier = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" );
         
         IterableLocalNetStoreMeshBase base = IterableLocalNetStoreMeshBase.create(
                 baseIdentifier,
+                DefaultNetMeshObjectAccessSpecificationFactory.create(
+                        baseIdentifier,
+                        theMeshBaseIdentifierFactory ),
                 theModelBase,
                 null,
                 theMeshStore,
@@ -78,7 +82,7 @@ public class StoreShadowMeshBaseTest8
                 true,
                 rootContext );
         
-        checkEquals( base.getAllShadowMeshBases().size(), 0, "Wrong number of shadows" );
+        checkEquals( base.getShadowMeshBases().size(), 0, "Wrong number of shadows" );
         
         //
         
@@ -89,7 +93,7 @@ public class StoreShadowMeshBaseTest8
         checkObject( found, "Object not found" );
         checkCondition( !found.isBlessedBy( TestSubjectArea.AA ), "Not blessed correctly" );
 
-        checkEquals( base.getAllShadowMeshBases().size(), 1, "Wrong number of shadows" );
+        checkEquals( base.getShadowMeshBases().size(), 1, "Wrong number of shadows" );
 
         
         ShadowMeshBase shadow = base.getShadowMeshBaseFor( found.getProxyTowardsHomeReplica().getPartnerMeshBaseIdentifier() );
@@ -138,6 +142,9 @@ public class StoreShadowMeshBaseTest8
 
         IterableLocalNetStoreMeshBase base2 = IterableLocalNetStoreMeshBase.create(
                 baseIdentifier,
+                DefaultNetMeshObjectAccessSpecificationFactory.create(
+                        baseIdentifier,
+                        theMeshBaseIdentifierFactory ),
                 theModelBase,
                 null,
                 theMeshStore,
@@ -150,7 +157,7 @@ public class StoreShadowMeshBaseTest8
                 rootContext );
         
         checkEquals( base2.size(), 2, "Wrong number of MeshObjects found in recreated MeshBase" );
-        checkEquals( base2.getAllShadowMeshBases().size(), 1, "Wrong number of shadows" );
+        checkEquals( base2.getShadowMeshBases().size(), 1, "Wrong number of shadows" );
         
         NetMeshObject found2 = base2.findMeshObjectByIdentifier( foundIdentifier );
         checkObject( found2, "Object not found" );

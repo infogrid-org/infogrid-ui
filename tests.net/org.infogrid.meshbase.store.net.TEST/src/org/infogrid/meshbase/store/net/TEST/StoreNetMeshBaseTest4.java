@@ -106,17 +106,11 @@ public class StoreNetMeshBaseTest4
 
         ExternalizedProxy mb1_p1_ext = test.decodeExternalizedProxy(
                 mb1_p1_data.getDataAsStream(),
-                mb1.getMeshBaseLifecycleManager(),
-                mb1.getMeshBaseIdentifierFactory(),
-                mb1.getMeshObjectIdentifierFactory(),
-                mb1.getModelBase().getMeshTypeIdentifierFactory() );
+                mb1 );
         
         ExternalizedProxy mb2_p1_ext = test.decodeExternalizedProxy(
                 mb2_p1_data.getDataAsStream(),
-                mb2.getMeshBaseLifecycleManager(),
-                mb2.getMeshBaseIdentifierFactory(),
-                mb2.getMeshObjectIdentifierFactory(),
-                mb2.getModelBase().getMeshTypeIdentifierFactory() );
+                mb2 );
 
         checkEquals( mb1_p1_lastSent,     mb1_p1_ext.getLastSentToken(),     "mb1 p1 last-sent-token different" );
         checkEquals( mb1_p1_lastReceived, mb1_p1_ext.getLastReceivedToken(), "mb1 p1 last-received-token different" );
@@ -203,12 +197,12 @@ public class StoreNetMeshBaseTest4
     /**
      * The first NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.obtainUnresolvable( "http://one.local/" );
+    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.fromExternalForm( "http://one.local/" );
 
     /**
      * The second NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.obtainUnresolvable( "http://two.local/" );
+    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.fromExternalForm( "http://two.local/" );
 
     /**
      * The first NetMeshBase.

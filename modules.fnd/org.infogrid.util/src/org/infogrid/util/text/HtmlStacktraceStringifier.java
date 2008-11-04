@@ -83,7 +83,7 @@ public class HtmlStacktraceStringifier
     {
         String raw = super.format( arg );
         
-        String ret = HtmlStringStringifier.stringToHtml( raw );
+        String ret = raw; // HtmlStringStringifier.stringToHtml( raw );
         
         return ret;
     }

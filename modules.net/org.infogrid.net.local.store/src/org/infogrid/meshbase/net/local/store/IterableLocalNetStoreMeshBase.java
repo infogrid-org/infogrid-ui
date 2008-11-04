@@ -943,6 +943,9 @@ public class IterableLocalNetStoreMeshBase
 
         setFactory.setMeshBase( ret );
         proxyFactory.setNetMeshBase( ret );
+        proxyMapper.setMeshBase( ret );
+        objectMapper.setMeshBase( ret );
+
         ret.initializeHomeObject();
         
         if( log.isDebugEnabled() ) {

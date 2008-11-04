@@ -21,6 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.store.IterableLocalNetStoreMeshBase;
 import org.infogrid.meshbase.net.local.store.LocalNetStoreMeshBase;
@@ -62,6 +63,9 @@ public class StoreShadowMeshBaseTest9
         
         IterableLocalNetStoreMeshBase base = IterableLocalNetStoreMeshBase.create(
                 baseIdentifier,
+                DefaultNetMeshObjectAccessSpecificationFactory.create(
+                        baseIdentifier,
+                        theMeshBaseIdentifierFactory ),
                 theModelBase,
                 null,
                 theMeshStore,
@@ -73,7 +77,7 @@ public class StoreShadowMeshBaseTest9
                 true,
                 rootContext );
         
-        checkEquals( base.getAllShadowMeshBases().size(), 0, "Wrong number of shadows" );
+        checkEquals( base.getShadowMeshBases().size(), 0, "Wrong number of shadows" );
         
         startClock();
         
@@ -115,6 +119,9 @@ public class StoreShadowMeshBaseTest9
 
         IterableLocalNetStoreMeshBase base2 = IterableLocalNetStoreMeshBase.create(
                 baseIdentifier,
+                DefaultNetMeshObjectAccessSpecificationFactory.create(
+                        baseIdentifier,
+                        theMeshBaseIdentifierFactory ),
                 theModelBase,
                 null,
                 theMeshStore,

@@ -38,11 +38,17 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
 import org.infogrid.meshbase.net.xpriso.SimpleXprisoMessage;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
+import org.infogrid.meshbase.store.net.NetStoreMeshBase;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
+import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.m.MMeshTypeIdentifierFactory;
+import org.infogrid.modelbase.m.MModelBase;
 import org.infogrid.module.ModuleRegistry;
+import org.infogrid.store.m.MStore;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.testharness.ModuleRegistryContext;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -212,10 +218,7 @@ public class ProxySerializationTest1
         
         ExternalizedProxy proxy = test.decodeExternalizedProxy(
                 new FileInputStream( theFile ),
-                theExternalizedMeshObjectFactory,
-                theMeshBaseIdentifierFactory,
-                theNetMeshObjectIdentifierFactory,
-                theMeshTypeIdentifierFactory );
+                theNetMeshBase );
 
         checkEquals( proxy.getNetworkIdentifier(),          testCase.theNetworkIdentifier, testCase.theInputFile + ": NetworkIdentifier wrong" );
         checkEquals( proxy.getNetworkIdentifierOfPartner(), testCase.theNetworkIdentifierOfPartner, testCase.theInputFile + ": NetworkIdentifier wrong" );
@@ -276,10 +279,32 @@ public class ProxySerializationTest1
             Exception
     {
         super( "org/infogrid/meshbase/store/net/TEST/ResourceHelper", "org/infogrid/meshbase/store/net/TEST/Log.properties" );
+        
+        MStore meshObjectStore = MStore.create();
+        MStore proxyStore      = MStore.create();
+        
+        theNetMeshBase = NetStoreMeshBase.create(
+                theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local" ),
+                theModelBase,
+                null,
+                null,
+                meshObjectStore,
+                proxyStore,
+                rootContext );
     }
 
     // Our Logger
     private static Log log = Log.getLogInstance( ProxySerializationTest1.class );
+    
+    /**
+     * The root application context.
+     */
+    protected static final Context rootContext = SimpleContext.createRoot( "root" );
+    
+    /**
+     * ModelBase.
+     */
+    protected static final ModelBase theModelBase = MModelBase.create();
     
 //    /**
 //     * The test NetMeshBaseIdentifier.
@@ -323,6 +348,10 @@ public class ProxySerializationTest1
     protected MeshTypeIdentifierFactory theMeshTypeIdentifierFactory
             = MMeshTypeIdentifierFactory.create();
 
+    /**
+     * NetMeshBase for the test.
+     */
+    protected NetStoreMeshBase theNetMeshBase;
 
     /**
      * Represents one TestCase.

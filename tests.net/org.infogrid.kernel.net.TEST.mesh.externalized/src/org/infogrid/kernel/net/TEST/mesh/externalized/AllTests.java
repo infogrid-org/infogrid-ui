@@ -34,6 +34,7 @@ public abstract class AllTests
         TestSpec [] tests = {
                 new TestSpec( NetSerializerTest1.class ),
                 new TestSpec( NetSerializerTest2.class ),
+                new TestSpec( NetSerializerTest3.class ),
         };
 
         runTests( tests );

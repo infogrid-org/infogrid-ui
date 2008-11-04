@@ -201,7 +201,7 @@ public class ProbeTest5
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "TEST_NETWORK_IDENTIFIER.local" );
+            temp = theMeshBaseIdentifierFactory.fromExternalForm( "test://example.local/" );
 
         } catch( Throwable t ) {
             log.error( t );

@@ -31,9 +31,7 @@ import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.IntegerValue;
@@ -181,10 +179,10 @@ public class StoreShadowMeshBaseTest2
         
         // 
 
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local" );
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         StoreShadowMeshBaseFactory theShadowFactory = StoreShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
                 shadowEndpointFactory,
                 theModelBase,
                 theProbeDirectory,
@@ -211,7 +209,7 @@ public class StoreShadowMeshBaseTest2
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "TEST://example.local" );
+            temp = theMeshBaseIdentifierFactory.fromExternalForm( "test://example.local" );
 
         } catch( Throwable t ) {
             log.error( t );

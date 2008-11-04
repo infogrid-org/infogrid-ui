@@ -68,8 +68,12 @@ public class ProbeTest1
 
         log.info( "creating the same data independently" );
         
-        IterableMeshBase         meshBase2 = MMeshBase.create( theMeshBaseIdentifierFactory.obtainUnresolvable( "meshBase2" ), theModelBase, null, rootContext );
-        MeshBaseLifecycleManager life2     = meshBase2.getMeshBaseLifecycleManager();
+        IterableMeshBase meshBase2 = MMeshBase.create(
+                theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://meshBase2" ),
+                theModelBase,
+                null,
+                rootContext );
+        MeshBaseLifecycleManager life2 = meshBase2.getMeshBaseLifecycleManager();
 
         Transaction tx2 = meshBase2.createTransactionNow();
         
@@ -177,8 +181,12 @@ public class ProbeTest1
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
-        ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
+        ShadowMeshBaseFactory theShadowFactory = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
+                shadowEndpointFactory,
+                theModelBase,
+                theProbeDirectory,
+                rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
         shadowEndpointFactory.setNameServer( theProbeManager1.getNetMeshBaseNameServer() );

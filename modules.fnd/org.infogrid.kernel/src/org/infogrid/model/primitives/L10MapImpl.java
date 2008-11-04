@@ -16,7 +16,7 @@ package org.infogrid.model.primitives;
 
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.NameValuePair;
-import org.infogrid.util.ZeroElementIterator;
+import org.infogrid.util.ZeroElementCursorIterator;
 
 import java.util.Iterator;
 import java.util.Locale;
@@ -325,7 +325,7 @@ public class L10MapImpl
     public Iterator<String> keyIterator()
     {
         if( keys == null || keys.length == 0 ) {
-            return ZeroElementIterator.<String>create();
+            return ZeroElementCursorIterator.<String>create();
         } else {
             return new MyKeyIterator();
         }
@@ -340,7 +340,7 @@ public class L10MapImpl
     public Iterator<NameValuePair<PropertyValue>> getPairIterator()
     {
         if( keys == null || keys.length == 0 ) {
-            return ZeroElementIterator.<NameValuePair<PropertyValue>>create();
+            return ZeroElementCursorIterator.<NameValuePair<PropertyValue>>create();
         } else {
             return new MyPairIterator();
         }

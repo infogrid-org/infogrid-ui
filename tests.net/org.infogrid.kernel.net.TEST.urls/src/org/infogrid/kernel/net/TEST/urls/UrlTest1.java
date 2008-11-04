@@ -92,20 +92,38 @@ public class UrlTest1
 
         checkEquals(
                 obj1_mb1_different_default,
-                "<a href=\"" + contextUrl + "/%23xxx" + "\">",
+                "<a href=\""
+                        + contextUrl
+                        + "/%23xxx"
+                        + "\">",
                 "obj1_mb1_different_default is wrong" );
         checkEquals(
                 obj1_mb1_different_nonDefault,
-                "<a href=\"" + contextUrl + "/[meshbase=" + mb1.getIdentifier().toExternalForm() + "]" + "%23xxx\">",
+                "<a href=\""
+                        + contextUrl
+                        + "/[meshbase="
+                        + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
+                        + "]"
+                        + "%23xxx\">",
                 "obj1_mb1_different_nonDefault is wrong" );
 
         checkEquals(
                 obj2_mb1_different_default,
-                "<a href=\"" + contextUrl + "/" + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" ) + "\">",
+                "<a href=\""
+                        + contextUrl
+                        + "/"
+                        + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\">",
                 "obj2_mb1_different_default is wrong" );
         checkEquals(
                 obj2_mb1_different_nonDefault,
-                "<a href=\"" + contextUrl + "/[meshbase=" + mb1.getIdentifier().toExternalForm() + "]" + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" ) + "\">",
+                "<a href=\""
+                        + contextUrl
+                        + "/[meshbase="
+                        + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
+                        + "]"
+                        + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\">",
                 "obj2_mb1_different_nonDefault is wrong" );
     }
 

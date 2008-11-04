@@ -260,7 +260,11 @@ public abstract class AbstractXprisoTest
     /**
      * Factory for NetMeshBaseIdentifiers.
      */
-    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create(
+            new DefaultNetMeshBaseIdentifierFactory.Protocol[] {
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "test", false ),
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "http", true )
+            });
     
     /**
      * The root context for these tests.

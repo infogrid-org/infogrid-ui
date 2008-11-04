@@ -380,22 +380,22 @@ public class XprisoTest8
     /**
      * The first NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.obtainUnresolvable( "one.local" );
+    protected NetMeshBaseIdentifier net1 = theMeshBaseIdentifierFactory.fromExternalForm( "test://one.local" );
 
     /**
      * The second NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.obtainUnresolvable( "two.local" );
+    protected NetMeshBaseIdentifier net2 = theMeshBaseIdentifierFactory.fromExternalForm( "test://two.local" );
 
     /**
      * The third NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net3 = theMeshBaseIdentifierFactory.obtainUnresolvable( "three.local" );
+    protected NetMeshBaseIdentifier net3 = theMeshBaseIdentifierFactory.fromExternalForm( "test://three.local" );
 
     /**
      * The fourth NetMeshBaseIdentifier.
      */
-    protected NetMeshBaseIdentifier net4 = theMeshBaseIdentifierFactory.obtainUnresolvable( "four.local" );
+    protected NetMeshBaseIdentifier net4 = theMeshBaseIdentifierFactory.fromExternalForm( "test://four.local" );
 
     /**
      * The first NetMeshBase.

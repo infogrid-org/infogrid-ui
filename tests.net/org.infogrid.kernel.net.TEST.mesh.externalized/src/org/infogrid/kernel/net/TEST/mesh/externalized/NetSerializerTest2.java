@@ -26,6 +26,9 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
 
 import java.util.ArrayList;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
+import org.infogrid.meshbase.net.proxy.DefaultProxyFactory;
+import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
 
 /**
  * Tests NetMeshObjectAccessSpecification serialization and deserialization.
@@ -43,11 +46,15 @@ public class NetSerializerTest2
         throws
             Exception
     {
+        NetMeshBaseIdentifier nmbid        = theFactory.fromExternalForm( "http://here.local/" );
+        DefaultProxyFactory   proxyFactory = DefaultProxyFactory.create( null, NiceAndTrustingProxyPolicyFactory.create() );
+
         NetMMeshBase mb = NetMMeshBase.create(
-                theFactory.fromExternalForm( "http://here.local/" ),
+                nmbid,
+                DefaultNetMeshObjectAccessSpecificationFactory.create( nmbid, theFactory ),
                 null,
                 null,
-                null,
+                proxyFactory,
                 SimpleContext.createRoot( "root" ));
         
         NetMeshBaseIdentifier [] testData = new NetMeshBaseIdentifier [] {
@@ -57,7 +64,7 @@ public class NetSerializerTest2
         };
         NetMeshObjectIdentifier [] testIdentifiers = new NetMeshObjectIdentifier[] {
                 null,
-                mb.getMeshObjectIdentifierFactory().fromExternalForm( "abc://def.org/" ),
+                mb.getMeshObjectIdentifierFactory().fromExternalForm( "test://def.org/" ),
                 mb.getMeshObjectIdentifierFactory().fromExternalForm( "http://abc.com/" ),
                 mb.getMeshObjectIdentifierFactory().fromExternalForm( "http://abc.com/#def" ),
         };

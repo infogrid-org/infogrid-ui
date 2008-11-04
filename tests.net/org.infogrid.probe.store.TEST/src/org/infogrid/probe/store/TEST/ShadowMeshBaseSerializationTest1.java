@@ -20,19 +20,29 @@ import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObjectFactory;
 import org.infogrid.mesh.net.externalized.SimpleExternalizedNetMeshObject;
+import org.infogrid.meshbase.net.DefaultNetMeshBaseAccessSpecificationFactory;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
+import org.infogrid.meshbase.net.NetMeshBaseAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
+import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.m.MMeshTypeIdentifierFactory;
+import org.infogrid.modelbase.m.MModelBase;
 import org.infogrid.module.ModuleRegistry;
+import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
 import org.infogrid.probe.shadow.externalized.xml.ExternalizedShadowMeshBaseXmlEncoder;
+import org.infogrid.probe.shadow.m.MShadowMeshBase;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.testharness.ModuleRegistryContext;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -109,10 +119,7 @@ public class ShadowMeshBaseSerializationTest1
         
         ExternalizedShadowMeshBase mb = test.decodeShadowMeshBase(
                 new FileInputStream( theFile ),
-                theExternalizedMeshObjectFactory,
-                theNetMeshObjectIdentifierFactory,
-                theMeshBaseIdentifierFactory,
-                theMeshTypeIdentifierFactory );
+                theShadowMeshBase );
 
         checkEquals( mb.getNetworkIdentifier(), testCase.theNetworkIdentifier, testCase.theInputFile + ": NetworkIdentifier wrong" );
         
@@ -203,6 +210,45 @@ public class ShadowMeshBaseSerializationTest1
      */
     protected MeshTypeIdentifierFactory theMeshTypeIdentifierFactory
             = MMeshTypeIdentifierFactory.create();
+    
+    /**
+     * a factory for NetMeshBaseAccessSpecifications for the test.
+     */
+    protected NetMeshBaseAccessSpecificationFactory theNetMeshBaseAccessSpecificationFactory
+            = DefaultNetMeshBaseAccessSpecificationFactory.create(
+                    theMeshBaseIdentifierFactory );
+    /**
+     * A factory for NetMeshObjectAccessSpecifications for the test.
+     */
+    protected NetMeshObjectAccessSpecificationFactory theNetMeshObjectAccessSpecificationFactory
+            = DefaultNetMeshObjectAccessSpecificationFactory.create(
+                    theNetMeshObjectIdentifierFactory,
+                    theMeshBaseIdentifierFactory,
+                    theNetMeshBaseAccessSpecificationFactory );
+    
+    /**
+     * Our ModelBase.
+     */
+    protected static ModelBase theModelBase = MModelBase.create();
+    
+    /**
+     * Root application context.
+     */
+    protected static Context theApplicationContext = SimpleContext.createRoot( "root" );
+    
+    /**
+     * ShadowMeshBase to be serialized into.
+     */
+    protected ShadowMeshBase theShadowMeshBase = MShadowMeshBase.create(
+            nmbid1,
+            theMeshBaseIdentifierFactory,
+            theNetMeshObjectAccessSpecificationFactory,
+            null,
+            theModelBase,
+            null,
+            null,
+            System.currentTimeMillis(),
+            theApplicationContext );
     
     /**
      * Represents one TestCase.

@@ -73,8 +73,12 @@ public abstract class AbstractYadisTest
 
         ProxyMessageEndpointFactory endpointsFactory = MPingPongNetMessageEndpointFactory.create( exec );
         
-        ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( endpointsFactory, theModelBase, theProbeDirectory, rootContext );
+        ShadowMeshBaseFactory theShadowFactory = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
+                endpointsFactory,
+                theModelBase,
+                theProbeDirectory,
+                rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
     }

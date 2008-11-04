@@ -10,13 +10,12 @@
  %><%@ taglib prefix="c"           uri="http://java.sun.com/jsp/jstl/core"
  %>
 <v:viewlet>
- <h1>All MeshObjects in the MeshBase</h1>
+ <h1>All Shadow MeshBases</h1>
  <ol>
-  <c:forEach items="${Viewlet.cursorIterator}" var="current" varStatus="currentStatus">
+  <c:forEach items="${Subject.meshBase.shadowMeshBases}" var="current" varStatus="currentStatus">
    <li>
-    <mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current"/></mesh:meshObjectLink>
+    <meshbase:meshBaseLink meshBaseName="current"><meshbase:meshBaseId meshBaseName="current"/></meshbase:meshBaseLink>
    </li>
   </c:forEach>
  </ol>
- <p>Go to <a href="?lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.net.AllShadowsViewlet">Shadows</a>.</p>
 </v:viewlet>

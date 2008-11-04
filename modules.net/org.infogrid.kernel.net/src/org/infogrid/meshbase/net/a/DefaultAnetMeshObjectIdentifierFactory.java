@@ -18,8 +18,6 @@ import java.net.URISyntaxException;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.a.DefaultAnetMeshObjectIdentifier;
 import org.infogrid.meshbase.a.DefaultAMeshObjectIdentifierFactory;
-import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
-import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;

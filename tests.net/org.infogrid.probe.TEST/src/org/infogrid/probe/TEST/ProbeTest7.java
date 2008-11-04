@@ -77,8 +77,12 @@ public class ProbeTest7
         // need to instrument the NetMeshBase
         final MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
-        ShadowMeshBaseFactory delegate
-                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
+        ShadowMeshBaseFactory delegate = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
+                shadowEndpointFactory,
+                theModelBase,
+                theProbeDirectory,
+                rootContext );
 
         ScheduledExecutorProbeManager probeManager = MScheduledExecutorProbeManager.create( delegate );
 
@@ -248,7 +252,7 @@ public class ProbeTest7
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = theMeshBaseIdentifierFactory.obtainUnresolvable( "TEST_NETWORK_IDENTIFIER.local" );
+            temp = theMeshBaseIdentifierFactory.fromExternalForm( "http://TEST_NETWORK_IDENTIFIER.local" );
 
         } catch( Throwable t ) {
             log.error( t );

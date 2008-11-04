@@ -249,6 +249,7 @@ public class ProbeUpdateCalculatorTest1
                 ChangingProbe.class ));
 
         theShadowFactory = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
                 theShadowEndpointFactory,
                 theModelBase,
                 theProbeDirectory,
@@ -272,8 +273,8 @@ public class ProbeUpdateCalculatorTest1
     
     protected static ArrayList<Long> theInvokedAt;
 
-    protected NetMeshBaseIdentifier theChangingDataSource   = theMeshBaseIdentifierFactory.obtainUnresolvable( "proto://here.local/change" );
-    protected NetMeshBaseIdentifier theUnchangingDataSource = theMeshBaseIdentifierFactory.obtainUnresolvable( "proto://here.local/nochange" );
+    protected NetMeshBaseIdentifier theChangingDataSource   = theMeshBaseIdentifierFactory.fromExternalForm( "test://here.local/change" );
+    protected NetMeshBaseIdentifier theUnchangingDataSource = theMeshBaseIdentifierFactory.fromExternalForm( "test://here.local/nochange" );
 
     /**
      * The first test Probe.

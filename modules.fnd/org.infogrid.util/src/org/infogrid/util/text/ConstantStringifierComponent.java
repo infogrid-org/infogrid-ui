@@ -16,7 +16,7 @@ package org.infogrid.util.text;
 
 import org.infogrid.util.ArrayFacade;
 import org.infogrid.util.OneElementIterator;
-import org.infogrid.util.ZeroElementIterator;
+import org.infogrid.util.ZeroElementCursorIterator;
 
 import java.util.Iterator;
 
@@ -84,7 +84,7 @@ public class ConstantStringifierComponent<T>
                     }
                 );
         } else {
-            return ZeroElementIterator.<StringifierParsingChoice<T>>create();
+            return ZeroElementCursorIterator.<StringifierParsingChoice<T>>create();
         }
     }
 

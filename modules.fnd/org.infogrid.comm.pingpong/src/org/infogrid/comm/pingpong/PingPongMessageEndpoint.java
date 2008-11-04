@@ -123,8 +123,8 @@ public abstract class PingPongMessageEndpoint<T>
         // determine whether this is a regular response, a resend, or a recover. Resend and regular
         // response are treated by the same code, the only difference is when it is invoked by the timer.
         
-        long    tokenToSend;
-        List<T> toBeSent = null; // send nothing unless something is set
+        long    tokenToSend = -1L;
+        List<T> toBeSent    = null; // send nothing unless something is set
 
         synchronized( this ) {
             if( theLastReceivedToken < 0 ) {

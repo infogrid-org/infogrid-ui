@@ -65,9 +65,9 @@ public class ProbeMatchTest1
     {
         log.info( "Configuring ProbeDirectory" );
         
-        NetMeshBaseIdentifier id1 = theMeshBaseIdentifierFactory.fromExternalForm( "proto://foo.com/bar" );
-        NetMeshBaseIdentifier id2 = theMeshBaseIdentifierFactory.fromExternalForm( "proto://foo.com/bar?abc=def" );
-        NetMeshBaseIdentifier id3 = theMeshBaseIdentifierFactory.fromExternalForm( "proto://foo.com/bar?ghi=klm" );
+        NetMeshBaseIdentifier id1 = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://foo.com/bar" );
+        NetMeshBaseIdentifier id2 = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://foo.com/bar?abc=def" );
+        NetMeshBaseIdentifier id3 = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://foo.com/bar?ghi=klm" );
 
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 id1.toExternalForm(),
@@ -78,7 +78,7 @@ public class ProbeMatchTest1
                 TestProbe2.class ));
 
         theProbeDirectory.addPatternUrlMatch( new ProbeDirectory.PatternMatchDescriptor(
-                Pattern.compile( "proto://foo.com/bar(.*)" ),
+                Pattern.compile( PROTOCOL_NAME + "://foo.com/bar(.*)" ),
                 TestProbe3.class ));
 
         //
@@ -144,8 +144,12 @@ public class ProbeMatchTest1
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
-        ShadowMeshBaseFactory theShadowFactory
-                = MShadowMeshBaseFactory.create( shadowEndpointFactory, theModelBase, theProbeDirectory, rootContext );
+        ShadowMeshBaseFactory theShadowFactory = MShadowMeshBaseFactory.create(
+                theMeshBaseIdentifierFactory,
+                shadowEndpointFactory,
+                theModelBase,
+                theProbeDirectory,
+                rootContext );
         
         theProbeManager1 = MPassiveProbeManager.create( theShadowFactory );
         shadowEndpointFactory.setNameServer( theProbeManager1.getNetMeshBaseNameServer() );
@@ -182,7 +186,7 @@ public class ProbeMatchTest1
     /**
      * The abstract test Probe. This needs to be declared public otherwise the Probe framework cannot access it.
      */
-    static abstract class AbstractTestProbe
+    public static abstract class AbstractTestProbe
             implements
                 ApiProbe
     {

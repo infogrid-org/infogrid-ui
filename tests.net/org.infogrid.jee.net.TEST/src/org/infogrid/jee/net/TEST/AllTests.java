@@ -15,6 +15,7 @@
 package org.infogrid.jee.net.TEST;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import org.infogrid.module.ModuleRequirement;
 import org.infogrid.testharness.AbstractTest;
@@ -22,6 +23,7 @@ import org.infogrid.testharness.AbstractTestGroup;
 import org.infogrid.testharness.AbstractTestGroup.TestSpec;
 import org.infogrid.testharness.tomcat.TomcatProxy;
 import org.infogrid.testharness.tomcat.TomcatProxyConfiguredByProperties;
+import org.infogrid.util.logging.Log;
 
 /**
  * Runs all tests in this package.
@@ -45,7 +47,14 @@ public class AllTests
         TomcatProxy       tomcat = TomcatProxyConfiguredByProperties.create(
                 new File( AbstractTest.fileSystemFileName( AllTests.class, "tomcat.properties" ))) ;
 
-        URL appUrl = tomcat.deployModule( toTest );
+        URL appUrl;
+        try {
+            appUrl = tomcat.deployModule( toTest );
+        } catch( IOException ex ) {
+            Log.getLogInstance( AllTests.class ).error( "Cannot deploy module " + toTest, ex );
+            System.exit( 1 );
+            return; // make compiler happy
+        }
 
         TestSpec [] tests = {
                 new TestSpec( AllMeshObjectsTest1.class, appUrl.toExternalForm() ),

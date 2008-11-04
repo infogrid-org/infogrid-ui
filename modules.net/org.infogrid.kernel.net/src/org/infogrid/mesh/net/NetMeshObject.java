@@ -239,7 +239,7 @@ public interface NetMeshObject
     /**
      * Obtain all Proxies applicable to this replica.
      *
-     * @return all Proxies. This may return null for efficiency reasons
+     * @return all Proxies. This may return null for efficiency reasons.
      */
     public abstract Proxy [] getAllProxies();
 
