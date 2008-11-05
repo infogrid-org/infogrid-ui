@@ -14,8 +14,9 @@
 
 package org.infogrid.module;
 
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Iterator;
 
