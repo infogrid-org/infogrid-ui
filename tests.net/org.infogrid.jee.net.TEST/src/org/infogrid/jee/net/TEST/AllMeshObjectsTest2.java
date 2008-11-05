@@ -38,18 +38,15 @@ public class AllMeshObjectsTest2
     {
         log.info( "Looking at all the MeshObjectIdentifiers" );
         
-        HTTP.Response r = HTTP.http_get( theApplicationUrl + "[meshbase=custom://example.org/a/%3Ffoo=bar%26argl=brgl]" );
-        checkRegex( "200",       r.getResponseCode(), "wrong response code" );
-        checkRegex( "text/html", r.getContentType(),  "wrong mime type" );
+        HTTP.Response r = HTTP.http_get( theApplicationUrl + "/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]" );
+        checkRegex( r.getResponseCode(), "200",       "wrong response code" );
+        checkRegex( r.getContentType(),  "text/html", "wrong mime type" );
 
         String content = r.getContentAsString();
         
         String [] objects = {
-            "<a href=\"/org.infogrid.jee.net.TESTAPP/custom://example.org/a/%3Ffoo=bar%26argl=brgl\">custom://example.org/a/?foo=bar&amp;argl=brgl</a>",
-            "<a href=\"/org.infogrid.jee.net.TESTAPP/\">&lt;HOME&gt;</a>",
-            "<a href=\"/org.infogrid.jee.net.TESTAPP/custom://example.com/\">custom://example.com/</a>",
-            "<a href=\"/org.infogrid.jee.net.TESTAPP/custom://example.com/%23xxx\">custom://example.com/#xxx</a>",
-            "<a href=\"/org.infogrid.jee.net.TESTAPP/custom://example.org/a/%3Ffoo=bar%26argl=brgl%23xxx\">custom://example.org/a/?foo=bar&amp;argl=brgl#xxx</a>"
+            "<a href=\"/org.infogrid.jee.net.TESTAPP/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]\">&lt;HOME&gt; in NetMeshBase custom://example.org/a/?foo=bar&amp;argl=brgl</a>",
+            "<a href=\"/org.infogrid.jee.net.TESTAPP/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]%23xxx\">custom://example.org/a/?foo=bar&amp;argl=brgl#xxx in NetMeshBase custom://example.org/a/?foo=bar&amp;argl=brgl</a>"
         };
         for( int i=0 ; i<objects.length ; ++i ) {
             checkCondition( content.indexOf( objects[i] ) >=0, "Not found: " + objects[i] );
