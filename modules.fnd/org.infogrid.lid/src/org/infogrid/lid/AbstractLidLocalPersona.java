@@ -89,8 +89,6 @@ public abstract class AbstractLidLocalPersona
 
     /**
      * The credential types available.
-     * 
-     * @return the credential types
      */
     protected Set<LidCredentialType> theCredentialTypes;
 }

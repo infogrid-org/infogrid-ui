@@ -207,7 +207,7 @@ public class DefaultShadowProxyPolicy
             locks = new NetMeshObjectIdentifier[0];
         }
         
-        boolean isWriteableProbe = theMeshBase.usesWritableProbe();
+        boolean isWritableProbe = theMeshBase.usesWritableProbe();
 
         if( arrayHasContent( incoming.getConveyedMeshObjects())) {
             for( ExternalizedNetMeshObject current : incoming.getConveyedMeshObjects() ) {
@@ -224,7 +224,7 @@ public class DefaultShadowProxyPolicy
                     // don't need it
                     wantIt = false;
 
-                } else if( !isWriteableProbe ) {
+                } else if( !isWritableProbe ) {
                     // we are certain we don't want it
                     wantIt = false;
                     

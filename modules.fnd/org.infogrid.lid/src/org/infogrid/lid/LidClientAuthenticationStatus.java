@@ -77,7 +77,7 @@ public interface LidClientAuthenticationStatus
     /**
      * <p>Determine whether the client of this request offered a valid credential stronger than a session id
      *    for this request. To determine which valid credential type or types were offered, see
-     *    {@link #getValidCredentialTypes}.</p>
+     *    {@link #getCarriedValidCredentialTypes}.</p>
      * 
      * @return true if the client provided a valid credential for this request that is stronger than a session identifier
      */
@@ -86,7 +86,7 @@ public interface LidClientAuthenticationStatus
     /**
      * <p>Determine whether the client of this request offered an invalid credential stronger than a session id
      *    for this request. To determine which invalid credential type or types were offered, see
-     *    {@link #getInvalidCredentialTypes}.</p>
+     *    {@link #getCarriedValidCredentialTypes}.</p>
      * 
      * @return true if the client provided an invalid credential for this request that is stronger than a session identifier
      */

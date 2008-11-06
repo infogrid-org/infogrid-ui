@@ -47,7 +47,7 @@ import org.w3c.dom.Document;
  *   for( one or more times ) {
  *       read( ... )
  *       wait for some period of time, depending on the CoherenceSpecification in effect
- *       write( ... ) [optional: only for Probes that also implement WriteableProbe]
+ *       write( ... ) [optional: only for Probes that also implement WritableProbe]
  *   }
  * </pre>
  * <p>This sequence may be repeated itself many times, even for the same data source:

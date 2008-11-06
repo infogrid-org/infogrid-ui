@@ -266,8 +266,8 @@ public class ProbeDispatcher
                         }
                         try {
                             home.setPropertyValue(
-                                    ProbeSubjectArea.PROBEUPDATESPECIFICATION_LASTRUNUSEDWRITEABLEPROBE,
-                                    BooleanValue.create( probeResult.getUsedWriteableProbe() ));
+                                    ProbeSubjectArea.PROBEUPDATESPECIFICATION_LASTRUNUSEDWRITABLEPROBE,
+                                    BooleanValue.create( probeResult.getUsedWritableProbe() ));
                         } catch( IllegalPropertyTypeException ex3 ) {
                             log.error( ex3 );
                         } catch( IllegalPropertyValueException ex3 ) {
@@ -1475,7 +1475,7 @@ public class ProbeDispatcher
             theUsesWritableProbe = Boolean.FALSE; // now if anything goes wrong
             MeshObject home = theShadowMeshBase.getHomeObject();
             try {
-                BooleanValue found = (BooleanValue) home.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_LASTRUNUSEDWRITEABLEPROBE );
+                BooleanValue found = (BooleanValue) home.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_LASTRUNUSEDWRITABLEPROBE );
                 if( found == null ) {
                     return false;
                 }
@@ -1879,7 +1879,7 @@ public class ProbeDispatcher
     protected Throwable theCurrentProblem;
 
     /**
-     * The set of Changes to write to a Writeable Probe (if any).
+     * The set of Changes to write to a Writable Probe (if any).
      */
     protected ChangeSet theChangesToWriteBack = null;
 
@@ -1960,7 +1960,7 @@ public class ProbeDispatcher
     protected YadisServiceFactory theServiceFactory;
 
     /**
-     * If the last Probe run used a Writeable Probe, this is true.
+     * If the last Probe run used a Writeble Probe, this is true.
      */
     protected Boolean theUsesWritableProbe;
     

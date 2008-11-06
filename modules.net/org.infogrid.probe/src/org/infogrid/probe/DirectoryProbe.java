@@ -39,7 +39,7 @@ import java.io.IOException;
  *       wait for some period of time
  *   }
  * </pre>
- * <p>If a class also supports {@link org.infogrid.probe.WriteableProbe WriteableProbe},
+ * <p>If a class also supports {@link org.infogrid.probe.WritableProbe WritableProbe},
  *    the sequence of invocation is:</p>
  * <pre>
  *   constructor

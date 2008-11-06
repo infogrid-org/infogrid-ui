@@ -14,19 +14,18 @@
 
 package org.infogrid.store.encrypted;
 
-import org.infogrid.store.AbstractStore;
-import org.infogrid.store.Store;
-import org.infogrid.store.StoreKeyDoesNotExistException;
-import org.infogrid.store.StoreKeyExistsAlreadyException;
-import org.infogrid.store.StoreValue;
-import org.infogrid.util.logging.Log;
-
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import org.infogrid.store.AbstractStore;
+import org.infogrid.store.Store;
+import org.infogrid.store.StoreKeyDoesNotExistException;
+import org.infogrid.store.StoreKeyExistsAlreadyException;
+import org.infogrid.store.StoreValue;
+import org.infogrid.util.logging.Log;
 
 /**
  * <p>A <code>Store</code> that encrypts its data before delegating to an
@@ -101,7 +100,7 @@ public class EncryptedStore
     
     /**
      * Initialize the Store if needed. If the Store was initialized earlier, this will do
-     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * nothing. This operation is equivalent to {@link #initializeHard} if and only if
      * the Store had not been initialized earlier.
      * 
      * @throws IOException thrown if an I/O error occurred
@@ -129,6 +128,7 @@ public class EncryptedStore
      * @see #update if a data element with this key exists already
      * @see #putOrUpdate if a data element with this key may exist already
      */
+    @Override
     public void put(
             String  key,
             String  encodingId,
@@ -196,6 +196,7 @@ public class EncryptedStore
      * @see #put if a data element with this key does not exist already
      * @see #putOrUpdate if a data element with this key may exist already
      */
+    @Override
     public void update(
             String  key,
             String  encodingId,
@@ -263,6 +264,7 @@ public class EncryptedStore
      * @see #put if a data element with this key does not exist already
      * @see #update if a data element with this key exists already
      */
+    @Override
     public boolean putOrUpdate(
             String  key,
             String  encodingId,
@@ -374,6 +376,7 @@ public class EncryptedStore
      *
      * @throws IOException thrown if an I/O error occurred
      */
+    @Override
     public void deleteAll()
         throws
             IOException

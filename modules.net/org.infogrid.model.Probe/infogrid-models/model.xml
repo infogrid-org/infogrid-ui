@@ -118,10 +118,10 @@
                 <defaultvalue>0</defaultvalue>
             </propertytype>
 
-            <propertytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification/LastRunUsedWriteableProbe">
-                <name>LastRunUsedWriteableProbe</name>
-                <username>Last run used writeable Probe</username>
-                <userdescription>If this is true, the last Probe run used a WriteableProbe.</userdescription>
+            <propertytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification/LastRunUsedWritableProbe">
+                <name>LastRunUsedWritableProbe</name>
+                <username>Last run used writable Probe</username>
+                <userdescription>If this is true, the last Probe run used a WritableProbe.</userdescription>
                 <datatype>
                     <BooleanDataType/>
                 </datatype>

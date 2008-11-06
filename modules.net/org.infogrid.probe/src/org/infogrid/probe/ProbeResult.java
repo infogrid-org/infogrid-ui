@@ -23,14 +23,14 @@ public class ProbeResult
      * Constructor for subclasses only, use factory method.
      * 
      * @param updated if true, the Shadow was updated during the probe run
-     * @param usedWriteableProbe if true, the probe run used a WriteableProbe
+     * @param usedWritableProbe if true, the probe run used a WritableProbe
      */
     public ProbeResult(
             boolean updated,
-            boolean usedWriteableProbe )
+            boolean usedWritableProbe )
     {
-        theUpdated            = updated;
-        theUsedWriteableProbe = usedWriteableProbe;
+        theUpdated           = updated;
+        theUsedWritableProbe = usedWritableProbe;
     }
     
     /**
@@ -44,13 +44,13 @@ public class ProbeResult
     }
     
     /**
-     * Determine whether the probe run used a WriteableProbe.
+     * Determine whether the probe run used a WritableProbe.
      * 
      * @return true or false
      */
-    public boolean getUsedWriteableProbe()
+    public boolean getUsedWritableProbe()
     {
-        return theUsedWriteableProbe;
+        return theUsedWritableProbe;
     }
 
     /**
@@ -59,7 +59,7 @@ public class ProbeResult
     protected boolean theUpdated;
     
     /**
-     * If true, the probe run used a WriteableProbe.
+     * If true, the probe run used a WritableProbe.
      */
-    protected boolean theUsedWriteableProbe;
+    protected boolean theUsedWritableProbe;
 }

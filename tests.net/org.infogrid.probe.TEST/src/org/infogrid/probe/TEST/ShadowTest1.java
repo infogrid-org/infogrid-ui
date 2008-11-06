@@ -106,7 +106,7 @@ public class ShadowTest1
         // 1. Home Object created
         // 2. Home Object deleted
         // 3. ProbeUpdateSpecification#ProbeRunCounter changed
-        // 4. ProbeUpdateSpecification#LastRunUsedWriteableProbe changed
+        // 4. ProbeUpdateSpecification#LastRunUsedWritableProbe changed
 
         if( changes.size() != 4 ) {
             dumpChangeSet( changes, log );

@@ -14,6 +14,11 @@
 
 package org.infogrid.store.m;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import org.infogrid.store.AbstractStore;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.IterableStoreCursor;
@@ -24,12 +29,6 @@ import org.infogrid.util.ArrayCursorIterator;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.MapCursorIterator;
 import org.infogrid.util.logging.Log;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
 
 /**
  * A "fake" Store implementation that keeps the {@link org.infogrid.store.Store} content in memory only.
@@ -76,7 +75,7 @@ public class MStore
     
     /**
      * Initialize the Store if needed. If the Store was initialized earlier, this will do
-     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * nothing. This operation is equivalent to {@link #initializeHard} if and only if
      * the Store had not been initialized earlier.
      * 
      * @throws IOException thrown if an I/O error occurred

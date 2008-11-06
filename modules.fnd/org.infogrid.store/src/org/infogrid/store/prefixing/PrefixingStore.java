@@ -14,15 +14,13 @@
 
 package org.infogrid.store.prefixing;
 
+import java.io.IOException;
 import org.infogrid.store.AbstractStore;
 import org.infogrid.store.Store;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
 import org.infogrid.store.StoreValue;
-
 import org.infogrid.util.StringHelper;
-
-import java.io.IOException;
 
 /**
  * This {@link Store} delegates to another <code>Store</code>, but prefixes all keys with
@@ -76,7 +74,7 @@ public class PrefixingStore
     
     /**
      * Initialize the Store if needed. If the Store was initialized earlier, this will do
-     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * nothing. This operation is equivalent to {@link #initializeHard} if and only if
      * the Store had not been initialized earlier.
      * 
      * @throws IOException thrown if an I/O error occurred
@@ -105,6 +103,7 @@ public class PrefixingStore
      * @see #update if a data element with this key exists already
      * @see #putOrUpdate if a data element with this key may exist already
      */
+    @Override
     public void put(
             String  key,
             String  encodingId,
@@ -185,6 +184,7 @@ public class PrefixingStore
      * @see #put if a data element with this key does not exist already
      * @see #putOrUpdate if a data element with this key may exist already
      */
+    @Override
     public void update(
             String  key,
             String  encodingId,
@@ -265,6 +265,7 @@ public class PrefixingStore
      * @see #put if a data element with this key does not exist already
      * @see #update if a data element with this key exists already
      */
+    @Override
     public boolean putOrUpdate(
             String  key,
             String  encodingId,
@@ -396,6 +397,7 @@ public class PrefixingStore
      *
      * @throws IOException thrown if an I/O error occurred
      */
+    @Override
     public void deleteAll()
         throws
             IOException

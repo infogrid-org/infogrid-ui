@@ -123,7 +123,7 @@ public class FilesystemStore
     
     /**
      * Initialize the Store if needed. If the Store was initialized earlier, this will do
-     * nothing. This operation is equivalent to {@see #initializeHard} if and only if
+     * nothing. This operation is equivalent to {@link #initializeHard} if and only if
      * the Store had not been initialized earlier.
      * 
      * @throws IOException thrown if an I/O error occurred
