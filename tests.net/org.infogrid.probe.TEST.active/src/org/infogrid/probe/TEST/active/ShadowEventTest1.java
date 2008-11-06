@@ -86,7 +86,7 @@ public class ShadowEventTest1
                 rootContext );
         
         MeshObjectSetFactory passiveFactory = base.getMeshObjectSetFactory();
-        MeshObjectSetFactory activeFactory  = ActiveMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );;
+        MeshObjectSetFactory activeFactory  = ActiveMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
         
         //
 
@@ -224,13 +224,23 @@ public class ShadowEventTest1
     private static final String PROTOCOL_NAME = "ShadowEventTest1Protocol";
 
     /**
+     * Factory for NetMeshBaseIdentifiers.
+     */
+    private static final DefaultNetMeshBaseIdentifierFactory theIdentifierFactory
+            = DefaultNetMeshBaseIdentifierFactory.create(
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol [] {
+                            new DefaultNetMeshBaseIdentifierFactory.Protocol(
+                                    PROTOCOL_NAME, false )
+            } );
+
+    /**
      * The first URL that we are accessing.
      */
     private static NetMeshBaseIdentifier TEST1_URL;
 
     static {
         try {
-            TEST1_URL = DefaultNetMeshBaseIdentifierFactory.create().obtainUnresolvable( PROTOCOL_NAME + "://myhost.local/remainder" );
+            TEST1_URL = theIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://myhost.local/remainder" );
 
         } catch( Exception ex ) {
             log.error( ex );
