@@ -27,12 +27,22 @@
  </resource-ref>
 
  <filter>
-  <filter-name>InitializationFilter</filter-name>
-  <filter-class>org.infogrid.jee.servlet.InitializationFilter</filter-class>
+  <filter-name>DefaultInitializationFilter</filter-name>
+  <filter-class>org.infogrid.jee.defaultapp.DefaultInitializationFilter</filter-class>
   <init-param>
-   <param-name>org.infogrid.jee.app.InfoGridWebApp</param-name>
-   <param-value>org.infogrid.meshworld.MeshWorldApp</param-value>
+   <param-name>ROOTMODULE</param-name>
+   <param-value>org.infogrid.meshworld</param-value>
   </init-param>
+ </filter>
+
+ <filter>
+  <filter-name>TemplatesFilter</filter-name>
+  <filter-class>org.infogrid.jee.templates.servlet.TemplatesFilter</filter-class>
+ </filter>
+
+ <filter>
+  <filter-name>ApplicationInitializationFilter</filter-name>
+  <filter-class>org.infogrid.meshworld.MeshWorldAppInitializationFilter</filter-class>
   <init-param>
    <param-name>DefaultMeshBaseIdentifier</param-name>
    <param-value>http://meshworld.infogrid.org/</param-value>
@@ -45,8 +55,8 @@
  </filter>
 
  <filter>
-  <filter-name>TemplatesFilter</filter-name>
-  <filter-class>org.infogrid.jee.templates.servlet.TemplatesFilter</filter-class>
+  <filter-name>HttpShellFilter</filter-name>
+  <filter-class>org.infogrid.jee.shell.http.HttpShellFilter</filter-class>
  </filter>
 
  <filter>
@@ -54,18 +64,24 @@
   <filter-class>org.infogrid.jee.servlet.RegexDispatcherFilter</filter-class>
  </filter>
 
- <filter>
-  <filter-name>HttpShellFilter</filter-name>
-  <filter-class>org.infogrid.jee.shell.http.HttpShellFilter</filter-class>
- </filter>
-
  <servlet>
   <servlet-name>ViewletDispatcher</servlet-name>
   <servlet-class>org.infogrid.jee.viewlet.servlet.ViewletDispatcherServlet</servlet-class>
  </servlet>
 
+
  <filter-mapping>
-  <filter-name>InitializationFilter</filter-name>
+  <filter-name>DefaultInitializationFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+ </filter-mapping>
+
+ <filter-mapping>
+  <filter-name>TemplatesFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+ </filter-mapping>
+
+ <filter-mapping>
+  <filter-name>ApplicationInitializationFilter</filter-name>
   <url-pattern>/*</url-pattern>
  </filter-mapping>
 
@@ -80,13 +96,7 @@
  </filter-mapping>
 
  <filter-mapping>
-  <filter-name>TemplatesFilter</filter-name>
-  <url-pattern>/*</url-pattern>
- </filter-mapping>
-
- <filter-mapping>
   <filter-name>DispatcherFilter</filter-name>
   <url-pattern>/*</url-pattern>
  </filter-mapping>
-
 </web-app>
