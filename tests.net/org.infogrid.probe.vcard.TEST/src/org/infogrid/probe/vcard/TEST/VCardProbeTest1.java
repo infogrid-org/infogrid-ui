@@ -38,7 +38,9 @@ public class VCardProbeTest1
         AbstractVCardProbeTest
 {
     /**
-     * run the test
+     * Run the test.
+     * 
+     * @throws Exception all kinds of things may go wrong during a test
      */
     public void run()
         throws
