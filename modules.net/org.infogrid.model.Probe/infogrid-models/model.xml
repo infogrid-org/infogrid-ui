@@ -24,8 +24,8 @@
             <name>ProbeUpdateSpecification</name>
             <username>A Probe's update specification</username>
             <userdescription>A Home Object of a Probe is blessed with a subtype of this ProbeUpdateSpecification.
-              It expresses meta-data such as when the Probe was last run, when it should be run next etc.
-              Subtypes may implement different algorithms to determine the respective data.</userdescription>
+It expresses meta-data such as when the Probe was last run, when it should be run next etc.
+Subtypes may implement different algorithms to determine the respective data.</userdescription>
             <isabstract/>
             <declaresMethod><![CDATA[
     /**
@@ -88,8 +88,8 @@
                 <name>NextProbeRun</name>
                 <username>Time of next Probe run</username>
                 <userdescription>The time at which to run this Probe next. If this is not given, this indicates
-                  &quot;never&quot;. If this is in the past, it means &quot;as soon as possible&quot;. This value
-                  is given in Java's System.currentTimeMillis() format.</userdescription>
+&quot;never&quot;. If this is in the past, it means &quot;as soon as possible&quot;. This value
+is given in Java's System.currentTimeMillis() format.</userdescription>
                 <datatype>
                     <IntegerDataType/>
                 </datatype>
@@ -430,7 +430,7 @@
                 <name>CurrentDelay</name>
                 <username>Current delay between Probe runs</username>
                 <userdescription>The current delay between the end of a Probe run and the start of the next Probe run.
-            FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
+FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
                 <datatype>
                     <IntegerDataType/>
                 </datatype>
@@ -441,7 +441,7 @@
                 <name>MaxDelay</name>
                 <username>Maximum delay between Probe runs</username>
                 <userdescription>The maximum delay between the end of a Probe run and the start of the next Probe run.
-            FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
+FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
                 <datatype>
                     <IntegerDataType/>
                 </datatype>
@@ -453,8 +453,8 @@
                 <name>FallbackDelay</name>
                 <username>Fallback delay between Probe runs</username>
                 <userdescription>The fallback delay between the end of a Probe run and the start of the next Probe run.
-                  CurrentDelay is re-initialized to this value when a Probe run was unsuccessful, or data changed.
-             FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
+CurrentDelay is re-initialized to this value when a Probe run was unsuccessful, or data changed.
+FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
                 <datatype>
                     <IntegerDataType/>
                 </datatype>
@@ -464,8 +464,7 @@
             <propertytype ID="org.infogrid.model.Probe#PeriodicProbeUpdateSpecification/AdaptiveFactor">
                 <name>AdaptiveFactor</name>
                 <username>Adaptive Factor</username>
-                <userdescription>The factor by which the delay increases for each Probe run that was successful and did not
-                  produce changed data.</userdescription>
+                <userdescription>The factor by which the delay increases for each Probe run that was successful and did not produce changed data.</userdescription>
                 <datatype>
                     <FloatDataType/>
                 </datatype>

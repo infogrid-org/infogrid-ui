@@ -30,7 +30,7 @@
             <name>Service</name>
             <username>Yadis Service</username>
             <userdescription>This represents a Yadis Service. The concept of a ServiceType is
-              expressed by subclasses of this EntityType.</userdescription>
+expressed by subclasses of this EntityType.</userdescription>
             
             <propertytype ID="org.infogrid.lid.mnodel.yadis#Service/Priority">
                 <name>Priority</name>
@@ -47,8 +47,8 @@
             <name>Site_MakesUseOf_Service</name>
             <username>makes use of</username>
             <userdescription>This relates a MeshObject to the Yadis Services that it makes use of. For example,
-            an individual (Site) uses this relationship to identify the authentication services (Service)
-            that he uses for authentication, e.g. via an XRDS file they put together.</userdescription>
+an individual (Site) uses this relationship to identify the authentication services (Service)
+that he uses for authentication, e.g. via an XRDS file they put together.</userdescription>
             <src>
               <e>org.infogrid.lid.model.yadis#Site</e>
               <MultiplicityValue>0:N</MultiplicityValue>
@@ -63,7 +63,7 @@
             <name>Service_IsProvidedAtEndpoint_Site</name>
             <username>Is provided at</username>
             <userdescription>Expresses at which endpoints a Service is available. For example,
-            an identity provider (Service) uses this to list its endpoints (Site).</userdescription>
+an identity provider (Service) uses this to list its endpoints (Site).</userdescription>
             <src>
               <e>org.infogrid.lid.model.yadis#Service</e>
               <MultiplicityValue>0:N</MultiplicityValue>
@@ -78,7 +78,7 @@
             <name>Site_Offers_Service</name>
             <username>offers</username>
             <userdescription>Expresses which Services a Site offers. This is distinct from Service_IsProvidedAt_Site.
-            For example, a website (Site) may offer identity provider services (Service).</userdescription>
+For example, a website (Site) may offer identity provider services (Service).</userdescription>
             <src>
               <e>org.infogrid.lid.model.yadis#Site</e>
               <MultiplicityValue>0:N</MultiplicityValue>

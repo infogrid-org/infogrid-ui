@@ -18,8 +18,7 @@
   <subjectarea ID="org.infogrid.model.Blob">
     <name>org.infogrid.model.Blob</name>
     <username>Blob (Binary Large Objects) Subject Area</username>
-    <userdescription>This Subject Area deals with bulk data,
-       such as files.</userdescription>
+    <userdescription>This Subject Area deals with bulk data, such as files.</userdescription>
     <dependson>
      <subjectareareference>
        <name>org.infogrid.model.Common</name>
@@ -57,8 +56,8 @@
     <entitytype ID="org.infogrid.model.Blob#File">
       <name>File</name>
       <userdescription>A named reference to a file, but not the file itself.
-        Multiple instances of this object can reference the actual file content
-        (what certain operating systems call &quot;hard link&quot;.</userdescription>
+Multiple instances of this object can reference the actual file content
+(what certain operating systems call &quot;hard link&quot;.</userdescription>
       <supertype>org.infogrid.model.Common#ComponentObject</supertype>
       <issignificant/>
     </entitytype>

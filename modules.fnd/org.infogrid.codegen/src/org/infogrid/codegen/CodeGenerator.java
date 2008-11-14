@@ -108,7 +108,7 @@ public class CodeGenerator
 
         Object base = modelBaseModule.activateRecursively(); // return value is ignored but may be helpful in debugging
 
-        SimpleModelPrimitivesStringRepresentation commentsRepresentation = SimpleModelPrimitivesStringRepresentation.create( "Html" );
+        SimpleModelPrimitivesStringRepresentation commentsRepresentation = SimpleModelPrimitivesStringRepresentation.create( "Javadoc" );
         
         CodeGenerator generator         = new CodeGenerator( outputDir, commentsRepresentation );
         List<File>    moduleDirectories = theModuleRegistry.getSoftwareInstallation().getInstallModuleDirectories();

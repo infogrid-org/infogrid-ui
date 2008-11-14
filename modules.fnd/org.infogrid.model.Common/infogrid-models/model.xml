@@ -164,8 +164,8 @@
       <name>ComponentObject</name>
       <username>Use of Object</username>
       <userdescription>This entitytype is an abstract supertype for components inside a structured, potentially
-       hierarchical definition (represented by DefinitionObject). In programming, for example, a member variable
-       of a class could be represented as a (subtype of) ComponentObject.</userdescription>
+hierarchical definition (represented by DefinitionObject). In programming, for example, a member variable
+of a class could be represented as a (subtype of) ComponentObject.</userdescription>
       <icon path="org/infogrid/model/Common/ComponentObject.gif"/>
       <isabstract/>
       <issignificant/>
@@ -194,13 +194,13 @@
       <name>DefinitionObject</name>
       <username>Object</username>
       <userdescription>DefinitionObject serves as an abstract supertype for all definitions which may
-       be reused. A DefinitionObject may contain ComponentObjects, indicating that the definition is
-       structured. The ComponentObjects contained in a DefinitionObject form the components of
-       the structured definition. DefinitionObjects are referenced by ComponentObjects, indicating
-       the definition of the ComponentObject. In programming, for example, a class could be represented
-       as a (subtype of) DefinitionObject. Its member variables would be (subtypes of) ComponentObject,
-       which would be contained in the DefinitionObject. In turn, the contained ComponentObjects reference
-       other DefinitionObjects (representing other classes, for example), to indicate their own structure.</userdescription>
+be reused. A DefinitionObject may contain ComponentObjects, indicating that the definition is
+structured. The ComponentObjects contained in a DefinitionObject form the components of
+the structured definition. DefinitionObjects are referenced by ComponentObjects, indicating
+the definition of the ComponentObject. In programming, for example, a class could be represented
+as a (subtype of) DefinitionObject. Its member variables would be (subtypes of) ComponentObject,
+which would be contained in the DefinitionObject. In turn, the contained ComponentObjects reference
+other DefinitionObjects (representing other classes, for example), to indicate their own structure.</userdescription>
       <icon path="org/infogrid/model/Common/DefinitionObject.gif"/>
       <isabstract/>
       <issignificant/>
@@ -318,7 +318,7 @@
       <name>DefinitionObject_Contains_ComponentObject</name>
       <username>contains</username>
       <userdescription>This relationshiptype relates a DefinitionObject to those ComponentObjects wich form its structure
-      or composition.</userdescription>
+or composition.</userdescription>
       <src>
         <e>org.infogrid.model.Common#DefinitionObject</e>
         <MultiplicityValue>0:N</MultiplicityValue>

@@ -329,8 +329,7 @@
       <propertytype ID="org.infogrid.model.VCard#CommunicationAddress/HasMessageBox">
         <name>HasMessageBox</name>
         <username>Has Message Box</username>
-        <userdescription>Does this CommunicationAddress support leaving messages even if the user is not
-             available.</userdescription>
+        <userdescription>Does this CommunicationAddress support leaving messages even if the user is not available.</userdescription>
         <datatype>
           <BooleanDataType/>
         </datatype>

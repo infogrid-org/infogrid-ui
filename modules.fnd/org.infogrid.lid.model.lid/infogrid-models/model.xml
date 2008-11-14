@@ -30,14 +30,14 @@
             <name>IdentityProvider</name>
             <username>Identity Provider</username>
             <userdescription>A MeshObject that is an Identity Provider. It generally offers one or more
-               Authentication Services.</userdescription>
+Authentication Services.</userdescription>
             <supertype>org.infogrid.lid.model.yadis#Site</supertype>
 
             <propertytype ID="org.infogrid.lid.model.lid#IdentityProvider/RequiresUserSpecificSecret">
                 <name>RequiresUserSpecificSecret</name>
                 <username>RequiresUserSpecificSecret</username>
                 <userdescription>True if this Identity Provider requires a user-specific secret to authenticate users.
-                  This could be a password, or a hardware token, but not a client certificate.</userdescription>
+This could be a password, or a hardware token, but not a client certificate.</userdescription>
                 <datatype>
                     <BooleanDataType/>
                 </datatype>
@@ -70,15 +70,15 @@
             <name>RelyingParty</name>
             <username>Relying Party</username>
             <userdescription>A MeshObject that can accept externally provided identities. It generally provides one or
-               more RelyingPartyServices.</userdescription>
+more RelyingPartyServices.</userdescription>
             <supertype>org.infogrid.lid.model.yadis#Site</supertype>
             
             <propertytype ID="org.infogrid.lid.model.lid#RelyingParty/RequiresUserSpecificSecret">
                 <name>RequiresUserSpecificSecret</name>
                 <username>RequiresUserSpecificSecret</username>
                 <userdescription>True if this Relying Party only trusts Identity Providers that require a
-                  user-specific secret to authenticate users.
-                  This could be a password, or a hardware token, but not a client certificate.</userdescription>
+user-specific secret to authenticate users.
+This could be a password, or a hardware token, but not a client certificate.</userdescription>
                 <datatype>
                     <BooleanDataType/>
                 </datatype>
@@ -89,7 +89,7 @@
                 <name>RequiresHardwareToken</name>
                 <username>RequiresHardwareToken</username>
                 <userdescription>True if this Relying Party only trusts Identity Providers that require
-                  a hardware token to authenticate users.</userdescription>
+a hardware token to authenticate users.</userdescription>
                 <datatype>
                     <BooleanDataType/>
                 </datatype>
@@ -100,7 +100,7 @@
                 <name>RequiresEncryptedCommunications</name>
                 <username>RequiresEncryptedCommunications</username>
                 <userdescription>True if this Relying Party only trusts Identity Providers that require that
-                     all secrets are exchanged in encrypted form.</userdescription>
+all secrets are exchanged in encrypted form.</userdescription>
                 <datatype>
                     <BooleanDataType/>
                 </datatype>
@@ -111,14 +111,14 @@
         <entitytype ID="org.infogrid.lid.model.lid#Principal">
             <name>Principal</name>
             <userdescription>A MeshObject that represents an pricipal, such as a user. It generally makes use of
-               one or more Yadis Services.</userdescription>
+one or more Yadis Services.</userdescription>
             <supertype>org.infogrid.lid.model.yadis#Site</supertype>
         </entitytype>
         
         <entitytype ID="org.infogrid.lid.model.lid#AuthenticationService">
             <name>AuthenticationService</name>
             <userdescription>A Yadis Service that is able to authenticate a principal. More specific subclasses
-               are provided for specific authentication protocols.</userdescription>
+are provided for specific authentication protocols.</userdescription>
             <supertype>org.infogrid.lid.model.yadis#Service</supertype>
             <isabstract/>
         </entitytype>
@@ -126,8 +126,8 @@
         <entitytype ID="org.infogrid.lid.model.lid#WebAuthenticationService">
             <name>WebAuthenticationService</name>
             <userdescription>An AuthenticationService that uses a standard web browser as the client device,
-               and thus implements the redirect dance. More specific subclasses
-               are provided for specific authentication protocols.</userdescription>
+and thus implements the redirect dance. More specific subclasses
+are provided for specific authentication protocols.</userdescription>
             <supertype>org.infogrid.lid.model.lid#AuthenticationService</supertype>
             <isabstract/>
             <declaresMethod>
@@ -192,7 +192,7 @@
         <entitytype ID="org.infogrid.lid.model.lid#RelyingPartyService">
             <name>RelyingPartyService</name>
             <userdescription>A Yadis Service that is able to accept authentication assertions. More specific subclasses
-               are provided for specific protocols.</userdescription>
+are provided for specific protocols.</userdescription>
             <supertype>org.infogrid.lid.model.yadis#Service</supertype>
         </entitytype>
 
