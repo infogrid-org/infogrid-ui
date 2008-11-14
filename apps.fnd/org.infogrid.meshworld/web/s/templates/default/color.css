@@ -17,7 +17,7 @@ h1 {
 #canvas-app-row > div.canvas-main {
     height: 80px;
     background: #f0f0f0;
-    background-image: url(../icons/white-shift-vertical-long.png);
+    background-image: url(../images/white-shift-vertical-long.png);
     border-color: rgb(0,80,144);
     border-style: solid;
     border-width: 4px 0 2px 0;
@@ -60,7 +60,7 @@ div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table {
 }
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > thead > tr > th {
     border: #808080 1px solid;
-    background-image: url(../icons/white-shift-vertical-short.png);
+    background-image: url(../images/white-shift-vertical-short.png);
     background-repeat: repeat-x;
 }
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > .type,
