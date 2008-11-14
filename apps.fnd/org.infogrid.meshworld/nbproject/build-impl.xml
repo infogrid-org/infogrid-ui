@@ -373,8 +373,8 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
             -->
     <target depends="init" if="no.dist.ear.dir" name="deps-module-jar" unless="no.deps">
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_jee_defaultapp}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_jee_rest_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_shell_http}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_templates}/build.xml" inheritall="false" target="jar"/>
@@ -399,8 +399,8 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
     </target>
     <target depends="init" if="dist.ear.dir" name="deps-ear-jar" unless="no.deps">
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_jee_defaultapp}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_jee_rest_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_shell_http}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_templates}/build.xml" inheritall="false" target="jar"/>
@@ -563,40 +563,40 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,-do-dist-with-manifest,-do-dist-without-manifest" name="do-dist"/>
     <target depends="init" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <basename file="${reference.org_infogrid_util_logging_log4j.jar}" property="included.lib.reference.org_infogrid_util_logging_log4j.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_util_logging_log4j.jar}" propname="included.lib.reference.org_infogrid_util_logging_log4j.jar.X"/>
-        <basename file="${reference.org_infogrid_model_Test.jar}" property="included.lib.reference.org_infogrid_model_Test.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_model_Test.jar}" propname="included.lib.reference.org_infogrid_model_Test.jar.X"/>
-        <basename file="${reference.org_infogrid_model_Wiki.jar}" property="included.lib.reference.org_infogrid_model_Wiki.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_model_Wiki.jar}" propname="included.lib.reference.org_infogrid_model_Wiki.jar.X"/>
-        <basename file="${reference.org_infogrid_model_Viewlet.jar}" property="included.lib.reference.org_infogrid_model_Viewlet.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_model_Viewlet.jar}" propname="included.lib.reference.org_infogrid_model_Viewlet.jar.X"/>
         <basename file="${reference.org_infogrid_jee.jar}" property="included.lib.reference.org_infogrid_jee.jar"/>
         <copy-ear-war file="${reference.org_infogrid_jee.jar}" propname="included.lib.reference.org_infogrid_jee.jar.X"/>
-        <basename file="${reference.org_infogrid_jee_defaultapp.jar}" property="included.lib.reference.org_infogrid_jee_defaultapp.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_jee_defaultapp.jar}" propname="included.lib.reference.org_infogrid_jee_defaultapp.jar.X"/>
         <basename file="${reference.org_infogrid_jee_rest.jar}" property="included.lib.reference.org_infogrid_jee_rest.jar"/>
         <copy-ear-war file="${reference.org_infogrid_jee_rest.jar}" propname="included.lib.reference.org_infogrid_jee_rest.jar.X"/>
-        <basename file="${reference.org_infogrid_jee_store.jar}" property="included.lib.reference.org_infogrid_jee_store.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_jee_store.jar}" propname="included.lib.reference.org_infogrid_jee_store.jar.X"/>
-        <basename file="${reference.org_infogrid_jee_viewlet.jar}" property="included.lib.reference.org_infogrid_jee_viewlet.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_jee_viewlet.jar}" propname="included.lib.reference.org_infogrid_jee_viewlet.jar.X"/>
-        <basename file="${reference.org_infogrid_jee_templates.jar}" property="included.lib.reference.org_infogrid_jee_templates.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_jee_templates.jar}" propname="included.lib.reference.org_infogrid_jee_templates.jar.X"/>
+        <basename file="${reference.org_infogrid_jee_rest_store.jar}" property="included.lib.reference.org_infogrid_jee_rest_store.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_jee_rest_store.jar}" propname="included.lib.reference.org_infogrid_jee_rest_store.jar.X"/>
         <basename file="${reference.org_infogrid_jee_shell_http.jar}" property="included.lib.reference.org_infogrid_jee_shell_http.jar"/>
         <copy-ear-war file="${reference.org_infogrid_jee_shell_http.jar}" propname="included.lib.reference.org_infogrid_jee_shell_http.jar.X"/>
-        <basename file="${reference.org_infogrid_viewlet.jar}" property="included.lib.reference.org_infogrid_viewlet.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_viewlet.jar}" propname="included.lib.reference.org_infogrid_viewlet.jar.X"/>
-        <basename file="${reference.org_infogrid_jee_viewlet_wikiobject.jar}" property="included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_jee_viewlet_wikiobject.jar}" propname="included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar.X"/>
+        <basename file="${reference.org_infogrid_jee_store.jar}" property="included.lib.reference.org_infogrid_jee_store.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_jee_store.jar}" propname="included.lib.reference.org_infogrid_jee_store.jar.X"/>
+        <basename file="${reference.org_infogrid_jee_templates.jar}" property="included.lib.reference.org_infogrid_jee_templates.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_jee_templates.jar}" propname="included.lib.reference.org_infogrid_jee_templates.jar.X"/>
+        <basename file="${reference.org_infogrid_jee_viewlet.jar}" property="included.lib.reference.org_infogrid_jee_viewlet.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_jee_viewlet.jar}" propname="included.lib.reference.org_infogrid_jee_viewlet.jar.X"/>
         <basename file="${reference.org_infogrid_jee_viewlet_bulk.jar}" property="included.lib.reference.org_infogrid_jee_viewlet_bulk.jar"/>
         <copy-ear-war file="${reference.org_infogrid_jee_viewlet_bulk.jar}" propname="included.lib.reference.org_infogrid_jee_viewlet_bulk.jar.X"/>
+        <basename file="${reference.org_infogrid_jee_viewlet_wikiobject.jar}" property="included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_jee_viewlet_wikiobject.jar}" propname="included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar.X"/>
         <basename file="${reference.org_infogrid_kernel.jar}" property="included.lib.reference.org_infogrid_kernel.jar"/>
         <copy-ear-war file="${reference.org_infogrid_kernel.jar}" propname="included.lib.reference.org_infogrid_kernel.jar.X"/>
         <basename file="${reference.org_infogrid_meshbase_store.jar}" property="included.lib.reference.org_infogrid_meshbase_store.jar"/>
         <copy-ear-war file="${reference.org_infogrid_meshbase_store.jar}" propname="included.lib.reference.org_infogrid_meshbase_store.jar.X"/>
+        <basename file="${reference.org_infogrid_model_Test.jar}" property="included.lib.reference.org_infogrid_model_Test.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_model_Test.jar}" propname="included.lib.reference.org_infogrid_model_Test.jar.X"/>
+        <basename file="${reference.org_infogrid_model_Viewlet.jar}" property="included.lib.reference.org_infogrid_model_Viewlet.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_model_Viewlet.jar}" propname="included.lib.reference.org_infogrid_model_Viewlet.jar.X"/>
+        <basename file="${reference.org_infogrid_model_Wiki.jar}" property="included.lib.reference.org_infogrid_model_Wiki.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_model_Wiki.jar}" propname="included.lib.reference.org_infogrid_model_Wiki.jar.X"/>
         <basename file="${reference.org_infogrid_modelbase_m.jar}" property="included.lib.reference.org_infogrid_modelbase_m.jar"/>
         <copy-ear-war file="${reference.org_infogrid_modelbase_m.jar}" propname="included.lib.reference.org_infogrid_modelbase_m.jar.X"/>
+        <basename file="${reference.org_infogrid_module.jar}" property="included.lib.reference.org_infogrid_module.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_module.jar}" propname="included.lib.reference.org_infogrid_module.jar.X"/>
+        <basename file="${reference.org_infogrid_module_servlet.jar}" property="included.lib.reference.org_infogrid_module_servlet.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_module_servlet.jar}" propname="included.lib.reference.org_infogrid_module_servlet.jar.X"/>
         <basename file="${reference.org_infogrid_store.jar}" property="included.lib.reference.org_infogrid_store.jar"/>
         <copy-ear-war file="${reference.org_infogrid_store.jar}" propname="included.lib.reference.org_infogrid_store.jar.X"/>
         <basename file="${reference.org_infogrid_store_sql.jar}" property="included.lib.reference.org_infogrid_store_sql.jar"/>
@@ -605,12 +605,12 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${reference.org_infogrid_store_sql_mysql.jar}" propname="included.lib.reference.org_infogrid_store_sql_mysql.jar.X"/>
         <basename file="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" property="included.lib.reference.org_infogrid_vendors_com_mysql_jdbc.jar"/>
         <copy-ear-war file="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" propname="included.lib.reference.org_infogrid_vendors_com_mysql_jdbc.jar.X"/>
+        <basename file="${reference.org_infogrid_viewlet.jar}" property="included.lib.reference.org_infogrid_viewlet.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_viewlet.jar}" propname="included.lib.reference.org_infogrid_viewlet.jar.X"/>
         <basename file="${reference.org_infogrid_util.jar}" property="included.lib.reference.org_infogrid_util.jar"/>
         <copy-ear-war file="${reference.org_infogrid_util.jar}" propname="included.lib.reference.org_infogrid_util.jar.X"/>
-        <basename file="${reference.org_infogrid_module.jar}" property="included.lib.reference.org_infogrid_module.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_module.jar}" propname="included.lib.reference.org_infogrid_module.jar.X"/>
-        <basename file="${reference.org_infogrid_module_servlet.jar}" property="included.lib.reference.org_infogrid_module_servlet.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_module_servlet.jar}" propname="included.lib.reference.org_infogrid_module_servlet.jar.X"/>
+        <basename file="${reference.org_infogrid_util_logging_log4j.jar}" property="included.lib.reference.org_infogrid_util_logging_log4j.jar"/>
+        <copy-ear-war file="${reference.org_infogrid_util_logging_log4j.jar}" propname="included.lib.reference.org_infogrid_util_logging_log4j.jar.X"/>
         <basename file="${libs.Log4j.classpath}" property="included.lib.libs.Log4j.classpath"/>
         <copy-ear-war file="${libs.Log4j.classpath}" propname="included.lib.libs.Log4j.classpath.X"/>
         <basename file="${libs.J2EE.classpath}" property="included.lib.libs.J2EE.classpath"/>
@@ -621,35 +621,35 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${libs.JSTL.classpath.libfile.1}" propname="included.lib.libs.JSTL.classpath.1.X"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.reference.org_infogrid_util_logging_log4j.jar} ${included.lib.reference.org_infogrid_model_Test.jar} ${included.lib.reference.org_infogrid_model_Wiki.jar} ${included.lib.reference.org_infogrid_model_Viewlet.jar} ${included.lib.reference.org_infogrid_jee.jar} ${included.lib.reference.org_infogrid_jee_defaultapp.jar} ${included.lib.reference.org_infogrid_jee_rest.jar} ${included.lib.reference.org_infogrid_jee_store.jar} ${included.lib.reference.org_infogrid_jee_viewlet.jar} ${included.lib.reference.org_infogrid_jee_templates.jar} ${included.lib.reference.org_infogrid_jee_shell_http.jar} ${included.lib.reference.org_infogrid_viewlet.jar} ${included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar} ${included.lib.reference.org_infogrid_jee_viewlet_bulk.jar} ${included.lib.reference.org_infogrid_kernel.jar} ${included.lib.reference.org_infogrid_meshbase_store.jar} ${included.lib.reference.org_infogrid_modelbase_m.jar} ${included.lib.reference.org_infogrid_store.jar} ${included.lib.reference.org_infogrid_store_sql.jar} ${included.lib.reference.org_infogrid_store_sql_mysql.jar} ${included.lib.reference.org_infogrid_vendors_com_mysql_jdbc.jar} ${included.lib.reference.org_infogrid_util.jar} ${included.lib.reference.org_infogrid_module.jar} ${included.lib.reference.org_infogrid_module_servlet.jar} ${included.lib.libs.Log4j.classpath} ${included.lib.libs.J2EE.classpath} ${included.lib.libs.JSTL.classpath.1.X} ${included.lib.libs.JSTL.classpath.2.X} "/>
+            <attribute name="Class-Path" value="${included.lib.reference.org_infogrid_jee.jar} ${included.lib.reference.org_infogrid_jee_rest.jar} ${included.lib.reference.org_infogrid_jee_rest_store.jar} ${included.lib.reference.org_infogrid_jee_shell_http.jar} ${included.lib.reference.org_infogrid_jee_store.jar} ${included.lib.reference.org_infogrid_jee_templates.jar} ${included.lib.reference.org_infogrid_jee_viewlet.jar} ${included.lib.reference.org_infogrid_jee_viewlet_bulk.jar} ${included.lib.reference.org_infogrid_jee_viewlet_wikiobject.jar} ${included.lib.reference.org_infogrid_kernel.jar} ${included.lib.reference.org_infogrid_meshbase_store.jar} ${included.lib.reference.org_infogrid_model_Test.jar} ${included.lib.reference.org_infogrid_model_Viewlet.jar} ${included.lib.reference.org_infogrid_model_Wiki.jar} ${included.lib.reference.org_infogrid_modelbase_m.jar} ${included.lib.reference.org_infogrid_module.jar} ${included.lib.reference.org_infogrid_module_servlet.jar} ${included.lib.reference.org_infogrid_store.jar} ${included.lib.reference.org_infogrid_store_sql.jar} ${included.lib.reference.org_infogrid_store_sql_mysql.jar} ${included.lib.reference.org_infogrid_vendors_com_mysql_jdbc.jar} ${included.lib.reference.org_infogrid_viewlet.jar} ${included.lib.reference.org_infogrid_util.jar} ${included.lib.reference.org_infogrid_util_logging_log4j.jar} ${included.lib.libs.Log4j.classpath} ${included.lib.libs.J2EE.classpath} ${included.lib.libs.JSTL.classpath.1.X} ${included.lib.libs.JSTL.classpath.2.X} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
-        <copy file="${reference.org_infogrid_util_logging_log4j.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_model_Test.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_model_Wiki.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_model_Viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_jee.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_jee_defaultapp.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_jee_rest.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_jee_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_jee_viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_jee_templates.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_jee_rest_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_jee_shell_http.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_jee_viewlet_wikiobject.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_jee_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_jee_templates.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_jee_viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_jee_viewlet_bulk.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_jee_viewlet_wikiobject.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_kernel.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_meshbase_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_model_Test.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_model_Viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_model_Wiki.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_modelbase_m.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_module.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_module_servlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_store_sql.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_store_sql_mysql.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_util.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_module.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_module_servlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${reference.org_infogrid_util_logging_log4j.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.Log4j.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.J2EE.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${libs.JSTL.classpath.libfile.2}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -941,8 +941,8 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
             -->
     <target depends="init" if="no.dist.ear.dir" name="deps-clean" unless="no.deps">
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_jee_defaultapp}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_jee_rest_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_shell_http}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_templates}/build.xml" inheritall="false" target="clean"/>

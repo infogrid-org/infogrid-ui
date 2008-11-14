@@ -21,21 +21,21 @@ import javax.servlet.ServletException;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.servlet.InitializationFilter;
-import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
-import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleException;
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleRequirement;
 import org.infogrid.module.SoftwareInstallation;
 import org.infogrid.module.servlet.ServletBootLoader;
+import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
- * Configures the default InfoGridWebApp with log4j logging and the InfoGrid web template framework.
+ * Configures the default InfoGridWebApp with log4j logging.
  */
 public class DefaultInitializationFilter
         extends
@@ -193,8 +193,8 @@ public class DefaultInitializationFilter
 //            ex.printStackTrace( System.err );
 //            throw new RuntimeException( ex );
 //        }
-//
-//        ResourceHelper.initializeLogging();
+
+        ResourceHelper.initializeLogging();
 
         log = Log.getLogInstance( InfoGridWebApp.class );
 
@@ -202,21 +202,28 @@ public class DefaultInitializationFilter
         SimpleContext rootContext = SimpleContext.createRoot( rootModule + " root context" );
         rootContext.addContextObject( theThisModule.getModuleRegistry() );
         
-        // Formatter
-        JeeFormatter formatter = JeeFormatter.create();
-        rootContext.addContextObject( formatter );
-
-        // StructuredResponseTemplateFactory
-        StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create( "default" );
-        rootContext.addContextObject( tmplFactory );
-
-        StringRepresentationDirectory srepdir = SimpleStringRepresentationDirectory.create();
-        rootContext.addContextObject( srepdir );
-
+        initializeContextObjects( rootContext );
+        
         // app
         DefaultInfoGridWebApp ret = new DefaultInfoGridWebApp( rootContext );
 
         return ret;        
+    }
+
+    /**
+     * Initialize the context objects. This may be overridden by subclasses.
+     * 
+     * @param rootContext the root Context
+     */
+    protected void initializeContextObjects(
+            Context rootContext )
+    {
+        // Formatter
+        JeeFormatter formatter = JeeFormatter.create();
+        rootContext.addContextObject( formatter );
+
+        StringRepresentationDirectory srepdir = SimpleStringRepresentationDirectory.create();
+        rootContext.addContextObject( srepdir );
     }
 
     /**

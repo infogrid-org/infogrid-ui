@@ -30,7 +30,7 @@ public class DefaultInfoGridWebApp
      * @param applicationContext the main application Context. This context holds all the
      *        well-known objects needed by the application
      */
-    protected DefaultInfoGridWebApp(
+    public DefaultInfoGridWebApp(
             Context applicationContext )
     {
         super( applicationContext );

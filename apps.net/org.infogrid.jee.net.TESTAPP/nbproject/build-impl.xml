@@ -375,7 +375,6 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <ant antfile="${project.org_infogrid_comm}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_comm_pingpong}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_jee_defaultapp}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_rest_net}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_shell_http}/build.xml" inheritall="false" target="jar"/>
@@ -408,7 +407,6 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <ant antfile="${project.org_infogrid_comm}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_comm_pingpong}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_jee_defaultapp}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_rest_net}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_shell_http}/build.xml" inheritall="false" target="jar"/>
@@ -583,8 +581,6 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${reference.org_infogrid_comm_pingpong.jar}" propname="included.lib.reference.org_infogrid_comm_pingpong.jar.X"/>
         <basename file="${reference.org_infogrid_jee.jar}" property="included.lib.reference.org_infogrid_jee.jar"/>
         <copy-ear-war file="${reference.org_infogrid_jee.jar}" propname="included.lib.reference.org_infogrid_jee.jar.X"/>
-        <basename file="${reference.org_infogrid_jee_defaultapp.jar}" property="included.lib.reference.org_infogrid_jee_defaultapp.jar"/>
-        <copy-ear-war file="${reference.org_infogrid_jee_defaultapp.jar}" propname="included.lib.reference.org_infogrid_jee_defaultapp.jar.X"/>
         <basename file="${reference.org_infogrid_jee_rest.jar}" property="included.lib.reference.org_infogrid_jee_rest.jar"/>
         <copy-ear-war file="${reference.org_infogrid_jee_rest.jar}" propname="included.lib.reference.org_infogrid_jee_rest.jar.X"/>
         <basename file="${reference.org_infogrid_jee_rest_net.jar}" property="included.lib.reference.org_infogrid_jee_rest_net.jar"/>
@@ -647,7 +643,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy-ear-war file="${libs.JSTL.classpath.libfile.1}" propname="included.lib.libs.JSTL.classpath.1.X"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.reference.org_infogrid_comm.jar} ${included.lib.reference.org_infogrid_comm_pingpong.jar} ${included.lib.reference.org_infogrid_jee.jar} ${included.lib.reference.org_infogrid_jee_defaultapp.jar} ${included.lib.reference.org_infogrid_jee_rest.jar} ${included.lib.reference.org_infogrid_jee_rest_net.jar} ${included.lib.reference.org_infogrid_jee_shell_http.jar} ${included.lib.reference.org_infogrid_jee_templates.jar} ${included.lib.reference.org_infogrid_jee_viewlet.jar} ${included.lib.reference.org_infogrid_jee_viewlet_bulk.jar} ${included.lib.reference.org_infogrid_jee_viewlet_net.jar} ${included.lib.reference.org_infogrid_kernel.jar} ${included.lib.reference.org_infogrid_kernel_net.jar} ${included.lib.reference.org_infogrid_lid.jar} ${included.lib.reference.org_infogrid_lid_model_lid.jar} ${included.lib.reference.org_infogrid_lid_model_openid.jar} ${included.lib.reference.org_infogrid_lid_model_yadis.jar} ${included.lib.reference.org_infogrid_lid_openid.jar} ${included.lib.reference.org_infogrid_model_Blob.jar} ${included.lib.reference.org_infogrid_model_Common.jar} ${included.lib.reference.org_infogrid_model_Probe.jar} ${included.lib.reference.org_infogrid_model_Test.jar} ${included.lib.reference.org_infogrid_model_Viewlet.jar} ${included.lib.reference.org_infogrid_modelbase_m.jar} ${included.lib.reference.org_infogrid_module.jar} ${included.lib.reference.org_infogrid_module_servlet.jar} ${included.lib.reference.org_infogrid_net_local.jar} ${included.lib.reference.org_infogrid_probe.jar} ${included.lib.reference.org_infogrid_util.jar} ${included.lib.reference.org_infogrid_util_logging_log4j.jar} ${included.lib.reference.org_infogrid_viewlet.jar} ${included.lib.libs.Log4j.classpath} ${included.lib.libs.JSTL.classpath.1.X} ${included.lib.libs.JSTL.classpath.2.X} "/>
+            <attribute name="Class-Path" value="${included.lib.reference.org_infogrid_comm.jar} ${included.lib.reference.org_infogrid_comm_pingpong.jar} ${included.lib.reference.org_infogrid_jee.jar} ${included.lib.reference.org_infogrid_jee_rest.jar} ${included.lib.reference.org_infogrid_jee_rest_net.jar} ${included.lib.reference.org_infogrid_jee_shell_http.jar} ${included.lib.reference.org_infogrid_jee_templates.jar} ${included.lib.reference.org_infogrid_jee_viewlet.jar} ${included.lib.reference.org_infogrid_jee_viewlet_bulk.jar} ${included.lib.reference.org_infogrid_jee_viewlet_net.jar} ${included.lib.reference.org_infogrid_kernel.jar} ${included.lib.reference.org_infogrid_kernel_net.jar} ${included.lib.reference.org_infogrid_lid.jar} ${included.lib.reference.org_infogrid_lid_model_lid.jar} ${included.lib.reference.org_infogrid_lid_model_openid.jar} ${included.lib.reference.org_infogrid_lid_model_yadis.jar} ${included.lib.reference.org_infogrid_lid_openid.jar} ${included.lib.reference.org_infogrid_model_Blob.jar} ${included.lib.reference.org_infogrid_model_Common.jar} ${included.lib.reference.org_infogrid_model_Probe.jar} ${included.lib.reference.org_infogrid_model_Test.jar} ${included.lib.reference.org_infogrid_model_Viewlet.jar} ${included.lib.reference.org_infogrid_modelbase_m.jar} ${included.lib.reference.org_infogrid_module.jar} ${included.lib.reference.org_infogrid_module_servlet.jar} ${included.lib.reference.org_infogrid_net_local.jar} ${included.lib.reference.org_infogrid_probe.jar} ${included.lib.reference.org_infogrid_util.jar} ${included.lib.reference.org_infogrid_util_logging_log4j.jar} ${included.lib.reference.org_infogrid_viewlet.jar} ${included.lib.libs.Log4j.classpath} ${included.lib.libs.JSTL.classpath.1.X} ${included.lib.libs.JSTL.classpath.2.X} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
@@ -655,7 +651,6 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <copy file="${reference.org_infogrid_comm.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_comm_pingpong.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_jee.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy file="${reference.org_infogrid_jee_defaultapp.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_jee_rest.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_jee_rest_net.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copy file="${reference.org_infogrid_jee_shell_http.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -975,7 +970,6 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
         <ant antfile="${project.org_infogrid_comm}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_comm_pingpong}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_jee_defaultapp}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_rest_net}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_shell_http}/build.xml" inheritall="false" target="clean"/>

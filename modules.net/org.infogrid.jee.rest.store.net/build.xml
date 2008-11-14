@@ -13,17 +13,12 @@
     All rights reserved.
 -->
 
-<standardmodule>
- <name>org.infogrid.jee.defaultapp</name>
- <username>Default InfoGrid Web Application</username>
- <userdescription>A pre-configured web application for InfoGrid that makes use of log4j and the web template framework.</userdescription>
- <provides>
-  <jar>org.infogrid.jee.defaultapp.jar</jar> 
- </provides>
- <dependencies>
-  <requires name="org.infogrid.jee"/>
-  <requires name="org.infogrid.jee.templates"/>
-  <requires name="org.infogrid.util"/>
-  <requires name="org.infogrid.util.logging.log4j"/>
- </dependencies>
-</standardmodule>
+<project name="org.infogrid.jee.rest.store.net" default="default" basedir=".">
+    <description>Builds, tests, and runs the project org.infogrid.jee.rest.store.net.</description>
+    <import file="../../tools/infogrid-ant-library.xml"/>
+    <import file="nbproject/build-impl.xml"/>
+
+    <target name="-pre-compile" depends="-module-setup"/>
+</project>
+
+

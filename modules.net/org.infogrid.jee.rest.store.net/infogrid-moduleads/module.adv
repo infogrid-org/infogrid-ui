@@ -13,10 +13,16 @@
     All rights reserved.
 -->
 
-<project name="org.infogrid.jee.defaultapp" default="default" basedir=".">
-    <description>Builds, tests, and runs the project org.infogrid.jee.defaultapp.</description>
-    <import file="../../tools/infogrid-ant-library.xml"/>
-    <import file="nbproject/build-impl.xml"/>
-
-    <target name="-pre-compile" depends="-module-setup"/>
-</project>
+<standardmodule>
+ <name>org.infogrid.jee.rest.store.net</name>
+ <username>JEE/REST Store Net support for InfoGrid.</username>
+ <userdescription>Makes developing REST-ful, net-based applications based on Store with InfoGrid easier.</userdescription>
+ <provides>
+  <jar>org.infogrid.jee.rest.store.net.jar</jar> 
+ </provides>
+ <dependencies>
+  <requires name="org.infogrid.jee.rest.net"/>
+  <requires name="org.infogrid.jee.store"/>
+  <requires name="org.infogrid.util"/>
+ </dependencies>
+</standardmodule>

@@ -14,3 +14,4 @@ org.infogrid.probe.store
 org.infogrid.probe.vcard
 org.infogrid.net.local
 org.infogrid.net.local.store
+org.infogrid.jee.rest.store.net

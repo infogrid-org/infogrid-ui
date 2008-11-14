@@ -39,11 +39,11 @@ org.infogrid.jee
 org.infogrid.jee.templates
 org.infogrid.jee.rest
 org.infogrid.jee.store
+org.infogrid.jee.rest.store
 org.infogrid.jee.viewlet
 org.infogrid.jee.shell.http
 org.infogrid.jee.viewlet.bulk
 org.infogrid.jee.viewlet.wikiobject
-org.infogrid.jee.defaultapp
 org.infogrid.lid
 org.infogrid.lid.ldap
 org.infogrid.lid.openid

@@ -14,24 +14,17 @@
 -->
 
 <standardmodule>
- <name>org.infogrid.meshworld</name>
- <userdescription>The MeshWorld example application.</userdescription>
+ <name>org.infogrid.jee.rest.store</name>
+ <username>JEE/REST Store support for InfoGrid.</username>
+ <userdescription>Makes developing REST-ful applications based on Store with InfoGrid easier.</userdescription>
  <provides>
-  <jar>org.infogrid.meshworld.jar</jar>
+  <jar>org.infogrid.jee.rest.store.jar</jar> 
  </provides>
  <dependencies>
-  <requires name="org.infogrid.util.logging.log4j"/>
-  <requires name="org.infogrid.modelbase.m"/>
-  <requires name="org.infogrid.jee.shell.http"/>
-  <requires name="org.infogrid.jee.rest.store"/>
-  <requires name="org.infogrid.kernel"/>
+  <requires name="org.infogrid.jee.rest"/>
+  <requires name="org.infogrid.jee.store"/>
   <requires name="org.infogrid.meshbase.store"/>
-  <requires name="org.infogrid.model.Test"/>
-  <requires name="org.infogrid.model.Viewlet"/>
-  <requires name="org.infogrid.model.Wiki"/>
-  <requires name="org.infogrid.store.sql.mysql"/>
-  <requires name="org.infogrid.jee.viewlet.bulk"/>
-  <requires name="org.infogrid.jee.viewlet.wikiobject"/>
+  <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.util"/>
  </dependencies>
 </standardmodule>

@@ -19,7 +19,7 @@ is divided into following sections:
   - cleanup
 
         -->
-<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="org.infogrid.jee.defaultapp-impl">
+<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="org.infogrid.jee.rest.store-impl">
     <target depends="test,jar,javadoc" description="Build and test whole project." name="default"/>
     <!-- 
                 ======================
@@ -314,11 +314,14 @@ is divided into following sections:
             -->
     <target depends="init" name="deps-jar" unless="no.deps">
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_jee_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_templates}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_module_servlet}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="jar"/>
     </target>
     <target depends="init,deps-jar" name="-pre-pre-compile">
         <mkdir dir="${build.classes.dir}"/>
@@ -631,11 +634,14 @@ is divided into following sections:
             -->
     <target depends="init" name="deps-clean" unless="no.deps">
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_jee_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_templates}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_module_servlet}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="clean"/>
     </target>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>
