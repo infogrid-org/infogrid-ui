@@ -165,6 +165,9 @@ public class AllTests
                         ForwardReferenceTest4.class ),
 
                 new TestSpec(
+                        ForwardReferenceTest5.class ),
+
+                new TestSpec(
                         ProbeMatchTest1.class ),
         };
 
