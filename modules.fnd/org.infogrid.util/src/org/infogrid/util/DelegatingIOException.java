@@ -24,6 +24,8 @@ import java.io.IOException;
 public class DelegatingIOException
         extends
             IOException
+        implements
+            LocalizedException
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -52,4 +54,72 @@ public class DelegatingIOException
 
         super.initCause( cause ); // stupid API
     }
+
+    /**
+     * Determine the correct internationalized string that can be shown to the
+     * user. Use a default formatter.
+     *
+     * @return the internationalized string
+     */
+    @Override
+    public String getLocalizedMessage()
+    {
+        return getLocalizedMessage( null );
+    }
+
+    /**
+     * Determine the correct internationalized string that can be shown to the
+     * user.
+     *
+     * @param formatter the formatter to use for data objects to be displayed as part of the message
+     * @return the internationalized string
+     */
+    public String getLocalizedMessage(
+            LocalizedObjectFormatter formatter )
+    {
+        return AbstractLocalizedException.constructLocalizedMessage(
+                this,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findMessageParameter(),
+                formatter );
+        
+    }
+ 
+    /**
+     * Obtain resource parameters for the internationalization.
+     *
+     * @return the resource parameters
+     */    
+    public Object [] getLocalizationParameters()
+    {
+        Throwable cause = getCause();
+        if( cause != null ) {
+            return new Object[] {
+                cause.getLocalizedMessage()
+            };
+        } else {
+            return new Object[0];
+        }
+    }
+
+    /**
+     * Allow subclasses to override which key to use in the Resource file for the message.
+     *
+     * @return the key
+     */
+    protected String findMessageParameter()
+    {
+        return MESSAGE_PARAMETER;
+    }
+    
+    /**
+     * Allow subclasses to override which ResourceHelper to use.
+     *
+     * @return the ResourceHelper to use
+     */
+    protected ResourceHelper findResourceHelperForLocalizedMessage()
+    {
+        return ResourceHelper.getInstance( getClass() );
+    }    
 }

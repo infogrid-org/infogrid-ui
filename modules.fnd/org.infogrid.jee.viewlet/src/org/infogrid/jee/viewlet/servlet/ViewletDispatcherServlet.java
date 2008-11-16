@@ -80,11 +80,15 @@ public class ViewletDispatcherServlet
         InfoGridWebApp      app     = InfoGridWebApp.getSingleton();
         Context             c       = app.getApplicationContext();
         TraversalDictionary dict    = c.findContextObject( TraversalDictionary.class ); // optional
+        MeshBase            mb      = c.findContextObject( MeshBase.class );
 
+        if( mb == null ) {
+            throw new ContextMeshBaseNotFoundException();
+        }
         RestfulRequest restfulRequest = createRestfulRequest(
                 saneRequest,
                 servletRequest.getContextPath(),
-                c.findContextObjectOrThrow( MeshBase.class ).getIdentifier().toExternalForm() );
+                mb.getIdentifier().toExternalForm() );
 
         servletRequest.setAttribute( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME, restfulRequest );
 

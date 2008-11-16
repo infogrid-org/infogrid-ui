@@ -47,7 +47,24 @@ public class StructuredResponse
             HttpServletResponse delegate,
             ServletContext      servletContext )
     {
-        StructuredResponse ret = new StructuredResponse( delegate, servletContext );
+        StructuredResponse ret = new StructuredResponse( delegate, servletContext, DEFAULT_MAX_PROBLEMS );
+        return ret;
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegate the underlying HttpServletResponse
+     * @param servletContext the ServletContext in which the StructuredResponse is created
+     * @param maxProblems the maxmimum number of problems to report in this StructuredResponse
+     * @return the created StructuredResponse
+     */
+    public static StructuredResponse create(
+            HttpServletResponse delegate,
+            ServletContext      servletContext,
+            int                 maxProblems )
+    {
+        StructuredResponse ret = new StructuredResponse( delegate, servletContext, maxProblems );
         return ret;
     }
 
@@ -56,13 +73,16 @@ public class StructuredResponse
      *
      * @param delegate the underlying HttpServletResponse
      * @param servletContext the ServletContext in which the StructuredResponse is created
+     * @param maxProblems the maxmimum number of problems to report in this StructuredResponse
      */
     protected StructuredResponse(
             HttpServletResponse delegate,
-            ServletContext      servletContext )
+            ServletContext      servletContext,
+            int                 maxProblems )
     {
         theDelegate       = delegate;
         theServletContext = servletContext;
+        theMaxProblems    = maxProblems;
     }
     
     /**

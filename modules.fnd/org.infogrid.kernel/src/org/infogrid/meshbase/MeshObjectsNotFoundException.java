@@ -16,10 +16,8 @@ package org.infogrid.meshbase;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-
 import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.ResourceHelper;
-
 import java.text.MessageFormat;
 
 /**
@@ -102,6 +100,7 @@ public class MeshObjectsNotFoundException
         }
         return message;
     }
+
 
     /**
      * Obtain resource parameters for the internationalization.

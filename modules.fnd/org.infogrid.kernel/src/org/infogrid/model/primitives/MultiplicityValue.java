@@ -149,9 +149,9 @@ public final class MultiplicityValue
     public String toString()
     {
         StringBuilder buf = new StringBuilder();
-        buf.append( ( minimum == N ) ? "*" : String.valueOf( minimum ) );
+        buf.append( ( minimum == N ) ? N_SYMBOL : String.valueOf( minimum ) );
         buf.append( ".." );
-        buf.append( ( maximum == N ) ? "*" : String.valueOf( maximum ) );
+        buf.append( ( maximum == N ) ? N_SYMBOL : String.valueOf( maximum ) );
         return buf.toString();
     }
 
@@ -226,8 +226,8 @@ public final class MultiplicityValue
         return rep.formatEntry(
                 getClass(),
                 DEFAULT_ENTRY,
-                ( minimum == N ) ? "*" : String.valueOf( minimum ),
-                ( maximum == N ) ? "*" : String.valueOf( maximum )) ;
+                ( minimum == N ) ? N_SYMBOL : String.valueOf( minimum ),
+                ( maximum == N ) ? N_SYMBOL : String.valueOf( maximum )) ;
     }
 
     /**
@@ -239,4 +239,11 @@ public final class MultiplicityValue
       * The value for the maximum.
       */
     protected int maximum;
+    
+    /**
+     * Symbol to use when displaying N.
+     */
+    public static final String N_SYMBOL = ResourceHelper.getInstance( MultiplicityValue.class ).getResourceStringOrDefault( 
+            "NSymbol",
+            "*" );
 }

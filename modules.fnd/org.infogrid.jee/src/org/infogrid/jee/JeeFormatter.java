@@ -1018,12 +1018,20 @@ public class JeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
+        String        sep = "";
         StringBuilder buf = new StringBuilder();
         for( Throwable current : reportedProblems ) {
             Throwable toFormat = determineThrowableToFormat( current );
             
             String temp = rep.formatThrowable( toFormat, context );
+            if(    buf.length() > 0
+                && temp.charAt( 0 ) != '\n'
+                && buf.charAt( buf.length()-1 ) != '\n' )
+            {
+                buf.append( sep );
+            }
             buf.append( temp );
+            sep = "\n";
         }
         return buf.toString();        
     }

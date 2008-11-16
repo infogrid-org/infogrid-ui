@@ -28,6 +28,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.jee.security.FormTokenService;
+import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.jee.security.store.StoreFormTokenService;
 import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.templates.StructuredResponse;
@@ -191,6 +193,12 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
             } else {
                 throw new ServletException( t );
             }
+        }
+        
+        // want some kind of FormTokenService even if initialization failed
+        if( appContext.findContextObject( FormTokenService.class ) == null ) {
+            MFormTokenService formTokenService = MFormTokenService.create();
+            appContext.addContextObject( formTokenService );
         }
     }
 

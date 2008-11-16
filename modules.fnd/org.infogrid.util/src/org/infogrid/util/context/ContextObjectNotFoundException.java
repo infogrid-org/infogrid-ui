@@ -14,12 +14,14 @@
 
 package org.infogrid.util.context;
 
+import org.infogrid.util.AbstractLocalizedRuntimeException;
+
 /**
  * Thrown if a Context could not find an object that it was asked for.
  */
 public class ContextObjectNotFoundException
         extends
-            RuntimeException
+            AbstractLocalizedRuntimeException
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -46,6 +48,16 @@ public class ContextObjectNotFoundException
         return theClassOfContextObject;
     }
     
+    /**
+     * Obtain resource parameters for the internationalization.
+     *
+     * @return the resource parameters
+     */    
+    public Object [] getLocalizationParameters()
+    {
+        return new Object[] { getClassOfContextObject() };
+    }
+
     /**
      * The class that was specified to find the context object.
      */

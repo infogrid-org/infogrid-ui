@@ -121,7 +121,35 @@ public abstract class AbstractLocalizedRuntimeException
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
-        return getLocalizedMessage();
+        Throwable cause     = getCause();
+        Throwable rootCause = cause;
+
+        if( rootCause != null ) {
+            while( true ) {
+                Throwable t = rootCause.getCause();
+                if( t == null ) {
+                    break;
+                }
+                rootCause = t;
+            }
+        }
+        
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
+                STRING_REPRESENTATION_KEY,
+                getMessage(),
+                getLocalizedMessage(),
+                getStackTrace(),
+                cause,
+                cause != null ? cause.getMessage() : null,
+                cause != null ? cause.getLocalizedMessage() : null,
+                cause != null ? cause.getStackTrace() : null,
+                rootCause,
+                rootCause != null ? rootCause.getMessage() : null,
+                rootCause != null ? rootCause.getLocalizedMessage() : null,
+                rootCause != null ? rootCause.getStackTrace() : null );
+
+        return ret;
     }
 
     /**

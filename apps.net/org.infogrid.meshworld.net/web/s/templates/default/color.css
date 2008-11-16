@@ -37,7 +37,6 @@ div.errors {
 }
 div.errors > h2 {
     color: red;
-    margin: 0;
 }
 
 div.viewlet {

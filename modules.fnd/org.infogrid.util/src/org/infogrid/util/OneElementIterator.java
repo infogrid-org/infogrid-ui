@@ -21,7 +21,7 @@ import java.util.Iterator;
  * A very simple Iterator that returns only one element and then stops.
  * It is surprising how often this is useful.
  * 
- * @param T the type of element to iterate over
+ * @param <T> the type of element to iterate over
  */
 public class OneElementIterator<T>
     implements
@@ -33,6 +33,7 @@ public class OneElementIterator<T>
      *
      * @param onlyObject the one Object that we iterate over.
      * @return the created OneElementIterator
+     * @param <T> the type of element to iterate over
      */
     public static <T> OneElementIterator<T> create(
             T onlyObject )

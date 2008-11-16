@@ -26,6 +26,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.jee.security.FormTokenService;
+import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.jee.security.store.StoreFormTokenService;
 import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.templates.StructuredResponse;
@@ -40,8 +42,8 @@ import org.infogrid.meshbase.store.IterableStoreMeshBase;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.store.IterableStore;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.context.ContextObjectNotFoundException;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -78,20 +80,40 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
             IOException,
             ServletException
     {
+        Context appContext = InfoGridWebApp.getSingleton().getApplicationContext();
+
         synchronized( AbstractStoreRestfulAppInitializationFilter.class ) {
             if( !isInitialized ) {
-                initialize( request, response );
-                isInitialized = true;
+                try {
+                    initialize( request, response );
+                } catch( Throwable t ) {
+                    StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+                    if( structured != null ) {
+                        structured.reportProblem( t );
+                    } else {
+                        throw new ServletException( t );
+                    }
+                    // Fix whatever we can if something went wrong
+                    // want some kind of FormTokenService even if initialization failed
+                    if( appContext.findContextObject( FormTokenService.class ) == null ) {
+                        MFormTokenService formTokenService = MFormTokenService.create();
+                        appContext.addContextObject( formTokenService );
+                    }
+                } finally {
+                    isInitialized = true;
+                }
             }
         }
+        
         StringRepresentationContext stringRepContext
                 = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
         MeshBase mb
-                = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( MeshBase.class );
-        
+                = appContext.findContextObject( MeshBase.class );
+
         if( stringRepContext != null && mb != null ) {
             stringRepContext.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb );
         }
+
         chain.doFilter( request, response );
     }
 
@@ -101,13 +123,13 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
      * 
      * @param request The servlet request we are processing
      * @param response The servlet response we are creating
-     * @throws ServletException something bad happened that cannot be fixed by re-invoking this method
+     * @throws Throwable something bad happened that cannot be fixed by re-invoking this method
      */
     protected void initialize(
             ServletRequest  request,
             ServletResponse response )
         throws
-            ServletException
+            Throwable
     {
         HttpServletRequest realRequest = (HttpServletRequest) request;
         SaneRequest        saneRequest = SaneServletRequest.create( realRequest );
@@ -115,62 +137,50 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         InfoGridWebApp app        = InfoGridWebApp.getSingleton();
         Context        appContext = app.getApplicationContext();
         
-        ResourceHelper theResourceHelper = ResourceHelper.getInstance( getClass() );
+        initializeDataSources();
+
+        theMeshStore.initializeIfNecessary();
+        theFormTokenStore.initializeIfNecessary();
+
+        // ModelBase
+        ModelBase modelBase = ModelBaseSingleton.getSingleton();
+        appContext.addContextObject( modelBase );
+
+        // MeshBaseIdentifierFactory
+        MeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
+        appContext.addContextObject( meshBaseIdentifierFactory );
+
+        if( theDefaultMeshBaseIdentifier == null ) {
+            theDefaultMeshBaseIdentifier = saneRequest.getAbsoluteBaseUri();
+        }
+
+        // Only one MeshBase
+        MeshBaseIdentifier mbId;
         try {
-            initializeDataSources();
+            mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
 
-            theMeshStore.initializeIfNecessary();
-            theFormTokenStore.initializeIfNecessary();
+        } catch( URISyntaxException ex ) {
+            throw new RuntimeException( ex );
+        }
 
-            // ModelBase
-            ModelBase modelBase = ModelBaseSingleton.getSingleton();
-            appContext.addContextObject( modelBase );
+        // AccessManager
+        AccessManager accessMgr = null;
 
-            // MeshBaseIdentifierFactory
-            MeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
-            appContext.addContextObject( meshBaseIdentifierFactory );
+        IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, appContext );
+        appContext.addContextObject( meshBase );
 
-            if( theDefaultMeshBaseIdentifier == null ) {
-                theDefaultMeshBaseIdentifier = saneRequest.getAbsoluteBaseUri();
-            }
-            
-            // Only one MeshBase
-            MeshBaseIdentifier mbId;
-            try {
-                mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
+        // Name Server
+        MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
+        nameServer.put( mbId, meshBase );
+        appContext.addContextObject( nameServer );
 
-            } catch( URISyntaxException ex ) {
-                throw new RuntimeException( ex );
-            }
-
-            // AccessManager
-            AccessManager accessMgr = null;
-
-            IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, appContext );
-            appContext.addContextObject( meshBase );
-
-            // Name Server
-            MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
-            nameServer.put( mbId, meshBase );
-            appContext.addContextObject( nameServer );
-
-            // FormTokenService
-            StoreFormTokenService formTokenService = StoreFormTokenService.create( theFormTokenStore );
-            appContext.addContextObject( formTokenService );
+        // FormTokenService
+        StoreFormTokenService formTokenService = StoreFormTokenService.create( theFormTokenStore );
+        appContext.addContextObject( formTokenService );
 
 //        // ViewletFactory and utils
-            
-            initializeContextObjects( appContext );
 
-        } catch( Throwable t ) {
-
-            StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-            if( structured != null ) {
-                structured.reportProblem( t );
-            } else {
-                throw new ServletException( t );
-            }
-        }
+        initializeContextObjects( appContext );
     }
 
     /**
