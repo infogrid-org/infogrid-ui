@@ -49,6 +49,7 @@ import org.infogrid.store.IterableStore;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationContext;
 
 /**
@@ -58,6 +59,8 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
         implements
             Filter
 {
+    private static final Log log = Log.getLogInstance( AbstractStoreNetRestfulAppInitializationFilter.class  ); // our own, private logger
+
     /**
      * Constructor.
      */
@@ -84,23 +87,46 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
             IOException,
             ServletException
     {
+        Context appContext = InfoGridWebApp.getSingleton().getApplicationContext();
+
         synchronized( AbstractStoreNetRestfulAppInitializationFilter.class ) {
             if( !isInitialized ) {
-                initialize( request, response );
-                isInitialized = true;
+                try {
+                    initialize( request, response );
+
+                } catch( Throwable t ) {
+                    log.error( t );
+
+                    StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+                    if( structured != null ) {
+                        structured.reportProblem( t );
+                    } else {
+                        throw new ServletException( t );
+                    }
+                    // Fix whatever we can if something went wrong
+                    // want some kind of FormTokenService even if initialization failed
+                    if( appContext.findContextObject( FormTokenService.class ) == null ) {
+                        MFormTokenService formTokenService = MFormTokenService.create();
+                        appContext.addContextObject( formTokenService );
+                    }
+                } finally {
+                    isInitialized = true;
+                }
             }
         }
+
+        
         StringRepresentationContext stringRepContext
                 = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
         MeshBase mb
-                = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( MeshBase.class );
-        
+                = appContext.findContextObject( MeshBase.class );
+
         if( stringRepContext != null && mb != null ) {
             stringRepContext.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb );
         }
+
         chain.doFilter( request, response );
     }
-
 
     /**
      * <p>Perform initialization.</p>
@@ -172,6 +198,7 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
                     exec,
                     true,
                     appContext );
+            initializeMeshBase( meshBase );
             appContext.addContextObject( meshBase );
 
             MeshBaseNameServer nameServer = meshBase.getLocalNameServer();
@@ -226,6 +253,17 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
     protected abstract void initializeDataSources()
             throws
                 NamingException;
+
+    /**
+     * Initialize the initial content of the MeshBase.
+     * 
+     * @param mb the MeshBase to initialize
+     */
+    protected void initializeMeshBase(
+            MeshBase mb )
+    {
+        // nothing on this level
+    }
 
     /**
      * Initialize context objects.

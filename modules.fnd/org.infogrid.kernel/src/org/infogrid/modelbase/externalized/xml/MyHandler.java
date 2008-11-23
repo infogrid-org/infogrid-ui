@@ -82,6 +82,7 @@ import org.infogrid.modelbase.externalized.ExternalizedSubjectAreaDependency;
 import org.infogrid.modelbase.externalized.ExternalizedTraversalSpecification;
 import org.infogrid.modelbase.externalized.ExternalizedTraversalToPropertySpecification;
 import org.infogrid.module.ModuleRequirement;
+import org.infogrid.util.Base64;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -1176,7 +1177,36 @@ public class MyHandler
         DataType      type = pt.getDataType();
 
         if( type instanceof BlobDataType ) {
-            ret = BlobValue.create( raw );
+            String STRING_TAG = "string:";
+            String MIME_TAG   = "mime:";
+            String LOADER_TAG = "loader:";
+            String BYTES_TAG  = "bytes:";
+            
+            if( raw.startsWith( STRING_TAG )) {
+                ret = BlobValue.create( raw.substring( STRING_TAG.length() ));
+
+            } else if( raw.startsWith( MIME_TAG )) {
+                String raw2  = raw.substring( MIME_TAG.length() );
+                int    blank = raw2.indexOf( ' ' );
+
+                if( raw2.regionMatches( blank+1, LOADER_TAG, 0, LOADER_TAG.length() )) {
+                    ret = BlobValue.createByLoadingFrom(
+                            getClass().getClassLoader(),
+                            raw2.substring( blank+1+LOADER_TAG.length() ),
+                            raw2.substring( 0, blank ));
+
+                } else if( raw2.regionMatches( blank+1, BYTES_TAG, 0, BYTES_TAG.length() )) {
+                    byte [] bytes = Base64.base64decode( raw2.substring( blank+1+BYTES_TAG.length() ));
+                    ret = BlobValue.create(
+                            bytes,
+                            raw2.substring( 0, blank ));
+
+                } else {
+                    ret = BlobValue.create( raw );
+                }
+            } else {
+                ret = BlobValue.create( raw );
+            }
 
         } else if( type instanceof BooleanDataType ) {
             char firstChar = raw.charAt( 0 );

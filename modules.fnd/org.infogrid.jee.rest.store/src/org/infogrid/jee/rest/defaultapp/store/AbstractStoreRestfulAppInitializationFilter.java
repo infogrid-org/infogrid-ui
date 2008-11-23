@@ -43,8 +43,8 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.store.IterableStore;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.context.ContextObjectNotFoundException;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationContext;
 
 /**
@@ -54,6 +54,8 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         implements
             Filter
 {
+    private static final Log log = Log.getLogInstance( AbstractStoreRestfulAppInitializationFilter.class ); // our own, private logger
+
     /**
      * Constructor.
      */
@@ -87,6 +89,9 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
                 try {
                     initialize( request, response );
                 } catch( Throwable t ) {
+
+                    log.error( t );
+
                     StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
                     if( structured != null ) {
                         structured.reportProblem( t );
@@ -167,6 +172,7 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         AccessManager accessMgr = null;
 
         IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, appContext );
+        initializeMeshBase( meshBase );
         appContext.addContextObject( meshBase );
 
         // Name Server
@@ -207,6 +213,17 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
     protected abstract void initializeDataSources()
             throws
                 NamingException;
+
+    /**
+     * Initialize the initial content of the MeshBase.
+     * 
+     * @param mb the MeshBase to initialize
+     */
+    protected void initializeMeshBase(
+            MeshBase mb )
+    {
+        // nothing on this level
+    }
 
     /**
      * Initialize context objects.

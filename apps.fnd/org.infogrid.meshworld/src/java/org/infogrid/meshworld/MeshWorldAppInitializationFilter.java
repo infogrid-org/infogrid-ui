@@ -61,7 +61,6 @@ public class MeshWorldAppInitializationFilter
             theMeshStore      = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "MeshObjectTable", "MeshObjects" ));
             theFormTokenStore = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "FormTokenTable",  "FormTokens"  ));
 
-
         } catch( NamingException ex ) {
             throw new NamingReportingException( name, ctx, ex );
         }

@@ -345,7 +345,7 @@ public class ImplementationGenerator
                 propTypesString.append( ",\n" );
                 
                 propValuesString.append( "                    " + defaultValue.getJavaConstructorString(
-                        "getClass().getClassLoader()",
+                        getClassPrefix() + theMeshTypeName + ".class.getClassLoader()",
                         propertyTypeName.toUpperCase() + "_type" ) );
                 propValuesString.append( ",\n" );
             }

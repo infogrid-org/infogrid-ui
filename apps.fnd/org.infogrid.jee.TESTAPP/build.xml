@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This file is part of InfoGrid(tm). You may not use this file except in
+    compliance with the InfoGrid license. The InfoGrid license and important
+    disclaimers are contained in the file LICENSE.InfoGrid.txt that you should
+    have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
+    or you do not consent to all aspects of the license and the disclaimers,
+    no license is granted; do not use this file.
+ 
+    For more information about InfoGrid go to http://infogrid.org/
+
+    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    All rights reserved.
+-->
+
+<project name="org.infogrid.jee.TESTAPP" default="default" basedir=".">
+    <description>Builds, tests, and runs the project org.infogrid.jee.TESTAPP.</description>
+    <import file="../../tools/infogrid-ant-library.xml"/>
+    <import file="nbproject/build-impl.xml"/>
+
+    <target name="-pre-compile" depends="-module-setup"/>
+
+    <!-- take out all the dependencies for the debug & run targets, so no automatic recompile etc.  -->
+    <target depends="init" description="Debug project in IDE." if="netbeans.home" name="debug">
+        <nbdeploy clientUrlPart="${client.urlPart}" debugmode="true"/>
+        <antcall target="connect-debugger"/>
+        <antcall target="debug-display-browser"/>
+        <antcall target="connect-client-debugger"/>
+    </target>
+    <target name="run-deploy" depends="init,-pre-run-deploy,-pre-nbmodule-run-deploy,-run-deploy-nb,-init-deploy-ant,-deploy-ant,-run-deploy-am,-post-nbmodule-run-deploy,-post-run-deploy"/>
+
+    <property file="production.properties"/>
+
+    <target name="production-deploy" description="Install WAR on production server" depends="-init-project">
+      <taskdef name="deploy"    classname="org.apache.catalina.ant.DeployTask"/>
+      <echo message="Deploying file ${dist.war}"/>
+      <deploy url="${production.manager.url}" path="/" war="${dist.war}" username="${production.secrets.username}" password="${production.secrets.password}" />
+    </target>
+
+    <target name="production-undeploy" description="Uninstall WAR on production server" depends="-init-project">
+      <taskdef name="undeploy"    classname="org.apache.catalina.ant.UndeployTask"/>
+      <echo message="Undeploying"/>
+      <undeploy url="${production.manager.url}" path="/" username="${production.secrets.username}" password="${production.secrets.password}" />
+    </target>
+
+    <target name="production-redeploy" description="Uninstall and re-install WAR on production server" depends="production-undeploy,production-deploy"/>
+</project>

@@ -69,5 +69,24 @@ Multiple instances of this object can reference the actual file content
       <supertype>org.infogrid.model.Common#DefinitionObject</supertype>
       <issignificant/>
     </entitytype>
+    
+    <entitytype ID="org.infogrid.model.Blob#Image">
+      <name>Image</name>
+      <username>Image</username>
+      <userdescription>An image in a format such as PNG.</userdescription>
+      <supertype>org.infogrid.model.Common#DefinitionObject</supertype>
+      <issignificant/>
+
+      <propertytype ID="org.infogrid.model.Blob#Image/Content">
+        <name>Content</name>
+        <username>Content</username>
+        <userdescription>The content of the Image</userdescription>
+        <datatype>
+          <BlobDataType/>
+        </datatype>
+        <defaultvalue>mime:image/png loader:org/infogrid/model/primitives/BlobDefaultValue.png</defaultvalue>
+        <sequencenumber>1.0</sequencenumber>
+      </propertytype>
+    </entitytype>
   </subjectarea>
 </model>

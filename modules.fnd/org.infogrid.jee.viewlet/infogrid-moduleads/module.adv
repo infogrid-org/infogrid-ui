@@ -23,6 +23,7 @@
  <dependencies>
   <requires name="org.infogrid.jee.rest"/>
   <requires name="org.infogrid.jee.templates"/>
+  <requires name="org.infogrid.model.Blob"/>
   <requires name="org.infogrid.viewlet"/>
   <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.util"/>
