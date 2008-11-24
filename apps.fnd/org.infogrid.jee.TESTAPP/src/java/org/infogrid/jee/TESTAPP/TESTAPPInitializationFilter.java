@@ -14,9 +14,12 @@
 
 package org.infogrid.jee.TESTAPP;
 
+import java.net.URISyntaxException;
 import org.infogrid.jee.rest.defaultapp.store.AbstractStoreRestfulAppInitializationFilter;
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.meshbase.MeshBase;
@@ -71,10 +74,17 @@ public class TESTAPPInitializationFilter
         try {
             tx = mb.createTransactionNow();
             
-            MeshObject image = life.createMeshObject( BlobSubjectArea.IMAGE );
+            MeshObjectIdentifier id = mb.getMeshObjectIdentifierFactory().fromExternalForm( "image" ); // testing is easier with well-known object
+            MeshObject image = life.createMeshObject(
+                    id,
+                    BlobSubjectArea.IMAGE );
             
             mb.getHomeObject().relate( image );
             
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+        } catch( MeshObjectIdentifierNotUniqueException ex ) {
+            log.error( ex );
         } catch( IsAbstractException ex ) {
             log.error( ex );
         } catch( RelatedAlreadyException ex ) {

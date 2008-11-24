@@ -125,6 +125,10 @@ public class DefaultStructuredResponseTemplateFactory
             if( dispatcher != null ) {
                 ret = JspStructuredResponseTemplate.create( dispatcher, request, requestedTemplateName, userRequestedTemplateName, structured );
 
+            } else if( mime != null && !mime.startsWith( "text/" )) {
+                // binary content
+                ret = BinaryPassThruStructuredResponseTemplate.create( request, structured );
+                
             } else {
                 // all hope is lost, we have to stream verbatim whatever it is that is in structured
                 ret = VerbatimStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured );
