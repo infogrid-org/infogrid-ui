@@ -16,4 +16,4 @@
 # Build all of InfoGrid with the default build properties file.
 #
 
-tools/build.sh -a -antflags -Dbuild-properties=../../config/default.properties
+tools/build.sh -antflags -Dbuild-properties=../../config/default.properties $*
