@@ -13,8 +13,8 @@
     All rights reserved.
 -->
 
-<project name="org.infogrid.jee.net.TESTAPP" default="default" basedir=".">
-    <description>Builds, tests, and runs the project org.infogrid.jee.net.TESTAPP.</description>
+<project name="org.infogrid.jee.net.testapp" default="default" basedir=".">
+    <description>Builds, tests, and runs the project org.infogrid.jee.net.testapp.</description>
     <import file="../../tools/infogrid-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
 

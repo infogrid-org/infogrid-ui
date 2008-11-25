@@ -15,8 +15,8 @@
 
 <standardmodule>
  <name>org.infogrid.jee.net.TEST</name>
- <username>org.infogrid.jee.net.TESTAPP test program</username>
- <userdescription>Testing the InfoGrid TESTAPP</userdescription>
+ <username>org.infogrid.jee.net.testapp test program</username>
+ <userdescription>Testing the InfoGrid testapp</userdescription>
  <runclass>org.infogrid.jee.net.TEST.AllTests</runclass>
  <dependencies>
   <requires name="org.infogrid.testharness.tomcat"/>

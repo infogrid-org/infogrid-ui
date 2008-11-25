@@ -13,4 +13,4 @@
     All rights reserved.
 -->
 
-<Context path="/org.infogrid.jee.net.TESTAPP" cookies="false" />
+<Context path="/org.infogrid.jee.net.testapp" cookies="false" />

@@ -14,10 +14,10 @@
 -->
 
 <standardmodule>
- <name>org.infogrid.jee.TESTAPP</name>
+ <name>org.infogrid.jee.testapp</name>
  <userdescription>Test application.</userdescription>
  <provides>
-  <jar>org.infogrid.jee.TESTAPP.war</jar>
+  <jar>org.infogrid.jee.testapp.war</jar>
  </provides>
  <dependencies>
   <requires name="org.infogrid.util.logging.log4j"/>

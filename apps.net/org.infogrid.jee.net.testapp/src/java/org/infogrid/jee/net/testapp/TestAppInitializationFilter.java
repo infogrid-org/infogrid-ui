@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.net.TESTAPP;
+package org.infogrid.jee.net.testapp;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -66,16 +66,16 @@ import org.infogrid.viewlet.ViewletFactory;
 /**
  * Initializes application-level functionality
  */
-public class TESTAPPInitializationFilter
+public class TestAppInitializationFilter
         implements
             Filter
 {
-    private Log log = Log.getLogInstance( TESTAPPInitializationFilter.class );
+    private Log log = Log.getLogInstance( TestAppInitializationFilter.class );
     
     /**
      * Constructor for subclasses only, use factory method.
      */
-    public TESTAPPInitializationFilter()
+    public TestAppInitializationFilter()
     {
         // nothing right now
     }
@@ -98,7 +98,7 @@ public class TESTAPPInitializationFilter
             IOException,
             ServletException
     {
-        synchronized( TESTAPPInitializationFilter.class ) {
+        synchronized( TestAppInitializationFilter.class ) {
             if( !isInitialized ) {
                 initialize( request, response );
                 isInitialized = true;
@@ -185,7 +185,7 @@ public class TESTAPPInitializationFilter
             appContext.addContextObject( formTokenService );
 
             // ViewletFactory and utils
-            ViewletFactory vlFact = new TESTAPPViewletFactory();
+            ViewletFactory vlFact = new TestAppViewletFactory();
             appContext.addContextObject( vlFact );
 
             NetRestfulJeeFormatter formatter = NetRestfulJeeFormatter.create();

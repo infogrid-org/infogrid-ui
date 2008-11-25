@@ -15,14 +15,14 @@
 <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
- <display-name>org.infogrid.jee.TESTAPP</display-name>
+ <display-name>org.infogrid.jee.testapp</display-name>
 
  <filter>
   <filter-name>DefaultInitializationFilter</filter-name>
   <filter-class>org.infogrid.jee.rest.defaultapp.DefaultRestfulInitializationFilter</filter-class>
   <init-param>
    <param-name>ROOTMODULE</param-name>
-   <param-value>org.infogrid.jee.TESTAPP</param-value>
+   <param-value>org.infogrid.jee.testapp</param-value>
   </init-param>
  </filter>
 
@@ -33,7 +33,7 @@
 
  <filter>
   <filter-name>ApplicationInitializationFilter</filter-name>
-  <filter-class>org.infogrid.jee.TESTAPP.TESTAPPInitializationFilter</filter-class>
+  <filter-class>org.infogrid.jee.testapp.TestAppInitializationFilter</filter-class>
  </filter>
 
  <filter>

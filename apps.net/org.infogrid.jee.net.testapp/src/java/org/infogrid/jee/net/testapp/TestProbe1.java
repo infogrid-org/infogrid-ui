@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.net.TESTAPP;
+package org.infogrid.jee.net.testapp;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

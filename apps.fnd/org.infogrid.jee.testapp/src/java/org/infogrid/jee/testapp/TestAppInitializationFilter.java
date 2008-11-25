@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.TESTAPP;
+package org.infogrid.jee.testapp;
 
 import java.net.URISyntaxException;
 import org.infogrid.jee.rest.defaultapp.store.AbstractStoreRestfulAppInitializationFilter;
@@ -35,16 +35,16 @@ import org.infogrid.viewlet.ViewletFactory;
 /**
  * Initializes application-level functionality.
  */
-public class TESTAPPInitializationFilter
+public class TestAppInitializationFilter
         extends
             AbstractStoreRestfulAppInitializationFilter
 {
-    private static final Log log = Log.getLogInstance( TESTAPPInitializationFilter.class ); // our own, private logger
+    private static final Log log = Log.getLogInstance( TestAppInitializationFilter.class ); // our own, private logger
 
     /**
      * Constructor.
      */
-    public TESTAPPInitializationFilter()
+    public TestAppInitializationFilter()
     {
         // nothing
     }
@@ -108,7 +108,7 @@ public class TESTAPPInitializationFilter
     protected void initializeContextObjects(
             Context context )
     {
-        ViewletFactory vlFact = new TESTAPPViewletFactory();
+        ViewletFactory vlFact = new TestAppViewletFactory();
         context.addContextObject( vlFact );
     }
 }

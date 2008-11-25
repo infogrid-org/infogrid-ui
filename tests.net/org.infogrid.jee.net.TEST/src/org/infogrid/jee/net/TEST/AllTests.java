@@ -43,7 +43,7 @@ public class AllTests
         throws
             Exception
     {
-        ModuleRequirement toTest = ModuleRequirement.create1( "org.infogrid.jee.net.TESTAPP" );
+        ModuleRequirement toTest = ModuleRequirement.create1( "org.infogrid.jee.net.testapp" );
         TomcatProxy       tomcat = TomcatProxyConfiguredByProperties.create(
                 new File( AbstractTest.fileSystemFileName( AllTests.class, "tomcat.properties" ))) ;
 

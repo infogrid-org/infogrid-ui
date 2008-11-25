@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.TESTAPP;
+package org.infogrid.jee.testapp;
 
 import java.util.ArrayList;
 import org.infogrid.jee.viewlet.PseudoJspViewletFactoryChoice;
@@ -27,16 +27,16 @@ import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
- * ViewletFactory for the TESTAPP application.
+ * ViewletFactory for the TestApp application.
  */
-public class TESTAPPViewletFactory
+public class TestAppViewletFactory
         extends
             AbstractViewletFactory
 {
     /**
      * Constructor.
      */
-    public TESTAPPViewletFactory()
+    public TestAppViewletFactory()
     {
         super( "org.infogrid.jee.viewlet.JeeViewlet" );
     }
