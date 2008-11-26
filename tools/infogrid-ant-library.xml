@@ -270,7 +270,7 @@
               section="misc"
               postinst="../../tools/debian/postinst"
               prerm="../../tools/debian/prerm"
-              depends="sun-java5-jre | sun-java6-jre tomcat5.5">
+              depends="sun-java5-jre | sun-java6-jre, tomcat5.5">
         <version upstream="2.0.0-${touch.time}"/>
         <maintainer name="InfoGrid Build Master" email="buildmaster@infogrid.org"/>
         <description synopsis="InfoGrid module ${ant.project.name}">
