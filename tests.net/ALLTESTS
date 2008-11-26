@@ -1,6 +1,6 @@
 org.infogrid.kernel.net.TEST.mesh.externalized
 org.infogrid.kernel.net.TEST.urls
-org.infogrid.jee.net.TEST
+org.infogrid.jee.net.TEST [norun]
 org.infogrid.kernel.net.TEST.xpriso
 org.infogrid.meshbase.store.net.TEST
 org.infogrid.probe.TEST
