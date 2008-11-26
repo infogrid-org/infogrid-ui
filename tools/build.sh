@@ -107,7 +107,7 @@ if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
 	echo "        -v: verbose output"
 	echo "        -h: this help"
 	echo "        -n: do not execute, only print"
-	echo "        -a: complete rebuild, equivalent to -clean -build -doc -run modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net dist.fnd dist.net"
+	echo "        -a: complete rebuild, equivalent to -clean -build -doc -run modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net dist.fnd dist.net debian.fnd debian.net"
 	echo "        -clean: remove old build artifacts"
 	echo "        -build: build"
 	echo "        -doc: document"
