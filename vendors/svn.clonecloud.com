@@ -1,1 +1,1 @@
-../../../../svn.clonecloud.com/public/trunk/
+link ../../../../svn.clonecloud.com/public/trunk

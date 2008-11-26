@@ -250,4 +250,36 @@
 	<property file="${build-properties}"/>
     </target>
 
+<!-- Debian target -->
+
+    <path id="ant-deb.classpath">
+        <pathelement location="../../vendors/code.google.com/p/ant-deb-task/ant-deb.jar"/>
+    </path>
+
+    <taskdef name="debian-package" classname="com.googlecode.ant_deb_task.Deb" classpathref="ant-deb.classpath"/>
+
+    <target name="debian-package-war">
+      <mkdir dir="dist"/>
+      <tstamp>
+        <format property="touch.time" pattern="yyyyMMdd'Z'hhmmss" timezone="UTC"/>
+      </tstamp>
+
+      <debian-package
+              package="${ant.project.name}"
+              todir="dist"
+              section="misc"
+              postinst="../../tools/debian/postinst"
+              prerm="../../tools/debian/prerm"
+              depends="sun-java5-jre | sun-java6-jre tomcat5.5">
+        <version upstream="2.0.0-${touch.time}"/>
+        <maintainer name="InfoGrid Build Master" email="buildmaster@infogrid.org"/>
+        <description synopsis="InfoGrid module ${ant.project.name}">
+For documentation, please refer to InfoGrid.org.
+        </description>
+        <tarfileset prefix="var/lib/tomcat5.5/webapps/${ant.project.name}" dir="dist">
+          <include name="${ant.project.name}.war"/>
+        </tarfileset>
+      </debian-package>
+    </target>
+
 </project>
