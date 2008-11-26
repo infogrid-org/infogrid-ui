@@ -23,6 +23,10 @@ if [ ! -d modules.fnd ]; then
 	exit 1;
 fi;
 
+# Use the ant in SVN
+export ANT_HOME=vendors/ant.apache.org/apache-ant
+export PATH=$ANT_HOME/bin:$PATH
+
 CLEANFLAGS=-Dno.deps=1;
 BUILDFLAGS=-Dno.deps=1;
 DOCFLAGS=;
