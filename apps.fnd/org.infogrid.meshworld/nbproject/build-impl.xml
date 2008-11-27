@@ -375,6 +375,7 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_model_Common}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Viewlet}/build.xml" inheritall="false" target="jar"/>
@@ -402,6 +403,7 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_model_Common}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Viewlet}/build.xml" inheritall="false" target="jar"/>
@@ -566,6 +568,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_kernel.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_kernel.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.org_infogrid_meshbase_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_meshbase_store.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.org_infogrid_model_Blob.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Blob.jar" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_Common.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Common.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.org_infogrid_model_Test.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Test.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.org_infogrid_model_Viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Viewlet.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.org_infogrid_model_Wiki.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Wiki.jar" todir="${dist.ear.dir}"/>
@@ -584,7 +587,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.JSTL.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.JSTL.classpath" todir="${dist.ear.dir}"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.reference.org_infogrid_jee.jar} ${manifest.reference.org_infogrid_jee_rest.jar} ${manifest.reference.org_infogrid_jee_rest_store.jar} ${manifest.reference.org_infogrid_jee_shell_http.jar} ${manifest.reference.org_infogrid_jee_store.jar} ${manifest.reference.org_infogrid_jee_templates.jar} ${manifest.reference.org_infogrid_jee_viewlet.jar} ${manifest.reference.org_infogrid_jee_viewlet_bulk.jar} ${manifest.reference.org_infogrid_jee_viewlet_wikiobject.jar} ${manifest.reference.org_infogrid_kernel.jar} ${manifest.reference.org_infogrid_meshbase_store.jar} ${manifest.reference.org_infogrid_model_Blob.jar} ${manifest.reference.org_infogrid_model_Test.jar} ${manifest.reference.org_infogrid_model_Viewlet.jar} ${manifest.reference.org_infogrid_model_Wiki.jar} ${manifest.reference.org_infogrid_modelbase_m.jar} ${manifest.reference.org_infogrid_module.jar} ${manifest.reference.org_infogrid_module_servlet.jar} ${manifest.reference.org_infogrid_store.jar} ${manifest.reference.org_infogrid_store_sql.jar} ${manifest.reference.org_infogrid_store_sql_mysql.jar} ${manifest.reference.org_infogrid_vendors_com_mysql_jdbc.jar} ${manifest.reference.org_infogrid_viewlet.jar} ${manifest.reference.org_infogrid_util.jar} ${manifest.reference.org_infogrid_util_logging_log4j.jar} ${manifest.libs.Log4j.classpath} ${manifest.libs.J2EE.classpath} ${manifest.libs.JSTL.classpath} "/>
+            <attribute name="Class-Path" value="${manifest.reference.org_infogrid_jee.jar} ${manifest.reference.org_infogrid_jee_rest.jar} ${manifest.reference.org_infogrid_jee_rest_store.jar} ${manifest.reference.org_infogrid_jee_shell_http.jar} ${manifest.reference.org_infogrid_jee_store.jar} ${manifest.reference.org_infogrid_jee_templates.jar} ${manifest.reference.org_infogrid_jee_viewlet.jar} ${manifest.reference.org_infogrid_jee_viewlet_bulk.jar} ${manifest.reference.org_infogrid_jee_viewlet_wikiobject.jar} ${manifest.reference.org_infogrid_kernel.jar} ${manifest.reference.org_infogrid_meshbase_store.jar} ${manifest.reference.org_infogrid_model_Blob.jar} ${manifest.reference.org_infogrid_model_Common.jar} ${manifest.reference.org_infogrid_model_Test.jar} ${manifest.reference.org_infogrid_model_Viewlet.jar} ${manifest.reference.org_infogrid_model_Wiki.jar} ${manifest.reference.org_infogrid_modelbase_m.jar} ${manifest.reference.org_infogrid_module.jar} ${manifest.reference.org_infogrid_module_servlet.jar} ${manifest.reference.org_infogrid_store.jar} ${manifest.reference.org_infogrid_store_sql.jar} ${manifest.reference.org_infogrid_store_sql_mysql.jar} ${manifest.reference.org_infogrid_vendors_com_mysql_jdbc.jar} ${manifest.reference.org_infogrid_viewlet.jar} ${manifest.reference.org_infogrid_util.jar} ${manifest.reference.org_infogrid_util_logging_log4j.jar} ${manifest.libs.Log4j.classpath} ${manifest.libs.J2EE.classpath} ${manifest.libs.JSTL.classpath} "/>
         </manifest>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
@@ -600,6 +603,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_kernel.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_meshbase_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Blob.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.org_infogrid_model_Common.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Test.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Wiki.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -908,6 +912,7 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_model_Common}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Viewlet}/build.xml" inheritall="false" target="clean"/>
