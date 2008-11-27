@@ -161,13 +161,17 @@ public class ServletSoftwareInstallation
         String productName = "unknown";
         String productId   = "unknown";
 
-        try {
-            productName = System.getProperty( PRODUCT_NAME_PROPERTY );
-            productId   = System.getProperty( PRODUCT_ID_PROPERTY );
-            
-        } catch( AccessControlException ex ) {
-            ModuleErrorHandler.informThrowable( ex );
-        }
+        // This does not actually occur in a typical JEE environment. It also throws
+        // java.security.AccessControlException: access denied (java.util.PropertyPermission
+        // product.name read). So I'm commenting it out.
+//        try {
+//            productName = System.getProperty( PRODUCT_NAME_PROPERTY );
+//            productId   = System.getProperty( PRODUCT_ID_PROPERTY );
+//
+//        } catch( AccessControlException ex ) {
+//            ModuleErrorHandler.informThrowable( ex );
+//        }
+
         // determine platform
         platform = determinePlatform();
 

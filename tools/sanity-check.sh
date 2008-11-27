@@ -18,13 +18,13 @@
 
 FLAGS="-i";
 
-echo '** Checking that no funny paths exist **'
+echo '** Checking that no funny paths exist. **'
 grep ${FLAGS} '\.\./\.\./\.\.' {modules*,apps*,tests*}/*/nbproject/project.properties
 
-echo '** Checking that the Vendor is set right'
+echo '** Checking that the vendor is set right. **'
 grep ${FLAGS} application.vendor {modules*,apps*,tests*}/*/nbproject/project.properties | grep -v InfoGrid.org
 
 for pattern in "$@"; do
-	echo '** Checking that pattern' ${pattern} 'does not exist.'
+	echo '** Checking that pattern' ${pattern} 'does not exist. **'
 	find . -type f -and -not -path '*/.svn/*' -exec grep ${FLAGS} -H ${pattern} {} \;
 done
