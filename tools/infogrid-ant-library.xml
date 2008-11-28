@@ -290,7 +290,7 @@
       <debian-package
               package="${ant.project.name}"
               todir="dist"
-              section="misc"
+              section="web"
               postinst="dist/debian/postinst"
               prerm="dist/debian/prerm"
               postrm="dist/debian/postrm"
