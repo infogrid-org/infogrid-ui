@@ -13,25 +13,28 @@
 #
 # (end of header)
 #
-# prerm script for InfoGrid Debian package
-# This was inspired by the corresponding script in the tomcatXX-webapps module.
+# postrm script for InfoGrid Debian package
+# Cleanup Tomcat cache, Tomcat does not seem to do that itself
 
 set -e
 
 case "$1" in
     remove|deconfigure)
-        if [ -x /etc/init.d/tomcat5.5 ]; then
-            if invoke-rc.d tomcat5.5 status >/dev/null; then
-                invoke-rc.d tomcat5.5 stop || true
-            fi
+        if [ -d /var/cache/tomcat5.5/Catalina/localhost/@PACKAGE_NAME@/ ]; then
+            # For some reason, Tomcat does not seem to remove this itself
+            /bin/rm -rf /var/cache/tomcat5.5/Catalina/localhost/@PACKAGE_NAME@/
         fi
+        if [ -x /etc/init.d/tomcat5.5 ]; then
+            invoke-rc.d tomcat5.5 start || true
+        fi
+
     ;;
 
     upgrade|failed-upgrade)
     ;;
 
     *)
-        echo "prerm called with unknown argument \`$1'" >&2
+        echo "postrm called with unknown argument \`$1'" >&2
         exit 1
     ;;
 esac

@@ -1,0 +1,23 @@
+// This file is part of InfoGrid(tm). You may not use this file except in
+// compliance with the InfoGrid license. The InfoGrid license and important
+// disclaimers are contained in the file LICENSE.InfoGrid.txt that you should
+// have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
+// or you do not consent to all aspects of the license and the disclaimers,
+// no license is granted; do not use this file.
+//
+// For more information about InfoGrid go to http://infogrid.org/
+//
+// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// All rights reserved.
+//
+// (end of header)
+
+// Security policy for a debian-packaged InfoGrid application
+
+grant codeBase "file:${catalina.home}/bin/tomcat-juli.jar" {
+    permission java.io.FilePermission "/var/lib/tomcat5.5/webapps/@PACKAGE_NAME@/WEB-INF/classes/logging.properties", "read";
+};
+grant codeBase "file:/var/cache/tomcat5.5/Catalina/localhost/@PACKAGE_NAME@/-" {
+    permission java.net.SocketPermission "127.0.0.1", "resolve, connect";
+    permission java.security.AllPermission ;
+};
