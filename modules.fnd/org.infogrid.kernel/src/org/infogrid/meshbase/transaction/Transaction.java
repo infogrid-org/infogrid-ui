@@ -14,14 +14,12 @@
 
 package org.infogrid.meshbase.transaction;
 
-import org.infogrid.meshbase.MeshBase;
-import org.infogrid.util.StringHelper;
-
-import org.infogrid.util.logging.Log;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.util.FlexibleListenerSet;
+import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.Log;
 
 /**
   * <p>The concept of a Transaction in InfoGrid. This is an abstract class;
@@ -87,7 +85,15 @@ public abstract class Transaction
      */
     protected void preCommitHook()
     {
-        // no op on this leve
+        // no op on this level
+    }
+
+    /**
+      * Currently not implemented.
+      */
+    public void rollbackTransaction()
+    {
+        throw new UnsupportedOperationException();
     }
 
     /**

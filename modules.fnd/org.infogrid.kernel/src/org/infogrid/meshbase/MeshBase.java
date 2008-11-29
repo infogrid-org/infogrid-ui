@@ -14,6 +14,7 @@
 
 package org.infogrid.meshbase;
 
+import java.beans.PropertyChangeListener;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -31,7 +32,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.LiveDeadObject;
 import org.infogrid.util.QuitListener;
 import org.infogrid.util.context.ObjectInContext;
-import java.beans.PropertyChangeListener;
+import org.infogrid.meshbase.transaction.TransactionAction;
 import org.infogrid.util.text.HasStringRepresentation;
 
 /**
@@ -316,6 +317,32 @@ public interface MeshBase
     public abstract Transaction checkTransaction()
         throws
             TransactionException;
+
+    /**
+     * Perform this TransactionAction within an automatically generated Transaction
+     * immediately. Evaluate any thrown TransactionActionException, and retry if requested.
+     *
+     * @param act the TransactionAction
+     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @throws TransactionActiveAlreadyException a Transaction was active already
+     */
+    public abstract boolean executeNow(
+            TransactionAction act )
+        throws
+            TransactionActiveAlreadyException;
+
+    /**
+     * Perform this TransactionAction within an automatically generated Transaction
+     * as soon as possible. Evaluate any thrown TransactionActionException, and retry if requested.
+     *
+     * @param act the TransactionAction
+     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @throws TransactionAsapTimeoutException a Transaction timeout has occurred
+     */
+    public abstract boolean executeAsap(
+            TransactionAction act )
+        throws
+            TransactionAsapTimeoutException;
 
     /**
      * Clear the in-memory cache, if this MeshBase has one. This method only makes any sense

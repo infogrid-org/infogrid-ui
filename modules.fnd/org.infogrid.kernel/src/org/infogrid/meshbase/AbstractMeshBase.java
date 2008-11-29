@@ -33,6 +33,8 @@ import org.infogrid.meshbase.transaction.MeshObjectLifecycleEvent;
 import org.infogrid.meshbase.transaction.MeshObjectLifecycleListener;
 import org.infogrid.meshbase.transaction.NotWithinTransactionBoundariesException;
 import org.infogrid.meshbase.transaction.Transaction;
+import org.infogrid.meshbase.transaction.TransactionAction;
+import org.infogrid.meshbase.transaction.TransactionActionException;
 import org.infogrid.meshbase.transaction.TransactionActiveAlreadyException;
 import org.infogrid.meshbase.transaction.TransactionAsapTimeoutException;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -728,6 +730,78 @@ public abstract class AbstractMeshBase
         }
         theCurrentTransaction.checkThreadIsAllowed();
         return theCurrentTransaction;
+    }
+
+    /**
+     * Perform this TransactionAction within an automatically generated Transaction
+     * immediately. Evaluate any thrown TransactionActionException, and retry if requested.
+     *
+     * @param act the TransactionAction
+     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @throws TransactionActiveAlreadyException a Transaction was active already
+     */
+    public boolean executeNow(
+            TransactionAction act )
+        throws
+            TransactionActiveAlreadyException
+    {
+        Transaction tx = createTransactionNowIfNeeded();
+
+        boolean ret = executeTransactionAction( tx, act );
+        return ret;
+    }
+
+    /**
+     * Perform this TransactionAction within an automatically generated Transaction
+     * as soon as possible. Evaluate any thrown TransactionActionException, and retry if requested.
+     *
+     * @param act the TransactionAction
+     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @throws TransactionAsapTimeoutException a Transaction timeout has occurred
+     */
+    public boolean executeAsap(
+            TransactionAction act )
+        throws
+            TransactionAsapTimeoutException
+    {
+        Transaction tx = createTransactionAsapIfNeeded();
+
+        boolean ret = executeTransactionAction( tx, act );
+        return ret;
+    }
+
+    /**
+     * Helper method to execute a TransactionAction.
+     *
+     * @param tx the Transaction
+     * @param act the TransactionAction
+     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     */
+    protected boolean executeTransactionAction(
+            Transaction       tx,
+            TransactionAction act )
+    {
+        while( true ) {
+            try {
+                act.execute( tx );
+
+                tx.commitTransaction();
+                tx = null;
+
+                return true;
+
+            } catch( TransactionActionException.Rollback ex ) {
+                return false;
+
+            } catch( TransactionActionException.Retry ex ) {
+                // do nothing, stay in the loop
+
+            } finally {
+                if( tx != null ) {
+                    tx.rollbackTransaction();
+                }
+            }
+        }
     }
 
     /**
