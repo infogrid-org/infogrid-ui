@@ -649,20 +649,24 @@ public abstract class ModuleAdvertisement
             appendOpenTag( NAME_TAG, buf );
             buf.append( theModuleName );
             appendCloseTag( NAME_TAG, buf );
+            buf.append( '\n' );
         }
         if( theModuleVersion != null && theModuleVersion.length() > 0 ) {
             appendOpenTag( VERSION_TAG, buf );
             buf.append( theModuleVersion );
             appendCloseTag( VERSION_TAG, buf );
+            buf.append( '\n' );
         }
         if( theModuleBuildDate != null ) {
             appendOpenTag( BUILD_TIME_TAG, buf );
             buf.append( theDefaultDateFormat.format( theModuleBuildDate ));
             appendCloseTag( BUILD_TIME_TAG, buf );
+            buf.append( '\n' );
         } else {
             appendOpenTag( BUILD_TIME_TAG, buf );
             buf.append( theDefaultDateFormat.format( new Date() )); // now
             appendCloseTag( BUILD_TIME_TAG, buf );
+            buf.append( '\n' );
         }
 
         if( theModuleUserNames != null && !theModuleUserNames.isEmpty() ) {
@@ -672,7 +676,7 @@ public abstract class ModuleAdvertisement
                 String value  = theModuleUserNames.get( locale );
 
                 if( locale != null && locale.length() > 0 ) {
-                    buf.append( " <" ).append( USERNAME_TAG ).append( " locale=\"" );
+                    buf.append( "<" ).append( USERNAME_TAG ).append( " locale=\"" );
                     buf.append( locale );
                     buf.append( "\">");
                 } else {
@@ -680,6 +684,7 @@ public abstract class ModuleAdvertisement
                 }
                 buf.append( value );
                 appendCloseTag( USERNAME_TAG, buf );
+                buf.append( '\n' );
             }
         }
 
@@ -690,7 +695,7 @@ public abstract class ModuleAdvertisement
                 String value  = theModuleUserDescriptions.get( locale );
 
                 if( locale != null && locale.length() > 0 ) {
-                    buf.append( " <" ).append( USERDESCRIPTION_TAG ).append( " locale=\"" );
+                    buf.append( "<" ).append( USERDESCRIPTION_TAG ).append( " locale=\"" );
                     buf.append( locale );
                     buf.append( "\">");
                 } else {
@@ -698,6 +703,7 @@ public abstract class ModuleAdvertisement
                 }
                 buf.append( value );
                 appendCloseTag( USERDESCRIPTION_TAG, buf );
+                buf.append( '\n' );
             }
         }
 
@@ -707,7 +713,7 @@ public abstract class ModuleAdvertisement
         }
         
         if( theModuleJars != null && theModuleJars.length > 0 ) {
-            buf.append( " <" ).append( PROVIDES_TAG );
+            buf.append( "<" ).append( PROVIDES_TAG );
             if( theModuleJarsBaseUrl != null ) { // intentionally do not check for empty string
                 buf.append( " baseurl=\"" );
                 buf.append( theModuleJarsBaseUrl.toExternalForm() );
@@ -719,6 +725,7 @@ public abstract class ModuleAdvertisement
                 buf.append( theModuleJars[i] );
                 appendCloseTag( JAR_TAG, buf );
             }
+            buf.append( '\n' );
             appendCloseTag( PROVIDES_TAG, buf );
         }
 
@@ -730,19 +737,23 @@ public abstract class ModuleAdvertisement
             if( theBuildTimeModuleRequirements != null ) {
                 for( int i=0 ; i<theBuildTimeModuleRequirements.length ; ++i ) {
                     buf.append( theBuildTimeModuleRequirements[i].getAsXml( "buildtime" ));
+                    buf.append( '\n' );
                 }
             }
             if( theRunTimeModuleRequirements != null ) {
                 for( int i=0 ; i<theRunTimeModuleRequirements.length ; ++i ) {
                     buf.append( theRunTimeModuleRequirements[i].getAsXml( "runtime" ));
+                    buf.append( '\n' );
                 }
             }
             appendCloseTag( DEPENDENCIES_TAG, buf );
+            buf.append( '\n' );
         }
 
         String supportedCapabilitiesXml = getSupportedCapabilitiesAsXml();
         if( supportedCapabilitiesXml != null ) {
             buf.append( supportedCapabilitiesXml );
+            buf.append( '\n' );
         }
 
         if(    ( theLocalParameterDefaults != null && theLocalParameterDefaults.size() > 0 )

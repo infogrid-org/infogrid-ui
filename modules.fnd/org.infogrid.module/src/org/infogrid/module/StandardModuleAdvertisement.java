@@ -14,9 +14,10 @@
 
 package org.infogrid.module;
 
-import java.io.*;
+import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * This ModuleAdvertisement is for standard Modules. Standard Modules contain regular code.
@@ -24,6 +25,8 @@ import java.util.*;
 public class StandardModuleAdvertisement
         extends ModuleAdvertisement
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
      * Factory method that constructs a ModuleAdvertisement from specified data.
      *
@@ -354,19 +357,19 @@ public class StandardModuleAdvertisement
     {
         StringBuffer buf = new StringBuffer( 64 ); // fudge
         if( theActivationClassName != null && theActivationClassName.length() > 0 ) {
-            buf.append( " <activationclass>" );
+            buf.append( "<activationclass>" );
             buf.append( theActivationClassName );
             buf.append( "</activationclass>\n" );
         }
 
         if( theConfigurationClassName != null && theConfigurationClassName.length() > 0 ) {
-            buf.append( " <configurationclass>" );
+            buf.append( "<configurationclass>" );
             buf.append( theConfigurationClassName );
             buf.append( "</configurationclass>\n" );
         }
 
         if( theRunClassName != null && theRunClassName.length() > 0 ) {
-            buf.append( " <runclass>" );
+            buf.append( "<runclass>" );
             buf.append( theRunClassName );
             buf.append( "</runclass>\n" );
         }
@@ -376,7 +379,7 @@ public class StandardModuleAdvertisement
             return null;
         }
     }
-    
+
     /**
      * Obtain the supported capabilities as XML, if any.
      *
@@ -450,10 +453,10 @@ public class StandardModuleAdvertisement
         ret.append( ", runMethod: " );
         ret.append( theRunMethodName );
         ret.append( ", caps: { " ); // do not use ArrayHelper, not in the bootloader
-        for( int i=0 ; i<theSupportedCapabilities.length ; ++i )
-        {
-            if( i>0 )
+        for( int i=0 ; i<theSupportedCapabilities.length ; ++i ) {
+            if( i>0 ) {
                 ret.append( ", " );
+            }
             ret.append( theSupportedCapabilities[i] );
         }
         ret.append( " } }>" );

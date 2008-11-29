@@ -14,11 +14,6 @@
 
 package org.infogrid.module.moduleadvertisementserializer;
 
-import org.infogrid.module.ModuleAdvertisement;
-import org.infogrid.module.ModuleAdvertisementXmlParser;
-import org.infogrid.module.ModuleConfigurationException;
-import org.infogrid.module.ModuleRequirement;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,6 +29,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Properties;
+import org.infogrid.module.ModuleAdvertisement;
+import org.infogrid.module.ModuleAdvertisementXmlParser;
+import org.infogrid.module.ModuleConfigurationException;
+import org.infogrid.module.ModuleRequirement;
 
 /**
  * <p>This helper program takes XML ModuleAdvertisements and converts them into a representation
