@@ -165,35 +165,6 @@ public class DefaultInitializationFilter
             }
         }
 
-//        // first resource helper, then logger
-//        String nameOfResourceHelperFile = InfoGridWebApp.class.getName();
-//        String nameOfLog4jConfigFile    = InfoGridWebApp.class.getName().replace( '.', '/' ) + "Log.properties";
-//        try {
-//            ResourceHelper.setApplicationResourceBundle( ResourceBundle.getBundle( 
-//                    nameOfResourceHelperFile,
-//                    Locale.getDefault(),
-//                    InfoGridWebApp.class.getClassLoader()  ));
-//
-//        } catch( Exception ex ) {
-//            System.err.println( "Unexpected Exception attempting to load " + nameOfResourceHelperFile );
-//            ex.printStackTrace( System.err );
-//            throw new RuntimeException( ex );
-//        }
-//
-//        try {
-//            Properties logProperties = new Properties();
-//            logProperties.load( new BufferedInputStream(
-//                    InfoGridWebApp.class.getClassLoader().getResourceAsStream( nameOfLog4jConfigFile )));
-//
-//            Log4jLog.configure( logProperties );
-//            // which logger is being used is defined in the module dependency declaration through parameters
-//
-//        } catch( Exception ex ) {
-//            System.err.println( "Unexpected Exception attempting to load " + nameOfLog4jConfigFile );
-//            ex.printStackTrace( System.err );
-//            throw new RuntimeException( ex );
-//        }
-
         ResourceHelper.initializeLogging();
 
         log = Log.getLogInstance( InfoGridWebApp.class );

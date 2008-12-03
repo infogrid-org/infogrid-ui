@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.lid.credential.LidPasswordCredentialType;
-import org.infogrid.util.FactoryException;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.SaneRequest;
 
@@ -287,10 +286,11 @@ public class RegexLidLocalPersonaManager
                 throw new LidInvalidCredentialException( theIdentifier, credType );
             }
             String givenPassword = request.getArgument( "lid-credential" );
-            String correctPassword = theIdentifier + "pass";
 
-            int result = StringHelper.compareTo( givenPassword, correctPassword );
-            if( result != 0 ) {
+            if( ! theUserNameRegex.matcher( theIdentifier ).matches()) {
+                throw new LidInvalidCredentialException( theIdentifier, credType );
+            }
+            if( ! thePasswordRegex.matcher( givenPassword ).matches()) {
                 throw new LidInvalidCredentialException( theIdentifier, credType );
             }
         }
