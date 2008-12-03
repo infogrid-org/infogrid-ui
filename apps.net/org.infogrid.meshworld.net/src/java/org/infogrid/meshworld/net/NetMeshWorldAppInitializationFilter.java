@@ -17,7 +17,7 @@ package org.infogrid.meshworld.net;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import org.infogrid.jee.rest.net.defaultapp.store.AbstractStoreNetRestfulAppInitializationFilter;
+import org.infogrid.jee.rest.net.local.defaultapp.store.AbstractStoreNetLocalRestfulAppInitializationFilter;
 import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
@@ -29,7 +29,7 @@ import org.infogrid.viewlet.ViewletFactory;
  */
 public class NetMeshWorldAppInitializationFilter
         extends
-            AbstractStoreNetRestfulAppInitializationFilter
+            AbstractStoreNetLocalRestfulAppInitializationFilter
 {
     /**
      * Constructor for subclasses only, use factory method.
@@ -78,6 +78,8 @@ public class NetMeshWorldAppInitializationFilter
     protected void initializeContextObjects(
             Context context )
     {
+        super.initializeContextObjects( context );
+
         ViewletFactory vlFact = new NetMeshWorldViewletFactory();
         context.addContextObject( vlFact );
     }

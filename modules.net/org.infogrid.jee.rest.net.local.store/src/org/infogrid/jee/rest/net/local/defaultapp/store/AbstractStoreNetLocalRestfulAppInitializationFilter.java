@@ -12,29 +12,23 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.rest.net.defaultapp.store;
+package org.infogrid.jee.rest.net.local.defaultapp.store;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.naming.NamingException;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.FormTokenService;
 import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.jee.security.store.StoreFormTokenService;
-import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.mesh.text.MeshStringRepresentationContext;
-import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -50,82 +44,22 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * Common functionality of application initialization filters that are net-enabled and REST-ful.
  */
-public abstract class AbstractStoreNetRestfulAppInitializationFilter
-        implements
-            Filter
+public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
+        extends
+            AbstractRestfulAppInitializationFilter
 {
-    private static final Log log = Log.getLogInstance( AbstractStoreNetRestfulAppInitializationFilter.class  ); // our own, private logger
+    private static final Log log = Log.getLogInstance( AbstractStoreNetLocalRestfulAppInitializationFilter.class  ); // our own, private logger
 
     /**
      * Constructor.
      */
-    protected AbstractStoreNetRestfulAppInitializationFilter()
+    protected AbstractStoreNetLocalRestfulAppInitializationFilter()
     {
         // nothing
-    }
-
-    /**
-     * Execute the filter.
-     * 
-     * @param request The servlet request we are processing
-     * @param response The servlet response we are creating
-     * @param chain The filter chain we are processing
-     *
-     * @throws IOException if an input/output error occurs
-     * @throws ServletException if a servlet error occurs
-     */
-    public void doFilter(
-            ServletRequest  request,
-            ServletResponse response,
-            FilterChain     chain )
-        throws
-            IOException,
-            ServletException
-    {
-        Context appContext = InfoGridWebApp.getSingleton().getApplicationContext();
-
-        synchronized( AbstractStoreNetRestfulAppInitializationFilter.class ) {
-            if( !isInitialized ) {
-                try {
-                    initialize( request, response );
-
-                } catch( Throwable t ) {
-                    log.error( t );
-
-                    StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-                    if( structured != null ) {
-                        structured.reportProblem( t );
-                    } else {
-                        throw new ServletException( t );
-                    }
-                    // Fix whatever we can if something went wrong
-                    // want some kind of FormTokenService even if initialization failed
-                    if( appContext.findContextObject( FormTokenService.class ) == null ) {
-                        MFormTokenService formTokenService = MFormTokenService.create();
-                        appContext.addContextObject( formTokenService );
-                    }
-                } finally {
-                    isInitialized = true;
-                }
-            }
-        }
-
-        
-        StringRepresentationContext stringRepContext
-                = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
-        MeshBase mb
-                = appContext.findContextObject( MeshBase.class );
-
-        if( stringRepContext != null && mb != null ) {
-            stringRepContext.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb );
-        }
-
-        chain.doFilter( request, response );
     }
 
     /**
@@ -161,7 +95,7 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
             ModelBase modelBase = ModelBaseSingleton.getSingleton();
             appContext.addContextObject( modelBase );
 
-    // NetMeshBaseIdentifierFactory
+            // NetMeshBaseIdentifierFactory
             NetMeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
             appContext.addContextObject( meshBaseIdentifierFactory );
 
@@ -198,7 +132,7 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
                     exec,
                     true,
                     appContext );
-            initializeMeshBase( meshBase );
+            populateMeshBase( meshBase );
             appContext.addContextObject( meshBase );
 
             MeshBaseNameServer nameServer = meshBase.getLocalNameServer();
@@ -208,7 +142,7 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
             StoreFormTokenService formTokenService = StoreFormTokenService.create( theFormTokenStore );
             appContext.addContextObject( formTokenService );
 
-//        // ViewletFactory and utils
+            // ViewletFactory and utils
             
             initializeContextObjects( appContext );
 
@@ -230,22 +164,6 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
     }
 
     /**
-     * Initialize the Filter.
-     *
-     * @param filterConfig the Filter configuration object
-     * @throws ServletException thrown if misconfigured
-     */
-    public void init(
-            FilterConfig filterConfig )
-        throws
-            ServletException
-    {
-        theFilterConfig  = filterConfig;
-        
-        theDefaultMeshBaseIdentifier = filterConfig.getInitParameter( DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER_NAME );
-    }
-    
-    /**
      * Initialize the data sources.
      * 
      * @throws NamingException thrown if a data source could not be found or accessed
@@ -254,46 +172,6 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
             throws
                 NamingException;
 
-    /**
-     * Initialize the initial content of the MeshBase.
-     * 
-     * @param mb the MeshBase to initialize
-     */
-    protected void initializeMeshBase(
-            MeshBase mb )
-    {
-        // nothing on this level
-    }
-
-    /**
-     * Initialize context objects.
-     * 
-     * @param context the Context
-     */
-    protected void initializeContextObjects(
-            Context context )
-    {
-        // nothing on this level
-    }
-
-    /**
-     * Destroy method for this Filter.
-     */
-    public void destroy()
-    {
-        // noop
-    }
-    
-    /**
-     * The filter configuration object this Filter is associated with.
-     */
-    protected FilterConfig theFilterConfig = null;    
-
-    /**
-     * Have the Stores been successfully initialized.
-     */
-    protected boolean isInitialized = false;
-    
     /**
      * The Store for MeshObjects. This must be set by a subclass.
      */
@@ -318,14 +196,4 @@ public abstract class AbstractStoreNetRestfulAppInitializationFilter
      * The Store for form tokens. This must be set by a subclass.
      */
     protected IterableStore theFormTokenStore;
-
-    /**
-     * Identifier of the main MeshBase.
-     */
-    protected String theDefaultMeshBaseIdentifier;
-
-    /**
-     * Name of the Filter parameter in web.xml that contains the identifier of the main MeshBase.
-     */
-    public static final String DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER_NAME = "DefaultMeshBaseIdentifier";
 }

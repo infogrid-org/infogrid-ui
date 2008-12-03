@@ -75,6 +75,8 @@ public class MeshWorldAppInitializationFilter
     protected void initializeContextObjects(
             Context context )
     {
+        super.initializeContextObjects( context );
+
         ViewletFactory vlFact = new MeshWorldViewletFactory();
         context.addContextObject( vlFact );
     }

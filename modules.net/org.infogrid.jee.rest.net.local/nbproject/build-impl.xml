@@ -19,7 +19,7 @@ is divided into following sections:
   - cleanup
 
         -->
-<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="org.infogrid.jee.rest.store.net-impl">
+<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="org.infogrid.jee.rest.net.local-impl">
     <target depends="test,jar,javadoc" description="Build and test whole project." name="default"/>
     <!-- 
                 ======================
@@ -322,18 +322,12 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_rest_net}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_jee_rest_store}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_jee_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_jee_templates}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_kernel_net}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_meshbase_store_net}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_net_local}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_net_local_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_probe}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="jar"/>
     </target>
     <target depends="init,-check-automatic-build,-clean-after-automatic-build" name="-verify-automatic-build"/>
@@ -656,18 +650,12 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_jee}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_rest}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_rest_net}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_jee_rest_store}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_jee_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_templates}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_kernel_net}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_meshbase_store_net}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_net_local}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_net_local_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_probe}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="clean"/>
     </target>
     <target depends="init" name="-do-clean">

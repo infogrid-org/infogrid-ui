@@ -5,55 +5,53 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
-package org.infogrid.jee.rest.defaultapp.store;
+package org.infogrid.jee.rest.defaultapp.m;
 
 import java.net.URISyntaxException;
-import javax.naming.NamingException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
 import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.jee.security.store.StoreFormTokenService;
+import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
+import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.m.MMeshBaseNameServer;
 import org.infogrid.meshbase.security.AccessManager;
-import org.infogrid.meshbase.store.IterableStoreMeshBase;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
-import org.infogrid.store.IterableStore;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
 /**
- * Common functionality of application initialization filters that are REST-ful and use a Store for MeshBase persistence.
+ * Common functionality of application initialization filters that are REST-ful and use MMeshBase.
  */
-public abstract class AbstractStoreRestfulAppInitializationFilter
+public abstract class AbstractMRestfulAppInitializationFilter
         extends
             AbstractRestfulAppInitializationFilter
 {
     /**
      * Constructor.
      */
-    protected AbstractStoreRestfulAppInitializationFilter()
+    protected AbstractMRestfulAppInitializationFilter()
     {
         // nothing
     }
 
     /**
      * <p>Perform initialization.</p>
-     * 
+     *
      * @param request The servlet request we are processing
      * @param response The servlet response we are creating
      * @throws Throwable something bad happened that cannot be fixed by re-invoking this method
@@ -66,14 +64,9 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
     {
         HttpServletRequest realRequest = (HttpServletRequest) request;
         SaneRequest        saneRequest = SaneServletRequest.create( realRequest );
-        
+
         InfoGridWebApp app        = InfoGridWebApp.getSingleton();
         Context        appContext = app.getApplicationContext();
-        
-        initializeDataSources();
-
-        theMeshStore.initializeIfNecessary();
-        theFormTokenStore.initializeIfNecessary();
 
         // ModelBase
         ModelBase modelBase = ModelBaseSingleton.getSingleton();
@@ -99,7 +92,7 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         // AccessManager
         AccessManager accessMgr = null;
 
-        IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, appContext );
+        MMeshBase meshBase = MMeshBase.create( mbId, modelBase, accessMgr, appContext );
         populateMeshBase( meshBase );
         appContext.addContextObject( meshBase );
 
@@ -109,30 +102,11 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         appContext.addContextObject( nameServer );
 
         // FormTokenService
-        StoreFormTokenService formTokenService = StoreFormTokenService.create( theFormTokenStore );
+        MFormTokenService formTokenService = MFormTokenService.create();
         appContext.addContextObject( formTokenService );
 
         // ViewletFactory and utils
 
         initializeContextObjects( appContext );
     }
-
-    /**
-     * Initialize the data sources.
-     * 
-     * @throws NamingException thrown if a data source could not be found or accessed
-     */
-    protected abstract void initializeDataSources()
-            throws
-                NamingException;
-
-    /**
-     * The Store for MeshObjects. This must be set by a subclass.
-     */
-    protected IterableStore theMeshStore;
-    
-    /**
-     * The Store for form tokens. This must be set by a subclass.
-     */
-    protected IterableStore theFormTokenStore;
 }

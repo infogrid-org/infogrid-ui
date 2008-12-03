@@ -15,7 +15,7 @@
 package org.infogrid.jee.testapp;
 
 import java.net.URISyntaxException;
-import org.infogrid.jee.rest.defaultapp.store.AbstractStoreRestfulAppInitializationFilter;
+import org.infogrid.jee.rest.defaultapp.m.AbstractMRestfulAppInitializationFilter;
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
@@ -27,7 +27,6 @@ import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Blob.BlobSubjectArea;
-import org.infogrid.store.m.MStore;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.ViewletFactory;
@@ -37,7 +36,7 @@ import org.infogrid.viewlet.ViewletFactory;
  */
 public class TestAppInitializationFilter
         extends
-            AbstractStoreRestfulAppInitializationFilter
+            AbstractMRestfulAppInitializationFilter
 {
     private static final Log log = Log.getLogInstance( TestAppInitializationFilter.class ); // our own, private logger
 
@@ -50,22 +49,12 @@ public class TestAppInitializationFilter
     }
 
     /**
-     * Initialize the data sources.
-     */
-    @Override
-    protected void initializeDataSources()
-    {
-        theMeshStore      = MStore.create();
-        theFormTokenStore = MStore.create();
-    }
-
-    /**
      * Initialize the initial content of the MeshBase.
      * 
      * @param mb the MeshBase to initialize
      */
     @Override
-    protected void initializeMeshBase(
+    protected void populateMeshBase(
             MeshBase mb )
     {
         MeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
@@ -108,6 +97,8 @@ public class TestAppInitializationFilter
     protected void initializeContextObjects(
             Context context )
     {
+        super.initializeContextObjects( context );
+
         ViewletFactory vlFact = new TestAppViewletFactory();
         context.addContextObject( vlFact );
     }

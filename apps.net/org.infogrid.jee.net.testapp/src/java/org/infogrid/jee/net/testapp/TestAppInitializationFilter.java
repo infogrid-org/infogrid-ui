@@ -14,61 +14,33 @@
 
 package org.infogrid.jee.net.testapp;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.rest.net.NetRestfulJeeFormatter;
-import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.jee.security.FormTokenService;
-import org.infogrid.jee.security.m.MFormTokenService;
-import org.infogrid.jee.servlet.InitializationFilter;
-import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
-import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
+import org.infogrid.jee.rest.net.local.defaultapp.m.AbstractMNetLocalRestfulAppInitializationFilter;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
-import org.infogrid.mesh.text.MeshStringRepresentationContext;
-import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
-import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.NetMeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
-import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
-import org.infogrid.meshbase.net.security.NetAccessManager;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.modelbase.ModelBase;
-import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.ProbeDirectory;
-import org.infogrid.probe.WritableProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.viewlet.ViewletFactory;
 
 /**
  * Initializes application-level functionality
  */
 public class TestAppInitializationFilter
-        implements
-            Filter
+        extends
+            AbstractMNetLocalRestfulAppInitializationFilter
 {
     private Log log = Log.getLogInstance( TestAppInitializationFilter.class );
     
@@ -81,188 +53,69 @@ public class TestAppInitializationFilter
     }
 
     /**
-     * Execute the filter.
-     * 
-     * @param request The servlet request we are processing
-     * @param response The servlet response we are creating
-     * @param chain The filter chain we are processing
+     * Overridable method to create the NetMeshBaseIdentifierFactory appropriate for this
+     * application.
      *
-     * @throws IOException if an input/output error occurs
-     * @throws ServletException if a servlet error occurs
+     * @return the created NetMeshBaseIdentifierFactory
      */
-    public void doFilter(
-            ServletRequest  request,
-            ServletResponse response,
-            FilterChain     chain )
-        throws
-            IOException,
-            ServletException
+    @Override
+    protected NetMeshBaseIdentifierFactory createNetMeshBaseIdentifierFactory()
     {
-        synchronized( TestAppInitializationFilter.class ) {
-            if( !isInitialized ) {
-                initialize( request, response );
-                isInitialized = true;
-            }
-        }
-        StringRepresentationContext stringRepContext
-                = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
-        MeshBase mb
-                = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( MeshBase.class );
-        
-        if( stringRepContext != null && mb != null ) {
-            stringRepContext.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb );
-        }
-            
-        chain.doFilter( request, response );
+        NetMeshBaseIdentifierFactory ret = DefaultNetMeshBaseIdentifierFactory.create(
+                new DefaultNetMeshBaseIdentifierFactory.Protocol [] {
+                        new DefaultNetMeshBaseIdentifierFactory.Protocol( "http",   true ),
+                        new DefaultNetMeshBaseIdentifierFactory.Protocol( "https",  true ),
+                        new DefaultNetMeshBaseIdentifierFactory.Protocol( "custom", false ),
+        });
+        return ret;
     }
 
     /**
-     * <p>Perform initialization.</p>
-     * 
-     * @param request The servlet request we are processing
-     * @param response The servlet response we are creating
-     * @throws ServletException something bad happened that cannot be fixed by re-invoking this method
-     */
-    protected void initialize(
-            ServletRequest  request,
-            ServletResponse response )
-        throws
-            ServletException
-    {
-        InfoGridWebApp     app        = InfoGridWebApp.getSingleton();
-        Context            appContext = app.getApplicationContext();
-        
-        if( theDefaultMeshBaseIdentifier == null ) {
-            SaneServletRequest lidRequest = SaneServletRequest.create( (HttpServletRequest) request );
-            
-            theDefaultMeshBaseIdentifier = lidRequest.getAbsoluteContextUri() + "/"; // need trailing slash for MeshBase
-        }
-        
-        try {
-            // ModelBase
-            ModelBase modelBase = ModelBaseSingleton.getSingleton();
-
-            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create(
-                    new DefaultNetMeshBaseIdentifierFactory.Protocol [] {
-                            new DefaultNetMeshBaseIdentifierFactory.Protocol( "http",   true ),
-                            new DefaultNetMeshBaseIdentifierFactory.Protocol( "https",  true ),
-                            new DefaultNetMeshBaseIdentifierFactory.Protocol( "custom", false ),
-            });
-            appContext.addContextObject( meshBaseIdentifierFactory );
-
-            // NetMeshBaseIdentifier
-            NetMeshBaseIdentifier mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
-
-            // AccessManager
-            NetAccessManager accessMgr = null;
-
-            WritableProbeDirectory probeDirectory = MProbeDirectory.create();
-            populateProbeDirectory( probeDirectory, meshBaseIdentifierFactory );
-            
-            ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
-
-            // MeshBase
-            LocalNetMMeshBase meshBase = LocalNetMMeshBase.create(
-                    mbId,
-                    DefaultNetMeshObjectAccessSpecificationFactory.create(
-                            mbId,
-                            meshBaseIdentifierFactory ),
-                    modelBase,
-                    accessMgr,
-                    probeDirectory,
-                    exec,
-                    appContext );
-
-            appContext.addContextObject( meshBase );
-
-            populateMeshBase( meshBase );
-            
-            MeshBaseNameServer nameServer = meshBase.getLocalNameServer();
-            appContext.addContextObject( nameServer );
-
-            // FormTokenService
-            FormTokenService formTokenService = MFormTokenService.create();
-            appContext.addContextObject( formTokenService );
-
-            // ViewletFactory and utils
-            ViewletFactory vlFact = new TestAppViewletFactory();
-            appContext.addContextObject( vlFact );
-
-            NetRestfulJeeFormatter formatter = NetRestfulJeeFormatter.create();
-            appContext.addContextObject( formatter );
-
-            // StructuredResponseTemplateFactory
-            StructuredResponseTemplateFactory tmplFact = DefaultStructuredResponseTemplateFactory.create();
-            appContext.addContextObject( tmplFact );
-        
-        } catch( Throwable t ) {
-
-            StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-            if( structured != null ) {
-                structured.reportProblem( t );
-            } else {
-                throw new ServletException( t );
-            }
-        }
-    }
-
-    /**
-     * Initialize the Filter.
+     * Overridable method to create and populate a ProbeDirectory apporpriate for this
+     * application.
      *
-     * @param filterConfig the Filter configuration object
-     * @throws ServletException thrown if misconfigured
+     * @param meshBaseIdentifierFactory the NetMeshBaseIdentifierFactory to us
+     * @return the created and populated ProbeDirectory
+     * @throws URISyntaxException thrown if an identifier could not be parsed
      */
-    public void init(
-            FilterConfig filterConfig )
+    @Override
+    protected ProbeDirectory createAndPopulateProbeDirectory(
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
         throws
-            ServletException
+            URISyntaxException
     {
-        theFilterConfig  = filterConfig;
-        
-        theDefaultMeshBaseIdentifier = theFilterConfig.getInitParameter( DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER );
-        if( theDefaultMeshBaseIdentifier != null && theDefaultMeshBaseIdentifier.length() == 0 ) {
-            throw new ServletException( "Filter configuration in web.xml must specify non-empty " + DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER );
+        MProbeDirectory ret = MProbeDirectory.create();
+        toAccess = new NetMeshBaseIdentifier[] {
+            meshBaseIdentifierFactory.fromExternalForm( "custom://example.com/" ),
+            meshBaseIdentifierFactory.fromExternalForm( "custom://example.org/a/?foo=bar&argl=brgl" ),
+        };
+
+        for( NetMeshBaseIdentifier current : toAccess ) {
+            ret.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor( current.toExternalForm(), TestProbe1.class ));
         }
+        return ret;
     }
 
     /**
-     * Destroy method for this Filter.
+     * Initialize the initial content of the NetMeshBase.
+     *
+     * @param mb the NetMeshBase to initialize
      */
-    public void destroy()
-    {
-        // noop
-    }
-    
-    /**
-     * Put some test data into the MeshBase.
-     * 
-     * @param mb the MeshBase
-     * @throws MeshObjectIdentifierNotUniqueException coding error
-     * @throws NetMeshObjectAccessException coding error
-     * @throws RelatedAlreadyException coding error
-     * @throws NotPermittedException coding error
-     * @throws URISyntaxException coding error
-     */
-    protected void populateMeshBase(
+    @Override
+    protected void populateNetMeshBase(
             NetMeshBase mb )
-        throws
-            URISyntaxException,
-            MeshObjectIdentifierNotUniqueException,
-            NetMeshObjectAccessException,
-            RelatedAlreadyException,
-            NotPermittedException
     {
-        NetMeshBaseLifecycleManager    life = mb.getMeshBaseLifecycleManager();
-        NetMeshObjectIdentifierFactory fact = mb.getMeshObjectIdentifierFactory();
-
-        NetMeshObject [] resolved = new NetMeshObject[ toAccess.length ];
-        for( int i=0 ; i<resolved.length ; ++i ) {
-            resolved[i] = mb.accessLocally( toAccess[i] );
-            resolved[i].traverseToNeighborMeshObjects(); // get the related objects into the main MeshBase, too
-        }
-        
         Transaction tx = null;
         try {
+            NetMeshBaseLifecycleManager    life = mb.getMeshBaseLifecycleManager();
+            NetMeshObjectIdentifierFactory fact = mb.getMeshObjectIdentifierFactory();
+
+            NetMeshObject [] resolved = new NetMeshObject[ toAccess.length ];
+            for( int i=0 ; i<resolved.length ; ++i ) {
+                resolved[i] = mb.accessLocally( toAccess[i] );
+                resolved[i].traverseToNeighborMeshObjects(); // get the related objects into the main MeshBase, too
+            }
+        
             tx = mb.createTransactionNow();
             
             NetMeshObject a = life.createMeshObject( fact.fromExternalForm( "#aaaa" )); // make sure there are long enough to pass the Regex filter
@@ -278,8 +131,17 @@ public class TestAppInitializationFilter
                 }
             }
             
-            
         } catch( TransactionException ex ) {
+            log.error( ex );
+        } catch( MeshObjectIdentifierNotUniqueException ex ) {
+            log.error( ex );
+        } catch( NetMeshObjectAccessException ex ) {
+            log.error( ex );
+        } catch( RelatedAlreadyException ex ) {
+            log.error( ex );
+        } catch( NotPermittedException ex ) {
+            log.error( ex );
+        } catch( URISyntaxException ex ) {
             log.error( ex );
         } finally {
             if( tx != null ) {
@@ -289,51 +151,22 @@ public class TestAppInitializationFilter
     }
     
     /**
-     * Put the right Probes into the ProbeDirectory.
-     * 
-     * @param dir the ProbeDirectory
-     * @param meshBaseIdentifierFactory factory for NetMeshBaseIdentifiers
-     * @throws URISyntaxException coding error
+     * Initialize context objects.
+     *
+     * @param context the Context
      */
-    protected void populateProbeDirectory(
-            WritableProbeDirectory       dir,
-            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
-        throws
-            URISyntaxException
+    @Override
+    protected void initializeContextObjects(
+            Context context )
     {
-        toAccess = new NetMeshBaseIdentifier[] {
-            meshBaseIdentifierFactory.fromExternalForm( "custom://example.com/" ),
-            meshBaseIdentifierFactory.fromExternalForm( "custom://example.org/a/?foo=bar&argl=brgl" ),
-        };
-
-        for( NetMeshBaseIdentifier current : toAccess ) {
-            dir.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor( current.toExternalForm(), TestProbe1.class ));
-        }
+        super.initializeContextObjects( context );
+        
+        ViewletFactory vlFact = new TestAppViewletFactory();
+        context.addContextObject( vlFact );
     }
-    
-    /**
-     * The filter configuration object this Filter is associated with.
-     */
-    protected FilterConfig theFilterConfig = null;    
-
-    /**
-     * Have the Stores been successfully initialized.
-     */
-    protected boolean isInitialized = false;
-    
-    /**
-     * The default MeshBaseIdentifier, in String form,
-     */
-    protected String theDefaultMeshBaseIdentifier;
 
     /**
      * THe identifiers of the Probe home objects to be accessLocally'd.
      */
     protected NetMeshBaseIdentifier [] toAccess;
-
-    /**
-     * Name of the String in the RequestContext that contains the identifier of the default
-     * MeshBase.
-     */
-    public static final String DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER = "DefaultMeshBaseIdentifier";
 }

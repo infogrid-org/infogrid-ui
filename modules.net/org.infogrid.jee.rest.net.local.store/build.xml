@@ -13,8 +13,8 @@
     All rights reserved.
 -->
 
-<project name="org.infogrid.jee.rest.store.net" default="default" basedir=".">
-    <description>Builds, tests, and runs the project org.infogrid.jee.rest.store.net.</description>
+<project name="org.infogrid.jee.rest.net.local.store" default="default" basedir=".">
+    <description>Builds, tests, and runs the project org.infogrid.jee.rest.net.local.store.</description>
     <import file="../../tools/infogrid-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
 

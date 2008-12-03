@@ -14,15 +14,15 @@
 -->
 
 <standardmodule>
- <name>org.infogrid.jee.rest.store.net</name>
+ <name>org.infogrid.jee.rest.net.local.store</name>
  <username>JEE/REST Store Net support for InfoGrid.</username>
  <userdescription>Makes developing REST-ful, net-based applications based on Store with InfoGrid easier.</userdescription>
  <provides>
-  <jar>org.infogrid.jee.rest.store.net.jar</jar> 
+  <jar>org.infogrid.jee.rest.net.local.store.jar</jar>
  </provides>
  <dependencies>
   <requires name="org.infogrid.jee.rest.net"/>
-  <requires name="org.infogrid.jee.store"/>
+  <requires name="org.infogrid.net.local.store"/>
   <requires name="org.infogrid.util"/>
  </dependencies>
 </standardmodule>
