@@ -38,7 +38,6 @@
   <requires name="org.infogrid.jee.viewlet.wikiobject"/>
   <requires name="org.infogrid.kernel.net"/>
   <requires name="org.infogrid.meshbase.store.net"/>
-  <requires name="org.infogrid.probe.store"/>
   <requires name="org.infogrid.net.local.store"/>
   <requires name="org.infogrid.lid"/>
   <requires name="org.infogrid.lid.model.lid"/>

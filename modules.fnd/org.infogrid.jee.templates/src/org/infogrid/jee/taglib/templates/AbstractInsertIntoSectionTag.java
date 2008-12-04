@@ -20,21 +20,20 @@ import javax.servlet.jsp.tagext.BodyContent;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.TextHtmlStructuredResponseSectionTemplate;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 
 /**
  * <p>Abstract superclass for all tags that insert tag body content into the HTML header
  *    via a StructuredResponse object.</p>
  */
-public abstract class AbstractInsertIntoHtmlHeaderTag
+public abstract class AbstractInsertIntoSectionTag
     extends
         AbstractInfoGridBodyTag
 {
     /**
      * Constructor.
      */
-    protected AbstractInsertIntoHtmlHeaderTag()
+    protected AbstractInsertIntoSectionTag()
     {
         // noop
     }
@@ -61,17 +60,26 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
             JspException,
             IgnoreException
     {
+        String sectionName = getSectionName();
+
         theResponse = (StructuredResponse) lookupOrThrow(
                 StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-        theHtmlHeadSection = theResponse.getTextSection( TextHtmlStructuredResponseSectionTemplate.HTML_HEAD_SECTION );
+        theSection = theResponse.obtainTextSectionByName( sectionName );
 
         String text = determineStartText();
         if( text != null ) {
-            theHtmlHeadSection.appendContent( text );
+            theSection.appendContent( text );
         }
         
         return EVAL_BODY_BUFFERED;
     }
+
+    /**
+     * Determine the name of the section into which to insert.
+     *
+     * @return the name of the section
+     */
+    protected abstract String getSectionName();
 
     /**
      * Our implementation of doAfterBody().
@@ -90,7 +98,7 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
     {
         String text = determineBodyText();
         if( text != null ) {
-            theHtmlHeadSection.appendContent( text );
+            theSection.appendContent( text );
         }
         
         return SKIP_BODY;
@@ -113,7 +121,7 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
     {
         String text = determineEndText();
         if( text != null ) {
-            theHtmlHeadSection.appendContent( text );
+            theSection.appendContent( text );
         }
         return EVAL_PAGE; // reasonable default
     }
@@ -180,7 +188,7 @@ public abstract class AbstractInsertIntoHtmlHeaderTag
     protected StructuredResponse theResponse;
     
     /**
-     * The HTML head section in the StructuredResponse to which we write.
+     * The TextStructuredResponse to which we write.
      */
-    protected TextStructuredResponseSection theHtmlHeadSection;
+    protected TextStructuredResponseSection theSection;
 }

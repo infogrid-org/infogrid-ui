@@ -183,7 +183,7 @@ public class DefaultInitializationFilter
 
     /**
      * Initialize the context objects. This may be overridden by subclasses.
-     * 
+     *
      * @param rootContext the root Context
      */
     protected void initializeContextObjects(

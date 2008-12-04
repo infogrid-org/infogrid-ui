@@ -18,7 +18,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.TextHtmlStructuredResponseSectionTemplate;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.VerbatimStructuredResponseTemplate;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
@@ -130,7 +129,7 @@ public class OpenIdSsoPipelineStage
             LidAbortProcessingPipelineException
     {
         if( requestedResource != null && lidRequest.getAbsoluteBaseUri().equals( requestedResource.getIdentifier() )) {
-            TextStructuredResponseSection htmlHeadSection = lidResponse.getTextSection( TextHtmlStructuredResponseSectionTemplate.HTML_HEAD_SECTION );
+            TextStructuredResponseSection htmlHeadSection = lidResponse.obtainTextSection( StructuredResponse.HTML_HEAD_SECTION );
             htmlHeadSection.appendContent(
                     "  <link rel=\"openid.server\" href=\"" +  lidRequest.getAbsoluteBaseUri() + "\" />\n" );
         }

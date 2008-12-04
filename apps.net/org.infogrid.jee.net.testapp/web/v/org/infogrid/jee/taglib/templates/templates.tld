@@ -6,7 +6,27 @@
 
     <!-- Tags are ordered alphabetically by Java Class name. Makes it easier
          to find them in the IDE. -->
-         
+
+    <tag>
+        <name>append</name>
+        <tag-class>org.infogrid.jee.taglib.templates.AppendSectionTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>define</name>
+        <tag-class>org.infogrid.jee.taglib.templates.DefineSectionTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
     <tag>
         <name>ifEmpty</name>
         <tag-class>org.infogrid.jee.taglib.templates.IfEmptyTag</tag-class>
@@ -67,5 +87,10 @@
             <name>href</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+    </tag>
+
+    <tag>
+        <name>title</name>
+        <tag-class>org.infogrid.jee.taglib.templates.TitleTag</tag-class>
     </tag>
 </taglib>

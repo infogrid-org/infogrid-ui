@@ -93,8 +93,8 @@ public class InlineTag
             throw new JspException( "Cannot find StructuredResponse in the request context" );
         }
 
-        TextStructuredResponseSection   textSection   = structured.findTextSectionByName(   theName );
-        BinaryStructuredResponseSection binarySection = structured.findBinarySectionByName( theName );
+        TextStructuredResponseSection   textSection   = structured.obtainTextSectionByName(   theName );
+        BinaryStructuredResponseSection binarySection = structured.obtainBinarySectionByName( theName );
 
         if( textSection != null ) {
             String content = textSection.getContent();

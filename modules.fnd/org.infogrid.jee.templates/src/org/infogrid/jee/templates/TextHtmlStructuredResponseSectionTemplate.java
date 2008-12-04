@@ -61,16 +61,4 @@ public class TextHtmlStructuredResponseSectionTemplate
     {
         super( name, maxProblems );
     }
-
-    /**
-     * The section representing the head of an HTML document.
-     */
-    public static final TextHtmlStructuredResponseSectionTemplate HTML_HEAD_SECTION
-            = TextHtmlStructuredResponseSectionTemplate.create( "html-head" );
-
-    /**
-     * The section representing the messages section of an HTML document.
-     */
-    public static final TextHtmlStructuredResponseSectionTemplate HTML_MESSAGES_SECTION
-            = TextHtmlStructuredResponseSectionTemplate.create( "html-messages" );
 }

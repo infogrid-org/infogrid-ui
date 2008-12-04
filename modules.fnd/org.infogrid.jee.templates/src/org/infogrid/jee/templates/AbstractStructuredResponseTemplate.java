@@ -83,8 +83,8 @@ public abstract class AbstractStructuredResponseTemplate
     {
         HasHeaderPreferences [] toConsider = {
                 structured,
-                structured.getTextSection(   TextStructuredResponseSectionTemplate.DEFAULT_SECTION ),
-                structured.getBinarySection( BinaryStructuredResponseSectionTemplate.DEFAULT_SECTION )
+                structured.obtainTextSection(   StructuredResponse.DEFAULT_TEXT_SECTION ),
+                structured.obtainBinarySection( StructuredResponse.DEFAULT_BINARY_SECTION )
         };
         return toConsider;
     }

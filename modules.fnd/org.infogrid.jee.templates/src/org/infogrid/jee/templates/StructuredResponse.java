@@ -102,7 +102,7 @@ public class StructuredResponse
      */
     public TextStructuredResponseSection getDefaultTextSection()
     {
-        return getTextSection( TextStructuredResponseSectionTemplate.DEFAULT_SECTION );
+        return obtainTextSection( DEFAULT_TEXT_SECTION );
     }
 
     /**
@@ -112,16 +112,16 @@ public class StructuredResponse
      */
     public BinaryStructuredResponseSection getDefaultBinarySection()
     {
-        return getBinarySection( BinaryStructuredResponseSectionTemplate.DEFAULT_SECTION );
+        return obtainBinarySection( DEFAULT_BINARY_SECTION );
     }
 
     /**
-     * Obtain a text section.
+     * Obtain a text section; if the section does not exist, create it.
      * 
      * @param template the section type
-     * @return the section, or null
+     * @return the section
      */
-    public TextStructuredResponseSection getTextSection(
+    public TextStructuredResponseSection obtainTextSection(
             TextStructuredResponseSectionTemplate template )
     {
         if( template == null ) {
@@ -136,12 +136,12 @@ public class StructuredResponse
     }
 
     /**
-     * Obtain a binary section.
+     * Obtain a binary section; if the section does not exist, create it.
      * 
      * @param template the section type
-     * @return the section, or null
+     * @return the section
      */
-    public BinaryStructuredResponseSection getBinarySection(
+    public BinaryStructuredResponseSection obtainBinarySection(
             BinaryStructuredResponseSectionTemplate template )
     {
         if( template == null ) {
@@ -156,46 +156,116 @@ public class StructuredResponse
     }
 
     /**
-     * Find a text section by name.
-     * 
-     * @param name the name of the section
-     * @return the section template, if any
+     * Get a text section; if the section does not exist, return null.
+     *
+     * @param template the section type
+     * @return the section, or null
      */
-    public TextStructuredResponseSection findTextSectionByName(
-            String name )
+    public TextStructuredResponseSection getTextSection(
+            TextStructuredResponseSectionTemplate template )
     {
-        TextStructuredResponseSectionTemplate template = findTextSectionTemplateByName( name );
         if( template == null ) {
-            return null;
+            throw new NullPointerException( "Cannot obtain null section" );
         }
-        TextStructuredResponseSection ret = getTextSection( template );
+        TextStructuredResponseSection ret = theTextSections.get( template );
         return ret;
     }
 
     /**
-     * Find a binary section by name.
-     * 
-     * @param name the name of the section
-     * @return the section template, if any
+     * Obtain a binary section; if the section does not exist, return null.
+     *
+     * @param template the section type
+     * @return the section, or null
      */
-    public BinaryStructuredResponseSection findBinarySectionByName(
-            String name )
+    public BinaryStructuredResponseSection getBinarySection(
+            BinaryStructuredResponseSectionTemplate template )
     {
-        BinaryStructuredResponseSectionTemplate template = findBinarySectionTemplateByName( name );
         if( template == null ) {
-            return null;
+            throw new NullPointerException( "Cannot obtain null section" );
         }
-        BinaryStructuredResponseSection ret = getBinarySection( template );
+        BinaryStructuredResponseSection ret = theBinarySections.get( template );
         return ret;
     }
 
     /**
-     * Find a text section template by name.
+     * Obtain a text section by name; if the section does not exist, create it.
      * 
+     * @param name the name of the section
+     * @return the section
+     */
+    public TextStructuredResponseSection obtainTextSectionByName(
+            String name )
+    {
+        TextStructuredResponseSectionTemplate template = obtainTextSectionTemplateByName( name );
+        if( template == null ) {
+            return null;
+        }
+        TextStructuredResponseSection ret = obtainTextSection( template );
+        return ret;
+    }
+
+    /**
+     * Obtain a binary section by name; if the section does not exist, create it.
+     * 
+     * @param name the name of the section
+     * @return the section
+     */
+    public BinaryStructuredResponseSection obtainBinarySectionByName(
+            String name )
+    {
+        BinaryStructuredResponseSectionTemplate template = obtainBinarySectionTemplateByName( name );
+        if( template == null ) {
+            return null;
+        }
+        BinaryStructuredResponseSection ret = obtainBinarySection( template );
+        return ret;
+    }
+
+    /**
+     * Obtain a text section template by name; if it does not exist, create it.
+     *
+     * @param name the name of the section
+     * @return the section template
+     */
+    public TextStructuredResponseSectionTemplate obtainTextSectionTemplateByName(
+            String name )
+    {
+        for( TextStructuredResponseSectionTemplate current : theTextSections.keySet() ) {
+            if( name.equals( current.getSectionName() )) {
+                return current;
+            }
+        }
+        TextStructuredResponseSectionTemplate ret
+                = createTextStructuredResponseSectionTemplate( name );
+        return ret;
+    }
+
+    /**
+     * Obtain a binary section template by name; if it does not exist, create it.
+     *
+     * @param name the name of the section
+     * @return the section template
+     */
+    public BinaryStructuredResponseSectionTemplate obtainBinarySectionTemplateByName(
+            String name )
+    {
+        for( BinaryStructuredResponseSectionTemplate current : theBinarySections.keySet() ) {
+            if( name.equals( current.getSectionName() )) {
+                return current;
+            }
+        }
+        BinaryStructuredResponseSectionTemplate ret
+                = createBinaryStructuredResponseSectionTemplate( name );
+        return ret;
+    }
+
+    /**
+     * Get a text section template by name; if it does not exist, return null.
+     *
      * @param name the name of the section
      * @return the section template, if any
      */
-    public TextStructuredResponseSectionTemplate findTextSectionTemplateByName(
+    public TextStructuredResponseSectionTemplate getTextSectionTemplateByName(
             String name )
     {
         for( TextStructuredResponseSectionTemplate current : theTextSections.keySet() ) {
@@ -205,22 +275,58 @@ public class StructuredResponse
         }
         return null;
     }
-    
+
     /**
-     * Find a binary section template by name.
-     * 
+     * Get a binary section template by name; if it does not exist, return null.
+     *
      * @param name the name of the section
      * @return the section template, if any
      */
-    public BinaryStructuredResponseSectionTemplate findBinarySectionTemplateByName(
+    public BinaryStructuredResponseSectionTemplate getBinarySectionTemplateByName(
             String name )
-    {    
+    {
         for( BinaryStructuredResponseSectionTemplate current : theBinarySections.keySet() ) {
             if( name.equals( current.getSectionName() )) {
                 return current;
             }
         }
         return null;
+    }
+
+    /**
+     * Create a TextStructuredResponseSectionTemplate for which only a name is known.
+     *
+     * @param name the name of the to-be-created TextStructuredResponseSectionTemplate
+     * @return the created TextStructuredResponseSectionTemplate
+     */
+    protected TextStructuredResponseSectionTemplate createTextStructuredResponseSectionTemplate(
+            String name )
+    {
+        TextStructuredResponseSectionTemplate ret;
+        if( DEFAULT_TEXT_SECTION.getSectionName().equals( name )) {
+            ret = DEFAULT_TEXT_SECTION;
+        } else {
+            ret = TextStructuredResponseSectionTemplate.create( name );
+        }
+        return ret;
+    }
+
+    /**
+     * Create a BinaryStructuredResponseSectionTemplate for which only a name is known.
+     *
+     * @param name the name of the to-be-created BinaryStructuredResponseSectionTemplate
+     * @return the created BinaryStructuredResponseSectionTemplate
+     */
+    protected BinaryStructuredResponseSectionTemplate createBinaryStructuredResponseSectionTemplate(
+            String name )
+    {
+        BinaryStructuredResponseSectionTemplate ret;
+        if( DEFAULT_BINARY_SECTION.getSectionName().equals( name )) {
+            ret = DEFAULT_BINARY_SECTION;
+        } else {
+            ret = BinaryStructuredResponseSectionTemplate.create( name );
+        }
+        return ret;
     }
 
     /**
@@ -573,4 +679,37 @@ public class StructuredResponse
      * The default maximum number of problems to store.
      */
     public static final int DEFAULT_MAX_PROBLEMS = theResourceHelper.getResourceIntegerOrDefault( "DefaultMaxProblems", 20 );
-}
+
+
+    /**
+     * The single default section for text content. Output will be written into this section
+     * unless otherwise specified.
+     */
+    public static final TextStructuredResponseSectionTemplate DEFAULT_TEXT_SECTION
+            = TextStructuredResponseSectionTemplate.create( "default-text" );
+
+    /**
+     * The single default section for binary content. Binary output will be written into this section
+     * unless otherwise specified.
+     */
+    public static final BinaryStructuredResponseSectionTemplate DEFAULT_BINARY_SECTION
+            = BinaryStructuredResponseSectionTemplate.create( "default-binary" );
+
+    /**
+     * The section representing the head of an HTML document.
+     */
+    public static final TextHtmlStructuredResponseSectionTemplate HTML_HEAD_SECTION
+            = TextHtmlStructuredResponseSectionTemplate.create( "html-head" );
+
+    /**
+     * The section representing the messages section of an HTML document.
+     */
+    public static final TextHtmlStructuredResponseSectionTemplate HTML_MESSAGES_SECTION
+            = TextHtmlStructuredResponseSectionTemplate.create( "html-messages" );
+
+    /**
+     * The section representing the main menu in an HTML document. Many HTML documents don't have
+     * such a section, but it is common enough that we make it explicit here.
+     */
+    public static final TextHtmlStructuredResponseSectionTemplate HTML_MAIN_MENU_SECTION
+            = TextHtmlStructuredResponseSectionTemplate.create( "html-main-menu" );}

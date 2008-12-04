@@ -64,8 +64,8 @@ public abstract class JeeTemplateUtils
     {
         runRequestDispatcher(
                 dispatcher,
-                TextStructuredResponseSectionTemplate.DEFAULT_SECTION,
-                BinaryStructuredResponseSectionTemplate.DEFAULT_SECTION,
+                StructuredResponse.DEFAULT_TEXT_SECTION,
+                StructuredResponse.DEFAULT_BINARY_SECTION,
                 request,
                 structured );
     }
@@ -113,24 +113,24 @@ public abstract class JeeTemplateUtils
                     // don't know what to do here -- defaults to "string gets processed, bytes ignore"
                     log.warn( "Have both String and byte content, don't know what to do: " + request );
 
-                    TextStructuredResponseSection textSection = structured.getTextSection( textSectionTemplate );
+                    TextStructuredResponseSection textSection = structured.obtainTextSection( textSectionTemplate );
                     textSection.setContent( bufferedString ); // do something is better than nothing
                     section = textSection;
 
                 } else {
-                    BinaryStructuredResponseSection binarySection = structured.getBinarySection( binarySectionTemplate );
+                    BinaryStructuredResponseSection binarySection = structured.obtainBinarySection( binarySectionTemplate );
                     binarySection.setContent( bufferedBytes );
                     section = binarySection;
                 }
 
             } else if( bufferedString != null ) {
-                TextStructuredResponseSection textSection = structured.getTextSection( textSectionTemplate );
+                TextStructuredResponseSection textSection = structured.obtainTextSection( textSectionTemplate );
                 textSection.appendContent( bufferedString );
                 section = textSection;
 
             } else {
                 // empty section, but keep redirect status etc.
-                TextStructuredResponseSection textSection = structured.getTextSection( textSectionTemplate );
+                TextStructuredResponseSection textSection = structured.obtainTextSection( textSectionTemplate );
                 section = textSection;
             }
 

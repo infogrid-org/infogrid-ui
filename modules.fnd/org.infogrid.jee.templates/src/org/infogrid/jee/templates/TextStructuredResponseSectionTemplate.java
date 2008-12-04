@@ -61,11 +61,4 @@ public class TextStructuredResponseSectionTemplate
     {
         super( name, maxProblems );
     }
-
-    /**
-     * The single default section for text content. Output will be written into this section
-     * unless otherwise specified.
-     */
-    public static final TextStructuredResponseSectionTemplate DEFAULT_SECTION
-            = TextStructuredResponseSectionTemplate.create( "default" );
 }

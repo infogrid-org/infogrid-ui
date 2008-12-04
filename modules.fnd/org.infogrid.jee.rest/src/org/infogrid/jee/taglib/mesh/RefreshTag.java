@@ -20,7 +20,6 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.TextHtmlStructuredResponseSectionTemplate;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.util.http.SaneRequest;
    
@@ -86,7 +85,7 @@ public class RefreshTag
         css.append( ".css" );
         css.append( "\" />\n" );
 
-        TextStructuredResponseSection headSection = theResponse.getTextSection( TextHtmlStructuredResponseSectionTemplate.HTML_HEAD_SECTION );
+        TextStructuredResponseSection headSection = theResponse.obtainTextSection( StructuredResponse.HTML_HEAD_SECTION );
         headSection.appendContent( css.toString() );
 
         return EVAL_BODY_INCLUDE;

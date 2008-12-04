@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -20,10 +20,10 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 
 /**
- * <p>Insert an HTML title into the HTML header.</p>
+ * <p>Append a piece of text to a named TextStructuredResponseSection.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class TitleTag
+public class AppendSectionTag
     extends
         AbstractInsertIntoSectionTag
 {
@@ -32,20 +32,45 @@ public class TitleTag
     /**
      * Constructor.
      */
-    public TitleTag()
+    public AppendSectionTag()
     {
         // noop
     }
 
     /**
-     * Initialize all default values. To be invoked by subclasses.
+     * Initialize all default values.
      */
     @Override
     protected void initializeToDefaults()
     {
+        theName = null;
+
         super.initializeToDefaults();
     }
-    
+
+    /**
+     * Obtain value of the name property.
+     *
+     * @return value of the name property
+     * @see #setName
+     */
+    public final String getName()
+    {
+        return theName;
+    }
+
+    /**
+     * Set value of the name property.
+     *
+     * @param newValue new value of the name property
+     * @see #getName
+     */
+    public final void setName(
+            String newValue )
+    {
+        theName = newValue;
+    }
+
     /**
      * Determine the name of the section into which to insert.
      *
@@ -53,11 +78,11 @@ public class TitleTag
      */
     protected String getSectionName()
     {
-        return StructuredResponse.HTML_HEAD_SECTION.getSectionName();
+        return StructuredResponse.HTML_MAIN_MENU_SECTION.getSectionName();
     }
 
     /**
-     * Determine the text to insert into the header.
+     * Determine the text to insert into the header when the tag's body has been processed.
      *
      * @return text to insert
      * @throws JspException thrown if an evaluation error occurred
@@ -69,18 +94,14 @@ public class TitleTag
             JspException,
             IgnoreException
     {
-        BodyContent body     = getBodyContent();
-        String      theTitle = body != null ? body.getString() : null;
+        BodyContent body       = getBodyContent();
+        String      bodyString = body != null ? body.getString() : null;
 
-        if( theTitle != null ) {
-            StringBuilder buf = new StringBuilder();
-            buf.append( "<title>" );
-            buf.append( theTitle );
-            buf.append( "</title>" );
-            return buf.toString();
-
-        } else {
-            return null;
-        }
+        return bodyString;
     }
+
+    /**
+     * The name of the section in the StructuredResponse that is being evaluated.
+     */
+    protected String theName;
 }

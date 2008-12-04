@@ -61,11 +61,4 @@ public class BinaryStructuredResponseSectionTemplate
     {
         super( name, maxProblems );
     }
-
-    /**
-     * The single default section for binary content. Output will be written into this section
-     * unless otherwise specified.
-     */
-    public static final BinaryStructuredResponseSectionTemplate DEFAULT_SECTION
-            = BinaryStructuredResponseSectionTemplate.create( "default" );
 }

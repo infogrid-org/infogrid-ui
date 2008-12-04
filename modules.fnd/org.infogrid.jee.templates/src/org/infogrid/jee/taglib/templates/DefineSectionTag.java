@@ -5,59 +5,38 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
-
 package org.infogrid.jee.taglib.templates;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyContent;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.templates.StructuredResponse;
 
 /**
- * <p>Insert an HTML title into the HTML header.</p>
+ * <p>Write a piece of text to a named TextStructuredResponseSection, overwriting what was there already (if any).</p>
+ * <p>Implementation inheritance here leads to the shortest amount of code to write.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class TitleTag
+public class DefineSectionTag
     extends
-        AbstractInsertIntoSectionTag
+        AppendSectionTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
      * Constructor.
      */
-    public TitleTag()
+    public DefineSectionTag()
     {
         // noop
     }
 
     /**
-     * Initialize all default values. To be invoked by subclasses.
-     */
-    @Override
-    protected void initializeToDefaults()
-    {
-        super.initializeToDefaults();
-    }
-    
-    /**
-     * Determine the name of the section into which to insert.
-     *
-     * @return the name of the section
-     */
-    protected String getSectionName()
-    {
-        return StructuredResponse.HTML_HEAD_SECTION.getSectionName();
-    }
-
-    /**
-     * Determine the text to insert into the header.
+     * Determine the text to insert into the header when the tag's body has been processed.
      *
      * @return text to insert
      * @throws JspException thrown if an evaluation error occurred
@@ -69,18 +48,9 @@ public class TitleTag
             JspException,
             IgnoreException
     {
-        BodyContent body     = getBodyContent();
-        String      theTitle = body != null ? body.getString() : null;
+        theSection.setContent( null );
 
-        if( theTitle != null ) {
-            StringBuilder buf = new StringBuilder();
-            buf.append( "<title>" );
-            buf.append( theTitle );
-            buf.append( "</title>" );
-            return buf.toString();
-
-        } else {
-            return null;
-        }
+        return super.determineBodyText();
     }
+
 }

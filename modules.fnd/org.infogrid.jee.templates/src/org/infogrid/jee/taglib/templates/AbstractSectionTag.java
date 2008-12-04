@@ -88,9 +88,9 @@ public abstract class AbstractSectionTag
         if( theName == null ) {
             return null;
         }
-        StructuredResponseSection ret = response.findTextSectionByName( theName );
+        StructuredResponseSection ret = response.obtainTextSectionByName( theName );
         if( ret == null ) {
-            ret = response.findBinarySectionByName( theName );
+            ret = response.obtainBinarySectionByName( theName );
         }
 
         return ret;
