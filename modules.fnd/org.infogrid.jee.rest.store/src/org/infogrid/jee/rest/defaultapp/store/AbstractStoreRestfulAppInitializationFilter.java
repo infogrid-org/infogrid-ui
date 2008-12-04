@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.rest.defaultapp.store;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import javax.naming.NamingException;
 import javax.servlet.ServletRequest;
@@ -72,9 +73,6 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         
         initializeDataSources();
 
-        theMeshStore.initializeIfNecessary();
-        theFormTokenStore.initializeIfNecessary();
-
         // ModelBase
         ModelBase modelBase = ModelBaseSingleton.getSingleton();
         appContext.addContextObject( modelBase );
@@ -112,19 +110,19 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         StoreFormTokenService formTokenService = StoreFormTokenService.create( theFormTokenStore );
         appContext.addContextObject( formTokenService );
 
-        // ViewletFactory and utils
-
         initializeContextObjects( appContext );
     }
 
     /**
      * Initialize the data sources.
-     * 
+     *
      * @throws NamingException thrown if a data source could not be found or accessed
+     * @throws IOException thrown if an I/O problem occurred
      */
     protected abstract void initializeDataSources()
             throws
-                NamingException;
+                NamingException,
+                IOException;
 
     /**
      * The Store for MeshObjects. This must be set by a subclass.

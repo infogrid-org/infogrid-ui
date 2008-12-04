@@ -39,13 +39,15 @@ public class DefaultTemplatesInitializationFilter
 
     /**
      * Initialize the context objects. This may be overridden by subclasses.
-     * 
+     *
      * @param rootContext the root Context
      */
     @Override
     protected void initializeContextObjects(
             Context rootContext )
     {
+        super.initializeContextObjects( rootContext );
+
         // Formatter
         JeeFormatter formatter = JeeFormatter.create();
         rootContext.addContextObject( formatter );

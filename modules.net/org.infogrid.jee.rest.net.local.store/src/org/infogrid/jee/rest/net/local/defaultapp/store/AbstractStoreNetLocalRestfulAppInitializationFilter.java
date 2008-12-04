@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.rest.net.local.defaultapp.store;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -85,12 +86,6 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         try {
             initializeDataSources();
 
-            theMeshStore.initializeIfNecessary();
-            theProxyStore.initializeIfNecessary();
-            theShadowStore.initializeIfNecessary();
-            theShadowProxyStore.initializeIfNecessary();
-            theFormTokenStore.initializeIfNecessary();
-
             // ModelBase
             ModelBase modelBase = ModelBaseSingleton.getSingleton();
             appContext.addContextObject( modelBase );
@@ -114,7 +109,6 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             
             // AccessManager
             NetAccessManager accessMgr = null; // NetMeshWorldAccessManager.obtain();
-
 
             ProbeDirectory probeDirectory = MProbeDirectory.create();
             ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
@@ -165,12 +159,14 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
 
     /**
      * Initialize the data sources.
-     * 
+     *
      * @throws NamingException thrown if a data source could not be found or accessed
+     * @throws IOException thrown if an I/O problem occurred
      */
     protected abstract void initializeDataSources()
             throws
-                NamingException;
+                NamingException,
+                IOException;
 
     /**
      * The Store for MeshObjects. This must be set by a subclass.

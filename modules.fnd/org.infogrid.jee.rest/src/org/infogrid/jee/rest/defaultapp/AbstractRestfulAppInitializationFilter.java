@@ -103,12 +103,12 @@ public abstract class AbstractRestfulAppInitializationFilter
     }
 
     /**
-     * Initialize context objects.
+     * Initialize the context objects. This may be overridden by subclasses.
      *
-     * @param context the Context
+     * @param rootContext the root Context
      */
     protected void initializeContextObjects(
-            Context context )
+            Context rootContext )
     {
         // nothing on this level
     }

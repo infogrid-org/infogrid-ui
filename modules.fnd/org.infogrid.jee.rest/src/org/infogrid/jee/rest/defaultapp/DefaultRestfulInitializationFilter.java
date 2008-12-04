@@ -40,13 +40,16 @@ public class DefaultRestfulInitializationFilter
 
     /**
      * Initialize the context objects. This may be overridden by subclasses.
-     * 
+     *
      * @param rootContext the root Context
      */
     @Override
     protected void initializeContextObjects(
             Context rootContext )
     {
+        // do NOT invoke super.initializeContextObjects( rootContext );
+        // we use better subclasses ourselves
+        
         // Formatter
         RestfulJeeFormatter formatter = RestfulJeeFormatter.create();
         rootContext.addContextObject( formatter );

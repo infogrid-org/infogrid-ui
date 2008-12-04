@@ -105,8 +105,6 @@ public abstract class AbstractMRestfulAppInitializationFilter
         MFormTokenService formTokenService = MFormTokenService.create();
         appContext.addContextObject( formTokenService );
 
-        // ViewletFactory and utils
-
         initializeContextObjects( appContext );
     }
 }

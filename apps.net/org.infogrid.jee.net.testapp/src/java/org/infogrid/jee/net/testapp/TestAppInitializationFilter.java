@@ -151,18 +151,18 @@ public class TestAppInitializationFilter
     }
     
     /**
-     * Initialize context objects.
+     * Initialize the context objects. This may be overridden by subclasses.
      *
-     * @param context the Context
+     * @param rootContext the root Context
      */
     @Override
     protected void initializeContextObjects(
-            Context context )
+            Context rootContext )
     {
-        super.initializeContextObjects( context );
+        super.initializeContextObjects( rootContext );
         
         ViewletFactory vlFact = new TestAppViewletFactory();
-        context.addContextObject( vlFact );
+        rootContext.addContextObject( vlFact );
     }
 
     /**
