@@ -35,12 +35,13 @@ done;
 if [ "${module}" == "" ]; then
 	echo Synopsis:
 	echo "    ${script} <module>"
-	echo "        <module>: name of a module, e.g. 'apps/org.infogrid.meshworld"
+	echo "        <module>: name of a module, e.g. 'apps.fnd/org.infogrid.meshworld"
 	exit 1;
 fi
 
 for f in `find ${module}/web/v -name '*.tld' -print`; do
 	g=`echo $f | sed "s#^\${module}/web/v/##g"`;
-	echo '---- now looking at:' $g
+	/bin/echo -n '---- now looking at: '
+	ls ${modprefix}*/*/src/$g ${module}/web/v/$g
 	diff ${modprefix}*/*/src/$g ${module}/web/v/$g
 done;
