@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -29,6 +28,7 @@ import javax.servlet.jsp.tagext.BodyContent;
 import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentation;
@@ -989,29 +989,13 @@ public class JeeFormatter
     /**
      * Format a list of problems represented as Throwables.
      * 
-     * @param pageContext the PageContext object for this page
-     * @param reportedProblems the reported problems
-     * @param stringRepresentation the StringRepresentation to use
-     * @return the String to display
-     */
-    public String formatProblems(
-            PageContext        pageContext,
-            List<Throwable>    reportedProblems,
-            String             stringRepresentation )
-    {
-        return formatProblems( pageContext.getRequest(), reportedProblems, stringRepresentation );
-    }
-
-    /**
-     * Format a list of problems represented as Throwables.
-     * 
      * @param request the incoming request
      * @param reportedProblems the reported problems
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      */
     public String formatProblems(
-            ServletRequest     request,
+            SaneRequest        request,
             List<Throwable>    reportedProblems,
             String             stringRepresentation )
     {

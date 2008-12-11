@@ -21,7 +21,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * A ResponseTemplate that returns the default sections in the StructuredResponse without
@@ -41,7 +41,7 @@ public class VerbatimStructuredResponseTemplate
      * @return the created JspStructuredResponseTemplate
      */
     public static VerbatimStructuredResponseTemplate create(
-            SaneServletRequest request,
+            SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured )
@@ -63,7 +63,7 @@ public class VerbatimStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      */
     protected VerbatimStructuredResponseTemplate(
-            SaneServletRequest request,
+            SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured )
@@ -96,7 +96,7 @@ public class VerbatimStructuredResponseTemplate
         JeeFormatter theFormatter = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( JeeFormatter.class );
         
         List<Throwable> reportedProblems = structured.problems();
-        String errorContent = theFormatter.formatProblems( theRequest.getDelegate(), reportedProblems, "Text" );                
+        String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, "Text" );                
         if( errorContent != null ) {
             Writer w = delegate.getWriter();
             w.write( errorContent );

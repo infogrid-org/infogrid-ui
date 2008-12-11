@@ -19,7 +19,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulRequest;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
@@ -136,7 +135,7 @@ public abstract class AbstractJeeViewlet
             UnsafePostException,
             ServletException
     {
-        throw new UnsafePostException( (SaneServletRequest) request.getSaneRequest() );
+        throw new UnsafePostException( request.getSaneRequest() );
     }
 
     /**
@@ -250,7 +249,7 @@ public abstract class AbstractJeeViewlet
                         structured.getServletContext() );
 
                 if( dispatcher != null ) {
-                    JeeTemplateUtils.runRequestDispatcher( dispatcher, (SaneServletRequest) restful.getSaneRequest(), structured );
+                    JeeTemplateUtils.runRequestDispatcher( dispatcher, restful.getSaneRequest(), structured );
                 } // FIXME? Should there be an else here, throwing an Exception?
             }
 
@@ -272,12 +271,12 @@ public abstract class AbstractJeeViewlet
         String ret = getRequestURI();
         
         // append lid-xpath
-        String xpath = theCurrentRequest.getDelegate().getParameter( RestfulRequest.XPATH_PREFIX );
+        String xpath = theCurrentRequest.getSaneRequest().getArgument( RestfulRequest.XPATH_PREFIX );
         if( xpath != null ) {
             ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.XPATH_PREFIX + "=" + HTTP.encodeToValidUrlArgument( xpath ));
         }
         // append lid-format
-        String format = theCurrentRequest.getDelegate().getParameter( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
+        String format = theCurrentRequest.getSaneRequest().getArgument( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
         if( format != null ) {
             ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_FORMAT_PARAMETER_NAME + "=" + HTTP.encodeToValidUrlArgument( format ));
         }

@@ -19,7 +19,6 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.CarriesHttpStatusCodeException;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 
@@ -41,7 +40,7 @@ public abstract class AbstractStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      */
     protected AbstractStructuredResponseTemplate(
-            SaneServletRequest request,
+            SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured )
@@ -83,8 +82,8 @@ public abstract class AbstractStructuredResponseTemplate
     {
         HasHeaderPreferences [] toConsider = {
                 structured,
-                structured.obtainTextSection(   StructuredResponse.DEFAULT_TEXT_SECTION ),
-                structured.obtainBinarySection( StructuredResponse.DEFAULT_BINARY_SECTION )
+                structured.obtainTextSection(   StructuredResponse.TEXT_DEFAULT_SECTION ),
+                structured.obtainBinarySection( StructuredResponse.BINARY_DEFAULT_SECTION )
         };
         return toConsider;
     }
@@ -165,7 +164,8 @@ public abstract class AbstractStructuredResponseTemplate
         if( theUserRequestedTemplate != null ) {
             
             Cookie toSend = new Cookie( LID_TEMPLATE_COOKIE_NAME, HTTP.encodeToValidUrlArgument( theRequestedTemplate ));
-            toSend.setPath( theRequest.getDelegate().getContextPath() );
+            
+            toSend.setPath( theRequest.getContextPath() );
             toSend.setMaxAge( 60 * 60 * 24 * 365 * 10 ); // 10 years
             
             delegate.addCookie( toSend );
@@ -247,7 +247,7 @@ public abstract class AbstractStructuredResponseTemplate
     /**
      * The incoming request.
      */
-    protected SaneServletRequest theRequest;
+    protected SaneRequest theRequest;
 
     /**
      * The structured response to process with the dispatcher

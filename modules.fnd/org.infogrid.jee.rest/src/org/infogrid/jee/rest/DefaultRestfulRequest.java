@@ -18,7 +18,6 @@ import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
@@ -27,6 +26,7 @@ import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Default implementation of RestfulRequest.
@@ -44,9 +44,9 @@ public class DefaultRestfulRequest
      * @return the created DefaultRestfulRequest
      */
     public static DefaultRestfulRequest create(
-            SaneServletRequest lidRequest,
-            String             contextPath,
-            String             defaultMeshBaseIdentifier )
+            SaneRequest lidRequest,
+            String      contextPath,
+            String      defaultMeshBaseIdentifier )
     {
         MeshBaseIdentifierFactory meshBaseIdentifierFactory
                 = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( MeshBaseIdentifierFactory.class );
@@ -66,7 +66,7 @@ public class DefaultRestfulRequest
      * @param meshBaseIdentifierFactory the factory for MeshBaseIdentifiers if any are specified in the request
      */
     protected DefaultRestfulRequest(
-            SaneServletRequest        lidRequest,
+            SaneRequest               lidRequest,
             String                    contextPath,
             String                    defaultMeshBaseIdentifier,
             MeshBaseIdentifierFactory meshBaseIdentifierFactory )

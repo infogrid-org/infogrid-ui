@@ -20,7 +20,6 @@ import java.util.Iterator;
 import javax.servlet.ServletException;
 import org.infogrid.util.context.Context;
 import org.infogrid.jee.rest.RestfulRequest;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.SimpleJeeViewlet;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
@@ -125,9 +124,8 @@ public class BulkLoaderViewlet
         throws
             ServletException
     {
-        SaneRequest theSaneRequest = (SaneRequest) request.getDelegate().getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
-        
-        String bulkXml = theSaneRequest.getPostArgument( LOAD_CONTENT_ARGUMENT_NAME );
+        SaneRequest theSaneRequest = request.getSaneRequest();
+        String      bulkXml        = theSaneRequest.getPostArgument( LOAD_CONTENT_ARGUMENT_NAME );
 
         MeshBase    base = getSubject().getMeshBase();
         Transaction tx   = null;

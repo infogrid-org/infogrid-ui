@@ -86,7 +86,7 @@ public class ProxyViewlet
         
         try {
             Proxy pseudoSubject = realRestful.determineRequestedProxy();
-            realRestful.getDelegate().setAttribute( "Proxy", pseudoSubject );
+            realRestful.getSaneRequest().setAttribute( "Proxy", pseudoSubject );
 
         } catch( MeshObjectAccessException ex ) {
             throw new ServletException( ex );

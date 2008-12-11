@@ -14,15 +14,15 @@
 
 package org.infogrid.jee.templates;
 
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.Factory;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Marks classes that know how to create StructuredResponseTemplates.
  */
 public interface StructuredResponseTemplateFactory
     extends
-        Factory<SaneServletRequest,StructuredResponseTemplate,StructuredResponse>
+        Factory<SaneRequest,StructuredResponseTemplate,StructuredResponse>
 {
     // no op
 }

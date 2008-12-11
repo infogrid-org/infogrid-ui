@@ -30,6 +30,7 @@ import org.infogrid.lid.DefaultLidProcessingPipeline;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
 import org.infogrid.lid.LidProcessingPipeline;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -134,7 +135,7 @@ public class LidProcessingPipelineServlet
      * @param t the exception
      */
     protected void handleException(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             StructuredResponse lidResponse,
             Throwable          t )
     {

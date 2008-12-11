@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
@@ -28,6 +29,7 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseSection;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.TextStructuredResponseSectionTemplate;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -56,7 +58,7 @@ public abstract class JeeTemplateUtils
      */
     public static void runRequestDispatcher(
             RequestDispatcher  dispatcher,
-            SaneServletRequest request,
+            SaneRequest        request,
             StructuredResponse structured )
         throws
             ServletException,
@@ -64,8 +66,8 @@ public abstract class JeeTemplateUtils
     {
         runRequestDispatcher(
                 dispatcher,
-                StructuredResponse.DEFAULT_TEXT_SECTION,
-                StructuredResponse.DEFAULT_BINARY_SECTION,
+                StructuredResponse.TEXT_DEFAULT_SECTION,
+                StructuredResponse.BINARY_DEFAULT_SECTION,
                 request,
                 structured );
     }
@@ -85,7 +87,7 @@ public abstract class JeeTemplateUtils
             RequestDispatcher                       dispatcher,
             TextStructuredResponseSectionTemplate   textSectionTemplate,
             BinaryStructuredResponseSectionTemplate binarySectionTemplate,
-            SaneServletRequest                      request,
+            SaneRequest                             request,
             StructuredResponse                      structured )
         throws
             ServletException,
@@ -98,7 +100,9 @@ public abstract class JeeTemplateUtils
             // requires containers to ignore the declared content (Mime) type of included content.
             // It does process is for forwarded requests. We do need the content type to drive the
             // selection of the right template.
-            dispatcher.forward( request.getDelegate(), bufferedResponse );
+            ServletRequest sRequest = ((SaneServletRequest)request).getDelegate();
+            
+            dispatcher.forward( sRequest, bufferedResponse );
 
         } catch( Throwable ex ) {
             lastException = ex;
@@ -136,7 +140,7 @@ public abstract class JeeTemplateUtils
 
             if( section != null ) {
                 @SuppressWarnings( "unchecked" )
-                List<Throwable> problems = (List<Throwable>) request.getDelegate().getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
+                List<Throwable> problems = (List<Throwable>) request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
 
                 if( problems != null ) {
                     for( Throwable current : problems ) {
@@ -146,7 +150,7 @@ public abstract class JeeTemplateUtils
                 if( lastException != null ) {
                     section.reportProblem( lastException );
                 }
-                request.getDelegate().removeAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
+                request.removeAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
 
                 if( bufferedResponse.getStatus() > 0 ) {
                     section.setHttpResponseCode( bufferedResponse.getStatus());

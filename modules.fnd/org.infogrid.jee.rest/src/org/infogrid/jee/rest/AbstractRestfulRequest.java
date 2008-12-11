@@ -15,8 +15,6 @@
 package org.infogrid.jee.rest;
 
 import java.net.URISyntaxException;
-import javax.servlet.http.HttpServletRequest;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -41,8 +39,8 @@ public abstract class AbstractRestfulRequest
      * @param contextPath the context path of the JEE application
      */
     protected AbstractRestfulRequest(
-            SaneServletRequest lidRequest,
-            String             contextPath )
+            SaneRequest lidRequest,
+            String      contextPath )
     {
         theSaneRequest = lidRequest;
         theContextPath = contextPath;
@@ -246,19 +244,9 @@ public abstract class AbstractRestfulRequest
     }
 
     /**
-     * Determine the underlying HttpServletRequest.
-     * 
-     * @return the delegate
-     */
-    public HttpServletRequest getDelegate()
-    {
-        return theSaneRequest.getDelegate();
-    }
-
-    /**
      * The underlying SaneRequest.
      */
-    protected SaneServletRequest theSaneRequest;
+    protected SaneRequest theSaneRequest;
 
     /**
      * The context path of the web application.

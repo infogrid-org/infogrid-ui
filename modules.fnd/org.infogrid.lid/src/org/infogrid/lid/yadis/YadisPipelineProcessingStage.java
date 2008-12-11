@@ -16,13 +16,13 @@ package org.infogrid.lid.yadis;
 
 import java.text.MessageFormat;
 import java.util.Iterator;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.VerbatimStructuredResponseTemplate;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
 import org.infogrid.lid.LidResource;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Knows how to process Yadis requests.
@@ -66,7 +66,7 @@ public class YadisPipelineProcessingStage
      * @throws LidAbortProcessingPipelineException thrown if processing is complete
      */
     public void processRequest(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             StructuredResponse lidResponse,
             LidResource        resource )
         throws
@@ -76,7 +76,7 @@ public class YadisPipelineProcessingStage
         if( meta == null ) {
             meta = lidRequest.getArgument( "meta" );
         }
-        String acceptHeader = lidRequest.getDelegate().getHeader( "Accept" );
+        String acceptHeader = lidRequest.getAcceptHeader();
 
         if(    "capabilities".equals( meta )
             || ( acceptHeader != null && acceptHeader.indexOf( "application/xrds+xml" ) >= 0 ))

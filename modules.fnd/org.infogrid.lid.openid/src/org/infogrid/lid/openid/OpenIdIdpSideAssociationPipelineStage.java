@@ -16,7 +16,6 @@ package org.infogrid.lid.openid;
 
 import java.math.BigInteger;
 import org.infogrid.crypto.diffiehellman.DiffieHellmanEndpoint;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.VerbatimStructuredResponseTemplate;
@@ -25,6 +24,7 @@ import org.infogrid.lid.LidProcessingPipelineStage;
 import org.infogrid.util.Base64;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Knows how to process incoming OpenID association requests. This does not implement
@@ -75,7 +75,7 @@ public class OpenIdIdpSideAssociationPipelineStage
      * @throws LidAbortProcessingPipelineException thrown if processing is complete
      */
     public void processRequest(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
             LidAbortProcessingPipelineException

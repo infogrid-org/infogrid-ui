@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -99,7 +101,7 @@ public class InitializationFilter
             initializeInfoGridWebApp();
 
             // SaneServletRequest adds itself as a request attribute
-            SaneServletRequest lidRequest  = SaneServletRequest.create( realRequest );
+            SaneRequest lidRequest = SaneServletRequest.create( realRequest );
             request.setAttribute( CONTEXT_PARAMETER, realRequest.getContextPath() );
 
             StringBuilder fullContext = new StringBuilder();
@@ -264,7 +266,7 @@ public class InitializationFilter
      * Name of the default StringRepresentationContext in the RequestContext.
      */
     public static final String STRING_REPRESENTATION_CONTEXT_PARAMETER
-            = SaneServletRequest.classToAttributeName( StringRepresentationContext.class );
+            = SaneRequestUtils.classToAttributeName( StringRepresentationContext.class );
 
     /**
      * The Filter configuration object.

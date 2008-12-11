@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.http.SaneRequestUtils;
 
 /**
  * Categorizes incoming POST requests as safe or unsafe, depending on whether they contain
@@ -69,7 +70,7 @@ public class SafeUnsafePostFilter
         {
             HttpServletRequest realRequest = (HttpServletRequest) request;
             if( "POST".equalsIgnoreCase( realRequest.getMethod() )) {
-                SaneRequest sane  = (SaneRequest) realRequest.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME  );
+                SaneRequest sane  = SaneServletRequest.create( realRequest );
                 String      token = sane.getPostArgument( INPUT_FIELD_NAME );
                 
                 isSafe = theFormTokenService.validateToken( token );
@@ -122,6 +123,26 @@ public class SafeUnsafePostFilter
     }
 
     /**
+     * Determine whether this incoming request is a safe POST. This is a static method
+     * here so it can be invoked from anywhere in the application.
+     *
+     * @param request the incoming request
+     * @return true if this is an HTTP POST, and the POST is safe
+     */
+    public static boolean isSafePost(
+            SaneRequest request )
+    {
+        boolean ret = false;
+        if( "POST".equalsIgnoreCase( request.getMethod() )) {
+            Boolean safeUnsafe = (Boolean) request.getAttribute( SafeUnsafePostFilter.SAFE_UNSAFE_FLAG );
+            if( safeUnsafe != null && safeUnsafe.booleanValue() ) {
+                ret = true;
+            }
+        }
+        return ret;
+    }
+
+    /**
      * Determine whether this incoming request is an unsafe POST. This is a static method
      * here so it can be invoked from anywhere in the application.
      * 
@@ -130,6 +151,26 @@ public class SafeUnsafePostFilter
      */
     public static boolean isUnsafePost(
             HttpServletRequest request )
+    {
+        boolean ret = false;
+        if( "POST".equalsIgnoreCase( request.getMethod() )) {
+            Boolean safeUnsafe = (Boolean) request.getAttribute( SafeUnsafePostFilter.SAFE_UNSAFE_FLAG );
+            if( safeUnsafe != null && !safeUnsafe.booleanValue() ) {
+                ret = true;
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Determine whether this incoming request is an unsafe POST. This is a static method
+     * here so it can be invoked from anywhere in the application.
+     *
+     * @param request the incoming request
+     * @return true if this is an HTTP POST, but the POST is not safe
+     */
+    public static boolean isUnsafePost(
+            SaneRequest request )
     {
         boolean ret = false;
         if( "POST".equalsIgnoreCase( request.getMethod() )) {
@@ -160,6 +201,27 @@ public class SafeUnsafePostFilter
         }
         return ret;
     }
+
+    /**
+     * Determine whether this incoming request has not run through the SafeUnsafePostFilter, and thus
+     * it cannot be determined whether the HTTP POST is safe or not.
+     *
+     * @param request the incoming request
+     * @return true if this is an HTTP POST and it is unclear whether it is safe or not
+     */
+    public static boolean mayBeSafeOrUnsafePost(
+            SaneRequest request )
+    {
+        boolean ret = false;
+        if( "POST".equalsIgnoreCase( request.getMethod() )) {
+            Boolean safeUnsafe = (Boolean) request.getAttribute( SafeUnsafePostFilter.SAFE_UNSAFE_FLAG );
+            if( safeUnsafe == null ) {
+                ret = true;
+            }
+        }
+        return ret;
+    }
+
     /**
      * The filter configuration object this Filter is associated with.
      */
@@ -169,7 +231,7 @@ public class SafeUnsafePostFilter
      * Name of the attribute in the incoming request that indicates whether this is a safe request or not.
      */
     public static final String SAFE_UNSAFE_FLAG
-            = SaneServletRequest.classToAttributeName( SafeUnsafePostFilter.class, "safeunsafe" );
+            = SaneRequestUtils.classToAttributeName( SafeUnsafePostFilter.class, "safeunsafe" );
 
     /**
      * Name of the hidden field in the form.

@@ -224,6 +224,4 @@ public abstract class AbstractTomcatTest
      * The default regular expression flags for checking HTTP response content.
      */
     protected static final int DEFAULT_HTTP_REGEX_FLAGS = Pattern.CANON_EQ | Pattern.DOTALL | Pattern.MULTILINE;
-
 }
- 

@@ -29,6 +29,7 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -128,7 +129,7 @@ public class HttpShellFilter
     {
         HttpServletRequest  realRequest  = (HttpServletRequest)  request;
         HttpServletResponse realResponse = (HttpServletResponse) response;
-        SaneServletRequest  lidRequest   = (SaneServletRequest)  realRequest.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME  );
+        SaneRequest         lidRequest   = SaneServletRequest.create( realRequest );
 
         try {
             performFactoryOperations( lidRequest );
@@ -158,7 +159,7 @@ public class HttpShellFilter
      * @throws HttpShellException a factory Exception occurred
      */
     protected void performFactoryOperations(
-            SaneServletRequest lidRequest )
+            SaneRequest lidRequest )
         throws
             NotPermittedException,
             HttpShellException
@@ -167,8 +168,8 @@ public class HttpShellFilter
             return;
         }
 
-        if(    SafeUnsafePostFilter.isSafePost( lidRequest.getDelegate() )
-            || SafeUnsafePostFilter.mayBeSafeOrUnsafePost( lidRequest.getDelegate()))
+        if(    SafeUnsafePostFilter.isSafePost( lidRequest )
+            || SafeUnsafePostFilter.mayBeSafeOrUnsafePost( lidRequest ))
         {
             HttpShellVerb v = HttpShellVerb.findApplicableVerb( lidRequest );
             if( v == null ) {

@@ -23,8 +23,8 @@ import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -287,7 +287,7 @@ public abstract class InfoGridWebApp
      * List&lt;Throwable&gt;.
      */
     public static final String PROCESSING_PROBLEM_EXCEPTION_NAME
-            = SaneServletRequest.classToAttributeName( InfoGridWebApp.class, "RequestProblems" );
+            = SaneRequestUtils.classToAttributeName( InfoGridWebApp.class, "RequestProblems" );
 
     /**
      * The application context.

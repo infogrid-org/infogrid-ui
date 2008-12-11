@@ -17,7 +17,6 @@ package org.infogrid.jee.shell.http;
 import java.net.URISyntaxException;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -55,6 +54,7 @@ import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -141,7 +141,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -243,7 +243,7 @@ public enum HttpShellVerb
          */
         @Override
         public void performVerb(
-                SaneServletRequest lidRequest )
+                SaneRequest lidRequest )
             throws
                 NotPermittedException,
                 HttpShellException
@@ -400,7 +400,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -469,7 +469,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -559,7 +559,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -634,7 +634,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -730,7 +730,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -811,7 +811,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -911,7 +911,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -997,7 +997,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -1083,7 +1083,7 @@ public enum HttpShellVerb
          */
         @Override
         protected void performVerbWithinTransaction(
-                SaneServletRequest   lidRequest,
+                SaneRequest          lidRequest,
                 MeshObjectIdentifier subjectIdentifier,
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
@@ -1128,7 +1128,7 @@ public enum HttpShellVerb
      * @throws HttpShellException thrown if the operation could not be performed
      */
     public void performVerb(
-            SaneServletRequest lidRequest )
+            SaneRequest lidRequest )
         throws
             NotPermittedException,
             HttpShellException
@@ -1288,7 +1288,7 @@ public enum HttpShellVerb
      * @throws URISyntaxException thrown if a URI syntax error occurred
      */
     protected abstract void performVerbWithinTransaction(
-            SaneServletRequest   lidRequest,
+            SaneRequest          lidRequest,
             MeshObjectIdentifier subjectIdentifier,
             MeshObject           subject,
             MeshObjectIdentifier objectIdentifier,
@@ -1321,7 +1321,7 @@ public enum HttpShellVerb
      * @return the found MeHttpShellVerbor null if none
      */
     public static HttpShellVerb findApplicableVerb(
-            SaneServletRequest lidRequest )
+            SaneRequest lidRequest )
     {
         String verbValue = lidRequest.getPostArgument( HttpShellFilter.VERB_TAG );
         if( verbValue != null ) {
@@ -1386,7 +1386,7 @@ public enum HttpShellVerb
      * @throws TransactionException thrown if invoked outside of proper Transaction boundaries
      */
     protected void potentiallyBlessEntityTypes(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             MeshObject         subject,
             MeshBase           mb,
             boolean            throwExceptions )
@@ -1430,7 +1430,7 @@ public enum HttpShellVerb
      * @throws TransactionException thrown if invoked outside of proper Transaction boundaries
      */
     protected void potentiallySetProperties(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             MeshObject         subject,
             MeshBase           mb,
             boolean            throwExceptions )
@@ -1522,7 +1522,7 @@ public enum HttpShellVerb
      * @throws TransactionException thrown if invoked outside of proper Transaction boundaries
      */
     protected void potentiallyRelateAndBless(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             MeshObject         subject,
             MeshObject         object,
             MeshBase           mb,
@@ -1580,7 +1580,7 @@ public enum HttpShellVerb
      * @throws MeshTypeWithIdentifierNotFoundException thrown if a MeshType could not be found
      */
     protected static EntityType [] determineEntityTypes(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             MeshBase           mb )
         throws
             MeshTypeWithIdentifierNotFoundException
@@ -1632,7 +1632,7 @@ public enum HttpShellVerb
      * @throws MeshTypeWithIdentifierNotFoundException thrown if a MeshType could not be found
      */
     protected static RoleType [] determineRoleTypes(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             MeshBase           mb )
         throws
             MeshTypeWithIdentifierNotFoundException

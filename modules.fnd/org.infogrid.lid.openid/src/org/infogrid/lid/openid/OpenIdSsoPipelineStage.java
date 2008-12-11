@@ -16,7 +16,6 @@ package org.infogrid.lid.openid;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.VerbatimStructuredResponseTemplate;
@@ -27,6 +26,7 @@ import org.infogrid.lid.yadis.AbstractYadisService;
 import org.infogrid.util.Base64;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -83,10 +83,10 @@ public class OpenIdSsoPipelineStage
      * @throws LidAbortProcessingPipelineException thrown if processing is complete
      */
     public void processRequest(
-            SaneServletRequest              lidRequest,
-            StructuredResponse              lidResponse,
-            LidClientAuthenticationStatus   clientAuthStatus,
-            LidResource                     requestedResource )
+            SaneRequest                   lidRequest,
+            StructuredResponse            lidResponse,
+            LidClientAuthenticationStatus clientAuthStatus,
+            LidResource                   requestedResource )
         throws
             LidAbortProcessingPipelineException
     {
@@ -120,11 +120,11 @@ public class OpenIdSsoPipelineStage
      * @throws LidAbortProcessingPipelineException thrown if processing is complete
      */
     protected void processCheckId(
-            SaneServletRequest              lidRequest,
-            StructuredResponse              lidResponse,
-            LidClientAuthenticationStatus   clientAuthStatus,
-            LidResource                     requestedResource,
-            boolean                         checkIdImmediate )
+            SaneRequest                   lidRequest,
+            StructuredResponse            lidResponse,
+            LidClientAuthenticationStatus clientAuthStatus,
+            LidResource                   requestedResource,
+            boolean                       checkIdImmediate )
         throws
             LidAbortProcessingPipelineException
     {
@@ -245,10 +245,10 @@ public class OpenIdSsoPipelineStage
      * @throws LidAbortProcessingPipelineException thrown if processing is complete
      */
     protected void processCheckAuthentication(
-            SaneServletRequest              lidRequest,
-            StructuredResponse              lidResponse,
-            LidClientAuthenticationStatus   clientAuthStatus,
-            LidResource                     requestedResource )
+            SaneRequest                   lidRequest,
+            StructuredResponse            lidResponse,
+            LidClientAuthenticationStatus clientAuthStatus,
+            LidResource                   requestedResource )
         throws
             LidAbortProcessingPipelineException
     {

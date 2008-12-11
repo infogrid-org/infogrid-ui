@@ -17,11 +17,11 @@ package org.infogrid.jee.taglib.util;
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.FormTokenService;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.util.http.SaneRequestUtils;
         
 /**
  * <p>Generates an HTML form with a token that reduces CSRF attacks. This token
@@ -734,5 +734,5 @@ public class SafeFormTag
      * Name of the buffered token in the page context.
      */
     public static final String FORM_TOKEN_NAME
-            = SaneServletRequest.classToAttributeName( SafeFormTag.class, "token" );
+            = SaneRequestUtils.classToAttributeName( SafeFormTag.class, "token" );
 }

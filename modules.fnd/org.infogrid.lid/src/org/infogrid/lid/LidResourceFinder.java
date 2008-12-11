@@ -14,7 +14,7 @@
 
 package org.infogrid.lid;
 
-import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Given a request, this interface is supported by objects that know how to find
@@ -30,7 +30,7 @@ public interface LidResourceFinder
      * @throws LidResourceUnknownException thrown if the resource could not be found
      */
     public LidResource findLidResource(
-            SaneServletRequest request )
+            SaneRequest request )
         throws
             LidResourceUnknownException;
 }

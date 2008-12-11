@@ -14,8 +14,9 @@
 
 package org.infogrid.lid;
 
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.http.SaneRequestUtils;
 
 /**
  * Processes LID requests.
@@ -27,11 +28,12 @@ public interface LidProcessingPipeline
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
+     * @return the authentication status of the client
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
      */
-    public void processPipeline(
-            SaneServletRequest lidRequest,
+    public LidClientAuthenticationStatus processPipeline(
+            SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
             LidAbortProcessingPipelineException;
@@ -41,19 +43,19 @@ public interface LidProcessingPipeline
      * pipeline has been processed.
      */
     public static final String CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME
-            = SaneServletRequest.classToAttributeName( LidClientAuthenticationStatus.class );
+            = SaneRequestUtils.classToAttributeName( LidClientAuthenticationStatus.class );
 
     /**
      * Name of the LidPersona instance representing the client, and found in the request after the
      * pipeline has been processed.
      */
     public static final String CLIENT_PERSONA_ATTRIBUTE_NAME
-            = SaneServletRequest.classToAttributeName( LidPersona.class );
+            = SaneRequestUtils.classToAttributeName( LidPersona.class );
 
     /**
      * Name of the LidResource instance found in the request after the pipeline has
      * been processed.
      */
     public static final String REQUESTED_RESOURCE_ATTRIBUTE_NAME
-            = SaneServletRequest.classToAttributeName( LidResource.class );
+            = SaneRequestUtils.classToAttributeName( LidResource.class );
 }

@@ -15,14 +15,13 @@
 package org.infogrid.jee.rest;
 
 import java.net.URISyntaxException;
-import javax.servlet.http.HttpServletRequest;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.http.SaneRequestUtils;
 
 /**
  * Encapsulates parameter parsing according to InfoGrid REST conventions.
@@ -109,17 +108,10 @@ public interface RestfulRequest
     public String getRequestedMimeType();
 
     /**
-     * Determine the underlying HttpServletRequest.
-     * 
-     * @return the delegate
-     */
-    public HttpServletRequest getDelegate();
-
-    /**
      * Name of the request attribute that contains an instance of this type.
      */
     public static final String RESTFUL_REQUEST_ATTRIBUTE_NAME
-            = SaneServletRequest.classToAttributeName( RestfulRequest.class );
+            = SaneRequestUtils.classToAttributeName( RestfulRequest.class );
 
     /**
      * Name of the LID format parameter.

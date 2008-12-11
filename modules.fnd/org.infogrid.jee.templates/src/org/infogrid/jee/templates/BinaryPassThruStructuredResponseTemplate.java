@@ -17,7 +17,7 @@ package org.infogrid.jee.templates;
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
-import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * A ResponseTemplate that returns binary content verbatim.
@@ -34,7 +34,7 @@ public class BinaryPassThruStructuredResponseTemplate
      * @return the created JspStructuredResponseTemplate
      */
     public static BinaryPassThruStructuredResponseTemplate create(
-            SaneServletRequest request,
+            SaneRequest        request,
             StructuredResponse structured )
     {
         BinaryPassThruStructuredResponseTemplate ret = new BinaryPassThruStructuredResponseTemplate(
@@ -50,7 +50,7 @@ public class BinaryPassThruStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      */
     protected BinaryPassThruStructuredResponseTemplate(
-            SaneServletRequest request,
+            SaneRequest        request,
             StructuredResponse structured )
     {
         super( request, null, null, structured );

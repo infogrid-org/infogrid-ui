@@ -15,10 +15,13 @@
 package org.infogrid.jee.taglib.templates;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseSection;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Inlines the reported errors into the output.
@@ -98,8 +101,9 @@ public class InlineErrorsTag
 
             reportedProblems = structured.problemsAggregate();
         }
-        
-        String content = theFormatter.formatProblems( pageContext, reportedProblems, theStringRepresentation );                
+        SaneRequest sane = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+
+        String content = theFormatter.formatProblems( sane, reportedProblems, theStringRepresentation );
         print( content );
 
         return SKIP_BODY;

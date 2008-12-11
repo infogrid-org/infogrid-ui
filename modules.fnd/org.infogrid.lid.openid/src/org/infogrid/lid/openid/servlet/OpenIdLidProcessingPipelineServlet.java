@@ -15,7 +15,6 @@
 
 package org.infogrid.lid.openid.servlet;
 
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.lid.LidProcessingPipeline;
@@ -24,6 +23,7 @@ import org.infogrid.lid.openid.OpenIdAssociationException;
 import org.infogrid.lid.openid.OpenIdSsoException;
 import org.infogrid.lid.servlet.LidProcessingPipelineServlet;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Invokes the LidProcessingPipeline.
@@ -67,7 +67,7 @@ public class OpenIdLidProcessingPipelineServlet
      */
     @Override
     protected void handleException(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             StructuredResponse lidResponse,
             Throwable          t )
     {

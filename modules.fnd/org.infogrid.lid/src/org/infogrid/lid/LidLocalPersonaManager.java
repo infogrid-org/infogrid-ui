@@ -15,8 +15,8 @@
 package org.infogrid.lid;
 
 import java.util.Map;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.lid.credential.LidCredentialType;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Manages locally provisioned identities.
@@ -97,7 +97,7 @@ public interface LidLocalPersonaManager
      * @throws LidResourceUnknownException thrown if the resource could not be found
      */
     public LidLocalPersona findLidResource(
-            SaneServletRequest request )
+            SaneRequest request )
         throws
             LidResourceUnknownException;
 

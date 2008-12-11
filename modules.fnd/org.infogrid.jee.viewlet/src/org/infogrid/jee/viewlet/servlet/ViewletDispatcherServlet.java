@@ -41,6 +41,7 @@ import org.infogrid.model.traversal.TraversalDictionary;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
@@ -73,9 +74,9 @@ public class ViewletDispatcherServlet
             ServletException,
             IOException
     {
-        HttpServletRequest  servletRequest = (HttpServletRequest) request;
-        SaneServletRequest  saneRequest    = (SaneServletRequest) request.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME  );
-        StructuredResponse  structured     = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+        HttpServletRequest servletRequest = (HttpServletRequest) request;
+        SaneRequest        saneRequest    = SaneServletRequest.create( servletRequest );
+        StructuredResponse structured     = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
         InfoGridWebApp      app     = InfoGridWebApp.getSingleton();
         Context             c       = app.getApplicationContext();
@@ -190,9 +191,9 @@ public class ViewletDispatcherServlet
      * @return the created RestfulRequest
      */
     protected RestfulRequest createRestfulRequest(
-            SaneServletRequest lidRequest,
-            String             context,
-            String             defaultMeshBaseIdentifier )
+            SaneRequest lidRequest,
+            String      context,
+            String      defaultMeshBaseIdentifier )
     {
         DefaultRestfulRequest ret = DefaultRestfulRequest.create(
                 lidRequest,

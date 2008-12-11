@@ -81,8 +81,6 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         
         InfoGridWebApp app        = InfoGridWebApp.getSingleton();
         Context        appContext = app.getApplicationContext();
-        
-        ResourceHelper theResourceHelper = ResourceHelper.getInstance( getClass() );
         try {
             initializeDataSources();
 
@@ -108,7 +106,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             }
             
             // AccessManager
-            NetAccessManager accessMgr = null; // NetMeshWorldAccessManager.obtain();
+            NetAccessManager accessMgr = createAccessManager();
 
             ProbeDirectory probeDirectory = MProbeDirectory.create();
             ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
@@ -167,6 +165,16 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             throws
                 NamingException,
                 IOException;
+
+    /**
+     * Overridable method to create the AccessManager to use.
+     *
+     * @return the created AccessManager, or null
+     */
+    protected NetAccessManager createAccessManager()
+    {
+        return null;
+    }
 
     /**
      * The Store for MeshObjects. This must be set by a subclass.

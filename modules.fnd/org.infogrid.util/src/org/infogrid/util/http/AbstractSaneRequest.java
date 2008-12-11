@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -20,10 +20,20 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * A saner API for incoming HTTP requests than the JDK's HttpServletRequest.
+ * Factors out functionality common to many implementations of SaneRequest.
  */
-public interface SaneRequest
+public abstract class AbstractSaneRequest
+        implements
+            SaneRequest
 {
+    /**
+     * Private constructor, for subclasses only.
+     */
+    protected AbstractSaneRequest()
+    {
+        // nothing
+    }
+
     /**
      * Determine the HTTP method (such as GET).
      *
@@ -38,7 +48,17 @@ public interface SaneRequest
      *
      * @return the requested root URI
      */
-    public abstract String getRootUri();
+    public String getRootUri()
+    {
+        if( theRootUri == null ) {
+            StringBuffer buf = new StringBuffer( 64 );
+            buf.append( getProtocol());
+            buf.append( "://" );
+            buf.append( getHttpHost());
+            theRootUri = buf.toString();
+        }
+        return theRootUri;
+    }
 
     /**
      * Determine the requested, relative base URI.
@@ -56,7 +76,13 @@ public interface SaneRequest
      *
      * @return the requested absolute base URI
      */
-    public abstract String getAbsoluteBaseUri();
+    public String getAbsoluteBaseUri()
+    {
+        if( theAbsoluteBaseUri == null ) {
+            theAbsoluteBaseUri = getRootUri() + getRelativeBaseUri();
+        }
+        return theAbsoluteBaseUri;
+    }
 
     /**
      * Determine the requested, relative full URI.
@@ -74,7 +100,13 @@ public interface SaneRequest
      *
      * @return the requested absolute full URI
      */
-    public abstract String getAbsoluteFullUri();
+    public String getAbsoluteFullUri()
+    {
+        if( theAbsoluteFullUri == null ) {
+            theAbsoluteFullUri = getRootUri() + getRelativeFullUri();
+        }
+        return theAbsoluteFullUri;
+    }
 
     /**
      * Get the name of the server.
@@ -109,8 +141,8 @@ public interface SaneRequest
      *
      * @return http or https
      */
-    public abstract String getProtocol();    
-    
+    public abstract String getProtocol();
+
     /**
      * Obtain all values of a multi-valued argument
      *
@@ -128,9 +160,19 @@ public interface SaneRequest
      * @param name the name of the argument
      * @return the value of the argument with name name
      */
-    public abstract String getArgument(
-            String name );
-    
+    public final String getArgument(
+            String name )
+    {
+        String [] almost = getMultivaluedArgument( name );
+        if( almost == null || almost.length == 0 ) {
+            return null;
+        } else if( almost.length == 1 ) {
+            return almost[0];
+        } else {
+            throw new IllegalStateException( "Argument " + name + " has " + almost.length + " values" );
+        }
+    }
+
     /**
      * Obtain all arguments of this Request.
      *
@@ -141,14 +183,26 @@ public interface SaneRequest
     /**
      * Determine whether a named argument has the given value. This method is useful
      * in case several arguments have been given with the same name.
-     * 
+     *
      * @param name the name of the argument
      * @param value the desired value of the argument
      * @return true if the request contains an argument with this name and value
      */
-    public abstract boolean matchArgument(
+    public boolean matchArgument(
             String name,
-            String value );
+            String value )
+    {
+        String [] found = getMultivaluedArgument( name );
+        if( found == null ) {
+            return false;
+        }
+        for( String current : found ) {
+            if( value.equals( current )) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Obtain a POST'd argument. If more than one argument is given by this name,
@@ -157,8 +211,18 @@ public interface SaneRequest
      * @param argName name of the argument
      * @return value.
      */
-    public abstract String getPostArgument(
-            String argName );
+    public final String getPostArgument(
+            String argName )
+    {
+        String [] almost = getMultivaluedPostArgument( argName );
+        if( almost == null || almost.length == 0 ) {
+            return null;
+        } else if( almost.length == 1 ) {
+            return almost[0];
+        } else {
+            throw new IllegalStateException();
+        }
+    }
 
     /**
      * Obtain all values of a multi-valued POST'd argument
@@ -203,8 +267,19 @@ public interface SaneRequest
      * @param name the name of the cookie
      * @return the named cookie, or null
      */
-    public abstract SaneCookie getCookie(
-            String name );
+    public SaneCookie getCookie(
+            String name )
+    {
+        SaneCookie [] cookies = getCookies();
+        if( cookies != null ) {
+            for( int i=0 ; i<cookies.length ; ++i ) {
+                if( cookies[i].getName().equals( name )) {
+                    return cookies[i];
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * Obtain the value of a named cookie, or null if not present.
@@ -212,16 +287,25 @@ public interface SaneRequest
      * @param name the name of the cookie
      * @return the value of the named cookie, or null
      */
-    public abstract String getCookieValue(
-            String name );
+    public String getCookieValue(
+            String name )
+    {
+        SaneCookie cook = getCookie( name );
+        if( cook != null ) {
+            return cook.getValue();
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * Obtain the query string, if any.
-     * 
+     *
      * @return the query string
      */
     public abstract String getQueryString();
-    
+
     /**
      * Obtain the client IP address.
      *
@@ -308,4 +392,60 @@ public interface SaneRequest
      * @see #removeAttribute
      */
     public abstract Enumeration<String> getAttributeNames();
+
+    /**
+     * Helper method to convert a class name into a suitable attribute name.
+     *
+     * @param clazz the Class
+     * @return the attribute name
+     */
+    public static String classToAttributeName(
+            Class<?> clazz )
+    {
+        String ret = clazz.getName();
+        ret = ret.replaceAll( "\\.", "_" );
+        return ret;
+    }
+
+    /**
+     * Helper method to convert a class name and a local fragment into a suitable attribute name.
+     *
+     * @param clazz the Class
+     * @param fragment the fragment, or local id
+     * @return the attribute name
+     */
+    public static String classToAttributeName(
+            Class<?> clazz,
+            String   fragment )
+    {
+        String ret = clazz.getName();
+        ret = ret.replaceAll( "\\.", "_" );
+        ret = ret + "__" + fragment;
+        return ret;
+    }
+
+    /**
+     * The root URI of the Request.
+     */
+    private String theRootUri;
+
+    /**
+     * The absolute base URI of the Request.
+     */
+    private String theAbsoluteBaseUri;
+
+    /**
+     * The absolute full URI of the Request.
+     */
+    private String theAbsoluteFullUri;
+
+    /**
+     * Name of the cookie that might contain Accept-Language information.
+     */
+    public static final String ACCEPT_LANGUAGE_COOKIE_NAME = "Accept-Language";
+
+    /**
+     * Name of the HTTP Header that specifies the acceptable MIME types.
+     */
+    protected static final String ACCEPT_HEADER = "Accept";
 }

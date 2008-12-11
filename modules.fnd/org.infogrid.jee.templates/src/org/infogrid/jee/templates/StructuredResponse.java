@@ -23,8 +23,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -102,7 +102,7 @@ public class StructuredResponse
      */
     public TextStructuredResponseSection getDefaultTextSection()
     {
-        return obtainTextSection( DEFAULT_TEXT_SECTION );
+        return obtainTextSection( TEXT_DEFAULT_SECTION );
     }
 
     /**
@@ -112,7 +112,7 @@ public class StructuredResponse
      */
     public BinaryStructuredResponseSection getDefaultBinarySection()
     {
-        return obtainBinarySection( DEFAULT_BINARY_SECTION );
+        return obtainBinarySection( BINARY_DEFAULT_SECTION );
     }
 
     /**
@@ -303,8 +303,8 @@ public class StructuredResponse
             String name )
     {
         TextStructuredResponseSectionTemplate ret;
-        if( DEFAULT_TEXT_SECTION.getSectionName().equals( name )) {
-            ret = DEFAULT_TEXT_SECTION;
+        if( TEXT_DEFAULT_SECTION.getSectionName().equals( name )) {
+            ret = TEXT_DEFAULT_SECTION;
         } else {
             ret = TextStructuredResponseSectionTemplate.create( name );
         }
@@ -321,8 +321,8 @@ public class StructuredResponse
             String name )
     {
         BinaryStructuredResponseSectionTemplate ret;
-        if( DEFAULT_BINARY_SECTION.getSectionName().equals( name )) {
-            ret = DEFAULT_BINARY_SECTION;
+        if( BINARY_DEFAULT_SECTION.getSectionName().equals( name )) {
+            ret = BINARY_DEFAULT_SECTION;
         } else {
             ret = BinaryStructuredResponseSectionTemplate.create( name );
         }
@@ -668,7 +668,7 @@ public class StructuredResponse
      * interpret it as being an expression.
      */
     public static final String STRUCTURED_RESPONSE_ATTRIBUTE_NAME
-            = SaneServletRequest.classToAttributeName( StructuredResponse.class );
+            = SaneRequestUtils.classToAttributeName( StructuredResponse.class );
 
     /**
      * Our ResourceHelper.
@@ -685,15 +685,15 @@ public class StructuredResponse
      * The single default section for text content. Output will be written into this section
      * unless otherwise specified.
      */
-    public static final TextStructuredResponseSectionTemplate DEFAULT_TEXT_SECTION
-            = TextStructuredResponseSectionTemplate.create( "default-text" );
+    public static final TextStructuredResponseSectionTemplate TEXT_DEFAULT_SECTION
+            = TextStructuredResponseSectionTemplate.create( "text-default" );
 
     /**
      * The single default section for binary content. Binary output will be written into this section
      * unless otherwise specified.
      */
-    public static final BinaryStructuredResponseSectionTemplate DEFAULT_BINARY_SECTION
-            = BinaryStructuredResponseSectionTemplate.create( "default-binary" );
+    public static final BinaryStructuredResponseSectionTemplate BINARY_DEFAULT_SECTION
+            = BinaryStructuredResponseSectionTemplate.create( "binary-default" );
 
     /**
      * The section representing the head of an HTML document.

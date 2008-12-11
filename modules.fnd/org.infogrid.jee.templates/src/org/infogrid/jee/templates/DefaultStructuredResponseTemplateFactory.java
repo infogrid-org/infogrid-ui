@@ -16,7 +16,6 @@ package org.infogrid.jee.templates;
 
 import javax.servlet.RequestDispatcher;
 import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
@@ -27,7 +26,7 @@ import org.infogrid.util.http.SaneRequest;
  */
 public class DefaultStructuredResponseTemplateFactory
         extends
-            AbstractFactory<SaneServletRequest,StructuredResponseTemplate,StructuredResponse>
+            AbstractFactory<SaneRequest,StructuredResponseTemplate,StructuredResponse>
         implements
             StructuredResponseTemplateFactory
 {
@@ -75,7 +74,7 @@ public class DefaultStructuredResponseTemplateFactory
      * @throws FactoryException catch-all Exception, consider its cause
      */
     public StructuredResponseTemplate obtainFor(
-            SaneServletRequest request,
+            SaneRequest        request,
             StructuredResponse structured )
         throws
             FactoryException
@@ -123,7 +122,12 @@ public class DefaultStructuredResponseTemplateFactory
             }
 
             if( dispatcher != null ) {
-                ret = JspStructuredResponseTemplate.create( dispatcher, request, requestedTemplateName, userRequestedTemplateName, structured );
+                ret = JspStructuredResponseTemplate.create(
+                        dispatcher,
+                        request,
+                        requestedTemplateName,
+                        userRequestedTemplateName,
+                        structured );
 
             } else if( mime != null && !mime.startsWith( "text/" )) {
                 // binary content
@@ -131,7 +135,11 @@ public class DefaultStructuredResponseTemplateFactory
                 
             } else {
                 // all hope is lost, we have to stream verbatim whatever it is that is in structured
-                ret = VerbatimStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured );
+                ret = VerbatimStructuredResponseTemplate.create(
+                        request,
+                        requestedTemplateName,
+                        userRequestedTemplateName,
+                        structured );
             }
         }
         return ret;
@@ -144,7 +152,7 @@ public class DefaultStructuredResponseTemplateFactory
      * @return class name of the requested layout template, if any
      */
     public String getUserRequestedTemplate(
-            SaneServletRequest request )
+            SaneRequest request )
     {
         String ret = request.getArgument( StructuredResponseTemplate.LID_TEMPLATE_PARAMETER_NAME );
 

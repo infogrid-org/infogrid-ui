@@ -20,7 +20,6 @@ import java.util.Map;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.rest.net.DefaultNetRestfulRequest;
 import org.infogrid.jee.rest.net.NetRestfulRequest;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.viewlet.servlet.ViewletDispatcherServlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
@@ -28,7 +27,7 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.model.traversal.TraversalDictionary;
 import org.infogrid.model.traversal.TraversalSpecification;
-import org.infogrid.util.logging.Log;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
 
@@ -39,7 +38,6 @@ public class NetViewletDispatcherServlet
         extends
             ViewletDispatcherServlet
 {
-    private static final Log  log              = Log.getLogInstance( NetViewletDispatcherServlet.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
@@ -53,9 +51,9 @@ public class NetViewletDispatcherServlet
      */
     @Override
     protected NetRestfulRequest createRestfulRequest(
-            SaneServletRequest lidRequest,
-            String             context,
-            String             defaultMeshBaseIdentifier )
+            SaneRequest lidRequest,
+            String      context,
+            String      defaultMeshBaseIdentifier )
     {
         DefaultNetRestfulRequest ret = DefaultNetRestfulRequest.create(
                 lidRequest,

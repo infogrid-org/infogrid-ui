@@ -14,8 +14,6 @@
 
 package org.infogrid.lid.openid;
 
-import javax.servlet.http.HttpServletRequest;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
 import org.infogrid.lid.LidClientAuthenticationPipelineStage;
@@ -28,6 +26,7 @@ import org.infogrid.lid.LidResourceUnknownException;
 import org.infogrid.lid.yadis.YadisPipelineProcessingStage;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -77,16 +76,16 @@ public class DefaultOpenIdLidProcessingPipeline
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
+     * @return the authentication status of the client
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
      */
-    public void processPipeline(
-            SaneServletRequest lidRequest,
+    public LidClientAuthenticationStatus processPipeline(
+            SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
             LidAbortProcessingPipelineException
     {
-        HttpServletRequest            realRequest       = lidRequest.getDelegate();
         LidResource                   requestedResource = null;
         LidClientAuthenticationStatus clientAuthStatus  = null;
         LidPersona                    clientPersona     = null;
@@ -96,7 +95,7 @@ public class DefaultOpenIdLidProcessingPipeline
         if( lid_target == null ) {
             lid_target = lidRequest.getArgument( "openid.return_to" );
         }
-        realRequest.setAttribute( LID_TARGET_ATTRIBUTE_NAME, lid_target );
+        lidRequest.setAttribute( LID_TARGET_ATTRIBUTE_NAME, lid_target );
 
         if( theOpenIdIdpSideAssociationStage != null ) {
             theOpenIdIdpSideAssociationStage.processRequest( lidRequest, lidResponse );
@@ -109,7 +108,7 @@ public class DefaultOpenIdLidProcessingPipeline
                 log.info( ex );
             }
         }
-        realRequest.setAttribute( REQUESTED_RESOURCE_ATTRIBUTE_NAME, requestedResource );
+        lidRequest.setAttribute( REQUESTED_RESOURCE_ATTRIBUTE_NAME, requestedResource );
 
         if( theYadisStage != null ) {
             theYadisStage.processRequest( lidRequest, lidResponse, requestedResource );
@@ -118,16 +117,18 @@ public class DefaultOpenIdLidProcessingPipeline
         if( theAuthenticationStage != null ) {
             clientAuthStatus = theAuthenticationStage.determineAuthenticationStatus( lidRequest, lidResponse );
         }
-        realRequest.setAttribute( CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME, clientAuthStatus );
+        lidRequest.setAttribute( CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME, clientAuthStatus );
 
         if( clientAuthStatus != null ) {
             clientPersona = clientAuthStatus.getClientPersona();
         }
-        realRequest.setAttribute( CLIENT_PERSONA_ATTRIBUTE_NAME, clientPersona );
+        lidRequest.setAttribute( CLIENT_PERSONA_ATTRIBUTE_NAME, clientPersona );
 
         if( theOpenIdSsoStage != null ) {
             theOpenIdSsoStage.processRequest( lidRequest, lidResponse, clientAuthStatus, requestedResource );
         }
+
+        return clientAuthStatus;
     }
     
     /**

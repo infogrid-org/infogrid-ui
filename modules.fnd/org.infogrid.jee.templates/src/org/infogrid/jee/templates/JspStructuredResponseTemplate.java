@@ -17,9 +17,9 @@ package org.infogrid.jee.templates;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * A ResponseTemplate that processes a JSP page with placeholders, in which the named
@@ -41,7 +41,7 @@ public class JspStructuredResponseTemplate
      */
     public static JspStructuredResponseTemplate create(
             RequestDispatcher  dispatcher,
-            SaneServletRequest request,
+            SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured )
@@ -66,7 +66,7 @@ public class JspStructuredResponseTemplate
      */
     protected JspStructuredResponseTemplate(
             RequestDispatcher  dispatcher,
-            SaneServletRequest request,
+            SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured )
@@ -98,16 +98,16 @@ public class JspStructuredResponseTemplate
         outputLocation(    delegate, structured );
         outputYadisHeader( delegate, structured );
 
-        HttpServletRequest servletRequest = theRequest.getDelegate();
-        
-        Object oldStructured = servletRequest.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+        Object oldStructured = theRequest.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
         try {
-            servletRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
+            theRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
 
-            theRequestDispatcher.include( servletRequest, delegate );
+            theRequestDispatcher.include(
+                    ((SaneServletRequest) theRequest).getDelegate(),
+                    delegate );
 
         } finally {
-            servletRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, oldStructured );
+            theRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, oldStructured );
         }
     }
     

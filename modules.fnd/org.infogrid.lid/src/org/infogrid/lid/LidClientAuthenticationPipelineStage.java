@@ -14,8 +14,8 @@
 
 package org.infogrid.lid;
 
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Knows how to determine the authentication status of the client from an incoming request.
@@ -34,7 +34,7 @@ public interface LidClientAuthenticationPipelineStage
      *         and no further processing is necessary
      */
     public LidClientAuthenticationStatus determineAuthenticationStatus(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
             LidAbortProcessingPipelineException;

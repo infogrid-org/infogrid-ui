@@ -21,6 +21,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.lid.LidCookies;
@@ -60,7 +61,7 @@ public class LidSessionFilter
             IOException,
             ServletException
     {
-        SaneRequest saneRequest = (SaneRequest) request.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) request );
 
         String lid     = saneRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
         String session = saneRequest.getCookieValue( LidCookies.LID_SESSION_COOKIE_NAME );

@@ -14,7 +14,7 @@
 
 package org.infogrid.lid;
 
-import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Factors out common functionality of LidIdentityManagers.
@@ -31,7 +31,7 @@ public abstract class AbstractLidLocalPersonaManager
      * @throws LidResourceUnknownException thrown if the resource could not be found
      */
     public LidLocalPersona findLidResource(
-            SaneServletRequest request )
+            SaneRequest request )
         throws
             LidResourceUnknownException
     {

@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Set;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
-import org.infogrid.util.FactoryException;
 import org.infogrid.util.http.SaneRequest;
 
 /**

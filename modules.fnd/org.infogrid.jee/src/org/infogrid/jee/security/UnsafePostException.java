@@ -14,8 +14,8 @@
 
 package org.infogrid.jee.security;
 
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Thrown if an unsafe POST was attempted in a place where that was not acceptable.
@@ -32,7 +32,7 @@ public class UnsafePostException
      * @param request the incoming RESTful request
      */
     public UnsafePostException(
-            SaneServletRequest request )
+            SaneRequest request )
     {
         theRequest = request;
     }
@@ -42,7 +42,7 @@ public class UnsafePostException
      * 
      * @return the request
      */
-    public SaneServletRequest getRequest()
+    public SaneRequest getRequest()
     {
         return theRequest;
     }
@@ -60,5 +60,5 @@ public class UnsafePostException
     /**
      * The unsafe request.
      */
-    protected SaneServletRequest theRequest;
+    protected SaneRequest theRequest;
 }

@@ -31,9 +31,9 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CompositeIterator;
 import org.infogrid.util.OneElementIterator;
 import org.infogrid.util.StreamUtils;
+import org.infogrid.util.http.AbstractSaneRequest;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneCookie;
-import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -41,7 +41,7 @@ import org.infogrid.util.logging.Log;
  */
 public class SaneServletRequest
         extends
-            SaneRequest
+            AbstractSaneRequest
 {
     private static final Log log = Log.getLogInstance( SaneServletRequest.class ); // our own, private logger
     
@@ -406,11 +406,21 @@ public class SaneServletRequest
     {
         return thePostArguments;
     }    
-    
+
     /**
-     * Obtain the JEE app's context path, but in absolute terms.
-     * 
-     * @return the absolute context path
+     * Obtain the relative context Uri of this application.
+     *
+     * @return the relative context URI
+     */
+    public String getContextPath()
+    {
+        return theContextPath;
+    }
+
+    /**
+     * Obtain the absolute context Uri of this application.
+     *
+     * @return the absolute context URI
      */
     public String getAbsoluteContextUri()
     {
@@ -571,6 +581,17 @@ public class SaneServletRequest
     }
 
     /**
+     * Obtain the value of the accept header, if any.
+     *
+     * @return the value of the accept header
+     */
+    public String getAcceptHeader()
+    {
+        String ret = theDelegate.getHeader( "Accept" );
+        return ret;
+    }
+
+    /**
      * Obtain the delegate request.
      *
      * @return the delegate
@@ -581,34 +602,66 @@ public class SaneServletRequest
     }
 
     /**
-     * Helper method to convert a class name into a suitable attribute name.
-     * 
-     * @param clazz the Class
-     * @return the attribute name
+     * Set a request-context attribute. The semantics are equivalent to setting
+     * an attribute on an HttpServletRequest.
+     *
+     * @param name the name of the attribute
+     * @param value the value of the attribute
+     * @see #getAttribute
+     * @see #removeAttribute
+     * @see #getAttributeNames
      */
-    public static String classToAttributeName(
-            Class<?> clazz )
+    public void setAttribute(
+            String name,
+            Object value )
     {
-        String ret = clazz.getName();
-        ret = ret.replaceAll( "\\.", "_" );
+        theDelegate.setAttribute( name, value );
+    }
+
+    /**
+     * Get a request-context attribute. The semantics are equivalent to getting
+     * an attribute on an HttpServletRequest.
+     *
+     * @param name the name of the attribute
+     * @return the value of the attribute
+     * @see #setAttribute
+     * @see #removeAttribute
+     * @see #getAttributeNames
+     */
+    public Object getAttribute(
+            String name )
+    {
+        Object ret = theDelegate.getAttribute( name );
         return ret;
     }
 
     /**
-     * Helper method to convert a class name and a local fragment into a suitable attribute name.
-     * 
-     * @param clazz the Class
-     * @param fragment the fragment, or local id
-     * @return the attribute name
+     * Remove a request-context attribute. The semantics are equivalent to removing
+     * an attribute on an HttpServletRequest.
+     *
+     * @param name the name of the attribute
+     * @see #setAttribute
+     * @see #getAttribute
+     * @see #getAttributeNames
      */
-    public static String classToAttributeName(
-            Class<?> clazz,
-            String   fragment )
+    public void removeAttribute(
+            String name )
     {
-        String ret = clazz.getName();
-        ret = ret.replaceAll( "\\.", "_" );
-        ret = ret + "__" + fragment;
-        return ret;
+        theDelegate.removeAttribute( name );
+    }
+
+    /**
+     * Iterate over all request-context attributes currently set.
+     *
+     * @return an Iterator over the names of all the request-context attributes
+     * @see #setAttribute
+     * @see #getAttribute
+     * @see #removeAttribute
+     */
+    @SuppressWarnings("unchecked")
+    public Enumeration<String> getAttributeNames()
+    {
+        return theDelegate.getAttributeNames();
     }
 
     /**

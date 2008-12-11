@@ -32,6 +32,7 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -75,7 +76,7 @@ public class TemplatesFilter
         HttpServletResponse realResponse = (HttpServletResponse) response;
 
         InfoGridWebApp      app           = InfoGridWebApp.getSingleton();
-        SaneServletRequest  saneRequest   = SaneServletRequest.create( realRequest );
+        SaneRequest         saneRequest   = SaneServletRequest.create( realRequest );
         StructuredResponse  structured    = createStructuredResponse( realResponse );
 
         request.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );

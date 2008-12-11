@@ -16,7 +16,7 @@ package org.infogrid.jee.templates;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
-import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * A ResponseTemplate that emits nothing, regardless of what content has been set.
@@ -35,7 +35,7 @@ public class NoContentStructuredResponseTemplate
      * @return the created JspStructuredResponseTemplate
      */
     public static NoContentStructuredResponseTemplate create(
-            SaneServletRequest request,
+            SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured )
@@ -58,7 +58,7 @@ public class NoContentStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      */
     protected NoContentStructuredResponseTemplate(
-            SaneServletRequest request,
+            SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured )

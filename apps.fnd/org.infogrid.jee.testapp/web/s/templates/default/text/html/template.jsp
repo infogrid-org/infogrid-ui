@@ -29,7 +29,7 @@
       <tmpl:inlineErrors stringRepresentation="Html"/>
      </div>
     </tmpl:ifErrors>
-    <tmpl:inline name="default"/>
+    <tmpl:inline name="text-default"/>
    </div>
   </div>
  </body>

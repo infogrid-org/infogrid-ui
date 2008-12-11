@@ -26,7 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import org.infogrid.jee.sane.SaneServletRequest;
 
 /**
  * <p>Regular-expression-based dispatcher for the different request types.</p>
@@ -89,15 +88,9 @@ public class RegexDispatcherFilter
             IOException,
             ServletException
     {
-        HttpServletRequest  realRequest  = (HttpServletRequest) request;
-        SaneServletRequest  lidRequest   = (SaneServletRequest) request.getAttribute( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
+        HttpServletRequest realRequest = (HttpServletRequest) request;
 
-        String relativePath;
-        if( lidRequest != null ) {
-            relativePath = realRequest.getServletPath();
-        } else {
-            relativePath = lidRequest.getRelativeBaseUri();
-        }
+        String relativePath = realRequest.getServletPath();
 
         Matcher m = thePattern.matcher( relativePath );
         if( m.matches() ) {

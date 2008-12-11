@@ -149,8 +149,8 @@ public class WikiObjectEditViewlet
         
         Mode theMode = theAction.determineMode();
 
-        request.getDelegate().setAttribute( "action", theAction.getName() );
-        request.getDelegate().setAttribute( "mode",   theMode.getName() );
+        sane.setAttribute( "action", theAction.getName() );
+        sane.setAttribute( "mode",   theMode.getName() );
 
         String currentContent = sane.getPostArgument( "current-content" );
 
