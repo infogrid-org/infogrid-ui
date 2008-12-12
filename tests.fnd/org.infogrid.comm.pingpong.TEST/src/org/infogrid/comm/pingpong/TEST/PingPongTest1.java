@@ -111,7 +111,6 @@ public class PingPongTest1
         throws
             Exception
     {
-        super( thisPackage( PingPongTest1.class, "Log.properties" ));
     }
 
     /**

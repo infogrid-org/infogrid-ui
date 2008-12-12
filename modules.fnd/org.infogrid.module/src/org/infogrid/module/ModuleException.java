@@ -31,7 +31,7 @@ public abstract class ModuleException
             ModuleAdvertisement adv,
             Throwable           cause )
     {
-        super( cause );
+        super( null, cause ); // do not create default message
 
         theModuleAdvertisement = adv;
     }

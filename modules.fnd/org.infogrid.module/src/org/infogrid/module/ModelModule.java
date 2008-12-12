@@ -14,9 +14,7 @@
 
 package org.infogrid.module;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.*;
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -62,9 +60,11 @@ public class ModelModule
      * This method does nothing here.
      *
      * @param parameters the set of parameters for this Module
+     * @param whereParametersSpecifiedMap maps which Modules specified each parameter
      */
     protected void configure(
-            Map<String,? extends Object> parameters )
+            Map<String,? extends Object> parameters,
+            Map<String,Module>           whereParametersSpecifiedMap )
     {
         // NO OP
     }

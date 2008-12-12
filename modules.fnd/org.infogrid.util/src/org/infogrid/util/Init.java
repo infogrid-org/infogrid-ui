@@ -16,7 +16,6 @@ package org.infogrid.util;
 
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleAdvertisement;
-import org.infogrid.module.ModuleConfigurationException;
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleRequirement;
 
@@ -34,11 +33,13 @@ public abstract class Init
      * Configure this Module.
      *
      * @param parameters the parameters for initialization
+     * @param whereParametersSpecifiedMap maps which Modules specified each parameter
      * @param thisModule the Module to be configured
      * @throws Exception may throw a range of Exceptions
      */
     public static void configure(
-            Map<String,String> parameters,
+            Map<String,Object> parameters,
+            Map<String,Module> whereParametersSpecifiedMap,
             Module             thisModule )
         throws
             Exception
@@ -47,8 +48,8 @@ public abstract class Init
             return;
         }
 
-        String className  = parameters.get( LOG_FACTORY_CLASS_PARAMETER_NAME );
-        String moduleName = parameters.get( LOG_FACTORY_MODULE_PARAMETER_NAME );
+        String className  = (String) parameters.get( LOG_FACTORY_CLASS_PARAMETER_NAME );
+        String moduleName = (String) parameters.get( LOG_FACTORY_MODULE_PARAMETER_NAME );
 
         if( className == null ) {
             return;

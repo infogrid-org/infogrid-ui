@@ -26,11 +26,13 @@ public abstract class Init
      * Configure this Module.
      *
      * @param parameters the parameters for initialization
+     * @param whereParametersSpecifiedMap maps which Modules specified each parameter
      * @param thisModule the Module to be configured
      * @throws Exception may throw a range of Exceptions
      */
     public static void configure(
-            Map<String,String> parameters,
+            Map<String,Object> parameters,
+            Map<String,Module> whereParametersSpecifiedMap,
             Module             thisModule )
         throws
             Exception

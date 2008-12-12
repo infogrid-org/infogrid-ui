@@ -108,7 +108,6 @@ public class ArrayStringifierTest1
         throws
             Exception
     {
-        super( thisPackage( ArrayStringifierTest1.class, "Log.properties" ));
     }
 
     private static final Log log = Log.getLogInstance( ArrayStringifierTest1.class ); // our own, private logger

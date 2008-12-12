@@ -58,8 +58,7 @@ public abstract class AbstractActiveMeshObjectSetTest
             MeshTypeNotFoundException,
             URISyntaxException
     {
-        super( localFileName( AllTests.class, "/ResourceHelper" ),
-               localFileName( AllTests.class, "/Log.properties" ));
+        super( localFileName( AllTests.class, "/ResourceHelper" ));
 
         typeAA   = theModelBase.findEntityType( "org.infogrid.model.Test", null, "AA" );
         typeAR1A = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "AR1A" );

@@ -88,7 +88,6 @@ public class MessageStringifierTest2
         throws
             Exception
     {
-        super( thisPackage( MessageStringifierTest2.class, "Log.properties"  ));
     }
 
     private static void f1()

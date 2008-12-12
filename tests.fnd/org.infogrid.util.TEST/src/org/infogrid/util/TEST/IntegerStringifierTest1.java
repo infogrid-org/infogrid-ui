@@ -146,7 +146,6 @@ public class IntegerStringifierTest1
         throws
             Exception
     {
-        super( thisPackage( IntegerStringifierTest1.class, "Log.properties" ));
     }
 
     private static final Log log = Log.getLogInstance( IntegerStringifierTest1.class ); // our own, private logger

@@ -19,7 +19,9 @@
  <userdescription>Tests the PingPong communications framework.</userdescription>
  <runclass>org.infogrid.comm.pingpong.TEST.AllTests</runclass>
  <dependencies>
-  <requires name="org.infogrid.util.logging.log4j"/>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/comm/pingpong/TEST/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.comm.pingpong"/>
   <requires name="org.infogrid.testharness"/>
   <requires name="org.infogrid.util"/>

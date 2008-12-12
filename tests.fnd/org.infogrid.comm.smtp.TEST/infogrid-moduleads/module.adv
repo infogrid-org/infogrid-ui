@@ -19,7 +19,9 @@
  <userdescription>Tests the SMTP Communications Module</userdescription>
  <runclass>org.infogrid.comm.smtp.TEST.AllTests</runclass>
  <dependencies>
-  <requires name="org.infogrid.util.logging.log4j"/>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/comm/smtp/TEST/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.comm.smtp"/>
   <requires name="org.infogrid.testharness"/>
   <requires name="org.infogrid.util"/>

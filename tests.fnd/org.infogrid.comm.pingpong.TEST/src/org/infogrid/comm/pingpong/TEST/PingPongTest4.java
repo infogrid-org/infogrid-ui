@@ -124,9 +124,6 @@ public class PingPongTest4
         throws
             Exception
     {
-        super( thisPackage( PingPongTest4.class, "Log.properties" ));
-
-        log = Log.getLogInstance( getClass() );
     }
 
     /**

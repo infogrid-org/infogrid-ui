@@ -22,11 +22,13 @@
   <jar>org.infogrid.kernel.TEST.mesh.externalized.jar</jar>
  </provides>
  <dependencies>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/kernel/TEST/mesh/externalized/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.modelbase.m"/>
   <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.util"/>
-  <requires name="org.infogrid.util.logging.log4j"/>
   <requires name="org.infogrid.testharness"/>
  </dependencies>
 </standardmodule>

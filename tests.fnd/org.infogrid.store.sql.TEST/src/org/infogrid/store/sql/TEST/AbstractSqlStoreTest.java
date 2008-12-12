@@ -43,8 +43,7 @@ public abstract class AbstractSqlStoreTest
         throws
             SQLException
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
         
         if( "mysql".equalsIgnoreCase( dataBaseEngine ) ) {
             MysqlDataSource theDataSource = new MysqlDataSource();

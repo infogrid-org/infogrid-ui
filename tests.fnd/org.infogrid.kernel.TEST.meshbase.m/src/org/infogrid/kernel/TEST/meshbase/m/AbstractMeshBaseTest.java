@@ -37,8 +37,7 @@ public abstract class AbstractMeshBaseTest
     public AbstractMeshBaseTest(
             Class<? extends AbstractTest> testClass )
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
     }
     
     /**

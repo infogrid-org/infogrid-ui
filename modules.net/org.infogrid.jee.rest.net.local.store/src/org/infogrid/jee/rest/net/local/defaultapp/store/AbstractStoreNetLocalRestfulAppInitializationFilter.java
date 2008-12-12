@@ -30,8 +30,11 @@ import org.infogrid.jee.security.FormTokenService;
 import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.jee.security.store.StoreFormTokenService;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
+import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.local.store.IterableLocalNetStoreMeshBase;
@@ -41,7 +44,6 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.store.IterableStore;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
@@ -89,7 +91,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             appContext.addContextObject( modelBase );
 
             // NetMeshBaseIdentifierFactory
-            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory = createNetMeshBaseIdentifierFactory();
             appContext.addContextObject( meshBaseIdentifierFactory );
 
             if( theDefaultMeshBaseIdentifier == null ) {
@@ -108,12 +110,17 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             // AccessManager
             NetAccessManager accessMgr = createAccessManager();
 
-            ProbeDirectory probeDirectory = MProbeDirectory.create();
+            ProbeDirectory probeDirectory = createAndPopulateProbeDirectory(
+                    meshBaseIdentifierFactory );
+
             ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
 
             // MeshBase
             IterableLocalNetStoreMeshBase meshBase = IterableLocalNetStoreMeshBase.create(
                     mbId,
+                    DefaultNetMeshObjectAccessSpecificationFactory.create(
+                            mbId,
+                            meshBaseIdentifierFactory ),
                     modelBase,
                     accessMgr,
                     theMeshStore,
@@ -165,6 +172,60 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             throws
                 NamingException,
                 IOException;
+
+    /**
+     * Overridable method to create the NetMeshBaseIdentifierFactory appropriate for this
+     * application.
+     *
+     * @return the created NetMeshBaseIdentifierFactory
+     */
+    protected NetMeshBaseIdentifierFactory createNetMeshBaseIdentifierFactory()
+    {
+        DefaultNetMeshBaseIdentifierFactory ret =
+                DefaultNetMeshBaseIdentifierFactory.create();
+
+        return ret;
+    }
+
+    /**
+     * Overridable method to create and populate a ProbeDirectory apporpriate for this
+     * application.
+     *
+     * @param meshBaseIdentifierFactory the NetMeshBaseIdentifierFactory to us
+     * @return the created and populated ProbeDirectory
+     * @throws URISyntaxException thrown if an identifier could not be parsed
+     */
+    protected ProbeDirectory createAndPopulateProbeDirectory(
+            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
+        throws
+            URISyntaxException
+    {
+        ProbeDirectory ret = MProbeDirectory.create();
+        return ret;
+    }
+
+    /**
+     * Convenience method to avoid subclassing mistakes.
+     *
+     * @param mb the MeshBase to initialize
+     */
+    @Override
+    protected void populateMeshBase(
+            MeshBase mb )
+    {
+        populateNetMeshBase( (NetMeshBase) mb );
+    }
+
+    /**
+     * Initialize the initial content of the NetMeshBase.
+     *
+     * @param mb the NetMeshBase to initialize
+     */
+    protected void populateNetMeshBase(
+            NetMeshBase mb )
+    {
+        // nothing on this level
+    }
 
     /**
      * Overridable method to create the AccessManager to use.

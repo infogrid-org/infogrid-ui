@@ -100,7 +100,7 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
             }
 
             // AccessManager
-            NetAccessManager accessMgr = null; // NetMeshWorldAccessManager.obtain();
+            NetAccessManager accessMgr = createAccessManager();
 
             ProbeDirectory probeDirectory = createAndPopulateProbeDirectory(
                     meshBaseIdentifierFactory );
@@ -202,5 +202,15 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
             NetMeshBase mb )
     {
         // nothing on this level
+    }
+
+    /**
+     * Overridable method to create the AccessManager to use.
+     *
+     * @return the created AccessManager, or null
+     */
+    protected NetAccessManager createAccessManager()
+    {
+        return null;
     }
 }

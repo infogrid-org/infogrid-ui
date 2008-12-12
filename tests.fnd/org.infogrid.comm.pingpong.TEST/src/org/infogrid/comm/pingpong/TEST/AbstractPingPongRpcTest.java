@@ -37,7 +37,7 @@ public abstract class AbstractPingPongRpcTest
      */
     protected AbstractPingPongRpcTest()
     {
-        super( thisPackage( AbstractPingPongRpcTest.class, "Log.properties" ));
+        super();
     }
 
     /**

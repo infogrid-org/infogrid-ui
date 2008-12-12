@@ -40,8 +40,7 @@ public abstract class AbstractStoreMeshBaseTest
     public AbstractStoreMeshBaseTest(
             Class testClass )
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
 
         theDataSource = new MysqlDataSource();
         theDataSource.setDatabaseName( TEST_DATABASE_NAME );

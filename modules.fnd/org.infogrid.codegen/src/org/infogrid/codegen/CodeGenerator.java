@@ -14,13 +14,11 @@
 
 package org.infogrid.codegen;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import org.infogrid.codegen.impl.ImplementationGenerator;
 import org.infogrid.codegen.intfc.InterfaceGenerator;
 import org.infogrid.codegen.modelloader.ModelLoaderGenerator;
@@ -34,7 +32,6 @@ import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleRequirement;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.logging.log4j.Log4jLog;
 import org.infogrid.util.text.StringRepresentation;
 
 /**
@@ -80,20 +77,6 @@ public class CodeGenerator
         }
         if( outputDir == null ) {
             usageAndQuit();
-        }
-
-        String nameOfLog4jConfigFile = "org/infogrid/codegen/Log.properties";
-        try {
-            Properties logProperties = new Properties();
-            logProperties.load( new BufferedInputStream(
-                    CodeGenerator.class.getClassLoader().getResourceAsStream( nameOfLog4jConfigFile )));
-
-            Log4jLog.configure( logProperties );
-            // which logger is being used is defined in the module dependency declaration through parameters
-
-        } catch( Throwable ex ) {
-            System.err.println( "Unexpected Exception attempting to load " + nameOfLog4jConfigFile );
-            ex.printStackTrace( System.err );
         }
 
         ResourceHelper.initializeLogging();

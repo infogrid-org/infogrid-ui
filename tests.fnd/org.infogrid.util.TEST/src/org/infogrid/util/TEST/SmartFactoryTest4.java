@@ -167,7 +167,6 @@ public class SmartFactoryTest4
         throws
             Exception
     {
-        super( thisPackage( SmartFactoryTest4.class, "Log.properties" ));
     }
 
     private static final Log log = Log.getLogInstance( SmartFactoryTest4.class ); // our own, private logger

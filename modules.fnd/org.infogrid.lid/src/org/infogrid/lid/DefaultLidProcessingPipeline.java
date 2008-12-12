@@ -55,9 +55,9 @@ public class DefaultLidProcessingPipeline
     {
         super( c );
         
-        theResourceFinder      = c.findContextObjectOrThrow( LidResourceFinder.class );
-        theYadisStage          = c.findContextObject(        YadisPipelineProcessingStage.class );
-        theAuthenticationStage = c.findContextObject(        LidClientAuthenticationPipelineStage.class );
+        theResourceFinder      = c.findContextObject( LidResourceFinder.class );
+        theYadisStage          = c.findContextObject( YadisPipelineProcessingStage.class );
+        theAuthenticationStage = c.findContextObject( LidClientAuthenticationPipelineStage.class );
     }
     
     /**
@@ -78,16 +78,18 @@ public class DefaultLidProcessingPipeline
         LidResource                   requestedResource = null;
         LidClientAuthenticationStatus clientAuthStatus  = null;
         LidPersona                    clientPersona     = null;
-        
-        try {
-            requestedResource = theResourceFinder.findLidResource( lidRequest );
-        } catch( LidResourceUnknownException ex ) {
-            if( log.isInfoEnabled() ) {
-                log.info( ex );
+
+        if( theResourceFinder != null ) {
+            try {
+                requestedResource = theResourceFinder.findLidResource( lidRequest );
+            } catch( LidResourceUnknownException ex ) {
+                if( log.isInfoEnabled() ) {
+                    log.info( ex );
+                }
             }
         }
         
-        if( theYadisStage != null ) {
+        if( theYadisStage != null && requestedResource != null ) {
             theYadisStage.processRequest( lidRequest, lidResponse, requestedResource );
         }
         

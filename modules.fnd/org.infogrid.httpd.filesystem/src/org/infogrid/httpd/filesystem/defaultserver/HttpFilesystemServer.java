@@ -82,12 +82,14 @@ public class HttpFilesystemServer
      * This allows the Module framework to configure this Module prior to activating it.
      *
      * @param parameters the parameters for this Module
+     * @param whereParametersSpecifiedMap maps which Modules specified each parameter
      * @param thisModule this Module
      * @throws ModuleConfigurationException thrown if the provided parameters are insufficient
      * @throws IOException thrown if the document root does not exist or is not a directory
      */
     public static void configure(
             Map<String,Object> parameters,
+            Map<String,Module> whereParametersSpecifiedMap,
             Module             thisModule )
         throws
             ModuleConfigurationException,

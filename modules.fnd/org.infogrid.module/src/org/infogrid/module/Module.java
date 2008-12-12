@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A software Module in the Module Framework. More concrete suclasses
@@ -263,12 +264,14 @@ public abstract class Module
      * that it this Module depends on, and then it configures itself.
      *
      * @param parameters the set of parameters for this Module
+     * @param whereParametersSpecifiedMap maps which Modules specified each parameter
      * @throws ModuleResolutionException thrown if a dependent Module cannot be resolved
      * @throws ModuleNotFoundException thrown if a dependent Module cannot be found
      * @throws ModuleConfigurationException thrown if this Module could not be configured
      */
     public final void configureRecursively(
-            Map<String,? extends Object> parameters )
+            Map<String,? extends Object> parameters,
+            Map<String,Module>           whereParametersSpecifiedMap )
         throws
             ModuleResolutionException,
             ModuleNotFoundException,
@@ -283,15 +286,24 @@ public abstract class Module
                     parameters,
                     moduleAd.getLocalParameterValues(),
                     moduleAd.getLocalParameterDefaults() );
+            Map<String,Module> localWhereParametersSpecifiedMap = merge(
+                    whereParametersSpecifiedMap,
+                    moduleAd.getLocalParameterValues()   != null ? moduleAd.getLocalParameterValues().keySet()   : null,
+                    moduleAd.getLocalParameterDefaults() != null ? moduleAd.getLocalParameterDefaults().keySet() : null );
 
             for( int i=0 ; i<dependencies.length ; ++i ) {
                 Map<String,? extends Object> childParameters = merge(
                         localParameters,
                         requirements[i].getLocalParameterValues(),
                         requirements[i].getLocalParameterDefaults() );
-                dependencies[i].configureRecursively( childParameters );
+                Map<String,Module> childWhereParametersSpecifiedMap = merge(
+                        localWhereParametersSpecifiedMap,
+                        requirements[i].getLocalParameterValues()   != null ? requirements[i].getLocalParameterValues().keySet()   : null,
+                        requirements[i].getLocalParameterDefaults() != null ? requirements[i].getLocalParameterDefaults().keySet() : null );
+
+                dependencies[i].configureRecursively( childParameters, childWhereParametersSpecifiedMap );
             }
-            configure( localParameters );
+            configure( localParameters, localWhereParametersSpecifiedMap );
 
             isConfigured = true;
         }
@@ -301,10 +313,12 @@ public abstract class Module
      * Configure this Module. Do not call this directly, call configureRecursively() instead.
      *
      * @param parameters the set of parameters for this Module
+     * @param whereParametersSpecifiedMap maps which Modules specified each parameter
      * @throws ModuleConfigurationException thrown if this Module could not be configured
      */
     protected abstract void configure(
-            Map<String,? extends Object> parameters )
+            Map<String,? extends Object> parameters,
+            Map<String,Module>           whereParametersSpecifiedMap )
         throws
             ModuleConfigurationException;
 
@@ -446,6 +460,59 @@ public abstract class Module
             return ret;
         }
         // return new MergeMap( parent, overrides, defaults );
+    }
+
+    /**
+     * Helper method to create a new Map from a base map, a set of keys and
+     * an overriding set of keys, the latter two of which are supposed to
+     * reference this Module.
+     */
+    private Map<String,Module> merge(
+            Map<String,Module> parent,
+            Set<String>        overrides,
+            Set<String>        defaults )
+    {
+        Map<String,Module> ret;
+
+        if( parent == null ) {
+            if( overrides == null ) {
+                if( defaults == null ) {
+                    ret = null;
+                } else {
+                    ret = new HashMap<String,Module>();
+                    for( String name : defaults ) {
+                        ret.put( name, this );
+                    }
+                }
+            } else if( defaults == null ) {
+                ret = new HashMap<String,Module>();
+                for( String name : overrides ) {
+                    ret.put( name, this );
+                }
+            } else {
+                ret = new HashMap<String,Module>();
+                for( String name : defaults ) {
+                    ret.put( name, this );
+                }
+                for( String name : overrides ) {
+                    ret.put( name, this );
+                }
+            }
+        } else {
+            ret = new HashMap<String,Module>();
+            ret.putAll( parent );
+            if( defaults != null ) {
+                for( String name : defaults ) {
+                    ret.put( name, this );
+                }
+            }
+            if( overrides != null ) {
+                for( String name : overrides ) {
+                    ret.put( name, this );
+                }
+            }
+        }
+        return ret;
     }
 
     /**

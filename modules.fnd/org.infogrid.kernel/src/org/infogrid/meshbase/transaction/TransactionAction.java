@@ -26,10 +26,12 @@ public interface TransactionAction
      * @param tx the Transaction within which the code is invoked.
      * @throws TransactionActionException.Rollback thrown if the Transaction needs to be rolled back
      * @throws TransactionActionException.Retry thrown if the Transaction needs to be rolled back and retried
+     * @throws TransactionException should never be thrown
      */
     public abstract void execute(
             Transaction tx )
         throws
             TransactionActionException.Rollback,
-            TransactionActionException.Retry;
+            TransactionActionException.Retry,
+            TransactionException;
 }

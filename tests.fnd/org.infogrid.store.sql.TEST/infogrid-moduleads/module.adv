@@ -22,7 +22,9 @@
   <jar>org.infogrid.store.sql.TEST.jar</jar>
  </provides>
  <dependencies>
-  <requires name="org.infogrid.util.logging.log4j"/>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/store/sql/TEST/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.store.sql.mysql"/>
   <requires name="org.infogrid.store.sql.postgresql"/>
   <requires name="org.infogrid.store.keystore"/>

@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -42,7 +41,6 @@ import org.infogrid.module.ModuleClassLoader;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.logging.log4j.Log4jLog;
 
 /**
  * An abstract superclass for tests. It provides a bunch of generic test
@@ -51,25 +49,20 @@ import org.infogrid.util.logging.log4j.Log4jLog;
 public abstract class AbstractTest
 {
     /**
-     * Constructor if we don't have a special resource file.
-     *
-     * @param nameOfLog4jConfigFile the name of the log4j config file
+     * Constructor if we do not have a special resource file.
      */
-    protected AbstractTest(
-            String nameOfLog4jConfigFile )
+    protected AbstractTest()
     {
-        this( null, nameOfLog4jConfigFile );
+        this( null );
     }
 
     /**
      * Constructor if we have a special resource file.
      *
      * @param nameOfResourceHelperFile the name of the resource file
-     * @param nameOfLog4jConfigFile the name of the log4j config file
      */
     protected AbstractTest(
-            String nameOfResourceHelperFile,
-            String nameOfLog4jConfigFile )
+            String nameOfResourceHelperFile )
     {
         // first resource helper, then logger
         if( nameOfResourceHelperFile != null ) {
@@ -83,19 +76,6 @@ public abstract class AbstractTest
                 System.err.println( "Unexpected Exception attempting to load " + nameOfResourceHelperFile );
                 ex.printStackTrace( System.err );
             }
-        }
-
-        try {
-            Properties logProperties = new Properties();
-            logProperties.load( new BufferedInputStream(
-                    getClass().getClassLoader().getResourceAsStream( nameOfLog4jConfigFile )));
-
-            Log4jLog.configure( logProperties );
-            // which logger is being used is defined in the module dependency declaration through parameters
-
-        } catch( Throwable ex ) {
-            System.err.println( "Unexpected Exception attempting to load " + nameOfLog4jConfigFile );
-            ex.printStackTrace( System.err );
         }
 
         ResourceHelper.initializeLogging();

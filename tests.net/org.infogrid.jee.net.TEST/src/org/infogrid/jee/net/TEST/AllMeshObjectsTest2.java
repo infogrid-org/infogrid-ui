@@ -99,7 +99,7 @@ public class AllMeshObjectsTest2
         throws
             Exception
     {
-        super( args[0], thisPackage( AllMeshObjectsTest2.class, "Log.properties"  ));
+        super( args[0] );
 
         log = Log.getLogInstance( getClass() );
     }

@@ -108,7 +108,7 @@ public class SmtpSendingMessageEndpointTest1
         throws
             Exception
     {
-        super( thisPackage( SmtpSendingMessageEndpointTest1.class, "Log.properties" ));
+        super();
 
         log = Log.getLogInstance( getClass() );
     }

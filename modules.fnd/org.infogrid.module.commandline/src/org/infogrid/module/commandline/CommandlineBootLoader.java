@@ -144,7 +144,7 @@ public class CommandlineBootLoader
             theRootModule.activateRecursively( act );
                     // may throw an exception
 
-            theRootModule.configureRecursively( null ); // FIXME
+            theRootModule.configureRecursively( null, null ); // FIXME
 
             String runClassName  = theInstallation.getOverriddenRunClassName();
             String runMethodName = theInstallation.getOverriddenRunMethodName();

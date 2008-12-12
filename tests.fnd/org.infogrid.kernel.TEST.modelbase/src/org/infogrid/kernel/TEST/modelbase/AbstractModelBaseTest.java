@@ -31,7 +31,6 @@ public abstract class AbstractModelBaseTest
     protected AbstractModelBaseTest(
             Class<?> testClass )
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
     }
 }

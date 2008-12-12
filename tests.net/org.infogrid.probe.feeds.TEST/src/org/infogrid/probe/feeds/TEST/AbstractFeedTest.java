@@ -45,8 +45,7 @@ public abstract class AbstractFeedTest
     protected AbstractFeedTest(
             Class<?> testClass )
     {
-        super( localFileName( AbstractFeedTest.class, "/ResourceHelper" ),
-               localFileName( AbstractFeedTest.class, "/Log.properties" ));
+        super( localFileName( AbstractFeedTest.class, "/ResourceHelper" ));
     }
 
     /**

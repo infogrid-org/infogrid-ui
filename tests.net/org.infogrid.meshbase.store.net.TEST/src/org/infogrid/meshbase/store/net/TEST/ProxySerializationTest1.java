@@ -278,7 +278,7 @@ public class ProxySerializationTest1
         throws
             Exception
     {
-        super( "org/infogrid/meshbase/store/net/TEST/ResourceHelper", "org/infogrid/meshbase/store/net/TEST/Log.properties" );
+        super( "org/infogrid/meshbase/store/net/TEST/ResourceHelper" );
         
         MStore meshObjectStore = MStore.create();
         MStore proxyStore      = MStore.create();

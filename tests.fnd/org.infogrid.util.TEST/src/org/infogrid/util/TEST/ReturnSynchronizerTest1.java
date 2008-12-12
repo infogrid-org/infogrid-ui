@@ -128,7 +128,6 @@ public class ReturnSynchronizerTest1
         throws
             Exception
     {
-        super( thisPackage( ReturnSynchronizerTest1.class, "Log.properties" ));
     }
 
     /**

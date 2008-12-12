@@ -98,26 +98,21 @@ public abstract class AbstractMessageStringifierTest
 
     /**
      * Constructor if we don't have a special resource file.
-     *
-     * @param nameOfLog4jConfigFile the name of the log4j config file
      */
-    protected AbstractMessageStringifierTest(
-            String nameOfLog4jConfigFile )
+    protected AbstractMessageStringifierTest()
     {
-        super( nameOfLog4jConfigFile );
+        super();
     }
 
     /**
      * Constructor if we have a special resource file.
      *
      * @param nameOfResourceHelperFile the name of the resource file
-     * @param nameOfLog4jConfigFile the name of the log4j config file
      */
     protected AbstractMessageStringifierTest(
-            String nameOfResourceHelperFile,
-            String nameOfLog4jConfigFile )
+            String nameOfResourceHelperFile )
     {
-        super( nameOfResourceHelperFile, nameOfLog4jConfigFile );
+        super( nameOfResourceHelperFile );
     }
 
     /**

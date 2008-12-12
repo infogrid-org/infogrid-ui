@@ -32,8 +32,7 @@ public abstract class AbstractNetSerializerTest
     public AbstractNetSerializerTest(
             Class testClass )
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
 
     }
     

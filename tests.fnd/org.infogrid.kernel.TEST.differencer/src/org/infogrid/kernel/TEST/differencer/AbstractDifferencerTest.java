@@ -56,8 +56,7 @@ public abstract class AbstractDifferencerTest
         throws
             Exception
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
 
         SubjectArea sa = theModelBase.findSubjectArea( "org.infogrid.model.Test", null );
         

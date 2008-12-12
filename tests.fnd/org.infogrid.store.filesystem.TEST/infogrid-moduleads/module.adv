@@ -22,7 +22,9 @@
   <jar>org.infogrid.store.filesystem.TEST.jar</jar>
  </provides>
  <dependencies>
-  <requires name="org.infogrid.util.logging.log4j"/>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/store/filesystem/TEST/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.store"/>
   <requires name="org.infogrid.store.filesystem"/>
   <requires name="org.infogrid.util"/>

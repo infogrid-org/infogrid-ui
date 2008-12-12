@@ -22,11 +22,13 @@
   <jar>org.infogrid.kernel.net.TEST.urls.jar</jar>
  </provides>
  <dependencies>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/kernel/net/TEST/urls/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.util">
    <parameter name="org.infogrid.util.logging.LogFactory.Class" value="org.infogrid.util.logging.log4j.Log4jLogFactory"/>
    <parameter name="org.infogrid.util.logging.LogFactory.Module" value="org.infogrid.util.logging.log4j"/>
   </requires>
-  <requires name="org.infogrid.util.logging.log4j"/>
   <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.modelbase.m"/>
   <requires name="org.infogrid.kernel.net"/>

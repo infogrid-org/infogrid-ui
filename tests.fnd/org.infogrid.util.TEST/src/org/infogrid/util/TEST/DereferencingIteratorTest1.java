@@ -140,7 +140,6 @@ public class DereferencingIteratorTest1
         throws
             Exception
     {
-        super( thisPackage( DereferencingIteratorTest1.class, "Log.properties" ));
     }
 
     private static final Log log = Log.getLogInstance( DereferencingIteratorTest1.class ); // our own, private logger

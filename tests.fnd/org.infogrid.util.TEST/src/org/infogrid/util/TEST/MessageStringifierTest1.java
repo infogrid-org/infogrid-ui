@@ -88,7 +88,6 @@ public class MessageStringifierTest1
         throws
             Exception
     {
-        super( thisPackage( MessageStringifierTest1.class, "Log.properties"  ));
     }
 
     private static final Log log = Log.getLogInstance( MessageStringifierTest1.class  ); // our own, private logger

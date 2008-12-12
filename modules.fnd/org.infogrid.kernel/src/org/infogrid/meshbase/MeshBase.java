@@ -324,12 +324,12 @@ public interface MeshBase
      *
      * @param act the TransactionAction
      * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
-     * @throws TransactionActiveAlreadyException a Transaction was active already
+     * @throws TransactionException a TransactionException has occurred
      */
     public abstract boolean executeNow(
             TransactionAction act )
         throws
-            TransactionActiveAlreadyException;
+            TransactionException;
 
     /**
      * Perform this TransactionAction within an automatically generated Transaction
@@ -337,12 +337,12 @@ public interface MeshBase
      *
      * @param act the TransactionAction
      * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
-     * @throws TransactionAsapTimeoutException a Transaction timeout has occurred
+     * @throws TransactionException a TransactionException has occurred
      */
     public abstract boolean executeAsap(
             TransactionAction act )
         throws
-            TransactionAsapTimeoutException;
+            TransactionException;
 
     /**
      * Clear the in-memory cache, if this MeshBase has one. This method only makes any sense

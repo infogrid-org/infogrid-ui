@@ -15,6 +15,7 @@
 package org.infogrid.module.servlet;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import org.infogrid.module.Module;
@@ -124,12 +125,22 @@ public abstract class ServletBootLoader
             }
         }
 
+        // build whereParametersSpecifiedMap
+        HashMap<String,Module> whereParametersSpecifiedMap = null;
+        if( rootConfigParameters != null ) {
+            whereParametersSpecifiedMap = new HashMap<String,Module>();
+
+            for( String name : rootConfigParameters.keySet() ) {
+                whereParametersSpecifiedMap.put( name, theRootModule );
+            }
+        }
+
         try {
             Object ret = theRootModule.activateRecursively( act );
                     // may throw an exception
                     // ret is only there for debugging
 
-            theRootModule.configureRecursively( rootConfigParameters ); // FIXME
+            theRootModule.configureRecursively( rootConfigParameters, whereParametersSpecifiedMap ); // FIXME
 
             // we don't run anything in servlet mode
 

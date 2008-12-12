@@ -50,7 +50,7 @@ public class MeshObjectAccessException
             MeshObjectIdentifier [] failedIdentifiers,
             Throwable               cause )
     {
-        super( cause );
+        super( null, cause ); // avoid construction of default message
 
         theMeshBase           = mb;
         theMeshBaseIdentifier = mbIdentifier;

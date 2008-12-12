@@ -172,8 +172,7 @@ public class ShadowMeshBaseSerializationTest1
         throws
             Exception
     {
-        super(  "org/infogrid/probe/store/TEST/ResourceHelper",
-                "org/infogrid/probe/store/TEST/Log.properties" );
+        super(  "org/infogrid/probe/store/TEST/ResourceHelper" );
     }
 
     // Our Logger

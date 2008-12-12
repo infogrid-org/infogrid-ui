@@ -23,6 +23,5 @@
  </provides>
  <dependencies>
   <requires name="org.infogrid.util"/>
-  <requires name="org.infogrid.util.logging.log4j"/>
  </dependencies>
 </standardmodule>

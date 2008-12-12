@@ -171,6 +171,6 @@ public abstract class AbstractCursorIteratorTest
         throws
             Exception
     {
-        super( thisPackage( AbstractCursorIteratorTest.class, "Log.properties" ));
+        super();
     }
 }

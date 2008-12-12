@@ -165,7 +165,6 @@ public class DoubleStringifierTest1
         throws
             Exception
     {
-        super( thisPackage( DoubleStringifierTest1.class, "Log.properties" ));
     }
 
     private static final Log log = Log.getLogInstance( DoubleStringifierTest1.class ); // our own, private logger

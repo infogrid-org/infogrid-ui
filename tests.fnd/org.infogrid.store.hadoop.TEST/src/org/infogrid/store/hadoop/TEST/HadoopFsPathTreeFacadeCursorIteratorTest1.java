@@ -347,7 +347,6 @@ public class HadoopFsPathTreeFacadeCursorIteratorTest1
         throws
             Exception
     {
-        super( thisPackage( HadoopFsPathTreeFacadeCursorIteratorTest1.class, "Log.properties" ));
     }
 
     private static final Log log = Log.getLogInstance( HadoopFsPathTreeFacadeCursorIteratorTest1.class  ); // our own, private logger

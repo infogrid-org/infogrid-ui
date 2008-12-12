@@ -114,7 +114,7 @@ public abstract class AbstractModuleTestGroup
 
             Module testModule = registry.resolve( candidate );
 
-            testModule.configureRecursively( null );
+            testModule.configureRecursively( null, null );
             testModule.activateRecursively();
             testModule.run( theTestArgs );
         }

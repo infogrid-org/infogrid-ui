@@ -47,7 +47,7 @@ public abstract class AbstractHttpdTest
         throws
             Exception
     {
-        super( thisPackage( AbstractHttpdTest.class, "Log.properties" ));
+        super();
 
         log = Log.getLogInstance( getClass() );
 

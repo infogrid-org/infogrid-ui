@@ -22,7 +22,9 @@
   <jar>org.infogrid.store.TEST.jar</jar>
  </provides>
  <dependencies>
-  <requires name="org.infogrid.util.logging.log4j"/>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/store/TEST/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.store"/>
   <requires name="org.infogrid.util"/>
   <requires name="org.infogrid.testharness"/>

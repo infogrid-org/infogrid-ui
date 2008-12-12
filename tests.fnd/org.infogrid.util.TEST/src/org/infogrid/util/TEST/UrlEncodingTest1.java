@@ -121,7 +121,6 @@ public class UrlEncodingTest1
         throws
             Exception
     {
-        super( thisPackage( UrlEncodingTest1.class, "Log.properties"  ));
     }
 
     private static final Log log = Log.getLogInstance( UrlEncodingTest1.class  ); // our own, private logger

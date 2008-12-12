@@ -18,6 +18,7 @@
  <username>Log4j logging module</username>
  <userdescription>Enables the InfoGrid logging framework to log via log4j.</userdescription>
  <activationclass>org.infogrid.util.logging.log4j.Init</activationclass>
+ <configurationclass>org.infogrid.util.logging.log4j.Init</configurationclass>
  <dependencies>
   <requires name="org.infogrid.util"/>
  </dependencies>
@@ -26,4 +27,3 @@
   <jar>log4j.jar</jar>
  </provides>
 </standardmodule>
-

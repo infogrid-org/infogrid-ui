@@ -38,8 +38,7 @@ public abstract class AbstractUrlTest
     protected AbstractUrlTest(
             Class testClass )
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
 
         theNameServer = NetMMeshBaseNameServer.create();
     }

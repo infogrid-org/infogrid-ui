@@ -24,9 +24,11 @@
   <jar>org.infogrid.codegen.jar</jar>
  </provides>
  <dependencies>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/codegen/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.modelbase.m"/>
   <requires name="org.infogrid.util"/>
-  <requires name="org.infogrid.util.logging.log4j"/>
- </dependencies>
+</dependencies>
 </standardmodule>

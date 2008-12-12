@@ -33,7 +33,7 @@ public class FactoryException
             Factory<?,?,?> sender,
             Throwable      cause )
     {
-        super( cause );
+        super( null, cause ); // don't automatically create message
 
         theSender = sender;
     }

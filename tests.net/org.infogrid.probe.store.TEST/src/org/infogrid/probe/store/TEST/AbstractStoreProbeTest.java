@@ -48,8 +48,7 @@ public abstract class AbstractStoreProbeTest
         throws
             Exception
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
 
         theDataSource = new MysqlDataSource();
         theDataSource.setDatabaseName( TEST_DATABASE_NAME );

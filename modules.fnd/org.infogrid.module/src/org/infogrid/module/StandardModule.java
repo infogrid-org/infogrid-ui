@@ -62,10 +62,12 @@ public class StandardModule
      * Configure this Module. Do not call this directly, call configureRecursively() instead.
      *
      * @param parameters the set of parameters for this Module
+     * @param whereParametersSpecifiedMap maps which Modules specified each parameter
      * @throws ModuleConfigurationException thrown if this Module could not be configured
      */
     protected void configure(
-            Map<String,? extends Object> parameters )
+            Map<String,? extends Object> parameters,
+            Map<String,Module>           whereParametersSpecifiedMap )
         throws
             ModuleConfigurationException
     {
@@ -95,6 +97,7 @@ public class StandardModule
                         configurationMethodName,
                         new Class[] {
                             Map.class,
+                            Map.class,
                             Module.class } );
 
                 ModuleErrorHandler.informModuleConfigure( this, configurationMethod );
@@ -103,6 +106,7 @@ public class StandardModule
                         null,
                         new Object[] {
                                 parameters,
+                                whereParametersSpecifiedMap,
                                 this } ); // may throw exception
             }
             
@@ -111,7 +115,12 @@ public class StandardModule
         } catch( InvocationTargetException ex ) {
             ModuleErrorHandler.informModuleConfigureFailed( this, ex.getTargetException() );
 
-            throw new ModuleConfigurationException( theModuleAdvertisement, ex.getTargetException() );
+            // don't wrap if it is the right exception already
+            if( ex.getTargetException() instanceof ModuleConfigurationException ) {
+                throw (ModuleConfigurationException) ex.getTargetException();
+            } else {
+                throw new ModuleConfigurationException( theModuleAdvertisement, ex.getTargetException() );
+            }
 
         } catch( Throwable ex ) {
             ModuleErrorHandler.informModuleConfigureFailed( this, ex );

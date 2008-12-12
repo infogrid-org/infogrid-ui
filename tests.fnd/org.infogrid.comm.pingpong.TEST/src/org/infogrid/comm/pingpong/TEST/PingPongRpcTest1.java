@@ -103,7 +103,6 @@ public class PingPongRpcTest1
         throws
             Exception
     {
-        log = Log.getLogInstance( getClass() );
     }
 
     /**

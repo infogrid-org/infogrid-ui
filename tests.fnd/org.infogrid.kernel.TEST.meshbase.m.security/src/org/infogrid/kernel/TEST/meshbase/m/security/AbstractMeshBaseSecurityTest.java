@@ -51,8 +51,7 @@ public abstract class AbstractMeshBaseSecurityTest
             MeshTypeNotFoundException,
             URISyntaxException
     {
-        super( localFileName( testClass, "/ResourceHelper" ),
-               localFileName( testClass, "/Log.properties" ));
+        super( localFileName( testClass, "/ResourceHelper" ));
 
         theAccessManager = AclBasedAccessManager.create();
         
