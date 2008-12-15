@@ -41,7 +41,7 @@ public abstract class AbstractSectionTag
     @Override
     protected void initializeToDefaults()
     {
-        theName = null;
+        theSectionName = null;
 
         super.initializeToDefaults();
     }
@@ -50,23 +50,23 @@ public abstract class AbstractSectionTag
      * Obtain value of the name property.
      *
      * @return value of the name property
-     * @see #setName
+     * @see #setSectionName
      */
-    public final String getName()
+    public final String getSectionName()
     {
-        return theName;
+        return theSectionName;
     }
 
     /**
      * Set value of the name property.
      *
      * @param newValue new value of the name property
-     * @see #getName
+     * @see #getSectionName
      */
-    public final void setName(
+    public final void setSectionName(
             String newValue )
     {
-        theName = newValue;
+        theSectionName = newValue;
     }
 
     /**
@@ -85,12 +85,12 @@ public abstract class AbstractSectionTag
         if( response == null ) {
             return null;
         }
-        if( theName == null ) {
+        if( theSectionName == null ) {
             return null;
         }
-        StructuredResponseSection ret = response.obtainTextSectionByName( theName );
+        StructuredResponseSection ret = response.obtainTextSectionByName( theSectionName );
         if( ret == null ) {
-            ret = response.obtainBinarySectionByName( theName );
+            ret = response.obtainBinarySectionByName( theSectionName );
         }
 
         return ret;
@@ -99,5 +99,5 @@ public abstract class AbstractSectionTag
     /**
      * The name of the section in the StructuredResponse that is being evaluated.
      */
-    protected String theName;
+    protected String theSectionName;
 }

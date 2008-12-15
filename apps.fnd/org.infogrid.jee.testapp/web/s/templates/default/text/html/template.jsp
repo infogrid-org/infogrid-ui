@@ -7,11 +7,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
  <head>
-  <title>org.infogrid.jee.testapp: <tmpl:inline name="html-title"/></title>
+  <title>org.infogrid.jee.testapp: <tmpl:inline sectionName="html-title"/></title>
   <link rel="stylesheet" href="${CONTEXT}/s/templates/default/master.css" type="text/css" />
   <link rel="stylesheet" href="${CONTEXT}/s/templates/default/layout.css" type="text/css" />
   <link rel="stylesheet" href="${CONTEXT}/s/templates/default/color.css"  type="text/css" />
-  <tmpl:inline name="html-head"/>
+  <tmpl:inline sectionName="html-head"/>
  </head>
  <body>
   <div id="canvas-top">
@@ -29,7 +29,7 @@
       <tmpl:inlineErrors stringRepresentation="Html"/>
      </div>
     </tmpl:ifErrors>
-    <tmpl:inline name="text-default"/>
+    <tmpl:inline sectionName="text-default"/>
    </div>
   </div>
  </body>

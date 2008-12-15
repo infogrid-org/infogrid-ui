@@ -11,7 +11,7 @@
         <name>append</name>
         <tag-class>org.infogrid.jee.taglib.templates.AppendSectionTag</tag-class>
         <attribute>
-            <name>name</name>
+            <name>sectionName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -21,7 +21,7 @@
         <name>define</name>
         <tag-class>org.infogrid.jee.taglib.templates.DefineSectionTag</tag-class>
         <attribute>
-            <name>name</name>
+            <name>sectionName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -31,7 +31,7 @@
         <name>ifEmpty</name>
         <tag-class>org.infogrid.jee.taglib.templates.IfEmptyTag</tag-class>
         <attribute>
-            <name>name</name>
+            <name>sectionName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -46,7 +46,7 @@
         <name>ifNotEmpty</name>
         <tag-class>org.infogrid.jee.taglib.templates.IfNotEmptyTag</tag-class>
         <attribute>
-            <name>name</name>
+            <name>sectionName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -56,7 +56,7 @@
         <name>inline</name>
         <tag-class>org.infogrid.jee.taglib.templates.InlineTag</tag-class>
         <attribute>
-            <name>name</name>
+            <name>sectionName</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

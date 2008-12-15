@@ -17,7 +17,6 @@ package org.infogrid.jee.taglib.templates;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.templates.StructuredResponse;
 
 /**
  * <p>Append a piece of text to a named TextStructuredResponseSection.</p>
@@ -43,42 +42,32 @@ public class AppendSectionTag
     @Override
     protected void initializeToDefaults()
     {
-        theName = null;
+        theSectionName = null;
 
         super.initializeToDefaults();
     }
 
     /**
-     * Obtain value of the name property.
+     * Obtain value of the sectionName property.
      *
-     * @return value of the name property
-     * @see #setName
+     * @return value of the sectionName property
+     * @see #setSectionName
      */
-    public final String getName()
+    public final String getSectionName()
     {
-        return theName;
+        return theSectionName;
     }
 
     /**
-     * Set value of the name property.
+     * Set value of the sectionName property.
      *
-     * @param newValue new value of the name property
-     * @see #getName
+     * @param newValue new value of the sectionName property
+     * @see #getSectionName
      */
-    public final void setName(
+    public final void setSectionName(
             String newValue )
     {
-        theName = newValue;
-    }
-
-    /**
-     * Determine the name of the section into which to insert.
-     *
-     * @return the name of the section
-     */
-    protected String getSectionName()
-    {
-        return StructuredResponse.HTML_MAIN_MENU_SECTION.getSectionName();
+        theSectionName = newValue;
     }
 
     /**
@@ -103,5 +92,5 @@ public class AppendSectionTag
     /**
      * The name of the section in the StructuredResponse that is being evaluated.
      */
-    protected String theName;
+    protected String theSectionName;
 }

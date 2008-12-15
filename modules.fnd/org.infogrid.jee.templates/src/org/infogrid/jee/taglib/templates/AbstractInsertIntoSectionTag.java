@@ -44,6 +44,9 @@ public abstract class AbstractInsertIntoSectionTag
     @Override
     protected void initializeToDefaults()
     {
+        theResponse = null;
+        theSection  = null;
+
         super.initializeToDefaults();
     }
     

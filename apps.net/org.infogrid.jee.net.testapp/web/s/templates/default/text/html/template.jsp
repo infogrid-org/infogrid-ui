@@ -7,8 +7,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
  <head>
-  <title><tmpl:inline name="html-title"/></title>
-  <tmpl:inline name="html-head"/>
+  <title><tmpl:inline sectionName="html-title"/></title>
+  <tmpl:inline sectionName="html-head"/>
  </head>
  <body>
   <tmpl:ifErrors>
@@ -16,6 +16,6 @@
     <tmpl:inlineErrors stringRepresentation="Html"/>
    </div>
   </tmpl:ifErrors>
-  <tmpl:inline name="text-default"/>
+  <tmpl:inline sectionName="text-default"/>
  </body>
 </html>

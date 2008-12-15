@@ -47,32 +47,32 @@ public class InlineTag
     @Override
     protected void initializeToDefaults()
     {
-        theName = null;
+        theSectionName = null;
 
         super.initializeToDefaults();
     }
 
     /**
-     * Obtain value of the name property.
+     * Obtain value of the sectionName property.
      *
-     * @return value of the name property
-     * @see #setName
+     * @return value of the sectionName property
+     * @see #setSectionName
      */
-    public final String getName()
+    public final String getSectionName()
     {
-        return theName;
+        return theSectionName;
     }
 
     /**
-     * Set value of the name property.
+     * Set value of the sectionName property.
      *
-     * @param newValue new value of the name property
-     * @see #getName
+     * @param newValue new value of the sectionName property
+     * @see #getSectionName
      */
-    public final void setName(
+    public final void setSectionName(
             String newValue )
     {
-        theName = newValue;
+        theSectionName = newValue;
     }
 
     /**
@@ -93,8 +93,8 @@ public class InlineTag
             throw new JspException( "Cannot find StructuredResponse in the request context" );
         }
 
-        TextStructuredResponseSection   textSection   = structured.obtainTextSectionByName(   theName );
-        BinaryStructuredResponseSection binarySection = structured.obtainBinarySectionByName( theName );
+        TextStructuredResponseSection   textSection   = structured.obtainTextSectionByName(   theSectionName );
+        BinaryStructuredResponseSection binarySection = structured.obtainBinarySectionByName( theSectionName );
 
         if( textSection != null ) {
             String content = textSection.getContent();
@@ -119,7 +119,7 @@ public class InlineTag
 
         } else {
             if( theFormatter.isFalse( getIgnore() )) {
-                throw new JspException( "Cannot find ResponseSection named " + theName );
+                throw new JspException( "Cannot find ResponseSection named " + theSectionName );
             }
         }
 
@@ -129,5 +129,5 @@ public class InlineTag
     /**
      * The name of the section in the StructuredResponse that will be inlined.
      */
-    protected String theName;
+    protected String theSectionName;
 }
