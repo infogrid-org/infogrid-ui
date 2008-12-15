@@ -86,7 +86,7 @@ public class PseudoJspViewletFactoryChoice
     {
         ResourceHelper rh  = ResourceHelper.getInstance( thePseudoClassName, PseudoJspViewletFactoryChoice.class.getClassLoader()  );
 
-        String ret = rh.getResourceStringOrDefault( "UserVisibleName", theViewletClass.getName() );
+        String ret = rh.getResourceStringOrDefault( "UserVisibleName", thePseudoClassName );
 
         return ret;
     }
