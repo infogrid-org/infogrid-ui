@@ -56,6 +56,20 @@ public interface MeshObjectIdentifierFactory
             URISyntaxException;
 
     /**
+     * Recreate a MeshObjectIdentifier from an external form. Be lenient about syntax and
+     * attempt to interpret what the user meant when entering an invalid or incomplete
+     * raw String.
+     *
+     * @param raw the external form
+     * @return the created MeshObjectIdentifier
+     * @throws URISyntaxException thrown if a parsing error occurred
+     */
+    public MeshObjectIdentifier guessFromExternalForm(
+            String raw )
+        throws
+            URISyntaxException;
+
+    /**
      * Convert this StringRepresentation back to a MeshObjectIdentifier.
      *
      * @param representation the StringRepresentation in which this String is represented

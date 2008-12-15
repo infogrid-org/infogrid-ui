@@ -14,14 +14,12 @@
 
 package org.infogrid.meshbase.a;
 
+import java.net.URISyntaxException;
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.a.DefaultAMeshObjectIdentifier;
 import org.infogrid.meshbase.AbstractMeshObjectIdentifierFactory;
-
 import org.infogrid.util.text.StringRepresentation;
-
 import org.infogrid.util.text.StringifierException;
-
-import java.net.URISyntaxException;
 
 /**
  * Default implementation of MeshObjectIdentifierFactory for the A implementation.
@@ -52,15 +50,15 @@ public class DefaultAMeshObjectIdentifierFactory
     /**
      * Create an identifier for a MeshObject at held locally at this MeshBase.
      *
-     * @param localId the local distinguishing String
+     * @param raw the raw String
      * @throws URISyntaxException
      */
     public DefaultAMeshObjectIdentifier fromExternalForm(
-            String localId )
+            String raw )
         throws
             URISyntaxException
     {
-        return DefaultAMeshObjectIdentifier.create( localId );
+        return DefaultAMeshObjectIdentifier.create( raw );
     }
 
     /**
@@ -107,6 +105,24 @@ public class DefaultAMeshObjectIdentifierFactory
         }
     }
     
+    /**
+     * Recreate a MeshObjectIdentifier from an external form. Be lenient about syntax and
+     * attempt to interpret what the user meant when entering an invalid or incomplete
+     * raw String.
+     *
+     * @param raw the external form
+     * @return the created MeshObjectIdentifier
+     * @throws URISyntaxException thrown if a parsing error occurred
+     */
+    public MeshObjectIdentifier guessFromExternalForm(
+            String raw )
+        throws
+            URISyntaxException
+    {
+        // on this level, everything is opaque
+        return DefaultAMeshObjectIdentifier.create( raw );
+    }
+
     /**
      * Determine the Identifier of the Home Object.
      *
