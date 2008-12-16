@@ -38,10 +38,11 @@
   </provides>
   <dependencies>
     <requires name="org.infogrid.kernel"/>
-<xsl:apply-templates select="*/subjectareareference"/>
+<xsl:apply-templates select="dependson/subjectareareference"/>
+<xsl:apply-templates select="dependson/modulereference"/>
   </dependencies>
 </xsl:template>
-<xsl:template match="subjectareareference">
+<xsl:template match="subjectareareference|modulereference">
   <requires>
     <xsl:attribute name="name">
 <xsl:value-of select='name'/>
