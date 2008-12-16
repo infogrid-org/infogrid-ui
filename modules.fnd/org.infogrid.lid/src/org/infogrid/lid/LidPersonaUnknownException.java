@@ -14,10 +14,13 @@
 
 package org.infogrid.lid;
 
+import org.infogrid.util.Identifier;
+
 /**
- * Thrown if a LidLocalPersona with this identifier is required for an operation but does not exist.
+ * Thrown if a LidPersona with this identifier is required for an operation but cannot
+ * be found.
  */
-public class LidLocalPersonaUnknownException
+public class LidPersonaUnknownException
         extends
             LidResourceUnknownException
 {
@@ -26,10 +29,10 @@ public class LidLocalPersonaUnknownException
     /**
      * Constructor.
      * 
-     * @param identifier the identifier that could not be resolved into a LidLocalPersona
+     * @param identifier the identifier that could not be resolved into a LidPersona
      */
-    public LidLocalPersonaUnknownException(
-            String identifier )
+    public LidPersonaUnknownException(
+            Identifier identifier )
     {
         super( identifier );
     }
@@ -37,11 +40,11 @@ public class LidLocalPersonaUnknownException
     /**
      * Constructor.
      * 
-     * @param identifier the identifier that could not be resolved into a LidLocalPersona
+     * @param identifier the identifier that could not be resolved into a LidPersona
      * @param cause the underlying cause, if any
      */
-    public LidLocalPersonaUnknownException(
-            String    identifier,
+    public LidPersonaUnknownException(
+            Identifier    identifier,
             Throwable cause )
     {
         super( identifier, cause );

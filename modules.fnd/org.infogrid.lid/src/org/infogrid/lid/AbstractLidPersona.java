@@ -17,6 +17,7 @@ package org.infogrid.lid;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+import org.infogrid.util.Identifier;
 
 /**
  * Collects features of LidPersona that are common to many implementations.
@@ -35,7 +36,7 @@ public abstract class AbstractLidPersona
      * @param attributes attributes of the persona, e.g. first name
      */
     protected AbstractLidPersona(
-            String                 identifier,
+            Identifier             identifier,
             Map<String,String>     attributes )
     {
         super( identifier );

@@ -15,6 +15,7 @@
 package org.infogrid.lid;
 
 import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.Identifier;
 
 /**
  * Thrown if a LidResource with this identifier is required for an operation but does not exist.
@@ -31,7 +32,7 @@ public class LidResourceUnknownException
      * @param identifier the identifier that could not be resolved into a LidResource
      */
     public LidResourceUnknownException(
-            String identifier )
+            Identifier identifier )
     {
         theIdentifier = identifier;
     }
@@ -43,8 +44,8 @@ public class LidResourceUnknownException
      * @param cause the underlying cause, if any
      */
     public LidResourceUnknownException(
-            String    identifier,
-            Throwable cause )
+            Identifier identifier,
+            Throwable  cause )
     {
         super( cause );
 
@@ -56,7 +57,7 @@ public class LidResourceUnknownException
      * 
      * @return the identifier
      */
-    public String getIdentifier()
+    public Identifier getIdentifier()
     {
         return theIdentifier;
     }
@@ -74,5 +75,5 @@ public class LidResourceUnknownException
     /**
      * The identifier that could not be resolved into a LidResource.
      */
-    protected String theIdentifier;        
+    protected Identifier theIdentifier;
 }

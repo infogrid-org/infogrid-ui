@@ -15,6 +15,7 @@
 package org.infogrid.lid.credential;
 
 import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.Identifier;
 
 /**
  * Thrown if a credential was provided that was invalid.
@@ -32,7 +33,7 @@ public class LidInvalidCredentialException
      * @param type the type of credential that was invalid
      */
     public LidInvalidCredentialException(
-            String            identifier,
+            Identifier        identifier,
             LidCredentialType type )
     {
         theIdentifier = identifier;
@@ -46,7 +47,7 @@ public class LidInvalidCredentialException
      * @param cause the underlying cause, if any
      */
     public LidInvalidCredentialException(
-            String            identifier,
+            Identifier        identifier,
             LidCredentialType type,
             Throwable         cause )
     {
@@ -61,7 +62,7 @@ public class LidInvalidCredentialException
      * 
      * @return the identifier
      */
-    public String getIdentifier()
+    public Identifier getIdentifier()
     {
         return theIdentifier;
     }
@@ -89,7 +90,7 @@ public class LidInvalidCredentialException
     /**
      * The identifier for which an invalid credential was provided.
      */
-    protected String theIdentifier;
+    protected Identifier theIdentifier;
     
     /**
      * The type of credential that was invalid.

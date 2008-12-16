@@ -15,6 +15,7 @@
 package org.infogrid.lid;
 
 import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.Identifier;
 
 /**
  * An invalidIdentifier was entered that was invalid.
@@ -28,10 +29,10 @@ public class LidInvalidIdentifierException
     /**
      * Constructor.
      * 
-     * @param invalidIdentifier the invalid invalidIdentifier
+     * @param invalidIdentifier the invalid Identifier
      */
     public LidInvalidIdentifierException(
-            String invalidIdentifier  )
+            Identifier invalidIdentifier )
     {
         theInvalidIdentifier = invalidIdentifier;
     }
@@ -43,8 +44,8 @@ public class LidInvalidIdentifierException
      * @param cause the underlying cause, if any
      */
     public LidInvalidIdentifierException(
-            String    invalidIdentifier,
-            Throwable cause )
+            Identifier invalidIdentifier,
+            Throwable  cause )
     {
         super( cause );
 
@@ -56,7 +57,7 @@ public class LidInvalidIdentifierException
      * 
      * @return the invalidIdentifier
      */
-    public String getIdentifier()
+    public Identifier getIdentifier()
     {
         return theInvalidIdentifier;
     }
@@ -74,5 +75,5 @@ public class LidInvalidIdentifierException
     /**
      * The invalid invalidIdentifier.
      */
-    protected String theInvalidIdentifier;
+    protected Identifier theInvalidIdentifier;
 }

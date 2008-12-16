@@ -17,6 +17,7 @@ package org.infogrid.lid;
 import java.util.Map;
 import java.util.Set;
 import org.infogrid.lid.credential.LidCredentialType;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.StringHelper;
 
 /**
@@ -38,7 +39,7 @@ public abstract class AbstractLidLocalPersona
      * @param credentialTypes the credential types available to authenticate this LidLocalPersona
      */
     protected AbstractLidLocalPersona(
-            String                 identifier,
+            Identifier             identifier,
             Map<String,String>     attributes,
             Set<LidCredentialType> credentialTypes )
     {

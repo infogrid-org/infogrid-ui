@@ -31,6 +31,8 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.security.ThreadIdentityManager;
 import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.util.Identifier;
+import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
@@ -63,9 +65,11 @@ public class LidSessionFilter
     {
         SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) request );
 
-        String lid     = saneRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
-        String session = saneRequest.getCookieValue( LidCookies.LID_SESSION_COOKIE_NAME );
+        String lidString = saneRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
+        String session   = saneRequest.getCookieValue( LidCookies.LID_SESSION_COOKIE_NAME );
         
+        Identifier lid = SimpleStringIdentifier.create( lidString );
+
         boolean setCaller = false;
 
         try {
@@ -74,7 +78,7 @@ public class LidSessionFilter
             if( userSession != null && userSession.isStillValid() && userSession.getCookieValue().equals( session )) {
 
                 try {
-                    NetMeshObjectIdentifier callerId = theNetMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( lid );
+                    NetMeshObjectIdentifier callerId = theNetMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( lidString );
 
                     NetMeshObject caller = theNetMeshBase.accessLocally( callerId );
                     

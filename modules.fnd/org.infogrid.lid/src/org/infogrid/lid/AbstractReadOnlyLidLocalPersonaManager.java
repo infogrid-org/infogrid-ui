@@ -16,6 +16,7 @@ package org.infogrid.lid;
 
 import java.util.Map;
 import org.infogrid.lid.credential.LidCredentialType;
+import org.infogrid.util.Identifier;
 
 /**
  * Factors out common functionality of LidLocalPersonaManagers that only support
@@ -35,7 +36,7 @@ public abstract class AbstractReadOnlyLidLocalPersonaManager
      * @throws UnsupportedOperationException always thrown
      */
     public LidLocalPersona createLocalPersona(
-            String                        identifier,
+            Identifier                    identifier,
             Map<String,String>            attributes,
             Map<LidCredentialType,String> credentials )
         throws
@@ -44,24 +45,6 @@ public abstract class AbstractReadOnlyLidLocalPersonaManager
         throw new UnsupportedOperationException();
     }
 
-//    /**
-//     * Change the credential associated with a given identifier.
-//     *
-//     * @param identifier the identifier for which the credential will be changed
-//     * @param type the type of credential to be changed
-//     * @param credential the new credential
-//     * @throws UnsupportedOperationException always thrown
-//     */
-//    public void changeCredential(
-//            String            identifier,
-//            LidCredentialType type,
-//            String            credential )
-//        throws
-//            UnsupportedOperationException
-//    {
-//        throw new UnsupportedOperationException();
-//    }
-
     /**
      * Delete a LidLocalPersona, given its identifier.
      * 
@@ -69,7 +52,7 @@ public abstract class AbstractReadOnlyLidLocalPersonaManager
      * @throws UnsupportedOperationException always thrown
      */
     public void delete(
-            String identifier )
+            Identifier identifier )
         throws
             UnsupportedOperationException
     {

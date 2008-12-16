@@ -18,6 +18,7 @@ import java.util.Map;
 import org.infogrid.lid.AbstractLidLocalPersona;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.SaneRequest;
 
@@ -38,7 +39,7 @@ public class StoreLidLocalPersona
      * @param credentials the credentials available to authenticate this LidLocalPersona
      */
     protected StoreLidLocalPersona(
-            String                        identifier,
+            Identifier                    identifier,
             Map<String,String>            attributes,
             Map<LidCredentialType,String> credentials )
     {

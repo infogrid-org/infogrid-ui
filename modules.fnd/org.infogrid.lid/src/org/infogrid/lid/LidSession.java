@@ -16,6 +16,7 @@ package org.infogrid.lid;
 
 import java.util.Random;
 import org.infogrid.util.AbstractFactoryCreatedObject;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.ResourceHelper;
 
 /**
@@ -29,7 +30,7 @@ import org.infogrid.util.ResourceHelper;
  */
 public class LidSession
         extends
-            AbstractFactoryCreatedObject<String,LidSession,String>
+            AbstractFactoryCreatedObject<Identifier,LidSession,String>
 {
     /**
      * Factory method.
@@ -44,13 +45,13 @@ public class LidSession
      * @return the created LidSession
      */
     public static LidSession create(
-            String lid,
-            String cookieValue,
-            long   timeCreated,
-            long   timeUpdated,
-            long   timeRead,
-            long   timeExpires,
-            String creationClientIp )
+            Identifier lid,
+            String     cookieValue,
+            long       timeCreated,
+            long       timeUpdated,
+            long       timeRead,
+            long       timeExpires,
+            String     creationClientIp )
     {
         LidSession ret = new LidSession( lid, cookieValue, timeCreated, timeUpdated, timeRead, timeExpires, creationClientIp );
         return ret;
@@ -68,13 +69,13 @@ public class LidSession
      * @param creationClientIp the IP address of the client that created the session
      */
     protected LidSession(
-            String lid,
-            String cookieValue,
-            long   timeCreated,
-            long   timeUpdated,
-            long   timeRead,
-            long   timeExpires,
-            String creationClientIp )
+            Identifier lid,
+            String     cookieValue,
+            long       timeCreated,
+            long       timeUpdated,
+            long       timeRead,
+            long       timeExpires,
+            String     creationClientIp )
     {
         theLid              = lid;
         theCookieValue      = cookieValue;
@@ -109,7 +110,7 @@ public class LidSession
      *
      * @return the key
      */
-    public String getFactoryKey()
+    public Identifier getFactoryKey()
     {
         return theLid;
     }
@@ -233,7 +234,7 @@ public class LidSession
     /**
      * The LID identifier of the user
      */
-    protected String theLid;
+    protected Identifier theLid;
     
     /**
      * The value identifying this session in a browser cookie.

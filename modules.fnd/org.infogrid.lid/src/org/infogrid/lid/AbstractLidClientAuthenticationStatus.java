@@ -17,6 +17,7 @@ package org.infogrid.lid;
 import java.util.Date;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
+import org.infogrid.util.Identifier;
 
 /**
  * Factors out common functionality of LidClientAuthenticationStatus
@@ -40,13 +41,13 @@ public abstract class AbstractLidClientAuthenticationStatus
      * @param wishesCancelSession the client wishes to cancel the session
      */
     protected AbstractLidClientAuthenticationStatus(
-            String                           clientIdentifier,
+            Identifier                       clientIdentifier,
             LidPersona                       clientPersona,
             LidSession                       session,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
-            String                           sessionClientIdentifier,
+            Identifier                       sessionClientIdentifier,
             LidPersona                       sessionClientPersona,
             boolean                          wishesCancelSession )
     {
@@ -300,7 +301,7 @@ public abstract class AbstractLidClientAuthenticationStatus
      * 
      * @return the claimed client identifier
      */
-    public String getClientIdentifier()
+    public Identifier getClientIdentifier()
     {
         return theClientIdentifier;
     }
@@ -349,7 +350,7 @@ public abstract class AbstractLidClientAuthenticationStatus
      * @return the identifier of the valid session going into this request, if any
      * @see #getSessionBelongsToPersona() 
      */
-    public String getSessionBelongsToIdentifier()
+    public Identifier getSessionBelongsToIdentifier()
     {
         return theSessionClientIdentifier;
     }
@@ -357,7 +358,7 @@ public abstract class AbstractLidClientAuthenticationStatus
     /**
      * The normalized identifier provided by the client.
      */
-    protected String theClientIdentifier;
+    protected Identifier theClientIdentifier;
     
     /**
      * The determined client LidPersona.
@@ -395,7 +396,7 @@ public abstract class AbstractLidClientAuthenticationStatus
     /**
      * The normalized client identifier associated with the session, if any.
      */
-    protected String theSessionClientIdentifier;
+    protected Identifier theSessionClientIdentifier;
     
     /**
      * The client LidPersona as determined from the session, if any.

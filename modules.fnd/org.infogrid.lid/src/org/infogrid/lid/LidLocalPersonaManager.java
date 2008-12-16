@@ -16,6 +16,7 @@ package org.infogrid.lid;
 
 import java.util.Map;
 import org.infogrid.lid.credential.LidCredentialType;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -36,7 +37,7 @@ public interface LidLocalPersonaManager
      * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the creation of new LidLocalPersonas
      */
     public LidLocalPersona createLocalPersona(
-            String                        identifier,
+            Identifier                    identifier,
             Map<String,String>            attributes,
             Map<LidCredentialType,String> credentials )
         throws
@@ -49,7 +50,7 @@ public interface LidLocalPersonaManager
 //     * @param identifier the identifier for which the credential will be checked
 //     * @param type the type of credential to be checked
 //     * @param credential the credential to be checked
-//     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+//     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
 //     * @throws LidInvalidCredentialException thrown if the credential was invalid
 //     */
 //    public abstract void checkCredential(
@@ -57,7 +58,7 @@ public interface LidLocalPersonaManager
 //            LidCredentialType type,
 //            String            credential )
 //        throws
-//            LidLocalPersonaUnknownException,
+//            LidPersonaUnknownException,
 //            LidInvalidCredentialException;
 //
 //    /**
@@ -67,7 +68,7 @@ public interface LidLocalPersonaManager
 //     * @param type the type of credential to be changed
 //     * @param credential the new credential
 //     * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the changing of passwords
-//     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+//     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
 //     */
 //    public void changeCredential(
 //            String            identifier,
@@ -75,19 +76,19 @@ public interface LidLocalPersonaManager
 //            String            credential )
 //        throws
 //            UnsupportedOperationException,
-//            LidLocalPersonaUnknownException;
+//            LidPersonaUnknownException;
 
     /**
      * Obtain a LidLocalPersona, given its identifier.
      *
      * @param identifier the identifier for which the LidLocalPersona will be retrieved
      * @return the found LidLocalPersona
-     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
     public abstract LidLocalPersona get(
-            String identifier )
+            Identifier identifier )
         throws
-            LidLocalPersonaUnknownException;
+            LidPersonaUnknownException;
 
     /**
      * Find the LidResource, or null, which in this case is a LidLocalPersona.
@@ -106,11 +107,11 @@ public interface LidLocalPersonaManager
      * 
      * @param identifier the identifier of the LidLocalPersona that will be deleted
      * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the deletion of LidLocalPersonas
-     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
     public abstract void delete(
-            String identifier )
+            Identifier identifier )
         throws
             UnsupportedOperationException,
-            LidLocalPersonaUnknownException;
+            LidPersonaUnknownException;
 }

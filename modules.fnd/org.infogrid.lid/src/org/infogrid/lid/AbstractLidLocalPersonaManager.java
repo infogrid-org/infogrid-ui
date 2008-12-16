@@ -14,6 +14,8 @@
 
 package org.infogrid.lid;
 
+import org.infogrid.util.Identifier;
+import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -36,7 +38,8 @@ public abstract class AbstractLidLocalPersonaManager
             LidResourceUnknownException
     {
         String          identifier = request.getAbsoluteBaseUri();
-        LidLocalPersona ret        = get( identifier );
+        Identifier      realId     = SimpleStringIdentifier.create( identifier );
+        LidLocalPersona ret        = get( realId );
         return ret;
     }
 }

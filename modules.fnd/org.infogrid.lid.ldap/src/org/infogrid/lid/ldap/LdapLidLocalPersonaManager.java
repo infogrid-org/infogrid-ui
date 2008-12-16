@@ -28,11 +28,12 @@ import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
 import org.infogrid.lid.AbstractReadOnlyLidLocalPersonaManager;
 import org.infogrid.lid.LidLocalPersona;
-import org.infogrid.lid.LidLocalPersonaUnknownException;
+import org.infogrid.lid.LidPersonaUnknownException;
 import org.infogrid.lid.AbstractLidLocalPersona;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.lid.credential.LidPasswordCredentialType;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
@@ -137,16 +138,17 @@ public class LdapLidLocalPersonaManager
      *
      * @param identifier the identifier for which the LidLocalPersona will be retrieved
      * @return the found LidLocalPersona
-     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
     public LidLocalPersona get(
-            String identifier )
+            Identifier identifier )
         throws
-            LidLocalPersonaUnknownException
+            LidPersonaUnknownException
     {
         NamingEnumeration found = null;
+        String            s     = identifier.toExternalForm();
         try {
-            found = theManagerDir.search( identifier, theFilter, theControls );
+            found = theManagerDir.search( s, theFilter, theControls );
 
             if( found.hasMore() ) {
                 SearchResult current = (SearchResult) found.next();
@@ -166,11 +168,11 @@ public class LdapLidLocalPersonaManager
                 
                 return ret;
             }
-            throw new LidLocalPersonaUnknownException( identifier );
+            throw new LidPersonaUnknownException( identifier );
 
         } catch( NamingException ex ) {
             log.error( ex );
-            throw new LidLocalPersonaUnknownException( identifier );
+            throw new LidPersonaUnknownException( identifier );
             
         } finally {
             if( found != null ) {
@@ -227,7 +229,7 @@ public class LdapLidLocalPersonaManager
          * @param attributes attributes of the persona, e.g. first name
          */
         protected LdapLidLocalPersona(
-                String                        identifier,
+                Identifier                    identifier,
                 Map<String,String>            attributes )
         {
             super( identifier, attributes, CREDENTIAL_TYPES );

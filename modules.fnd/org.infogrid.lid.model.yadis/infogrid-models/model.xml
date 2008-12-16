@@ -20,6 +20,12 @@
         <username>Yadis Subject Area</username>
         <userdescription>This Subject Area covers the concepts defined by the Yadis protocol.</userdescription>
 
+        <dependson>
+            <modulereference>
+                <name>org.infogrid.lid</name>
+            </modulereference>
+        </dependson>
+
         <entitytype ID="org.infogrid.lid.model.yadis#Site">
             <name>Site</name>
             <username>Site</username>

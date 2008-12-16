@@ -17,6 +17,7 @@ package org.infogrid.lid;
 import java.util.Date;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
+import org.infogrid.util.Identifier;
 
 /**
  * Collects in one place all information known about the current client and how the client authenticated.
@@ -173,7 +174,7 @@ public interface LidClientAuthenticationStatus
      * @return the claimed client identifier
      * @see #getClientPersona
      */
-    public abstract String getClientIdentifier();
+    public abstract Identifier getClientIdentifier();
     
     /**
      * Obtain what we know about the client with this client identifier here locally. If the persona
@@ -212,5 +213,5 @@ public interface LidClientAuthenticationStatus
      * @return the identifier of the valid session going into this request, if any
      * @see #getSessionBelongsToPersona() 
      */
-    public abstract String getSessionBelongsToIdentifier();
+    public abstract Identifier getSessionBelongsToIdentifier();
 }

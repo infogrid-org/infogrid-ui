@@ -333,7 +333,7 @@ public interface MeshObject
      * it throws an MeshTypeNotFoundException.</p>
      *
      * <p>Warning: sometimes, a MeshObject may carry two Properties with the same (short) name.
-     * It is undefined which of the PropertyValues this call will return.</p>
+     * It is undefined which of those PropertyValues this call will return.</p>
      *
      * @param propertyName the name of the property
      * @return the PropertyValue

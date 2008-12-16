@@ -20,6 +20,7 @@ import org.infogrid.lid.LidSessionManager;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.Factory;
+import org.infogrid.util.Identifier;
 
 /**
  * Implements LidSessionManager using the Store abstraction.
@@ -55,7 +56,7 @@ public class StoreLidSessionManager
     {
         StoreLidSessionMapper mapper = new StoreLidSessionMapper();
         
-        StoreBackedSwappingHashMap<String,LidSession> storage = StoreBackedSwappingHashMap.createWeak( 
+        StoreBackedSwappingHashMap<Identifier,LidSession> storage = StoreBackedSwappingHashMap.createWeak(
                 mapper,
                 store );
         
@@ -75,9 +76,9 @@ public class StoreLidSessionManager
      * @param sessionDuration the duration of new or renewed sessions in milli-seconds
      */
     protected StoreLidSessionManager(
-            Factory<String,LidSession,String>             delegateFactory,
-            StoreBackedSwappingHashMap<String,LidSession> storage,
-            long                                          sessionDuration )
+            Factory<Identifier,LidSession,String>             delegateFactory,
+            StoreBackedSwappingHashMap<Identifier,LidSession> storage,
+            long                                              sessionDuration )
     {
         super( delegateFactory, storage, sessionDuration );
     }    

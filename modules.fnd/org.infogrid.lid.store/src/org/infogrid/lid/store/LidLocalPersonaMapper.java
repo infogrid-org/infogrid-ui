@@ -27,6 +27,8 @@ import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
+import org.infogrid.util.Identifier;
+import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
@@ -42,7 +44,7 @@ public class LidLocalPersonaMapper
         extends
             DefaultHandler
         implements
-            StoreEntryMapper<String,StoreLidLocalPersona>,
+            StoreEntryMapper<Identifier,StoreLidLocalPersona>,
             LidLocalPersonaTags
 {
     private static final Log log = Log.getLogInstance( LidLocalPersonaMapper.class  ); // our own, private logger
@@ -72,9 +74,9 @@ public class LidLocalPersonaMapper
      * @return the corresponding String value that can be used for the Store
      */
     public String keyToString(
-            String key )
+            Identifier key )
     {
-        return key;
+        return key.toExternalForm();
     }
 
     /**
@@ -83,10 +85,11 @@ public class LidLocalPersonaMapper
      * @param stringKey the key in String form
      * @return the corresponding key object
      */
-    public String stringToKey(
+    public Identifier stringToKey(
             String stringKey )
     {
-        return stringKey;
+        Identifier ret = SimpleStringIdentifier.create( stringKey );
+        return ret;
     }
 
     /**
@@ -98,7 +101,7 @@ public class LidLocalPersonaMapper
      * @throws StoreValueDecodingException thrown if the StoreValue could not been decoded
      */
     public StoreLidLocalPersona decodeValue(
-            String     key,
+            Identifier key,
             StoreValue value )
         throws
             StoreValueDecodingException
@@ -190,7 +193,7 @@ public class LidLocalPersonaMapper
             if( theCurrentIdentifier != null ) {
                 throw new SAXParseException( "Repeated tag " + PERSONA_TAG, theLocator );
             }
-            theCurrentIdentifier = attrs.getValue( IDENTIFIER_TAG );
+            theCurrentIdentifier = SimpleStringIdentifier.create( attrs.getValue( IDENTIFIER_TAG ));
             theCurrentAttCreds = new AttributesCredentials();
 
         } else if( ATTRIBUTE_TAG.equals( qName )) {
@@ -425,7 +428,7 @@ public class LidLocalPersonaMapper
     {
         StringBuilder buf = new StringBuilder();
         buf.append( "<" ).append( PERSONA_TAG );
-        buf.append(  " " ).append( IDENTIFIER_TAG ).append( "=\"" ).append( XmlUtils.escape( persona.getIdentifier() )).append( "\">\n");
+        buf.append(  " " ).append( IDENTIFIER_TAG ).append( "=\"" ).append( XmlUtils.escape( persona.getIdentifier().toExternalForm() )).append( "\">\n");
 
         for( String name : persona.getAttributeKeys() ) {
             String value = persona.getAttribute( name );
@@ -485,7 +488,7 @@ public class LidLocalPersonaMapper
     /**
      * The identifier of the LidLocalPersona currently being parsed.
      */
-    protected String theCurrentIdentifier;
+    protected Identifier theCurrentIdentifier;
     
     /**
      * The AttributesCredentials of the LidLocalPersona currently being parsed.

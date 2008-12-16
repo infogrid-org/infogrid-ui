@@ -14,11 +14,6 @@
 
 package org.infogrid.lid;
 
-import java.util.Set;
-import org.infogrid.lid.credential.LidCredentialType;
-import org.infogrid.lid.credential.LidInvalidCredentialException;
-import org.infogrid.util.http.SaneRequest;
-
 /**
  * Represents a locally provisioned LidPersona.
  */
@@ -56,28 +51,4 @@ public interface LidLocalPersona
 //            LidCredentialType type,
 //            String            credential );
 //
-    /**
-     * Obtain the credential types available.
-     * 
-     * @return the credential types
-     */
-    public Set<LidCredentialType> getCredentialTypes();
-
-    /**
-     * Perform a check of the validity of a presented credential.
-     * 
-     * @param credType the LidCredentialType to check
-     * @param request the incoming request carrying the presented credential
-     * @throws LidInvalidCredentialException thrown if the credential was invalid
-     */
-    public abstract void checkCredential(
-            LidCredentialType credType,
-            SaneRequest       request )
-        throws
-            LidInvalidCredentialException;
-
-    /**
-     * Name of the attribute that contains the persona's identifier.
-     */
-    public static final String IDENTIFIER_ATTRIBUTE_NAME = "identifier";
 }

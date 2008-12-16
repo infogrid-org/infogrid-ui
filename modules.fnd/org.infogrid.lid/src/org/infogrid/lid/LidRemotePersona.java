@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -14,25 +14,11 @@
 
 package org.infogrid.lid;
 
-import org.infogrid.util.Identifier;
-import org.infogrid.util.SmartFactory;
-
 /**
- * Defines the concept of a session manager. The arguments are as follows:
- * <ul>
- *  <li>String: the identifier of the user whose session we look for</li>
- *  <li>LidSession: the session</li>
- *  <li>String: IP address of the user at the time the session was created</li>
- * </ul>
+ * Represents a LidPersona that is remotely asserted (not locally provisioned).
  */
-public interface LidSessionManager
+public interface LidRemotePersona
         extends
-            SmartFactory<Identifier,LidSession,String>
+            LidPersona
 {
-    /**
-     * Obtain the session duration for newly created or renewed sessions.
-     * 
-     * @return the session duration, in milliseconds
-     */
-    public long getSessionDuration();
 }

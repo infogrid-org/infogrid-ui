@@ -14,9 +14,11 @@
 
 package org.infogrid.lid;
 
+import org.infogrid.util.Identifier;
+
 /**
  * A resource that a client may want to access. On this level, we only know the resource has
- * an identiifer.
+ * an identifier.
  */
 public interface LidResource
 {
@@ -25,5 +27,5 @@ public interface LidResource
      * 
      * @return the unique identifier
      */
-    public String getIdentifier();
+    public Identifier getIdentifier();
 }

@@ -17,6 +17,7 @@ package org.infogrid.lid;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.Factory;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.MSmartFactory;
 import org.infogrid.util.ResourceHelper;
 
@@ -25,7 +26,7 @@ import org.infogrid.util.ResourceHelper;
  */
 public abstract class AbstractLidSessionManager
         extends
-            MSmartFactory<String,LidSession,String>
+            MSmartFactory<Identifier,LidSession,String>
         implements
             LidSessionManager
 {
@@ -37,9 +38,9 @@ public abstract class AbstractLidSessionManager
      * @param sessionDuration the duration of new or renewed sessions in milli-seconds
      */
     protected AbstractLidSessionManager(
-            Factory<String,LidSession,String> delegateFactory,
-            CachingMap<String,LidSession>     storage,
-            long                              sessionDuration )
+            Factory<Identifier,LidSession,String> delegateFactory,
+            CachingMap<Identifier,LidSession>     storage,
+            long                                  sessionDuration )
     {
         super( delegateFactory, storage );
         
@@ -75,7 +76,7 @@ public abstract class AbstractLidSessionManager
      */
     protected static class MyDelegateFactory
             extends
-                AbstractFactory<String,LidSession,String>
+                AbstractFactory<Identifier,LidSession,String>
     {
         /**
          * Constructor.
@@ -93,8 +94,8 @@ public abstract class AbstractLidSessionManager
          * @return the new LidSession
          */
         public LidSession obtainFor(
-                String lid,
-                String clientIp )
+                Identifier lid,
+                String     clientIp )
         {
             String cookieValue = LidSession.createNewCookieValue();
             long timeCreated   = System.currentTimeMillis();

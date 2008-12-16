@@ -14,6 +14,9 @@
 
 package org.infogrid.lid;
 
+import org.infogrid.util.Identifier;
+import org.infogrid.util.SimpleStringIdentifier;
+
 /**
  * Maps local usernames into identity URLs by prefixing or postfixing
  * a constant character string.
@@ -86,31 +89,34 @@ public class PrePostfixTranslatingLocalPersonaManager
      * @param identifier input parameter
      * @return translated identifier
      */
-    protected String translateIdentifierForward(
-            String identifier )
+    protected Identifier translateIdentifierForward(
+            Identifier identifier )
     {
         if( identifier == null ) {
             return null;
         }
-        if( thePrefix != null && !identifier.startsWith( thePrefix )) {
+        String s = identifier.toExternalForm();
+
+        if( thePrefix != null && !s.startsWith( thePrefix )) {
             throw new IllegalArgumentException( "identifier " + identifier + " does not start with prefix " + thePrefix );
         }
-        if( thePostfix != null && !identifier.endsWith( thePostfix )) {
+        if( thePostfix != null && !s.endsWith( thePostfix )) {
             throw new IllegalArgumentException( "identifier " + identifier + " does not end with postfix " + thePostfix );
         }
         
-        String ret;
+        String almost;
         if( thePrefix != null ) {
             if( thePostfix != null ) {
-                ret = identifier.substring( thePrefix.length(), identifier.length() - thePostfix.length() );
+                almost = s.substring( thePrefix.length(), s.length() - thePostfix.length() );
             } else {
-                ret = identifier.substring( thePrefix.length() );
+                almost = s.substring( thePrefix.length() );
             }
         } else if( thePostfix != null ) {
-            ret = identifier.substring( 0, identifier.length() - thePostfix.length() );
+            almost = s.substring( 0, s.length() - thePostfix.length() );
         } else {
-            ret = identifier;
+            almost = s;
         }
+        Identifier ret = SimpleStringIdentifier.create( almost.toString());
         return ret;
     }
 
@@ -120,21 +126,22 @@ public class PrePostfixTranslatingLocalPersonaManager
      * @param identifier input parameter
      * @return translated identifier
      */
-    protected String translateIdentifierBackward(
-            String identifier )
+    protected Identifier translateIdentifierBackward(
+            Identifier identifier )
     {
         if( identifier == null ) {
             return null;
         }
-        StringBuilder ret = new StringBuilder();
+        StringBuilder almost = new StringBuilder();
         if( thePrefix != null ) {
-            ret.append( thePrefix );
+            almost.append( thePrefix );
         }
-        ret.append(  identifier );
+        almost.append( identifier.toExternalForm() );
         if( thePostfix != null ) {
-            ret.append( thePostfix );
+            almost.append( thePostfix );
         }
-        return ret.toString();
+        Identifier ret = SimpleStringIdentifier.create( almost.toString());
+        return ret;
     }
     
     /**

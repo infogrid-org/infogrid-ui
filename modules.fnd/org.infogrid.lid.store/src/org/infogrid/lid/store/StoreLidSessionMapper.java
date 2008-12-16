@@ -20,13 +20,15 @@ import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
+import org.infogrid.util.Identifier;
+import org.infogrid.util.SimpleStringIdentifier;
 
 /**
  * Maps session cookies into the Store.
  */
 public class StoreLidSessionMapper
         implements
-            StoreEntryMapper<String,LidSession>
+            StoreEntryMapper<Identifier,LidSession>
 {
     /**
      * Map a key to a String value that can be used for the Store.
@@ -35,9 +37,9 @@ public class StoreLidSessionMapper
      * @return the corresponding String value that can be used for the Store
      */
     public String keyToString(
-            String key )
+            Identifier key )
     {
-        return key;
+        return key.toExternalForm();
     }
 
     /**
@@ -46,10 +48,10 @@ public class StoreLidSessionMapper
      * @param stringKey the key in String form
      * @return the corresponding key object
      */
-    public String stringToKey(
+    public Identifier stringToKey(
             String stringKey )
     {
-        return stringKey;
+        return SimpleStringIdentifier.create( stringKey );
     }
 
     /**
@@ -61,7 +63,7 @@ public class StoreLidSessionMapper
      * @throws StoreValueDecodingException thrown if the StoreValue could not been decoded
      */
     public LidSession decodeValue(
-            String     key,
+            Identifier key,
             StoreValue value )
         throws
             StoreValueDecodingException
@@ -73,9 +75,9 @@ public class StoreLidSessionMapper
 
             int sep = data.indexOf( SEPARATOR );
             
-            String lid              = key;
-            String cookieValue      = data.substring( 0, sep );
-            String creationClientIp = data.substring( sep+1 );
+            Identifier lid              = key;
+            String     cookieValue      = data.substring( 0, sep );
+            String     creationClientIp = data.substring( sep+1 );
             
             LidSession ret = LidSession.create(
                     lid,

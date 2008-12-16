@@ -113,6 +113,132 @@ all secrets are exchanged in encrypted form.</userdescription>
             <userdescription>A MeshObject that represents an pricipal, such as a user. It generally makes use of
 one or more Yadis Services.</userdescription>
             <supertype>org.infogrid.lid.model.yadis#Site</supertype>
+            <additionalinterface>org.infogrid.lid.LidPersona</additionalinterface>
+            <implementsMethod><![CDATA[
+    /**
+     * Determine whether this LidPersona is hosted locally or remotely.
+     *
+     * @return true if the LidPersona is hosted locally
+     */
+    public boolean isHostedLocally()
+    {
+        // look at the identifier
+        String myId   = getIdentifier().toExternalForm();
+        String baseId = getMeshBase().getIdentifier().toExternalForm();
+
+        boolean ret = myId.startsWith( baseId );
+        return ret;
+    }
+           ]]></implementsMethod>
+           <implementsMethod><![CDATA[
+    /**
+     * Obtain an attribute of the persona.
+     *
+     * @param key the name of the attribute
+     * @return the value of the attribute, or null
+     */
+    public String getAttribute(
+            String key )
+    {
+        org.infogrid.modelbase.ModelBase modelBase
+                = get_Delegate().getMeshBase().getModelBase();
+        org.infogrid.model.primitives.MeshTypeIdentifier typeId
+                = modelBase.getMeshTypeIdentifierFactory().fromExternalForm( key );
+
+        org.infogrid.model.primitives.PropertyType  type   = null;
+        org.infogrid.model.primitives.PropertyValue almost = null;
+
+        try {
+            type   = modelBase.findPropertyTypeByIdentifier( typeId );
+            almost = get_Delegate().getPropertyValue( type );
+
+        } catch( org.infogrid.mesh.NotPermittedException ex ) {
+            // simply treat it as null
+        } catch( org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException ex ) {
+            // simply treat it as null
+        } catch( org.infogrid.mesh.IllegalPropertyTypeException ex ) {
+            // simply treat it as null
+        }
+
+        String ret;
+        if( almost != null ) {
+            ret = almost.toString();
+        } else {
+            ret = null;
+        }
+        return null;
+    }
+          ]]></implementsMethod>
+            <implementsMethod><![CDATA[
+    /**
+     * Get the set of keys into the set of attributes.
+     *
+     * @return the keys into the set of attributes
+     */
+    public java.util.Set<String> getAttributeKeys()
+    {
+        return getAttributes().keySet();
+    }
+
+          ]]></implementsMethod>
+            <implementsMethod><![CDATA[
+    /**
+     * Obtain the map of attributes. This breaks encapsulation, but works much better
+     * for JSP pages.
+     *
+     * @return the map of attributes
+     */
+    public java.util.Map<String,String> getAttributes()
+    {
+        org.infogrid.model.primitives.PropertyType [] types = get_Delegate().getAllPropertyTypes();
+        java.util.HashMap<String,String>              ret   = new java.util.HashMap<String,String>();
+
+        for( org.infogrid.model.primitives.PropertyType key : types ) {
+            try {
+                org.infogrid.model.primitives.PropertyValue value = get_Delegate().getPropertyValue( key );
+                String stringValue = value != null ? value.toString() : null;
+
+                ret.put( key.getIdentifier().toExternalForm(), stringValue );
+
+            } catch( org.infogrid.mesh.NotPermittedException ex ) {
+                log.error( ex );
+            } catch( org.infogrid.mesh.IllegalPropertyTypeException ex ) {
+                log.error( ex );
+            }
+        }
+        return ret;
+    }
+
+          ]]></implementsMethod>
+            <implementsMethod><![CDATA[
+    /**
+     * Perform a check of the validity of a presented credential.
+     *
+     * @param credType the LidCredentialType to check
+     * @param request the incoming request carrying the presented credential
+     * @throws org.infogrid.lid.credential.LidInvalidCredentialException thrown if the credential was invalid
+     */
+    public void checkCredential(
+            org.infogrid.lid.credential.LidCredentialType credType,
+            org.infogrid.util.http.SaneRequest            request )
+        throws
+            org.infogrid.lid.credential.LidInvalidCredentialException
+    {
+        throw new UnsupportedOperationException( "FIXME" );
+    }
+          ]]></implementsMethod>
+
+            <implementsMethod><![CDATA[
+    /**
+     * Obtain the credential types available.
+     *
+     * @return the credential types
+     */
+    public java.util.Set<org.infogrid.lid.credential.LidCredentialType> getCredentialTypes()
+    {
+        throw new UnsupportedOperationException( "FIXME" );
+    }
+          ]]></implementsMethod>
         </entitytype>
         
         <entitytype ID="org.infogrid.lid.model.lid#AuthenticationService">

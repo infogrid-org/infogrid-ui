@@ -14,6 +14,8 @@
 
 package org.infogrid.lid;
 
+import org.infogrid.util.Identifier;
+
 /**
  * Collects features of LidResource that are common to many implementations.
  */
@@ -27,7 +29,7 @@ public abstract class AbstractLidResource
      * @param identifier the unique identifier of the persona, e.g. their identity URL
      */
     protected AbstractLidResource(
-            String identifier )
+            Identifier identifier )
     {
         theIdentifier = identifier;
     }
@@ -37,13 +39,13 @@ public abstract class AbstractLidResource
      * 
      * @return the unique identifier
      */
-    public String getIdentifier()
+    public Identifier getIdentifier()
     {
         return theIdentifier;
     }
 
     /**
-     * The unique identifier of the persona.
+     * The unique identifier of the LidResource.
      */
-    protected String theIdentifier;
+    protected Identifier theIdentifier;
 }
