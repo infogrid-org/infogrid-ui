@@ -356,6 +356,7 @@ public class ModelLoaderGenerator
         outStream.println( "                " + classNameArray( theEntity.getLocalEntityTypeGuardClassNames() ) + ","   ); // String []               localEntityTypeGuardClassNames
         outStream.println( "                " + getValueString( theEntity.getDeclaredMethods()                ) + ","   ); // BlobValue []            declaredMethods
         outStream.println( "                " + getValueString( theEntity.getImplementedMethods()             ) + ","   ); // BlobValue []            implementedMethods
+        outStream.println( "                " + classNameArray( theEntity.getAdditionalInterfaces()           ) + ","   ); // String []               additionalInterfaces,
         outStream.println( "                " + getValueString( theEntity.getIsAbstract()                     ) + ","   ); // BooleanValue            isAbstract,
         outStream.println( "                " + getValueString( theEntity.getMayBeUsedAsForwardReference()    ) + ","   ); // BooleanValue            mayBeUsedAsForwardReference,
         outStream.println( "                " + getValueString( theEntity.getIsSignificant()                  ) + ","   ); // BooleanValue            isSignificant,

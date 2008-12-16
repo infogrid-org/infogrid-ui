@@ -139,6 +139,7 @@ public class InterfaceGenerator
 
         AttributableMeshType [] supertypes = theMeshType.getDirectSupertypes();
 
+        String sep = "        extends ";
         if( supertypes.length >= 1 ) {
             String supertypeName
                     = thePackageNameTranslatorWithoutVersion.translateSubjectArea( supertypes[0].getSubjectArea() )
@@ -146,7 +147,9 @@ public class InterfaceGenerator
                     + "."
                     + supertypes[0].getName().value();
 
-            outStream.print( "        extends " + supertypeName );
+            outStream.print( sep );
+            outStream.print( supertypeName );
+            sep = ",\n            ";
         }
         for( int i=1 ; i<supertypes.length ; ++i ) {
             String supertypeName
@@ -155,10 +158,21 @@ public class InterfaceGenerator
                     + "."
                     + supertypes[i].getName().value();
 
-            outStream.println( "," );
-            outStream.print( "            " + supertypeName );
+            outStream.print( sep );
+            outStream.print( supertypeName );
+            sep = ",\n            ";
         }
-        if( supertypes.length >= 1 ) {
+
+        String [] additionalInterfaces = theMeshType.getAdditionalInterfaces();
+        if( additionalInterfaces != null ) {
+            for( int i=0 ; i<additionalInterfaces.length ; ++i ) {
+                outStream.print( sep );
+                outStream.print( additionalInterfaces[i] );
+                sep = ",\n            ";
+            }
+        }
+
+        if( supertypes.length >= 1 || ( additionalInterfaces != null && additionalInterfaces.length > 0 )) {
             outStream.println();
         }
         outStream.println( "{" );

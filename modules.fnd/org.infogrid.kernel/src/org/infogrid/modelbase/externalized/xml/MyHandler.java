@@ -308,6 +308,9 @@ public class MyHandler
                 case XmlModelTokens.MAYBE_USED_AS_FORWARD_REFERENCE:
                     // noop
                     break;
+                case XmlModelTokens.ADDITIONAL_INTERFACE:
+                    // noop
+                    break;
                 case XmlModelTokens.IS_OPTIONAL_TOKEN:
                     // noop
                     break;
@@ -740,6 +743,16 @@ public class MyHandler
                         error( theErrorPrefix + "unexpected type: " + temp );
                     }
                     break;
+                case XmlModelTokens.ADDITIONAL_INTERFACE:
+                    temp = theStack.peek();
+                    if( temp instanceof ExternalizedEntityType ) {
+                        theEntityType = (ExternalizedEntityType) temp;
+                        theEntityType.addAdditionalInterface( theCharacters.toString().trim() );
+                    } else {
+                        error( theErrorPrefix + "unexpected type: " + temp );
+                    }
+                    break;
+
                 case XmlModelTokens.IS_OPTIONAL_TOKEN:
                     temp = theStack.peek();
                     if( temp instanceof ExternalizedPropertyType ) {
@@ -1483,6 +1496,7 @@ public class MyHandler
                     theExternalizedEntityType.getLocalEntityTypeGuardClassNames(),
                     BlobValue.createMultiple( theExternalizedEntityType.getDeclaredMethods() ),
                     BlobValue.createMultiple( theExternalizedEntityType.getImplementedMethods() ),
+                    theExternalizedEntityType.getAdditionalInterfaces(),
                     theExternalizedEntityType.getIsAbstract(),
                     theExternalizedEntityType.getMayBeUsedAsForwardReference(),
                     theExternalizedEntityType.getIsSignificant(),

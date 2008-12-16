@@ -26,7 +26,7 @@
 <!ELEMENT dependson   ( ( modulerequirement | subjectareareference )+ )>
 <!ELEMENT subjectareareference       ( name, minversion? )>
 <!ELEMENT modulerequirement          ( name, minversion? )>
-<!ELEMENT entitytype                 ( name, username*, userdescription*, icon?, supertype+, overridecode?, isabstract?, issignificant?, forwardreference?, codegen?, ( propertytype | projectedpropertytype | propertytypegroup )* )>
+<!ELEMENT entitytype                 ( name, username*, userdescription*, icon?, supertype+, overridecode?, isabstract?, issignificant?, forwardreference?, codegen?, additionalinterface, ( propertytype | projectedpropertytype | propertytypegroup )* )>
 <!ELEMENT relationshiptype           ( name, username*, userdescription*, (( src, dest ) | srcdest ), isabstract?, codegen?, propertytype* )>
 <!ELEMENT propertytype               ( name, username*, userdescription*, tooverride*, datatype, defaultvalue?, isoptional?, isreadonly?, codegen?, sequencenumber? )>
 <!ELEMENT projectedpropertytype      ( name, username*, userdescription*, tooverride*, datatype, defaultvalue?, isoptional?, isreadonly?, inputpropertyspecification*, projectioncode?, codegen?, sequencenumber? )>
@@ -41,32 +41,33 @@
 <!ELEMENT propertytypereference      EMPTY>
 <!ELEMENT roletypereference          EMPTY>
 
-<!ELEMENT name             (#PCDATA)>
-<!ELEMENT minversion       (#PCDATA)>
-<!ELEMENT version          (#PCDATA)>
-<!ELEMENT username         (#PCDATA)>
-<!ELEMENT userdescription  (#PCDATA)>
-<!ELEMENT supertype        (#PCDATA)>
-<!ELEMENT overridecode     (#PCDATA)>
-<!ELEMENT projectioncode   (#PCDATA)>
-<!ELEMENT isabstract       EMPTY>
-<!ELEMENT isoptional       EMPTY>
-<!ELEMENT isreadonly       EMPTY>
-<!ELEMENT issignificant    EMPTY>
-<!ELEMENT forwardreference EMPTY>
-<!ELEMENT codegen          EMPTY>
-<!ELEMENT datatype         ( BlobDataType | BooleanDataType | ColorDataType | EnumeratedDataType | ExtentDataType | FloatDataType | IntegerDataType | MultiplicityDataType | PointDataType | StringDataType | TimePeriodDataType | TimeStampDataType )>
-<!ELEMENT defaultvalue     (#PCDATA)>
-<!ELEMENT src              ( username*, e, refines+, MultiplicityValue, constraint+ )>
-<!ELEMENT dest             ( username*, e, refines+, MultiplicityValue, constraint+ )>
-<!ELEMENT srcdest          ( username*, e, refines*, top?, MultiplicityValue, constraint+ )>
-<!ELEMENT e                (#PCDATA)>
-<!ELEMENT refines          (#PCDATA)>
-<!ELEMENT top              (#PCDATA)>
-<!ELEMENT constraint       (#PCDATA)>
-<!ELEMENT tooverride       (#PCDATA)>
-<!ELEMENT sequencenumber   (#PCDATA)>
-<!ELEMENT icon             EMPTY>
+<!ELEMENT name                (#PCDATA)>
+<!ELEMENT minversion          (#PCDATA)>
+<!ELEMENT version             (#PCDATA)>
+<!ELEMENT username            (#PCDATA)>
+<!ELEMENT userdescription     (#PCDATA)>
+<!ELEMENT supertype           (#PCDATA)>
+<!ELEMENT overridecode        (#PCDATA)>
+<!ELEMENT projectioncode      (#PCDATA)>
+<!ELEMENT isabstract          EMPTY>
+<!ELEMENT isoptional          EMPTY>
+<!ELEMENT isreadonly          EMPTY>
+<!ELEMENT issignificant       EMPTY>
+<!ELEMENT forwardreference    EMPTY>
+<!ELEMENT additionalinterface (#PCDATA)>
+<!ELEMENT codegen             EMPTY>
+<!ELEMENT datatype            ( BlobDataType | BooleanDataType | ColorDataType | EnumeratedDataType | ExtentDataType | FloatDataType | IntegerDataType | MultiplicityDataType | PointDataType | StringDataType | TimePeriodDataType | TimeStampDataType )>
+<!ELEMENT defaultvalue        (#PCDATA)>
+<!ELEMENT src                 ( username*, e, refines+, MultiplicityValue, constraint+ )>
+<!ELEMENT dest                ( username*, e, refines+, MultiplicityValue, constraint+ )>
+<!ELEMENT srcdest             ( username*, e, refines*, top?, MultiplicityValue, constraint+ )>
+<!ELEMENT e                   (#PCDATA)>
+<!ELEMENT refines             (#PCDATA)>
+<!ELEMENT top                 (#PCDATA)>
+<!ELEMENT constraint          (#PCDATA)>
+<!ELEMENT tooverride          (#PCDATA)>
+<!ELEMENT sequencenumber      (#PCDATA)>
+<!ELEMENT icon                EMPTY>
 
 <!ELEMENT BlobDataType         EMPTY>
 <!ELEMENT BooleanDataType      EMPTY>

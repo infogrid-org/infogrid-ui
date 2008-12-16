@@ -130,41 +130,42 @@ abstract class XmlModelTokens
     protected static final int PROJECTION_CODE_TOKEN                     = 27;
     protected static final int IS_ABSTRACT_TOKEN                         = 28;
     protected static final int MAYBE_USED_AS_FORWARD_REFERENCE           = 29;
-    protected static final int IS_OPTIONAL_TOKEN                         = 30;
-    protected static final int IS_READONLY_TOKEN                         = 31;
-    protected static final int IS_SIGNIFICANT_TOKEN                      = 32;
-    protected static final int CODEGEN_TOKEN                             = 33;
-    protected static final int DATATYPE_TOKEN                            = 34;
-    protected static final int DEFAULT_VALUE_TOKEN                       = 35;
-    protected static final int SOURCE_TOKEN                              = 36;
-    protected static final int DESTINATION_TOKEN                         = 37;
-    protected static final int SOURCE_DESTINATION_TOKEN                  = 38;
-    protected static final int ENTITY_TOKEN                              = 39;
-    protected static final int REFINES_TOKEN                             = 40;
-    protected static final int TO_OVERRIDE_TOKEN                         = 41;
-    protected static final int GUARD_TOKEN                               = 42;
-    protected static final int SEQUENCE_NUMBER_TOKEN                     = 43;
-    protected static final int ICON_TOKEN                                = 44;
+    protected static final int ADDITIONAL_INTERFACE                      = 30;
+    protected static final int IS_OPTIONAL_TOKEN                         = 31;
+    protected static final int IS_READONLY_TOKEN                         = 32;
+    protected static final int IS_SIGNIFICANT_TOKEN                      = 33;
+    protected static final int CODEGEN_TOKEN                             = 34;
+    protected static final int DATATYPE_TOKEN                            = 35;
+    protected static final int DEFAULT_VALUE_TOKEN                       = 36;
+    protected static final int SOURCE_TOKEN                              = 37;
+    protected static final int DESTINATION_TOKEN                         = 38;
+    protected static final int SOURCE_DESTINATION_TOKEN                  = 39;
+    protected static final int ENTITY_TOKEN                              = 40;
+    protected static final int REFINES_TOKEN                             = 41;
+    protected static final int TO_OVERRIDE_TOKEN                         = 42;
+    protected static final int GUARD_TOKEN                               = 43;
+    protected static final int SEQUENCE_NUMBER_TOKEN                     = 44;
+    protected static final int ICON_TOKEN                                = 45;
 
-    protected static final int BLOB_DATATYPE_TOKEN                       = 45;
-    protected static final int BOOLEAN_DATATYPE_TOKEN                    = 46;
-    protected static final int COLOR_DATATYPE_TOKEN                      = 47;
-    protected static final int ENUMERATED_DATATYPE_TOKEN                 = 48;
-    protected static final int EXTENT_DATATYPE_TOKEN                     = 49;
-    protected static final int FLOAT_DATATYPE_TOKEN                      = 50;
-    protected static final int FLOAT_MATRIX_DATATYPE_TOKEN               = 51;
-    protected static final int INTEGER_DATATYPE_TOKEN                    = 52;
-    protected static final int MULTIPLICITY_DATATYPE_TOKEN               = 53;
-    protected static final int POINT_DATATYPE_TOKEN                      = 54;
-    protected static final int STRING_DATATYPE_TOKEN                     = 55;
-    protected static final int TIME_PERIOD_DATATYPE_TOKEN                = 56;
-    protected static final int TIME_STAMP_DATATYPE_TOKEN                 = 57;
+    protected static final int BLOB_DATATYPE_TOKEN                       = 46;
+    protected static final int BOOLEAN_DATATYPE_TOKEN                    = 47;
+    protected static final int COLOR_DATATYPE_TOKEN                      = 48;
+    protected static final int ENUMERATED_DATATYPE_TOKEN                 = 49;
+    protected static final int EXTENT_DATATYPE_TOKEN                     = 50;
+    protected static final int FLOAT_DATATYPE_TOKEN                      = 51;
+    protected static final int FLOAT_MATRIX_DATATYPE_TOKEN               = 52;
+    protected static final int INTEGER_DATATYPE_TOKEN                    = 53;
+    protected static final int MULTIPLICITY_DATATYPE_TOKEN               = 54;
+    protected static final int POINT_DATATYPE_TOKEN                      = 55;
+    protected static final int STRING_DATATYPE_TOKEN                     = 56;
+    protected static final int TIME_PERIOD_DATATYPE_TOKEN                = 57;
+    protected static final int TIME_STAMP_DATATYPE_TOKEN                 = 58;
 
-    protected static final int MULTIPLICITY_VALUE_TOKEN                  = 58;
-    protected static final int ENUM_TOKEN                                = 59;
+    protected static final int MULTIPLICITY_VALUE_TOKEN                  = 59;
+    protected static final int ENUM_TOKEN                                = 60;
 
-    protected static final int DECLARES_METHOD_TOKEN                     = 60;
-    protected static final int IMPLEMENTS_METHOD_TOKEN                   = 61;
+    protected static final int DECLARES_METHOD_TOKEN                     = 61;
+    protected static final int IMPLEMENTS_METHOD_TOKEN                   = 62;
 
     /**
      * The table to map integers into strings.
@@ -208,6 +209,7 @@ abstract class XmlModelTokens
         addToTable( "projectioncode",              PROJECTION_CODE_TOKEN );
         addToTable( "isabstract",                  IS_ABSTRACT_TOKEN );
         addToTable( "maybeusedasforwardreference", MAYBE_USED_AS_FORWARD_REFERENCE );
+        addToTable( "additionalinterface",         ADDITIONAL_INTERFACE );
         addToTable( "isoptional",                  IS_OPTIONAL_TOKEN );
         addToTable( "isreadonly",                  IS_READONLY_TOKEN );
         addToTable( "issignificant",               IS_SIGNIFICANT_TOKEN );

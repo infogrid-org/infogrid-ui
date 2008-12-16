@@ -176,7 +176,7 @@ public class ExternalizedEntityType
     }
 
     /**
-     * Add an impeemnted method.
+     * Add an implemented method.
      *
      * @param newValue the new value
      */
@@ -215,6 +215,27 @@ public class ExternalizedEntityType
     public BooleanValue getMayBeUsedAsForwardReference()
     {
         return theMayBeUsedAsForwardReference;
+    }
+
+    /**
+     * Add an additional interface.
+     * 
+     * @param toAdd the fully-qualified interface name to add
+     */
+    public void addAdditionalInterface(
+            String toAdd )
+    {
+        theAdditionalInterfaces.add( toAdd );
+    }
+
+    /**
+     * Get property.
+     *
+     * @return the value
+     */
+    public String [] getAdditionalInterfaces()
+    {
+        return ArrayHelper.copyIntoNewArray( theAdditionalInterfaces, String.class );
     }
 
     /**
@@ -261,4 +282,9 @@ public class ExternalizedEntityType
      * Implemented methods code.
      */
     protected ArrayList<String> theImplementedMethods = new ArrayList<String>();
+
+    /**
+     * Additional interfaces.
+     */
+    protected ArrayList<String> theAdditionalInterfaces = new ArrayList<String>();
 }

@@ -21,6 +21,7 @@ import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.model.primitives.L10Map;
+import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.MultiplicityValue;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyTypeGroup;
@@ -29,11 +30,7 @@ import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.SubjectArea;
-
 import org.infogrid.model.traversal.TraversalToPropertySpecification;
-
-import org.infogrid.model.primitives.MeshTypeIdentifier;
-
 import org.infogrid.module.ModuleRequirement;
 
 /**
@@ -56,6 +53,7 @@ public interface MeshTypeLifecycleManager
      * @param localEntityTypeGuardClassNames the class names of the set of EntityTypeGuards locally defined on this EntityType
      * @param declaredMethods the methods declared on this EntityType
      * @param implementedMethods the methods implemented by this EntityType
+     * @param additionalInterfaces additional interfaces declared by the generated code
      * @param isAbstract if BooleanValue.TRUE, this EntityType cannot be instantiated and a non-abstract subtype must be instantiated instead
      * @param mayBeUsedAsForwardReference if BooleanValue.TRUE, this EntityType may be used as a ForwardReference
      * @param isSignificant if BooleanValue.TRUE, this EntityType is significant and not just mechanistic
@@ -75,6 +73,7 @@ public interface MeshTypeLifecycleManager
             String []               localEntityTypeGuardClassNames,
             BlobValue []            declaredMethods,
             BlobValue []            implementedMethods,
+            String []               additionalInterfaces,
             BooleanValue            isAbstract,
             BooleanValue            mayBeUsedAsForwardReference,
             BooleanValue            isSignificant,

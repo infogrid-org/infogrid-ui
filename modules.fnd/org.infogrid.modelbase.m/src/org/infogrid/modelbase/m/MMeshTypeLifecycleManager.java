@@ -14,6 +14,9 @@
 
 package org.infogrid.modelbase.m;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
@@ -39,21 +42,13 @@ import org.infogrid.model.primitives.m.MPropertyTypeGroup;
 import org.infogrid.model.primitives.m.MRelationshipType;
 import org.infogrid.model.primitives.m.MRoleType;
 import org.infogrid.model.primitives.m.MSubjectArea;
-
 import org.infogrid.model.traversal.TraversalToPropertySpecification;
-
 import org.infogrid.modelbase.InheritanceConflictException;
 import org.infogrid.modelbase.MeshTypeLifecycleManager;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ProjectedPropertyTypePatcher;
-
 import org.infogrid.module.ModuleRequirement;
-
 import org.infogrid.util.ArrayHelper;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * The MeshTypeLifecycleManager implementation for the in-memory implementation
@@ -105,6 +100,7 @@ public class MMeshTypeLifecycleManager
             String []               localEntityTypeGuardClassNames,
             BlobValue []            declaredMethods,
             BlobValue []            implementedMethods,
+            String []               additionalInterfaces,
             BooleanValue            isAbstract,
             BooleanValue            mayBeUsedAsForwardReference,
             BooleanValue            isSignificant,
@@ -174,8 +170,9 @@ public class MMeshTypeLifecycleManager
         ret.setDoGenerateInterfaceCode( doGenerateInterfaceCode );
         ret.setDoGenerateImplementationCode( doGenerateImplementationCode );
 
-        ret.setDeclaredMethods(    declaredMethods );
-        ret.setImplementedMethods( implementedMethods );
+        ret.setDeclaredMethods(      declaredMethods );
+        ret.setImplementedMethods(   implementedMethods );
+        ret.setAdditionalInterfaces( additionalInterfaces );
         
         theModelBase.theCluster.addObject( ret );
 
@@ -1359,6 +1356,7 @@ public class MMeshTypeLifecycleManager
      * @param oldArray the old array
      * @param arrayComponentType the type of the new array
      * @return the new array with the old content
+     * @param <T> type parameter
      */
     @SuppressWarnings(value={"unchecked"})
     protected <T> T [] copyIntoNewArray(
@@ -1378,6 +1376,7 @@ public class MMeshTypeLifecycleManager
      * @param oldCollection the old Collection
      * @param arrayComponentType the type of the new array
      * @return the new array with the old content
+     * @param <T> type parameter
      */
     @SuppressWarnings(value={"unchecked"})
     protected <T> T [] copyIntoNewArray(

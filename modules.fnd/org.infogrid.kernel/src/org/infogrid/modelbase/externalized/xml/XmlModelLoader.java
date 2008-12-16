@@ -14,6 +14,11 @@
 
 package org.infogrid.modelbase.externalized.xml;
 
+import java.io.IOException;
+import java.io.InputStream;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.modelbase.InheritanceConflictException;
 import org.infogrid.modelbase.MeshTypeLifecycleManager;
@@ -21,16 +26,8 @@ import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelLoader;
 import org.infogrid.util.logging.Log;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
   * This class loads a model from an XML InputStream.

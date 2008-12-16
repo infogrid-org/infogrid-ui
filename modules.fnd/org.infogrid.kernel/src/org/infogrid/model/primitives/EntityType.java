@@ -113,6 +113,13 @@ public interface EntityType
     public BlobValue [] getImplementedMethods();
 
     /**
+     * Obtain the set of interfaces that this EntityType declares in addition.
+     *
+     * @return Java interface names
+     */
+    public String [] getAdditionalInterfaces();
+
+    /**
      * Obtain the set of EntityTypeGuards locally defined on this EntityType.
      *
      * @return the set of EntityTypeGuards locally defined on this EntityType
