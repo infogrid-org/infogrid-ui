@@ -45,12 +45,12 @@ public class CodeGenerator
      * Main program for the code generator.
      *
      * @param args command-line arguments
-     * @throws Exception things may go wrong, and there is no error handling on the top
+     * @throws Throwable things may go wrong
      */
     public static void main(
             String [] args )
         throws
-            Exception
+            Throwable
     {
         ArrayList<String> subjectAreas = new ArrayList<String>();
         File              outputDir    = null;
@@ -122,8 +122,8 @@ public class CodeGenerator
                 generator.generateForAll( sas );
 
             } catch( Throwable ex ) {
-                System.err.println( "Unexpected Exception attempting to access SubjectArea " + saName );
-                ex.printStackTrace( System.err );
+                log.error( ex );
+                throw ex; // rethrow
             }
         }
     }
@@ -156,7 +156,7 @@ public class CodeGenerator
     {
         System.err.println( "Usage:" );
         System.err.println( "    java " + CodeGenerator.class.getName() + " <subjectArea> ... -o <outputDir>" );
-        System.exit( 0 );
+        System.exit( 1 );
     }
 
     /**
