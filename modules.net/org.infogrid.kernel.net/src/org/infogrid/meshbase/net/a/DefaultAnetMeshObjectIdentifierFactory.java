@@ -146,14 +146,14 @@ public class DefaultAnetMeshObjectIdentifierFactory
      * @throws URISyntaxException thrown if a parsing error occurred
      */
     @Override
-    public NetMeshObjectIdentifier guessFromExternalForm(
+    public DefaultAnetMeshObjectIdentifier guessFromExternalForm(
             String raw )
         throws
             URISyntaxException
     {
         // FIXME? Can we make this smarter?
 
-        DefaultAnetMeshObjectIdentifier ret = fromExternalForm( theMeshBaseIdentifier, raw  );
+        DefaultAnetMeshObjectIdentifier ret = fromExternalForm( theMeshBaseIdentifier, raw );
         return ret;
     }
     
@@ -185,7 +185,7 @@ public class DefaultAnetMeshObjectIdentifierFactory
             DefaultAnetMeshObjectIdentifier ret;
             switch( found.length ) {
                 case 1:
-                    ret = fromExternalForm( (String) found[0] );
+                    ret = guessFromExternalForm( (String) found[0] );
                     break;
 
                 default:

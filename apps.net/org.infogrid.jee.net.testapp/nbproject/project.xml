@@ -80,7 +80,7 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library>
-                    <file>${reference.org_infogrid_lid_model_openid.jar}</file>
+                    <file>${reference.org_infogrid_lid_model_openid_auth.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library>
@@ -109,6 +109,10 @@
                 </library>
                 <library>
                     <file>${reference.org_infogrid_model_Viewlet.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library>
+                    <file>${reference.org_infogrid_model_Web.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library>
@@ -283,7 +287,7 @@
                 <id>jar</id>
             </reference>
             <reference>
-                <foreign-project>org_infogrid_lid_model_openid</foreign-project>
+                <foreign-project>org_infogrid_lid_model_openid_auth</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>
@@ -340,6 +344,14 @@
             </reference>
             <reference>
                 <foreign-project>org_infogrid_model_Viewlet</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>org_infogrid_model_Web</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

@@ -26,7 +26,7 @@
 <!ELEMENT dependson   ( ( modulerequirement | subjectareareference )+ )>
 <!ELEMENT subjectareareference       ( name, minversion? )>
 <!ELEMENT modulerequirement          ( name, minversion? )>
-<!ELEMENT entitytype                 ( name, username*, userdescription*, icon?, supertype+, overridecode?, isabstract?, issignificant?, forwardreference?, codegen?, additionalinterface, ( propertytype | projectedpropertytype | propertytypegroup )* )>
+<!ELEMENT entitytype                 ( name, username*, userdescription*, icon?, supertype*, synonym*, overridecode?, isabstract?, issignificant?, forwardreference?, codegen?, additionalinterface, ( propertytype | projectedpropertytype | propertytypegroup )* )>
 <!ELEMENT relationshiptype           ( name, username*, userdescription*, (( src, dest ) | srcdest ), isabstract?, codegen?, propertytype* )>
 <!ELEMENT propertytype               ( name, username*, userdescription*, tooverride*, datatype, defaultvalue?, isoptional?, isreadonly?, codegen?, sequencenumber? )>
 <!ELEMENT projectedpropertytype      ( name, username*, userdescription*, tooverride*, datatype, defaultvalue?, isoptional?, isreadonly?, inputpropertyspecification*, projectioncode?, codegen?, sequencenumber? )>
@@ -47,6 +47,7 @@
 <!ELEMENT username            (#PCDATA)>
 <!ELEMENT userdescription     (#PCDATA)>
 <!ELEMENT supertype           (#PCDATA)>
+<!ELEMENT synonym             (#PCDATA)>
 <!ELEMENT overridecode        (#PCDATA)>
 <!ELEMENT projectioncode      (#PCDATA)>
 <!ELEMENT isabstract          EMPTY>

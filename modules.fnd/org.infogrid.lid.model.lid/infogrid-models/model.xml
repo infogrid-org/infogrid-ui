@@ -24,6 +24,9 @@
             <subjectareareference>
                 <name>org.infogrid.lid.model.yadis</name>
             </subjectareareference>
+            <modulereference>
+                <name>org.infogrid.lid</name>
+            </modulereference>
         </dependson>
 
         <entitytype ID="org.infogrid.lid.model.lid#IdentityProvider">
@@ -31,7 +34,7 @@
             <username>Identity Provider</username>
             <userdescription>A MeshObject that is an Identity Provider. It generally offers one or more
 Authentication Services.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Site</supertype>
+            <supertype>org.infogrid.model.Web#WebResource</supertype>
 
             <propertytype ID="org.infogrid.lid.model.lid#IdentityProvider/RequiresUserSpecificSecret">
                 <name>RequiresUserSpecificSecret</name>
@@ -71,7 +74,7 @@ This could be a password, or a hardware token, but not a client certificate.</us
             <username>Relying Party</username>
             <userdescription>A MeshObject that can accept externally provided identities. It generally provides one or
 more RelyingPartyServices.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Site</supertype>
+            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
             
             <propertytype ID="org.infogrid.lid.model.lid#RelyingParty/RequiresUserSpecificSecret">
                 <name>RequiresUserSpecificSecret</name>
@@ -112,7 +115,7 @@ all secrets are exchanged in encrypted form.</userdescription>
             <name>Principal</name>
             <userdescription>A MeshObject that represents an pricipal, such as a user. It generally makes use of
 one or more Yadis Services.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Site</supertype>
+            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
             <additionalinterface>org.infogrid.lid.LidPersona</additionalinterface>
             <implementsMethod><![CDATA[
     /**
@@ -245,7 +248,7 @@ one or more Yadis Services.</userdescription>
             <name>AuthenticationService</name>
             <userdescription>A Yadis Service that is able to authenticate a principal. More specific subclasses
 are provided for specific authentication protocols.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Service</supertype>
+            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
             <isabstract/>
         </entitytype>
 
@@ -268,19 +271,20 @@ are provided for specific authentication protocols.</userdescription>
             </declaresMethod>
         </entitytype>
 
-        <entitytype ID="http://lid.netmesh.org/sso">
+        <entitytype ID="org.infogrid.lid.model.lid#LidGpgSso">
             <name>LidGpgSso</name>
             <username>LID's GPG-based Authentication Service</username>
             <userdescription>This represents a LID GPG-based Authentication Service in any version.</userdescription>
             <supertype>org.infogrid.lid.model.lid#WebAuthenticationService</supertype>
             <isabstract/>
+            <synonym>http://lid.netmesh.org/sso</synonym>
         </entitytype>        
 
-        <entitytype ID="http://lid.netmesh.org/sso/2.0">
+        <entitytype ID="org.infogrid.lid.model.lid#LidGpgSso2">
             <name>LidGpgSso2</name>
             <username>LID's GPG-based Authentication Service (version 2)</username>
             <userdescription>An Authentication Service based on the LID GPG SSO service, version 2.</userdescription>
-            <supertype>http://lid.netmesh.org/sso</supertype>
+            <supertype>org.infogrid.lid.model.lid#LidGpgSso</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
@@ -289,7 +293,7 @@ are provided for specific authentication protocols.</userdescription>
             org.infogrid.util.context.Context context )
     {
         org.infogrid.mesh.set.MeshObjectSet endpoints = this.traverse(
-                org.infogrid.lid.model.yadis.YadisSubjectArea.SERVICE_ISPROVIDEDATENDPOINT_SITE.getSource() );
+                org.infogrid.lid.model.yadis.YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource() );
         if( endpoints.isEmpty() ) {
             throw new IllegalArgumentException( "no Endpoint found" );
         }
@@ -307,34 +311,38 @@ are provided for specific authentication protocols.</userdescription>
         return ret.toString();
     }
           ]]></implementsMethod>
+          <synonym>http://lid.netmesh.org/sso/2.0</synonym>
         </entitytype>
 
-        <entitytype ID="http://lid.netmesh.org/minimum-lid/2.0">
+        <entitytype ID="org.infogrid.lid.model.lid#MinimumLid2">
             <name>MinimumLid2</name>
             <username>Minimum LID (version 2)</username>
-            <supertype>org.infogrid.lid.model.yadis#Service</supertype>
+            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
+            <synonym>http://lid.netmesh.org/minimum-lid/2.0</synonym>
         </entitytype>
 
         <entitytype ID="org.infogrid.lid.model.lid#RelyingPartyService">
             <name>RelyingPartyService</name>
             <userdescription>A Yadis Service that is able to accept authentication assertions. More specific subclasses
 are provided for specific protocols.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Service</supertype>
+            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
         </entitytype>
 
-        <entitytype ID="http://lid.netmesh.org/relying-party">
+        <entitytype ID="org.infogrid.lid.model.lid#LidGpgRelyingParty">
             <name>LidGpgRelyingParty</name>
             <username>LID's GPG-based Relying Party Service</username>
             <userdescription>This represents a LID GPG-based Relying Party Service in any version.</userdescription>
             <supertype>org.infogrid.lid.model.lid#RelyingPartyService</supertype>
             <isabstract/>
+            <synonym>http://lid.netmesh.org/relying-party</synonym>
         </entitytype>
 
-        <entitytype ID="http://lid.netmesh.org/relying-party/2.0">
+        <entitytype ID="org.infogrid.lid.model.lid#LidGpgRelyingParty2">
             <name>LidGpgRelyingParty2</name>
             <username>LID's GPG-based Relying Party Service (version 2)</username>
             <userdescription>A LID GPG-based Relying Party Service based on the LID GPG SSO service, version 2.</userdescription>
-            <supertype>http://lid.netmesh.org/relying-party</supertype>
+            <supertype>org.infogrid.lid.model.lid#LidGpgRelyingParty</supertype>
+            <synonym>http://lid.netmesh.org/relying-party/2.0</synonym>
         </entitytype>
 
         <entitytype ID="org.infogrid.lid.model.lid#HardwareTokenRelyingParty">
@@ -349,30 +357,6 @@ are provided for specific protocols.</userdescription>
             <username>Username/password-based Relying Party</username>
             <userdescription>This represents a Relying Party that accepts usernames and passwords.</userdescription>
             <supertype>org.infogrid.lid.model.lid#RelyingPartyService</supertype>
-        </entitytype>
-
-        <entitytype ID="http://lid.netmesh.org/traversal/2.0">
-            <name>TraversalService2</name>
-            <userdescription>A Yadis Service to traverse from one object to zero, one or more others.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Service</supertype>
-        </entitytype>
-
-        <entitytype ID="http://lid.netmesh.org/format-negotiation/2.0">
-            <name>FormatNegotiation</name>
-            <userdescription>A Yadis Service to negotiate the format of responses.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Service</supertype>
-        </entitytype>
-
-        <entitytype ID="http://lid.netmesh.org/post/sender/2.0">
-            <name>PostSender</name>
-            <userdescription>A Yadis Service to send messages from one place to another.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Service</supertype>
-        </entitytype>
-
-        <entitytype ID="http://lid.netmesh.org/post/receiver/2.0">
-            <name>PostReceiver</name>
-            <userdescription>A Yadis Service to receive messages from another place.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#Service</supertype>
         </entitytype>
     </subjectarea>
 </model>

@@ -204,13 +204,13 @@ public abstract class AbstractLocalizedException
                 getLocalizedMessage(),
                 getStackTrace(),
                 cause,
-                cause != null ? cause.getMessage() : null,
+                cause != null ? cause.getMessage()          : null,
                 cause != null ? cause.getLocalizedMessage() : null,
-                cause != null ? cause.getStackTrace() : null,
+                cause != null ? cause.getStackTrace()       : null,
                 rootCause,
-                rootCause != null ? rootCause.getMessage() : null,
+                rootCause != null ? rootCause.getMessage()          : null,
                 rootCause != null ? rootCause.getLocalizedMessage() : null,
-                rootCause != null ? rootCause.getStackTrace() : null );
+                rootCause != null ? rootCause.getStackTrace()       : null );
 
         return ret;
     }

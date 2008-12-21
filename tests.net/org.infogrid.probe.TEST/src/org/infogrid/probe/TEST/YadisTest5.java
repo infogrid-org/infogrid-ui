@@ -57,16 +57,16 @@ public class YadisTest5
         
         log.info( "Checking for correct results" );
         
-        MeshObjectSet services = home.traverse( YadisSubjectArea.SITE_MAKESUSEOF_SERVICE.getSource() );
+        MeshObjectSet services = home.traverse( YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getSource() );
         checkEquals( services.size(), 9, "Wrong number of services found" );
         
         boolean found [] = new boolean[ 9 ];
         for( int i=0 ; i<found.length ; ++i ) {
             MeshObject current = services.get( i );
             
-            checkCondition( current.isBlessedBy( YadisSubjectArea.SERVICE ), "Index " + i + " is not a Service" );
+            checkCondition( current.isBlessedBy( YadisSubjectArea.XRDSSERVICE ), "Index " + i + " is not a Service" );
             
-            IntegerValue priority = (IntegerValue) current.getPropertyValue( YadisSubjectArea.SERVICE_PRIORITY );
+            IntegerValue priority = (IntegerValue) current.getPropertyValue( YadisSubjectArea.XRDSSERVICE_PRIORITY );
             found[ (int) priority.longValue() - 1 ] = true;
         }
         for( int i=0 ; i<found.length ; ++i ) {

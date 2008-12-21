@@ -312,6 +312,27 @@ public class MEntityType
     }
 
     /**
+     * Set the identifiers by which this EntityType is also known.
+     *
+     * @param newValue the synonym identifiers
+     */
+    public void setSynonyms(
+            MeshTypeIdentifier [] newValue )
+    {
+        theSynonyms = newValue;
+    }
+
+    /**
+     * Obtain the identifiers by which this EntityType is also known.
+     *
+     * @return the identifiers by which this EntityType is also known
+     */
+    public final MeshTypeIdentifier [] getSynonyms()
+    {
+        return theSynonyms;
+    }
+
+    /**
      * Set the set of method declarations that this EntityType makes in addition.
      *
      * @param newValue the method declarations
@@ -589,6 +610,11 @@ public class MEntityType
      * The set of EntityTypeGuards on this EntityType (not a supertype), expressed as the set of class names.
      */
     private String [] theLocalEntityTypeGuardClassNames;
+
+    /**
+     * The identifiers by which this EntityType is also known.
+     */
+    private MeshTypeIdentifier [] theSynonyms;
 
     /**
      * The declared methods code.

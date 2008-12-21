@@ -50,7 +50,7 @@ public class AllTests
                         AbstractTest.tempInputFileName( ProbeTest3.class, "test3-active.xml" ),
                         AbstractTest.fileSystemFileName( ProbeTest3.class, "ProbeTest2_1.xml" ),
                         AbstractTest.fileSystemFileName( ProbeTest3.class, "ProbeTest2_2.xml" )),
-                        
+
                 new TestSpec(
                         ProbeTest4.class,
                         AbstractTest.fileSystemFileName( ProbeTest4.class, "ProbeTest4.xml" )),

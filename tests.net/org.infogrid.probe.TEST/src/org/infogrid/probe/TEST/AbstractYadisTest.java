@@ -21,9 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.httpd.HttpResponseFactory;
 import org.infogrid.httpd.server.HttpServer;
 import org.infogrid.lid.model.lid.LidSubjectArea;
-import org.infogrid.lid.model.openid.OpenidSubjectArea;
-import org.infogrid.lid.model.yadis.Service;
-import org.infogrid.lid.model.yadis.Site;
+import org.infogrid.lid.model.openid.auth.AuthSubjectArea;
 import org.infogrid.lid.model.yadis.YadisSubjectArea;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
@@ -31,6 +29,7 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.Probe.ProbeSubjectArea;
+import org.infogrid.model.Web.WebSubjectArea;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.probe.m.MProbeDirectory;
@@ -112,7 +111,7 @@ public abstract class AbstractYadisTest
     {
         checkEqualsOutOfSequence(
                 home.getTypes(),
-                new MeshType[] { YadisSubjectArea.SITE, ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION },
+                new MeshType[] { YadisSubjectArea.XRDSSERVICECOLLECTION, ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION },
                 "home object blessed" );
         
         MeshObjectSet services = home.traverseToNeighborMeshObjects();
@@ -125,31 +124,34 @@ public abstract class AbstractYadisTest
 
             boolean found = false;
             for( EntityType type : service.getTypes() ) {
-                if( type.isSubtypeOfOrEquals( Service._TYPE )) {
+                if( type.isSubtypeOfOrEquals( YadisSubjectArea.XRDSSERVICE )) {
                     found = true;
                     break;
                 }
             }
             if( !found ) {
-                reportError( "Service is not a Service.TYPE" );
+                reportError( "Service is not a XRDSSERVICE" );
             }
             if( ArrayHelper.isIn( LidSubjectArea.MINIMUMLID2, service.getTypes(), false )) {
                 // good
-            } else if( ArrayHelper.isIn( OpenidSubjectArea.AUTHENTICATION1_0SERVICE, service.getTypes(), false )) {
+            } else if( ArrayHelper.isIn( AuthSubjectArea.AUTHENTICATION1_0SERVICE, service.getTypes(), false )) {
                 // good
             } else {
                 // not good
-                reportError( "Service is neither MinimumLid nor OpenID Auth" );
+                reportError(
+                        "Service "
+                        + service.getIdentifier().toExternalForm()
+                        + " is neither MinimumLid nor OpenID Auth, is: "
+                        + ArrayHelper.join( service.getTypes() ));
             }
             
-
-            MeshObjectSet endpoints = service.traverse( Service._Service_IsProvidedAtEndpoint_Site_SOURCE );
+            MeshObjectSet endpoints = service.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource() );
             checkEquals( endpoints.size(), 1, "wrong number of endpoints" );
             
             for( MeshObject endpoint : endpoints ) {
                 getLog().debug( "Looking at Endpoint " + endpoint );
 
-                checkEqualsOutOfSequence( endpoint.getTypes(), new MeshType[] { Site._TYPE }, "endpoint not blessed" );
+                checkEqualsOutOfSequence( endpoint.getTypes(), new MeshType[] { WebSubjectArea.WEBRESOURCE }, "endpoint not blessed" );
             }
         }
     }

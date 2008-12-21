@@ -25,7 +25,7 @@
   <requires name="org.infogrid.lid"/>
   <requires name="org.infogrid.lid.model.lid"/>
   <requires name="org.infogrid.lid.openid"/>
-  <requires name="org.infogrid.lid.model.openid"/>
+  <requires name="org.infogrid.lid.model.openid.auth"/>
   <requires name="org.infogrid.lid.model.yadis"/>
   <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.kernel.net"/>

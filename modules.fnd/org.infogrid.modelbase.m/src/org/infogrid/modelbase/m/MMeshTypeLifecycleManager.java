@@ -78,7 +78,8 @@ public class MMeshTypeLifecycleManager
      * @param theUserDescriptions internationalized descriptions of this EntityType
      * @param theIcon an icon that can be shown to the user that represents this EntityType
      * @param theSubjectArea the SubjectArea in which this EntityType is defined
-     * @param supertypes the one more or AttributableMeshTypes that are the direct supertypes of this EntityType
+     * @param supertypes the zero or more or AttributableMeshTypes that are the direct supertypes of this EntityType
+     * @param synonyms the alternate MeshTypeIdentifiers identifying this EntityType
      * @param inheritingOverrideCode code, if any, that shall be in-lined into implementation code of this EntityType and all of its subtypes
      * @param localEntityTypeGuardClassNames the class names of the set of EntityTypeGuards locally defined on this EntityType.
      * @param isAbstract if BooleanValue.TRUE, this EntityType cannot be instantiated and a non-abstract subtype must be instantiated instead
@@ -96,6 +97,7 @@ public class MMeshTypeLifecycleManager
             BlobValue               theIcon,
             SubjectArea             theSubjectArea,
             AttributableMeshType [] supertypes,
+            MeshTypeIdentifier []   synonyms,
             BlobValue               inheritingOverrideCode,
             String []               localEntityTypeGuardClassNames,
             BlobValue []            declaredMethods,
@@ -161,6 +163,7 @@ public class MMeshTypeLifecycleManager
                 realSupertypes[i].addDirectSubtype( ret );
             }
         }
+        ret.setSynonyms( synonyms );
 
         ret.setInheritingOverrideCode( inheritingOverrideCode );
         ret.setLocalEntityTypeGuardClassNames( localEntityTypeGuardClassNames );
@@ -175,6 +178,10 @@ public class MMeshTypeLifecycleManager
         ret.setAdditionalInterfaces( additionalInterfaces );
         
         theModelBase.theCluster.addObject( ret );
+
+        for( MeshTypeIdentifier current : synonyms ) {
+            theModelBase.theSynonymDictionary.addToTable( current, identifier );
+        }
 
         return ret;
     }

@@ -315,7 +315,7 @@ public enum HttpShellVerb
             } catch( MeshObjectAccessException ex ) {
                 throw new HttpShellException( ex );
             }
-            MeshObject object  = ( objectName  != null ) ? meshBase.findMeshObjectByIdentifier( objectName  ) : null;
+            MeshObject object = ( objectName  != null ) ? meshBase.findMeshObjectByIdentifier( objectName  ) : null;
 
             Transaction tx = null;
             try {

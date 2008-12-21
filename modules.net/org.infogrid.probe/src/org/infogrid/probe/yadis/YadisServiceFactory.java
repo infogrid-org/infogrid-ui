@@ -17,13 +17,10 @@ package org.infogrid.probe.yadis;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
-import org.infogrid.lid.model.openid.Authentication1_0Service;
-import org.infogrid.lid.model.yadis.Service;
-import org.infogrid.lid.model.yadis.Site;
+import org.infogrid.lid.model.openid.auth.AuthSubjectArea;
 import org.infogrid.lid.model.yadis.YadisSubjectArea;
 import org.infogrid.mesh.BlessedAlreadyException;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
@@ -47,7 +44,9 @@ import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.StringValue;
+import org.infogrid.model.Web.WebSubjectArea;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
+import org.infogrid.modelbase.MeshTypeSynonymDictionary;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.util.http.HTTP;
@@ -143,7 +142,7 @@ public class YadisServiceFactory
             URISyntaxException
     {
         try {
-            subject.bless( YadisSubjectArea.SITE );
+            subject.bless( YadisSubjectArea.XRDSSERVICECOLLECTION );
 
         } catch( BlessedAlreadyException ex ) {
             log.warn( ex );
@@ -181,7 +180,7 @@ public class YadisServiceFactory
                     try {
                         serviceMeshObject = base.getMeshBaseLifecycleManager().createMeshObject(
                                 base.getMeshObjectIdentifierFactory().fromExternalForm( prefix ),
-                                Service._TYPE );
+                                YadisSubjectArea.XRDSSERVICE );
                     } catch( IsAbstractException ex ) {
                         log.error( ex );
                         continue;
@@ -194,7 +193,9 @@ public class YadisServiceFactory
                         // ignore
                     }
                     try {
-                        serviceMeshObject.blessRelationship( Service._Site_MakesUseOf_Service_DESTINATION, subject );
+                        serviceMeshObject.blessRelationship(
+                                YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getDestination(),
+                                subject );
                     } catch( RoleTypeBlessedAlreadyException ex ) {
                         // ignore
                     } catch( EntityNotBlessedException ex ) {
@@ -235,7 +236,9 @@ public class YadisServiceFactory
             URISyntaxException
     {
         try {
-            serviceMeshObject.setPropertyValue( Service.PRIORITY, decodePriorityValue( serviceNode ));
+            serviceMeshObject.setPropertyValue(
+                    YadisSubjectArea.XRDSSERVICE_PRIORITY,
+                    decodePriorityValue( serviceNode ));
 
         } catch( IllegalPropertyTypeException ex ) {
             log.error( ex );
@@ -286,7 +289,10 @@ public class YadisServiceFactory
                 String realFound = found.toString().trim();
                 NetMeshObjectIdentifier endpointIdentifier = base.getMeshObjectIdentifierFactory().fromExternalForm( realFound );
 
-                NetMeshObject endpoint = findOrCreateAndBless( endpointIdentifier, YadisSubjectArea.SITE, base );
+                NetMeshObject endpoint = findOrCreateAndBless(
+                        endpointIdentifier,
+                        WebSubjectArea.WEBRESOURCE,
+                        base );
 
                 // FIXME? endpoint.setPropertyValue( ServiceEndPoint.Priority_PROPERTYTYPE, decodePriorityValue( infoNode ));
                 // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( realFound ));
@@ -296,7 +302,9 @@ public class YadisServiceFactory
                     // ignore
                 }
                 try {
-                    serviceMeshObject.blessRelationship( Service._Service_IsProvidedAtEndpoint_Site_SOURCE, endpoint );
+                    serviceMeshObject.blessRelationship(
+                            YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource(),
+                            endpoint );
 
                 } catch( BlessedAlreadyException ex ) {
                     // ignore
@@ -349,63 +357,58 @@ public class YadisServiceFactory
             ModelBase modelBase,
             String    externalForm )
     {
-        MeshTypeIdentifier identifier;
-        MeshType ret;
-        try {
-            // first look in the mapping table
-            identifier = theTypeMappingTable.get( externalForm );
-            if( identifier != null ) {
+        MeshTypeSynonymDictionary dictionary = modelBase.getSynonymDictionary();
+        MeshTypeIdentifier        identifier = modelBase.getMeshTypeIdentifierFactory().fromExternalForm( externalForm );
+
+        MeshType ret = null;
+        if( ret == null && dictionary != null ) {
+            try {
+                ret = dictionary.findMeshTypeByIdentifier( identifier );
+            } catch( MeshTypeNotFoundException ex ) {
+                // ignore
+            }
+        }
+
+        if( ret == null ) {
+            try {
                 ret = modelBase.findMeshTypeByIdentifier( identifier );
-                return (EntityType) ret;
-            }
-            
-            // then try directly
-            identifier = modelBase.getMeshTypeIdentifierFactory().fromExternalForm( externalForm );
-            ret = modelBase.findMeshTypeByIdentifier( identifier );
-            if( ret != null ) {
-                return (EntityType) ret;
-            }
-        } catch( MeshTypeNotFoundException ex ) {
-            // ignore
-            if( log.isDebugEnabled() ) {
-                log.debug( ex );
+            } catch( MeshTypeNotFoundException ex ) {
+                // ignore
             }
         }
 
-        // finally try to strip of the beta version
-        Matcher m = betaPattern.matcher( externalForm );
-        if( !m.find() ) {
-            return null;
-        }
-        externalForm = m.group( 1 );
-        identifier = modelBase.getMeshTypeIdentifierFactory().fromExternalForm( externalForm );
-
-        // try directly
-        try {
-            ret = modelBase.findMeshTypeByIdentifier( identifier );
-            return (EntityType) ret;
-
-        } catch( MeshTypeNotFoundException ex ) {
-            // ignore
-            if( log.isDebugEnabled() ) {
-                log.debug( ex );
+        MeshTypeIdentifier withoutBetaIdentifier = null;
+        if( ret == null ) {
+            // finally try to strip of the beta version
+            Matcher m = betaPattern.matcher( externalForm );
+            if( m.find() ) {
+                externalForm = m.group( 1 );
+                withoutBetaIdentifier = modelBase.getMeshTypeIdentifierFactory().fromExternalForm( externalForm );
             }
         }
-        
-        identifier = theTypeMappingTable.get( externalForm );
-        if( identifier == null ) {
-            return null;
+
+        if( withoutBetaIdentifier != null ) {
+            if( ret == null && dictionary != null ) {
+                try {
+                    ret = dictionary.findMeshTypeByIdentifier( withoutBetaIdentifier );
+                } catch( MeshTypeNotFoundException ex ) {
+                    // ignore
+                }
+            }
+            if( ret == null ) {
+                try {
+                    ret = modelBase.findMeshTypeByIdentifier( withoutBetaIdentifier );
+                } catch( MeshTypeNotFoundException ex ) {
+                    // ignore
+                }
+            }
         }
 
         try {
-            ret = modelBase.findMeshTypeByIdentifier( identifier );
             return (EntityType) ret;
 
-        } catch( MeshTypeNotFoundException ex ) {
-            // ignore, we just don't know
-            if( log.isInfoEnabled() ) {
-                log.info( ex );
-            }
+        } catch( ClassCastException ex ) {
+            log.error( ex );
         }
         return null;
     }
@@ -593,7 +596,7 @@ public class YadisServiceFactory
                 }
 
                 try {
-                    subject.bless( YadisSubjectArea.SITE );
+                    subject.bless( YadisSubjectArea.XRDSSERVICECOLLECTION );
 
                 } catch( BlessedAlreadyException ex ) {
                     log.warn( ex );
@@ -605,21 +608,28 @@ public class YadisServiceFactory
                 try {
                     NetMeshObject serviceMeshObject = base.getMeshBaseLifecycleManager().createMeshObject(
                             base.getMeshObjectIdentifierFactory().fromExternalForm( prefix ),
-                            Service._TYPE );
+                            YadisSubjectArea.XRDSSERVICE );
 
-                    serviceMeshObject.bless( Authentication1_0Service._TYPE ); // FIXME? OpenIDAuthentication.TYPE );
+                    serviceMeshObject.bless( AuthSubjectArea.AUTHENTICATION1_0SERVICE ); // FIXME? OpenIDAuthentication.TYPE );
                     if( delegateIdentifier != null ) {
-                        serviceMeshObject.setPropertyValue( org.infogrid.lid.model.openid.AuthenticationService.DELEGATE, StringValue.create( delegateIdentifier.toExternalForm() ));
+                        serviceMeshObject.setPropertyValue(
+                                AuthSubjectArea.AUTHENTICATIONSERVICE_DELEGATE,
+                                StringValue.create( delegateIdentifier.toExternalForm() ));
                     }
                     
                     NetMeshObject endpoint = base.getMeshBaseLifecycleManager().createForwardReference(
                             identityServerIdentifier,
-                            Site._TYPE );
+                            WebSubjectArea.WEBRESOURCE );
 
                     // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( identityServer ));
 
-                    serviceMeshObject.relateAndBless( Service._Service_IsProvidedAtEndpoint_Site_SOURCE, endpoint );
-                    serviceMeshObject.relateAndBless( Service._Site_MakesUseOf_Service_DESTINATION, subject );
+                    serviceMeshObject.relateAndBless(
+                            YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource(),
+                            endpoint );
+
+                    serviceMeshObject.relateAndBless(
+                            YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getDestination(),
+                            subject );
 
                 } catch( IsAbstractException ex ) {
                     log.error( ex );
@@ -697,21 +707,6 @@ public class YadisServiceFactory
     private static final Pattern yadisHttpEquivPattern4 = Pattern.compile(
             "<meta[^>]+content=[\"']?([^\\s\"']*)[\"'\\s][^>]*http-equiv=[\"']?X-YADIS-Location[\"'\\s>]",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
-    
-    /**
-     * Table that maps Yadis type tags to Identifiers in our model.
-     */
-    protected static final HashMap<String,MeshTypeIdentifier> theTypeMappingTable = new HashMap<String,MeshTypeIdentifier>();
-    static {
-        // none of the following lines should be instantiated as long as we haven't defined a subtype of the Yadis generic Service
-        // theTypeMappingTable.put( "http://lid.netmesh.org/minimum-lid/2.0",        MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/sso/2.0",                MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/relying-party/2.0",      MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/traversal/2.0",          MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/format-negotiation/2.0", MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/post/sender/2.0",        MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
-        // theTypeMappingTable.put( "http://lid.netmesh.org/post/receiver/2.0",      MeshTypeIdentifier.obtain( "org.Yadis", "Service" ));
-    }
     
     /**
      * The "beta" pattern.

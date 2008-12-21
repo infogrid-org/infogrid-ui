@@ -14,12 +14,11 @@
 
 package org.infogrid.model.traversal;
 
+import java.io.Serializable;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.transaction.MeshObjectRoleChangeEvent;
-
-import java.io.Serializable;
 
 /**
  * <p>This interface is supported by all classes that can be

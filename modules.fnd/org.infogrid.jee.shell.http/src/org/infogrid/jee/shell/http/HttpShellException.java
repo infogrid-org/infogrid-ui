@@ -14,8 +14,7 @@
 
 package org.infogrid.jee.shell.http;
 
-import org.infogrid.util.LocalizedException;
-import org.infogrid.util.LocalizedObjectFormatter;
+import org.infogrid.util.AbstractLocalizedException;
 
 /**
  * Thrown when something went wrong in the
@@ -24,9 +23,7 @@ import org.infogrid.util.LocalizedObjectFormatter;
  */
 public final class HttpShellException
     extends
-        Exception
-    implements
-        LocalizedException
+        AbstractLocalizedException
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -43,20 +40,12 @@ public final class HttpShellException
     }
 
     /**
-     * Determine the correct internationalized string that can be shown to the
-     * user when the LocalizedException is thrown.
+     * Obtain resource parameters for the internationalization.
      *
-     * @param formatter the formatter to use for data objects to be displayed as part of the message
-     * @return the internationalized string
+     * @return the resource parameters
      */
-    public String getLocalizedMessage(
-            LocalizedObjectFormatter formatter )
+    public Object [] getLocalizationParameters()
     {
-        if( getCause() instanceof LocalizedException ) {
-            LocalizedException cause = (LocalizedException) getCause();
-            return cause.getLocalizedMessage( formatter );
-        } else {
-            return getCause().getLocalizedMessage();
-        }
+        return new Object[] { getCause() };
     }
 }

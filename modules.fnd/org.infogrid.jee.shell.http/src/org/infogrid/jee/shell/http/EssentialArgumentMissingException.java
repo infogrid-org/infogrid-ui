@@ -33,7 +33,7 @@ public class EssentialArgumentMissingException
      */
     public EssentialArgumentMissingException(
             HttpShellVerb verb,
-            String                argName )
+            String        argName )
     {
         theVerb         = verb;
         theArgumentName = argName;

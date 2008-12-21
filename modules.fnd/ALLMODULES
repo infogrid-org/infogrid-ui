@@ -18,6 +18,7 @@ org.infogrid.kernel
 org.infogrid.modelbase.m
 org.infogrid.kernel.active
 org.infogrid.codegen
+org.infogrid.model.Web
 org.infogrid.model.Common
 org.infogrid.model.AclBasedSecurity
 org.infogrid.model.Blob
@@ -49,7 +50,12 @@ org.infogrid.lid.ldap
 org.infogrid.lid.openid
 org.infogrid.lid.model.yadis
 org.infogrid.lid.model.lid
-org.infogrid.lid.model.openid
+org.infogrid.lid.model.openid.auth
+org.infogrid.lid.model.openid.ax
+org.infogrid.lid.model.openid.pape
+org.infogrid.lid.model.post
+org.infogrid.lid.model.traversal
+org.infogrid.lid.model.formatnegotiation
 org.infogrid.lid.store
 org.infogrid.lid.openid.store
 org.infogrid.scene

@@ -296,6 +296,9 @@ public class MyHandler
                 case XmlModelTokens.SUPERTYPE_TOKEN:
                     theStack.push( new ExternalizedAttributes( attrs ));
                     break;
+                case XmlModelTokens.SYNONYM_TOKEN:
+                    // noop
+                    break;
                 case XmlModelTokens.OVERRIDE_CODE_TOKEN:
                     // noop
                     break;
@@ -466,9 +469,10 @@ public class MyHandler
             ExternalizedTraversalSpecification           theTraversalSpecification;
             ExternalizedMeshObjectSelector               theMeshObjectSelector;
 
-            ArrayList<Object> theCollection;
-            DataType          theDataType;
-            Object            temp;
+            ArrayList<Object>  theCollection;
+            DataType           theDataType;
+            Object             temp;
+            MeshTypeIdentifier typeId;
 
             switch( token ) {
                 case XmlModelTokens.MODEL_TOKEN:
@@ -694,12 +698,22 @@ public class MyHandler
                     }
                     break;
                 case XmlModelTokens.SUPERTYPE_TOKEN:
-                    MeshTypeIdentifier v = createTypeIdentifierFrom( theCharacters.toString() );
+                    typeId = createTypeIdentifierFrom( theCharacters.toString() );
                     theStack.pop(); // the ExternalizedAttributes -- ignored because we have a string identifying the supertype
                     temp = theStack.peek();
                     if( temp instanceof ExternalizedEntityType ) {
                         theEntityType = (ExternalizedEntityType) temp;
-                        theEntityType.addSuperType( v );
+                        theEntityType.addSuperType( typeId );
+                    } else {
+                        error( theErrorPrefix + "unexpected type: " + temp );
+                    }
+                    break;
+                case XmlModelTokens.SYNONYM_TOKEN:
+                    typeId = createTypeIdentifierFrom( theCharacters.toString() );
+                    temp = theStack.peek();
+                    if( temp instanceof ExternalizedEntityType ) {
+                        theEntityType = (ExternalizedEntityType) temp;
+                        theEntityType.addSynonym( typeId );
                     } else {
                         error( theErrorPrefix + "unexpected type: " + temp );
                     }
@@ -1492,6 +1506,7 @@ public class MyHandler
                     icon,
                     theSubjectArea,
                     theSupertypes,
+                    theExternalizedEntityType.getSynonyms(),
                     overrideCode,
                     theExternalizedEntityType.getLocalEntityTypeGuardClassNames(),
                     BlobValue.createMultiple( theExternalizedEntityType.getDeclaredMethods() ),

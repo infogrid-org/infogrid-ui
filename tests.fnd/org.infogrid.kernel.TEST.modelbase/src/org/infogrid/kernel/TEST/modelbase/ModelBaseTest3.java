@@ -20,6 +20,7 @@ import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.model.primitives.L10MapImpl;
+import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.StringDataType;
 import org.infogrid.model.primitives.StringValue;
@@ -76,6 +77,7 @@ public class ModelBaseTest3
                 null,
                 sa,
                 new AttributableMeshType[0],
+                new MeshTypeIdentifier[0],
                 null,
                 new String[0],
                 new BlobValue[0],
@@ -114,6 +116,7 @@ public class ModelBaseTest3
                 null,
                 sa,
                 new AttributableMeshType[] { a },
+                new MeshTypeIdentifier[0],
                 null,
                 new String[0],
                 new BlobValue[0],
@@ -150,6 +153,7 @@ public class ModelBaseTest3
                 null,
                 sa,
                 new AttributableMeshType[] { a },
+                new MeshTypeIdentifier[0],
                 null,
                 new String[0],
                 new BlobValue[0],
@@ -186,6 +190,7 @@ public class ModelBaseTest3
                 null,
                 sa,
                 new AttributableMeshType[] { a },
+                new MeshTypeIdentifier[0],
                 null,
                 new String[0],
                 new BlobValue[0],
@@ -208,6 +213,7 @@ public class ModelBaseTest3
                 null,
                 sa,
                 new AttributableMeshType[] { d },
+                new MeshTypeIdentifier[0],
                 null,
                 new String[0],
                 new BlobValue[0],
@@ -246,6 +252,7 @@ public class ModelBaseTest3
                     null,
                     sa,
                     new AttributableMeshType[] { b, c },
+                    new MeshTypeIdentifier[0],
                     null,
                     new String[0],
                     new BlobValue[0],
@@ -272,6 +279,7 @@ public class ModelBaseTest3
                     null,
                     sa,
                     new AttributableMeshType[] { c, e },
+                    new MeshTypeIdentifier[0],
                     null,
                     new String[0],
                     new BlobValue[0],
@@ -296,6 +304,7 @@ public class ModelBaseTest3
                 null,
                 sa,
                 new AttributableMeshType[] { c, d },
+                new MeshTypeIdentifier[0],
                 null,
                 new String[0],
                 new BlobValue[0],
@@ -332,6 +341,7 @@ public class ModelBaseTest3
                 null,
                 sa,
                 new AttributableMeshType[] { c },
+                new MeshTypeIdentifier[0],
                 null,
                 new String[0],
                 new BlobValue[0],

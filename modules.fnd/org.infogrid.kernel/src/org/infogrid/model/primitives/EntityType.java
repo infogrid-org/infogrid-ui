@@ -29,6 +29,13 @@ public interface EntityType
             AttributableMeshType
 {
     /**
+     * Obtain the identifiers by which this EntityType is also known.
+     *
+     * @return the identifiers by which this EntityType is also known
+     */
+    public MeshTypeIdentifier [] getSynonyms();
+
+    /**
       * Obtain the value of the IsSignificant property.
       *
       * @return the value of the IsSignificant property

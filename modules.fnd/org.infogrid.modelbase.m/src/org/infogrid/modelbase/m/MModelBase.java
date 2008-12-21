@@ -69,9 +69,9 @@ public class MModelBase
     /**
      * Factory method.
      *
-     * @return the created ModelBase
+     * @return the created MModelBase
      */
-    public static ModelBase create()
+    public static MModelBase create()
     {
         ModuleRegistry registry;
         ClassLoader    ourLoader = MModelBase.class.getClassLoader();
@@ -83,36 +83,49 @@ public class MModelBase
             registry = null;
         }
 
+        MMeshTypeSynonymDictionary synonymDictionary         = MMeshTypeSynonymDictionary.create();
         MMeshTypeIdentifierFactory meshTypeIdentifierFactory = MMeshTypeIdentifierFactory.create();
         
-        return new MModelBase( meshTypeIdentifierFactory, registry );
+        MModelBase ret = new MModelBase( meshTypeIdentifierFactory, synonymDictionary, registry );
+
+        synonymDictionary.setModelBase( ret );
+
+        return ret;
     }
 
     /**
      * Factory method.
      *
      * @param registry the ModuleRegistry in which we look for ModelModules
-     * @return the created ModelBase
+     * @return the created MModelBase
      */
-    public static ModelBase create(
+    public static MModelBase create(
             ModuleRegistry registry )
     {
+        MMeshTypeSynonymDictionary synonymDictionary         = MMeshTypeSynonymDictionary.create();
         MMeshTypeIdentifierFactory meshTypeIdentifierFactory = MMeshTypeIdentifierFactory.create();
         
-        return new MModelBase( meshTypeIdentifierFactory, registry );
+        MModelBase ret = new MModelBase( meshTypeIdentifierFactory, synonymDictionary, registry );
+
+        synonymDictionary.setModelBase( ret );
+
+        return ret;
     }
 
     /**
      * Private constructor, use factory method.
      *
      * @param meshTypeIdentifierFactory the factory for MeshTypeIdentifiers to use
+     * @param synonymDictionary the dictionary for MeshTypeIdentifier synonyms to use
      * @param registry the ModuleRegistry in which we look for ModelModules
      */
     protected MModelBase(
             MMeshTypeIdentifierFactory meshTypeIdentifierFactory,
+            MMeshTypeSynonymDictionary synonymDictionary,
             ModuleRegistry             registry )
     {
         theMeshTypeIdentifierFactory = meshTypeIdentifierFactory;
+        theSynonymDictionary         = synonymDictionary;
         theModuleRegistry            = registry;
 
         theLifecycleManager = new MMeshTypeLifecycleManager( this );
@@ -811,6 +824,16 @@ public class MModelBase
     }
 
     /**
+     * Obtain a MeshTypeSynonymDictionary.
+     *
+     * @return the MeshTypeSynonyDirectory.
+     */
+    public MMeshTypeSynonymDictionary getSynonymDictionary()
+    {
+        return theSynonymDictionary;
+    }
+
+    /**
      * Helper method to check whether the right subtype of MeshType is being returned. If not, throw exception.
      * 
      * @param identifier the Identifier of the found type
@@ -850,13 +873,6 @@ public class MModelBase
             }
             throw new WrongMeshTypeException( identifier, foundType );
         }
-    }
-
-    /**
-      * We are told we are not needed any more. Clean up and release all resources.
-      */
-    public void die()
-    {
     }
 
     /**
@@ -1059,6 +1075,13 @@ public class MModelBase
     }
 
     /**
+      * We are told we are not needed any more. Clean up and release all resources.
+      */
+    public void die()
+    {
+    }
+
+    /**
       * The life cycle manager -- allocated smartly.
       */
     protected transient MMeshTypeLifecycleManager theLifecycleManager;
@@ -1073,6 +1096,11 @@ public class MModelBase
       */
     protected MMeshTypeStore theCluster = new MMeshTypeStore( this );
 
+    /**
+     * Dictionary of synonyms.
+     */
+    protected MMeshTypeSynonymDictionary theSynonymDictionary;
+    
     /**
      * The ModuleRegistry from which we attempt to demand-load models.
      */

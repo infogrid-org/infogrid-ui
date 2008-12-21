@@ -60,7 +60,7 @@
                 <id>jar</id>
             </reference>
             <reference>
-                <foreign-project>org_infogrid_lid_model_openid</foreign-project>
+                <foreign-project>org_infogrid_lid_model_openid_auth</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

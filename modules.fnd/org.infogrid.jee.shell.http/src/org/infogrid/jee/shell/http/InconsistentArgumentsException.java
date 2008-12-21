@@ -36,8 +36,8 @@ public class InconsistentArgumentsException
      */
     public InconsistentArgumentsException(
             HttpShellVerb verb,
-            String                arg1Name,
-            String                arg2Name )
+            String        arg1Name,
+            String        arg2Name )
     {
         theVerb          = verb;
         theArgument1Name = arg1Name;

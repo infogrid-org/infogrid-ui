@@ -14,12 +14,17 @@
 
 package org.infogrid.module;
 
-import java.io.*;
-import java.net.*;
-import java.security.*;
-import java.util.*;
-import java.util.jar.*;
-import java.util.zip.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLStreamHandler;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.NoSuchElementException;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * <p>This is a class loader that knows how to load the code for a Module. It first looks
@@ -181,6 +186,13 @@ public class ModuleClassLoader
                 if( classBytes != null && classBytes.length > 0 ) {
                     try {
                         c = defineClass( name, classBytes, 0, classBytes.length );
+
+                    } catch( NoClassDefFoundWithClassLoaderError ex ) {
+                        throw ex; // just rethrow
+
+                    } catch( NoClassDefFoundError ex ) {
+                        throw new NoClassDefFoundWithClassLoaderError( ex.getMessage(), this );
+
                     } catch( ClassFormatError ex ) {
                         ModuleErrorHandler.error( ex );
                     }

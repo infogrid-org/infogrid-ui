@@ -323,6 +323,7 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_lid}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_lid_model_yadis}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_model_Web}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="jar"/>
     </target>
@@ -647,6 +648,7 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_lid}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_lid_model_yadis}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_model_Web}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_module}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="clean"/>
     </target>

@@ -90,6 +90,7 @@ public abstract class AbstractTraversalDictionary
      * @param candidateValue the candidate value
      * @param allowedValues the set of allowed values
      * @return the approved value
+     * @param <T> type parameter
      */    
     protected static <T> T correct(
             T    candidateValue,

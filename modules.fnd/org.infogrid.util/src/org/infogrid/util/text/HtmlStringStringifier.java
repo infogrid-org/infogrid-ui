@@ -14,6 +14,8 @@
 
 package org.infogrid.util.text;
 
+import org.infogrid.util.ResourceHelper;
+
 /**
  * Stringifies a String until valid HTML symtax. For example, this replaces
  * <code>&gt;</code> with <code>&amp;gt;</code>.
@@ -86,6 +88,9 @@ public class HtmlStringStringifier
     public static String stringToHtml(
             String s )
     {
+        if( s == null ) {
+            return NULL_STRING;
+        }
         StringBuilder sb = new StringBuilder( s.length() );
 
         // true if last char was blank
@@ -198,4 +203,14 @@ public class HtmlStringStringifier
             throw new IllegalArgumentException( "htmlChars and htmlFrags not the same length" );
         }
     }
+
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( HtmlStringStringifier.class );
+
+    /**
+     * The String to return if an argument is null.
+     */
+    public static final String NULL_STRING = theResourceHelper.getResourceStringOrDefault( "NullString", "null" );
 }

@@ -14,10 +14,12 @@
 
 package org.infogrid.modelbase;
 
+import java.util.Iterator;
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.CollectableMeshType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
+import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.ProjectedPropertyType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyTypeGroup;
@@ -25,10 +27,6 @@ import org.infogrid.model.primitives.PropertyTypeOrGroup;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.SubjectArea;
-
-import org.infogrid.model.primitives.MeshTypeIdentifier;
-
-import java.util.Iterator;
 
 /**
   * <p>This interface is implemented by classes that act as a repository of model-level concepts.
@@ -413,6 +411,13 @@ public interface ModelBase
       */
     public void removeMeshTypeLifecycleEventListener(
             MeshTypeLifecycleEventListener oldListener );
+
+    /**
+     * Obtain a MeshTypeSynonymDictionary.
+     *
+     * @return the MeshTypeSynonyDirectory.
+     */
+    public MeshTypeSynonymDictionary getSynonymDictionary();
 
     /**
       * We are told we are not needed any more. Clean up and release all resources.

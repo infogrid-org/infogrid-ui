@@ -36,7 +36,7 @@ public class ExternalizedEntityType
     public void setRelativeIconPath(
             String newValue ) 
     {
-        relativeIconPath = newValue;
+        theRelativeIconPath = newValue;
     }
     
     /**
@@ -46,7 +46,7 @@ public class ExternalizedEntityType
      */
     public String getRelativeIconPath()
     {
-        return relativeIconPath;
+        return theRelativeIconPath;
     }
 
     /**
@@ -57,7 +57,7 @@ public class ExternalizedEntityType
     public void setIconMimeType(
             String newValue ) 
     {
-        iconMimeType = newValue;
+        theIconMimeType = newValue;
     }
     
     /**
@@ -67,7 +67,7 @@ public class ExternalizedEntityType
      */
     public String getIconMimeType()
     {
-        return iconMimeType;
+        return theIconMimeType;
     }
 
     /**
@@ -78,7 +78,7 @@ public class ExternalizedEntityType
     public void addSuperType(
             MeshTypeIdentifier newValue ) 
     {
-        superTypes.add( newValue );
+        theSuperTypes.add( newValue );
     }
     
     /**
@@ -88,7 +88,28 @@ public class ExternalizedEntityType
      */
     public ArrayList<MeshTypeIdentifier> getSuperTypes()
     {
-        return superTypes;
+        return theSuperTypes;
+    }
+
+    /**
+     * Add to the property.
+     *
+     * @param newValue the new value
+     */
+    public void addSynonym(
+            MeshTypeIdentifier newValue )
+    {
+        theSynonyms.add( newValue );
+    }
+
+    /**
+     * Get property.
+     *
+     * @return the value
+     */
+    public MeshTypeIdentifier [] getSynonyms()
+    {
+        return ArrayHelper.copyIntoNewArray( theSynonyms, MeshTypeIdentifier.class );
     }
 
     /**
@@ -99,7 +120,7 @@ public class ExternalizedEntityType
     public void setRawOverrideCode(
             String newValue ) 
     {
-        rawOverrideCode = newValue;
+        theRawOverrideCode = newValue;
     }
     
     /**
@@ -109,7 +130,7 @@ public class ExternalizedEntityType
      */
     public String getRawOverrideCode()
     {
-        return rawOverrideCode;
+        return theRawOverrideCode;
     }
 
     /**
@@ -241,22 +262,27 @@ public class ExternalizedEntityType
     /**
       * Relative icon path, if any.
       */
-    protected String relativeIconPath = null;
+    protected String theRelativeIconPath = null;
 
     /**
      * Mime type of the icon, if any.
      */
-    protected String iconMimeType = null;
+    protected String theIconMimeType = null;
 
     /**
      * List of Identifiers identifying the supertypes.
      */
-    ArrayList<MeshTypeIdentifier> superTypes = new ArrayList<MeshTypeIdentifier>();
+    protected ArrayList<MeshTypeIdentifier> theSuperTypes = new ArrayList<MeshTypeIdentifier>();
 
+    /**
+     * List of Strings containing the synonyms.
+     */
+    protected ArrayList<MeshTypeIdentifier> theSynonyms = new ArrayList<MeshTypeIdentifier>();
+    
     /**
       * OverrideCode in raw form.
       */
-    protected String rawOverrideCode = null;
+    protected String theRawOverrideCode = null;
 
     /**
       * IsSignificant.
