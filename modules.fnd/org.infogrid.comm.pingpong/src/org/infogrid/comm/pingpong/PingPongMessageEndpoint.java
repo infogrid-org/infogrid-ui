@@ -243,8 +243,10 @@ public abstract class PingPongMessageEndpoint<T>
             schedule( new ResendTask( this ), theDeltaResend );
                 // schedule a resend event prior to firing events to listeners
 
-            for( T t : toBeSent ) {
-                theListeners.fireEvent( t, MESSAGE_SENDING_FAILED );
+            if( toBeSent != null ) { // can happen when endpoint is killed off
+                for( T t : toBeSent ) {
+                    theListeners.fireEvent( t, MESSAGE_SENDING_FAILED );
+                }
             }
 
         } catch( Throwable t ) {

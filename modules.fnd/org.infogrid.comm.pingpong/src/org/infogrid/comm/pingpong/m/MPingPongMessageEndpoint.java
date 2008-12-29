@@ -18,10 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.infogrid.comm.MessageEndpointIsDeadException;
 import org.infogrid.comm.MessageSendException;
 import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -69,6 +71,10 @@ public class MPingPongMessageEndpoint<T>
                 -1,
                 null,
                 messagesToBeSent );
+
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret );
+        }
         return ret;
     }
 
@@ -106,6 +112,10 @@ public class MPingPongMessageEndpoint<T>
                 -1,
                 null,
                 messagesToBeSent );
+
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret );
+        }
         return ret;
     }
 
@@ -149,6 +159,10 @@ public class MPingPongMessageEndpoint<T>
                 lastReceivedToken,
                 messagesSentLast,
                 messagesToBeSent );
+
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret );
+        }
         return ret;
     }
 
@@ -307,6 +321,34 @@ public class MPingPongMessageEndpoint<T>
             theFuture.cancel( false );
             theFuture = null;
         }
+    }
+
+    /**
+     * Convert to String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theName",
+                    "isGracefullyDead",
+                    "theLastReceivedToken",
+                    "theLastSentToken",
+                    "theFuture",
+                    "theMessagesToBeSent"
+                },
+                new Object[] {
+                    theName,
+                    isGracefullyDead,
+                    theLastReceivedToken,
+                    theLastSentToken,
+                    theFuture != null ? theFuture.getDelay( TimeUnit.MILLISECONDS ) : -1L,
+                    theMessagesToBeSent
+                });
     }
 
     /**

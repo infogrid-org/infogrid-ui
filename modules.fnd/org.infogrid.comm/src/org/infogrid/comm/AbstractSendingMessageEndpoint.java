@@ -17,6 +17,7 @@ package org.infogrid.comm;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -123,7 +124,18 @@ public abstract class AbstractSendingMessageEndpoint<T>
             log.debug( this + ".schedule( " + task + ", " + base + " ) in " + actual + " msec" );
         }
 
-        theFuture = theExecutorService.schedule( task, actual, TimeUnit.MILLISECONDS );
+        try {
+            theFuture = theExecutorService.schedule( task, actual, TimeUnit.MILLISECONDS );
+
+        } catch( RejectedExecutionException ex ) {
+            log.warn(
+                    this    + ": could not schedule task "
+                            + task
+                            + ", perhaps the ExecutorService "
+                            + theExecutorService
+                            + " has been terminated?",
+                    ex );
+        }
     }
     
     /**
@@ -186,7 +198,7 @@ public abstract class AbstractSendingMessageEndpoint<T>
     /**
      * The outgoing queue of Messages to send.
      */
-    protected List<T> theMessagesToBeSent;
+    protected final List<T> theMessagesToBeSent;
     
     /**
      * The means by which to execute tasks.
