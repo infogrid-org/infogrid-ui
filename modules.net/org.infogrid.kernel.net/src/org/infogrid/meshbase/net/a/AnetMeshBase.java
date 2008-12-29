@@ -1089,5 +1089,5 @@ public abstract class AnetMeshBase
     /**
      * Table to map Threads to Proxies.
      */
-    protected HashMap<Thread,Proxy> theThreadProxyTable = new HashMap<Thread,Proxy>();
+    protected final HashMap<Thread,Proxy> theThreadProxyTable = new HashMap<Thread,Proxy>();
 }

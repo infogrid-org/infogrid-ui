@@ -25,7 +25,6 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.FactoryCreatedObject;
 import org.infogrid.util.RemoteQueryTimeoutException;
 import org.infogrid.util.text.HasStringRepresentation;
-import org.infogrid.util.text.StringRepresentation;
 
 /**
  * <p>All communications between a NetMeshBase A and a NetMeshBase B is managed by

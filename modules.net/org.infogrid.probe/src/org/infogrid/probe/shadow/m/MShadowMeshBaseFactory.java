@@ -82,7 +82,7 @@ public class MShadowMeshBaseFactory
                 theResourceHelper.getResourceLongOrDefault( "TimeNotNeededTillExpires", 10L * 60L * 1000L ), // 10 minutes
                 context );
         
-        theMeshBaseIdentifierFactory               = meshBaseIdentifierFactory;
+        theMeshBaseIdentifierFactory = meshBaseIdentifierFactory;
     }
 
     /**

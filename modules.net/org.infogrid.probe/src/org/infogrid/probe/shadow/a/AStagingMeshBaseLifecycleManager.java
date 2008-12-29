@@ -378,16 +378,17 @@ public class AStagingMeshBaseLifecycleManager
         if( accessPath == null || accessPath.length == 0 ) {
             throw new IllegalArgumentException( "Cannot use empty access path in NetMeshBaseAccessSpecification to create ForwardReference" );
         }
+        if( identifier == null ) {
+            throw new IllegalArgumentException( "null Identifier" );
+        }
         
         AnetMeshObject ret = null;
         try {
-            DefaultShadowProxy placeholderProxy = (DefaultShadowProxy) ((AStagingMeshBase)theMeshBase).obtainProxyFor( accessPath[0].getNetMeshBaseIdentifier(), null );
+            DefaultShadowProxy placeholderProxy = (DefaultShadowProxy) ((AStagingMeshBase)theMeshBase).obtainProxyFor(
+                    accessPath[0].getNetMeshBaseIdentifier(),
+                    null );
             placeholderProxy.setIsPlaceholder( true );
             
-            if( identifier == null ) {
-                throw new IllegalArgumentException( "null Identifier" );
-            }
-
             long now = determineCreationTime();
             if( timeCreated < 0 ) {
                 timeCreated = now;
