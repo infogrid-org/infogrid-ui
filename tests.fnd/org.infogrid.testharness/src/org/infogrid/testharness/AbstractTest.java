@@ -31,7 +31,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
@@ -39,7 +38,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.infogrid.module.ModuleClassLoader;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.NamedThreadFactory;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -400,7 +401,7 @@ public abstract class AbstractTest
     {
         boolean ret = ArrayHelper.hasSameContentOutOfOrder( one, two, true );
         if( !ret ) {
-            reportError( msg, "not the same content" );
+            reportError( msg, "not the same content: " + ArrayHelper.join( one ) + " vs. " + ArrayHelper.join( two ));
         }
         return ret;
     }
@@ -1261,12 +1262,25 @@ public abstract class AbstractTest
      * @return the created ScheduledExecutorService
      */
     protected ScheduledExecutorService createThreadPool(
-            String testName,
-            int    nThreads )
+            final String testName,
+            final int    nThreads )
     {
-        TestThreadFactory factory = new TestThreadFactory( testName );
+        NamedThreadFactory factory = new NamedThreadFactory( testName );
 
-        return new ScheduledThreadPoolExecutor( nThreads, factory );
+        return new ScheduledThreadPoolExecutor( nThreads, factory ) {
+            @Override
+            public String toString()
+            {
+                return StringHelper.objectLogString(
+                        this,
+                        new String[] {
+                            "name"
+                        },
+                        new Object[] {
+                            "ThreadPoolExecutor " + testName + " (" + nThreads + " threads)"
+                        });
+            }
+        };
     }
 
     /**
@@ -1295,47 +1309,4 @@ public abstract class AbstractTest
      * The number of errors we have encountered up to now.
      */
     protected static int errorCount = 0;
-
-    /**
-     * Customized ThreadFactory for better error reporting.
-     */
-    static class TestThreadFactory
-            implements
-                ThreadFactory
-    {
-        /**
-         * Constructor.
-         * 
-         * @param testName name of the test, used to label the Threads created by the ThreadFactory
-         */
-        public TestThreadFactory(
-                String testName )
-        {
-            thePrefix = testName + "-";
-        }
-        
-        /**
-         * Constructs a new <tt>Thread</tt>.  Implementations may also initialize
-         * priority, name, daemon status, <tt>ThreadGroup</tt>, etc.
-         *
-         * @param r a runnable to be executed by new thread instance
-         * @return constructed thread
-         */
-        public Thread newThread(
-                Runnable r )
-        {
-            Thread ret = new Thread( r, thePrefix + theCounter++ );
-            return ret;
-        }
-
-        /**
-         * The Prefix for the name of created Threads.
-         */
-        protected String thePrefix;
-        
-        /**
-         * The current counter of created Threads.
-         */
-        protected int theCounter = 0;
-    }    
 }
