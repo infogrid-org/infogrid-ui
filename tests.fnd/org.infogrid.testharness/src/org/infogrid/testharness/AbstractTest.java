@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
@@ -1262,25 +1263,12 @@ public abstract class AbstractTest
      * @return the created ScheduledExecutorService
      */
     protected ScheduledExecutorService createThreadPool(
-            final String testName,
-            final int    nThreads )
+            String testName,
+            int    nThreads )
     {
         NamedThreadFactory factory = new NamedThreadFactory( testName );
 
-        return new ScheduledThreadPoolExecutor( nThreads, factory ) {
-            @Override
-            public String toString()
-            {
-                return StringHelper.objectLogString(
-                        this,
-                        new String[] {
-                            "name"
-                        },
-                        new Object[] {
-                            "ThreadPoolExecutor " + testName + " (" + nThreads + " threads)"
-                        });
-            }
-        };
+        return new MyScheduledThreadPoolExecutor( nThreads, factory, testName );
     }
 
     /**
@@ -1309,4 +1297,52 @@ public abstract class AbstractTest
      * The number of errors we have encountered up to now.
      */
     protected static int errorCount = 0;
+
+    /**
+     * Our local subclass of ScheduledThreadPoolExecutor.
+     */
+    static class MyScheduledThreadPoolExecutor
+            extends
+                ScheduledThreadPoolExecutor
+    {
+        /**
+         * Constructor.
+         *
+         * @param corePoolSize number of Threads
+         * @param threadFactory factory for Threads
+         * @param name name of this MyScheduledThreadPoolExecutor, for debugging purposes
+         */
+        public MyScheduledThreadPoolExecutor(
+                int           corePoolSize,
+                ThreadFactory threadFactory,
+                String        name )
+        {
+            super( corePoolSize, threadFactory );
+
+            theName = name;
+        }
+
+        /**
+         * Convert to String representation, for debugging only.
+         *
+         * @return String representation
+         */
+        @Override
+        public String toString()
+        {
+            return StringHelper.objectLogString(
+                    this,
+                    new String[] {
+                        "name"
+                    },
+                    new Object[] {
+                        "ThreadPoolExecutor " + theName + " (" + getCorePoolSize() + " threads)"
+                    });
+        }
+
+        /**
+         *
+         */
+        protected String theName;
+    }
 }
