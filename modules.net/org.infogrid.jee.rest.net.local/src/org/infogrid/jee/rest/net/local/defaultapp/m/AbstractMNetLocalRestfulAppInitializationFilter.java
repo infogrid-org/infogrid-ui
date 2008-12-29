@@ -15,8 +15,8 @@
 package org.infogrid.jee.rest.net.local.defaultapp.m;
 
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -40,6 +40,8 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
+import org.infogrid.util.NamedThreadFactory;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
@@ -105,7 +107,7 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
             ProbeDirectory probeDirectory = createAndPopulateProbeDirectory(
                     meshBaseIdentifierFactory );
 
-            ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
+            ScheduledExecutorService exec = createScheduledExecutorService();
 
             // MeshBase
             LocalNetMMeshBase meshBase = LocalNetMMeshBase.create(
@@ -213,4 +215,26 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
     {
         return null;
     }
+
+    /**
+     * Obtain a ThreadPool. This can be overridden by subclasses.
+     *
+     * @return the ScheduledExecutorService
+     */
+    protected ScheduledExecutorService createScheduledExecutorService()
+    {
+        NamedThreadFactory factory = new NamedThreadFactory( getClass().getName() );
+
+        return new ScheduledThreadPoolExecutor( nThreads, factory );
+    }
+
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( AbstractMNetLocalRestfulAppInitializationFilter.class );
+
+    /**
+     * The default number of threads to use.
+     */
+    protected static final int nThreads = theResourceHelper.getResourceIntegerOrDefault( "nThreads", 3 );
 }
