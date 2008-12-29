@@ -26,8 +26,8 @@
             </subjectareareference>
         </dependson>
 
-        <entitytype ID="org.infogrid.lid.model.openid.pape#PhishingResistantAuthentication">
-            <name>PhishingResistantAuthentication</name>
+        <entitytype ID="org.infogrid.lid.model.openid.pape#PhishingResistantAuthentication200706">
+            <name>PhishingResistantAuthentication200706</name>
             <username>Phishing Resistant Authentication</username>
             <userdescription>This service is provided by OpenID Providers that offer one or more
 phishing-resistant forms of authentication.</userdescription>
@@ -35,8 +35,8 @@ phishing-resistant forms of authentication.</userdescription>
             <synonym>http://schemas.openid.net/pape/policies/2007/06/phishing-resistant</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.openid.pape#MultiFactorAuthentication">
-            <name>MultiFactorAuthentication</name>
+        <entitytype ID="org.infogrid.lid.model.openid.pape#MultiFactorAuthentication200706">
+            <name>MultiFactorAuthentication200706</name>
             <username>Multi-factor Authentication</username>
             <userdescription>This service is provided by OpenID Providers that offer one or more
 forms of authentication that require more than one factor.</userdescription>
@@ -44,8 +44,8 @@ forms of authentication that require more than one factor.</userdescription>
             <synonym>http://schemas.openid.net/pape/policies/2007/06/multi-factor</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.openid.pape#MultiFactorPhysicalAuthentication">
-            <name>MultiFactorPhysicalAuthentication</name>
+        <entitytype ID="org.infogrid.lid.model.openid.pape#MultiFactorPhysicalAuthentication200706">
+            <name>MultiFactorPhysicalAuthentication200706</name>
             <username>Multi-factor authentication including at least one physical factor</username>
             <userdescription>This service is provided by OpenID Providers that offer one or more
 forms of authentication that require more than one factor, at least one of which is a physical
