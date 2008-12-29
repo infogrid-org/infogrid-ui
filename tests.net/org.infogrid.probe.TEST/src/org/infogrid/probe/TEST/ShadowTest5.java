@@ -215,7 +215,7 @@ public class ShadowTest5
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * Counts the number of Probe runs.

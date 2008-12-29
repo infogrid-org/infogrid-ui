@@ -14,22 +14,20 @@
 
 package org.infogrid.probe.TEST;
 
+import java.io.File;
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.manager.PassiveProbeManager;
 import org.infogrid.probe.manager.m.MPassiveProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
 import org.infogrid.probe.shadow.m.MShadowMeshBaseFactory;
 import org.infogrid.util.logging.Log;
-
-import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.probe.m.MProbeDirectory;
 
 /**
  * Tests running Probes manually, tracking the changes of a data source correctly.
@@ -262,7 +260,7 @@ public class ProbeTest3
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * File name of the test file in the read position.

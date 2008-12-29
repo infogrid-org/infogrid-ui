@@ -16,7 +16,6 @@ package org.infogrid.probe.TEST;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
@@ -65,9 +64,6 @@ public class ProbeTest5
         throws
             Exception
     {
-        NetMeshBaseIdentifier    here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        LocalNetMMeshBase        base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
-
         Class [] expectedExceptionTypes = {
                 CallerHasInsufficientPermissionsException.class,
                 PropertyReadOnlyException.class,
@@ -97,7 +93,7 @@ public class ProbeTest5
             Throwable  lastCause     = null;
 
             try {
-                obj = base.accessLocally( TEST_NETWORK_IDENTIFIER );
+                obj = theMeshBase.accessLocally( TEST_NETWORK_IDENTIFIER );
 
             } catch( Throwable ex ) {
                 lastException = ex;
@@ -170,6 +166,10 @@ public class ProbeTest5
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 TEST_NETWORK_IDENTIFIER.toExternalForm(),
                 TestApiProbe.class ));
+
+        NetMeshBaseIdentifier    here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
+
+        theMeshBase = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
     }
 
     /**
@@ -178,6 +178,9 @@ public class ProbeTest5
     @Override
     public void cleanup()
     {
+        if( theMeshBase != null ) {
+            theMeshBase.die();
+        }
         exec.shutdown();
     }
 
@@ -185,6 +188,11 @@ public class ProbeTest5
      * The ProbeDirectory to use.
      */
     protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
+
+    /**
+     * The NetMeshBase to be tested.
+     */
+    protected LocalNetMMeshBase theMeshBase;
 
     /**
      * A counter that is incremented every time the Probe is run.
@@ -212,7 +220,7 @@ public class ProbeTest5
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * The test Probe.

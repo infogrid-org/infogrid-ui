@@ -15,7 +15,6 @@
 package org.infogrid.probe.TEST;
 
 import java.io.File;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
@@ -235,7 +234,7 @@ public class ProbeTest2
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * File name of the test file in the read position.

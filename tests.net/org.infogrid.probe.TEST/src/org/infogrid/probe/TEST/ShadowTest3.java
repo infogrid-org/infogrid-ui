@@ -187,5 +187,5 @@ public class ShadowTest3
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 }

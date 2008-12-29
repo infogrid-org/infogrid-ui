@@ -255,7 +255,9 @@ public class ProbeTest8
     @Override
     public void cleanup()
     {
-        theMeshBase.die();
+        if( theMeshBase != null ) {
+            theMeshBase.die();
+        }
     }
 
     /**
@@ -309,7 +311,7 @@ public class ProbeTest8
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * A "breakpoint" location. This has to be static as we can't provide non-static variables to our Probes.

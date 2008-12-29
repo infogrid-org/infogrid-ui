@@ -15,7 +15,6 @@
 package org.infogrid.probe.TEST;
 
 import java.io.File;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectBreadthFirstIterator;
@@ -42,14 +41,9 @@ public class ProbeTest4
         throws
             Exception
     {
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
-        
-        //
-
         log.info( "accessing " + theTestUrl );
 
-        MeshObject top = base.accessLocally( theTestUrl );
+        MeshObject top = theMeshBase.accessLocally( theTestUrl );
         checkObject( top, "no object from top" );
         reportOn( "top", top );
 
@@ -154,6 +148,10 @@ public class ProbeTest4
         super( ProbeTest4.class );
         
         theTestUrl = theMeshBaseIdentifierFactory.obtain( new File( args[0] ) );
+
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
+
+        theMeshBase = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
     }
     
     /**
@@ -162,6 +160,9 @@ public class ProbeTest4
     @Override
     public void cleanup()
     {
+        if( theMeshBase != null ) {
+            theMeshBase.die();
+        }
         exec.shutdown();
     }
 
@@ -173,12 +174,17 @@ public class ProbeTest4
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * The ProbeDirectory to use.
      */
     protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
+
+    /**
+     * The MeshBase to be tested.
+     */
+    protected LocalNetMMeshBase theMeshBase;
 
     // Our Logger
     private static Log log = Log.getLogInstance( ProbeTest4.class);

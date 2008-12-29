@@ -17,7 +17,6 @@ package org.infogrid.probe.TEST;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -43,35 +42,28 @@ public class ProbeTest6
         throws
             Exception
     {
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
-        
-        base.setSweeper( UnnecessaryReplicasSweeper.create( 500L ));
-        
-        //
-
         log.info( "accessing " + theTestUrl );
 
-        NetMeshObject firstObject = base.accessLocally( theTestUrl );
+        NetMeshObject firstObject = theMeshBase.accessLocally( theTestUrl );
         checkObject( firstObject, "no object from top" );
 
         // count MeshObjects, do not replicate
 
-        int oldMeshObjectCount = countMeshObjects( base, log );
+        int oldMeshObjectCount = countMeshObjects( theMeshBase, log );
         checkEquals( oldMeshObjectCount, 2, "Wrong number of MeshObjects after initial replication" ); // one plus home object
 
-        checkEquals( countFromIterator( base.proxies(), log ), 1, "Wrong number of proxies after initial replication" );
-        checkEquals( base.getShadowMeshBases().size(), 1, "Wrong number of shadows after initial replication" );
+        checkEquals( countFromIterator( theMeshBase.proxies(), log ), 1, "Wrong number of proxies after initial replication" );
+        checkEquals( theMeshBase.getShadowMeshBases().size(), 1, "Wrong number of shadows after initial replication" );
         
         //
         
         log.info( "Making sure proxies are set right" );
 
-        ShadowMeshBase shadow       = base.getShadowMeshBaseFor( theTestUrl );
+        ShadowMeshBase shadow       = theMeshBase.getShadowMeshBaseFor( theTestUrl );
         NetMeshObject  shadowObject = shadow.findMeshObjectByIdentifier( firstObject.getIdentifier() );
 
-        checkEquals( base.getIdentifier(),   shadow.proxies().next().getPartnerMeshBaseIdentifier(), "shadow proxy not pointing to base" );
-        checkEquals( shadow.getIdentifier(), base.proxies().next().getPartnerMeshBaseIdentifier(),   "base proxy not pointing to shadow" );
+        checkEquals( theMeshBase.getIdentifier(),   shadow.proxies().next().getPartnerMeshBaseIdentifier(), "shadow proxy not pointing to base" );
+        checkEquals( shadow.getIdentifier(), theMeshBase.proxies().next().getPartnerMeshBaseIdentifier(),   "base proxy not pointing to shadow" );
 
         checkEquals( firstObject.getProxyTowardsHomeReplica().getPartnerMeshBaseIdentifier(), shadow.getIdentifier(), "firstObject proxyTowardsHome wrong" );
         checkEquals( firstObject.getProxyTowardsLockReplica().getPartnerMeshBaseIdentifier(), shadow.getIdentifier(), "firstObject proxyTowardsLock wrong" );
@@ -93,14 +85,14 @@ public class ProbeTest6
         
         firstObject.addWeakPropertyChangeListener( listener );
         
-        base.sweepAllNow();
+        theMeshBase.sweepAllNow();
         Thread.sleep( 2500L );
 
         //
         
         log.info( "counting again" );
         
-        int newMeshObjectCount = countMeshObjects( base, log );
+        int newMeshObjectCount = countMeshObjects( theMeshBase, log );
         checkEquals( newMeshObjectCount, 2, "Wrong number of MeshObjects after first sweep" ); // one plus home object
         
         //
@@ -109,14 +101,14 @@ public class ProbeTest6
 
         firstObject.removePropertyChangeListener( listener );
         
-        base.sweepAllNow();
+        theMeshBase.sweepAllNow();
         Thread.sleep( 2500L );
 
         //
 
         log.info( "Counting again" );
         
-        newMeshObjectCount = countMeshObjects( base, log );
+        newMeshObjectCount = countMeshObjects( theMeshBase, log );
         checkEquals( newMeshObjectCount, 1, "Wrong number of MeshObjects after second sweep" );
         
         //
@@ -130,15 +122,15 @@ public class ProbeTest6
         
         log.info( "Running the probe again should now remove the unnecessary shadow" );
 
-        checkEquals( countFromIterator( base.proxies(), log ), 1, "Wrong number of proxies before probe call" );
-        checkEquals( base.getShadowMeshBases().size(), 1, "Wrong number of shadows before probe call" );
+        checkEquals( countFromIterator( theMeshBase.proxies(), log ), 1, "Wrong number of proxies before probe call" );
+        checkEquals( theMeshBase.getShadowMeshBases().size(), 1, "Wrong number of shadows before probe call" );
         
         shadow.doUpdateNow();
 
         Thread.sleep( 4000L );
         
-        checkEquals( countFromIterator( base.proxies(), log ), 0, "Wrong number of proxies after second probe call" );
-        checkEquals( base.getShadowMeshBases().size(), 0, "Wrong number of shadows after second probe call" );
+        checkEquals( countFromIterator( theMeshBase.proxies(), log ), 0, "Wrong number of proxies after second probe call" );
+        checkEquals( theMeshBase.getShadowMeshBases().size(), 0, "Wrong number of shadows after second probe call" );
     }
     
     /**
@@ -189,6 +181,12 @@ public class ProbeTest6
         super( ProbeTest6.class );
         
         theTestUrl = theMeshBaseIdentifierFactory.obtain( new File( args[0] ) );
+
+        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
+
+        theMeshBase = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
+
+        theMeshBase.setSweeper( UnnecessaryReplicasSweeper.create( 500L ));
     }
 
     /**
@@ -197,6 +195,9 @@ public class ProbeTest6
     @Override
     public void cleanup()
     {
+        if( theMeshBase != null ) {
+            theMeshBase.die();
+        }
         exec.shutdown();
     }
 
@@ -213,7 +214,12 @@ public class ProbeTest6
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
+
+    /**
+     * The NetMeshBase to be tested.
+     */
+    protected LocalNetMMeshBase theMeshBase;
 
     // Our Logger
     private static Log log = Log.getLogInstance( ProbeTest6.class );

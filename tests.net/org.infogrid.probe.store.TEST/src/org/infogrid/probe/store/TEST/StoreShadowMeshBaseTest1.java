@@ -201,7 +201,7 @@ public class StoreShadowMeshBaseTest1
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * The NetMeshBaseIdentifier identifying this Probe.

@@ -17,7 +17,6 @@ package org.infogrid.probe.TEST;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
@@ -70,7 +69,7 @@ public class ForwardReferenceTest3
         log.info( "Setting up" );
         
         NetMeshBaseIdentifier    here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+        ScheduledExecutorService exec = createThreadPool( 1 );
         LocalNetMMeshBase        base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
 
         //

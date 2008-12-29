@@ -237,7 +237,7 @@ public class StoreShadowMeshBaseTest5
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * File name of the first test file.

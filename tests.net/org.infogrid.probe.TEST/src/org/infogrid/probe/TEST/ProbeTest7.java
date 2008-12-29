@@ -115,7 +115,7 @@ public class ProbeTest7
         ImmutableMMeshObjectSetFactory              setFactory        = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
         AnetMeshBaseLifecycleManager                life              = AnetMeshBaseLifecycleManager.create();
         
-        LocalNetMMeshBase base = new LocalNetMMeshBase(
+        theMeshBase = new LocalNetMMeshBase(
                 here,
                 identifierFactory,
                 theMeshBaseIdentifierFactory,
@@ -137,9 +137,9 @@ public class ProbeTest7
             }
         };
 
-        setFactory.setMeshBase( base );
-        proxyFactory.setNetMeshBase( base );
-        probeManager.setMainNetMeshBase( base );
+        setFactory.setMeshBase( theMeshBase );
+        proxyFactory.setNetMeshBase( theMeshBase );
+        probeManager.setMainNetMeshBase( theMeshBase );
         probeManager.start( exec );
         
         //
@@ -148,7 +148,7 @@ public class ProbeTest7
 
         MeshObject obj;
         try {
-            obj = base.accessLocally( TEST_NETWORK_IDENTIFIER );
+            obj = theMeshBase.accessLocally( TEST_NETWORK_IDENTIFIER );
 
         } catch( Throwable ex ) {
             if( log.isDebugEnabled() ) {
@@ -229,6 +229,11 @@ public class ProbeTest7
     @Override
     public void cleanup()
     {
+        log.debug( this + ".cleanup()" );
+        
+        if( theMeshBase != null ) {
+            theMeshBase.die();
+        }
         exec.shutdown();
     }
 
@@ -263,7 +268,12 @@ public class ProbeTest7
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
+
+    /**
+     * The NetMeshBase to be tested.
+     */
+    protected LocalNetMMeshBase theMeshBase;
 
     /**
      * The test Probe.

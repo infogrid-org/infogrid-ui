@@ -176,7 +176,7 @@ public class ProbeMatchTest1
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * The ProbeManager that we use for the first Probe.

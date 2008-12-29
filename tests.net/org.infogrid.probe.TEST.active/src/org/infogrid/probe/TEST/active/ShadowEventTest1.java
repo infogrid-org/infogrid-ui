@@ -216,7 +216,7 @@ public class ShadowEventTest1
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
     
     /**
      * The test protocol. In the real world this would be something like "jdbc".

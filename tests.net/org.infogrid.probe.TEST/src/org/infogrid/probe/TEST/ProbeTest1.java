@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
@@ -208,7 +207,7 @@ public class ProbeTest1
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = Executors.newScheduledThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * File name of the first test file.
