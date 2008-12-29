@@ -15,7 +15,6 @@
 package org.infogrid.meshbase.transaction;
 
 import org.infogrid.util.AbstractLocalizedException;
-import org.infogrid.util.ResourceHelper;
 
 /**
  * Thrown if a problem occurred during the execution of a TransactionAction.

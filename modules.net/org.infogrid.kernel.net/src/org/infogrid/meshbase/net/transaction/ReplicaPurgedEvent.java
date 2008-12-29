@@ -17,7 +17,6 @@ package org.infogrid.meshbase.net.transaction;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;

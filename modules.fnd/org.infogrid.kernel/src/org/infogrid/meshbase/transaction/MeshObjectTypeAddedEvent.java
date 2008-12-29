@@ -16,13 +16,10 @@ package org.infogrid.meshbase.transaction;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-
 import org.infogrid.meshbase.MeshBase;
-
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.MeshTypeUtils;
-
 import org.infogrid.util.ArrayHelper;
 
 /**

@@ -16,7 +16,6 @@ package org.infogrid.meshbase.net.transaction;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 
@@ -27,7 +26,6 @@ import org.infogrid.meshbase.MeshBaseIdentifier;
 public interface ReplicaEvent
         extends
             NetChange<MeshBase,MeshBaseIdentifier,MeshObject,MeshObjectIdentifier>
-
 {
     // nothing
 }

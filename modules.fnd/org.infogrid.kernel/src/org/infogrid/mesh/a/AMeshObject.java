@@ -47,7 +47,6 @@ import org.infogrid.model.primitives.Role;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -474,8 +473,8 @@ public class AMeshObject
         otherObject.checkAlive();
         
         AMeshObject realOtherObject = (AMeshObject) otherObject;
-        MeshObjectIdentifier here  = getIdentifier();
-        MeshObjectIdentifier other = otherObject.getIdentifier();
+        MeshObjectIdentifier hereIdentifier  = getIdentifier();
+        MeshObjectIdentifier otherIdentifier = otherObject.getIdentifier();
 
         MeshObjectIdentifier [] oldOtherSides;
         MeshObjectIdentifier [] oldHereSides;
@@ -499,7 +498,7 @@ public class AMeshObject
 
                 int foundHere = -1;
                 for( int i=0 ; i<theOtherSides.length ; ++i ) {
-                    if( other.equals( theOtherSides[i] )) {
+                    if( otherIdentifier.equals( theOtherSides[i] )) {
                         foundHere = i;
                         break;
                     }
@@ -510,7 +509,7 @@ public class AMeshObject
 
                 int foundOther = -1;
                 for( int i=0 ; i<realOtherObject.theOtherSides.length ; ++i ) {
-                    if( here.equals( realOtherObject.theOtherSides[i] )) {
+                    if( hereIdentifier.equals( realOtherObject.theOtherSides[i] )) {
                         foundOther = i;
                         break;
                     }
@@ -521,39 +520,46 @@ public class AMeshObject
 
                 // check that the ByRoleType with the other side let us
                 if( theRoleTypes[foundHere] != null ) {
-                    checkPermittedUnbless( theRoleTypes[foundHere], otherObject );
+                    checkPermittedUnbless( theRoleTypes[foundHere], otherIdentifier );
                 }
                 if( realOtherObject.theRoleTypes[foundOther] != null ) {
-                    realOtherObject.checkPermittedUnbless( realOtherObject.theRoleTypes[foundOther], this );
+                    realOtherObject.checkPermittedUnbless( realOtherObject.theRoleTypes[foundOther], hereIdentifier );
                 }
                 // check that all other Roles let us
                 for( int i=0 ; i<theOtherSides.length ; ++i ) {
                     if( i != foundHere && theRoleTypes[i] != null ) {
                         MeshObject realOtherSide = findRelatedMeshObject( mb, theOtherSides[i] );
-                        checkPermittedUnbless( theRoleTypes[foundHere], otherObject, theRoleTypes[i], realOtherSide );
+                        checkPermittedUnbless(
+                                theRoleTypes[foundHere],
+                                otherIdentifier,
+                                theRoleTypes[i],
+                                realOtherSide.getIdentifier() );
                     }
                 }
                 for( int i=0 ; i<realOtherObject.theOtherSides.length ; ++i ) {
                     if( i != foundOther && realOtherObject.theRoleTypes[i] != null ) {
                         MeshObject realOtherSide = findRelatedMeshObject( mb, realOtherObject.theOtherSides[i] );
-                        realOtherObject.checkPermittedUnbless( realOtherObject.theRoleTypes[foundOther], this, realOtherObject.theRoleTypes[i], realOtherSide );
+                        realOtherObject.checkPermittedUnbless(
+                                realOtherObject.theRoleTypes[foundOther],
+                                hereIdentifier,
+                                realOtherObject.theRoleTypes[i],
+                                realOtherSide.getIdentifier() );
                     }
                 }
                 
                 // first remove all the RoleTypes
                 if( theRoleTypes[foundHere] != null ) {
-
                     fireTypesRemoved(
                             theRoleTypes[foundHere],
                             theRoleTypes[foundHere],
                             new RoleType[0],
-                            otherObject,
+                            otherIdentifier,
                             mb );
                     realOtherObject.fireTypesRemoved( 
                             realOtherObject.theRoleTypes[foundOther],
                             realOtherObject.theRoleTypes[foundOther],
                             new RoleType[0],
-                            this,
+                            hereIdentifier,
                             mb );                    
                 }
                 theRoleTypes[foundHere] = null;
@@ -568,8 +574,8 @@ public class AMeshObject
                 realOtherObject.theOtherSides = ArrayHelper.remove( realOtherObject.theOtherSides, foundOther, MeshObjectIdentifier.class );
                 realOtherObject.theRoleTypes  = ArrayHelper.remove( realOtherObject.theRoleTypes,  foundOther, RoleType[].class );                
 
-                this.fireNeighborRemoved( oldOtherSides, other, theOtherSides, mb );
-                realOtherObject.fireNeighborRemoved( oldHereSides, here, realOtherObject.theOtherSides, mb );
+                this.fireNeighborRemoved( oldOtherSides, otherIdentifier, theOtherSides, mb );
+                realOtherObject.fireNeighborRemoved( oldHereSides, hereIdentifier, realOtherObject.theOtherSides, mb );
             }
         }
         updateLastUpdated( timeUpdated, theTimeUpdated );
@@ -670,6 +676,9 @@ public class AMeshObject
         checkAlive();
         otherObject.checkAlive();
 
+        if( roleTypesToAddHere.length == 0 ) {
+            return;
+        }
         for( RoleType thisEnd : roleTypesToAddHere ) {
             if( thisEnd == null ) {
                 throw new IllegalArgumentException( "null RoleType" );
@@ -801,11 +810,11 @@ public class AMeshObject
                     }
                 }
 
-                checkPermittedBless( roleTypesToAddHere, otherObject ); // implementation does everything else
+                checkPermittedBless( roleTypesToAddHere, otherObject.getIdentifier() ); // implementation does everything else
                 for( int i=0 ; i<theOtherSides.length ; ++i ) {
                     if( i != foundHere && theRoleTypes[i] != null ) {
                         MeshObject realOtherSide = findRelatedMeshObject( theMeshBase, theOtherSides[i] );
-                        checkPermittedBless( roleTypesToAddHere, otherObject, theRoleTypes[i], realOtherSide );
+                        checkPermittedBless( roleTypesToAddHere, otherObject.getIdentifier(), theRoleTypes[i], realOtherSide.getIdentifier() );
                     }
                 }
                 
@@ -837,10 +846,10 @@ public class AMeshObject
                 }
 
                 if( !hereAlready ) {
-                    fireTypesAdded( oldRoleTypesHere, roleTypesToAddHere, newRoleTypesHere, otherObject, theMeshBase );
+                    fireTypesAdded( oldRoleTypesHere, roleTypesToAddHere, newRoleTypesHere, otherObject.getIdentifier(), theMeshBase );
                 }
                 if( !thereAlready ) {
-                    realOtherObject.fireTypesAdded( oldRoleTypesThere, roleTypesToAddThere, newRoleTypesThere, this, theMeshBase );
+                    realOtherObject.fireTypesAdded( oldRoleTypesThere, roleTypesToAddThere, newRoleTypesThere, getIdentifier(), theMeshBase );
                 }
             }
         }
@@ -866,7 +875,7 @@ public class AMeshObject
             TransactionException,
             NotPermittedException
     {
-        internalUnbless( thisEnds, otherObject, true, 0L );
+        internalUnbless( thisEnds, otherObject.getIdentifier(), true, 0L );
     }
     
     /**
@@ -874,7 +883,7 @@ public class AMeshObject
      * factoring out this method makes any sense, subclasses may appreciate it.
      * 
      * @param roleTypesToRemoveHere the RoleType of the RelationshipType at the end that this MeshObject is attached to, and that shall be removed
-     * @param otherObject the other MeshObject whose relationship to this MeshObject shall be unblessed
+     * @param neighborIdentifier identifier of the other MeshObject whose relationship to this MeshObject shall be unblessed
      * @param isMaster if true, this is the master replica
      * @param timeUpdated the value for the timeUpdated property after this operation. -1 indicates "don't change"
      * @throws RoleTypeNotBlessedException thrown if the relationship to the other MeshObject does not support the RoleType
@@ -883,10 +892,10 @@ public class AMeshObject
      * @throws NotPermittedException thrown if the caller is not authorized to perform this operation
      */
     protected void internalUnbless(
-            RoleType [] roleTypesToRemoveHere,
-            MeshObject  otherObject,
-            boolean     isMaster,
-            long        timeUpdated )
+            RoleType []          roleTypesToRemoveHere,
+            MeshObjectIdentifier neighborIdentifier,
+            boolean              isMaster,
+            long                 timeUpdated )
         throws
             RoleTypeNotBlessedException,
             NotRelatedException,
@@ -894,60 +903,72 @@ public class AMeshObject
             NotPermittedException
     {
         checkAlive();
-        otherObject.checkAlive();
 
+        MeshObject neighbor = theMeshBase.findMeshObjectByIdentifier( neighborIdentifier );
+        if( neighbor != null ) {
+            neighbor.checkAlive();
+        }
+
+        if( roleTypesToRemoveHere.length == 0 ) {
+            return;
+        }
         for( RoleType thisEnd : roleTypesToRemoveHere ) {
             if( thisEnd == null ) {
                 throw new IllegalArgumentException( "null RoleType" );
             }
         }
 
-        AMeshObject realOtherObject = (AMeshObject) otherObject;
+        AMeshObject realNeighbor = (AMeshObject) neighbor;
 
-        if( theMeshBase != realOtherObject.theMeshBase ) {
-            throw new IllegalArgumentException( "Cannot unrelate MeshObjects held in different MeshBases" );
+        Object neighborSyncObject; // this is a hack, but then, Java does not make this easy
+        if( realNeighbor != null ) {
+            neighborSyncObject = realNeighbor;
+        } else {
+            neighborSyncObject = new Object();
         }
-
         synchronized( this ) {
-            synchronized( otherObject ) {
+            synchronized( neighborSyncObject ) {
 
                 checkTransaction();
                 
                 if( theOtherSides == null || theOtherSides.length == 0 ) {
-                    throw new NotRelatedException( this, otherObject );
+                    throw new NotRelatedException( theMeshBase, theMeshBase.getIdentifier(), this, getIdentifier(), realNeighbor, neighborIdentifier );
                 }
-                if( realOtherObject.theOtherSides == null || realOtherObject.theOtherSides.length == 0 ) {
-                    log.error( "found otherObject here, but not here in otherObject: " + this + " vs. " + otherObject );
-                    throw new NotRelatedException( otherObject, this );
+                if( realNeighbor != null ) {
+                    if( realNeighbor.theOtherSides == null || realNeighbor.theOtherSides.length == 0 ) {
+                        log.error( "found otherObject here, but not here in otherObject: " + this + " vs. " + realNeighbor );
+                        throw new NotRelatedException( realNeighbor, this );
+                    }
                 }
 
-                MeshObjectIdentifier other     = otherObject.getIdentifier();
-                int            foundHere = -1;
+                int foundHere = -1;
                 for( int i=0 ; i<theOtherSides.length ; ++i ) {
-                    if( other.equals( theOtherSides[i] )) {
+                    if( neighborIdentifier.equals( theOtherSides[i] )) {
                         foundHere = i;
                         break;
                     }
                 }
                 if( foundHere == -1 ) {
-                    throw new NotRelatedException( this, otherObject );
+                    throw new NotRelatedException( theMeshBase, theMeshBase.getIdentifier(), this, getIdentifier(), realNeighbor, neighborIdentifier );
                 }
-                
-                MeshObjectIdentifier here       = getIdentifier();
-                int            foundThere = -1;
-                for( int i=0 ; i<realOtherObject.theOtherSides.length ; ++i ) {
-                    if( here.equals( realOtherObject.theOtherSides[i] )) {
-                        foundThere = i;
-                        break;
+
+                int foundThere = -1;
+                if( realNeighbor != null ) {
+                    MeshObjectIdentifier here = getIdentifier();
+                    for( int i=0 ; i<realNeighbor.theOtherSides.length ; ++i ) {
+                        if( here.equals( realNeighbor.theOtherSides[i] )) {
+                            foundThere = i;
+                            break;
+                        }
                     }
-                }
-                if( foundThere == -1 ) {
-                    log.error( "found otherObject here, but not here in otherObject: " + this + " vs. " + otherObject );
-                    throw new NotRelatedException( otherObject, this );
+                    if( foundThere == -1 ) {
+                        log.error( "found otherObject here, but not here in otherObject: " + this + " vs. " + realNeighbor );
+                        throw new NotRelatedException( realNeighbor, this );
+                    }
                 }
 
                 RoleType [] oldRoleTypesHere  = theRoleTypes[foundHere];
-                RoleType [] oldRoleTypesThere = realOtherObject.theRoleTypes[foundThere];
+                RoleType [] oldRoleTypesThere = realNeighbor != null ? realNeighbor.theRoleTypes[foundThere] : null;
 
                 RoleType [] roleTypesToRemoveThere = new RoleType[ roleTypesToRemoveHere.length ];
                 for( int i=0 ; i<roleTypesToRemoveHere.length ; ++i ) {
@@ -958,47 +979,65 @@ public class AMeshObject
                     RoleType otherEnd = thisEnd.getOtherRoleType();
 
                     if( theRoleTypes[foundHere] == null || !ArrayHelper.isIn( thisEnd, theRoleTypes[foundHere], false )) {
-                        throw new RoleTypeNotBlessedException( this, thisEnd, otherObject );
+                        throw new RoleTypeNotBlessedException( this, thisEnd, realNeighbor );
                     }
-                    if( realOtherObject.theRoleTypes[foundThere] == null || !ArrayHelper.isIn( otherEnd, realOtherObject.theRoleTypes[foundThere], false )) {
-                        throw new RoleTypeNotBlessedException( otherObject, otherEnd, this );
+                    if( realNeighbor != null ) {
+                        if( realNeighbor.theRoleTypes[foundThere] == null || !ArrayHelper.isIn( otherEnd, realNeighbor.theRoleTypes[foundThere], false )) {
+                            throw new RoleTypeNotBlessedException( realNeighbor, otherEnd, this );
+                        }
                     }
                 }
 
-                           this.checkPermittedUnbless( roleTypesToRemoveHere,  otherObject );
-                realOtherObject.checkPermittedUnbless( roleTypesToRemoveThere, this );
+                this.checkPermittedUnbless( roleTypesToRemoveHere,  neighborIdentifier );
+                if( realNeighbor != null ) {
+                    realNeighbor.checkPermittedUnbless( roleTypesToRemoveThere, getIdentifier() );
+                }
 
                 for( int i=0 ; i<theOtherSides.length ; ++i ) {
                     if( i != foundHere && theRoleTypes[i] != null ) {
                         MeshObject realOtherSide = findRelatedMeshObject( theMeshBase, theOtherSides[i] );
-                        checkPermittedUnbless( roleTypesToRemoveHere, otherObject, theRoleTypes[i], realOtherSide );
+                        checkPermittedUnbless(
+                                roleTypesToRemoveHere,
+                                neighborIdentifier,
+                                theRoleTypes[i],
+                                realOtherSide.getIdentifier() );
                     }
                 }
-                for( int i=0 ; i<realOtherObject.theOtherSides.length ; ++i ) {
-                    if( i != foundThere && realOtherObject.theRoleTypes[i] != null ) {
-                        MeshObject realOtherSide = findRelatedMeshObject( theMeshBase, realOtherObject.theOtherSides[i] );
-                        realOtherObject.checkPermittedUnbless( roleTypesToRemoveThere, this, realOtherObject.theRoleTypes[i], realOtherSide );
+                if( realNeighbor != null ) {
+                    for( int i=0 ; i<realNeighbor.theOtherSides.length ; ++i ) {
+                        if( i != foundThere && realNeighbor.theRoleTypes[i] != null ) {
+                            MeshObject realOtherSide = findRelatedMeshObject( theMeshBase, realNeighbor.theOtherSides[i] );
+                            realNeighbor.checkPermittedUnbless(
+                                    roleTypesToRemoveThere,
+                                    getIdentifier(),
+                                    realNeighbor.theRoleTypes[i],
+                                    realOtherSide.getIdentifier() );
+                        }
                     }
                 }
                 
                 for( RoleType thisEnd : roleTypesToRemoveHere ) {
                     RoleType otherEnd = thisEnd.getOtherRoleType();
                     
-                    theRoleTypes[foundHere]                  = ArrayHelper.remove( theRoleTypes[foundHere],                  thisEnd,  false, RoleType.class );
-                    realOtherObject.theRoleTypes[foundThere] = ArrayHelper.remove( realOtherObject.theRoleTypes[foundThere], otherEnd, false, RoleType.class );
+                    theRoleTypes[foundHere] = ArrayHelper.remove( theRoleTypes[foundHere], thisEnd, false, RoleType.class );
 
                     if( theRoleTypes[foundHere].length == 0 ) {
                         theRoleTypes[foundHere] = null;
                     }
-                    if( realOtherObject.theRoleTypes[foundThere].length == 0 ) {
-                        realOtherObject.theRoleTypes[foundThere] = null;
+                    if( realNeighbor != null ) {
+                        realNeighbor.theRoleTypes[foundThere] = ArrayHelper.remove( realNeighbor.theRoleTypes[foundThere], otherEnd, false, RoleType.class );
+                        if( realNeighbor.theRoleTypes[foundThere].length == 0 ) {
+                            realNeighbor.theRoleTypes[foundThere] = null;
+                        }
                     }
                 }
                 RoleType [] newRoleTypesHere  = theRoleTypes[foundHere];
-                RoleType [] newRoleTypesThere = realOtherObject.theRoleTypes[foundThere];
+                fireTypesRemoved( oldRoleTypesHere, roleTypesToRemoveHere, newRoleTypesHere, neighborIdentifier, theMeshBase );
 
-                fireTypesRemoved( oldRoleTypesHere, roleTypesToRemoveHere, newRoleTypesHere, otherObject, theMeshBase );
-                realOtherObject.fireTypesRemoved( oldRoleTypesThere, roleTypesToRemoveThere, newRoleTypesThere, this, theMeshBase );
+                if( realNeighbor != null ) {
+                    RoleType [] newRoleTypesThere = realNeighbor.theRoleTypes[foundThere];
+                    realNeighbor.fireTypesRemoved( oldRoleTypesThere, roleTypesToRemoveThere, newRoleTypesThere, getIdentifier(), theMeshBase );
+                }
             }
         }
         updateLastUpdated( timeUpdated, theTimeUpdated );
@@ -1084,7 +1123,7 @@ public class AMeshObject
         int index = 0;
         for( MeshObject current : almostRet ) {
             try {
-                checkPermittedTraversal( type, current );
+                checkPermittedTraversal( type, current.getIdentifier() );
                 ret[ index++ ] = current;
             } catch( NotPermittedException ex ) {
                 log.info( ex );
@@ -1150,7 +1189,7 @@ public class AMeshObject
                     if( roleTypes[s][i] != null ) {
                         for( int j=0 ; j<roleTypes[s][i].length ; ++j ) {
                             try {
-                                checkPermittedTraversal( roleTypes[s][i][j], realOtherSides[i] );
+                                checkPermittedTraversal( roleTypes[s][i][j], realOtherSides[i].getIdentifier() );
 
                                 if( !ArrayHelper.isIn( roleTypes[s][i][j], ret, 0, max, true )) {
                                     ret[ max++ ] = roleTypes[s][i][j];
@@ -1174,32 +1213,51 @@ public class AMeshObject
     /**
      * Obtain the MeshTypeIdentifiers of the RoleTypes that this MeshObject plays with a
      * given neighbor MeshObject identified by its MeshObjectIdentifier.
-     * 
+     *
      * @param neighborIdentifier the MeshObjectIdentifier of the neighbor MeshObject
-     * @return the RoleTypes
+     * @param considerEquivalents if true, all equivalent MeshObjects are considered as well;
+     *        if false, only this MeshObject will be used as the start
+     * @return the identifiers of the RoleTypes
      * @throws NotRelatedException thrown if the specified MeshObject is not actually a neighbor
      */
-    public synchronized MeshTypeIdentifier [] getRoleTypeIdentifiers(
-            MeshObjectIdentifier neighborIdentifier )
+    public MeshTypeIdentifier [] getRoleTypeIdentifiers(
+            MeshObjectIdentifier neighborIdentifier,
+            boolean              considerEquivalents )
         throws
             NotRelatedException
     {
-        if( theOtherSides != null ) {
-            for( int i=0 ; i<theOtherSides.length ; ++i ) {
-                if( neighborIdentifier.equals( theOtherSides[i] )) {
-                    if( theRoleTypes[i] != null ) {
-                        MeshTypeIdentifier [] ret = new MeshTypeIdentifier[ theRoleTypes[i].length ];
-                        for( int j=0 ; j<ret.length ; ++j ) {
-                            ret[j] = theRoleTypes[i][j].getIdentifier();
+        MeshObject [] starts;
+        if( considerEquivalents ) {
+            starts = getEquivalents().getMeshObjects();
+        } else {
+            starts = new MeshObject[] { this };
+        }
+
+        ArrayList<MeshTypeIdentifier> almost = new ArrayList<MeshTypeIdentifier>();
+        boolean found = false;
+        for( MeshObject start : starts ) {
+            AMeshObject realStart = (AMeshObject) start;
+            if( realStart.theOtherSides != null ) {
+                for( int i=0 ; i<realStart.theOtherSides.length ; ++i ) {
+                    if( neighborIdentifier.equals( realStart.theOtherSides[i] )) {
+                        found = true;
+                        if( realStart.theRoleTypes[i] != null ) {
+                            for( int j=0 ; j<realStart.theRoleTypes[i].length ; ++j ) {
+                                if( !almost.contains( realStart.theRoleTypes[i][j].getIdentifier() )) {
+                                    almost.add( realStart.theRoleTypes[i][j].getIdentifier() );
+                                }
+                            }
                         }
-                        return ret;
-                    } else {
-                        break;
                     }
                 }
             }
         }
-        throw new NotRelatedException( theMeshBase, theMeshBase.getIdentifier(), this, theIdentifier, null, neighborIdentifier );
+        if( found ) {
+            MeshTypeIdentifier [] ret = ArrayHelper.copyIntoNewArray( almost, MeshTypeIdentifier.class );
+            return ret;
+        } else {
+            throw new NotRelatedException( theMeshBase, theMeshBase.getIdentifier(), this, theIdentifier, null, neighborIdentifier );
+        }
     }
     
     /**
@@ -1224,7 +1282,7 @@ public class AMeshObject
         }
         
         MeshObjectIdentifier [][] otherSides = new MeshObjectIdentifier[ starts.length ][];
-        RoleType [][][]     roleTypes  = new RoleType[ starts.length ][][];
+        RoleType [][][]           roleTypes  = new RoleType[ starts.length ][][];
 
         int n=0;
         for( int s=0 ; s<starts.length ; ++s ) {
@@ -1253,7 +1311,7 @@ public class AMeshObject
                     if( roleTypes[s][i] != null ) {
                         for( int j=0 ; j<roleTypes[s][i].length ; ++j ) {
                             try {
-                                checkPermittedTraversal( roleTypes[s][i][j], realOtherSides[i] );
+                                checkPermittedTraversal( roleTypes[s][i][j], realOtherSides[i].getIdentifier() );
                                 ret[ max++ ] = new Role( roleTypes[s][i][j], realOtherSides[i] );
                             } catch( NotPermittedException ex ) {
                                 log.info( ex );
@@ -1407,7 +1465,7 @@ public class AMeshObject
 
                         for( int j=0 ; j<roleTypes[s][i].length ; ++j ) {
                             try {
-                                checkPermittedTraversal( roleTypes[s][i][j], otherObject );
+                                checkPermittedTraversal( roleTypes[s][i][j], otherObject.getIdentifier() );
 
                                 ret[max++] = roleTypes[s][i][j];
                             } catch( NotPermittedException ex ) {
@@ -1493,7 +1551,7 @@ public class AMeshObject
             }
         }
         
-        checkPermittedAddAsEquivalent( equiv );
+        checkPermittedAddAsEquivalent( equiv.getIdentifier() );
 
         // now insert, being mindful that we might be joining to chains here
         

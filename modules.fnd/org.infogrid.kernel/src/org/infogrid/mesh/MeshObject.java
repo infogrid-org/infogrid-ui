@@ -787,7 +787,7 @@ public interface MeshObject
      * given neighbor MeshObject identified by its MeshObjectIdentifier.
      * 
      * @param neighborIdentifier the MeshObjectIdentifier of the neighbor MeshObject
-     * @return the RoleTypes
+     * @return the identifiers of the RoleTypes
      * @throws NotRelatedException thrown if the specified MeshObject is not actually a neighbor
      */
     public abstract MeshTypeIdentifier [] getRoleTypeIdentifiers(
@@ -795,6 +795,22 @@ public interface MeshObject
         throws
             NotRelatedException;
     
+    /**
+     * Obtain the MeshTypeIdentifiers of the RoleTypes that this MeshObject plays with a
+     * given neighbor MeshObject identified by its MeshObjectIdentifier.
+     *
+     * @param neighborIdentifier the MeshObjectIdentifier of the neighbor MeshObject
+     * @param considerEquivalents if true, all equivalent MeshObjects are considered as well;
+     *        if false, only this MeshObject will be used as the start
+     * @return the identifiers of the RoleTypes
+     * @throws NotRelatedException thrown if the specified MeshObject is not actually a neighbor
+     */
+    public abstract MeshTypeIdentifier [] getRoleTypeIdentifiers(
+            MeshObjectIdentifier neighborIdentifier,
+            boolean              considerEquivalents )
+        throws
+            NotRelatedException;
+
     /**
      * Obtain the Roles that this MeshObject currently participates in.
      *

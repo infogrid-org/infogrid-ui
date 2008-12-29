@@ -321,7 +321,7 @@ public class IterableNetMeshBaseDifferencer
                 oldRoleTypes,
                 removedRoleTypes,
                 newRoleTypes,
-                (NetMeshObject) otherSideInBase,
+                (NetMeshObjectIdentifier) otherSideInBase.getIdentifier(),
                 (NetMeshBaseIdentifier) null,
                 meshObjectInComparison.getTimeUpdated() );
 

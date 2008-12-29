@@ -14,11 +14,10 @@
 
 package org.infogrid.meshbase.transaction;
 
-import org.infogrid.util.ArrayHelper;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.infogrid.util.ArrayHelper;
 
 /**
   * <p>A ChangeSet is the set of {@link Change Changes} (createCopy, update, delete)

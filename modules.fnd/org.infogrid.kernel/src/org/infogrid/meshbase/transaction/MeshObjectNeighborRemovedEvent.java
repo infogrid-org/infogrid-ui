@@ -17,10 +17,8 @@ package org.infogrid.meshbase.transaction;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.MeshObjectUtils;
-
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.primitives.RoleType;
-
 import org.infogrid.util.ArrayHelper;
 
 /**

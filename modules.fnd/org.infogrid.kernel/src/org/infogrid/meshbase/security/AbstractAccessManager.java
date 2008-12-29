@@ -195,10 +195,10 @@ public abstract class AbstractAccessManager
     /**
      * The identities of the callers in the various threads.
      */
-    protected HashMap<Thread,MeshObject> theCallersOnThreads = new HashMap<Thread,MeshObject>();
+    protected final HashMap<Thread,MeshObject> theCallersOnThreads = new HashMap<Thread,MeshObject>();
     
     /**
      * The threads that currently are su'd.
      */
-    protected HashMap<Thread,Integer> theSuThreads = new HashMap<Thread,Integer>();
+    protected final HashMap<Thread,Integer> theSuThreads = new HashMap<Thread,Integer>();
 }

@@ -37,4 +37,3 @@ public class IllegalTransactionThreadException
         super( trans, trans.getCurrentTransaction() );
     }
 }
-

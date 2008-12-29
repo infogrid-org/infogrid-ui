@@ -1618,13 +1618,7 @@ public class AnetMeshObject
             TransactionException,
             NotPermittedException
     {
-        try {
-            MeshObject otherSide = getMeshBase().accessLocally( neighborIdentifier );
-            internalUnbless( theTypes, otherSide, false, timeUpdated );
-
-        } catch( NetMeshObjectAccessException ex ) {
-            log.error( ex );
-        }
+        internalUnbless( theTypes, neighborIdentifier, false, timeUpdated );
     }
 
     /**
@@ -2014,7 +2008,7 @@ public class AnetMeshObject
                 = new NetMeshObjectNeighborRemovedEvent(
                         this,
                         copyIntoNetMeshObjectIdentifierArray( oldValue ),
-                        (NetMeshObjectIdentifier)    removed,
+                        (NetMeshObjectIdentifier) removed,
                         copyIntoNetMeshObjectIdentifierArray( newValue ),
                         determineIncomingProxyIdentifier( theMeshBase ),
                         theTimeUpdated );
@@ -2089,42 +2083,10 @@ public class AnetMeshObject
      * @param oldRoleTypes the RoleTypes prior to the change
      * @param addedRoleTypes the RoleTypes that were added
      * @param newRoleTypes the RoleTypes now, after the change
-     * @param otherSide the other side of this relationship
-     * @param mb the MeshBase to use
-     */
-    @Override
-    protected void fireTypesAdded(
-            RoleType [] oldRoleTypes,
-            RoleType [] addedRoleTypes,
-            RoleType [] newRoleTypes,
-            MeshObject  otherSide,
-            MeshBase    mb )
-    {
-        NetMeshObjectRoleAddedEvent theEvent
-                = new NetMeshObjectRoleAddedEvent(
-                        this,
-                        oldRoleTypes,
-                        addedRoleTypes,
-                        newRoleTypes,
-                        (NetMeshObject) otherSide,
-                        determineIncomingProxyIdentifier( theMeshBase ),
-                        theTimeUpdated );
-
-        mb.getCurrentTransaction().addChange( theEvent );
-
-        firePropertyChange( theEvent );
-    }
-
-    /**
-     * Fire an event indicating that one or more RoleTypes were added to the relationship of this
-     * MeshObject to another MeshObject.
-     *
-     * @param oldRoleTypes the RoleTypes prior to the change
-     * @param addedRoleTypes the RoleTypes that were added
-     * @param newRoleTypes the RoleTypes now, after the change
      * @param identifierOfOtherSide the Identifier of the other side of this relationship
      * @param mb the MeshBase to use
      */
+    @Override
     protected void fireTypesAdded(
             RoleType []          oldRoleTypes,
             RoleType []          addedRoleTypes,
@@ -2154,16 +2116,16 @@ public class AnetMeshObject
      * @param oldRoleTypes the RoleTypes prior to the change
      * @param removedRoleTypes the RoleTypes that were removed
      * @param newRoleTypes the RoleTypes now, after the change
-     * @param otherSide the other side of this relationship
+     * @param neighborIdentifier identifier of the other side of this relationship
      * @param mb the MeshBase to use
      */
     @Override
     protected void fireTypesRemoved(
-            RoleType [] oldRoleTypes,
-            RoleType [] removedRoleTypes,
-            RoleType [] newRoleTypes,
-            MeshObject  otherSide,
-            MeshBase    mb )
+            RoleType []          oldRoleTypes,
+            RoleType []          removedRoleTypes,
+            RoleType []          newRoleTypes,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshBase             mb )
     {
         NetMeshObjectRoleRemovedEvent theEvent
                 = new NetMeshObjectRoleRemovedEvent(
@@ -2171,7 +2133,7 @@ public class AnetMeshObject
                         oldRoleTypes,
                         removedRoleTypes,
                         newRoleTypes,
-                        (NetMeshObject) otherSide,
+                        (NetMeshObjectIdentifier) neighborIdentifier,
                         determineIncomingProxyIdentifier( theMeshBase ),
                         theTimeUpdated );
 

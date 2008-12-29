@@ -37,6 +37,38 @@ public class MeshObjectRoleAddedEvent
 
     /**
      * Constructor.
+     *
+     * @param source the MeshObject that is the source of the event
+     * @param oldValues the old values of the RoleType, prior to the event
+     * @param deltaValues the RoleTypes that changed
+     * @param newValues the new values of the RoleType, after the event
+     * @param neighborIdentifier identifier of the MeshObject that identifies the other end of the affected relationship
+     * @param timeEventOccurred the time at which the event occurred, in <code>System.currentTimeMillis</code> format
+     */
+    public MeshObjectRoleAddedEvent(
+            MeshObject           source,
+            RoleType []          oldValues,
+            RoleType []          deltaValues,
+            RoleType []          newValues,
+            MeshObjectIdentifier neighborIdentifier,
+            long                 timeEventOccurred )
+    {
+        this(   source,
+                source.getIdentifier(),
+                oldValues,
+                MeshTypeUtils.meshTypeIdentifiers( oldValues ),
+                deltaValues,
+                MeshTypeUtils.meshTypeIdentifiers( deltaValues ),
+                newValues,
+                MeshTypeUtils.meshTypeIdentifiers( newValues ),
+                null,
+                neighborIdentifier,
+                timeEventOccurred,
+                source.getMeshBase() );
+    }
+
+    /**
+     * Constructor.
      * 
      * @param source the MeshObject that is the source of the event
      * @param oldValues the old values of the RoleType, prior to the event

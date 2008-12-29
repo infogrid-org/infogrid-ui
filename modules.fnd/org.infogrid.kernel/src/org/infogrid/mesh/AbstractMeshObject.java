@@ -41,6 +41,7 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.Role;
@@ -1498,6 +1499,22 @@ public abstract class AbstractMeshObject
     }
 
     /**
+     * Obtain the MeshTypeIdentifiers of the RoleTypes that this MeshObject plays with a
+     * given neighbor MeshObject identified by its MeshObjectIdentifier.
+     *
+     * @param neighborIdentifier the MeshObjectIdentifier of the neighbor MeshObject
+     * @return the identifiers of the RoleTypes
+     * @throws NotRelatedException thrown if the specified MeshObject is not actually a neighbor
+     */
+    public final MeshTypeIdentifier [] getRoleTypeIdentifiers(
+            MeshObjectIdentifier neighborIdentifier )
+        throws
+            NotRelatedException
+    {
+        return getRoleTypeIdentifiers( neighborIdentifier, true );
+    }
+
+    /**
      * Obtain the Identifiers of the equivalent MeshObjects. This is sometimes more efficient than
      * traversing to the equivalents, and determining the MeshObjectIdentifiers.
      *
@@ -1814,15 +1831,15 @@ public abstract class AbstractMeshObject
      * @param oldRoleTypes the RoleTypes prior to the change
      * @param addedRoleTypes the RoleTypes that were added
      * @param newRoleTypes the RoleTypes now, after the change
-     * @param otherSide the other side of this relationship
+     * @param neighborIdentifier the identifier of the other side of this relationship
      * @param mb the MeshBase to use
      */
     protected void fireTypesAdded(
-            RoleType [] oldRoleTypes,
-            RoleType [] addedRoleTypes,
-            RoleType [] newRoleTypes,
-            MeshObject  otherSide,
-            MeshBase    mb )
+            RoleType []          oldRoleTypes,
+            RoleType []          addedRoleTypes,
+            RoleType []          newRoleTypes,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshBase             mb )
     {
         if( oldRoleTypes == null ) {
             oldRoleTypes = new RoleType[0];
@@ -1833,7 +1850,7 @@ public abstract class AbstractMeshObject
                         oldRoleTypes,
                         addedRoleTypes,
                         newRoleTypes,
-                        otherSide,
+                        neighborIdentifier,
                         theTimeUpdated );
 
         mb.getCurrentTransaction().addChange( theEvent );
@@ -1848,15 +1865,15 @@ public abstract class AbstractMeshObject
      * @param oldRoleTypes the RoleTypes prior to the change
      * @param removedRoleTypes the RoleTypes that were removed
      * @param newRoleTypes the RoleTypes now, after the change
-     * @param otherSide the other side of this relationship
+     * @param neighborIdentifier the identifier of the other side of this relationship
      * @param mb the MeshBase to use
      */
     protected void fireTypesRemoved(
-            RoleType [] oldRoleTypes,
-            RoleType [] removedRoleTypes,
-            RoleType [] newRoleTypes,
-            MeshObject  otherSide,
-            MeshBase    mb )
+            RoleType []          oldRoleTypes,
+            RoleType []          removedRoleTypes,
+            RoleType []          newRoleTypes,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshBase             mb )
     {
         if( newRoleTypes == null ) {
             newRoleTypes = new RoleType[0];
@@ -1867,7 +1884,7 @@ public abstract class AbstractMeshObject
                         oldRoleTypes,
                         removedRoleTypes,
                         newRoleTypes,
-                        otherSide,
+                        neighborIdentifier,
                         theTimeUpdated );
 
         mb.getCurrentTransaction().addChange( theEvent );
@@ -2119,25 +2136,20 @@ public abstract class AbstractMeshObject
      * may override this.
      * 
      * @param thisEnds the RoleTypes to bless the relationship with
-     * @param otherObject the neighbor to which this MeshObject is related
+     * @param otherObjectIdentifier identifier of the neighbor to which this MeshObject is related
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedBless(
-            RoleType [] thisEnds,
-            MeshObject  otherObject )
+            RoleType []          thisEnds,
+            MeshObjectIdentifier otherObjectIdentifier )
         throws
             NotPermittedException
     {
         checkAlive();
-        otherObject.checkAlive();
-
-        if( theMeshBase != otherObject.getMeshBase() ) {
-            throw new IllegalArgumentException( "Cannot relate MeshObjects held in different MeshBases" );
-        }
 
         AccessManager accessMgr = theMeshBase.getAccessManager();
         if( accessMgr != null ) {
-            accessMgr.checkPermittedBless( this, thisEnds, otherObject );
+            accessMgr.checkPermittedBless( this, thisEnds, otherObjectIdentifier );
         }
     }
 
@@ -2146,12 +2158,12 @@ public abstract class AbstractMeshObject
      * provided RoleTypes. Subclasses may override this.
      * 
      * @param thisEnds the RoleTypes to unbless the relationship from
-     * @param otherObject the neighbor to which this MeshObject is related
+     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedUnbless(
-            RoleType [] thisEnds,
-            MeshObject  otherObject )
+            RoleType []          thisEnds,
+            MeshObjectIdentifier neighborIdentifier )
         throws
             NotPermittedException
     {
@@ -2160,7 +2172,7 @@ public abstract class AbstractMeshObject
         }
         AccessManager accessMgr = theMeshBase.getAccessManager();
         if( accessMgr != null ) {
-            accessMgr.checkPermittedUnbless( this, thisEnds, otherObject );
+            accessMgr.checkPermittedUnbless( this, thisEnds, neighborIdentifier );
         }
     }    
     
@@ -2169,25 +2181,20 @@ public abstract class AbstractMeshObject
      * given MeshObject. Subclasses may override this.
      * 
      * @param toTraverse the RoleType to traverse
-     * @param otherObject the reached MeshObject in the traversal
+     * @param otherObjectIdentifier identifier of the reached MeshObject in the traversal
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedTraversal(
-            RoleType   toTraverse,
-            MeshObject otherObject )
+            RoleType             toTraverse,
+            MeshObjectIdentifier otherObjectIdentifier )
         throws
             NotPermittedException
     {
         checkAlive();
-        otherObject.checkAlive();
-
-        if( theMeshBase != otherObject.getMeshBase() ) {
-            throw new IllegalArgumentException( "Cannot traverse to MeshObjects held in different MeshBases" );
-        }
 
         AccessManager accessMgr = theMeshBase.getAccessManager();
         if( accessMgr != null ) {
-            accessMgr.checkPermittedTraversal( this, toTraverse, otherObject );
+            accessMgr.checkPermittedTraversal( this, toTraverse, otherObjectIdentifier );
         }
     }
 
@@ -2196,29 +2203,24 @@ public abstract class AbstractMeshObject
      * the given thisEnds RoleTypes. Subclasses may override this.
      * 
      * @param thisEnds the RoleTypes to bless the relationship with
-     * @param otherObject the neighbor to which this MeshObject is related
+     * @param otherObjectIdentifier identifier of the neighbor to which this MeshObject is related
      * @param roleTypesToAsk the RoleTypes, of the relationship with RoleTypesToAskUsed, which to as
-     * @param roleTypesToAskUsed the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
+     * @param roleTypesToAskUsedIdentifier identifier of the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedBless(
-            RoleType [] thisEnds,
-            MeshObject  otherObject,
-            RoleType [] roleTypesToAsk,
-            MeshObject  roleTypesToAskUsed )
+            RoleType []          thisEnds,
+            MeshObjectIdentifier otherObjectIdentifier,
+            RoleType []          roleTypesToAsk,
+            MeshObjectIdentifier roleTypesToAskUsedIdentifier )
         throws
             NotPermittedException
     {
         checkAlive();
-        otherObject.checkAlive();
-
-        if( theMeshBase != otherObject.getMeshBase() ) {
-            throw new IllegalArgumentException( "Cannot relate MeshObjects held in different MeshBases" );
-        }
 
         AccessManager accessMgr = theMeshBase.getAccessManager();
         if( accessMgr != null ) {
-            accessMgr.checkPermittedBless( this, thisEnds, otherObject, roleTypesToAsk, roleTypesToAskUsed );
+            accessMgr.checkPermittedBless( this, thisEnds, otherObjectIdentifier, roleTypesToAsk, roleTypesToAskUsedIdentifier );
         }
     }
 
@@ -2227,16 +2229,16 @@ public abstract class AbstractMeshObject
      * the given thisEnds RoleTypes. Subclasses may override this.
      * 
      * @param thisEnds the RoleTypes to unbless the relationship from
-     * @param otherObject the neighbor to which this MeshObject is related
+     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
      * @param roleTypesToAsk the RoleTypes, of the relationship with RoleTypesToAskUsed, which to as
-     * @param roleTypesToAskUsed the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
+     * @param roleTypesToAskUsedIdentifier identifier of the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedUnbless(
-            RoleType [] thisEnds,
-            MeshObject  otherObject,
-            RoleType [] roleTypesToAsk,
-            MeshObject  roleTypesToAskUsed )
+            RoleType []          thisEnds,
+            MeshObjectIdentifier neighborIdentifier,
+            RoleType []          roleTypesToAsk,
+            MeshObjectIdentifier roleTypesToAskUsedIdentifier )
         throws
             NotPermittedException
     {
@@ -2244,7 +2246,7 @@ public abstract class AbstractMeshObject
         
         AccessManager accessMgr = theMeshBase.getAccessManager();
         if( accessMgr != null ) {
-            accessMgr.checkPermittedUnbless( this, thisEnds, otherObject, roleTypesToAsk, roleTypesToAskUsed );
+            accessMgr.checkPermittedUnbless( this, thisEnds, neighborIdentifier, roleTypesToAsk, roleTypesToAskUsedIdentifier );
         }
     }
 
@@ -2252,11 +2254,11 @@ public abstract class AbstractMeshObject
      * Check whether it is permitted to make this MeshObject equivalent to another.
      * Subclasses may override this.
      * 
-     * @param newEquivalent the potential new equivalent
+     * @param newEquivalentIdentifier identifier of the potential new equivalent
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedAddAsEquivalent(
-            MeshObject newEquivalent )
+            MeshObjectIdentifier newEquivalentIdentifier )
         throws
             NotPermittedException
     {
@@ -2264,7 +2266,7 @@ public abstract class AbstractMeshObject
         
         AccessManager accessMgr = theMeshBase.getAccessManager();
         if( accessMgr != null ) {
-            accessMgr.checkPermittedAddAsEquivalent( this, getRoleTypes(), newEquivalent, newEquivalent.getRoleTypes() );
+            accessMgr.checkPermittedAddAsEquivalent( this, newEquivalentIdentifier );
         }
     }
 
@@ -2367,7 +2369,7 @@ public abstract class AbstractMeshObject
     /**
       * Storage for the Identifier property.
       */
-    protected MeshObjectIdentifier theIdentifier;
+    protected final MeshObjectIdentifier theIdentifier;
 
     /**
      * The time this MeshObject was created.

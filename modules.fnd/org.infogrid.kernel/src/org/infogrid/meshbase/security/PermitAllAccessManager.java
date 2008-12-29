@@ -186,35 +186,36 @@ public class PermitAllAccessManager
     /**
      * Check whether it is permitted to bless the relationship to the neighbor with the
      * provided RoleTypes.
-     * 
+     *
      * @param obj the MeshObject
      * @param thisEnds the RoleTypes to bless the relationship with
-     * @param neighbor the neighbor to which this MeshObject is related
+     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedBless(
-            MeshObject  obj,
-            RoleType [] thisEnds,
-            MeshObject  neighbor )
+            MeshObject           obj,
+            RoleType []          thisEnds,
+            MeshObjectIdentifier neighborIdentifier )
         throws
             NotPermittedException
     {
         // no op
     }
 
+
     /**
      * Check whether it is permitted to unbless the relationship to the neighbor from the
      * provided RoleTypes.
-     * 
+     *
      * @param obj the MeshObject
      * @param thisEnds the RoleTypes to unbless the relationship from
-     * @param neighbor the neighbor to which this MeshObject is related
+     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedUnbless(
-            MeshObject  obj,
-            RoleType [] thisEnds,
-            MeshObject  neighbor )
+            MeshObject           obj,
+            RoleType []          thisEnds,
+            MeshObjectIdentifier neighborIdentifier )
         throws
             NotPermittedException
     {
@@ -224,16 +225,16 @@ public class PermitAllAccessManager
     /**
      * Check whether it is permitted to traverse the given RoleType from this MeshObject to the
      * given MeshObject.
-     * 
+     *
      * @param obj the MeshObject
      * @param toTraverse the RoleType to traverse
-     * @param otherObject the reached MeshObject in the traversal
+     * @param otherObjectIdentifier identifier of the reached MeshObject in the traversal
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedTraversal(
-            MeshObject obj,
-            RoleType   toTraverse,
-            MeshObject otherObject )
+            MeshObject           obj,
+            RoleType             toTraverse,
+            MeshObjectIdentifier otherObjectIdentifier )
         throws
             NotPermittedException
     {
@@ -243,20 +244,21 @@ public class PermitAllAccessManager
     /**
      * Check whether it is permitted to bless the relationship with the given neighbor with
      * the given thisEnds RoleTypes.
-     * 
+     *
      * @param obj the MeshObject
      * @param thisEnds the RoleTypes to bless the relationship with
-     * @param neighbor the neighbor to which this MeshObject is related
+     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
      * @param roleTypesToAsk the RoleTypes, of the relationship with RoleTypesToAskUsed, which to as
-     * @param roleTypesToAskUsed the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
+     * @param roleTypesToAskUsedIdentifier identiifer of the neighbor MeshObject whose rules may have an opinion
+     *        on the blessing of the relationship with otherObject
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedBless(
-            MeshObject  obj,
-            RoleType [] thisEnds,
-            MeshObject  neighbor,
-            RoleType [] roleTypesToAsk,
-            MeshObject  roleTypesToAskUsed )
+            MeshObject            obj,
+            RoleType []           thisEnds,
+            MeshObjectIdentifier  neighborIdentifier,
+            RoleType []           roleTypesToAsk,
+            MeshObjectIdentifier  roleTypesToAskUsedIdentifier )
         throws
             NotPermittedException
     {
@@ -266,20 +268,20 @@ public class PermitAllAccessManager
     /**
      * Check whether it is permitted to unbless the relationship from the given neighbor from
      * the given thisEnds RoleTypes.
-     * 
+     *
      * @param obj the MeshObject
      * @param thisEnds the RoleTypes to unbless the relationship from
-     * @param neighbor the neighbor to which this MeshObject is related
+     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
      * @param roleTypesToAsk the RoleTypes, of the relationship with RoleTypesToAskUsed, which to as
-     * @param roleTypesToAskUsed the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
+     * @param roleTypesToAskUsedIdentifier identifier of the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedUnbless(
-            MeshObject  obj,
-            RoleType [] thisEnds,
-            MeshObject  neighbor,
-            RoleType [] roleTypesToAsk,
-            MeshObject  roleTypesToAskUsed )
+            MeshObject           obj,
+            RoleType []          thisEnds,
+            MeshObjectIdentifier neighborIdentifier,
+            RoleType []          roleTypesToAsk,
+            MeshObjectIdentifier roleTypesToAskUsedIdentifier )
         throws
             NotPermittedException
     {
@@ -288,18 +290,14 @@ public class PermitAllAccessManager
 
     /**
      * Check whether it is permitted to make one MeshObject equivalent to another.
-     * 
+     *
      * @param one the first MeshObject
-     * @param two the second MeshObject
-     * @param roleTypesOneToAsk the RoleTypes, of MeshObject one, to ask
-     * @param roleTypesTwoToAsk the RoleTypes, of MeshObject two, to ask
+     * @param twoIdentifier identifier of the second MeshObject
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedAddAsEquivalent(
-            MeshObject  one,
-            RoleType [] roleTypesOneToAsk,
-            MeshObject  two,
-            RoleType [] roleTypesTwoToAsk )
+            MeshObject           one,
+            MeshObjectIdentifier twoIdentifier )
         throws
             NotPermittedException
     {

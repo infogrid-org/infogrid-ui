@@ -14,16 +14,13 @@
 
 package org.infogrid.meshbase.transaction;
 
-import org.infogrid.mesh.MeshObject;
-
-import org.infogrid.meshbase.AbstractMeshBase;
-
-import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.logging.Log;
-
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Iterator;
+import org.infogrid.mesh.MeshObject;
+import org.infogrid.meshbase.AbstractMeshBase;
+import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.logging.Log;
 
 /**
  * The default implementation of a Transaction for subclasses of AbstractMeshBase.

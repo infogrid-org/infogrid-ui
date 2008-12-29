@@ -16,7 +16,6 @@ package org.infogrid.meshbase.net.transaction;
 
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
@@ -24,7 +23,6 @@ import org.infogrid.meshbase.transaction.CannotApplyChangeException;
 import org.infogrid.meshbase.transaction.MeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
-
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.MeshTypeUtils;
 import org.infogrid.model.primitives.RoleType;
@@ -48,18 +46,18 @@ public class NetMeshObjectRoleRemovedEvent
      * @param oldValues the old values of the RoleType, prior to the event
      * @param deltaValues the RoleTypes that changed
      * @param newValues the new values of the RoleType, after the event
-     * @param neighbor the MeshObject that identifies the other end of the affected relationship
+     * @param neighborIdentifier identifier of the MeshObject that identifies the other end of the affected relationship
      * @param originIdentifier identifier of the NetMeshBase from where this NetChange arrived, if any
      * @param timeEventOccurred the time at which the event occurred, in <code>System.currentTimeMillis</code> format
      */
     public NetMeshObjectRoleRemovedEvent(
-            NetMeshObject         source,
-            RoleType []           oldValues,
-            RoleType []           deltaValues,
-            RoleType []           newValues,
-            NetMeshObject         neighbor,
-            NetMeshBaseIdentifier originIdentifier,
-            long                  timeEventOccurred )
+            NetMeshObject           source,
+            RoleType []             oldValues,
+            RoleType []             deltaValues,
+            RoleType []             newValues,
+            NetMeshObjectIdentifier neighborIdentifier,
+            NetMeshBaseIdentifier   originIdentifier,
+            long                    timeEventOccurred )
     {
         this(   source,
                 source.getIdentifier(),
@@ -69,8 +67,8 @@ public class NetMeshObjectRoleRemovedEvent
                 MeshTypeUtils.meshTypeIdentifiers( deltaValues ),
                 newValues,
                 MeshTypeUtils.meshTypeIdentifiers( newValues ),
-                neighbor,
-                neighbor.getIdentifier(),
+                null,
+                neighborIdentifier,
                 originIdentifier,
                 timeEventOccurred,
                 source.getMeshBase() );

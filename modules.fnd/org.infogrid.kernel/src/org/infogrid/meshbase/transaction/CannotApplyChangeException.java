@@ -15,13 +15,13 @@
 package org.infogrid.meshbase.transaction;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
-
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.util.StringHelper;
 
 /**
- * This Exception is thrown if a Change could not be applied.
+ * This Exception is thrown if a Change could not be applied. Inner classes provide
+ * more detail.
  */
 public abstract class CannotApplyChangeException
         extends

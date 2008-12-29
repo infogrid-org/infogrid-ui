@@ -16,19 +16,14 @@ package org.infogrid.meshbase.transaction;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-
 import org.infogrid.meshbase.MeshBase;
-
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.RoleType;
-
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
-
-import org.infogrid.util.event.AbstractExternalizablePropertyChangeEvent;
-
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.event.AbstractExternalizablePropertyChangeEvent;
 import org.infogrid.util.event.PropertyUnresolvedException;
 import org.infogrid.util.event.SourceUnresolvedException;
 import org.infogrid.util.event.ValueUnresolvedException;
