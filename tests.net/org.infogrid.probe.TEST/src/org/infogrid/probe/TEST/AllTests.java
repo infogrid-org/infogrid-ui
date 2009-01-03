@@ -89,16 +89,16 @@ public class AllTests
 
                 new TestSpec( // property updates
                             WritableProbeTest1.class ),
-                            
+
                 new TestSpec( // blessing
                             WritableProbeTest2.class ),
-                            
+
                 new TestSpec( // unblessing
                             WritableProbeTest3.class ),
-                            
+
                 new TestSpec( // deletion
                             WritableProbeTest4.class ),
-                            
+
 
 // FIXME: The remaining WritableProbeTests have not been written yet.
 //                new TestSpec( // relationship delete
@@ -124,10 +124,10 @@ public class AllTests
                 new TestSpec(
                         ShadowTest1.class,
                         AbstractTest.fileSystemFileName( ShadowTest1.class, "ProbeTest1.xml" )),
-                            
+
                 new TestSpec(
                         ShadowTest2.class ),
-                            
+
                 new TestSpec(
                         ShadowTest3.class,
                         AbstractTest.fileSystemFileName( ShadowTest3.class, "ShadowTest3a.html" )), // ShadowTest3b.xml referenced from ShadowTest3a.html

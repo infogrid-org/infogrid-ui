@@ -131,7 +131,7 @@ public class IllegalPropertyValueException
                     thePropertyType,
                     thePropertyTypeIdentifier,
                     theIllegalValue,
-                    MeshTypeUtils.meshTypeIdentifiers( theMeshObject )
+                    MeshTypeUtils.meshTypeIdentifiersOrNull( theMeshObject )
                 });
     }
 

@@ -183,6 +183,8 @@ public class StoreShadowMeshBaseTest8
         
         checkCondition( found2.isBlessedBy(         TestSubjectArea.AA ), "Not blessed correctly" );
         checkCondition( foundInShadow2.isBlessedBy( TestSubjectArea.AA ), "Not blessed correctly in shadow" );
+
+        base2.die( false ); // if we make this false, we can still look into the database and see what's in it
     }
         
     /**

@@ -25,6 +25,7 @@ import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
@@ -43,9 +44,10 @@ import org.infogrid.mesh.net.LockChangedEvent;
 import org.infogrid.mesh.net.NotHomeReplicaException;
 import org.infogrid.mesh.net.proxy.ReplicaProxyInterface;
 import org.infogrid.mesh.text.MeshStringRepresentationContext;
+import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.NetMeshObjectAccessException;
+import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
@@ -60,6 +62,7 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
+import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
@@ -232,8 +235,7 @@ public class AnetMeshObject
         throws
             RemoteQueryTimeoutException
     {
-        AnetMeshBase realBase = (AnetMeshBase) theMeshBase;
-        return tryToObtainLock( -1L ); // realBase.getTryToObtainLockTimesOutAfter() );
+        return tryToObtainLock( -1L );
     }
 
     /**
@@ -289,8 +291,7 @@ public class AnetMeshObject
             DoNotHaveLockException,
             RemoteQueryTimeoutException
     {
-        AnetMeshBase realBase = (AnetMeshBase) theMeshBase;
-        return tryToPushLock( outgoingProxy, -1L ); // realBase.getTryToPushLockTimesOutAfter() );
+        return tryToPushLock( outgoingProxy, -1L );
     }
             
     /**
@@ -453,8 +454,7 @@ public class AnetMeshObject
         throws
             RemoteQueryTimeoutException
     {
-        AnetMeshBase realBase = (AnetMeshBase) theMeshBase;
-        return tryToObtainHomeReplica( -1L ); // realBase.getTryToObtainHomeReplicaTimesOutAfter() );
+        return tryToObtainHomeReplica( -1L );
     }
 
     /**
@@ -510,8 +510,7 @@ public class AnetMeshObject
             NotHomeReplicaException,
             RemoteQueryTimeoutException
     {
-        AnetMeshBase realBase = (AnetMeshBase) theMeshBase;
-        return tryToPushHomeReplica( outgoingProxy, -1L ); // realBase.getTryToPushHomeReplicaTimesOutAfter() );        
+        return tryToPushHomeReplica( outgoingProxy, -1L );
     }
             
     /**
@@ -690,6 +689,8 @@ public class AnetMeshObject
     public SimpleExternalizedNetMeshObject asExternalized(
             boolean captureProxies )
     {
+        AnetMeshObjectNeighborManager nMgr = getNeighborManager();
+
         MeshTypeIdentifier [] types;
         if( theMeshTypes != null && theMeshTypes.size() > 0 ) {
             types = new MeshTypeIdentifier[ theMeshTypes.size() ];
@@ -720,27 +721,29 @@ public class AnetMeshObject
             propertyValues = null;
         }
         
-        NetMeshObjectIdentifier [] otherSides;
-        MeshTypeIdentifier [][]    roleTypes;
+        NetMeshObjectIdentifier [] neighborIdentifiers;
+        MeshTypeIdentifier [][]    roleTypeIdentifiers;
 
-        if( theOtherSides != null && theOtherSides.length > 0 ) {
-            otherSides = new NetMeshObjectIdentifier[ theOtherSides.length ];
+        if( nMgr.hasNeighbors( this )) {
+            RoleType [][] roleTypes  = nMgr.getRoleTypes( this );
 
-            roleTypes = new MeshTypeIdentifier[ theOtherSides.length][];
-            for( int i=0 ; i<theOtherSides.length ; ++i ) {
-                otherSides[i] = (NetMeshObjectIdentifier) theOtherSides[i];
-                if( theRoleTypes[i] != null && theRoleTypes[i].length > 0 ) {
-                    roleTypes[i] = new MeshTypeIdentifier[ theRoleTypes[i].length ];
+            neighborIdentifiers = nMgr.getNeighborIdentifiers( this );
+            roleTypeIdentifiers = new MeshTypeIdentifier[ roleTypes.length][];
+
+            for( int i=0 ; i<roleTypes.length ; ++i ) {
+                if( roleTypes[i] != null && roleTypes[i].length > 0 ) {
+                    roleTypeIdentifiers[i] = new MeshTypeIdentifier[ roleTypes[i].length ];
                     for( int j=0 ; j<roleTypes[i].length ; ++j ) {
-                        roleTypes[i][j] = theRoleTypes[i][j].getIdentifier();
+                        roleTypeIdentifiers[i][j] = roleTypes[i][j].getIdentifier();
                     }
                 }
             }
         } else {
-            otherSides = null;
-            roleTypes  = null;
+            neighborIdentifiers = null;
+            roleTypeIdentifiers = null;
         }
-        
+
+
         NetMeshBaseIdentifier [] proxyNames;
         int homeProxyIndex;
         int lockProxyIndex;
@@ -791,8 +794,8 @@ public class AnetMeshObject
                 theTimeExpires,
                 propertyTypes,
                 propertyValues,
-                otherSides,
-                roleTypes,
+                neighborIdentifiers,
+                roleTypeIdentifiers,
                 equivalents,
                 theGiveUpHomeReplica,
                 theGiveUpLock,
@@ -1067,6 +1070,26 @@ public class AnetMeshObject
     }
     
     /**
+     * Find a single neighbor MeshObject of this MeshObject that is known by its
+     * MeshObjectIdentifier.
+     * We pass in the MeshBase to use because this may be invoked when a MeshObject's member
+     * variable has been zero'd out already.
+     * This internal helper method may be overridden by subclasses.
+     *
+     * @param mb the MeshBase to use
+     * @param neighborIdentifier the MeshObjectIdentifier of the MeshObject we are looking for
+     * @return the MeshObject that we found
+     */
+    @Override
+    protected NetMeshObject findRelatedMeshObject(
+            MeshBase             mb,
+            MeshObjectIdentifier neighborIdentifier )
+    {
+        NetMeshObject [] ret = findRelatedMeshObjects( mb, new NetMeshObjectIdentifier[] { (NetMeshObjectIdentifier) neighborIdentifier } );
+        return ret[0];
+    }
+
+    /**
      * Find neighbor MeshObjects of this MeshObject that are known by their
      * MeshObjectIdentifiers.
      * We pass in the MeshBase to use because this may be invoked when a MeshObject's member
@@ -1084,44 +1107,70 @@ public class AnetMeshObject
             MeshBase                mb,
             MeshObjectIdentifier [] identifiers )
     {
-        Proxy       homeProxy = getProxyTowardsHomeReplica();
         NetMeshBase realBase  = (NetMeshBase) mb;
-        
-        NetMeshObject [] ret = new NetMeshObject[ identifiers.length ]; // make compiler happy
+        Proxy       homeProxy = getProxyTowardsHomeReplica();
+
+        NetMeshObject [] ret = realBase.findMeshObjectsByIdentifier( identifiers );
+
         if( homeProxy != null ) {
-            NetMeshBaseIdentifier networkId = homeProxy.getPartnerMeshBaseIdentifier();
-
-            NetMeshObjectAccessSpecification []     paths          = new NetMeshObjectAccessSpecification[ identifiers.length ];
+            // try to fill in what we don't have locally by creating an expired replica and resynchronizing them
+            // as soon as possible
+            NetMeshBaseLifecycleManager             life           = realBase.getMeshBaseLifecycleManager();
             NetMeshObjectAccessSpecificationFactory accessSpecFact = ((NetMeshBase)theMeshBase).getNetMeshObjectAccessSpecificationFactory();
-            
-            for( int i=0 ; i<identifiers.length ; ++i ) {
-                if( identifiers[i] instanceof NetMeshObjectIdentifier ) {
-                    paths[i] = accessSpecFact.obtain( networkId, (NetMeshObjectIdentifier) identifiers[i] );
+            NetMeshObjectAccessSpecification []     toFind         = new NetMeshObjectAccessSpecification[ ret.length ];
+
+            int count = 0;
+            for( int i=0 ; i<ret.length ; ++i ) {
+                if( ret[i] == null ) {
+                    toFind[count++] = accessSpecFact.obtain( homeProxy.getPartnerMeshBaseIdentifier(), (NetMeshObjectIdentifier) identifiers[i] );
                 }
             }
-            try {
-                ret = realBase.accessLocally( paths );
-
-            } catch( NetMeshObjectAccessException ex ) {
-                log.warn( ex );
-                if( ex.isPartialResultAvailable() ) {
-                    ret = ex.getBestEffortResult();
+            if( count > 0 ) {
+                if( count < toFind.length ) {
+                    toFind = ArrayHelper.copyIntoNewArray( toFind, 0, count, NetMeshObjectAccessSpecification.class );
                 }
-            } catch( NotPermittedException ex ) {
-                log.info( ex );
-            }
 
-        } else {
-            try {
-                ret = realBase.accessLocally( identifiers );
+                Transaction txAlready = theMeshBase.getCurrentTransaction();
 
-            } catch( NetMeshObjectAccessException ex ) {
-                log.warn( ex );
-                if( ex.isPartialResultAvailable() ) {
-                    ret = ex.getBestEffortResult();
+                NetMeshObject [] found = null;
+
+                if( txAlready != null ) {
+                    Transaction tx = null;
+                    try {
+                        tx = realBase.createTransactionAsapIfNeeded();
+                    
+                        found = life.createForwardReferences( toFind );
+
+                    } catch( TransactionException ex ) {
+                        log.error( ex );
+                    } catch( MeshObjectIdentifierNotUniqueException ex ) {
+                        log.error( ex );
+                    } finally {
+                        if( tx != null ) {
+                            tx.commitTransaction();
+                        }
+                    }
+                } else {
+                    try {
+                        found = realBase.accessLocally( toFind );
+
+                    } catch( MeshObjectAccessException ex ) {
+                        MeshObject [] bestEffort = ex.getBestEffortResult();
+                        found = (NetMeshObject []) ArrayHelper.copyIntoNewArray( bestEffort, NetMeshObject.class );
+
+                    } catch( NotPermittedException ex ) {
+                        log.warn( ex );
+                    }
                 }
-            } catch( NotPermittedException ex ) {
-                log.info( ex );
+                if( found != null ) {
+                    count = 0;
+                    for( int i=0 ; i<ret.length ; ++i ) {
+                        if( count < found.length && identifiers[i].equals( toFind[count].getNetMeshObjectIdentifier() )) {
+                            ret[i] = found[count];
+                            ++count;
+                        }
+                    }
+                }
             }
         }
         return ret;
@@ -1431,52 +1480,51 @@ public class AnetMeshObject
             RelatedAlreadyException,
             TransactionException
     {
-        // we are not trying to accessLocally anything here as this would obtain a potentially
-        // infinite loop of information becoming replicated in.
-        
+        AnetMeshObjectNeighborManager nMgr = getNeighborManager();
+
         // first see whether we have it already
-        if( theOtherSides != null ) {
-            for( int i=0 ; i<theOtherSides.length ; ++i ) {
-                if( newNeighborIdentifier.equals( theOtherSides[i] )) {
-                    return;
+        boolean found = false;
+
+        NetMeshObjectIdentifier [] oldNeighborIdentifiers;
+        if( nMgr.hasNeighbors( this )) {
+            oldNeighborIdentifiers = nMgr.getNeighborIdentifiers( this );
+            for( int i=0 ; i<oldNeighborIdentifiers.length ; ++i ) {
+                if( newNeighborIdentifier.equals( oldNeighborIdentifiers[i] )) {
+                    found = true;
+                    break;
                 }
             }
+        } else {
+            oldNeighborIdentifiers = new NetMeshObjectIdentifier[]{};
+        }
+
+        if( !found ) {
+            nMgr.appendNeighbor( this, newNeighborIdentifier, null );
+            fireNeighborAdded( null, oldNeighborIdentifiers, newNeighborIdentifier, nMgr.getNeighborIdentifiers( this ), theMeshBase );
         }
         
-        MeshObjectIdentifier [] oldOtherSides = theOtherSides;
-        boolean                 fireHereEvent = false;
-        if( theOtherSides == null ) {
-            theOtherSides = new MeshObjectIdentifier[]{ newNeighborIdentifier };
-            theRoleTypes  = new RoleType[][] { null };
-            fireHereEvent = true;
+        NetMeshObject neighbor = ((NetMeshBase)theMeshBase).findMeshObjectByIdentifier( newNeighborIdentifier );
+        if( neighbor != null ) {
+            AnetMeshObject realNeighbor = (AnetMeshObject) neighbor;
 
-        } else if( !ArrayHelper.isIn( newNeighborIdentifier, theOtherSides, true )) {
-            theOtherSides = ArrayHelper.append( theOtherSides, newNeighborIdentifier, MeshObjectIdentifier.class );
-            theRoleTypes  = ArrayHelper.append( theRoleTypes,  (RoleType []) null,      RoleType[].class );
-            fireHereEvent = true;
-        }
-        if( fireHereEvent ) {
-            fireNeighborAdded( null, oldOtherSides, newNeighborIdentifier, theOtherSides, theMeshBase );
-        }
-        
-        MeshObject otherSide = theMeshBase.findMeshObjectByIdentifier( newNeighborIdentifier );
-        if( otherSide != null ) {
-            AnetMeshObject realOtherObject = (AnetMeshObject) otherSide;
-            MeshObjectIdentifier [] oldHereSides = realOtherObject.theOtherSides;
-            
-            boolean fireOtherEvent = false;
-            if( realOtherObject.theOtherSides == null ) {
-                realOtherObject.theOtherSides = new MeshObjectIdentifier[]{ theIdentifier };
-                realOtherObject.theRoleTypes  = new RoleType[][] { null };
-                fireOtherEvent = true;
+            boolean neighborFound = false;
 
-            } else if( !ArrayHelper.isIn( theIdentifier, realOtherObject.theOtherSides, true )) {
-                realOtherObject.theOtherSides = ArrayHelper.append( realOtherObject.theOtherSides, theIdentifier,    MeshObjectIdentifier.class );
-                realOtherObject.theRoleTypes  = ArrayHelper.append( realOtherObject.theRoleTypes,  (RoleType []) null, RoleType[].class );
-                fireOtherEvent = true;
+            NetMeshObjectIdentifier [] oldNeighborNeighborIdentifiers;
+            if( nMgr.hasNeighbors( realNeighbor )) {
+                oldNeighborNeighborIdentifiers = nMgr.getNeighborIdentifiers( realNeighbor );
+                for( int i=0 ; i<oldNeighborNeighborIdentifiers.length ; ++i ) {
+                    if( theIdentifier.equals( oldNeighborNeighborIdentifiers[i] )) {
+                        neighborFound = true;
+                        break;
+                    }
+                }
+            } else {
+                oldNeighborNeighborIdentifiers = new NetMeshObjectIdentifier[]{};
             }
-            if( fireOtherEvent ) {
-                realOtherObject.fireNeighborAdded( null, oldHereSides, theIdentifier, realOtherObject.theOtherSides, theMeshBase );
+
+            if( !neighborFound ) {
+                nMgr.appendNeighbor( realNeighbor, theIdentifier, null );
+                realNeighbor.fireNeighborAdded( null, oldNeighborNeighborIdentifiers, theIdentifier, nMgr.getNeighborIdentifiers( realNeighbor ), theMeshBase );
             }
         }
         
@@ -1502,13 +1550,7 @@ public class AnetMeshObject
             TransactionException,
             NotPermittedException
     {
-        try {
-            MeshObject otherSide = mb.accessLocally( neighborIdentifier );
-            internalUnrelate( otherSide, mb, false, timeUpdated );
-
-        } catch( NetMeshObjectAccessException ex ) {
-            log.error( ex );
-        }
+        internalUnrelate( neighborIdentifier, mb, false, timeUpdated );
     }
 
     /**
@@ -1539,32 +1581,15 @@ public class AnetMeshObject
             TransactionException,
             NotPermittedException
     {
-        // we are not trying to accessLocally anything here as this would obtain a potentially
-        // infinite loop of information becoming replicated in.
-        
         // FIXME: this does not seem to throw some of the declared exceptions, and that
         // seems rather wrong ...
-        
-        // first see whether we have it already
-        int foundIndex = -1;
-        if( theOtherSides != null ) {
-            for( int i=0 ; i<theOtherSides.length ; ++i ) {
-                if( neighborIdentifier.equals( theOtherSides[i] )) {
-                    foundIndex = i;
-                    break;
-                }
-            }
-        }
-        if( foundIndex == -1 ) {
-            log.error( "Cannot find existing relationship from " + this + " to " + neighborIdentifier );
-            return;
-        }
 
-        // then, be lenient
-        RoleType []         oldRoleTypes = theRoleTypes[ foundIndex ];
+        AnetMeshObjectNeighborManager nMgr = getNeighborManager();
+
+        RoleType []         oldRoleTypes = nMgr.getRoleTypesFor( this, neighborIdentifier ); // throws NotRelatedException
         ArrayList<RoleType> toAdd        = new ArrayList<RoleType>();
 
-        if( oldRoleTypes != null ) {
+        if( oldRoleTypes != null && oldRoleTypes.length > 0 ) {
             boolean foundRole = false;
 
             for( int i=0 ; i<theTypes.length ; ++i ) {
@@ -1578,21 +1603,20 @@ public class AnetMeshObject
                     toAdd.add( theTypes[i] );
                 }
             }
+
         } else {
-            oldRoleTypes = new RoleType[0];
-            for( int i=0 ; i<theTypes.length ; ++i ) {
-                toAdd.add( theTypes[i] );
+            for( RoleType current : theTypes ) {
+                toAdd.add( current );
             }
         }
 
-        RoleType [] added        = ArrayHelper.copyIntoNewArray( toAdd, RoleType.class );
-        RoleType [] newRoleTypes = ArrayHelper.append( oldRoleTypes, added, RoleType.class );
-            
-        theRoleTypes[foundIndex] = newRoleTypes;
+        RoleType [] added = ArrayHelper.copyIntoNewArray( toAdd, RoleType.class );
 
-        fireTypesAdded( oldRoleTypes, added, newRoleTypes, neighborIdentifier, theMeshBase );
-        
+        nMgr.appendRoleTypes( this, neighborIdentifier, added );
+
         updateLastUpdated( timeUpdated, theTimeUpdated );
+
+        fireTypesAdded( oldRoleTypes, added, nMgr.getRoleTypesFor( this, neighborIdentifier ), neighborIdentifier, theMeshBase );
     }
 
     /**
@@ -1639,13 +1663,7 @@ public class AnetMeshObject
             TransactionException,
             NotPermittedException
     {
-        try {
-            MeshObject equivalent = getMeshBase().accessLocally( identifierOfEquivalent );
-            internalAddAsEquivalent( equivalent, false, timeUpdated );
-
-        } catch( NetMeshObjectAccessException ex ) {
-            log.error( ex );
-        }
+        internalAddAsEquivalent( identifierOfEquivalent, false, timeUpdated );
     }
     
     /**
@@ -1729,12 +1747,14 @@ public class AnetMeshObject
     /**
      * Delete a replica NetMeshObject as a consequence of deleting another replica.
      * 
+     * @param mb the MeshBase that this MeshObject does or used to belong to
      * @param timeUpdated the value for the timeUpdated property after this operation. -1 indicates "don't change"
      * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
      * @throws NotPermittedException thrown if the caller is not authorized to perform this operation
      */
     public void rippleDelete(
-            long timeUpdated )
+            NetMeshBase mb,
+            long        timeUpdated )
         throws
             TransactionException,
             NotPermittedException
@@ -1883,7 +1903,8 @@ public class AnetMeshObject
      */
     protected void fireHomeReplicaGainedEvent()
     {
-        HomeReplicaChangedEvent.GainedHomeReplica theEvent = new HomeReplicaChangedEvent.GainedHomeReplica( this, System.currentTimeMillis() );
+        HomeReplicaChangedEvent.GainedHomeReplica theEvent
+                = new HomeReplicaChangedEvent.GainedHomeReplica( this, System.currentTimeMillis() );
 
         AnetMeshBase realBase = (AnetMeshBase) theMeshBase;
         realBase.flushMeshObject( this );
@@ -1896,7 +1917,8 @@ public class AnetMeshObject
      */
     protected void fireHomeReplicaLostEvent()
     {
-        HomeReplicaChangedEvent.LostHomeReplica theEvent = new HomeReplicaChangedEvent.LostHomeReplica( this, System.currentTimeMillis() );
+        HomeReplicaChangedEvent.LostHomeReplica theEvent
+                = new HomeReplicaChangedEvent.LostHomeReplica( this, System.currentTimeMillis() );
 
         AnetMeshBase realBase = (AnetMeshBase) theMeshBase;
         realBase.flushMeshObject( this );
@@ -2360,6 +2382,45 @@ public class AnetMeshObject
     }
 
     /**
+     * Find a manager for the MeshObject's neighbors.
+     *
+     * @return the AMeshObjectNeighborManager
+     */
+    @Override
+    protected AnetMeshObjectNeighborManager getNeighborManager()
+    {
+        return AnetMeshObjectNeighborManager.SINGLETON_NET;
+    }
+
+    /**
+     * Helper method to create an array of MeshObjectIdentifier.
+     * This may be overridden in subclasses.
+     *
+     * @param n the desired size of the array
+     * @return the array
+     */
+    @Override
+    protected NetMeshObjectIdentifier [] createMeshObjectIdentifierArray(
+            int n )
+    {
+        return new NetMeshObjectIdentifier[ n ];
+    }
+
+    /**
+     * Helper method to create an array of array of MeshObjectIdentifier.
+     * This may be overridden in subclasses.
+     *
+     * @param n the desired size of the array
+     * @return the array
+     */
+    @Override
+    protected NetMeshObjectIdentifier [][] createMeshObjectIdentifierArrayArray(
+            int n )
+    {
+        return new NetMeshObjectIdentifier[ n ][];
+    }
+
+    /**
      * Flag indicating our willingness to give up the lock when asked.
      */
     protected boolean theGiveUpLock = false;
@@ -2386,7 +2447,16 @@ public class AnetMeshObject
      * is HERE_CONSTANT, it indicates that this replica has the lock.
      */
     protected int theProxyTowardsLockIndex = HERE_CONSTANT;
-    
+
+    /**
+     * The table of Proxies through which we learned of relationships. This has the same
+     * length as the relationship table in the superclass, and is indexed the same way.
+     * If two Proxies are listed in this table for a given relationship, it means that
+     * we know that the replicas in the direction of these Proxies agree that this MeshObject
+     * has the given relationship.
+     */
+    protected Proxy [] theRelationshipProxies;
+
     /** 
      * Special value indicating this replica (instead of another, reached through a Proxy).
      */

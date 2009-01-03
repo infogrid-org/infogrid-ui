@@ -35,7 +35,7 @@ public abstract class MeshTypeUtils
      * @param types the MeshTypeIdentifiers
      * @return the MeshTypeIdentifiers of the MeshTypes
      */
-    public static MeshTypeIdentifier [] meshTypeIdentifiers(
+    public static MeshTypeIdentifier [] meshTypeIdentifiersOrNull(
             MeshType [] types )
     {
         if( types == null ) {
@@ -55,7 +55,7 @@ public abstract class MeshTypeUtils
      * @param obj the MeshObject
      * @return the MeshTypeIdentifiers of the MeshTypes of the MeshObject
      */
-    public static MeshTypeIdentifier [] meshTypeIdentifiers(
+    public static MeshTypeIdentifier [] meshTypeIdentifiersOrNull(
             MeshObject obj )
     {
         if( obj == null ) {

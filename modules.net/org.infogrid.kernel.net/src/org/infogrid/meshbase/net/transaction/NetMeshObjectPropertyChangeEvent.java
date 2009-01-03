@@ -204,7 +204,6 @@ public class NetMeshObjectPropertyChangeEvent
 
                 PropertyType  affectedProperty = getProperty();
                 PropertyValue newValue         = getNewValue();
-                long          updateTime       = getTimeEventOccurred();
 
                 otherObject.rippleSetPropertyValues(
                         new PropertyType []  { affectedProperty },

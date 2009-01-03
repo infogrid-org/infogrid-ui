@@ -213,9 +213,9 @@ public abstract class AnetMeshBase
         if( count == 0 ) {
             return ret;
         }
-        MeshObjectIdentifier [] notFound = new MeshObjectIdentifier[ count ];
+        NetMeshObjectIdentifier [] notFound = new NetMeshObjectIdentifier[ count ];
         for( int i=identifiers.length-1 ; i>=0 ; --i ) {
-            notFound[--count] = identifiers[i];
+            notFound[--count] = (NetMeshObjectIdentifier) identifiers[i];
         }
         throw new MeshObjectsNotFoundException( this, ret, notFound );
         
@@ -1044,6 +1044,56 @@ public abstract class AnetMeshBase
                     ArrayHelper.append( prefix, paths[i].getAccessPath(), NetMeshBaseAccessSpecification.class ),
                     paths[i].getNetMeshObjectIdentifier() );
         }
+        return ret;
+    }
+
+    /**
+     * <p>Find an already-created ForwardReference in this NetMeshBase. Specify the NetMeshBaseIdentifier
+     * of the NetMeshBase whose home object the to-be-found ForwardReference references.</p>
+     * <p>If not found, returns <code>null</code>.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @return the found ForwardReference, or null if not found
+     * @see #findMeshObjectByIdentifierOrThrow
+     */
+    public NetMeshObject findForwardReference(
+            NetMeshBaseIdentifier meshObjectLocation )
+    {
+        return findForwardReference( getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation ));
+    }
+
+    /**
+     * <p>Find an already-created ForwardReference in this NetMeshBase. Specify the NetMeshBaseIdentifier
+     * of the NetMeshBase which contains the NetMeshObject that the to-be-found ForwardReference references.</p>
+     * <p>If not found, returns <code>null</code>.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @param identifier the Identifier of the MeshObject into which this ForwardReference resolves
+     * @return the found ForwardReference, or null if not found
+     * @see #findMeshObjectByIdentifierOrThrow
+     */
+    public NetMeshObject findForwardReference(
+            NetMeshBaseIdentifier   meshObjectLocation,
+            NetMeshObjectIdentifier identifier )
+    {
+        return findForwardReference( getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation, identifier ));
+    }
+
+    /**
+     * <p>Find an already-created ForwardReference in this NetMeshBase. Specify the NetMeshObjectAccessSpecification
+     *    of the ForwardReference.</p>
+     * <p>If not found, returns <code>null</code>.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @return the found ForwardReference, or null if not found
+     * @see #findMeshObjectByIdentifierOrThrow
+     */
+    public NetMeshObject findForwardReference(
+            NetMeshObjectAccessSpecification pathToObject )
+    {
+        NetMeshObjectIdentifier identifier = pathToObject.getNetMeshObjectIdentifier();
+        NetMeshObject           ret        = findMeshObjectByIdentifier( identifier );
+
         return ret;
     }
 

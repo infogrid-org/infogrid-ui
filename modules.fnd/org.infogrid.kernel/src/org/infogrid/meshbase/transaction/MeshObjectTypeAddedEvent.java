@@ -50,11 +50,11 @@ public class MeshObjectTypeAddedEvent
         super(  source,
                 source.getIdentifier(),
                 oldValues,
-                MeshTypeUtils.meshTypeIdentifiers( oldValues ),
+                MeshTypeUtils.meshTypeIdentifiersOrNull( oldValues ),
                 deltaValues,
-                MeshTypeUtils.meshTypeIdentifiers( deltaValues ),
+                MeshTypeUtils.meshTypeIdentifiersOrNull( deltaValues ),
                 newValues,
-                MeshTypeUtils.meshTypeIdentifiers( newValues ),
+                MeshTypeUtils.meshTypeIdentifiersOrNull( newValues ),
                 timeEventOccurred,
                 source.getMeshBase() );
     }

@@ -14,7 +14,9 @@
 
 package org.infogrid.meshbase.net.a;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -41,8 +43,10 @@ import org.infogrid.meshbase.a.AMeshBase;
 import org.infogrid.meshbase.a.AMeshBaseLifecycleManager;
 import org.infogrid.meshbase.a.AMeshObjectEquivalenceSetComparator;
 import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
@@ -1077,7 +1081,8 @@ public class AnetMeshBaseLifecycleManager
         EntityType [] correctTypes = typesFromExternalizedMeshObject( externalized );
         EntityType [] currentTypes = ret.getTypes();
 
-        ArrayHelper.Difference<EntityType> typeDifferences = ArrayHelper.determineDifference( currentTypes, correctTypes, false, EntityType.class );
+        ArrayHelper.Difference<EntityType> typeDifferences
+                = ArrayHelper.determineDifference( currentTypes, correctTypes, false, EntityType.class );
         
         for( EntityType toAdd : typeDifferences.getAdditions() ) {
             try {
@@ -1108,9 +1113,58 @@ public class AnetMeshBaseLifecycleManager
         
         // FIXME: equivalents
 
-        // FIXME: neighbors
+        // neighbors
+//        NetMeshObjectIdentifier [] correctNeighbors = neighborsFromExternalizedMeshObject( externalized );
+//        MeshObjectIdentifier []    currentNeighbors = ret.getNeighborMeshObjectIdentifiers();
+//
+//        ArrayHelper.Difference<MeshObjectIdentifier> neighborDifferences
+//                = ArrayHelper.determineDifference( currentNeighbors, correctNeighbors, true, MeshObjectIdentifier.class );
+//        for( MeshObjectIdentifier toAdd : neighborDifferences.getAdditions() ) {
+//            try {
+//                ret.rippleRelate( (NetMeshObjectIdentifier) toAdd, externalized.getTimeUpdated() );
+//            } catch( RelatedAlreadyException ex ) {
+//                // happens for the other end of the relationship
+//            }
+//        }
+        // we do NOT unrelate. (FIXME?)
         
-        // FIXME: roles
+        // roles
+//        for( NetMeshObjectIdentifier neighborIdentifier : correctNeighbors ) { // only those that ExternalizedMeshObject knows something about
+//            MeshTypeIdentifier [] correctRoles;
+//            MeshTypeIdentifier [] currentRoles;
+//            ArrayHelper.Difference<MeshTypeIdentifier> roleDifferences;
+//
+//            try {
+//                correctRoles = roleTypesFromExternalizedMeshObject( externalized, neighborIdentifier );
+//                currentRoles = ret.getRoleTypeIdentifiers( neighborIdentifier );
+//            } catch( NotRelatedException ex ) {
+//                log.error( ex );
+//                continue;
+//            }
+//            roleDifferences = ArrayHelper.determineDifference( currentRoles, correctRoles, true, MeshTypeIdentifier.class );
+//            if( roleDifferences.getAdditions().length > 0 ) {
+//                try {
+//                    ret.rippleBless( roleTypesFromIdentifiers( roleDifferences.getAdditions()), neighborIdentifier, externalized.getTimeUpdated() );
+//                } catch( RoleTypeBlessedAlreadyException ex ) {
+//                    log.error( ex );
+//                } catch( EntityNotBlessedException ex ) {
+//                    log.error( ex );
+//                } catch( NotRelatedException ex ) {
+//                    log.error( ex );
+//                } catch( IsAbstractException ex ) {
+//                    log.error( ex );
+//                }
+//            }
+//            if( roleDifferences.getRemovals().length > 0 ) {
+//                try {
+//                    ret.rippleUnbless( roleTypesFromIdentifiers( roleDifferences.getRemovals()), neighborIdentifier, externalized.getTimeUpdated() );
+//                } catch( RoleTypeNotBlessedException ex ) {
+//                    log.error( ex );
+//                } catch( NotRelatedException ex ) {
+//                    log.error( ex );
+//                }
+//            }
+//        }
         
         // properties
         HashMap<PropertyType,PropertyValue> correctProperties = propertiesFromExternalizedMeshObject( externalized );
@@ -1237,6 +1291,62 @@ public class AnetMeshBaseLifecycleManager
     }
 
     /**
+     * Internal helper to extract the neighbor MeshObjectIdentifiers from an ExternalizedNetMeshObject.
+     * 
+     * @param externalized the ExternalizedNetMeshObject
+     * @return the neighbors
+     */
+    protected NetMeshObjectIdentifier [] neighborsFromExternalizedMeshObject(
+            ExternalizedNetMeshObject externalized )
+    {
+        NetMeshObjectIdentifier [] ret = externalized.getNeighbors();
+        return ret;
+    }
+
+    /**
+     * Internal helper to extract from an ExternalizedNetMeshObject the identifiers of the RoleTypes
+     * that the MeshObject plays with a given neighbor MeshObject.
+     * 
+     * @param externalized the ExternalizedNetMeshObject
+     * @param neighborIdentifier identifies the neighbor MeshObject
+     * @return the identifiers of the RoleTypes
+     */
+    protected MeshTypeIdentifier [] roleTypesFromExternalizedMeshObject(
+            ExternalizedNetMeshObject externalized,
+            MeshObjectIdentifier      neighborIdentifier )
+    {
+        MeshTypeIdentifier [] ret = externalized.getRoleTypesFor( neighborIdentifier );
+        return ret;
+    }
+
+    /**
+     * Helper to look up RoleTypes from their identifiers.
+     *
+     * @param identifiers the identifiers of the RoleTypes
+     * @return the RoleTypes
+     */
+    protected RoleType [] roleTypesFromIdentifiers(
+            MeshTypeIdentifier [] identifiers )
+    {
+        ModelBase modelBase = getMeshBase().getModelBase();
+
+        RoleType [] ret = new RoleType[ identifiers.length ];
+        int count = 0; // better safe than sorry
+        for( int i=0 ; i<ret.length ; ++i ) {
+            try {
+                ret[count] = modelBase.findRoleTypeByIdentifier( identifiers[i] );
+                ++count;
+            } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+                log.error( ex );
+            }
+        }
+        if( count < ret.length ) {
+            ret = ArrayHelper.copyIntoNewArray( ret, 0, count, RoleType.class );
+        }
+        return ret;
+    }
+
+    /**
      * Overridable helper to create a NetMeshObjectCreatedEvent.
      *
      * @param createdObject the created MeshObject
@@ -1315,5 +1425,519 @@ public class AnetMeshBaseLifecycleManager
     public ParserFriendlyExternalizedNetMeshObject createParserFriendlyExternalizedMeshObject()
     {
         return new ParserFriendlyExternalizedNetMeshObject();
+    }
+
+    /**
+     * <p>Create a ForwardReference to the home object of a NetMeshBase or data source, without a type.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @return the created MeshObject
+     * @throws TransactionException thrown if this method was invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshBaseIdentifier meshObjectLocation )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        NetMeshBase realBase = (NetMeshBase) theMeshBase;
+
+        return createForwardReference(
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation ),
+                null,
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference to the home object of a NetMeshBase or data source, with a type.
+     *    This type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @param type the EntityType with which the MeshObject will be blessed
+     * @return the created MeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshBaseIdentifier meshObjectLocation,
+            EntityType            type )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        NetMeshBase realBase = (NetMeshBase) theMeshBase;
+
+        return createForwardReference(
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation ),
+                new EntityType [] { type },
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference to the home object of a NetMeshBase or data source,  with zero or
+     *    more types. These types may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @param types the EntityTypes with which the MeshObject will be blessed
+     * @return the created MeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshBaseIdentifier meshObjectLocation,
+            EntityType []         types )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        NetMeshBase realBase = (NetMeshBase) theMeshBase;
+
+        return createForwardReference(
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation ),
+                types,
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference without a type.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @param identifier the Identifier of the MeshObject into which this ForwardReference resolves.
+     * @throws TransactionException thrown if this method was invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshBaseIdentifier   meshObjectLocation,
+            NetMeshObjectIdentifier identifier )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        NetMeshBase realBase = (NetMeshBase) theMeshBase;
+
+        return createForwardReference(
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation, identifier ),
+                null,
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference with a type. This type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @param identifier the Identifier of the MeshObject into which this ForwardReference resolves.
+     * @param type the EntityType with which the MeshObject will be blessed
+     * @return the created MeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshBaseIdentifier   meshObjectLocation,
+            NetMeshObjectIdentifier identifier,
+            EntityType              type )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        NetMeshBase realBase = (NetMeshBase) theMeshBase;
+
+        return createForwardReference(
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation, identifier ),
+                new EntityType[] { type },
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference with zero or more types. Each type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @param identifier the Identifier of the MeshObject into which this ForwardReference resolves.
+     * @param types the EntityTypes with which the MeshObject will be blessed
+     * @return the created MeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshBaseIdentifier   meshObjectLocation,
+            NetMeshObjectIdentifier identifier,
+            EntityType []           types )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        NetMeshBase realBase = (NetMeshBase) theMeshBase;
+
+        return createForwardReference(
+                realBase.getNetMeshObjectAccessSpecificationFactory().obtain( meshObjectLocation, identifier ),
+                types,
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference without a type.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @return the created MeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        return createForwardReference(
+                pathToObject,
+                null,
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference with a type. This type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @param type the EntityType with which the MeshObject will be blessed
+     * @return the created MeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            EntityType                       type )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        return createForwardReference(
+                pathToObject,
+                new EntityType[] { type },
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference with zero or more types. Each type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @param types the EntityTypes with which the MeshObject will be blessed
+     * @return the created MeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            EntityType []                    types )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        return createForwardReference(
+                pathToObject,
+                types,
+                -1L,
+                -1L,
+                -1L,
+                -1L,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock());
+    }
+
+    /**
+     * <p>Create a ForwardReference with zero or more types. Each type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObject identifies the data source where the MeshObject can be found
+     * @param types the EntityTypes with which the MeshObject will be blessed
+     * @param timeCreated the time the ForwardReference was created
+     * @param timeUpdated the time the ForwardReference was last updated
+     * @param timeRead the time the ForwardReference was last read
+     * @param timeExpires the time the ForwardReference will expire
+     * @param giveUpHomeReplica if true, this ForwardReference is willing to give up home replica status
+     * @param giveUpLock if true, this ForwardReference is willing to give up update rights
+     * @return the created ForwardReference
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            EntityType []                    types,
+            long                             timeCreated,
+            long                             timeUpdated,
+            long                             timeRead,
+            long                             timeExpires,
+            boolean                          giveUpHomeReplica,
+            boolean                          giveUpLock )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        AnetMeshObject [] found = createForwardReferences(
+                new NetMeshObjectAccessSpecification[] { pathToObject },
+                new EntityType[][] { types },
+                new long[] { timeCreated },
+                new long[] { timeUpdated },
+                new long[] { timeRead },
+                new long[] { timeExpires },
+                new boolean[] { giveUpHomeReplica },
+                new boolean[] { giveUpLock } );
+        return found[0];
+    }
+
+    /**
+     * <p>Create several ForwardReferences without a type.</p>
+     *
+     * @param pathToObjects specifies where and how the MeshObjects can be found
+     * @return the created NetMeshObjects
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public NetMeshObject [] createForwardReferences(
+            NetMeshObjectAccessSpecification [] pathToObjects )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        return createForwardReferences(
+                pathToObjects,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null );
+    }
+
+    /**
+     * <p>Create several ForwardReferences with a type. This type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObjects specifies where and how the MeshObjects can be found
+     * @param types the EntityTypes with which the MeshObjects will be blessed, in same sequence as pathToObjects
+     * @return the created NetMeshObjects
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public NetMeshObject [] createForwardReferences(
+            NetMeshObjectAccessSpecification [] pathToObjects,
+            EntityType []                       types )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        EntityType [][] realTypes = new EntityType[ pathToObjects.length ][];
+        for( int i=0 ; i<realTypes.length ; ++i ) {
+            realTypes[i] = new EntityType[] { types[i] };
+        }
+        return createForwardReferences(
+                pathToObjects,
+                realTypes,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null );
+    }
+
+    /**
+     * <p>Create several ForwardReferences with zero or more types. Each type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObjects specifies where and how the MeshObjects can be found
+     * @param types the EntityTypes with which the MeshObjects will be blessed, in same sequence as pathToObjects
+     * @return the created NetMeshObjects
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public NetMeshObject [] createForwardReferences(
+            NetMeshObjectAccessSpecification [] pathToObjects,
+            EntityType [][]                     types )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        return createForwardReferences(
+                pathToObjects,
+                types,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null );
+    }
+
+    /**
+     * <p>Create several ForwardReference with zero or more types. Each type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObjects identifies the data sources where the MeshObjects can be found
+     * @param types the EntityTypes with which the MeshObjects will be blessed
+     * @param timeCreateds the time the ForwardReferences was created
+     * @param timeUpdateds the time the ForwardReferences was last updated
+     * @param timeReads the time the ForwardReferences was last read
+     * @param timeExpiress the time the ForwardReferences will expire
+     * @param giveUpHomeReplicas if true, the ForwardReferences are willing to give up home replica status
+     * @param giveUpLocks if true, the ForwardReferences are willing to give up update rights
+     * @return the created ForwardReferences
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
+     */
+    public AnetMeshObject [] createForwardReferences(
+            NetMeshObjectAccessSpecification [] pathToObjects,
+            EntityType [][]                     types,
+            long []                             timeCreateds,
+            long []                             timeUpdateds,
+            long []                             timeReads,
+            long []                             timeExpiress,
+            boolean []                          giveUpHomeReplicas,
+            boolean []                          giveUpLocks )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        AnetMeshBase realBase = (AnetMeshBase) theMeshBase;
+        Transaction  tx       = realBase.checkTransaction();
+
+        Proxy                 incomingProxy           = realBase.determineIncomingProxy();
+        NetMeshBaseIdentifier incomingProxyIdentifier = incomingProxy != null ? incomingProxy.getPartnerMeshBaseIdentifier() : null;
+
+        NetMeshBaseAccessSpecification [][] accessPaths = new NetMeshBaseAccessSpecification[ pathToObjects.length ][];
+        NetMeshObjectIdentifier []          identifiers = new NetMeshObjectIdentifier[ pathToObjects.length ];
+        AnetMeshObject []                   ret         = new AnetMeshObject[ pathToObjects.length ];
+
+        Map<Proxy,ArrayList<NetMeshObjectIdentifier>> proxiesForIdentifiers = new HashMap<Proxy,ArrayList<NetMeshObjectIdentifier>>();
+
+        for( int i=0 ; i<pathToObjects.length ; ++i ) {
+            accessPaths[i] = pathToObjects[i].getAccessPath();
+            identifiers[i] = pathToObjects[i].getNetMeshObjectIdentifier();
+
+            if( accessPaths[i] == null || accessPaths[i].length == 0 ) {
+                throw new IllegalArgumentException( "Cannot use empty access path in NetMeshBaseAccessSpecification to create ForwardReference" );
+            }
+            if( identifiers[i] == null ) {
+                throw new IllegalArgumentException( "null Identifier" );
+            }
+            NetMeshObject existing = findInStore( identifiers[i] );
+            if( existing != null ) {
+                throw new MeshObjectIdentifierNotUniqueException( existing );
+            }
+
+            long now = determineCreationTime();
+            if( timeCreateds != null && timeCreateds[i] < 0 ) {
+                timeCreateds[i] = now;
+            }
+            if( timeUpdateds != null && timeUpdateds[i] < 0 ) {
+                timeUpdateds[i] = now;
+            }
+            if( timeReads != null && timeReads[i] < 0 ) {
+                timeReads[i] = now;
+            }
+            // not timeAutoDeletes
+
+            Proxy proxy;
+            try {
+                proxy = ((NetMeshBase)theMeshBase).obtainProxyFor(
+                        accessPaths[i][0].getNetMeshBaseIdentifier(),
+                        null );
+            } catch( FactoryException ex ) {
+                log.error( ex );
+                continue;
+            }
+            ArrayList<NetMeshObjectIdentifier> ids = proxiesForIdentifiers.get( proxy );
+            if( ids == null ) {
+                ids = new ArrayList<NetMeshObjectIdentifier>();
+                ids.add( identifiers[i] );
+            }
+
+            ret[i] = instantiateMeshObjectImplementation(
+                    identifiers[i],
+                    timeCreateds != null ? timeCreateds[i] : -1L,
+                    timeUpdateds != null ? timeUpdateds[i] : -1L,
+                    timeReads    != null ? timeReads[i] : -1L,
+                    timeExpiress != null ? timeExpiress[i] : -1L,
+                    giveUpHomeReplicas != null ? giveUpHomeReplicas[i] : realBase.getDefaultWillGiveUpHomeReplica(),
+                    giveUpLocks        != null ? giveUpLocks[i]        : realBase.getDefaultWillGiveUpLock(),
+                    new Proxy[] { proxy },
+                    0,
+                    AnetMeshObject.HERE_CONSTANT );
+
+            if( types != null && types[i] != null && types[i].length > 0 ) {
+                try {
+                    ret[i].blessForwardReference( types[i] );
+
+                } catch( EntityBlessedAlreadyException ex ) {
+                    log.error( ex );
+                } catch( NotPermittedException ex ) {
+                    log.error( ex );
+                }
+            }
+
+            putIntoMeshBase(
+                    ret[i],
+                    new NetMeshObjectCreatedEvent(
+                            realBase,
+                            realBase.getIdentifier(),
+                            ret[i],
+                            incomingProxyIdentifier ));
+            // assignOwner( ret ); FIXME? Should this assign an owner?
+        }
+
+        // now resynchronize
+        for( Proxy p : proxiesForIdentifiers.keySet() ) {
+            NetMeshObjectIdentifier [] ids = ArrayHelper.copyIntoNewArray( proxiesForIdentifiers.get(  p ), NetMeshObjectIdentifier.class );
+
+            p.tryResynchronizeReplicas( ids );
+        }
+
+        return ret;
     }
 }

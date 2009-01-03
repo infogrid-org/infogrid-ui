@@ -116,6 +116,44 @@ public interface NetMeshBase
             MeshObjectsNotFoundException;
 
     /**
+     * <p>Find an already-created ForwardReference in this StagingMeshBase. Specify the NetMeshBaseIdentifier
+     * of the NetMeshBase whose home object the to-be-found ForwardReference references.</p>
+     * <p>If not found, returns <code>null</code>.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @return the found ForwardReference, or null if not found
+     * @see #findMeshObjectByIdentifierOrThrow
+     */
+    public NetMeshObject findForwardReference(
+            NetMeshBaseIdentifier meshObjectLocation );
+
+    /**
+     * <p>Find an already-created ForwardReference in this StagingMeshBase. Specify the NetMeshBaseIdentifier
+     * of the NetMeshBase which contains the NetMeshObject that the to-be-found ForwardReference references.</p>
+     * <p>If not found, returns <code>null</code>.</p>
+     *
+     * @param meshObjectLocation identifies the data source where the MeshObject can be found
+     * @param identifier the Identifier of the MeshObject into which this ForwardReference resolves
+     * @return the found ForwardReference, or null if not found
+     * @see #findMeshObjectByIdentifierOrThrow
+     */
+    public NetMeshObject findForwardReference(
+            NetMeshBaseIdentifier   meshObjectLocation,
+            NetMeshObjectIdentifier identifier );
+
+    /**
+     * <p>Find an already-created ForwardReference in this StagingMeshBase. Specify the NetMeshObjectAccessSpecification
+     *    of the ForwardReference.</p>
+     * <p>If not found, returns <code>null</code>.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @return the found ForwardReference, or null if not found
+     * @see #findMeshObjectByIdentifierOrThrow
+     */
+    public NetMeshObject findForwardReference(
+            NetMeshObjectAccessSpecification pathToObject );
+
+    /**
      * Obtain a MeshObject whose unique identifier is known.
      * 
      * @param identifier the identifier property of the MeshObject

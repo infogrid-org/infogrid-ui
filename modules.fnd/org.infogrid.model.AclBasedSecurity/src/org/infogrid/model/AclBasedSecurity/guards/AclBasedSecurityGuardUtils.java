@@ -14,21 +14,25 @@
 
 package org.infogrid.model.AclBasedSecurity.guards;
 
+import org.infogrid.model.primitives.*;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.security.CallerHasInsufficientPermissionsException;
-
 import org.infogrid.model.primitives.RoleType;
-
 import org.infogrid.model.AclBasedSecurity.AclBasedSecuritySubjectArea;
-
 
 /**
  * Factors out common code of the various DefaultXXXGuard classes here.
  */
-public abstract class AbstractGuard
+public abstract class AclBasedSecurityGuardUtils
 {
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private AclBasedSecurityGuardUtils()
+    {}
+
     /**
      * Helper method to determine whether the caller may update this MeshObject.
      *

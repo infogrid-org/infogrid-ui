@@ -5,32 +5,26 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
-package org.infogrid.model.AclBasedSecurity.guards;
+package org.infogrid.model.primitives;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.mesh.security.CallerHasInsufficientPermissionsException;
-import org.infogrid.model.primitives.EntityType;
-import org.infogrid.model.primitives.EntityTypeGuard;
-import org.infogrid.model.AclBasedSecurity.AclBasedSecuritySubjectArea;
-import org.infogrid.util.logging.Log;
 
 /**
- * This EntityTypeGuard applies the rules of the SecurityModel to Entity operations.
+ * This EntityTypeGuard permits all operations. Its primary purpose is to make it easy to
+ * implement EntityTypeGuard because it can be subclassed.
  */
-public class DefaultEntityTypeGuard
+public class PermitAllEntityTypeGuard
         implements
             EntityTypeGuard
 {
-    private static final Log log = Log.getLogInstance( DefaultEntityTypeGuard.class );
-
     /**
      * Check whether the given caller is allowed to bless an existing MeshObject
      * with a given new MeshType.
@@ -40,7 +34,7 @@ public class DefaultEntityTypeGuard
      * @param type the EntityType
      * @param obj the MeshObject to be blessed
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedBless(
             EntityType    type,
@@ -49,19 +43,7 @@ public class DefaultEntityTypeGuard
         throws
             NotPermittedException
     {
-        try {
-            AclBasedSecurityGuardUtils.checkPermittedOperation(
-                    obj,
-                    caller,
-                    AclBasedSecuritySubjectArea.MESHOBJECT_HASUPDATEACCESSTO_PROTECTIONDOMAIN.getDestination() );
-
-        } catch( NotPermittedException ex ) {
-            throw ex; // gotta let this one through
-
-        } catch( Exception ex ) {
-            log.error( ex );
-            throw new CallerHasInsufficientPermissionsException( obj, caller );
-        }
+        // noop, but you can override
     }
 
     /**
@@ -73,7 +55,7 @@ public class DefaultEntityTypeGuard
      * @param type the EntityType
      * @param obj the MeshObject to be unblessed
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedUnbless(
             EntityType    type,
@@ -82,19 +64,7 @@ public class DefaultEntityTypeGuard
         throws
             NotPermittedException
     {
-        try {
-            AclBasedSecurityGuardUtils.checkPermittedOperation(
-                    obj,
-                    caller,
-                    AclBasedSecuritySubjectArea.MESHOBJECT_HASUPDATEACCESSTO_PROTECTIONDOMAIN.getDestination() );
-
-        } catch( NotPermittedException ex ) {
-            throw ex; // gotta let this one through
-
-        } catch( Exception ex ) {
-            log.error( ex );
-            throw new CallerHasInsufficientPermissionsException( obj, caller );
-        }
+        // noop, but you can override
     }
 
     /**
@@ -106,7 +76,7 @@ public class DefaultEntityTypeGuard
      * @param type the EntityType
      * @param obj the MeshObject to be checked
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedBlessedBy(
             EntityType    type,
@@ -115,18 +85,6 @@ public class DefaultEntityTypeGuard
         throws
             NotPermittedException
     {
-        try {
-            AclBasedSecurityGuardUtils.checkPermittedOperation(
-                    obj,
-                    caller,
-                    AclBasedSecuritySubjectArea.MESHOBJECT_HASREADACCESSTO_PROTECTIONDOMAIN.getDestination() );
-
-        } catch( NotPermittedException ex ) {
-            throw ex; // gotta let this one through
-
-        } catch( Exception ex ) {
-            log.error( ex );
-            throw new CallerHasInsufficientPermissionsException( obj, caller );
-        }
+        // noop, but you can override
     }
 }

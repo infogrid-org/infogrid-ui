@@ -15,17 +15,12 @@
 package org.infogrid.probe.TEST;
 
 import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.transaction.ChangeSet;
-import org.infogrid.probe.ProbeDirectory;
-import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
@@ -35,7 +30,7 @@ import org.infogrid.util.logging.Log;
  */
 public class ShadowTest1
         extends
-            AbstractProbeTest
+            AbstractShadowTest
 {
     /**
      * Run the test.
@@ -46,14 +41,6 @@ public class ShadowTest1
         throws
             Exception
     {
-        log.info( "Setting up" );
-        
-        ProbeDirectory        dir  = MProbeDirectory.create();
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, dir, exec, rootContext );
-
-        //
-        
         log.info( "accessing #abc of test file with NetMeshBase" );
         
         MeshObject abc = base.accessLocally(
@@ -163,7 +150,6 @@ public class ShadowTest1
         testFile1 = args[0];
 
         testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
-
     }
 
     /**
@@ -172,6 +158,8 @@ public class ShadowTest1
     @Override
     public void cleanup()
     {
+        super.cleanup();
+
         exec.shutdown();
     }
 
@@ -187,9 +175,4 @@ public class ShadowTest1
      * The NetworkIdentifer of the first test file.
      */
     protected NetMeshBaseIdentifier testFile1Id;
-
-    /**
-     * Our ThreadPool.
-     */
-    protected ScheduledExecutorService exec = createThreadPool( 1 );
 }

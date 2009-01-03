@@ -15,8 +15,6 @@
 package org.infogrid.probe.TEST;
 
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -32,14 +30,12 @@ import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.StagingMeshBase;
-import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
@@ -51,7 +47,7 @@ import org.infogrid.util.logging.Log;
  */
 public class ShadowTest6
         extends
-            AbstractProbeTest
+            AbstractShadowTest
 {
     /**
      * Run the test.
@@ -62,9 +58,6 @@ public class ShadowTest6
         throws
             Exception
     {
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
-
         NetMeshObjectIdentifier aId     = base.getMeshObjectIdentifierFactory().fromExternalForm( TEST_URL, "a" );
         NetMeshObjectIdentifier localId = base.getMeshObjectIdentifierFactory().fromExternalForm( "local" );
 
@@ -181,14 +174,11 @@ public class ShadowTest6
     @Override
     public void cleanup()
     {
+        super.cleanup();
+
         exec.shutdown();
     }
     
-    /**
-     * The ProbeDirectory to use.
-     */
-    protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
-
     // Our Logger
     private static Log log = Log.getLogInstance( ShadowTest6.class );
 
@@ -207,11 +197,6 @@ public class ShadowTest6
             TEST_URL = null; // make compiler happy
         }
     }
-
-    /**
-     * Our ThreadPool.
-     */
-    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * Counts the number of Probe runs.

@@ -33,6 +33,7 @@ import org.infogrid.util.LiveDeadObject;
 import org.infogrid.util.QuitListener;
 import org.infogrid.util.context.ObjectInContext;
 import org.infogrid.meshbase.transaction.TransactionAction;
+import org.infogrid.util.IsDeadException;
 import org.infogrid.util.text.HasStringRepresentation;
 
 /**
@@ -543,4 +544,16 @@ public interface MeshBase
      */
     public abstract void removeMeshObjectLifecycleEventListener(
             MeshObjectLifecycleListener oldListener );
+
+    /**
+     * Tell this MeshBase that we don't need it any more.
+     *
+     * @param isPermanent if true, this MeshBase will go away permanmently; if false,
+     *         it may come alive again some time later
+     * @throws IsDeadException thrown if this object is dead already
+     */
+    public void die(
+             boolean isPermanent )
+         throws
+             IsDeadException;
 }

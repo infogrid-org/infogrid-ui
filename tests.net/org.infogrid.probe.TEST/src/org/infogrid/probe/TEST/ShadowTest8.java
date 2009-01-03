@@ -15,8 +15,6 @@
 package org.infogrid.probe.TEST;
 
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -40,7 +38,6 @@ import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.StagingMeshBase;
-import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -48,7 +45,7 @@ import org.infogrid.util.logging.Log;
  */
 public class ShadowTest8
         extends
-            AbstractProbeTest
+            AbstractShadowTest
 {
     /**
      * Run the test.
@@ -59,11 +56,6 @@ public class ShadowTest8
         throws
             Exception
     {
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
-
-        //
-        
         log.info( "Accessing probe" );
 
         MeshObject home = base.accessLocally( TEST_URL, CoherenceSpecification.ONE_TIME_ONLY );
@@ -149,14 +141,11 @@ public class ShadowTest8
     @Override
     public void cleanup()
     {
+        super.cleanup();
+
         exec.shutdown();
     }
     
-    /**
-     * The ProbeDirectory to use.
-     */
-    protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
-
     // Our Logger
     private static Log log = Log.getLogInstance( ShadowTest8.class );
 
@@ -182,11 +171,6 @@ public class ShadowTest8
             TEST_URL = null; // make compiler happy
         }
     }
-
-    /**
-     * Our ThreadPool.
-     */
-    protected ScheduledExecutorService exec = createThreadPool( 1 );
 
     /**
      * The test Probe superclass.

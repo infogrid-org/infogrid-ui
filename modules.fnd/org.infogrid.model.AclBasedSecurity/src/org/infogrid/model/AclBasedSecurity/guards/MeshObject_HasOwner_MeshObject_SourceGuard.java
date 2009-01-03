@@ -15,24 +15,21 @@
 package org.infogrid.model.AclBasedSecurity.guards;
 
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.security.CallerHasInsufficientPermissionsException;
-
-import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.RoleType;
-import org.infogrid.model.primitives.RoleTypeGuard;
-
 import org.infogrid.model.AclBasedSecurity.AclBasedSecuritySubjectArea;
-
+import org.infogrid.model.primitives.PermitAllRoleTypeGuard;
 import org.infogrid.util.logging.Log;
 
 /**
  * RoleTypeGuard that guarts the MeshObject_HasOwner_MeshObject RelationshipType.
  */
 public class MeshObject_HasOwner_MeshObject_SourceGuard
-        implements
-            RoleTypeGuard
+        extends
+            PermitAllRoleTypeGuard
 {
     private static final Log log = Log.getLogInstance( MeshObject_HasOwner_MeshObject_SourceGuard.class );
 
@@ -48,6 +45,7 @@ public class MeshObject_HasOwner_MeshObject_SourceGuard
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
+    @Override
     public void checkPermittedSetTimeAutoDeletes(
             RoleType   type,
             MeshObject obj,
@@ -56,20 +54,7 @@ public class MeshObject_HasOwner_MeshObject_SourceGuard
         throws
             NotPermittedException
     {
-        try {
-            MeshObjectSet objOwners = obj.traverse( AclBasedSecuritySubjectArea.MESHOBJECT_HASOWNER_MESHOBJECT.getSource() );
-
-            if( objOwners.isEmpty() ) { // FIXME? This means anybody can grab an orphaned object
-                return;
-            }
-            if( caller != null && objOwners.contains( caller )) {
-                return;
-            }
-            
-        } catch( Exception ex ) {
-            log.error( ex );
-        }
-        throw new CallerHasInsufficientPermissionsException( obj, caller );
+        myCheck( obj, caller );
     }
 
     /**
@@ -80,32 +65,22 @@ public class MeshObject_HasOwner_MeshObject_SourceGuard
      *
      * @param type the RoleType
      * @param start the MeshObject from which the relationship starts
-     * @param destination the MeshObject to which the relationship leads
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
+    @Override
     public void checkPermittedBless(
-            RoleType      type,
-            MeshObject    start,          // to be granted access
-            MeshObject    destination,    // ProtectionDomain
-            MeshObject    caller )
+            RoleType             type,
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
-        try {
-            MeshObjectSet startOwners = start.traverse( AclBasedSecuritySubjectArea.MESHOBJECT_HASOWNER_MESHOBJECT.getSource() );
-
-            if( startOwners.isEmpty() ) { // FIXME? This means anybody can grab an orphaned object
-                return;
-            }
-            if( caller != null && startOwners.contains( caller )) {
-                return;
-            }
-            
-        } catch( Exception ex ) {
-            log.error( ex );
-        }
-        throw new CallerHasInsufficientPermissionsException( start, caller );
+        myCheck( start, caller );
     }
     
     /**
@@ -116,196 +91,50 @@ public class MeshObject_HasOwner_MeshObject_SourceGuard
      *
      * @param type the RoleType
      * @param start the MeshObject from which the relationship starts
-     * @param destination the MeshObject to which the relationship leads
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
+    @Override
     public void checkPermittedUnbless(
-            RoleType      type,
-            MeshObject    start,
-            MeshObject    destination,
-            MeshObject    caller )
+            RoleType             type,
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
-        try {
-            MeshObjectSet startOwners = start.traverse( AclBasedSecuritySubjectArea.MESHOBJECT_HASOWNER_MESHOBJECT.getSource() );
-
-            if( caller != null && startOwners.contains( caller )) {
-                return;
-            }
-            
-        } catch( Exception ex ) {
-            log.error( ex );
-        }
-        throw new CallerHasInsufficientPermissionsException( start, caller );
+        myCheck( start, caller );
     }
-
-    /**
-     * Check whether the given caller is allowed to bless the given start MeshObject with the additional
-     * given EntityTypes, in the opinion of another Role (represented as the given RoleType and the
-     * given otherSide) in which the start MeshObject participates in.
-     * This returns silently if the caller is permitted
-     * to do this, and throws a NotPermittedException if not.
-     *
-     * @param type the RoleType
-     * @param start the start MeshObject
-     * @param otherSide the MeshObject at the other side of the RoleType
-     * @param types the EntityTypes with which to additionally bless the start MeshObject
-     * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
-     */
-    public void checkPermittedIncrementalBless(
-            RoleType      type,
-            MeshObject    start,
-            MeshObject    otherSide,
-            EntityType [] types,
-            MeshObject    caller )
-        throws
-            NotPermittedException
-    {
-        // noop, but you can override
-    }
-
-    /**
-     * Check whether the given caller is allowed to unbless the given start MeshObject from the
-     * given EntityTypes, in the opinion of another Role (represented as the given RoleType and the
-     * given otherSide) in which the start MeshObject participates in.
-     * This returns silently if the caller is permitted
-     * to do this, and throws a NotPermittedException if not.
-     *
-     * @param type the RoleType
-     * @param start the start MeshObject
-     * @param thisOtherSide the MeshObject at the other side of the RoleType
-     * @param types the EntityTypes from which to unbless the start MeshObject
-     * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
-     */
-    public void checkPermittedIncrementalUnbless(
-            RoleType      type,
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            EntityType [] types,
-            MeshObject    caller )
-        throws
-            NotPermittedException
-    {
-        // noop, but you can override
-    }
-
-    /**
-     * Check whether the given caller is allowed to bless an existing relationship from a given
-     * start MeshObject to a given newDestination MeshObject with the given additional newTypes,
-     * in the opinion of another Role (represented as the given RoleType and the given
-     * otherSide).
-     * This returns silently if the caller is permitted
-     * to do this, and throws a NotPermittedException if not.
-     *
-     * @param type the RoleType
-     * @param start the start MeshObject
-     * @param otherSide the MeshObject at the other side of the RoleType
-     * @param newTypes the new RoleTypes with which to bless the relationship
-     * @param newDestination the destination of the relationship to be blessed
-     * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
-     */
-    public void checkPermittedIncrementalBless(
-            RoleType      type,
-            MeshObject    start,
-            MeshObject    otherSide,
-            RoleType []   newTypes,
-            MeshObject    newDestination,
-            MeshObject    caller )
-        throws
-            NotPermittedException
-    {
-        // noop, but you can override
-    }
-
-    /**
-     * Check wether the given caller is allowed to unbless an existing relationship from a given
-     * start MeshObject to a given newDestination MeshObject from the given oldTypes,
-     * in the opinion of another Role (represented as the given RoleType and the given
-     * otherSide).
-     * This returns silently if the caller is permitted
-     * to do this, and throws a NotPermittedException if not.
-     *
-     * @param type the RoleType
-     * @param start the start MeshObject
-     * @param otherSide the MeshObject at the other side of the RoleType
-     * @param oldTypes the old RoleTypes from which to unbless the relationship
-     * @param newDestination the destination of the relationship to be blessed
-     * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
-     */
-    public void checkPermittedIncrementalUnbless(
-            RoleType      type,
-            MeshObject    start,
-            MeshObject    otherSide,
-            RoleType []   oldTypes,
-            MeshObject    newDestination,
-            MeshObject    caller )
-        throws
-            NotPermittedException
-    {
-        // noop, but you can override
-    }
-
-    /**
-     * Check whether the given caller is allowed to traverse a given RoleType from a given
-     * start MeshObject to a given destination MeshObject.
-     * This returns silently if the caller is permitted
-     * to do this, and throws a NotPermittedException if not.
-     *
-     * @param type the RoleType
-     * @param start the start MeshObject
-     * @param destination the destination of the traversal
-     * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
-     */    
-    public void checkPermittedTraversal(
-            RoleType      type,
-            MeshObject    start,
-            MeshObject    destination,
-            MeshObject    caller )
-        throws
-            NotPermittedException
-    {
-        // noop, but you can override
-    }    
 
     /**
      * Check whether the given caller is allowed to make one and two members of the same
      * equivalence set.
-     * 
+     *
      * @param type the RoleType
      * @param one the first MeshObject
-     * @param two the second MeshObject
+     * @param twoIdentifier identifier of the second MeshObject
+     * @param two the second MeshObject, if successfully resolved
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
+    @Override
     public void checkPermittedAddAsEquivalent(
-            RoleType      type,
-            MeshObject    one,
-            MeshObject    two,
-            MeshObject    caller )
+            RoleType             type,
+            MeshObject           one,
+            MeshObjectIdentifier twoIdentifier,
+            MeshObject           two,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
-        try {
-            MeshObjectSet startOwners = one.traverse( AclBasedSecuritySubjectArea.MESHOBJECT_HASOWNER_MESHOBJECT.getSource() );
+        myCheck( one, caller );
 
-            if( startOwners.isEmpty() ) { // FIXME? This means anybody can grab an orphaned object
-                return;
-            }
-            if( caller != null && startOwners.contains( caller )) {
-                return;
-            }
-            
-        } catch( Exception ex ) {
-            log.error( ex );
+        if( two != null ) {
+            myCheck( two, caller );
         }
-        throw new CallerHasInsufficientPermissionsException( one, caller );
     }
 
     /**
@@ -317,6 +146,7 @@ public class MeshObject_HasOwner_MeshObject_SourceGuard
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
+    @Override
     public void checkPermittedRemoveAsEquivalent(
             RoleType      type,
             MeshObject    obj,
@@ -324,8 +154,25 @@ public class MeshObject_HasOwner_MeshObject_SourceGuard
         throws
             NotPermittedException
     {
+        myCheck( obj, caller );
+        // FIXME? Do we need to check for permission of the other members of the equivalence set, too?
+    }
+
+    /**
+     * The code for blessing and unblessing is the same.
+     *
+     * @param start the MeshObject from which the relationship starts
+     * @param caller the MeshObject representing the caller
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
+     */
+    protected void myCheck(
+            MeshObject           start,
+            MeshObject           caller )
+        throws
+            NotPermittedException
+    {
         try {
-            MeshObjectSet startOwners = obj.traverse( AclBasedSecuritySubjectArea.MESHOBJECT_HASOWNER_MESHOBJECT.getSource() );
+            MeshObjectSet startOwners = start.traverse( AclBasedSecuritySubjectArea.MESHOBJECT_HASOWNER_MESHOBJECT.getSource() );
 
             if( startOwners.isEmpty() ) { // FIXME? This means anybody can grab an orphaned object
                 return;
@@ -333,10 +180,10 @@ public class MeshObject_HasOwner_MeshObject_SourceGuard
             if( caller != null && startOwners.contains( caller )) {
                 return;
             }
-            
+
         } catch( Exception ex ) {
             log.error( ex );
         }
-        throw new CallerHasInsufficientPermissionsException( obj, caller );
+        throw new CallerHasInsufficientPermissionsException( start, caller );
     }
 }

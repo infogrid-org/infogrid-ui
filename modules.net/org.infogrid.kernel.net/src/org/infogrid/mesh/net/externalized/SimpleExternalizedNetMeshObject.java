@@ -48,7 +48,7 @@ public class SimpleExternalizedNetMeshObject
      * @param timeExpires the time the NetMeshObject will expire
      * @param propertyTypes the current PropertyTypes of the NetMeshObject, in the same sequence as propertyValues
      * @param propertyValues the current values of the PropertyTypes, in the same sequence as propertyTypes
-     * @param neighbors the NetMeshObjectIdentifiers of the directly related NetMeshObjects
+     * @param neighborIdentifiers the NetMeshObjectIdentifiers of the directly related NetMeshObjects
      * @param roleTypes the MeshTypeIdentifiers of the RoleTypes applicable to the neighbors, in the same sequence
      * @param equivalents the NetMeshObjectIdentifiers of the current left and right equivalent NetMeshObject, if any
      * @param giveUpHomeReplica if true, this replica will give up home replica status when asked
@@ -69,7 +69,7 @@ public class SimpleExternalizedNetMeshObject
             long                       timeExpires,
             MeshTypeIdentifier []      propertyTypes,
             PropertyValue  []          propertyValues,
-            NetMeshObjectIdentifier [] neighbors,
+            NetMeshObjectIdentifier [] neighborIdentifiers,
             MeshTypeIdentifier [][]    roleTypes,
             NetMeshObjectIdentifier [] equivalents,
             boolean                    giveUpHomeReplica,
@@ -103,14 +103,14 @@ public class SimpleExternalizedNetMeshObject
         if( propertyValues == null ) {
             propertyValues = new PropertyValue[0];
         }
-        if( neighbors != null ) {
-            for( MeshObjectIdentifier current : neighbors ) {
+        if( neighborIdentifiers != null ) {
+            for( MeshObjectIdentifier current : neighborIdentifiers ) {
                 if( current == null ) {
                     throw new IllegalArgumentException( "null neighbor" );
                 }
             }
         } else {
-            neighbors = new NetMeshObjectIdentifier[0];
+            neighborIdentifiers = new NetMeshObjectIdentifier[0];
             roleTypes = new MeshTypeIdentifier[0][];
         }
         
@@ -133,7 +133,7 @@ public class SimpleExternalizedNetMeshObject
                 timeExpires,
                 propertyTypes,
                 propertyValues,
-                neighbors,
+                neighborIdentifiers,
                 roleTypes,
                 equivalents,
                 giveUpHomeReplica,

@@ -15,18 +15,14 @@
 package org.infogrid.probe.TEST;
 
 import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.probe.ProbeDirectory.StreamProbeDescriptor;
 import org.infogrid.probe.blob.BlobProbe;
-import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -35,7 +31,7 @@ import org.infogrid.util.logging.Log;
  */
 public class ShadowTest3
         extends
-            AbstractProbeTest
+            AbstractShadowTest
 {
     /**
      * Run the test.
@@ -46,16 +42,6 @@ public class ShadowTest3
         throws
             Exception
     {
-        log.info( "Setting up" );
-        
-        MProbeDirectory theProbeDirectory = MProbeDirectory.create();
-        theProbeDirectory.addStreamProbe( new StreamProbeDescriptor( "text/html", BlobProbe.class ));
-
-        NetMeshBaseIdentifier here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        LocalNetMMeshBase     base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
-
-        //
-        
         log.info( "accessing #abc of test file with NetworkedMeshBase" );
         
         MeshObject home = base.accessLocally( testFile1Id );
@@ -105,9 +91,10 @@ public class ShadowTest3
         
         log.info( "Traversing from other object to Yadis services" );
         
-        MeshObjectSet found = other2.traverseToNeighborMeshObjects().traverseToNeighborMeshObjects();
+        MeshObjectSet found1 = other2.traverseToNeighborMeshObjects();
+        MeshObjectSet found2 = found1.traverseToNeighborMeshObjects();
         
-        checkEquals( found.size(), 11, "Wrong number of objects found" ); // that's the 9 Yadis services, other1 and other2
+        checkEquals( found2.size(), 11, "Wrong number of objects found" ); // that's the 9 Yadis services, other1 and other2
     }
 
     /**
@@ -160,6 +147,8 @@ public class ShadowTest3
         testFile1 = args[0];
 
         testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
+
+        theProbeDirectory.addStreamProbe( new StreamProbeDescriptor( "text/html", BlobProbe.class ));
     }
 
     /**
@@ -168,6 +157,8 @@ public class ShadowTest3
     @Override
     public void cleanup()
     {
+        super.cleanup();
+
         exec.shutdown();
     }
 
@@ -183,9 +174,4 @@ public class ShadowTest3
      * The NetworkIdentifer of the first test file.
      */
     protected NetMeshBaseIdentifier testFile1Id;
-
-    /**
-     * Our ThreadPool.
-     */
-    protected ScheduledExecutorService exec = createThreadPool( 1 );
 }

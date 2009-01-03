@@ -36,39 +36,57 @@ public class NotRelatedException
      * @param originatingMeshBaseIdentifier the MeshBaseIdentifier of the MeshBase in which this Exception was created
      * @param meshObject the first MeshObject that was unrelated, if available
      * @param meshObjectIdentifier the MeshObjectIdentifier for the first MeshObject that was unrelated
-     * @param other the MeshObject at the other end of the non-existing relationship, if available
-     * @param otherIdentifier the MeshObjectIdentifier for the MeshObject at the other end of the non-existing relationship, if available
+     * @param notNeighbor the MeshObject at the other end of the non-existing relationship, if available
+     * @param notNeighborIdentifier the MeshObjectIdentifier for the MeshObject at the other end of the non-existing relationship, if available
      */
     public NotRelatedException(
             MeshBase             mb,
             MeshBaseIdentifier   originatingMeshBaseIdentifier,
             MeshObject           meshObject,
             MeshObjectIdentifier meshObjectIdentifier,
-            MeshObject           other,
-            MeshObjectIdentifier otherIdentifier )
+            MeshObject           notNeighbor,
+            MeshObjectIdentifier notNeighborIdentifier )
     {
         super( mb, originatingMeshBaseIdentifier, meshObject, meshObjectIdentifier );
         
-        theOther                = other;
-        theOtherIdentifier      = otherIdentifier;
+        theNotNeighbor                = notNeighbor;
+        theNotNeighborIdentifier      = notNeighborIdentifier;
     }
 
     /**
      * More convenient simple constructor for the most common case.
      *
      * @param meshObject the first MeshObject that was unrelated, if available
-     * @param other the MeshObject at the other end of the non-existing relationship, if available
+     * @param notNeighbor the MeshObject at the other end of the non-existing relationship, if available
      */
     public NotRelatedException(
             MeshObject           meshObject,
-            MeshObject           other )
+            MeshObject           notNeighbor )
     {
         this(   meshObject.getMeshBase(),
                 meshObject.getMeshBase().getIdentifier(),
                 meshObject,
                 meshObject.getIdentifier(),
-                other,
-                other.getIdentifier() );
+                notNeighbor,
+                notNeighbor.getIdentifier() );
+    }
+
+    /**
+     * More convenient simple constructor for the most common case.
+     *
+     * @param meshObject the first MeshObject that was unrelated, if available
+     * @param notNeighborIdentifier identifier of the MeshObject at the other end of the non-existing relationship, if available
+     */
+    public NotRelatedException(
+            MeshObject           meshObject,
+            MeshObjectIdentifier notNeighborIdentifier )
+    {
+        this(   meshObject.getMeshBase(),
+                meshObject.getMeshBase().getIdentifier(),
+                meshObject,
+                meshObject.getIdentifier(),
+                null,
+                notNeighborIdentifier );
     }
 
     /**
@@ -79,16 +97,16 @@ public class NotRelatedException
      * @throws NotPermittedException thrown if the caller is not authorized to perform this operation
      * @throws IllegalStateException thrown if no resolving MeshBase is available
      */
-    public synchronized MeshObject getOtherMeshObject()
+    public synchronized MeshObject getNotNeighbor()
         throws
             MeshObjectAccessException,
             NotPermittedException,
             IllegalStateException
     {
-        if( theOther == null ) {
-            theOther = resolve( theOtherIdentifier );
+        if( theNotNeighbor == null ) {
+            theNotNeighbor = resolve( theNotNeighborIdentifier );
         }
-        return theOther;
+        return theNotNeighbor;
     }
 
     /**
@@ -96,9 +114,9 @@ public class NotRelatedException
      *
      * @return the MeshObjectIdentifier
      */
-    public MeshObjectIdentifier getOtherMeshObjectIdentifier()
+    public MeshObjectIdentifier getNotNeighborIdentifier()
     {
-        return theOtherIdentifier;
+        return theNotNeighborIdentifier;
     }
 
     /**
@@ -114,14 +132,14 @@ public class NotRelatedException
                 new String[] {
                     "theMeshObject",
                     "theMeshObjectIdentifier",
-                    "theOther",
-                    "theOtherIdentifier",
+                    "theNotNeighbor",
+                    "theNotNeighborIdentifier",
                 },
                 new Object[] {
                     theMeshObject,
                     theMeshObjectIdentifier,
-                    theOther,
-                    theOtherIdentifier
+                    theNotNeighbor,
+                    theNotNeighborIdentifier
                 });
     }
 
@@ -132,17 +150,17 @@ public class NotRelatedException
      */
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theMeshObjectIdentifier, theOtherIdentifier };
+        return new Object[] { theMeshObjectIdentifier, theNotNeighborIdentifier };
     }
 
     /**
      * The MeshObject at the other end of the relationship for which we discovered a violation.
      */
-    protected transient MeshObject theOther;
+    protected transient MeshObject theNotNeighbor;
 
     /**
      * The MeshObjectIdentifier of the MeshObject at the other end of the relationship for which we discovered a violation.
      */
-    protected MeshObjectIdentifier theOtherIdentifier;
+    protected MeshObjectIdentifier theNotNeighborIdentifier;
 }
 

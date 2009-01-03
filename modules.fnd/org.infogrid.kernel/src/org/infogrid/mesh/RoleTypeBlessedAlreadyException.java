@@ -42,8 +42,8 @@ public class RoleTypeBlessedAlreadyException
      * @param identifier the MeshObjectIdentifier for the MeshObject on which the illegal operation was attempted
      * @param type the MeshType of the already-existing blessing
      * @param typeIdentifier the MeshTypeIdentifier of the MeshType of the already-existing blessing
-     * @param other the MeshObject identifying the other end of the relationship, if available
-     * @param otherIdentifier the MeshObjectIdentifier for the MeshObject identifying the other end of the relationship
+     * @param neighbor the MeshObject identifying the other end of the relationship, if available
+     * @param neighborIdentifier the MeshObjectIdentifier for the MeshObject identifying the other end of the relationship
      */
     public RoleTypeBlessedAlreadyException(
             MeshBase             mb,
@@ -52,13 +52,13 @@ public class RoleTypeBlessedAlreadyException
             MeshObjectIdentifier identifier,
             RoleType             type,
             MeshTypeIdentifier   typeIdentifier,
-            MeshObject           other,
-            MeshObjectIdentifier otherIdentifier )
+            MeshObject           neighbor,
+            MeshObjectIdentifier neighborIdentifier )
     {
         super( mb, originatingMeshBaseIdentifier, obj, identifier, type, typeIdentifier );
         
-        theOther           = other;
-        theOtherIdentifier = otherIdentifier;
+        theNeighbor           = neighbor;
+        theNeighborIdentifier = neighborIdentifier;
     }
 
     /**
@@ -66,12 +66,12 @@ public class RoleTypeBlessedAlreadyException
      *
      * @param obj the MeshObject on which the illegal operation was attempted, if available
      * @param type the MeshType of the already-existing blessing
-     * @param other the MeshObject identifying the other end of the relationship, if available
+     * @param neighbor the MeshObject identifying the other end of the relationship, if available
      */
     public RoleTypeBlessedAlreadyException(
             MeshObject           obj,
             RoleType             type,
-            MeshObject           other )
+            MeshObject           neighbor )
     {
         this(   obj.getMeshBase(),
                 obj.getMeshBase().getIdentifier(),
@@ -79,8 +79,30 @@ public class RoleTypeBlessedAlreadyException
                 obj.getIdentifier(),
                 type,
                 type.getIdentifier(),
-                other,
-                other.getIdentifier() );
+                neighbor,
+                neighbor.getIdentifier() );
+    }
+
+    /**
+     * More convenient simple constructor.
+     *
+     * @param obj the MeshObject on which the illegal operation was attempted, if available
+     * @param type the MeshType of the already-existing blessing
+     * @param neighborIdentifier identifier of the MeshObject identifying the other end of the relationship, if available
+     */
+    public RoleTypeBlessedAlreadyException(
+            MeshObject           obj,
+            RoleType             type,
+            MeshObjectIdentifier neighborIdentifier )
+    {
+        this(   obj.getMeshBase(),
+                obj.getMeshBase().getIdentifier(),
+                obj,
+                obj.getIdentifier(),
+                type,
+                type.getIdentifier(),
+                null,
+                neighborIdentifier );
     }
 
     /**
@@ -115,8 +137,8 @@ public class RoleTypeBlessedAlreadyException
                     "meshObjectIdentifier",
                     "meshType",
                     "meshTypeIdentifier",
-                    "otherObject",
-                    "otherObjectIdentifier",
+                    "theNeighbor",
+                    "theNeighborIdentifier",
                     "types"
                 },
                 new Object[] {
@@ -124,9 +146,9 @@ public class RoleTypeBlessedAlreadyException
                     theMeshObjectIdentifier,
                     theType,
                     theTypeIdentifier,
-                    theOther,
-                    theOtherIdentifier,
-                    MeshTypeUtils.meshTypeIdentifiers( theMeshObject )
+                    theNeighbor,
+                    theNeighborIdentifier,
+                    MeshTypeUtils.meshTypeIdentifiersOrNull( theMeshObject )
                 });
     }
 
@@ -138,16 +160,16 @@ public class RoleTypeBlessedAlreadyException
     @Override
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theMeshObjectIdentifier, theTypeIdentifier, theOtherIdentifier };
+        return new Object[] { theMeshObjectIdentifier, theTypeIdentifier, theNeighborIdentifier };
     }
 
     /**
      * The other end of the relationship.
      */
-    protected transient MeshObject theOther;
+    protected transient MeshObject theNeighbor;
 
     /**
      * The identifier of the other end of the relationship.
      */
-    protected transient MeshObjectIdentifier theOtherIdentifier;
+    protected MeshObjectIdentifier theNeighborIdentifier;
 }

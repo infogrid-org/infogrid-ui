@@ -387,12 +387,12 @@ public abstract class AbstractMeshBase
     }
 
     /**
-      * Tell this MeshBase that we don't need it any more.
-      *
-      * @param isPermanent if true, this MeshBase will go away permanmently; if false,
+     * Tell this MeshBase that we don't need it any more.
+     *
+     * @param isPermanent if true, this MeshBase will go away permanmently; if false,
      *         it may come alive again some time later
-      * @throws IsDeadException thrown if this object is dead already
-      */
+     * @throws IsDeadException thrown if this object is dead already
+     */
     public void die(
              boolean isPermanent )
          throws

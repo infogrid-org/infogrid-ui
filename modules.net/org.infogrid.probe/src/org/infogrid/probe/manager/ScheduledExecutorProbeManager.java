@@ -157,6 +157,14 @@ public abstract class ScheduledExecutorProbeManager
         if( log.isDebugEnabled() ) {
             log.debug( this + ".die()" );
         }
+        for( ShadowMeshBase shadow : theKeyValueMap.values() ) {
+            // attempt to be as successful as possible
+            try {
+                shadow.die( isPermanent );
+            } catch( Throwable t ) {
+                log.error( t );
+            }
+        }
         if( theExecutorService != null ) {
             stop(); // cleans up nicely
         }

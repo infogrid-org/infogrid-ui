@@ -98,7 +98,7 @@ public abstract class NotBlessedException
                     theMeshObjectIdentifier,
                     theType,
                     theTypeIdentifier,
-                    MeshTypeUtils.meshTypeIdentifiers( theMeshObject )
+                    MeshTypeUtils.meshTypeIdentifiersOrNull( theMeshObject )
                 });
     }
 

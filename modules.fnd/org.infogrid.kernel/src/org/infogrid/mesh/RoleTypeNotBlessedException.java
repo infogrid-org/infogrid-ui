@@ -126,7 +126,7 @@ public class RoleTypeNotBlessedException
                     theTypeIdentifier,
                     theOther,
                     theOtherIdentifier,
-                    MeshTypeUtils.meshTypeIdentifiers( theMeshObject )
+                    MeshTypeUtils.meshTypeIdentifiersOrNull( theMeshObject )
                 });
     }
 

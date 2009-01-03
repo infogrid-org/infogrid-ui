@@ -98,7 +98,7 @@ public abstract class BlessedAlreadyException
                     theMeshObjectIdentifier,
                     theType,
                     theTypeIdentifier,
-                    MeshTypeUtils.meshTypeIdentifiers( theMeshObject )
+                    MeshTypeUtils.meshTypeIdentifiersOrNull( theMeshObject )
                 });
     }
 

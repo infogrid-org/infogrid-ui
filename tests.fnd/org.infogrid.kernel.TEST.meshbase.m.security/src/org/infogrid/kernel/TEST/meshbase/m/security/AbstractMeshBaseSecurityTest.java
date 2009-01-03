@@ -19,6 +19,7 @@ import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
+import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.meshbase.security.AccessManager;
 import org.infogrid.model.AclBasedSecurity.AclBasedSecuritySubjectArea;
@@ -63,7 +64,8 @@ public abstract class AbstractMeshBaseSecurityTest
                 theAccessManager,
                 rootContext );
 
-        life = theMeshBase.getMeshBaseLifecycleManager();
+        life   = theMeshBase.getMeshBaseLifecycleManager();
+        idFact = theMeshBase.getMeshObjectIdentifierFactory();
         
         rightsTypes = new RelationshipType[] {
                 AclBasedSecuritySubjectArea.MESHOBJECT_HASREADACCESSTO_PROTECTIONDOMAIN,
@@ -95,6 +97,11 @@ public abstract class AbstractMeshBaseSecurityTest
      * The MeshBaseLifecycleManager that goes with the MeshBase.
      */
     protected MeshBaseLifecycleManager life;
+
+    /**
+     * The IdentifierFactory that goes with the MeshBase.
+     */
+    protected MeshObjectIdentifierFactory idFact;
 
     /**
      * Our AccessManager for the MeshBase.

@@ -88,7 +88,9 @@ public class ProxyManager
         }
         for( Proxy p : temp ) {
             p.die( isPermanent );
-            remove( p.getPartnerMeshBaseIdentifier() );
+            if( isPermanent ) {
+                remove( p.getPartnerMeshBaseIdentifier() );
+            }
         }
     }
     

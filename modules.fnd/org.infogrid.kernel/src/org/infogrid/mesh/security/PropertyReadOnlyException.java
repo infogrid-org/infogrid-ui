@@ -130,7 +130,7 @@ public class PropertyReadOnlyException
                     theMeshObjectIdentifier,
                     thePropertyType,
                     thePropertyTypeIdentifier,
-                    MeshTypeUtils.meshTypeIdentifiers( theMeshObject )
+                    MeshTypeUtils.meshTypeIdentifiersOrNull( theMeshObject )
                 });
     }
 

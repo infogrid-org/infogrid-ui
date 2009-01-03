@@ -307,12 +307,14 @@ public interface ReplicaProxyInterface
     /**
      * Delete a replica NetMeshObject as a consequence of deleting another replica.
      * 
+     * @param mb the MeshBase that this MeshObject does or used to belong to
      * @param timeUpdated the value for the timeUpdated property after this operation. -1 indicates "don't change"
      * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
      * @throws NotPermittedException thrown if the caller is not authorized to perform this operation
      */
     public abstract void rippleDelete(
-            long timeUpdated )
+            NetMeshBase mb,
+            long        timeUpdated )
         throws
             TransactionException,
             NotPermittedException;    

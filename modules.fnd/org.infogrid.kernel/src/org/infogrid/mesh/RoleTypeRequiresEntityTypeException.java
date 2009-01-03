@@ -45,8 +45,8 @@ public class RoleTypeRequiresEntityTypeException
      * @param entityTypeIdentifier the MeshTypeIdentifier of the EntityType of the attempted unblessing
      * @param roleType the RoleType of that blocked the attempted unblessing
      * @param roleTypeIdentifier the MeshTypeIdentifier of the RoleType of that blocked the attempted unblessing
-     * @param other the MeshObject at the other end of the relationship, if available
-     * @param otherIdentifier the MeshObjectIdentifier of the MeshObject at the other end of the relationship
+     * @param neighbor the MeshObject at the other end of the relationship, if available
+     * @param neighborIdentifier the MeshObjectIdentifier of the MeshObject at the other end of the relationship
      */
     public RoleTypeRequiresEntityTypeException(
             MeshBase             mb,
@@ -57,8 +57,8 @@ public class RoleTypeRequiresEntityTypeException
             MeshTypeIdentifier   entityTypeIdentifier,
             RoleType             roleType,
             MeshTypeIdentifier   roleTypeIdentifier,
-            MeshObject           other,
-            MeshObjectIdentifier otherIdentifier )
+            MeshObject           neighbor,
+            MeshObjectIdentifier neighborIdentifier )
     {
         super( mb, originatingMeshBaseIdentifier, obj, identifier );
 
@@ -66,8 +66,8 @@ public class RoleTypeRequiresEntityTypeException
         theEntityTypeIdentifier = entityTypeIdentifier;
         theRoleType             = roleType;
         theRoleTypeIdentifier   = roleTypeIdentifier;
-        theOther                = other;
-        theOtherIdentifier      = otherIdentifier;
+        theNeighbor             = neighbor;
+        theNeighborIdentifier   = neighborIdentifier;
     }
 
     /**
@@ -94,6 +94,32 @@ public class RoleTypeRequiresEntityTypeException
                 roleType.getIdentifier(),
                 other,
                 other.getIdentifier() );
+    }
+
+    /**
+     * More convenient simple constructor for the most common case.
+     *
+     * @param obj the MeshObject on which the illegal operation was attempted, if available
+     * @param entityType the EntityType of the attempted unblessing, if available
+     * @param roleType the RoleType of that blocked the attempted unblessing
+     * @param neighborIdentifier identifier of the MeshObject at the other end of the relationship, if available
+     */
+    public RoleTypeRequiresEntityTypeException(
+            MeshObject           obj,
+            EntityType           entityType,
+            RoleType             roleType,
+            MeshObjectIdentifier neighborIdentifier )
+    {
+        this( obj.getMeshBase(),
+                obj.getMeshBase().getIdentifier(),
+                obj,
+                obj.getIdentifier(),
+                entityType,
+                entityType.getIdentifier(),
+                roleType,
+                roleType.getIdentifier(),
+                null,
+                neighborIdentifier );
     }
 
     /**
@@ -148,10 +174,10 @@ public class RoleTypeRequiresEntityTypeException
             NotPermittedException,
             IllegalStateException
     {
-        if( theOther == null ) {
-            theOther = resolve( theOtherIdentifier );
+        if( theNeighbor == null ) {
+            theNeighbor = resolve( theNeighborIdentifier );
         }
-        return theOther;
+        return theNeighbor;
     }
 
     /**
@@ -178,9 +204,9 @@ public class RoleTypeRequiresEntityTypeException
                     theEntityTypeIdentifier,
                     theRoleType,
                     theRoleTypeIdentifier,
-                    theOther,
-                    theOtherIdentifier,
-                    MeshTypeUtils.meshTypeIdentifiers( theMeshObject )
+                    theNeighbor,
+                    theNeighborIdentifier,
+                    MeshTypeUtils.meshTypeIdentifiersOrNull( theMeshObject )
                 });
     }
 
@@ -191,7 +217,7 @@ public class RoleTypeRequiresEntityTypeException
      */
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theMeshObjectIdentifier, theEntityTypeIdentifier, theRoleTypeIdentifier, theOtherIdentifier };
+        return new Object[] { theMeshObjectIdentifier, theEntityTypeIdentifier, theRoleTypeIdentifier, theNeighborIdentifier };
     }
 
     /**
@@ -217,10 +243,10 @@ public class RoleTypeRequiresEntityTypeException
     /**
      * The MeshObject at the other end of the relationship that blocked the unblessing.
      */
-    protected transient MeshObject theOther;
+    protected transient MeshObject theNeighbor;
 
     /**
      * The MeshObjectIdentifier of the MeshObject at the other end of the relationship that blocked the unblessing.
      */
-    protected MeshObjectIdentifier theOtherIdentifier;
+    protected MeshObjectIdentifier theNeighborIdentifier;
 }

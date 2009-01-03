@@ -41,21 +41,21 @@ public class MeshBaseSecurityTest3
         
         Transaction tx = theMeshBase.createTransactionNow();
         
-        MeshObject owner    = life.createMeshObject();
+        MeshObject owner = life.createMeshObject( idFact.fromExternalForm( "#owner" ));
 
         theAccessManager.setCaller( owner );
 
-        MeshObject ownerProtectionDomain = life.createMeshObject( AclBasedSecuritySubjectArea.PROTECTIONDOMAIN );
-        MeshObject ownerData             = life.createMeshObject();
+        MeshObject ownerProtectionDomain = life.createMeshObject( idFact.fromExternalForm( "#owner-protectiondomain" ), AclBasedSecuritySubjectArea.PROTECTIONDOMAIN );
+        MeshObject ownerData             = life.createMeshObject( idFact.fromExternalForm( "#owner-data" ) );
 
         theAccessManager.unsetCaller();
         
-        MeshObject attacker = life.createMeshObject();
+        MeshObject attacker = life.createMeshObject( idFact.fromExternalForm( "#attacker" ));
 
         theAccessManager.setCaller( attacker );
 
-        MeshObject attackerProtectionDomain = life.createMeshObject( AclBasedSecuritySubjectArea.PROTECTIONDOMAIN );
-        MeshObject attackerData             = life.createMeshObject();
+        MeshObject attackerProtectionDomain = life.createMeshObject( idFact.fromExternalForm( "#attacker-protectiondomain" ), AclBasedSecuritySubjectArea.PROTECTIONDOMAIN );
+        MeshObject attackerData             = life.createMeshObject( idFact.fromExternalForm( "#attacker-data" ) );
 
         theAccessManager.unsetCaller();
 

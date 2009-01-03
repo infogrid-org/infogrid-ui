@@ -429,5 +429,5 @@ public class MSmartFactory<K,V,A>
     /**
       * Our current values, keyed by our keys.
       */
-    protected CachingMap<K,V> theKeyValueMap;
+    protected final CachingMap<K,V> theKeyValueMap;
 }

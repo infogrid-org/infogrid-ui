@@ -62,11 +62,11 @@ public class NetMeshObjectRoleRemovedEvent
         this(   source,
                 source.getIdentifier(),
                 oldValues,
-                MeshTypeUtils.meshTypeIdentifiers( oldValues ),
+                MeshTypeUtils.meshTypeIdentifiersOrNull( oldValues ),
                 deltaValues,
-                MeshTypeUtils.meshTypeIdentifiers( deltaValues ),
+                MeshTypeUtils.meshTypeIdentifiersOrNull( deltaValues ),
                 newValues,
-                MeshTypeUtils.meshTypeIdentifiers( newValues ),
+                MeshTypeUtils.meshTypeIdentifiersOrNull( newValues ),
                 null,
                 neighborIdentifier,
                 originIdentifier,
@@ -234,10 +234,10 @@ public class NetMeshObjectRoleRemovedEvent
 
                 tx = base.createTransactionNowIfNeeded();
 
-                NetMeshObject relatedOtherObject = getNeighborMeshObject();
-                RoleType []   roleTypes          = getDeltaValue();
+                NetMeshObjectIdentifier relatedOtherObject = getNeighborMeshObjectIdentifier();
+                RoleType []             roleTypes          = getDeltaValue();
 
-                otherObject.rippleUnbless( roleTypes, relatedOtherObject.getIdentifier(), getTimeEventOccurred() );
+                otherObject.rippleUnbless( roleTypes, relatedOtherObject, getTimeEventOccurred() );
             }
             return otherObject;
 

@@ -300,7 +300,7 @@ public class NetMeshObjectNeighborRemovedEvent
 
         Transaction tx = null;
 
-        NetMeshObject [] relatedOtherObjects;
+        MeshObjectIdentifier [] relatedOtherObjects;
 
         try {
             NetMeshObject otherObject = (NetMeshObject) getSource();
@@ -308,10 +308,10 @@ public class NetMeshObjectNeighborRemovedEvent
 
                 tx = base.createTransactionNowIfNeeded();
 
-                relatedOtherObjects = (NetMeshObject []) getDeltaValue();
+                relatedOtherObjects = getDeltaValueIdentifier();
 
                 for( int i=0 ; i<relatedOtherObjects.length ; ++i ) {
-                    otherObject.rippleUnrelate( relatedOtherObjects[i].getIdentifier(), base, getTimeEventOccurred() );
+                    otherObject.rippleUnrelate( (NetMeshObjectIdentifier) relatedOtherObjects[i], base, getTimeEventOccurred() );
                 }
             }
             

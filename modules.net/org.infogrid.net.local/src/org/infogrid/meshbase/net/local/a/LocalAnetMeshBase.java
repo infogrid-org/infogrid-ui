@@ -106,12 +106,16 @@ public abstract class LocalAnetMeshBase
         throws
             FactoryException
     {
-        // first create the shadow -- if it throws an exception, we won't create the Proxy
-        ShadowMeshBase shadow = theProbeManager.obtainFor( networkIdentifier, coherence );
+        if( theProbeManager != null ) { // die() might have been invoked
+            // first create the shadow -- if it throws an exception, we won't create the Proxy
+            ShadowMeshBase shadow = theProbeManager.obtainFor( networkIdentifier, coherence );
 
-        Proxy ret = theProxyManager.obtainFor( networkIdentifier, coherence );
-        
-        return ret;
+            Proxy ret = theProxyManager.obtainFor( networkIdentifier, coherence );
+
+            return ret;
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -124,8 +128,12 @@ public abstract class LocalAnetMeshBase
     public ShadowMeshBase getShadowMeshBaseFor(
             NetMeshBaseIdentifier networkId )
     {
-        ShadowMeshBase ret = theProbeManager.get( networkId );
-        return ret;
+        if( theProbeManager != null ) { // die() might have been invoked
+            ShadowMeshBase ret = theProbeManager.get( networkId );
+            return ret;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -135,8 +143,12 @@ public abstract class LocalAnetMeshBase
      */
     public Collection<ShadowMeshBase> getShadowMeshBases()
     {
-        Collection<ShadowMeshBase> ret = theProbeManager.values();
-        return ret;
+        if( theProbeManager != null ) { // die() might have been invoked
+            Collection<ShadowMeshBase> ret = theProbeManager.values();
+            return ret;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -146,7 +158,11 @@ public abstract class LocalAnetMeshBase
      */
     public MeshBaseNameServer getLocalNameServer()
     {
-        return theProbeManager.getNetMeshBaseNameServer();
+        if( theProbeManager != null ) { // die() might have been invoked
+            return theProbeManager.getNetMeshBaseNameServer();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -170,7 +186,7 @@ public abstract class LocalAnetMeshBase
     {
         theProbeManager.die( isPermanent );
         theProbeManager = null;
-        
+
         super.internalDie( isPermanent );
     }
 

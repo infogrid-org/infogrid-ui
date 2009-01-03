@@ -20,6 +20,8 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.RelatedAlreadyException;
+import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.security.AbstractAccessManager;
 import org.infogrid.meshbase.security.IdentityChangeException;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -133,7 +135,10 @@ public class AclBasedAccessManager
             MeshObject caller = getCaller();
 
             for( Role current : obj.getRoles( false ) ) {
-                current.getRoleType().checkPermittedSetTimeExpires( obj, newValue, caller );
+                current.getRoleType().checkPermittedSetTimeExpires(
+                        obj,
+                        newValue,
+                        caller );
             }
         } catch( IdentityChangeException ex ) {
             log.error( ex );
@@ -164,7 +169,10 @@ public class AclBasedAccessManager
             
             MeshObject caller = getCaller();
 
-            thePropertyType.checkPermittedSetProperty( obj, newValue, caller );
+            thePropertyType.checkPermittedSetProperty(
+                    obj,
+                    newValue,
+                    caller );
 
         } catch( IdentityChangeException ex ) {
             log.error( ex );
@@ -192,7 +200,9 @@ public class AclBasedAccessManager
             
             MeshObject caller = getCaller();
 
-            thePropertyType.checkPermittedGetProperty( obj, caller );
+            thePropertyType.checkPermittedGetProperty(
+                    obj,
+                    caller );
         
         } catch( IdentityChangeException ex ) {
             log.error( ex );
@@ -221,7 +231,9 @@ public class AclBasedAccessManager
             
             MeshObject caller = getCaller();
 
-            type.checkPermittedBlessedBy( obj, caller );
+            type.checkPermittedBlessedBy(
+                    obj,
+                    caller );
         
         } catch( IdentityChangeException ex ) {
             log.error( ex );
@@ -247,17 +259,28 @@ public class AclBasedAccessManager
         try {
             sudo();
             
-            MeshObject caller = getCaller();
+            MeshObject caller      = getCaller();
+            MeshBase   theMeshBase = obj.getMeshBase();
 
             // we ask the new EntityTypes, and we ask the existing RoleTypes
 
             for( EntityType current : types ) {
-                current.checkPermittedBless( obj, caller );
+                current.checkPermittedBless(
+                        obj,
+                        caller );
             }
 
             Role [] roles = obj.getRoles( false );
             for( Role current : roles ) {
-                current.getRoleType().checkPermittedIncrementalBless( obj, current.getOtherSide(), types, caller );
+                RoleType   roleType = current.getRoleType();
+                MeshObject neighbor = theMeshBase.findMeshObjectByIdentifier( current.getNeighborIdentifier() );
+
+                roleType.checkPermittedIncrementalBless(
+                        obj,
+                        types,
+                        current.getNeighborIdentifier(),
+                        neighbor,
+                        caller );
             }
         } catch( IdentityChangeException ex ) {
             log.error( ex );
@@ -283,7 +306,8 @@ public class AclBasedAccessManager
         try {
             sudo();
             
-            MeshObject caller = getCaller();
+            MeshObject caller      = getCaller();
+            MeshBase   theMeshBase = obj.getMeshBase();
 
             for( EntityType current : types ) {
                 current.checkPermittedUnbless( obj, caller );
@@ -291,7 +315,15 @@ public class AclBasedAccessManager
 
             Role [] roles = obj.getRoles( false );
             for( Role current : roles ) {
-                current.getRoleType().checkPermittedIncrementalUnbless( obj, current.getOtherSide(), types, caller );
+                RoleType   roleType = current.getRoleType();
+                MeshObject neighbor = theMeshBase.findMeshObjectByIdentifier( current.getNeighborIdentifier() );
+
+                roleType.checkPermittedIncrementalUnbless(
+                        obj,
+                        types,
+                        current.getNeighborIdentifier(),
+                        neighbor,
+                        caller );
             }
         } catch( IdentityChangeException ex ) {
             log.error( ex );
@@ -302,40 +334,83 @@ public class AclBasedAccessManager
     }
 
     /**
-     * Check whether it is permitted to bless the relationship to the otherObject with the
+     * Check whether it is permitted to bless the relationship to the neighbor with the
      * provided RoleTypes.
-     * 
+     *
      * @param obj the MeshObject
      * @param thisEnds the RoleTypes to bless the relationship with
      * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
+     * @param neighbor neighbor to which this MeshObject is related, if it could be resolved
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedBless(
             MeshObject           obj,
             RoleType []          thisEnds,
-            MeshObjectIdentifier neighborIdentifier )
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor )
         throws
             NotPermittedException
     {
-        MeshObject neighbor = obj.getMeshBase().findMeshObjectByIdentifier( neighborIdentifier );
-        if( neighbor == null ) {
-            return; // FIXME?
-        }
         try {
             sudo();
             
             MeshObject caller = getCaller();
 
             for( RoleType current : thisEnds ) {
-                RoleType other = current.getOtherRoleType();
-                current.checkPermittedBless( obj, neighbor, caller );
-                  other.checkPermittedBless( neighbor, obj, caller );
+                current.checkPermittedBless(
+                        obj,
+                        neighborIdentifier,
+                        neighbor,
+                        caller );
+
+                if( neighbor != null ) {
+                    RoleType inverseRoleType = current.getInverseRoleType();
+                    inverseRoleType.checkPermittedBless(
+                            neighbor,
+                            obj.getIdentifier(),
+                            obj,
+                            caller );
+                }
             }
 
             Role [] roles = obj.getRoles( false );
             for( Role current : roles ) {
-                current.getRoleType().checkPermittedIncrementalBless( obj, current.getOtherSide(), thisEnds, neighbor, caller );
-                current.getRoleType().getOtherRoleType().checkPermittedIncrementalBless( current.getOtherSide(), obj, thisEnds, neighbor, caller );
+                RoleType roleType = current.getRoleType();
+
+                MeshObjectIdentifier neighborWithOpinionIdentifier = current.getNeighborIdentifier();
+                MeshObject           neighborWithOpinion           = current.getNeighborIfAvailable();
+
+                roleType.checkPermittedIncrementalBless(
+                        obj,
+                        neighborIdentifier,
+                        neighbor,
+                        thisEnds,
+                        neighborWithOpinionIdentifier,
+                        neighborWithOpinion,
+                        caller );
+            }
+
+            if( neighbor != null ) {
+                Role [] neighborRoles = neighbor.getRoles( false );
+                RoleType [] otherEnds = new RoleType[ thisEnds.length ];
+                for( int i=0 ; i<thisEnds.length ; ++i ) {
+                    otherEnds[i] = thisEnds[i].getInverseRoleType();
+                }
+                for( Role current : neighborRoles ) {
+                    RoleType roleType = current.getRoleType();
+
+                    MeshObjectIdentifier neighborWithOpinionIdentifier = current.getNeighborIdentifier();
+                    MeshObject           neighborWithOpinion           = current.getNeighborIfAvailable();
+
+                    roleType.checkPermittedIncrementalBless(
+                            neighbor,
+                            obj.getIdentifier(),
+                            obj,
+                            otherEnds,
+                            neighborWithOpinionIdentifier,
+                            neighborWithOpinion,
+                            caller );
+                }
             }
         } catch( IdentityChangeException ex ) {
             log.error( ex );
@@ -346,41 +421,85 @@ public class AclBasedAccessManager
     }
 
     /**
-     * Check whether it is permitted to unbless the relationship to the otherObject from the
+     * Check whether it is permitted to unbless the relationship to the neighbor from the
      * provided RoleTypes.
-     * 
+     *
      * @param obj the MeshObject
      * @param thisEnds the RoleTypes to unbless the relationship from
      * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
+     * @param neighbor neighbor to which this MeshObject is related, if it could be resolved
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedUnbless(
             MeshObject           obj,
             RoleType []          thisEnds,
-            MeshObjectIdentifier neighborIdentifier )
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor )
         throws
             NotPermittedException
     {
-        MeshObject neighbor = obj.getMeshBase().findMeshObjectByIdentifier( neighborIdentifier );
-        if( neighbor == null ) {
-            return; // FIXME?
-        }
         try {
             sudo();
             
             MeshObject caller = getCaller();
         
             for( RoleType current : thisEnds ) {
-                RoleType other = current.getOtherRoleType();
-                current.checkPermittedUnbless( obj,      neighbor, caller );
-                  other.checkPermittedUnbless( neighbor, obj,      caller );
+                current.checkPermittedUnbless(
+                        obj,
+                        neighborIdentifier,
+                        neighbor,
+                        caller );
+
+                if( neighbor != null ) {
+                    RoleType inverse = current.getInverseRoleType();
+                    inverse.checkPermittedUnbless(
+                            neighbor,
+                            obj.getIdentifier(),
+                            obj,
+                            caller );
+                }
             }
 
             Role [] roles = obj.getRoles( false );
             for( Role current : roles ) {
-                current.getRoleType().checkPermittedIncrementalUnbless( obj, current.getOtherSide(), thisEnds, neighbor, caller );
-                current.getRoleType().getOtherRoleType().checkPermittedIncrementalUnbless( current.getOtherSide(), obj, thisEnds, neighbor, caller );
+                RoleType roleType = current.getRoleType();
+
+                MeshObjectIdentifier neighborWithOpinionIdentifier = current.getNeighborIdentifier();
+                MeshObject           neighborWithOpinion           = current.getNeighborIfAvailable();
+
+                roleType.checkPermittedIncrementalUnbless(
+                        obj,
+                        neighborIdentifier,
+                        neighbor,
+                        thisEnds,
+                        neighborWithOpinionIdentifier,
+                        neighborWithOpinion,
+                        caller );
             }
+
+            if( neighbor != null ) {
+                Role [] neighborRoles = neighbor.getRoles( false );
+                RoleType [] otherEnds = new RoleType[ thisEnds.length ];
+                for( int i=0 ; i<thisEnds.length ; ++i ) {
+                    otherEnds[i] = thisEnds[i].getInverseRoleType();
+                }
+                for( Role current : neighborRoles ) {
+                    RoleType roleType = current.getRoleType();
+
+                    MeshObjectIdentifier neighborWithOpinionIdentifier = current.getNeighborIdentifier();
+                    MeshObject           neighborWithOpinion           = current.getNeighborIfAvailable();
+
+                    roleType.checkPermittedIncrementalUnbless(
+                            neighbor,
+                            obj.getIdentifier(),
+                            obj,
+                            otherEnds,
+                            neighborWithOpinionIdentifier,
+                            neighborWithOpinion,
+                            caller );
+                }
+            }
+
         } catch( IdentityChangeException ex ) {
             log.error( ex );
 
@@ -390,126 +509,30 @@ public class AclBasedAccessManager
     }
     
     /**
-     * Check whether it is permitted to traverse the given ByRoleType from this MeshObject to the
+     * Check whether it is permitted to traverse the given RoleType from this MeshObject to the
      * given MeshObject.
-     * 
+     *
      * @param obj the MeshObject
      * @param toTraverse the RoleType to traverse
-     * @param otherObjectIdentifier identifier of the reached MeshObject in the traversal
+     * @param neighborIdentifier identifier of the neighbor to which the traversal leads
+     * @param neighbor neighbor to which this traversal leads
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedTraversal(
             MeshObject           obj,
             RoleType             toTraverse,
-            MeshObjectIdentifier otherObjectIdentifier )
-        throws
-            NotPermittedException
-    {
-        MeshObject otherObject = obj.getMeshBase().findMeshObjectByIdentifier( otherObjectIdentifier );
-        if( otherObject == null ) {
-            return; // FIXME?
-        }
-
-        try {
-            sudo();
-            
-            MeshObject caller = getCaller();
-
-            toTraverse.checkPermittedTraversal( obj, otherObject, caller );
-
-        } catch( IdentityChangeException ex ) {
-            log.error( ex );
-
-        } finally {
-            sudone();
-        }        
-    }
-
-    /**
-     * Check whether it is permitted to bless the relationship with the given otherObject with
-     * the given thisEnds RoleTypes.
-     * 
-     * @param obj the MeshObject
-     * @param thisEnds the RoleTypes to bless the relationship with
-     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
-     * @param roleTypesToAsk the RoleTypes, of the relationship with RoleTypesToAskUsed, which to as
-     * @param roleTypesToAskUsedIdentifier identiifer of the neighbor MeshObject whose rules may have an opinion
-     *        on the blessing of the relationship with otherObject
-     * @throws NotPermittedException thrown if it is not permitted
-     */
-    public void checkPermittedBless(
-            MeshObject            obj,
-            RoleType []           thisEnds,
-            MeshObjectIdentifier  neighborIdentifier,
-            RoleType []           roleTypesToAsk,
-            MeshObjectIdentifier  roleTypesToAskUsedIdentifier )
-        throws
-            NotPermittedException
-    {
-        MeshObject otherObject = obj.getMeshBase().findMeshObjectByIdentifier( neighborIdentifier );
-        if( otherObject == null ) {
-            return; // FIXME?
-        }
-        MeshObject roleTypesToAskUsed = obj.getMeshBase().findMeshObjectByIdentifier( roleTypesToAskUsedIdentifier );
-        if( roleTypesToAskUsed == null ) {
-            return; // FIXME?
-        }
-
-        try {
-            sudo();
-            
-            MeshObject caller = getCaller();
-
-            for( RoleType current : roleTypesToAsk ) {
-                current.checkPermittedIncrementalBless( obj, roleTypesToAskUsed, thisEnds, otherObject, caller );
-            }
-        
-        } catch( IdentityChangeException ex ) {
-            log.error( ex );
-
-        } finally {
-            sudone();
-        }        
-    }
-
-    /**
-     * Check whether it is permitted to unbless the relationship from the given otherObject with
-     * the given thisEnds RoleTypes. Subclasses
-     * may override this.
-     * 
-     * @param obj the MeshObject
-     * @param thisEnds the RoleTypes to unbless the relationship from
-     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
-     * @param roleTypesToAsk the RoleTypes, of the relationship with RoleTypesToAskUsed, which to as
-     * @param roleTypesToAskUsedIdentifier identifier of the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
-     * @throws NotPermittedException thrown if it is not permitted
-     */
-    public void checkPermittedUnbless(
-            MeshObject           obj,
-            RoleType []          thisEnds,
             MeshObjectIdentifier neighborIdentifier,
-            RoleType []          roleTypesToAsk,
-            MeshObjectIdentifier roleTypesToAskUsedIdentifier )
+            MeshObject           neighbor )
         throws
             NotPermittedException
     {
-        MeshObject neighbor = obj.getMeshBase().findMeshObjectByIdentifier( neighborIdentifier );
-        if( neighbor == null ) {
-            return; // FIXME?
-        }
-        MeshObject roleTypesToAskUsed = obj.getMeshBase().findMeshObjectByIdentifier( roleTypesToAskUsedIdentifier );
-        if( roleTypesToAskUsed == null ) {
-            return; // FIXME?
-        }
-
         try {
             sudo();
             
             MeshObject caller = getCaller();
 
-            for( RoleType current : roleTypesToAsk ) {
-                current.checkPermittedIncrementalUnbless( obj, roleTypesToAskUsed, thisEnds, neighbor, caller );
-            }
+            toTraverse.checkPermittedTraversal( obj, neighborIdentifier, neighbor, caller );
+
         } catch( IdentityChangeException ex ) {
             log.error( ex );
 
@@ -517,24 +540,161 @@ public class AclBasedAccessManager
             sudone();
         }        
     }
+
+//    /**
+//     * Check whether it is permitted to bless the relationship with the given otherObject with
+//     * the given thisEnds RoleTypes.
+//     *
+//     * @param obj the MeshObject
+//     * @param thisEnds the RoleTypes to bless the relationship with
+//     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
+//     * @param roleTypesToAsk the RoleTypes, of the relationship with RoleTypesToAskUsed, which to as
+//     * @param roleTypesToAskUsedIdentifier identiifer of the neighbor MeshObject whose rules may have an opinion
+//     *        on the blessing of the relationship with otherObject
+//     * @throws NotPermittedException thrown if it is not permitted
+//     */
+//    public void checkPermittedBless(
+//            MeshObject            obj,
+//            RoleType []           thisEnds,
+//            MeshObjectIdentifier  neighborIdentifier,
+//            RoleType []           roleTypesToAsk,
+//            MeshObjectIdentifier  roleTypesToAskUsedIdentifier )
+//        throws
+//            NotPermittedException
+//    {
+//        MeshObject otherObject = obj.getMeshBase().findMeshObjectByIdentifier( neighborIdentifier );
+//                // may or may not be there.
+//
+//        MeshObject roleTypesToAskUsed = obj.getMeshBase().findMeshObjectByIdentifier( roleTypesToAskUsedIdentifier );
+//        if( roleTypesToAskUsed == null ) {
+//            return; // FIXME?
+//        }
+//
+//        try {
+//            sudo();
+//
+//            MeshObject caller = getCaller();
+//
+//            for( RoleType current : roleTypesToAsk ) {
+//                current.checkPermittedIncrementalBless(
+//                        obj,
+//                        neighborIdentifier,
+//                        neighbor,
+//                        thisEnds,
+//                        neighborWithOpinionIdentifier,
+//                        neighborWithOpinion,
+//                        caller );
+//            }
+//
+//        } catch( IdentityChangeException ex ) {
+//            log.error( ex );
+//
+//        } finally {
+//            sudone();
+//        }
+//    }
+//
+//    /**
+//     * Check whether it is permitted to unbless the relationship from the given otherObject with
+//     * the given thisEnds RoleTypes. Subclasses
+//     * may override this.
+//     *
+//     * @param obj the MeshObject
+//     * @param thisEnds the RoleTypes to unbless the relationship from
+//     * @param neighborIdentifier identifier of the neighbor to which this MeshObject is related
+//     * @param roleTypesToAsk the RoleTypes, of the relationship with RoleTypesToAskUsed, which to as
+//     * @param roleTypesToAskUsedIdentifier identifier of the neighbor MeshObject whose rules may have an opinion on the blessing of the relationship with otherObject
+//     * @throws NotPermittedException thrown if it is not permitted
+//     */
+//    public void checkPermittedUnbless(
+//            MeshObject           obj,
+//            RoleType []          thisEnds,
+//            MeshObjectIdentifier neighborIdentifier,
+//            RoleType []          roleTypesToAsk,
+//            MeshObjectIdentifier roleTypesToAskUsedIdentifier )
+//        throws
+//            NotPermittedException
+//    {
+//        MeshObject neighbor = obj.getMeshBase().findMeshObjectByIdentifier( neighborIdentifier );
+//                // may or may not be there.
+//
+//        MeshObject roleTypesToAskUsed = obj.getMeshBase().findMeshObjectByIdentifier( roleTypesToAskUsedIdentifier );
+//        if( roleTypesToAskUsed == null ) {
+//            return; // FIXME?
+//        }
+//
+//        try {
+//            sudo();
+//
+//            MeshObject caller = getCaller();
+//
+//            for( RoleType current : roleTypesToAsk ) {
+//                current.checkPermittedIncrementalUnbless( obj, neighborIdentifier, thisEnds, neighbor, caller );
+//            }
+//        } catch( IdentityChangeException ex ) {
+//            log.error( ex );
+//
+//        } finally {
+//            sudone();
+//        }
+//    }
+
+
+
+
+
+//                for( MeshObjectIdentifier oldNeighborIdentifier : nMgr.getNeighborIdentifiers( this )) {
+//                    if( neighborIdentifier.equals( oldNeighborIdentifier )) {
+//                        // skip this one
+//                        continue;
+//                    }
+//                    RoleType [] roleTypes2 = nMgr.getRoleTypesFor( this, oldNeighborIdentifier );
+//                    if( roleTypes2 == null || roleTypes2.length == 0 ) {
+//                        // nothing to do here
+//                        continue;
+//                    }
+//                    checkPermittedBless(
+//                            roleTypesToAdd,
+//                            neighborIdentifier,
+//                            roleTypes2,
+//                            oldNeighborIdentifier );
+//                }
+//                if( realNeighbor != null ) {
+//                    for( MeshObjectIdentifier oldNeighborNeighborIdentifier : nMgr.getNeighborIdentifiers( realNeighbor )) {
+//                        if( here.equals( oldNeighborNeighborIdentifier )) {
+//                            // skip this one
+//                            continue;
+//                        }
+//                        RoleType [] neighborRoleTypes2 = nMgr.getRoleTypesFor( realNeighbor, oldNeighborNeighborIdentifier );
+//                        if( neighborRoleTypes2 == null || neighborRoleTypes2.length == 0 ) {
+//                            // nothing to do here
+//                            continue;
+//                        }
+//                        checkPermittedBless(
+//                                neighborRoleTypesToAdd,
+//                                here,
+//                                neighborRoleTypes2,
+//                                oldNeighborNeighborIdentifier );
+//                    }
+//                }
+
+
 
     /**
      * Check whether it is permitted to make one MeshObject equivalent to another.
      * 
      * @param one the first MeshObject
      * @param twoIdentifier identifier of the second MeshObject
+     * @param two the second MeshObject, if it could be resolved
      * @throws NotPermittedException thrown if it is not permitted
      */
     public void checkPermittedAddAsEquivalent(
             MeshObject           one,
-            MeshObjectIdentifier twoIdentifier )
+            MeshObjectIdentifier twoIdentifier,
+            MeshObject           two )
         throws
             NotPermittedException
     {
-        MeshObject two = one.getMeshBase().findMeshObjectByIdentifier( twoIdentifier );
-        if( two == null ) {
-            return; // FIXME?
-        }
         try {
             sudo();
             
@@ -576,7 +736,9 @@ public class AclBasedAccessManager
             MeshObject caller = getCaller();
 
             for( RoleType current : roleTypesToAsk ) {
-                current.checkPermittedRemoveAsEquivalent( obj, caller );
+                current.checkPermittedRemoveAsEquivalent(
+                        obj,
+                        caller );
             }
         } catch( IdentityChangeException ex ) {
             log.error( ex );
@@ -609,8 +771,27 @@ public class AclBasedAccessManager
             checkPermittedUnbless( obj, allTypes );
         
             for( Role current : obj.getRoles( false ) ) {
-                checkPermittedUnbless( obj,                    new RoleType[] { current.getRoleType() },                    current.getOtherSide().getIdentifier() );
-                checkPermittedUnbless( current.getOtherSide(), new RoleType[] { current.getRoleType().getOtherRoleType() }, obj.getIdentifier() );
+                RoleType roleType = current.getRoleType();
+
+                checkPermittedUnbless(
+                        obj,
+                        new RoleType[] { roleType },
+                        current.getNeighborIdentifier(),
+                        current.getNeighborIfAvailable() );
+
+                try {
+                    MeshObject currentNeighbor = current.getNeighbor();
+                    RoleType   inverseRoleType = roleType.getInverseRoleType();
+
+                    checkPermittedUnbless(
+                            currentNeighbor,
+                            new RoleType[] { inverseRoleType },
+                            obj.getIdentifier(),
+                            obj );
+
+                } catch( MeshObjectAccessException ex ) {
+                    log.info( ex );
+                }
             }
         } catch( IdentityChangeException ex ) {
             log.error( ex );

@@ -17,10 +17,8 @@ package org.infogrid.model.primitives.m;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSet;
-
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.transaction.MeshObjectRoleChangeEvent;
-
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.MultiplicityValue;
@@ -29,14 +27,12 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.RoleTypeGuard;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.traversal.TraversalSpecification;
-
 import org.infogrid.modelbase.InheritanceConflictException;
-
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
-
 import java.util.ArrayList;
+import org.infogrid.mesh.MeshObjectIdentifier;
 
 /**
   * The RoleType played by an EntityType in a RelationshipType (between another EntityType and itself).
@@ -107,7 +103,7 @@ public abstract class MRoleType
      *
      * @return the RoleType on the other end of the RelationshipType that this RoleType belongs to
      */
-    public final RoleType getOtherRoleType()
+    public final RoleType getInverseRoleType()
     {
         if( theRelationshipType.getSource() == this ) {
             return theRelationshipType.getDestination();
@@ -125,7 +121,7 @@ public abstract class MRoleType
      */
     public EntityType getOtherEntityType()
     {
-        return getOtherRoleType().getEntityType();
+        return getInverseRoleType().getEntityType();
     }
 
     /**
@@ -410,7 +406,11 @@ public abstract class MRoleType
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedSetTimeAutoDeletes( this, obj, newValue, caller );
+            current.checkPermittedSetTimeAutoDeletes(
+                    this,
+                    obj,
+                    newValue,
+                    caller );
         }
     }
 
@@ -421,19 +421,26 @@ public abstract class MRoleType
      * to do this, and throws a NotPermittedException if not.
      *
      * @param start the MeshObject from which the relationship starts
-     * @param destination the MeshObject to which the relationship leads
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedBless(
-            MeshObject    start,
-            MeshObject    destination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedBless( this, start, destination, caller );
+            current.checkPermittedBless(
+                    this,
+                    start,
+                    neighborIdentifier,
+                    neighbor,
+                    caller );
         }
     }
 
@@ -444,123 +451,170 @@ public abstract class MRoleType
      * to do this, and throws a NotPermittedException if not.
      *
      * @param start the MeshObject from which the relationship starts
-     * @param destination the MeshObject to which the relationship leads
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedUnbless(
-            MeshObject    start,
-            MeshObject    destination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedUnbless( this, start, destination, caller );
+            current.checkPermittedUnbless(
+                    this,
+                    start,
+                    neighborIdentifier,
+                    neighbor,
+                    caller );
         }
     }
 
     /**
      * Check whether the given caller is allowed to bless the given start MeshObject with
      * the given additional EntityTypes, in the opinion of a Role (identified by this
-     * RoleType and thisOtherSide) currently also played by the start MeshObject.
+     * RoleType and neighborWithOpinion) currently also played by the start MeshObject.
      * This returns silently if the caller is permitted
      * to do this, and throws a NotPermittedException if not.
      *
      * @param start the MeshObject to be blessed
-     * @param thisOtherSide the MeshObjecton the other side of this role
      * @param types the EntityTypes by which the start MeshObject should be blessed
+     * @param neighborWithOpinionIdentifier identifier of the neighbor MeshObject whose opionion is being asked
+     * @param neighborWithOpinion neighbor MeshObject whose opionion is being asked
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedIncrementalBless(
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            EntityType [] types,
-            MeshObject    caller )
+            MeshObject           start,
+            EntityType []        types,
+            MeshObjectIdentifier neighborWithOpinionIdentifier,
+            MeshObject           neighborWithOpinion,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedIncrementalBless( this, start, thisOtherSide, types, caller );
+            current.checkPermittedIncrementalBless(
+                    this,
+                    start,
+                    types,
+                    neighborWithOpinionIdentifier,
+                    neighborWithOpinion,
+                    caller );
         }
     }
 
     /**
      * Check whether the given caller is allowed to unbless the given start MeshObject from
      * the given EntityTypes, in the opinion of a Role (identified by this
-     * RoleType and thisOtherSide) currently also played by the start MeshObject.
+     * RoleType and neighborWithOpinion) currently also played by the start MeshObject.
      * This returns silently if the caller is permitted
      * to do this, and throws a NotPermittedException if not.
      *
      * @param start the MeshObject to be blessed
-     * @param thisOtherSide the MeshObjecton the other side of this role
      * @param types the EntityTypes by which the start MeshObject should be unblessed
+     * @param neighborWithOpinionIdentifier identifier of the neighbor MeshObject whose opionion is being asked
+     * @param neighborWithOpinion neighbor MeshObject whose opionion is being asked
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedIncrementalUnbless(
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            EntityType [] types,
-            MeshObject    caller )
+            MeshObject           start,
+            EntityType []        types,
+            MeshObjectIdentifier neighborWithOpinionIdentifier,
+            MeshObject           neighborWithOpinion,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedIncrementalUnbless( this, start, thisOtherSide, types, caller );
+            current.checkPermittedIncrementalUnbless(
+                    this,
+                    start,
+                    types,
+                    neighborWithOpinionIdentifier,
+                    neighborWithOpinion,
+                    caller );
         }
     }
     
     /**
      * Check whether the given caller is allowed to bless an existing relationship from a given start
      * MeshObject to a given destination MeshObject with a given new RoleType, in the opinion of
-     * another Role (identified as this RoleType plus associated other-side MeshObject).
-     * 
+     * another Role (identified as this RoleType and neighborWithOpinion).
+     *
      * @param start the MeshObject to be blessed
-     * @param thisOtherSide the MeshObjecton the other side of this role
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param newTypes the RoleType by which the start MeshObject's relationship to the newDestination should be blessed
-     * @param newDestination identifies the MeshObject on the other side of the new roles
+     * @param neighborWithOpinionIdentifier identifier of the neighbor MeshObject whose opionion is being asked
+     * @param neighborWithOpinion neighbor MeshObject whose opionion is being asked
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedIncrementalBless(
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            RoleType []   newTypes,
-            MeshObject    newDestination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            RoleType []          newTypes,
+            MeshObjectIdentifier neighborWithOpinionIdentifier,
+            MeshObject           neighborWithOpinion,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedIncrementalBless( this, start, thisOtherSide, newTypes, newDestination, caller );
+            current.checkPermittedIncrementalBless(
+                    this,
+                    start,
+                    neighborIdentifier,
+                    neighbor,
+                    newTypes,
+                    neighborWithOpinionIdentifier,
+                    neighborWithOpinion,
+                    caller );
         }
     }
     
     /**
      * Check whether the given caller is allowed to bless an existing relationship from a given start
      * MeshObject to a given destination MeshObject with a given new RoleType, in the opinion of
-     * another Role (identified as this RoleType plus associated other-side MeshObject).
-     * 
+     * another Role (identified as this RoleType and neighborWithOpinion).
+     *
      * @param start the MeshObject to be blessed
-     * @param thisOtherSide the MeshObjecton the other side of this role
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param newTypes the RoleType by which the start MeshObject's relationship to the newDestination should be unblessed
-     * @param newDestination identifies the MeshObject on the other side of the new roles
+     * @param neighborWithOpinionIdentifier identifier of the neighbor MeshObject whose opionion is being asked
+     * @param neighborWithOpinion neighbor MeshObject whose opionion is being asked
      * @param caller the MeshObject representing the caller
-     * @throws NotPermittedException thrown if this caller is not permitted to do this 
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedIncrementalUnbless(
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            RoleType []   newTypes,
-            MeshObject    newDestination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            RoleType []          newTypes,
+            MeshObjectIdentifier neighborWithOpinionIdentifier,
+            MeshObject           neighborWithOpinion,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedIncrementalUnbless( this, start, thisOtherSide, newTypes, newDestination, caller );
+            current.checkPermittedIncrementalUnbless(
+                    this,
+                    start,
+                    neighborIdentifier,
+                    neighbor,
+                    newTypes,
+                    neighborWithOpinionIdentifier,
+                    neighborWithOpinion,
+                    caller );
         }
     }
     
@@ -569,19 +623,26 @@ public abstract class MRoleType
      * MeshObject to a given destination MeshObject.
      *
      * @param start the MeshObject from which the relationship starts
-     * @param destination the MeshObject to which the relationship leads
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedTraversal(
-            MeshObject    start,
-            MeshObject    destination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedTraversal( this, start, destination, caller );
+            current.checkPermittedTraversal(
+                    this,
+                    start,
+                    neighborIdentifier,
+                    neighbor,
+                    caller );
         }
     }
 
@@ -590,19 +651,26 @@ public abstract class MRoleType
      * equivalence set.
      * 
      * @param one the first MeshObject
-     * @param two the second MeshObject
+     * @param twoIdentifier identifier of the second MeshObject
+     * @param two the second MeshObject, if successfully resolved
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedAddAsEquivalent(
-            MeshObject  one,
-            MeshObject  two,
-            MeshObject  caller )
+            MeshObject           one,
+            MeshObjectIdentifier twoIdentifier,
+            MeshObject           two,
+            MeshObject           caller )
         throws
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedAddAsEquivalent( this, one, two, caller );
+            current.checkPermittedAddAsEquivalent(
+                    this,
+                    one,
+                    twoIdentifier,
+                    two,
+                    caller );
         }        
     }
     
@@ -621,7 +689,10 @@ public abstract class MRoleType
             NotPermittedException
     {
         for( RoleTypeGuard current : getAllRoleTypeGuards() ) {
-            current.checkPermittedRemoveAsEquivalent( this, obj, caller );
+            current.checkPermittedRemoveAsEquivalent(
+                    this,
+                    obj,
+                    caller );
         }        
     }
 

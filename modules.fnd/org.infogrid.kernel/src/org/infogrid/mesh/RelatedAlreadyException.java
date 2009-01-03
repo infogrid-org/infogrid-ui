@@ -36,39 +36,57 @@ public class RelatedAlreadyException
      * @param originatingMeshBaseIdentifier the MeshBaseIdentifier of the MeshBase in which this Exception was created
      * @param meshObject the first MeshObject that was related already, if available
      * @param meshObjectIdentifier the MeshObjectIdentifier for the first MeshObject that was related already
-     * @param other the MeshObject at the other end of the already-existing relationship, if available
-     * @param otherIdentifier the MeshObjectIdentifier for the MeshObject at the other end of the already-existing relationship, if available
+     * @param neighbor the MeshObject at the other end of the already-existing relationship, if available
+     * @param neighborIdentifier the MeshObjectIdentifier for the MeshObject at the other end of the already-existing relationship, if available
      */
     public RelatedAlreadyException(
             MeshBase             mb,
             MeshBaseIdentifier   originatingMeshBaseIdentifier,
             MeshObject           meshObject,
             MeshObjectIdentifier meshObjectIdentifier,
-            MeshObject           other,
-            MeshObjectIdentifier otherIdentifier )
+            MeshObject           neighbor,
+            MeshObjectIdentifier neighborIdentifier )
     {
         super( mb, originatingMeshBaseIdentifier, meshObject, meshObjectIdentifier );
         
-        theOther                = other;
-        theOtherIdentifier      = otherIdentifier;
+        theNeighbor                = neighbor;
+        theNeighborIdentifier      = neighborIdentifier;
     }
 
     /**
      * More convenient simple constructor for the most common case.
      *
      * @param meshObject the first MeshObject that was related already, if available
-     * @param other the MeshObject at the other end of the already-existing relationship, if available
+     * @param neighbor the MeshObject at the other end of the already-existing relationship, if available
      */
     public RelatedAlreadyException(
             MeshObject           meshObject,
-            MeshObject           other )
+            MeshObject           neighbor )
     {
         this(   meshObject.getMeshBase(),
                 meshObject.getMeshBase().getIdentifier(),
                 meshObject,
                 meshObject.getIdentifier(),
-                other,
-                other.getIdentifier() );
+                neighbor,
+                neighbor.getIdentifier() );
+    }
+
+    /**
+     * More convenient simple constructor.
+     *
+     * @param meshObject the first MeshObject that was related already, if available
+     * @param neighborIdentifier the MeshObject at the other end of the already-existing relationship, if available
+     */
+    public RelatedAlreadyException(
+            MeshObject           meshObject,
+            MeshObjectIdentifier neighborIdentifier )
+    {
+        this(   meshObject.getMeshBase(),
+                meshObject.getMeshBase().getIdentifier(),
+                meshObject,
+                meshObject.getIdentifier(),
+                null,
+                neighborIdentifier );
     }
 
     /**
@@ -79,16 +97,16 @@ public class RelatedAlreadyException
      * @throws NotPermittedException thrown if the caller is not authorized to perform this operation
      * @throws IllegalStateException thrown if no resolving MeshBase is available
      */
-    public synchronized MeshObject getOtherMeshObject()
+    public synchronized MeshObject getNeighbor()
         throws
             MeshObjectAccessException,
             NotPermittedException,
             IllegalStateException
     {
-        if( theOther == null ) {
-            theOther = resolve( theOtherIdentifier );
+        if( theNeighbor == null ) {
+            theNeighbor = resolve( theNeighborIdentifier );
         }
-        return theOther;
+        return theNeighbor;
     }
 
     /**
@@ -96,9 +114,9 @@ public class RelatedAlreadyException
      *
      * @return the MeshObjectIdentifier
      */
-    public MeshObjectIdentifier getOtherMeshObjectIdentifier()
+    public MeshObjectIdentifier getNeighborIdentifier()
     {
-        return theOtherIdentifier;
+        return theNeighborIdentifier;
     }
 
     /**
@@ -114,14 +132,14 @@ public class RelatedAlreadyException
                 new String[] {
                     "theMeshObject",
                     "theMeshObjectIdentifier",
-                    "theOther",
-                    "theOtherIdentifier",
+                    "theNeighbor",
+                    "theNeighborIdentifier",
                 },
                 new Object[] {
                     theMeshObject,
                     theMeshObjectIdentifier,
-                    theOther,
-                    theOtherIdentifier
+                    theNeighbor,
+                    theNeighborIdentifier
                 });
     }
 
@@ -132,16 +150,16 @@ public class RelatedAlreadyException
      */
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theMeshObjectIdentifier, theOtherIdentifier };
+        return new Object[] { theMeshObjectIdentifier, theNeighborIdentifier };
     }
 
     /**
      * The MeshObject at the other end of the relationship for which we discovered a violation.
      */
-    protected transient MeshObject theOther;
+    protected transient MeshObject theNeighbor;
 
     /**
      * The MeshObjectIdentifier of the MeshObject at the other end of the relationship for which we discovered a violation.
      */
-    protected MeshObjectIdentifier theOtherIdentifier;
+    protected MeshObjectIdentifier theNeighborIdentifier;
 }

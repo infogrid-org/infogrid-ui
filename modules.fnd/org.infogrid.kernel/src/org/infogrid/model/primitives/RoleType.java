@@ -15,6 +15,7 @@
 package org.infogrid.model.primitives;
 
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.model.traversal.TraversalSpecification;
 
@@ -66,7 +67,7 @@ public interface RoleType
      *
      * @return the RoleType on the other end of the RelationshipType that this RoleType belongs to
      */
-    public RoleType getOtherRoleType();
+    public RoleType getInverseRoleType();
 
     /**
      * Obtain the EntityType on the other end of this RelationshipType. A RelationshipType has a source
@@ -160,107 +161,137 @@ public interface RoleType
 
     /**
      * Check whether the given caller is allowed to bless an existing relationship from a given start
-     * MeshObject to a given destination MeshObject with a given new RoleType.
+     * MeshObject to a given destination MeshObject with this new RoleType.
      * This returns silently if the caller is permitted
      * to do this, and throws a NotPermittedException if not.
      *
      * @param start the MeshObject from which the relationship starts
-     * @param destination the MeshObject to which the relationship leads
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedBless(
-            MeshObject    start,
-            MeshObject    destination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            MeshObject           caller )
         throws
             NotPermittedException;
 
     /**
      * Check whether the given caller is allowed to unbless an existing relationship from a given start
-     * MeshObject to a given destination MeshObject from a given RoleType.
+     * MeshObject to a given destination MeshObject from this RoleType.
      * This returns silently if the caller is permitted
      * to do this, and throws a NotPermittedException if not.
      *
      * @param start the MeshObject from which the relationship starts
-     * @param destination the MeshObject to which the relationship leads
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedUnbless(
-            MeshObject    start,
-            MeshObject    destination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            MeshObject           caller )
         throws
             NotPermittedException;
 
     /**
      * Check whether the given caller is allowed to bless the given start MeshObject with
      * the given additional EntityTypes, in the opinion of a Role (identified by this
-     * RoleType and thisOtherSide) currently also played by the start MeshObject.
+     * RoleType and neighborWithOpinion) currently also played by the start MeshObject.
      * This returns silently if the caller is permitted
      * to do this, and throws a NotPermittedException if not.
      *
      * @param start the MeshObject to be blessed
-     * @param thisOtherSide the MeshObjecton the other side of this role
      * @param types the EntityTypes by which the start MeshObject should be blessed
+     * @param neighborWithOpinionIdentifier identifier of the neighbor MeshObject whose opionion is being asked
+     * @param neighborWithOpinion neighbor MeshObject whose opionion is being asked
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedIncrementalBless(
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            EntityType [] types,
-            MeshObject    caller )
+            MeshObject           start,
+            EntityType []        types,
+            MeshObjectIdentifier neighborWithOpinionIdentifier,
+            MeshObject           neighborWithOpinion,
+            MeshObject           caller )
         throws
             NotPermittedException;
 
     /**
      * Check whether the given caller is allowed to unbless the given start MeshObject from
      * the given EntityTypes, in the opinion of a Role (identified by this
-     * RoleType and thisOtherSide) currently also played by the start MeshObject.
+     * RoleType and neighborWithOpinion) currently also played by the start MeshObject.
      * This returns silently if the caller is permitted
      * to do this, and throws a NotPermittedException if not.
      *
      * @param start the MeshObject to be blessed
-     * @param thisOtherSide the MeshObjecton the other side of this role
      * @param types the EntityTypes by which the start MeshObject should be unblessed
+     * @param neighborWithOpinionIdentifier identifier of the neighbor MeshObject whose opionion is being asked
+     * @param neighborWithOpinion neighbor MeshObject whose opionion is being asked
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedIncrementalUnbless(
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            EntityType [] types,
-            MeshObject    caller )
+            MeshObject           start,
+            EntityType []        types,
+            MeshObjectIdentifier neighborWithOpinionIdentifier,
+            MeshObject           neighborWithOpinion,
+            MeshObject           caller )
         throws
             NotPermittedException;
     
     /**
      * Check whether the given caller is allowed to bless an existing relationship from a given start
      * MeshObject to a given destination MeshObject with a given new RoleType, in the opinion of
-     * another Role (identified as this RoleType plus associated other-side MeshObject).
+     * another Role (identified as this RoleType and neighborWithOpinion).
+     *
+     * @param start the MeshObject to be blessed
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
+     * @param newTypes the RoleType by which the start MeshObject's relationship to the newDestination should be blessed
+     * @param neighborWithOpinionIdentifier identifier of the neighbor MeshObject whose opionion is being asked
+     * @param neighborWithOpinion neighbor MeshObject whose opionion is being asked
+     * @param caller the MeshObject representing the caller
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedIncrementalBless(
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            RoleType []   newTypes,
-            MeshObject    newDestination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            RoleType []          newTypes,
+            MeshObjectIdentifier neighborWithOpinionIdentifier,
+            MeshObject           neighborWithOpinion,
+            MeshObject           caller )
         throws
             NotPermittedException;
-    
+
     /**
      * Check whether the given caller is allowed to bless an existing relationship from a given start
      * MeshObject to a given destination MeshObject with a given new RoleType, in the opinion of
-     * another Role (identified as this RoleType plus associated other-side MeshObject).
+     * another Role (identified as this RoleType and neighborWithOpinion).
+     *
+     * @param start the MeshObject to be blessed
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
+     * @param newTypes the RoleType by which the start MeshObject's relationship to the newDestination should be unblessed
+     * @param neighborWithOpinionIdentifier identifier of the neighbor MeshObject whose opionion is being asked
+     * @param neighborWithOpinion neighbor MeshObject whose opionion is being asked
+     * @param caller the MeshObject representing the caller
+     * @throws NotPermittedException thrown if this caller is not permitted to do this
      */
     public void checkPermittedIncrementalUnbless(
-            MeshObject    start,
-            MeshObject    thisOtherSide,
-            RoleType []   newTypes,
-            MeshObject    newDestination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            RoleType []          newTypes,
+            MeshObjectIdentifier neighborWithOpinionIdentifier,
+            MeshObject           neighborWithOpinion,
+            MeshObject           caller )
         throws
             NotPermittedException;
     
@@ -269,14 +300,16 @@ public interface RoleType
      * MeshObject to a given destination MeshObject.
      *
      * @param start the MeshObject from which the relationship starts
-     * @param destination the MeshObject to which the relationship leads
+     * @param neighborIdentifier identifier of the MeshObject to which the relationship leads
+     * @param neighbor MeshObject to which the relationship leads, if successfully resolved
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedTraversal(
-            MeshObject    start,
-            MeshObject    destination,
-            MeshObject    caller )
+            MeshObject           start,
+            MeshObjectIdentifier neighborIdentifier,
+            MeshObject           neighbor,
+            MeshObject           caller )
         throws
             NotPermittedException;
 
@@ -285,14 +318,16 @@ public interface RoleType
      * equivalence set.
      * 
      * @param one the first MeshObject
-     * @param two the second MeshObject
+     * @param twoIdentifier identifier of the second MeshObject
+     * @param two the second MeshObject, if successfully resolved
      * @param caller the MeshObject representing the caller
      * @throws NotPermittedException thrown if this caller is not permitted to do this 
      */
     public void checkPermittedAddAsEquivalent(
-            MeshObject  one,
-            MeshObject  two,
-            MeshObject  caller )
+            MeshObject           one,
+            MeshObjectIdentifier twoIdentifier,
+            MeshObject           two,
+            MeshObject           caller )
         throws
             NotPermittedException;
     
