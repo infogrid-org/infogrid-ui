@@ -144,8 +144,7 @@ public class RippleInstructions
                     theProxies,
                     theProxyTowardsLockIndex,
                     theProxyTowardsHomeIndex
-                },
-                StringHelper.LOG_FLAGS.SHOW_NON_NULL | StringHelper.LOG_FLAGS.SHOW_NON_ZERO );
+                } );
     }
     
     /**

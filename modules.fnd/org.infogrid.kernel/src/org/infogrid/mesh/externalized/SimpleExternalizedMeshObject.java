@@ -323,8 +323,7 @@ public class SimpleExternalizedMeshObject
                     theNeighbors,
                     theRoleTypes,
                     theEquivalents
-                },
-                StringHelper.LOG_FLAGS.SHOW_NON_NULL | StringHelper.LOG_FLAGS.SHOW_NON_ZERO );
+                });
     }
 
     /**

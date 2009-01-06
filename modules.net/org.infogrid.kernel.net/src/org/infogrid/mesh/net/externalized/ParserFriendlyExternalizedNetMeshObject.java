@@ -262,8 +262,7 @@ public class ParserFriendlyExternalizedNetMeshObject
                     theProxyIdentifiers,
                     theProxyTowardsHomeIndex,
                     theProxyTowardsLockIndex
-                },
-                StringHelper.LOG_FLAGS.SHOW_NON_NULL | StringHelper.LOG_FLAGS.SHOW_NON_ZERO | StringHelper.LOG_FLAGS.SHOW_ZERO );
+                });
     }
 
     /**

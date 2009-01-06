@@ -193,8 +193,12 @@ public class RoleTypeRequiresEntityTypeException
                 new String[]{
                     "meshObject",
                     "meshObjectIdentifier",
-                    "meshType",
-                    "meshTypeIdentifier",
+                    "entityType",
+                    "entityTypeIdentifier",
+                    "roleType",
+                    "roleTypeIdentifier",
+                    "neighbor",
+                    "neighborIdentifier",
                     "types"
                 },
                 new Object[] {

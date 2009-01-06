@@ -707,8 +707,7 @@ public class SimpleXprisoMessage
                     theRoleAdditions,
                     theRoleRemovals,
                     theDeleteChanges,
-                },
-                StringHelper.LOG_FLAGS.SHOW_NON_NULL | StringHelper.LOG_FLAGS.SHOW_NON_ZERO );
+                });
     }
 
     /**

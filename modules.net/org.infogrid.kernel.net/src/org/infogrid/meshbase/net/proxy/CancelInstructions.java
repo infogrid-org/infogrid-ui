@@ -99,8 +99,7 @@ public class CancelInstructions
                 new Object[] {
                     theProxy,
                     theNetMeshObjects
-                },
-                StringHelper.LOG_FLAGS.SHOW_ALL);
+                } );
     }
     
     /**

@@ -1129,7 +1129,6 @@ public class AnetMeshObject
                 if( count < toFind.length ) {
                     toFind = ArrayHelper.copyIntoNewArray( toFind, 0, count, NetMeshObjectAccessSpecification.class );
                 }
-
                 Transaction txAlready = theMeshBase.getCurrentTransaction();
 
                 NetMeshObject [] found = null;

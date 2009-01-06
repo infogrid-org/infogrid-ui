@@ -100,8 +100,7 @@ public class ResynchronizeInstructions
                 new Object[] {
                     theProxyIdentifier,
                     theNetMeshObjectIdentifiers
-                },
-                StringHelper.LOG_FLAGS.SHOW_ALL);
+                } );
     }
     
     /**

@@ -17,12 +17,9 @@ package org.infogrid.mesh.net.externalized;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.externalized.SimpleExternalizedMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyValue;
-
 import org.infogrid.util.StringHelper;
 
 /**
@@ -341,8 +338,7 @@ public class SimpleExternalizedNetMeshObject
                     theProxyIdentifiers,
                     theProxyTowardsHomeIndex,
                     theProxyTowardsLockIndex
-                },
-                StringHelper.LOG_FLAGS.SHOW_NON_NULL | StringHelper.LOG_FLAGS.SHOW_NON_ZERO | StringHelper.LOG_FLAGS.SHOW_ZERO );
+                });
     }
     
     /**

@@ -14,7 +14,6 @@
 
 package org.infogrid.meshbase;
 
-import java.net.URISyntaxException;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.text.StringRepresentation;

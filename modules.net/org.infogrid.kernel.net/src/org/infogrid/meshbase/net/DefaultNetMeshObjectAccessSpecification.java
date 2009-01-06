@@ -231,8 +231,7 @@ public class DefaultNetMeshObjectAccessSpecification
                 new Object[] {
                     theAccessPath,
                     theRemoteIdentifier
-                },
-                StringHelper.LOG_FLAGS.SHOW_NON_NULL | StringHelper.LOG_FLAGS.SHOW_NON_ZERO );
+                });
     }
 
     /**

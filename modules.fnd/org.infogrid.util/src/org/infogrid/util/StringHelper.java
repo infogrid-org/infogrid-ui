@@ -14,6 +14,8 @@
 
 package org.infogrid.util;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -208,6 +210,129 @@ public abstract class StringHelper
     }
 
     /**
+     * Helper method to make it easy to convert an arbitrary object
+     * into a format that is useful for logging.
+     *
+     * @param obj the actual Object
+     * @return String representation of the object
+     */
+    public static String objectLogString(
+            Object obj )
+    {
+        return objectLogString( obj, FlagsLogSelector.SHOW_DEFAULT );
+    }
+
+    /**
+     * Helper method to make it easy to convert an arbitrary object
+     * into a format that is useful for logging.
+     *
+     * @param obj the actual Object
+     * @param flags the flags indicating what to log and what not
+     * @return String representation of the object
+     */
+    public static String objectLogString(
+            Object obj,
+            int    flags )
+    {
+        return objectLogString( obj, new FlagsLogSelector( flags ));
+    }
+
+    /**
+     * Helper method to make it easy to convert an arbitrary object
+     * into a format that is useful for logging.
+     *
+     * @param obj the actual Object
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String objectLogString(
+            Object      obj,
+            LogSelector selector )
+    {
+        if( obj == null )  {
+            return nullLogString( selector );
+
+        } else if( obj instanceof Object[] ) {
+            return arrayLogString( (Object []) obj, selector );
+
+        } else if( obj instanceof Collection ) {
+            return collectionLogString( (Collection) obj, selector );
+
+        } else if( obj instanceof byte[] ) {
+            return byteArrayLogString( (byte []) obj, selector );
+
+        } else if( obj instanceof short[] ) {
+            return shortArrayLogString( (short []) obj, selector );
+
+        } else if( obj instanceof int[] ) {
+            return intArrayLogString( (int []) obj, selector );
+
+        } else if( obj instanceof long[] ) {
+            return longArrayLogString( (long []) obj, selector );
+
+        } else if( obj instanceof float[] ) {
+            return floatArrayLogString( (float []) obj, selector );
+
+        } else if( obj instanceof double[] ) {
+            return doubleArrayLogString( (double []) obj, selector );
+
+        } else if( obj instanceof char[] ) {
+            return charArrayLogString( (char []) obj, selector );
+
+        } else if( obj instanceof Boolean ) {
+            return booleanLogString( (Boolean) obj, selector );
+
+        } else if( obj instanceof Character ) {
+            return characterLogString( (Character) obj, selector );
+
+        } else if( obj instanceof Date ) {
+            return dateLogString( (Date) obj, selector );
+
+        } else if( obj instanceof Number ) {
+            return numberLogString( (Number) obj, selector );
+
+        } else if( obj instanceof CharSequence ) {
+            return stringLogString( (CharSequence) obj, selector );
+
+        } else if( obj instanceof Object[] ) {
+            return arrayLogString( (Object []) obj, selector );
+
+        } else if( obj instanceof Collection ) {
+            return collectionLogString( (Collection) obj, selector );
+
+        } else {
+            Field [] fields = obj.getClass().getFields();
+            ArrayList<String> names  = new ArrayList<String>();
+            ArrayList<Object> values = new ArrayList<Object>();
+
+            for( int i=0 ; i<fields.length ; ++i ) {
+                if( Modifier.isStatic( fields[i].getModifiers())) {
+                    continue; // we don't want static
+                }
+                try {
+                    Object value = fields[i].get( obj );
+                    names.add( fields[i].getName() );
+                    values.add( value );
+
+                } catch( Throwable t ) {
+                    if( log.isDebugEnabled() ) {
+                        log.debug( t );
+                    }
+                }
+            }
+
+            if( !names.isEmpty() ) {
+                String [] names2  = ArrayHelper.copyIntoNewArray( names, String.class );
+                Object [] values2 = ArrayHelper.copyIntoNewArray( values, Object.class );
+
+                return objectLogString( obj, names2, values2, selector );
+            } else {
+                return obj.toString();
+            }
+        }
+    }
+    
+    /**
      * Helper method to make it easy to convert a structured object
      * into a format that is useful for logging.
      *
@@ -221,9 +346,9 @@ public abstract class StringHelper
             String [] fieldNames,
             Object [] fieldValues )
     {
-        return objectLogString( obj, fieldNames, fieldValues, LOG_FLAGS.SHOW_ALL );
+        return objectLogString( obj, fieldNames, fieldValues, FlagsLogSelector.SHOW_DEFAULT );
     }
-    
+
     /**
      * Helper method to make it easy to convert a structured object
      * into a format that is useful for logging.
@@ -240,10 +365,26 @@ public abstract class StringHelper
             Object [] fieldValues,
             int       flags )
     {
-        StringBuffer buf = new StringBuffer();
-        buf.append( obj.getClass().getName() );
-        buf.append( '@' );
-        buf.append( Integer.toHexString( obj.hashCode() ));
+        return objectLogString( obj, fieldNames, fieldValues, new FlagsLogSelector( flags ));
+    }
+
+    /**
+     * Helper method to make it easy to convert a structured object
+     * into a format that is useful for logging.
+     *
+     * @param obj the actual Object
+     * @param fieldNames the field names that we want to log
+     * @param fieldValues the corresponding values that we want to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String objectLogString(
+            Object      obj,
+            String []   fieldNames,
+            Object []   fieldValues,
+            LogSelector selector )
+    {
+        StringBuilder buf = createBufferWithObjectId( obj );
         buf.append( "{\n" );
         int min = Math.min(
                 fieldNames  != null ? fieldNames.length  : 0,
@@ -252,108 +393,21 @@ public abstract class StringHelper
         for( int i=0 ; i<min ; ++i ) {
             Object value = fieldValues[i];
 
-            if( value == null && !LOG_FLAGS.showNull( flags ) ) {
-                continue;
+            if( selector.shouldBeLogged( value )) {
+
+                StringBuilder buf2 = new StringBuilder();
+                buf2.append( fieldNames[i] );
+                buf2.append( ": ");
+                buf2.append( objectLogString( value, selector ));
+                buf.append( indent( buf2.toString() ));
+
+                if( i<min-1 ) {
+                    buf.append( ',' );
+                }
+                buf.append( '\n' );
             }
-            if( value != null && !LOG_FLAGS.showNonNull( flags ) ) {
-                continue;
-            }
-            if( value instanceof Number ) {
-                Number realValue = (Number) value;
-
-                if( 0 == realValue.longValue() && !LOG_FLAGS.showZero( flags ) ) {
-                    continue;
-                }
-                if( -1 == realValue.longValue() && !LOG_FLAGS.showMinusOne( flags ) ) {
-                    continue;
-                }
-                if( 0 != realValue.longValue() && !LOG_FLAGS.showNonZero( flags ) ) {
-                    continue;
-                }
-            }
-            if( value instanceof Object[] ) {
-                Object [] realValue = (Object []) value;
-                if( realValue.length == 0 && !LOG_FLAGS.showEmptyArrays( flags )) {
-                    continue;
-                }
-            }
-            if( value instanceof Collection ) {
-                Collection realValue = (Collection) value;
-                if( realValue.isEmpty() && !LOG_FLAGS.showEmptyArrays( flags )) {
-                    continue;
-                }
-            }
-            
-            buf.append( "    " );
-            buf.append( fieldNames[i] );
-            buf.append( ": ");
-            if( value instanceof Object[] ) {
-                Object [] realValue = (Object []) value;
-                buf.append( realValue.getClass().getComponentType().getName() );
-                if( realValue.length > 0 ) {
-                    buf.append( '[' ).append( realValue.length ).append( "] = {\n" );
-                    int max = Math.min( 8, realValue.length );
-                    for( int j=0 ; j<max ; ++j ) {
-                        buf.append( "        " ).append( indent( String.valueOf( realValue[j] ))).append( "\n" );
-                    }
-                    if( max != realValue.length ) {
-                        buf.append( "        ...\n" );
-                    }
-                    buf.append( "    }" );
-
-                } else {
-                    buf.append( "[0] = {}" );
-                }
-
-            } else if( value instanceof Collection ) {
-                Collection realValue = (Collection) value;
-                buf.append( realValue.getClass().getName() );
-                if( realValue.size() > 0 ) {
-                    buf.append( '[' ).append( realValue.size() ).append( "] = {\n" );
-                    int max = Math.min( 8, realValue.size() );
-                    int j   = 0;
-                    for( Object current : realValue ) {
-                        buf.append( "        " ).append( indent( String.valueOf( current ))).append( "\n" );
-                        if( ++j >= max ) {
-                            break;
-                        }
-                    }
-                    if( max != realValue.size() ) {
-                        buf.append( "        ...\n" );
-                    }
-                    buf.append( "    }" );
-
-                } else {
-                    buf.append( "[0] = {}" );
-                }
-
-            } else if( value instanceof byte[] ) {
-                byte [] realValue = (byte []) value;
-                buf.append( "byte[ ").append( realValue.length ).append( " ] = " );
-                int max = Math.min( 8, realValue.length );
-                for( int j=0 ; j<max ; ++j ) {
-                    buf.append( Character.forDigit( ( realValue[j] >> 4 ) & 0xf, 16 )).append( Character.forDigit( realValue[j] & 0xf, 16 ));
-                }
-                if( max < realValue.length ) {
-                    buf.append( "..." );
-                }
-                buf.append( ";" );
-
-            } else if( value instanceof Date ) {
-                Date realValue = (Date) value;
-                String temp = theObjectLogStringDateFormat.format( realValue );
-                buf.append( temp );
-
-            } else {
-                buf.append( indent( String.valueOf( value )));
-            }
-
-            if( i<min-1 ) {
-                buf.append( ',' );
-            }
-            buf.append( '\n' );
         }
-        if(    ( fieldNames != null && fieldNames.length != min )
+        if(    ( fieldNames  != null && fieldNames.length  != min )
             || ( fieldValues != null && fieldValues.length != min ))
         {
             log.error( "non-matching field names and values in toString method" );
@@ -364,89 +418,445 @@ public abstract class StringHelper
     }
 
     /**
-     * Flags to configure the objectLogString output.
+     * Helper method to make it easy to convert the null value
+     * into a format that is useful for logging.
+     *
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
      */
-    public static class LOG_FLAGS
+    public static String nullLogString(
+            LogSelector selector )
     {
-        public static int SHOW_NULL         =   1;
-        public static int SHOW_NON_NULL     =   2;
-        public static int SHOW_ZERO         =   4;
-        public static int SHOW_NON_ZERO     =   8;
-        public static int SHOW_MINUS_ONE    =  16;
-        public static int SHOW_EMPTY_ARRAYS =  32;
-        public static int SHOW_ALL          = 255;
+        return "null";
+    }
 
-        /**
-         * Determine whether to show null values.
-         *
-         * @param theFlags the flags indicating what to log and what not
-         * @return true if showing null values
-         */
-        public static boolean showNull(
-                int theFlags )
-        {
-            return ( SHOW_NULL & theFlags ) != 0;
+    /**
+     * Helper method to make it easy to convert a Number object
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String numberLogString(
+            Number      value,
+            LogSelector selector )
+    {
+        if( value == null ) {
+            return nullLogString( selector );
+
+        } else {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append( value.getClass() );
+            buf.append( ": " );
+            buf.append( value );
+            return buf.toString();
         }
-        
-        /**
-         * Determine whether to show non-null values.
-         *
-         * @param theFlags the flags indicating what to log and what not
-         * @return true if showing non-null values
-         */
-        public static boolean showNonNull(
-                int theFlags )
-        {
-            return ( SHOW_NON_NULL & theFlags ) != 0;
+    }
+
+    /**
+     * Helper method to make it easy to convert a string object
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String stringLogString(
+            CharSequence value,
+            LogSelector  selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( value.getClass() );
+        buf.append( ": \"" );
+        buf.append( value );
+        buf.append( "\"" );
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert an  object array object
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String arrayLogString(
+            Object []   value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( value.getClass().getComponentType().getName() );
+        if( value.length > 0 ) {
+            buf.append( '[' ).append( value.length ).append( "] = {\n" );
+            int max = Math.min( 8, value.length );
+            for( int j=0 ; j<max ; ++j ) {
+                String delegate = objectLogString( value[j], selector );
+                StringBuilder delegate2 = indent( delegate );
+                buf.append( delegate2 );
+                if( j < max-1 ) {
+                    buf.append( "," );
+                }
+                buf.append( "\n" );
+            }
+            if( max != value.length ) {
+                buf.append( "        ...\n" );
+            }
+            buf.append( "}" );
+
+        } else {
+            buf.append( "[0] = {}" );
         }
-        
-        /**
-         * Determine whether to show zero values.
-         *
-         * @param theFlags the flags indicating what to log and what not
-         * @return true if showing zero values
-         */
-        public static boolean showZero(
-                int theFlags )
-        {
-            return ( SHOW_ZERO & theFlags ) != 0;
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert a Collection object
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String collectionLogString(
+            Collection  value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( value.getClass().getName() );
+        if( value.size() > 0 ) {
+            buf.append( '[' ).append( value.size() ).append( "] = {\n" );
+            int max = Math.min( 8, value.size() );
+            int j   = 0;
+            for( Object current : value ) {
+                String delegate = objectLogString( current, selector );
+                StringBuilder delegate2 = indent( delegate );
+                buf.append( delegate2 ).append( "\n" );
+                if( ++j >= max ) {
+                    break;
+                }
+            }
+            if( max != value.size() ) {
+                buf.append( "        ...\n" );
+            }
+            buf.append( "}" );
+
+        } else {
+            buf.append( "[0] = {}" );
         }
-        
-        /**
-         * Determine whether to show non-zero values.
-         *
-         * @param theFlags the flags indicating what to log and what not
-         * @return true if showing non-zero values
-         */
-        public static boolean showNonZero(
-                int theFlags )
-        {
-            return ( SHOW_NON_ZERO & theFlags ) != 0;
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert a byte array
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String byteArrayLogString(
+            byte []     value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( "byte[").append( value.length ).append( "] = " );
+        int max = Math.min( 8, value.length );
+        for( int j=0 ; j<max ; ++j ) {
+            buf.append( Character.forDigit( ( value[j] >> 4 ) & 0xf, 16 )).append( Character.forDigit( value[j] & 0xf, 16 ));
         }
-        
-        /**
-         * Determine whether to show -1 values.
-         *
-         * @param theFlags the flags indicating what to log and what not
-         * @return true if showing -1 values
-         */
-        public static boolean showMinusOne(
-                int theFlags )
-        {
-            return ( SHOW_MINUS_ONE & theFlags ) != 0;
+        if( max < value.length ) {
+            buf.append( "..." );
         }
-        
-        /**
-         * Determine whether to show empty arrays.
-         * 
-         * @param theFlags the flags indicating what to log and what not
-         * @return true if showing empty arrays
-         */
-        public static boolean showEmptyArrays(
-                int theFlags )
-        {
-            return ( SHOW_EMPTY_ARRAYS & theFlags ) != 0;
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert an array of short
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String shortArrayLogString(
+            short []    value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( "short[").append( value.length ).append( "] = { " );
+        int max = Math.min( 8, value.length );
+        for( int j=0 ; j<max ; ++j ) {
+            buf.append( value[j] );
+            if( j < max-1 ) {
+                buf.append( ", " );
+            }
         }
+        if( max < value.length ) {
+            buf.append( "..." );
+        }
+        buf.append( " }" );
+
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert an array of int
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String intArrayLogString(
+            int []      value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( "int[").append( value.length ).append( "] = { " );
+        int max = Math.min( 8, value.length );
+        for( int j=0 ; j<max ; ++j ) {
+            buf.append( value[j] );
+            if( j < max-1 ) {
+                buf.append( ", " );
+            }
+        }
+        if( max < value.length ) {
+            buf.append( "..." );
+        }
+        buf.append( " }" );
+
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert an array of long
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String longArrayLogString(
+            long []     value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( "long[").append( value.length ).append( "] = { " );
+        int max = Math.min( 8, value.length );
+        for( int j=0 ; j<max ; ++j ) {
+            buf.append( value[j] );
+            if( j < max-1 ) {
+                buf.append( ", " );
+            }
+        }
+        if( max < value.length ) {
+            buf.append( "..." );
+        }
+        buf.append( " }" );
+
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert an array of float
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String floatArrayLogString(
+            float []    value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( "float[").append( value.length ).append( "] = { " );
+        int max = Math.min( 8, value.length );
+        for( int j=0 ; j<max ; ++j ) {
+            buf.append( value[j] );
+            if( j < max-1 ) {
+                buf.append( ", " );
+            }
+        }
+        if( max < value.length ) {
+            buf.append( "..." );
+        }
+        buf.append( " }" );
+
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert an array of double
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String doubleArrayLogString(
+            double []   value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( "double[").append( value.length ).append( "] = { " );
+        int max = Math.min( 8, value.length );
+        for( int j=0 ; j<max ; ++j ) {
+            buf.append( value[j] );
+            if( j < max-1 ) {
+                buf.append( ", " );
+            }
+        }
+        if( max < value.length ) {
+            buf.append( "..." );
+        }
+        buf.append( " }" );
+
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert an array of boolean
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String booleanArrayLogString(
+            boolean []  value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( "boolean[").append( value.length ).append( "] = { " );
+        int max = Math.min( 8, value.length );
+        for( int j=0 ; j<max ; ++j ) {
+            buf.append( value[j] );
+            if( j < max-1 ) {
+                buf.append( ", " );
+            }
+        }
+        if( max < value.length ) {
+            buf.append( "..." );
+        }
+        buf.append( " }" );
+
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert an array of char
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String charArrayLogString(
+            char []     value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( "char[").append( value.length ).append( "] = { " );
+        int max = Math.min( 8, value.length );
+        for( int j=0 ; j<max ; ++j ) {
+            buf.append( '\'' );
+            buf.append( value[j] );
+            buf.append( '\'' );
+            if( j < max-1 ) {
+                buf.append( ", " );
+            }
+        }
+        if( max < value.length ) {
+            buf.append( "..." );
+        }
+        buf.append( " }" );
+
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert a Boolean object
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String booleanLogString(
+            Boolean     value,
+            LogSelector selector )
+    {
+        if( value.booleanValue() ) {
+            return "true";
+        } else {
+            return "false";
+        }
+    }
+
+    /**
+     * Helper method to make it easy to convert a Character object
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String characterLogString(
+            Character   value,
+            LogSelector selector )
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append( '\'' );
+        buf.append( value.charValue() );
+        buf.append( '\'' );
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert a Date object
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @return String representation of the object
+     */
+    public static String dateLogString(
+            Date        value,
+            LogSelector selector )
+    {
+        String ret = theObjectLogStringDateFormat.format( value );
+        return ret;
+    }
+
+    /**
+     * Create a StringBuilder with object identifier.
+     *
+     * @param obj the Object
+     * @return return the StringBuilder
+     */
+    protected static StringBuilder createBufferWithObjectId(
+            Object obj )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( obj.getClass().getName() );
+        buf.append( '@' );
+        buf.append( Integer.toHexString( obj.hashCode() ));
+        return buf;
     }
 
     /**
@@ -455,10 +865,11 @@ public abstract class StringHelper
      * @param input the input String
      * @return the indented String. This returns StringBuffer as that is usually more efficient.
      */
-    public static StringBuffer indent(
+    public static StringBuilder indent(
             String input )
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
+        buf.append( "    " );
         for( int i=0 ; i<input.length() ; ++i ) {
             char c = input.charAt( i );
             switch( c ) {
@@ -525,4 +936,125 @@ public abstract class StringHelper
      * The date format to use for Date fields in objectLogString
      */
     public static final DateFormat theObjectLogStringDateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.S" );
+
+    /**
+     * Interface that allows a client to specify which objects to log.
+     */
+    public interface LogSelector
+    {
+        /**
+         * Determine whether this object should be logged.
+         *
+         * @param obj the candidate object
+         * @return true if it should be logged
+         */
+       public boolean shouldBeLogged(
+               Object obj );
+    }
+
+    /**
+     * Flag-based LogSelector.
+     */
+    public static class FlagsLogSelector
+            implements
+                LogSelector
+    {
+        public static final int SHOW_NULL              =  1;
+        public static final int SHOW_NON_NULL          =  2;
+        public static final int SHOW_ZERO              =  4;
+        public static final int SHOW_NON_ZERO          =  8;
+        public static final int SHOW_MINUS_ONE         = 16;
+        public static final int SHOW_EMPTY_ARRAYS      = 32;
+        public static final int SHOW_EMPTY_COLLECTIONS = 64;
+        public static final int SHOW_ALL
+                = SHOW_NULL
+                | SHOW_NON_NULL
+                | SHOW_ZERO
+                | SHOW_NON_ZERO
+                | SHOW_MINUS_ONE
+                | SHOW_EMPTY_ARRAYS
+                | SHOW_EMPTY_COLLECTIONS;
+        public static final int SHOW_DEFAULT
+                = SHOW_NON_NULL
+                | SHOW_NON_ZERO
+                | SHOW_MINUS_ONE;
+
+        /**
+         * Constructor.
+         *
+         * @param flags the flags to use
+         */
+        public FlagsLogSelector(
+                int flags )
+        {
+            theFlags = flags;
+        }
+
+        /**
+         * Determine whether this object should be logged.
+         *
+         * @param obj the candidate object
+         * @return true if it should be logged
+         */
+       public boolean shouldBeLogged(
+               Object obj )
+       {
+           if( obj == null ) {
+               if(( SHOW_NULL & theFlags ) != 0 ) {
+                   return true;
+               } else {
+                   return false;
+               }
+           }
+           if( obj instanceof Number ) {
+               Number realObj = (Number) obj;
+
+               if( realObj.doubleValue() == 0. ) {
+                   if(( SHOW_ZERO & theFlags ) != 0 ) {
+                       return true;
+                   } else {
+                       return false;
+                   }
+               } else if( realObj.doubleValue() == -1. ) {
+                   if(( SHOW_MINUS_ONE & theFlags ) != 0 ) {
+                       return true;
+                   } else {
+                       return false;
+                   }
+               } else {
+                   if(( SHOW_NON_ZERO & theFlags ) != 0 ) {
+                       return true;
+                   } else {
+                       return false;
+                   }
+               }
+           } else if( obj instanceof Object[] ) {
+               Object [] realObj = (Object []) obj;
+
+               if( realObj.length == 0 ) {
+                   if(( SHOW_EMPTY_ARRAYS & theFlags ) != 0 ) {
+                       return true;
+                   } else {
+                       return false;
+                   }
+               }
+           } else if( obj instanceof Collection ) {
+               Collection realObj = (Collection) obj;
+
+               if( realObj.isEmpty() ) {
+                   if(( SHOW_EMPTY_COLLECTIONS & theFlags ) != 0 ) {
+                       return true;
+                   } else {
+                       return false;
+                   }
+               }
+           }
+           return true;
+       }
+
+        /**
+         * The masking flags.
+         */
+        protected int theFlags;
+    }
 }

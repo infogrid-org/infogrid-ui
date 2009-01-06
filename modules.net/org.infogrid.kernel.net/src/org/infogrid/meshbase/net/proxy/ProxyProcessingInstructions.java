@@ -908,8 +908,7 @@ public class ProxyProcessingInstructions
                     theRoleAdditions,
                     theRoleRemovals
                 
-                },
-                StringHelper.LOG_FLAGS.SHOW_NON_NULL | StringHelper.LOG_FLAGS.SHOW_NON_ZERO );
+                });
     }
     
     /**
