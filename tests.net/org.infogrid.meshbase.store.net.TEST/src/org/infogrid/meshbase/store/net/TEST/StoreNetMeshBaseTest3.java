@@ -19,7 +19,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.a.AnetMeshObject;
+import org.infogrid.mesh.net.a.AnetMeshObjectNeighborManager;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -111,9 +113,9 @@ public class StoreNetMeshBaseTest3
         checkEquals( mb2MeshStore.size(),  1, "Wrong number of entries in mb2MeshStore" );
         checkEquals( mb2ProxyStore.size(), 0, "Wrong number of entries in mb2ProxyStore" );
 
-        checkEquals( ((AnetMeshObject)obj1_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj2_mb1).getInternalNeighborList().length, 2, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj3_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj2_mb1 ).length, 2, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj3_mb1 ).length, 1, "Wrong number of internal neighbors" );
 
         //
 
@@ -139,10 +141,10 @@ public class StoreNetMeshBaseTest3
         checkEquals( mb2MeshStore.size(),  2, "Wrong number of entries in mb2MeshStore" );
         checkEquals( mb2ProxyStore.size(), 1, "Wrong number of entries in mb2ProxyStore" );
 
-        checkEquals( ((AnetMeshObject)obj1_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj2_mb1).getInternalNeighborList().length, 2, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj3_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj1_mb2).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj2_mb1 ).length, 2, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj3_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb2 ).length, 1, "Wrong number of internal neighbors" );
         
         NetMeshObject obj2_mb2   = mb2.findMeshObjectByIdentifier( obj2Name );
         checkCondition( obj2_mb2 == null, "obj2 should not be here yet" );
@@ -176,11 +178,11 @@ public class StoreNetMeshBaseTest3
         checkEquals( mb2MeshStore.size(),  3, "Wrong number of entries in mb2MeshStore" );
         checkEquals( mb2ProxyStore.size(), 1, "Wrong number of entries in mb2ProxyStore" );
 
-        checkEquals( ((AnetMeshObject)obj1_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj2_mb1).getInternalNeighborList().length, 2, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj3_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj1_mb2).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj2_mb2).getInternalNeighborList().length, 2, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj2_mb1 ).length, 2, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj3_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb2 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj2_mb2 ).length, 2, "Wrong number of internal neighbors" );
 
         //
 
@@ -208,12 +210,12 @@ public class StoreNetMeshBaseTest3
         checkEquals( mb2MeshStore.size(),  4, "Wrong number of entries in mb2MeshStore" );
         checkEquals( mb2ProxyStore.size(), 1, "Wrong number of entries in mb2ProxyStore" );
 
-        checkEquals( ((AnetMeshObject)obj1_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj2_mb1).getInternalNeighborList().length, 2, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj3_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj1_mb2).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj2_mb2).getInternalNeighborList().length, 2, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj3_mb2).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj2_mb1 ).length, 2, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj3_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb2 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj2_mb2 ).length, 2, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj3_mb2 ).length, 1, "Wrong number of internal neighbors" );
 
         //
 
@@ -276,12 +278,12 @@ public class StoreNetMeshBaseTest3
         checkObject( obj2_mb2, "obj2_mb2 not found" );
         checkObject( obj3_mb2, "obj3_mb2 not found" );
 
-        checkEquals( ((AnetMeshObject)obj1_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj2_mb1).getInternalNeighborList().length, 2, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj3_mb1).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj1_mb2).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj2_mb2).getInternalNeighborList().length, 2, "Wrong number of internal neighbors" );
-        checkEquals( ((AnetMeshObject)obj3_mb2).getInternalNeighborList().length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj2_mb1 ).length, 2, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj3_mb1 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj1_mb2 ).length, 1, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj2_mb2 ).length, 2, "Wrong number of internal neighbors" );
+        checkEquals( neighborsOf( obj3_mb2 ).length, 1, "Wrong number of internal neighbors" );
 
         //
         
@@ -388,6 +390,22 @@ public class StoreNetMeshBaseTest3
         mb2.die();
         
         exec.shutdown();
+    }
+
+    /**
+     * Helper method to make it easy to determine the neighbors of a MeshObject.
+     *
+     * @param obj the MeshObject
+     * @return identifiers of the neighbors
+     */
+    protected NetMeshObjectIdentifier [] neighborsOf(
+            MeshObject obj )
+    {
+        AnetMeshObject                realObj = (AnetMeshObject)obj;
+        AnetMeshObjectNeighborManager nMgr    = realObj.getNeighborManager();
+
+        NetMeshObjectIdentifier [] ret = nMgr.getNeighborIdentifiers( realObj );
+        return ret;
     }
 
     /**

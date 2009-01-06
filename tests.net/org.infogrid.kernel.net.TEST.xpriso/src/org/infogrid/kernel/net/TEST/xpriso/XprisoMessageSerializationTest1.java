@@ -200,7 +200,11 @@ public class XprisoMessageSerializationTest1
                         id1
                 }, // proxyNames
                 1, // proxyTowardsHomeIndex
-                0 )); // proxyTowardsLockIndex
+                0, // proxyTowardsLockIndex
+                new NetMeshBaseIdentifier[][] {
+                        new NetMeshBaseIdentifier [] { id3, id2 },
+                        null
+                })); // relationshipProxyNames
         
         // Message 3
         
@@ -222,24 +226,25 @@ public class XprisoMessageSerializationTest1
         four.setRequestId( 444 );
         four.setResponseId( -11111 );
         four.addConveyedMeshObject( SimpleExternalizedNetMeshObject.create(
-                        nmo_ref1, // identifier
-                        new MeshTypeIdentifier[] {
-                                mt_ref2
-                        }, // typeNames
-                        112L, // timeCreated
-                        134L, // timeUpdated
-                        156L, // timeRead
-                        178L, // timeExpires
-                        new MeshTypeIdentifier[0], // propertyTypes
-                        new PropertyValue[0], // propertyValues
-                        new NetMeshObjectIdentifier[0], // neighbors
-                        new MeshTypeIdentifier [0][], // roleTypes
-                        new NetMeshObjectIdentifier[0], // equivalents
-                        true, // giveUpHomeReplica
-                        true, // giveUpLock
-                        new NetMeshBaseIdentifier[0], // proxyNames
-                        -1, // proxyTowardsHomeIndex
-                        -1 )); // proxyTowardsLockIndex
+                nmo_ref1, // identifier
+                new MeshTypeIdentifier[] {
+                        mt_ref2
+                }, // typeNames
+                112L, // timeCreated
+                134L, // timeUpdated
+                156L, // timeRead
+                178L, // timeExpires
+                new MeshTypeIdentifier[0], // propertyTypes
+                new PropertyValue[0], // propertyValues
+                new NetMeshObjectIdentifier[0], // neighbors
+                new MeshTypeIdentifier [0][], // roleTypes
+                new NetMeshObjectIdentifier[0], // equivalents
+                true, // giveUpHomeReplica
+                true, // giveUpLock
+                new NetMeshBaseIdentifier[0], // proxyNames
+                -1, // proxyTowardsHomeIndex
+                -1, // proxyTowardsLockIndex
+                new NetMeshBaseIdentifier[0][] )); // relationshipProxyNames
 
         // Message 5
         

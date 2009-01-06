@@ -88,7 +88,8 @@ public class ShadowMeshBaseSerializationTest1
                                 false,
                                 null,
                                 -1,
-                                -1 )
+                                -1,
+                                null )
                     }
             )
         };
