@@ -132,7 +132,7 @@ public class ParserFriendlyExternalizedMeshObject
             MeshObjectIdentifier neighbor )
     {
         for( int i=0 ; i<theRelationships.size() ; ++i ) {
-            HasRoleTypes current = theRelationships.get( i );
+            Relationship current = theRelationships.get( i );
 
             if( current.getNeighborIdentifier().equals( neighbor )) {
                 return current.getTypes();
@@ -213,7 +213,7 @@ public class ParserFriendlyExternalizedMeshObject
      * @param rel the other relationship
      */
     public void addRelationship(
-            HasRoleTypes rel )
+            Relationship rel )
     {
         theRelationships.add( rel );
     }
@@ -221,11 +221,11 @@ public class ParserFriendlyExternalizedMeshObject
     /**
      * Get the relationships.
      *
-     * @return the elationships
+     * @return the relationships
      */
-    public HasRoleTypes [] getRelationships()
+    public Relationship [] getRelationships()
     {
-        HasRoleTypes [] ret = theRelationships.toArray( new HasRoleTypes[ theRelationships.size() ]);
+        Relationship [] ret = theRelationships.toArray( new Relationship[ theRelationships.size() ]);
         return ret;
     }
 
@@ -273,7 +273,7 @@ public class ParserFriendlyExternalizedMeshObject
     /**
      * The relationships in which this ExternalizedMeshObject participates.
      */
-    protected ArrayList<HasRoleTypes> theRelationships = new ArrayList<HasRoleTypes>();
+    protected ArrayList<Relationship> theRelationships = new ArrayList<Relationship>();
     
     /**
      * The PropertyValue that is currently being parsed.
@@ -396,7 +396,30 @@ public class ParserFriendlyExternalizedMeshObject
          */
         protected MeshObjectIdentifier theNeighborIdentifier;
     }
-    
+
+    /**
+     * A relationship.
+     */
+    public static class Relationship
+            extends
+                HasRoleTypes
+    {
+        /**
+         * Constructor.
+         *
+         * @param identifier the MeshObjectIdentifier on this side of the relationship
+         * @param neighborIdentifier the MeshObjectIdentifier on the other side of the relationship
+         * @param timeUpdated the time it was last updated
+         */
+        public Relationship(
+                MeshObjectIdentifier identifier,
+                MeshObjectIdentifier neighborIdentifier,
+                long                 timeUpdated )
+        {
+            super( identifier, neighborIdentifier, timeUpdated );
+        }
+    }
+
     /**
      * Represents something that has Properties, i.e. a MeshObject.
      */

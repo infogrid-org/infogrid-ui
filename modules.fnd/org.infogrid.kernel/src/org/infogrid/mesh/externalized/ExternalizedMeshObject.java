@@ -94,6 +94,7 @@ public interface ExternalizedMeshObject
      * Obtain the MeshTypeIdentifiers of the RoleTypes played by this MeshObject with respect to
      * a given neighbor.
      *
+     * @param neighbor the identifier of the neighbor
      * @return the MeshTypeIdentifiers of the RoleTypes
      */
     public abstract MeshTypeIdentifier [] getRoleTypesFor(

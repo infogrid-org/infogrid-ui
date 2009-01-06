@@ -14,17 +14,14 @@
 
 package org.infogrid.mesh.net.externalized;
 
+import java.util.ArrayList;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
-
-import java.util.ArrayList;
 
 /**
  * A temporary buffer for a to-be-deserialized NetMeshObject.
@@ -114,7 +111,7 @@ public class ParserFriendlyExternalizedNetMeshObject
      *
      * @param newValue the new value
      */
-    public void setGiveUpHomeReplica(
+    public void setGiveUpHome(
             boolean newValue )
     {
         theGiveUpHomeReplica = newValue;
@@ -220,6 +217,78 @@ public class ParserFriendlyExternalizedNetMeshObject
     }
     
     /**
+     * Obtain the NetMeshObjectIdentifiers of the partner NetMeshBases from which this
+     * NetMeshObject obtained relationship information.
+     *
+     * @param neighbor the identifier of the neighbor
+     * @return the NetMeshBaseIdentifiers of the partner NetMeshBases
+     */
+    public NetMeshBaseIdentifier [] getRelationshipProxyIdentifiersFor(
+            MeshObjectIdentifier neighbor )
+    {
+        for( int i=0 ; i<theRelationships.size() ; ++i ) {
+            RelationshipWithRelationshipProxies current = (RelationshipWithRelationshipProxies) theRelationships.get( i );
+
+            if( current.getNeighborIdentifier().equals( neighbor )) {
+                return current.getRelationshipProxyIdentifiers();
+            }
+        }
+        throw new IllegalArgumentException( "Not found" );
+    }
+
+    /**
+     * Determine equality.
+     *
+     * @param other the Object to test against
+     * @return true if the two Objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( !( other instanceof ExternalizedNetMeshObject )) {
+            return false;
+        }
+        if( !super.equals( other )) {
+            return false;
+        }
+
+        ExternalizedNetMeshObject realOther = (ExternalizedNetMeshObject) other;
+
+        if( theGiveUpHomeReplica != realOther.getGiveUpHomeReplica() ) {
+            return false;
+        }
+        if( theGiveUpLock != realOther.getGiveUpLock() ) {
+            return false;
+        }
+        if( !ArrayHelper.hasSameContentOutOfOrder( getProxyIdentifiers(), realOther.getProxyIdentifiers(), true )) {
+            return false;
+        }
+
+        if( getProxyTowardsHomeNetworkIdentifier() != null ) {
+            if( !getProxyTowardsHomeNetworkIdentifier().equals( realOther.getProxyTowardsHomeNetworkIdentifier() )) {
+                return false;
+            }
+        } else if( realOther.getProxyTowardsHomeNetworkIdentifier() != null ) {
+            return false;
+        }
+        if( getProxyTowardsLockNetworkIdentifier() != null ) {
+            if( !getProxyTowardsLockNetworkIdentifier().equals( realOther.getProxyTowardsLockNetworkIdentifier() )) {
+                return false;
+            }
+        } else if( realOther.getProxyTowardsLockNetworkIdentifier() != null ) {
+            return false;
+        }
+        for( MeshObjectIdentifier neighbor : getNeighbors() ) {
+            if( !ArrayHelper.hasSameContentOutOfOrder( getRelationshipProxyIdentifiersFor( neighbor ), realOther.getRelationshipProxyIdentifiersFor( neighbor ), true )) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Convert to String representation, for debugging.
      *
      * @return String representation
@@ -276,7 +345,7 @@ public class ParserFriendlyExternalizedNetMeshObject
     protected boolean theGiveUpLock;
     
     /**
-     * NetMeshBaseIdentifier for the Proxies to other NetworkedMeshBases that contain the replicas that are
+     * NetMeshBaseIdentifiers for the Proxies to other NetworkedMeshBases that contain the replicas that are
      * closest in the replication graph.
      */
     protected ArrayList<NetMeshBaseIdentifier> theProxyIdentifiers = new ArrayList<NetMeshBaseIdentifier>();
@@ -292,9 +361,59 @@ public class ParserFriendlyExternalizedNetMeshObject
      * is HERE_CONSTANT, it indicates that this replica has the lock.
      */
     protected int theProxyTowardsLockIndex = HERE_CONSTANT;
-    
+
     /** 
      * Special value indicating this replica (instead of another, reached through a Proxy).
      */
     protected static final int HERE_CONSTANT = -1;
+
+    /**
+     * Augments Relationship to also carry relationship Proxies.
+     */
+    public static class RelationshipWithRelationshipProxies
+            extends
+                Relationship
+    {
+        /**
+         * Constructor.
+         *
+         * @param identifier the MeshObjectIdentifier on this side of the relationship
+         * @param neighborIdentifier the MeshObjectIdentifier on the other side of the relationship
+         * @param timeUpdated the time it was last updated
+         */
+        public RelationshipWithRelationshipProxies(
+                MeshObjectIdentifier identifier,
+                MeshObjectIdentifier neighborIdentifier,
+                long                 timeUpdated )
+        {
+            super( identifier, neighborIdentifier, timeUpdated );
+        }
+
+        /**
+         * Add a relationship proxy.
+         *
+         * @param identifier identifier of the partner NetMeshBase of the proxies
+         */
+        public void addRelationshipProxyIdentifier(
+                NetMeshBaseIdentifier identifier )
+        {
+            theRelationshipProxyIdentifiers.add( identifier );
+        }
+
+        /**
+         * Get the relationship proxies.
+         *
+         * @return the identifiers of the partner NetMeshBases of the proxies
+         */
+        public NetMeshBaseIdentifier [] getRelationshipProxyIdentifiers()
+        {
+            NetMeshBaseIdentifier [] ret = theRelationshipProxyIdentifiers.toArray( new NetMeshBaseIdentifier[ theRelationshipProxyIdentifiers.size() ]);
+            return ret;
+        }
+
+        /**
+         * The identifiers of the NetMeshBases that are the partners in the relationship Proxies.
+         */
+        protected ArrayList<NetMeshBaseIdentifier> theRelationshipProxyIdentifiers = new ArrayList<NetMeshBaseIdentifier>();
+    }
 }

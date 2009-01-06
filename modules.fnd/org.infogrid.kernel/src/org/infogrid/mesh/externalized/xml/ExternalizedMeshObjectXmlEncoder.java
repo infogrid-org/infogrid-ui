@@ -23,7 +23,6 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.externalized.ExternalizedMeshObjectEncoder;
 import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObject;
-import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObjectFactory;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyValue;
@@ -113,7 +112,69 @@ public class ExternalizedMeshObjectXmlEncoder
     {
         encodeOpeningTag( obj, meshObjectTagName, buf  );
 
-        // types
+        encodeExternalizedMeshObjectTypes(       obj, buf );
+        encodeExternalizedMeshObjectProperties(  obj, buf );
+        encodeExternalizedMeshObjectNeighbors(   obj, buf );
+        encodeExternalizedMeshObjectEquivalents( obj, buf );
+        
+        appendExternalizedMeshObjectEncodingHook( obj, buf  );
+
+        buf.append( "</" ).append( meshObjectTagName ).append( ">\n" );
+    }
+
+    /**
+     * Serialize the opening tag, to make it easy for subclasses to add to the attributes list.
+     *
+     * @param obj the ExternalizedMeshObject to encode
+     * @param meshObjectTagName the XML top-level tag to use for this ExternalizedMeshObject
+     * @param buf the StringBuilder to which to append the ExternalizedMeshObject
+     * @throws EncodingException thrown if a problem occurred during encoding
+     */
+    protected void encodeOpeningTag(
+            ExternalizedMeshObject obj,
+            String                 meshObjectTagName,
+            StringBuilder          buf )
+        throws
+            EncodingException
+    {
+        buf.append( "<" );
+        buf.append( meshObjectTagName );
+        buf.append( " " );
+        buf.append( IDENTIFIER_TAG );
+        buf.append( "=\"" );
+        appendIdentifier( obj.getIdentifier(), buf );
+        buf.append( "\" " );
+        buf.append( TIME_CREATED_TAG );
+        buf.append( "=\"" );
+        appendLong( obj.getTimeCreated(), buf );
+        buf.append( "\" " );
+        buf.append( TIME_UPDATED_TAG );
+        buf.append( "=\"" );
+        appendLong( obj.getTimeUpdated(), buf );
+        buf.append( "\" " );
+        buf.append( TIME_READ_TAG );
+        buf.append( "=\"" );
+        appendLong( obj.getTimeRead(), buf );
+        buf.append( "\" " );
+        buf.append( TIME_EXPIRES_TAG );
+        buf.append( "=\"" );
+        appendLong( obj.getTimeExpires(), buf );
+        buf.append( "\">\n" );
+    }
+
+    /**
+     * Serialize the types section.
+     *
+     * @param obj the ExternalizedMeshObject to encode
+     * @param buf the StringBuilder to which to append the ExternalizedMeshObject
+     * @throws EncodingException thrown if a problem occurred during encoding
+     */
+    protected void encodeExternalizedMeshObjectTypes(
+            ExternalizedMeshObject obj,
+            StringBuilder          buf  )
+        throws
+            EncodingException
+    {
         MeshTypeIdentifier [] allTypes = obj.getExternalTypeIdentifiers();
         if( allTypes != null ) {
             for( int i=0 ; i<allTypes.length ; ++i ) {
@@ -127,8 +188,21 @@ public class ExternalizedMeshObjectXmlEncoder
                 buf.append( ">\n" );
             }
         }
+    }
 
-        // properties
+    /**
+     * Serialize the properties section.
+     *
+     * @param obj the ExternalizedMeshObject to encode
+     * @param buf the StringBuilder to which to append the ExternalizedMeshObject
+     * @throws EncodingException thrown if a problem occurred during encoding
+     */
+    protected void encodeExternalizedMeshObjectProperties(
+            ExternalizedMeshObject obj,
+            StringBuilder          buf  )
+        throws
+            EncodingException
+    {
         MeshTypeIdentifier [] allPropertyTypes  = obj.getPropertyTypes();
         PropertyValue []      allPropertyValues = obj.getPropertyValues();
         if( allPropertyTypes != null ) {
@@ -149,8 +223,21 @@ public class ExternalizedMeshObjectXmlEncoder
                 buf.append( ">\n" );
             }
         }
-        
-        // neighbors
+    }
+
+    /**
+     * Serialize the neighbors section.
+     *
+     * @param obj the ExternalizedMeshObject to encode
+     * @param buf the StringBuilder to which to append the ExternalizedMeshObject
+     * @throws EncodingException thrown if a problem occurred during encoding
+     */
+    protected void encodeExternalizedMeshObjectNeighbors(
+            ExternalizedMeshObject obj,
+            StringBuilder          buf  )
+        throws
+            EncodingException
+    {
         MeshObjectIdentifier [] neighbors = obj.getNeighbors();
         if( neighbors != null ) {
             for( int i=0 ; i<neighbors.length ; ++i ) {
@@ -182,8 +269,22 @@ public class ExternalizedMeshObjectXmlEncoder
                 }
             }
         }
-        
-        // equivalents. If we have this, we have to write even null values, because otherwise we can't distinguish right from left
+    }
+
+    /**
+     * Serialize the equivalents section.
+     *
+     * @param obj the ExternalizedMeshObject to encode
+     * @param buf the StringBuilder to which to append the ExternalizedMeshObject
+     * @throws EncodingException thrown if a problem occurred during encoding
+     */
+    protected void encodeExternalizedMeshObjectEquivalents(
+            ExternalizedMeshObject obj,
+            StringBuilder          buf  )
+        throws
+            EncodingException
+    {
+        // If we have this, we have to write even null values, because otherwise we can't distinguish right from left
         MeshObjectIdentifier [] equivalentsNames = obj.getEquivalents();
         if( equivalentsNames != null ) {
             for( int i=0 ; i<equivalentsNames.length ; ++i ) {
@@ -196,49 +297,8 @@ public class ExternalizedMeshObjectXmlEncoder
                 buf.append( ">\n" );
             }
         }
-        
-        appendExternalizedMeshObjectEncodingHook( obj, buf  );
-
-        buf.append( "</" ).append( meshObjectTagName ).append( ">\n" );
     }
 
-    /**
-     * Serialize the opening tag, to make it easy for subclasses to add to the attributes list.
-     *
-     * @param obj the ExternalizedMeshObject to encode
-     * @param meshObjectTagName the XML top-level tag to use for this ExternalizedMeshObject
-     * @param buf the StringBuilder to which to append the ExternalizedMeshObject
-     */
-    protected void encodeOpeningTag(
-            ExternalizedMeshObject obj,
-            String                 meshObjectTagName,
-            StringBuilder          buf )
-    {
-        buf.append( "<" );
-        buf.append( meshObjectTagName );
-        buf.append( " " );
-        buf.append( IDENTIFIER_TAG );
-        buf.append( "=\"" );
-        appendIdentifier( obj.getIdentifier(), buf );
-        buf.append( "\" " );
-        buf.append( TIME_CREATED_TAG );
-        buf.append( "=\"" );
-        appendLong( obj.getTimeCreated(), buf );
-        buf.append( "\" " );
-        buf.append( TIME_UPDATED_TAG );
-        buf.append( "=\"" );
-        appendLong( obj.getTimeUpdated(), buf );
-        buf.append( "\" " );
-        buf.append( TIME_READ_TAG );
-        buf.append( "=\"" );
-        appendLong( obj.getTimeRead(), buf );
-        buf.append( "\" " );
-        buf.append( TIME_EXPIRES_TAG );
-        buf.append( "=\"" );
-        appendLong( obj.getTimeExpires(), buf );
-        buf.append( "\">\n" );
-    }
-    
     /**
      * Hook to enable subclasses to add to the encoding of an ExternalizedMeshObject.
      *
@@ -345,7 +405,7 @@ public class ExternalizedMeshObjectXmlEncoder
 
             if( identifier != null ) {
                 try {
-                    theHasTypesBeingParsed = new ParserFriendlyExternalizedMeshObject.HasRoleTypes(
+                    theHasTypesBeingParsed = createRelationship(
                             theMeshObjectBeingParsed.getIdentifier(),
                             theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( XmlUtils.descape( identifier )),
                             updated );
@@ -361,6 +421,22 @@ public class ExternalizedMeshObjectXmlEncoder
         } else {
             startElement2( namespaceURI, localName, qName, attrs );
         }
+    }
+
+    /**
+     * Factors out the creation of Relationship instances, so subclasses can override it.
+     * 
+     * @param identifier the MeshObjectIdentifier on this side of the relationship
+     * @param neighborIdentifier the MeshObjectIdentifier on the other side of the relationship
+     * @param timeUpdated the time it was last updated
+     * @return the created Relationship object
+     */
+    protected ParserFriendlyExternalizedMeshObject.Relationship createRelationship(
+            MeshObjectIdentifier identifier,
+            MeshObjectIdentifier neighborIdentifier,
+            long                 timeUpdated )
+    {
+        return new ParserFriendlyExternalizedMeshObject.Relationship( identifier, neighborIdentifier, timeUpdated );
     }
 
     /**
@@ -417,7 +493,7 @@ public class ExternalizedMeshObjectXmlEncoder
             theMeshObjectBeingParsed.addPropertyValue( thePropertyValue );
 
         } else if( RELATIONSHIP_TAG.equals( qName )) {
-            theMeshObjectBeingParsed.addRelationship( (ParserFriendlyExternalizedMeshObject.HasRoleTypes) theHasTypesBeingParsed );
+            theMeshObjectBeingParsed.addRelationship( (ParserFriendlyExternalizedMeshObject.Relationship) theHasTypesBeingParsed );
             theHasTypesBeingParsed = null;
 
         } else if( EQUIVALENT_TAG.equals( qName )) {

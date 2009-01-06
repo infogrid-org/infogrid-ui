@@ -15,10 +15,14 @@
 package org.infogrid.mesh.net.a;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.a.AMeshObject;
 import org.infogrid.mesh.a.AMeshObjectNeighborManager;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
+import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.model.primitives.RoleType;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.logging.Log;
 
 /**
  * Refines AMeshObjectNeighborManager for AnetMeshObjects.
@@ -27,6 +31,142 @@ public class AnetMeshObjectNeighborManager
     extends
         AMeshObjectNeighborManager
 {
+    private static final Log log = Log.getLogInstance( AnetMeshObjectNeighborManager.class ); // our own, private logger
+
+    /**
+     * Append a new neighbor and associated RoleTypes to a MeshObject.
+     *
+     * @param subject the MeshObject in question
+     * @param neighborIdentifier identifier of the neighbor
+     * @param neighborRoleTypes RoleTypes, or null, for the neighbor
+     */
+    @Override
+    public void appendNeighbor(
+            AMeshObject          subject,
+            MeshObjectIdentifier neighborIdentifier,
+            RoleType []          neighborRoleTypes )
+    {
+        AnetMeshObject realSubject = (AnetMeshObject) subject;
+        Proxy          incoming    = realSubject.getMeshBase().determineIncomingProxy();
+
+        Proxy [] relationshipProxiesToAdd;
+        if( incoming != null ) {
+            relationshipProxiesToAdd = new Proxy[] { incoming };
+        } else {
+            relationshipProxiesToAdd = null;
+        }
+
+        synchronized( subject ) {
+            internalAppendNeighbor( realSubject, neighborIdentifier, neighborRoleTypes, relationshipProxiesToAdd );
+        }
+    }
+
+    /**
+     * Helper method to append a new neighbor, associated RoleTypes and relationship proxies.
+     *
+     * @param subject the MeshObject in question
+     * @param neighborIdentifier identifier of the neighbor
+     * @param neighborRoleTypes RoleTypes, or null, for the neighbor
+     * @param relationshipProxies the relationship proxies for this relationship
+     */
+    protected void internalAppendNeighbor(
+            AnetMeshObject       subject,
+            MeshObjectIdentifier neighborIdentifier,
+            RoleType []          neighborRoleTypes,
+            Proxy []             relationshipProxies )
+    {
+        internalAppendNeighbor( subject, neighborIdentifier, neighborRoleTypes );
+
+        if( subject.theRelationshipProxies == null ) {
+            subject.theRelationshipProxies = new Proxy[][] { relationshipProxies };
+        } else {
+            subject.theRelationshipProxies = ArrayHelper.append( subject.theRelationshipProxies, relationshipProxies, Proxy[].class );
+        }
+    }
+
+    /**
+     * Helper method to remove a neighbor and associated RoleTypes, at a given index.
+     *
+     * @param subject the MeshObject in question
+     * @param index index at which the neighbor is found
+     */
+    @Override
+    protected void internalRemoveNeighbor(
+            AMeshObject subject,
+            int         index )
+    {
+        AnetMeshObject realSubject = (AnetMeshObject) subject;
+
+        super.internalRemoveNeighbor( realSubject, index );
+
+        realSubject.theRelationshipProxies = ArrayHelper.remove( realSubject.theRelationshipProxies, index, Proxy[].class );
+    }
+
+    /**
+     * Helper method to append RoleTypes, at a given index.
+     *
+     * @param subject the MeshObject in question
+     * @param index index at which the neighbor is found
+     * @param toAdd the RoleTypes to add
+     */
+    @Override
+    protected void internalAppendRoleTypes(
+            AMeshObject subject,
+            int         index,
+            RoleType [] toAdd )
+    {
+        AnetMeshObject realSubject = (AnetMeshObject) subject;
+        Proxy          incoming    = realSubject.getMeshBase().determineIncomingProxy();
+
+        super.internalAppendRoleTypes( subject, index, toAdd );
+
+        if( incoming != null ) {
+            if( realSubject.theRelationshipProxies[index] == null ) {
+                realSubject.theRelationshipProxies[index] = new Proxy[] { incoming };
+
+            } else if( !ArrayHelper.isIn( incoming, realSubject.theRelationshipProxies[index], false )) {
+                realSubject.theRelationshipProxies[index] = ArrayHelper.append( realSubject.theRelationshipProxies[index], incoming, Proxy.class );
+            }
+        }
+    }
+
+    /**
+     * Obtain the set of relationship Proxies for all neighbors.
+     *
+     * @param subject the MeshObject in question
+     * @return the relationship Proxies of neighbor MeshObjects, in the same sequence as getNeighborIdentifiers()
+     */
+    public Proxy [][] getRelationshipProxies(
+            AnetMeshObject subject )
+    {
+        return subject.theRelationshipProxies;
+    }
+
+    /**
+     * Obtain the sources of a particular relationship between a NetMeshObject
+     * and another NetMeshObject (as given by a NetMeshObjectIdentifier).
+     *
+     * @param subject the MeshObject in question
+     * @param neighborIdentifier identifier of the neighbor MeshObject
+     * @return the sources of the relationship, if any
+     * @throws NotRelatedException thrown if the specified MeshObject is not actually a neighbor
+     */
+    public Proxy [] getRelationshipProxiesFor(
+            AnetMeshObject          subject,
+            NetMeshObjectIdentifier neighborIdentifier )
+        throws
+            NotRelatedException
+    {
+        synchronized( subject ) {
+            int found = determineRelationshipIndex( subject, neighborIdentifier );
+            if( found < 0 ) {
+                throw new NotRelatedException( subject, neighborIdentifier );
+            }
+
+            return subject.theRelationshipProxies[ found ];
+        }
+    }
+
     /**
      * Obtain the set of identifiers of neighbor MeshObjects.
      *

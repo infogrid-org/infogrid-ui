@@ -154,6 +154,7 @@ public class AnetMeshObject
      * @param proxies the currently active set of Proxies that are interested in this NetMeshObject
      * @param homeProxyIndex identifies that Proxy in the proxies array in whose direction the home replica can be found. This may be -1, indicating "here".
      * @param proxyTowardsLockIndex identifies that Proxy in the proxies array in whose direction the lock can be found. This may be -1, indicating "here".
+     * @param relationshipProxies the sources of the relationship with the various neighbors, in sequence
      */
     public AnetMeshObject(
             NetMeshObjectIdentifier             identifier,
@@ -171,7 +172,8 @@ public class AnetMeshObject
             boolean                             giveUpLock,
             Proxy []                            proxies,
             int                                 homeProxyIndex,
-            int                                 proxyTowardsLockIndex )
+            int                                 proxyTowardsLockIndex,
+            Proxy [][]                          relationshipProxies )
     {
         super(  identifier,
                 meshBase,
@@ -190,6 +192,7 @@ public class AnetMeshObject
         theProxies               = proxies;
         theHomeProxyIndex        = homeProxyIndex;
         theProxyTowardsLockIndex = proxyTowardsLockIndex;
+        theRelationshipProxies   = relationshipProxies;
     }
     
     /**
@@ -723,12 +726,15 @@ public class AnetMeshObject
         
         NetMeshObjectIdentifier [] neighborIdentifiers;
         MeshTypeIdentifier [][]    roleTypeIdentifiers;
+        NetMeshBaseIdentifier [][] relationshipProxyNames;
 
         if( nMgr.hasNeighbors( this )) {
-            RoleType [][] roleTypes  = nMgr.getRoleTypes( this );
+            RoleType [][] roleTypes           = nMgr.getRoleTypes( this );
+            Proxy [][]    relationshipProxies = nMgr.getRelationshipProxies( this );
 
-            neighborIdentifiers = nMgr.getNeighborIdentifiers( this );
-            roleTypeIdentifiers = new MeshTypeIdentifier[ roleTypes.length][];
+            neighborIdentifiers    = nMgr.getNeighborIdentifiers( this );
+            roleTypeIdentifiers    = new MeshTypeIdentifier[ roleTypes.length][];
+            relationshipProxyNames = new NetMeshBaseIdentifier[ relationshipProxies.length ][];
 
             for( int i=0 ; i<roleTypes.length ; ++i ) {
                 if( roleTypes[i] != null && roleTypes[i].length > 0 ) {
@@ -737,10 +743,17 @@ public class AnetMeshObject
                         roleTypeIdentifiers[i][j] = roleTypes[i][j].getIdentifier();
                     }
                 }
+                if( relationshipProxies[i] != null && relationshipProxies[i].length > 0 ) {
+                    relationshipProxyNames[i] = new NetMeshBaseIdentifier[ relationshipProxies[i].length ];
+                    for( int j=0 ; j<relationshipProxies[i].length ; ++j ) {
+                        relationshipProxyNames[i][j] = relationshipProxies[i][j].getPartnerMeshBaseIdentifier();
+                    }
+                }
             }
         } else {
-            neighborIdentifiers = null;
-            roleTypeIdentifiers = null;
+            neighborIdentifiers    = null;
+            roleTypeIdentifiers    = null;
+            relationshipProxyNames = null;
         }
 
 
@@ -801,7 +814,8 @@ public class AnetMeshObject
                 theGiveUpLock,
                 proxyNames,
                 homeProxyIndex,
-                lockProxyIndex );
+                lockProxyIndex,
+                relationshipProxyNames );
 
         return ret;
     }
@@ -1119,10 +1133,25 @@ public class AnetMeshObject
             NetMeshObjectAccessSpecificationFactory accessSpecFact = ((NetMeshBase)theMeshBase).getNetMeshObjectAccessSpecificationFactory();
             NetMeshObjectAccessSpecification []     toFind         = new NetMeshObjectAccessSpecification[ ret.length ];
 
+            AnetMeshObjectNeighborManager nMgr = getNeighborManager();
+
             int count = 0;
             for( int i=0 ; i<ret.length ; ++i ) {
                 if( ret[i] == null ) {
-                    toFind[count++] = accessSpecFact.obtain( homeProxy.getPartnerMeshBaseIdentifier(), (NetMeshObjectIdentifier) identifiers[i] );
+                    // check where the relationship came from
+
+                    Proxy direction = homeProxy;
+                    // pick any. if none found, use homeProxy
+                    try {
+                        Proxy [] relationshipProxies = nMgr.getRelationshipProxiesFor( this, (NetMeshObjectIdentifier) identifiers[i] );
+                        if( relationshipProxies != null && relationshipProxies.length > 0 ) {
+                            direction = relationshipProxies[0];
+                        }
+                    } catch( NotRelatedException ex ) {
+                        log.error( ex );
+                    }
+
+                    toFind[count++] = accessSpecFact.obtain( direction.getPartnerMeshBaseIdentifier(), (NetMeshObjectIdentifier) identifiers[i] );
                 }
             }
             if( count > 0 ) {
@@ -1999,9 +2028,9 @@ public class AnetMeshObject
                 = new NetMeshObjectNeighborAddedEvent(
                         this,
                         addedRoleTypes,
-                        copyIntoNetMeshObjectIdentifierArray( oldValue ),
+                        (NetMeshObjectIdentifier []) oldValue, // copyIntoNetMeshObjectIdentifierArray( oldValue ),
                         (NetMeshObjectIdentifier) added,
-                        copyIntoNetMeshObjectIdentifierArray( newValue ),
+                        (NetMeshObjectIdentifier []) newValue, // copyIntoNetMeshObjectIdentifierArray( newValue ),
                         determineIncomingProxyIdentifier( theMeshBase ),
                         theTimeUpdated );
 
@@ -2028,9 +2057,9 @@ public class AnetMeshObject
         NetMeshObjectNeighborRemovedEvent theEvent
                 = new NetMeshObjectNeighborRemovedEvent(
                         this,
-                        copyIntoNetMeshObjectIdentifierArray( oldValue ),
+                        (NetMeshObjectIdentifier []) oldValue, // copyIntoNetMeshObjectIdentifierArray( oldValue ),
                         (NetMeshObjectIdentifier) removed,
-                        copyIntoNetMeshObjectIdentifierArray( newValue ),
+                        (NetMeshObjectIdentifier []) newValue, // copyIntoNetMeshObjectIdentifierArray( newValue ),
                         determineIncomingProxyIdentifier( theMeshBase ),
                         theTimeUpdated );
 
@@ -2192,25 +2221,25 @@ public class AnetMeshObject
         firePropertyChange( theEvent );
     }
 
-    /**
-     * Helper method to get the type of array right. FIXME there must be a less inefficient
-     * way of doing this without disrupting all the code in superclasses.
-     *
-     * @param org the original array
-     * @return the new array
-     */
-    protected NetMeshObjectIdentifier [] copyIntoNetMeshObjectIdentifierArray(
-            MeshObjectIdentifier [] org )
-    {
-        if( org == null ) {
-            return null;
-        }
-        NetMeshObjectIdentifier [] ret = new NetMeshObjectIdentifier[ org.length ];
-        for( int i=0 ; i<ret.length ; ++i ) {
-            ret[i] = (NetMeshObjectIdentifier) org[i];
-        }
-        return ret;
-    }
+//    /**
+//     * Helper method to get the type of array right. FIXME there must be a less inefficient
+//     * way of doing this without disrupting all the code in superclasses.
+//     *
+//     * @param org the original array
+//     * @return the new array
+//     */
+//    protected NetMeshObjectIdentifier [] copyIntoNetMeshObjectIdentifierArray(
+//            MeshObjectIdentifier [] org )
+//    {
+//        if( org == null ) {
+//            return null;
+//        }
+//        NetMeshObjectIdentifier [] ret = new NetMeshObjectIdentifier[ org.length ];
+//        for( int i=0 ; i<ret.length ; ++i ) {
+//            ret[i] = (NetMeshObjectIdentifier) org[i];
+//        }
+//        return ret;
+//    }
     
     /**
      * Obtain a String representation of this instance that can be shown to the user.
@@ -2386,7 +2415,7 @@ public class AnetMeshObject
      * @return the AMeshObjectNeighborManager
      */
     @Override
-    protected AnetMeshObjectNeighborManager getNeighborManager()
+    public AnetMeshObjectNeighborManager getNeighborManager()
     {
         return AnetMeshObjectNeighborManager.SINGLETON_NET;
     }
@@ -2454,7 +2483,7 @@ public class AnetMeshObject
      * we know that the replicas in the direction of these Proxies agree that this MeshObject
      * has the given relationship.
      */
-    protected Proxy [] theRelationshipProxies;
+    protected Proxy [][] theRelationshipProxies;
 
     /** 
      * Special value indicating this replica (instead of another, reached through a Proxy).

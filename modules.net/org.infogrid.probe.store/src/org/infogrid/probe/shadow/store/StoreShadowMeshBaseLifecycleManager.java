@@ -34,6 +34,7 @@ import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.shadow.a.AStagingMeshBaseLifecycleManager;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.FactoryException;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -87,7 +88,7 @@ public class StoreShadowMeshBaseLifecycleManager
         ModelBase           modelBase = theMeshBase.getModelBase();
 
         NetMeshBaseIdentifier [] proxyNames = externalized.getProxyIdentifiers();
-        Proxy []             proxies    = new Proxy[ proxyNames.length ];
+        Proxy []                 proxies    = new Proxy[ proxyNames.length ];
 
         int proxyTowardsHomeIndex = -1;
         int proxyTowardsLockIndex = -1;
@@ -145,18 +146,18 @@ public class StoreShadowMeshBaseLifecycleManager
             localProperties = null;
         }
 
-        MeshObjectIdentifier []    otherSides = externalized.getNeighbors();
-        RoleType [][]              roleTypes  = null;
-        NetMeshObjectIdentifier [] realOtherSides;
+        MeshObjectIdentifier []    neighbors = externalized.getNeighbors();
+        RoleType [][]              roleTypes = null;
+        NetMeshObjectIdentifier [] realNeighbors;
         
-        if( otherSides != null && otherSides.length > 0 ) {
-            roleTypes      = new RoleType[ otherSides.length ][];
-            realOtherSides = new NetMeshObjectIdentifier[ otherSides.length ];
+        if( neighbors != null && neighbors.length > 0 ) {
+            roleTypes      = new RoleType[ neighbors.length ][];
+            realNeighbors = new NetMeshObjectIdentifier[ neighbors.length ];
 
-            for( int i=0 ; i<otherSides.length ; ++i ) {
-                realOtherSides[i] = (NetMeshObjectIdentifier) otherSides[i];
+            for( int i=0 ; i<neighbors.length ; ++i ) {
+                realNeighbors[i] = (NetMeshObjectIdentifier) neighbors[i];
 
-                MeshTypeIdentifier [] currentRoleTypes = externalized.getRoleTypesFor( otherSides[i] );
+                MeshTypeIdentifier [] currentRoleTypes = externalized.getRoleTypesFor( neighbors[i] );
 
                 roleTypes[i] = new RoleType[ currentRoleTypes.length ];
                 typeCounter = 0;
@@ -174,7 +175,32 @@ public class StoreShadowMeshBaseLifecycleManager
                 }
             }
         } else {
-            realOtherSides = null;
+            realNeighbors = null;
+        }
+
+        Proxy [][] relationshipProxies;
+        if( neighbors != null ) {
+            relationshipProxies = new Proxy[ neighbors.length ][];
+
+            for( int i=0 ; i<neighbors.length ; ++i ) {
+
+                NetMeshBaseIdentifier [] partnerIdentifiers
+                        = externalized.getRelationshipProxyIdentifiersFor( neighbors[i] );
+
+                if( partnerIdentifiers != null ) {
+                    relationshipProxies[i] = new Proxy[ partnerIdentifiers.length ];
+                    for( int j=0 ; j<partnerIdentifiers.length ; ++j ) {
+                        try {
+                            relationshipProxies[i][j] = realBase.obtainProxyFor( partnerIdentifiers[j], null );
+                        } catch( FactoryException ex ) {
+                            log.error( ex );
+                        }
+                    }
+                }
+            }
+
+        } else {
+            relationshipProxies = null;
         }
 
         NetMeshObjectIdentifier [] equivalents = externalized.getEquivalents();
@@ -194,13 +220,14 @@ public class StoreShadowMeshBaseLifecycleManager
                 localProperties,
                 types,
                 leftRight,
-                realOtherSides,
+                realNeighbors,
                 roleTypes,
                 externalized.getGiveUpHomeReplica(),
                 externalized.getGiveUpLock(),
                 proxies,
                 proxyTowardsHomeIndex,
-                proxyTowardsLockIndex );
+                proxyTowardsLockIndex,
+                relationshipProxies );
 
         putIntoMeshBase( ret, null ); // this does not create an event
 

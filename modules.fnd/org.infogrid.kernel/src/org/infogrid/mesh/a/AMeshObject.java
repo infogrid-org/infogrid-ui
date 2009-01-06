@@ -266,32 +266,6 @@ public class AMeshObject
     }
 
     /**
-     * For clients that know we are an AMeshObject, we can also return our internal representation.
-     * Please do not modify the content of this array, bad things may happen.
-     *
-     * @return the set of other sides
-     */
-    public MeshObjectIdentifier [] getInternalNeighborList()
-    {
-        AMeshObjectNeighborManager nMgr = getNeighborManager();
-
-        return nMgr.getNeighborIdentifiers( this );
-    }
-
-    /**
-     * For clients that know we are an AMeshObject, we can also return our internal representation.
-     * Please do not modify the content of this array, bad things may happen.
-     *
-     * @return the RoleTypes played by the other sides
-     */
-    public RoleType [][] getInternalNeighborRoleTypes()
-    {
-        AMeshObjectNeighborManager nMgr = getNeighborManager();
-
-        return nMgr.getRoleTypes( this );
-    }
-
-    /**
      * Relate this MeshObject to another MeshObject. This does not bless the relationship.
      *
      * @param newNeighbor the MeshObject to relate to
@@ -350,8 +324,8 @@ public class AMeshObject
         MeshObjectIdentifier here         = getIdentifier();
         AMeshObject          realNeighbor = (AMeshObject) neighbor;
 
-        MeshObjectIdentifier [] oldNeighborIdentifiers         = {};
-        MeshObjectIdentifier [] oldNeighborNeighborIdentifiers = {};
+        MeshObjectIdentifier [] oldNeighborIdentifiers         = createMeshObjectIdentifierArray( 0 );
+        MeshObjectIdentifier [] oldNeighborNeighborIdentifiers = createMeshObjectIdentifierArray( 0 );
 
         AMeshObjectNeighborManager nMgr = getNeighborManager();
 
@@ -509,6 +483,7 @@ public class AMeshObject
                 if( realNeighbor != null && neighborRoleTypes != null ) {
                     realNeighbor.checkPermittedUnbless( neighborRoleTypes, here, this );
                 }
+
 
 //                // check that all other Roles let us
 //                for( MeshObjectIdentifier oldNeighborIdentifier : oldNeighborIdentifiers ) {
@@ -1382,6 +1357,7 @@ public class AMeshObject
 //        return ret;
 //    }
 
+
     /**
      * Obtain the RoleTypes that this MeshObject currently participates in with the
      * specified other MeshObject.
@@ -1475,7 +1451,6 @@ public class AMeshObject
                 for( int i=0 ; i<neighborIdentifiers[s].length ; ++i ) {
                     if( neighborIdentifier.equals( neighborIdentifiers[s][i] )) {
                         if( roleTypes[s][i] != null ) {
-
                             for( int j=0 ; j<roleTypes[s][i].length ; ++j ) {
                                 try {
                                     checkPermittedTraversal(
@@ -1574,7 +1549,7 @@ public class AMeshObject
                 throw new EquivalentAlreadyException( this, equiv );
             }
         }
-        
+
         checkPermittedAddAsEquivalent( equivIdentifier, equiv );
 
         // now insert, being mindful that we might be joining to chains here
@@ -2066,7 +2041,7 @@ public class AMeshObject
      *
      * @return the AMeshObjectNeighborManager
      */
-    protected AMeshObjectNeighborManager getNeighborManager()
+    public AMeshObjectNeighborManager getNeighborManager()
     {
         return AMeshObjectNeighborManager.SINGLETON;
     }

@@ -38,6 +38,7 @@ public class AMeshObjectNeighborManager
         // no op
     }
 
+
     /**
      * Determine whether a MeshObject has neighbors.
      *
@@ -59,6 +60,30 @@ public class AMeshObjectNeighborManager
     }
 
     /**
+     * Determine the index of a relationship in a MeshObject's relationship table.
+     * Returns -1 if not related.
+     *
+     * @param subject the MeshObject in question
+     * @param neighborIdentifier identifier of the neighbor
+     * @return the index, or -1
+     */
+    protected int determineRelationshipIndex(
+            AMeshObject          subject,
+            MeshObjectIdentifier neighborIdentifier )
+    {
+        MeshObjectIdentifier [] neighborIdentifiers = subject.theNeighborIdentifiers;
+        if( neighborIdentifiers == null || neighborIdentifiers.length == 0 ) {
+            return -1;
+        }
+        for( int i=0 ; i<neighborIdentifiers.length ; ++i ) {
+            if( neighborIdentifier.equals( neighborIdentifiers[i] )) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Determine whether a MeshObject is related to another.
      *
      * @param subject the MeshObject in question
@@ -69,16 +94,8 @@ public class AMeshObjectNeighborManager
             AMeshObject          subject,
             MeshObjectIdentifier neighborIdentifier )
     {
-        MeshObjectIdentifier [] neighborIdentifiers = subject.theNeighborIdentifiers;
-        if( neighborIdentifiers == null || neighborIdentifiers.length == 0 ) {
-            return false;
-        }
-        for( int i=0 ; i<neighborIdentifiers.length ; ++i ) {
-            if( neighborIdentifier.equals( neighborIdentifiers[i] )) {
-                return true;
-            }
-        }
-        return false;
+        int index = determineRelationshipIndex( subject, neighborIdentifier );
+        return index >= 0;
     }
 
     /**
@@ -159,13 +176,32 @@ public class AMeshObjectNeighborManager
             RoleType []          neighborRoleTypes )
     {
         synchronized( subject ) {
-            if( subject.theNeighborIdentifiers == null || subject.theNeighborIdentifiers.length == 0 ) {
-                subject.theNeighborIdentifiers = makeMeshObjectIdentifiers( neighborIdentifier );
-                subject.theNeighborRoleTypes   = new RoleType[][] { neighborRoleTypes };
-            } else {
-                subject.theNeighborIdentifiers = makeMeshObjectIdentifiers( subject.theNeighborIdentifiers, neighborIdentifier );
-                subject.theNeighborRoleTypes   = ArrayHelper.append( subject.theNeighborRoleTypes,   neighborRoleTypes,  RoleType[].class );
-            }
+            internalAppendNeighbor( subject, neighborIdentifier, neighborRoleTypes );
+        }
+    }
+
+    /**
+     * Helper method to append a new neighbor and associated RoleTypes.
+     *
+     * @param subject the MeshObject in question
+     * @param neighborIdentifier identifier of the neighbor
+     * @param neighborRoleTypes RoleTypes, or null, for the neighbor
+     */
+    protected void internalAppendNeighbor(
+            AMeshObject          subject,
+            MeshObjectIdentifier neighborIdentifier,
+            RoleType []          neighborRoleTypes )
+    {
+        if( determineRelationshipIndex( subject, neighborIdentifier ) != -1 ) {
+            log.error( "Have relationship already between " + subject + " and " + neighborIdentifier );
+        }
+
+        if( subject.theNeighborIdentifiers == null || subject.theNeighborIdentifiers.length == 0 ) {
+            subject.theNeighborIdentifiers = makeMeshObjectIdentifiers( neighborIdentifier );
+            subject.theNeighborRoleTypes   = new RoleType[][] { neighborRoleTypes };
+        } else {
+            subject.theNeighborIdentifiers = makeMeshObjectIdentifiers( subject.theNeighborIdentifiers, neighborIdentifier );
+            subject.theNeighborRoleTypes   = ArrayHelper.append( subject.theNeighborRoleTypes, neighborRoleTypes,  RoleType[].class );
         }
     }
 
@@ -180,21 +216,27 @@ public class AMeshObjectNeighborManager
             MeshObjectIdentifier neighborIdentifier )
     {
         synchronized( subject ) {
-            int found = -1;
-            for( int i=0 ; i<subject.theNeighborIdentifiers.length ; ++i ) {
-                if( neighborIdentifier.equals( subject.theNeighborIdentifiers[i] )) {
-                    found = i;
-                    break;
-                }
-            }
+            int found = determineRelationshipIndex( subject, neighborIdentifier );
             if( found < 0 ) {
                 log.error( subject + ": neighbor not found " + neighborIdentifier );
                 return;
             }
-
-            subject.theNeighborIdentifiers = removeMeshObjectIdentifier( subject.theNeighborIdentifiers, found );
-            subject.theNeighborRoleTypes   = ArrayHelper.remove( subject.theNeighborRoleTypes,   found, RoleType[].class );
+            internalRemoveNeighbor( subject, found );
         }
+    }
+
+    /**
+     * Helper method to remove a neighbor and associated RoleTypes, at a given index.
+     *
+     * @param subject the MeshObject in question
+     * @param index index at which the neighbor is found
+     */
+    protected void internalRemoveNeighbor(
+            AMeshObject subject,
+            int         index )
+    {
+        subject.theNeighborIdentifiers = removeMeshObjectIdentifier( subject.theNeighborIdentifiers, index );
+        subject.theNeighborRoleTypes   = ArrayHelper.remove( subject.theNeighborRoleTypes, index, RoleType[].class );
     }
 
     /**
@@ -225,23 +267,31 @@ public class AMeshObjectNeighborManager
             RoleType []          toAdd )
     {
         synchronized( subject ) {
-            int found = -1;
-            for( int i=0 ; i<subject.theNeighborIdentifiers.length ; ++i ) {
-                if( neighborIdentifier.equals( subject.theNeighborIdentifiers[i] )) {
-                    found = i;
-                    break;
-                }
-            }
+            int found = determineRelationshipIndex( subject, neighborIdentifier );
             if( found < 0 ) {
                 log.error( subject + ": neighbor not found " + neighborIdentifier );
                 return;
             }
-
-            if( subject.theNeighborRoleTypes[found] == null ) {
-                subject.theNeighborRoleTypes[found] = toAdd;
-            } else {
-                subject.theNeighborRoleTypes[found] = ArrayHelper.append( subject.theNeighborRoleTypes[found], toAdd, RoleType.class );
-            }
+            internalAppendRoleTypes( subject, found, toAdd );
+        }
+    }
+    
+    /**
+     * Helper method to append RoleTypes, at a given index.
+     * 
+     * @param subject the MeshObject in question
+     * @param index index at which the neighbor is found
+     * @param toAdd the RoleTypes to add
+     */
+    protected void internalAppendRoleTypes(
+            AMeshObject subject,
+            int         index,
+            RoleType [] toAdd )
+    {
+        if( subject.theNeighborRoleTypes[index] == null ) {
+            subject.theNeighborRoleTypes[index] = toAdd;
+        } else {
+            subject.theNeighborRoleTypes[index] = ArrayHelper.append( subject.theNeighborRoleTypes[index], toAdd, RoleType.class );
         }
     }
 
@@ -258,22 +308,31 @@ public class AMeshObjectNeighborManager
             RoleType             toRemove )
     {
         synchronized( subject ) {
-            int found = -1;
-            for( int i=0 ; i<subject.theNeighborIdentifiers.length ; ++i ) {
-                if( neighborIdentifier.equals( subject.theNeighborIdentifiers[i] )) {
-                    found = i;
-                    break;
-                }
-            }
+            int found = determineRelationshipIndex( subject, neighborIdentifier );
             if( found < 0 ) {
                 log.error( subject + ": neighbor not found " + neighborIdentifier );
                 return;
             }
-            subject.theNeighborRoleTypes[found] = ArrayHelper.remove( subject.theNeighborRoleTypes[found], toRemove, false, RoleType.class );
+            internalRemoveRoleTypes( subject, found, toRemove );
+        }
+    }
+    
+    /**
+     * Helper method to remove RoleTypes, at a given index.
+     * 
+     * @param subject the MeshObject in question
+     * @param index index at which the neighbor is found
+     * @param toRemove the RoleTypes to remove
+     */
+    protected void internalRemoveRoleTypes(
+            AMeshObject subject,
+            int         index,
+            RoleType    toRemove )
+    {
+        subject.theNeighborRoleTypes[index] = ArrayHelper.remove( subject.theNeighborRoleTypes[index], toRemove, false, RoleType.class );
 
-            if( subject.theNeighborRoleTypes[found].length == 0 ) {
-                subject.theNeighborRoleTypes[found] = null;
-            }
+        if( subject.theNeighborRoleTypes[index].length == 0 ) {
+            subject.theNeighborRoleTypes[index] = null;
         }
     }
 

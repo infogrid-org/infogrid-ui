@@ -17,8 +17,10 @@ package org.infogrid.mesh.net.externalized.xml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.externalized.xml.ExternalizedMeshObjectXmlEncoder;
+import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObjectEncoder;
 import org.infogrid.mesh.net.externalized.ParserFriendlyExternalizedNetMeshObject;
@@ -26,7 +28,9 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
+import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.externalized.DecodingException;
+import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 import org.xml.sax.Attributes;
@@ -95,7 +99,78 @@ public class ExternalizedNetMeshObjectXmlEncoder
             buf.append( "=\"" );
             buf.append( YES_TAG );
         }
+        if( realObject.getGiveUpHomeReplica()) {
+            buf.append( "\" " );
+            buf.append( GIVE_UP_HOME_TAG );
+            buf.append( "=\"" );
+            buf.append( YES_TAG );
+        }
         buf.append( "\">\n" );
+    }
+
+    /**
+     * Serialize the neighbors section.
+     *
+     * @param obj the ExternalizedMeshObject to encode
+     * @param buf the StringBuilder to which to append the ExternalizedMeshObject
+     * @throws EncodingException thrown if a problem occurred during encoding
+     */
+    @Override
+    protected void encodeExternalizedMeshObjectNeighbors(
+            ExternalizedMeshObject obj,
+            StringBuilder          buf  )
+        throws
+            EncodingException
+    {
+        ExternalizedNetMeshObject realObj = (ExternalizedNetMeshObject) obj;
+
+        NetMeshObjectIdentifier [] neighbors = realObj.getNeighbors();
+        if( neighbors != null ) {
+            for( int i=0 ; i<neighbors.length ; ++i ) {
+                NetMeshObjectIdentifier  currentNeighbor            = neighbors[i];
+                MeshTypeIdentifier []    currentRoleTypes           = realObj.getRoleTypesFor( currentNeighbor );
+                NetMeshBaseIdentifier [] currentRelationshipProxies = realObj.getRelationshipProxyIdentifiersFor( currentNeighbor );
+
+                buf.append( " <" );
+                buf.append( RELATIONSHIP_TAG );
+                buf.append( " " );
+                buf.append( IDENTIFIER_TAG );
+                buf.append( "=\"" );
+                appendIdentifier( currentNeighbor, buf );
+                buf.append( "\"" );
+                if(    ( currentRoleTypes           == null || currentRoleTypes.length           == 0 )
+                    && ( currentRelationshipProxies == null || currentRelationshipProxies.length == 0 ))
+                {
+                    buf.append( "/>\n" );
+
+                } else {
+                    buf.append( ">\n" );
+                    if( currentRoleTypes != null ) {
+                        for( int j=0 ; j<currentRoleTypes.length ; ++j ) {
+                            buf.append( "  <" );
+                            buf.append( TYPE_TAG );
+                            buf.append( ">" );
+                            appendIdentifier( currentRoleTypes[j], buf );
+                            buf.append( "</" );
+                            buf.append( TYPE_TAG );
+                            buf.append( ">\n" );
+                        }
+                    }
+                    if( currentRelationshipProxies != null ) {
+                        for( int j=0 ; j<currentRelationshipProxies.length ; ++j ) {
+                            buf.append( "  <" );
+                            buf.append( RELATIONSHIP_PROXY_REFERENCE_TAG );
+                            buf.append( " " ).append( PROXY_NETWORK_IDENTIFIER_TAG ).append( "=\"");
+                            appendNetworkIdentifier( currentRelationshipProxies[j], buf );
+                            buf.append( "\"/>\n" );
+                        }
+                    }
+                    buf.append( " </" );
+                    buf.append( RELATIONSHIP_TAG );
+                    buf.append( ">\n" );
+                }
+            }
+        }
     }
 
     /**
@@ -119,7 +194,7 @@ public class ExternalizedNetMeshObjectXmlEncoder
             for( int i=0 ; i<proxyNames.length ; ++i ) {
                 NetMeshBaseIdentifier current = proxyNames[i];
 
-                buf.append( "<" ).append( PROXY_REFERENCE_TAG );
+                buf.append( " <" ).append( PROXY_REFERENCE_TAG );
                 buf.append( " " ).append( PROXY_NETWORK_IDENTIFIER_TAG ).append( "=\"");
                 appendNetworkIdentifier( current, buf );
                 buf.append( "\"" );
@@ -215,6 +290,11 @@ public class ExternalizedNetMeshObjectXmlEncoder
                 ParserFriendlyExternalizedNetMeshObject realObjectBeingParsed = (ParserFriendlyExternalizedNetMeshObject) theMeshObjectBeingParsed;
                 realObjectBeingParsed.setGiveUpLock( true );
             }
+            String giveUpHome = attrs.getValue( GIVE_UP_HOME_TAG );
+            if( YES_TAG.equals( giveUpHome )) {
+                ParserFriendlyExternalizedNetMeshObject realObjectBeingParsed = (ParserFriendlyExternalizedNetMeshObject) theMeshObjectBeingParsed;
+                realObjectBeingParsed.setGiveUpHome( true );
+            }
         }
     }
 
@@ -245,13 +325,26 @@ public class ExternalizedNetMeshObjectXmlEncoder
 
             try {
                 NetMeshBaseIdentifier proxyId = ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( proxyString );
-            
                 realObjectBeingParsed.addProxyNetworkIdentifier( proxyId, YES_TAG.equals( homeProxy ), YES_TAG.equals( lockProxy ));
 
             } catch( URISyntaxException ex ) {
                 error( ex );
             }
-            
+
+        } else if( RELATIONSHIP_PROXY_REFERENCE_TAG.equals( qName )) {
+
+            String proxyString = attrs.getValue( PROXY_NETWORK_IDENTIFIER_TAG );
+            ParserFriendlyExternalizedNetMeshObject.RelationshipWithRelationshipProxies realRelationship
+                    = (ParserFriendlyExternalizedNetMeshObject.RelationshipWithRelationshipProxies) theHasTypesBeingParsed;
+
+            try {
+                NetMeshBaseIdentifier proxyId = ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( proxyString );
+                realRelationship.addRelationshipProxyIdentifier( proxyId );
+
+            } catch( URISyntaxException ex ) {
+                error( ex );
+            }
+
         } else {
             startElement3( namespaceURI, localName, qName, attrs );
         }
@@ -296,6 +389,9 @@ public class ExternalizedNetMeshObjectXmlEncoder
         if( PROXY_REFERENCE_TAG.equals( qName )) {
             // no op
 
+        } else if( RELATIONSHIP_PROXY_REFERENCE_TAG.equals( qName )) {
+            // no op
+
         } else {
             endElement3( namespaceURI, localName, qName );
         }
@@ -317,5 +413,22 @@ public class ExternalizedNetMeshObjectXmlEncoder
             SAXException
     {
         log.error( "unknown qname " + qName );
+    }
+
+    /**
+     * Factors out the creation of Relationship instances, so subclasses can override it.
+     *
+     * @param identifier the MeshObjectIdentifier on this side of the relationship
+     * @param neighborIdentifier the MeshObjectIdentifier on the other side of the relationship
+     * @param timeUpdated the time it was last updated
+     * @return the created Relationship object
+     */
+    @Override
+    protected ParserFriendlyExternalizedNetMeshObject.RelationshipWithRelationshipProxies createRelationship(
+            MeshObjectIdentifier identifier,
+            MeshObjectIdentifier neighborIdentifier,
+            long                 timeUpdated )
+    {
+        return new ParserFriendlyExternalizedNetMeshObject.RelationshipWithRelationshipProxies( identifier, neighborIdentifier, timeUpdated );
     }
 }

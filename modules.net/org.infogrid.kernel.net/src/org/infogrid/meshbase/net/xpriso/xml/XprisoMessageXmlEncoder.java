@@ -431,6 +431,7 @@ public class XprisoMessageXmlEncoder
             String timeRead        = attrs.getValue( TIME_READ_TAG );
             String timeExpires     = attrs.getValue( TIME_EXPIRES_TAG );
             String giveUpLock      = attrs.getValue( GIVE_UP_LOCK_TAG );
+            String giveUpHome      = attrs.getValue( GIVE_UP_HOME_TAG );
 
             if( identifier != null ) {
                 try {
@@ -453,6 +454,9 @@ public class XprisoMessageXmlEncoder
             } 
             if( YES_TAG.equals( giveUpLock )) {
                 realObjectBeingParsed.setGiveUpLock( true );
+            }
+            if( YES_TAG.equals( giveUpHome )) {
+                realObjectBeingParsed.setGiveUpHome( true );
             }
             
         } else if(    NEIGHBOR_ADDITION_TAG.equals( qName )

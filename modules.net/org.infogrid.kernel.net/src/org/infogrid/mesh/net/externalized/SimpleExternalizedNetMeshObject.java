@@ -20,6 +20,7 @@ import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StringHelper;
 
 /**
@@ -55,6 +56,7 @@ public class SimpleExternalizedNetMeshObject
      *        direction the home replica may be found
      * @param proxyTowardsLockIndex index, into proxyIdentifiers, selecting the NetMeshBaseIdentifier of the Proxy in whose
      *        direction the lock may be found
+     * @param relationshipProxyNames the partner NetMeshBaseIdentifiers of all relationship Proxies
      * @return the created SimpleExternalizedNetMeshObject
      */
     public static SimpleExternalizedNetMeshObject create(
@@ -73,7 +75,8 @@ public class SimpleExternalizedNetMeshObject
             boolean                    giveUpLock,
             NetMeshBaseIdentifier []   proxyIdentifiers,
             int                        proxyTowardsHomeIndex,
-            int                        proxyTowardsLockIndex )
+            int                        proxyTowardsLockIndex,
+            NetMeshBaseIdentifier [][] relationshipProxyNames )
     {
         // do some sanity checking
         if( identifier == null ) {
@@ -120,6 +123,18 @@ public class SimpleExternalizedNetMeshObject
         } else {
             equivalents = new NetMeshObjectIdentifier[0];
         }
+
+        if( relationshipProxyNames != null ) {
+            for( NetMeshBaseIdentifier [] row : relationshipProxyNames ) {
+                if( row != null ) {
+                    for( NetMeshBaseIdentifier current : row ) {
+                        if( current == null ) {
+                            throw new IllegalArgumentException( "null relationshipProxyName" );
+                        }
+                    }
+                }
+            }
+        }
         
         SimpleExternalizedNetMeshObject ret = new SimpleExternalizedNetMeshObject(
                 identifier,
@@ -137,7 +152,8 @@ public class SimpleExternalizedNetMeshObject
                 giveUpLock,
                 proxyIdentifiers,
                 proxyTowardsHomeIndex,
-                proxyTowardsLockIndex );
+                proxyTowardsLockIndex,
+                relationshipProxyNames );
 
         return ret;
     }
@@ -163,6 +179,7 @@ public class SimpleExternalizedNetMeshObject
      *        direction the home replica may be found
      * @param proxyTowardsLockIndex index, into proxyIdentifiers, selecting the NetMeshBaseIdentifier of the Proxy in whose
      *        direction the lock may be found
+     * @param relationshipProxyNames the partner NetMeshBaseIdentifiers of all relationship Proxies
      */
     protected SimpleExternalizedNetMeshObject(
             NetMeshObjectIdentifier    identifier,
@@ -180,7 +197,8 @@ public class SimpleExternalizedNetMeshObject
             boolean                    giveUpLock,
             NetMeshBaseIdentifier[]    proxyIdentifiers,
             int                        proxyTowardsHomeIndex,
-            int                        proxyTowardsLockIndex )
+            int                        proxyTowardsLockIndex,
+            NetMeshBaseIdentifier [][] relationshipProxyNames )
 {
         super(  identifier,
                 typeNames,
@@ -194,13 +212,15 @@ public class SimpleExternalizedNetMeshObject
                 roleTypes,
                 equivalents );
 
-        theGiveUpHomeReplica = giveUpHomeReplica;
+        theGiveUpHome = giveUpHomeReplica;
         theGiveUpLock        = giveUpLock;
 
         theProxyIdentifiers = proxyIdentifiers != null ? proxyIdentifiers : new NetMeshBaseIdentifier[0];
 
         theProxyTowardsHomeIndex = proxyTowardsHomeIndex;
         theProxyTowardsLockIndex = proxyTowardsLockIndex;
+
+        theRelationshipProxyNames = relationshipProxyNames;
     }
     
     /**
@@ -244,7 +264,7 @@ public class SimpleExternalizedNetMeshObject
      */
     public final boolean getGiveUpHomeReplica()
     {
-        return theGiveUpHomeReplica;
+        return theGiveUpHome;
     }
 
     /**
@@ -294,7 +314,83 @@ public class SimpleExternalizedNetMeshObject
             return theProxyIdentifiers[ theProxyTowardsLockIndex ];
         }
     }
-    
+
+    /**
+     * Obtain the NetMeshObjectIdentifiers of the partner NetMeshBases from which this
+     * NetMeshObject obtained relationship information.
+     *
+     * @param neighbor the identifier of the neighbor
+     * @return the NetMeshBaseIdentifiers of the partner NetMeshBases
+     */
+    public NetMeshBaseIdentifier [] getRelationshipProxyIdentifiersFor(
+            MeshObjectIdentifier neighbor )
+    {
+        for( int i=0 ; i<theNeighbors.length ; ++i ) {
+            MeshObjectIdentifier current = theNeighbors[i];
+
+            if( current.equals( neighbor )) {
+                if( theRelationshipProxyNames[i] != null ) {
+                    return theRelationshipProxyNames[i];
+                } else {
+                    return new NetMeshBaseIdentifier[0];
+                }
+            }
+        }
+        throw new IllegalArgumentException( "Not found" );
+    }
+
+    /**
+     * Determine equality.
+     *
+     * @param other the Object to test against
+     * @return true if the two Objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( !( other instanceof ExternalizedNetMeshObject )) {
+            return false;
+        }
+        if( !super.equals( other )) {
+            return false;
+        }
+
+        ExternalizedNetMeshObject realOther = (ExternalizedNetMeshObject) other;
+
+        if( theGiveUpHome != realOther.getGiveUpHomeReplica() ) {
+            return false;
+        }
+        if( theGiveUpLock != realOther.getGiveUpLock() ) {
+            return false;
+        }
+        if( !ArrayHelper.hasSameContentOutOfOrder( getProxyIdentifiers(), realOther.getProxyIdentifiers(), true )) {
+            return false;
+        }
+
+        if( getProxyTowardsHomeNetworkIdentifier() != null ) {
+            if( !getProxyTowardsHomeNetworkIdentifier().equals( realOther.getProxyTowardsHomeNetworkIdentifier() )) {
+                return false;
+            }
+        } else if( realOther.getProxyTowardsHomeNetworkIdentifier() != null ) {
+            return false;
+        }
+        if( getProxyTowardsLockNetworkIdentifier() != null ) {
+            if( !getProxyTowardsLockNetworkIdentifier().equals( realOther.getProxyTowardsLockNetworkIdentifier() )) {
+                return false;
+            }
+        } else if( realOther.getProxyTowardsLockNetworkIdentifier() != null ) {
+            return false;
+        }
+        for( MeshObjectIdentifier neighbor : getNeighbors() ) {
+            if( !ArrayHelper.hasSameContentOutOfOrder( getRelationshipProxyIdentifiersFor( neighbor ), realOther.getRelationshipProxyIdentifiersFor( neighbor ), true )) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Convert to String representation, for debugging.
      *
@@ -317,10 +413,12 @@ public class SimpleExternalizedNetMeshObject
                     "theNeighbors",
                     "theRoleTypes",
                     "theEquivalents",
+                    "theGiveUpHomeReplica",
                     "theGiveUpLock",
                     "theProxyIdentifiers",
                     "theProxyTowardsHomeIndex",
-                    "theProxyTowardsLockIndex"
+                    "theProxyTowardsLockIndex",
+                    "theRelationshipProxyNames"
                 },
                 new Object[] {
                     theIdentifier,
@@ -334,17 +432,19 @@ public class SimpleExternalizedNetMeshObject
                     theNeighbors,
                     theRoleTypes,
                     theEquivalents,
+                    theGiveUpHome,
                     theGiveUpLock,
                     theProxyIdentifiers,
                     theProxyTowardsHomeIndex,
-                    theProxyTowardsLockIndex
+                    theProxyTowardsLockIndex,
+                    theRelationshipProxyNames
                 });
     }
     
     /**
      * The GiveUpHomeReplica property.
      */
-    protected boolean theGiveUpHomeReplica;
+    protected boolean theGiveUpHome;
     
     /**
      * The GiveUpLock property.
@@ -368,7 +468,13 @@ public class SimpleExternalizedNetMeshObject
      * is HERE_CONSTANT, it indicates that this replica has the lock.
      */
     protected int theProxyTowardsLockIndex = HERE_CONSTANT;
-    
+
+    /**
+     * The identifiers of the relationship Proxies with respect to our neighbors, in
+     * same sequence as theNeighbors.
+     */
+    protected NetMeshBaseIdentifier [][] theRelationshipProxyNames;
+
     /** 
      * Special value indicating this replica (instead of another, reached through a Proxy).
      */

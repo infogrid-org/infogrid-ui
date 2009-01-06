@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.a.AMeshObject;
+import org.infogrid.mesh.a.AMeshObjectNeighborManager;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.meshbase.AbstractMeshBase;
@@ -39,7 +40,6 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CachingMap;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
@@ -107,9 +107,10 @@ public abstract class AMeshBase
         int                     currentLength = 0; // make compiler happy
 
         for( int i=0 ; i<all.length ; ++i ) {
-            AMeshObject             pivot          = (AMeshObject) all[i];
-            MeshObjectIdentifier [] pivotNeighbors = pivot.getInternalNeighborList();
-            RoleType [][]           pivotTypes     = pivot.getInternalNeighborRoleTypes();
+            AMeshObject                pivot          = (AMeshObject) all[i];
+            AMeshObjectNeighborManager nMgr           = pivot.getNeighborManager();
+            MeshObjectIdentifier []    pivotNeighbors = nMgr.getNeighborIdentifiers( pivot );
+            RoleType [][]              pivotTypes     = nMgr.getRoleTypes( pivot );
 
             if( currentSet == null ) {
                 currentSet    = ArrayHelper.copyIntoNewArray( pivotNeighbors, MeshObjectIdentifier.class );

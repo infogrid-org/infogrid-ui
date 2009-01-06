@@ -731,7 +731,7 @@ public class AnetMeshBaseLifecycleManager
      * @param properties the properties of the MeshObject
      * @param types the EntityTypes of the MeshObject
      * @param equivalents either an array of length 2, or null. If given, contains the left and right equivalence pointers.
-     * @param otherSides the identifiers of the MeshObject's neighbors, if any
+     * @param neighbors the identifiers of the MeshObject's neighbors, if any
      * @param roleTypes the RoleTypes in which this MeshObject participates with its neighbors
      * @param theObjectBeingParsed the externalized representation of the MeshObject
      * @return the recreated AMeshObject
@@ -746,7 +746,7 @@ public class AnetMeshBaseLifecycleManager
             HashMap<PropertyType,PropertyValue> properties,
             EntityType []                       types,
             MeshObjectIdentifier []             equivalents,
-            MeshObjectIdentifier []             otherSides,
+            MeshObjectIdentifier []             neighbors,
             RoleType [][]                       roleTypes,
             ExternalizedMeshObject              theObjectBeingParsed )
     {
@@ -786,6 +786,31 @@ public class AnetMeshBaseLifecycleManager
                 log.error( ex );
             }
         }
+
+        Proxy [][] relationshipProxies;
+        if( neighbors != null ) {
+            relationshipProxies = new Proxy[ neighbors.length ][];
+
+            for( int i=0 ; i<neighbors.length ; ++i ) {
+
+                NetMeshBaseIdentifier [] partnerIdentifiers
+                        = realObjectBeingParsed.getRelationshipProxyIdentifiersFor( neighbors[i] );
+
+                if( partnerIdentifiers != null ) {
+                    relationshipProxies[i] = new Proxy[ partnerIdentifiers.length ];
+                    for( int j=0 ; j<partnerIdentifiers.length ; ++j ) {
+                        try {
+                            relationshipProxies[i][j] = realBase.obtainProxyFor( partnerIdentifiers[j], null );
+                        } catch( FactoryException ex ) {
+                            log.error( ex );
+                        }
+                    }
+                }
+            }
+
+        } else {
+            relationshipProxies = null;
+        }
         
         AnetMeshObject ret = new AnetMeshObject(
                 (NetMeshObjectIdentifier) identifier,
@@ -797,13 +822,14 @@ public class AnetMeshBaseLifecycleManager
                 properties,
                 types,
                 (NetMeshObjectIdentifier []) equivalents,
-                (NetMeshObjectIdentifier []) otherSides,
+                (NetMeshObjectIdentifier []) neighbors,
                 roleTypes,
                 giveUpHomeReplica,
                 giveUpLock,
                 proxies,
                 proxyTowardsHomeIndex,
-                proxyTowardsLockIndex );
+                proxyTowardsLockIndex,
+                relationshipProxies );
 
         return ret;
     }

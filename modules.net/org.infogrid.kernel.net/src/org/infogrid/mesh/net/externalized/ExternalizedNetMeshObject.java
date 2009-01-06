@@ -14,6 +14,7 @@
 
 package org.infogrid.mesh.net.externalized;
 
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -81,4 +82,15 @@ public interface ExternalizedNetMeshObject
      * @return the NetMeshBaseIdentifier, if any
      */
     public abstract NetMeshBaseIdentifier getProxyTowardsLockNetworkIdentifier();
+
+    /**
+     * Obtain the NetMeshObjectIdentifiers of the partner NetMeshBases from which this
+     * NetMeshObject obtained relationship information.
+     *
+     * @param neighbor the identifier of the neighbor
+     * @return the NetMeshBaseIdentifiers of the partner NetMeshBases
+     */
+    public abstract NetMeshBaseIdentifier [] getRelationshipProxyIdentifiersFor(
+            MeshObjectIdentifier neighbor );
 }
+
