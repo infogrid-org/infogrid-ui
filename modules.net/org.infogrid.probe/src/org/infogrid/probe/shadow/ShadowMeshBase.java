@@ -17,6 +17,7 @@ package org.infogrid.probe.shadow;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
@@ -124,7 +125,14 @@ public interface ShadowMeshBase
      * @return true if it is still needed
      */
     public boolean isNeeded();
-    
+
+    /**
+     * Obtain the ProxyPolicyFactory of this ShadowMeshBase.
+     *
+     * @return the ProxyPolicyFactory
+     */
+    public ProxyPolicyFactory getProxyPolicyFactory();
+
     /**
      * Add a listener to listen to ShadowMeshBase-specific events.
      *

@@ -17,7 +17,8 @@ package org.infogrid.probe.shadow.proxy;
 import org.infogrid.comm.ReceivingMessageEndpoint;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
-import org.infogrid.meshbase.net.proxy.AbstractProxy;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.AbstractCommunicatingProxy;
 import org.infogrid.meshbase.net.proxy.ProxyPolicy;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -30,7 +31,7 @@ import org.infogrid.util.logging.Log;
  */
 public class DefaultShadowProxy
         extends
-            AbstractProxy
+            AbstractCommunicatingProxy
 {
     private static final Log log = Log.getLogInstance( DefaultShadowProxy.class ); // our own, private logger
 
@@ -39,14 +40,18 @@ public class DefaultShadowProxy
      *
      * @param ep the communications endpoint
      * @param mb the MeshBase this Proxy belongs to
+     * @param policy the ProxyPolicy to use
+     * @param partnerIdentifier identifier of the partner NetMeshBase with which this Proxy communicates
      * @return the created DefaultShadowProxy
      */
     public static DefaultShadowProxy create(
-            ProxyMessageEndpoint ep,
-            NetMeshBase        mb )
+            ProxyMessageEndpoint  ep,
+            NetMeshBase           mb,
+            ProxyPolicy           policy,
+            NetMeshBaseIdentifier partnerIdentifier )
     {
-        DefaultShadowProxyPolicy policy = DefaultShadowProxyPolicy.create(); // in the future, this should become configurable
-        DefaultShadowProxy       ret    = new DefaultShadowProxy( ep, mb, policy );
+        // DefaultShadowProxyPolicy policy = DefaultShadowProxyPolicy.create(); // in the future, this should become configurable
+        DefaultShadowProxy       ret    = new DefaultShadowProxy( ep, mb, policy, partnerIdentifier );
 
         if( log.isDebugEnabled() ) {
             log.debug( "Created " + ret, new RuntimeException( "marker" ));
@@ -59,6 +64,8 @@ public class DefaultShadowProxy
      *
      * @param ep the communications endpoint
      * @param mb the MeshBase this Proxy belongs to
+     * @param policy the ProxyPolicy to use
+     * @param partnerIdentifier identifier of the partner NetMeshBase with which this Proxy communicates
      * @param isPlaceholder if true, this is a placeholder Proxy for the purposes of processing forward references
      * @param timeCreated the timeCreated to use
      * @param timeUpdated the timeUpdated to use
@@ -67,16 +74,18 @@ public class DefaultShadowProxy
      * @return the created DefaultShadowProxy
      */
     public static DefaultShadowProxy restoreProxy(
-            ProxyMessageEndpoint ep,
-            NetMeshBase        mb,
-            boolean            isPlaceholder,
-            long               timeCreated,
-            long               timeUpdated,
-            long               timeRead,
-            long               timeExpires )
+            ProxyMessageEndpoint  ep,
+            NetMeshBase           mb,
+            ProxyPolicy           policy,
+            NetMeshBaseIdentifier partnerIdentifier,
+            boolean               isPlaceholder,
+            long                  timeCreated,
+            long                  timeUpdated,
+            long                  timeRead,
+            long                  timeExpires )
     {
-        DefaultShadowProxyPolicy policy = DefaultShadowProxyPolicy.create(); // in the future, this should become configurable
-        DefaultShadowProxy       ret = new DefaultShadowProxy( ep, mb, policy, isPlaceholder, timeCreated, timeUpdated, timeRead, timeExpires );
+        // DefaultShadowProxyPolicy policy = DefaultShadowProxyPolicy.create(); // in the future, this should become configurable
+        DefaultShadowProxy ret = new DefaultShadowProxy( ep, mb, policy, partnerIdentifier, isPlaceholder, timeCreated, timeUpdated, timeRead, timeExpires );
 
         if( log.isDebugEnabled() ) {
             log.debug( "Created " + ret, new RuntimeException( "marker" ));
@@ -90,13 +99,15 @@ public class DefaultShadowProxy
      * @param ep the communications endpoint
      * @param mb the MeshBase this Proxy belongs to
      * @param policy the ProxyPolicy to use
+     * @param partnerIdentifier identifier of the partner NetMeshBase with which this Proxy communicates
      */
     protected DefaultShadowProxy(
-            ProxyMessageEndpoint ep,
-            NetMeshBase        mb,
-            ProxyPolicy        policy )
+            ProxyMessageEndpoint  ep,
+            NetMeshBase           mb,
+            ProxyPolicy           policy,
+            NetMeshBaseIdentifier partnerIdentifier )
     {
-        super( ep, mb, policy );
+        super( ep, mb, policy, partnerIdentifier );
         
         theIsPlaceholder = false;
     }
@@ -107,6 +118,7 @@ public class DefaultShadowProxy
      * @param ep the communications endpoint
      * @param mb the MeshBase this Proxy belongs to
      * @param policy the ProxyPolicy to use
+     * @param partnerIdentifier identifier of the partner NetMeshBase with which this Proxy communicates
      * @param isPlaceholder if true, this is a placeholder Proxy for the purposes of processing forward references
      * @param timeCreated the timeCreated to use
      * @param timeUpdated the timeUpdated to use
@@ -114,16 +126,17 @@ public class DefaultShadowProxy
      * @param timeExpires the timeExpires to use
      */
     protected DefaultShadowProxy(
-            ProxyMessageEndpoint ep,
-            NetMeshBase        mb,
-            ProxyPolicy        policy,
-            boolean            isPlaceholder,
-            long               timeCreated,
-            long               timeUpdated,
-            long               timeRead,
-            long               timeExpires )
+            ProxyMessageEndpoint  ep,
+            NetMeshBase           mb,
+            ProxyPolicy           policy,
+            NetMeshBaseIdentifier partnerIdentifier,
+            boolean               isPlaceholder,
+            long                  timeCreated,
+            long                  timeUpdated,
+            long                  timeRead,
+            long                  timeExpires )
     {
-        super( ep, mb, policy );
+        super( ep, mb, policy, partnerIdentifier );
         
         theIsPlaceholder = isPlaceholder;
 

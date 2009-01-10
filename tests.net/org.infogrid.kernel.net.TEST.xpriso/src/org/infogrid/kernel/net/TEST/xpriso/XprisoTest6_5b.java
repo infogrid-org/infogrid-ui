@@ -99,6 +99,11 @@ public class XprisoTest6_5b
 
         Thread.sleep( delay );
 
+        checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
+        checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
+        checkNotObject( obj1_mb2.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb2" );
+        checkNotObject( obj2_mb2.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb2" );
+
         //
 
         log.info( "Creating relationship between obj1 and obj2 in mb2." );
@@ -118,6 +123,11 @@ public class XprisoTest6_5b
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj1_mb2 has wrong proxies" );
         checkProxies( obj2_mb1, new NetMeshBase[] { mb2 }, null, null, "obj2_mb1 has wrong proxies" );
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
+
+        checkRelationshipProxies( obj1_mb1, obj2_mb1.getIdentifier(), new NetMeshBase[] { mb2 }, "obj1-obj2 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj1_mb1.getIdentifier(), new NetMeshBase[] { mb2 }, "obj2-obj1 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj1_mb2, obj2_mb2.getIdentifier(), null, "obj1-obj2 has wrong relationship proxies in mb2" );
+        checkRelationshipProxies( obj2_mb2, obj1_mb2.getIdentifier(), null, "obj2-obj1 has wrong relationship proxies in mb2" );
 
         //
 

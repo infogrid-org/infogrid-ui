@@ -80,6 +80,11 @@ public class XprisoTest1
 
         tx.commitTransaction();
 
+        checkRelationshipProxies( obj1_mb1, obj2_mb1.getIdentifier(), null, "obj1-obj2 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj1_mb1.getIdentifier(), null, "obj2-obj1 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj3_mb1.getIdentifier(), null, "obj2-obj3 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj3_mb1, obj2_mb1.getIdentifier(), null, "obj3-obj2 has wrong relationship proxies in mb1" );
+
         //
 
         log.info( "replicating first object" );
@@ -97,6 +102,13 @@ public class XprisoTest1
 
         checkProxies( obj2_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj3_mb1, null, null, null, "obj1_mb1 has proxies" );
+
+        checkRelationshipProxies( obj1_mb1, obj2_mb1.getIdentifier(), null, "obj1-obj2 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj1_mb1.getIdentifier(), null, "obj2-obj1 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj3_mb1.getIdentifier(), null, "obj2-obj3 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj3_mb1, obj2_mb1.getIdentifier(), null, "obj3-obj2 has wrong relationship proxies in mb1" );
+
+        checkRelationshipProxies( obj1_mb2, obj2_mb1.getIdentifier(), new NetMeshBase[] { mb1 }, "obj1-obj2 has wrong relationship proxies in mb2" );
 
         //
 
@@ -118,7 +130,16 @@ public class XprisoTest1
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
 
         checkProxies( obj3_mb1, null, null, null, "obj1_mb1 has proxies" );
-        
+
+        checkRelationshipProxies( obj1_mb1, obj2_mb1.getIdentifier(), null, "obj1-obj2 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj1_mb1.getIdentifier(), null, "obj2-obj1 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj3_mb1.getIdentifier(), null, "obj2-obj3 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj3_mb1, obj2_mb1.getIdentifier(), null, "obj3-obj2 has wrong relationship proxies in mb1" );
+
+        checkRelationshipProxies( obj1_mb2, obj2_mb2.getIdentifier(), new NetMeshBase[] { mb1 }, "obj1-obj2 has wrong relationship proxies in mb2" );
+        checkRelationshipProxies( obj2_mb2, obj1_mb2.getIdentifier(), new NetMeshBase[] { mb1 }, "obj2-obj1 has wrong relationship proxies in mb2" );
+        checkRelationshipProxies( obj2_mb2, obj3_mb1.getIdentifier(), new NetMeshBase[] { mb1 }, "obj2-obj3 has wrong relationship proxies in mb2" );
+
         //
 
         log.info( "traverse from replicated object 2" );
@@ -139,6 +160,16 @@ public class XprisoTest1
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
         checkProxies( obj3_mb1, new NetMeshBase[] { mb2 }, null, null, "obj3_mb1 has wrong proxies" );
         checkProxies( obj3_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj3_mb2 has wrong proxies" );
+
+        checkRelationshipProxies( obj1_mb1, obj2_mb1.getIdentifier(), null, "obj1-obj2 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj1_mb1.getIdentifier(), null, "obj2-obj1 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj2_mb1, obj3_mb1.getIdentifier(), null, "obj2-obj3 has wrong relationship proxies in mb1" );
+        checkRelationshipProxies( obj3_mb1, obj2_mb1.getIdentifier(), null, "obj3-obj2 has wrong relationship proxies in mb1" );
+
+        checkRelationshipProxies( obj1_mb2, obj2_mb2.getIdentifier(), new NetMeshBase[] { mb1 }, "obj1-obj2 has wrong relationship proxies in mb2" );
+        checkRelationshipProxies( obj2_mb2, obj1_mb2.getIdentifier(), new NetMeshBase[] { mb1 }, "obj2-obj1 has wrong relationship proxies in mb2" );
+        checkRelationshipProxies( obj2_mb2, obj3_mb2.getIdentifier(), new NetMeshBase[] { mb1 }, "obj2-obj3 has wrong relationship proxies in mb2" );
+        checkRelationshipProxies( obj3_mb2, obj2_mb2.getIdentifier(), new NetMeshBase[] { mb1 }, "obj3-obj2 has wrong relationship proxies in mb2" );
 
         //
 

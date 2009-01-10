@@ -160,7 +160,7 @@ public abstract class ScheduledExecutorProbeManager
         for( ShadowMeshBase shadow : theKeyValueMap.values() ) {
             // attempt to be as successful as possible
             try {
-                shadow.die( isPermanent );
+                shadow.die();
             } catch( Throwable t ) {
                 log.error( t );
             }

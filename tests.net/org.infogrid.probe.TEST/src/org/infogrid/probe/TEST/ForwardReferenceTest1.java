@@ -15,13 +15,10 @@
 package org.infogrid.probe.TEST;
 
 import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.testharness.util.IteratorElementCounter;
@@ -32,7 +29,7 @@ import org.infogrid.util.logging.Log;
  */
 public class ForwardReferenceTest1
         extends
-            AbstractProbeTest
+            AbstractForwardReferenceTest
 {
     /**
      * Run the test.
@@ -43,14 +40,6 @@ public class ForwardReferenceTest1
         throws
             Exception
     {
-        log.info( "Setting up" );
-        
-        NetMeshBaseIdentifier    here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
-        LocalNetMMeshBase        base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
-
-        //
-        
         log.info( "accessing test file 1" );
         
         MeshObject abc = base.accessLocally( testFile1Id, CoherenceSpecification.ONE_TIME_ONLY );
@@ -67,11 +56,12 @@ public class ForwardReferenceTest1
         checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Not blessed by right type" );
         checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.B, false ), "Blessed by wrong type" );
         checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
+        checkEquals( fwdReference.getNeighborMeshObjectIdentifiers().length, 1, "wrong number of neighbors" );
 
         // wait some
         
         Thread.sleep( 3500L );
-        
+
         checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "resolved", "ForwardReference was not successfully resolved: " + fwdReference.getIdentifier().toExternalForm() );
 
         checkEquals(    fwdReference.getAllProxies().length, 1, "Wrong number of proxies on forward reference" );
@@ -79,6 +69,7 @@ public class ForwardReferenceTest1
         checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.A,  false ), "Blessed still by old type" );
         checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.AA, false ), "Not blessed by the right type (AA)" );
         checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.B,  false ), "Not blessed by the right type (B)" );
+        checkEquals( fwdReference.getNeighborMeshObjectIdentifiers().length, 2, "wrong number of neighbors" );
     }
 
     /**

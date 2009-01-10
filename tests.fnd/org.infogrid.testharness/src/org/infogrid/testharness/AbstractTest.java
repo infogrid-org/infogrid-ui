@@ -488,7 +488,7 @@ public abstract class AbstractTest
             String msg )
     {
         if( one != null ) {
-            reportError( msg, String.valueOf( one ));
+            reportError( msg, StringHelper.objectLogString( one ));
             return false;
         }
 

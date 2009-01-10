@@ -121,7 +121,6 @@ public class XprisoTest4
         checkEquals( obj_mb2.getPropertyValue( TestSubjectArea.A_X ), obj_mb1.getPropertyValue( TestSubjectArea.A_X ), "Wrong property value" );
         checkProxies( obj_mb1, new NetMeshBase[] { mb2 }, null, mb2,  "obj_mb1 has wrong proxies" );
         checkProxies( obj_mb2, new NetMeshBase[] { mb1 }, mb1,  null, "obj_mb2 has wrong proxies" );
-        
     }
 
     /**

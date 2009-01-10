@@ -182,6 +182,44 @@ public class AnetMeshObjectNeighborManager
     }
 
     /**
+     * Obtain the set of identifiers of neighbor MeshObjects according
+     * to a particular relationship Proxy.
+     *
+     * @param subject the MeshObject in question
+     * @param p the relationship Proxy
+     * @return the set of identifiers of neighbor MeshObjects
+     */
+    public NetMeshObjectIdentifier [] getNeighborMeshObjectIdentifiersFromSource(
+            AnetMeshObject subject,
+            Proxy          p )
+    {
+        NetMeshObjectIdentifier [] all = getNeighborIdentifiers( subject );
+
+        if( all == null || all.length == 0 ) {
+            return new NetMeshObjectIdentifier[0];
+        }
+
+        NetMeshObjectIdentifier [] ret = new NetMeshObjectIdentifier[ all.length ];
+        int count = 0;
+        for( int i=0 ; i<all.length ; ++i ) {
+            Proxy [] here = subject.theRelationshipProxies[ i ];
+            if( here == null ) {
+                continue;
+            }
+            for( int j=0 ; j<here.length ; ++j ) {
+                if( p == here[j] ) {
+                    ret[ count++ ] = all[i];
+                    break;
+                }
+            }
+        }
+        if( count < ret.length ) {
+            ret = ArrayHelper.copyIntoNewArray( ret, 0, count, NetMeshObjectIdentifier.class );
+        }
+        return ret;
+    }
+
+    /**
      * Overridable method to create a single-element MeshObjectIdentifier array.
      *
      * @param oneElement the single element

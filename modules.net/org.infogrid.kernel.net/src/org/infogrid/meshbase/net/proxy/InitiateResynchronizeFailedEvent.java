@@ -16,6 +16,7 @@ package org.infogrid.meshbase.net.proxy;
 
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.util.StringHelper;
 
 /**
  * Indicates that the attempt to issue a resynchronization via a 3rd Proxy failed.
@@ -66,6 +67,32 @@ public class InitiateResynchronizeFailedEvent
         return theCause;
     }
     
+    /**
+     * Return in string form, for debugging.
+     *
+     * @return this instance in string form
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theSourceIdentifier",
+                    "theDeltaValueIdentifier",
+                    "theTimeEventOccurred",
+                    "theToBeResynchronized",
+                    "theCause"
+                },
+                new Object[] {
+                    getSourceIdentifier(),
+                    getDeltaValueIdentifier(),
+                    getTimeEventOccurred(),
+                    theToBeResynchronized,
+                    theCause
+                });
+    }
+
     /**
      * The NetMeshObjectIdentifiers of the NetMeshObjects that were to be resynchronized.
      */

@@ -68,6 +68,9 @@ public class XprisoTest2b
         checkProxies( obj1_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj2_mb1, null, null, null, "obj2_mb1 has proxies" );
 
+        checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
+        checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
+
         //
 
         log.info( "Accessing obj2 at mb3 via mb2 from mb1" );
@@ -83,13 +86,31 @@ public class XprisoTest2b
 
         Thread.sleep( 12000L );
 
+        checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
+        checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
+        checkEquals( obj2_mb3.getAllRelationshipProxies().length, 1, "wrong relationship proxies in obj2_mb3" );
+        checkEquals( obj2_mb3.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb2.getIdentifier(), "wrong relationship proxies in obj2_mb3" );
+
+        //
+
         log.info( "Finding obj2_mb2" );
 
         NetMeshObject obj2_mb2 = mb2.findMeshObjectByIdentifier( obj2_mb1.getIdentifier() );
         
+        //
+
+        log.info( "Checking proxies" );
+
         checkProxies( obj2_mb1, new NetMeshBase[] { mb2 },      null, null, "obj2_mb1 has wrong proxies" );
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1, mb3 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
         checkProxies( obj2_mb3, new NetMeshBase[] { mb2 },      mb2,  mb2,  "obj2_mb3 has wrong proxies" );
+
+        checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
+        checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
+        checkEquals( obj2_mb2.getAllRelationshipProxies().length, 1, "wrong relationship proxies in obj2_mb2" );
+        checkEquals( obj2_mb2.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb1.getIdentifier(), "wrong relationship proxies in obj2_mb2" );
+        checkEquals( obj2_mb3.getAllRelationshipProxies().length, 1, "wrong relationship proxies in obj2_mb3" );
+        checkEquals( obj2_mb3.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb2.getIdentifier(), "wrong relationship proxies in obj2_mb3" );
     }
 
     /**

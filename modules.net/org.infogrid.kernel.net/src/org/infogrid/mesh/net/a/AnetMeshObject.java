@@ -672,6 +672,56 @@ public class AnetMeshObject
     }
 
     /**
+     * Obtain all relationship Proxies applicable to this replica.
+     *
+     * @return all relationship Proxies. This may return null for efficiency reasons.
+     */
+    public Proxy [] getAllRelationshipProxies()
+    {
+        AnetMeshObjectNeighborManager nMgr = getNeighborManager();
+
+        Proxy [][] found = nMgr.getRelationshipProxies( this );
+        if( found == null || found.length == 0 ) {
+            return null;
+        }
+        ArrayList<Proxy> almost = new ArrayList<Proxy>();
+        for( int i=0 ; i<found.length ; ++i ) {
+            if( found[i] == null ) {
+                continue;
+            }
+            for( int j=0 ; j<found[i].length ; ++j ) {
+                if( !almost.contains( found[i][j] )) {
+                    almost.add( found[i][j] );
+                }
+            }
+        }
+        if( almost.isEmpty() ) {
+            return null;
+        }
+        Proxy [] ret = ArrayHelper.copyIntoNewArray( almost, Proxy.class );
+        return ret;
+    }
+
+    /**
+     * Obtain the set of relationship Proxies for the relationship between this NetMeshObject
+     * and the provided neighbor NetMeshObject.
+     *
+     * @param neighborIdentifier identifier of the neighbor NetMeshObject, identifying the relationship
+     * @return the found relationship Proxies
+     * @throws NotRelatedException thrown if the two NetMeshObjects are not related
+     */
+    public Proxy [] getRelationshipProxiesFor(
+            NetMeshObjectIdentifier neighborIdentifier )
+        throws
+            NotRelatedException
+    {
+        AnetMeshObjectNeighborManager nMgr = getNeighborManager();
+
+        Proxy [] ret = nMgr.getRelationshipProxiesFor( this, neighborIdentifier );
+        return ret;
+    }
+
+    /**
      * Obtain the same NetMeshObject as ExternalizedNetMeshObject so it can be easily serialized.
      * 
      * @return this NetMeshObject as SimpleExternalizedNetMeshObject

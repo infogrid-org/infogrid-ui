@@ -16,8 +16,6 @@ package org.infogrid.probe.TEST;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -31,7 +29,6 @@ import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.Test.TestSubjectArea;
@@ -42,7 +39,6 @@ import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
-import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
 
@@ -51,7 +47,7 @@ import org.infogrid.util.logging.Log;
  */
 public class ForwardReferenceTest5
         extends
-            AbstractProbeTest
+            AbstractForwardReferenceTest
 {
     /**
      * Run the test.
@@ -62,14 +58,6 @@ public class ForwardReferenceTest5
         throws
             Exception
     {
-        log.info( "Setting up" );
-        
-        NetMeshBaseIdentifier    here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
-        ScheduledExecutorService exec = createThreadPool( 1 );
-        LocalNetMMeshBase        base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
-
-        //
-        
         log.info( "accessing outer probe" );
         
         MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY );
@@ -160,11 +148,6 @@ public class ForwardReferenceTest5
     private static Log log = Log.getLogInstance( ForwardReferenceTest5.class);
 
     /**
-     * The ProbeDirectory to use.
-     */
-    protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
-
-    /**
      * URL for the outer Probe.
      */
     public static final NetMeshBaseIdentifier OUTER_URL;
@@ -200,7 +183,6 @@ public class ForwardReferenceTest5
      */
     public static final String INNER_NON_HOME_LOCAL_IDENTIFIER = "#non-home";
 
-    
     /**
      * The Probe to the outer data feed.
      */

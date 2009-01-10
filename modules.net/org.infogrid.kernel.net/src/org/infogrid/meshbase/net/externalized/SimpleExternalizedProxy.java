@@ -19,6 +19,7 @@ import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import java.util.List;
+import org.infogrid.meshbase.net.proxy.ProxyMessageEndpoint;
 
 /**
  * This implementation of ExternalizedProxy is fully initialized in the
@@ -37,18 +38,36 @@ public class SimpleExternalizedProxy
     public static SimpleExternalizedProxy create(
             Proxy proxy )
     {
+        long lastSentToken;
+        long lastReceivedToken;
+        List<XprisoMessage> messagesToSend;
+        List<XprisoMessage> messagesLastSent;
+
+        ProxyMessageEndpoint ep = proxy.getMessageEndpoint();
+        if( ep != null ) {
+            lastSentToken     = ep.getLastSentToken();
+            lastReceivedToken = ep.getLastReceivedToken();
+            messagesToSend    = ep.messagesToBeSent();
+            messagesLastSent  = ep.messagesLastSent();
+        } else {
+            lastSentToken     = -1L;
+            lastReceivedToken = -1L;
+            messagesToSend    = null;
+            messagesLastSent  = null;
+        }
+
         return new SimpleExternalizedProxy(
                 proxy.getTimeCreated(),
                 proxy.getTimeUpdated(),
                 proxy.getTimeRead(),
                 proxy.getTimeExpires(),
-                proxy.getMessageEndpoint().getLastSentToken(),
-                proxy.getMessageEndpoint().getLastReceivedToken(),
+                lastSentToken,
+                lastReceivedToken,
                 proxy.getNetMeshBase().getIdentifier(),
                 proxy.getPartnerMeshBaseIdentifier(),
                 proxy.getCoherenceSpecification(),
-                proxy.getMessageEndpoint().messagesToBeSent(),
-                proxy.getMessageEndpoint().messagesLastSent() );
+                messagesToSend,
+                messagesLastSent );
     }
 
     /**

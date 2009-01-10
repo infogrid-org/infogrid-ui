@@ -29,6 +29,7 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
+import org.infogrid.mesh.RoleTypeNotBlessedException;
 import org.infogrid.mesh.RoleTypeRequiresEntityTypeException;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -1097,8 +1098,9 @@ public class AnetMeshBaseLifecycleManager
             TransactionException,
             NotPermittedException
     {
-        NetMeshObjectIdentifier identifier = externalized.getIdentifier();
-        AnetMeshObject          ret        = findInStore( identifier );
+        NetMeshObjectIdentifier identifier    = externalized.getIdentifier();
+        AnetMeshObject          ret           = findInStore( identifier );
+        Proxy                   incomingProxy = ((NetMeshBase)theMeshBase).determineIncomingProxy();
 
         if( ret == null ) {
             throw new IllegalStateException( "Should exist: " + identifier );
@@ -1140,57 +1142,63 @@ public class AnetMeshBaseLifecycleManager
         // FIXME: equivalents
 
         // neighbors
-//        NetMeshObjectIdentifier [] correctNeighbors = neighborsFromExternalizedMeshObject( externalized );
-//        MeshObjectIdentifier []    currentNeighbors = ret.getNeighborMeshObjectIdentifiers();
-//
-//        ArrayHelper.Difference<MeshObjectIdentifier> neighborDifferences
-//                = ArrayHelper.determineDifference( currentNeighbors, correctNeighbors, true, MeshObjectIdentifier.class );
-//        for( MeshObjectIdentifier toAdd : neighborDifferences.getAdditions() ) {
-//            try {
-//                ret.rippleRelate( (NetMeshObjectIdentifier) toAdd, externalized.getTimeUpdated() );
-//            } catch( RelatedAlreadyException ex ) {
-//                // happens for the other end of the relationship
-//            }
-//        }
-        // we do NOT unrelate. (FIXME?)
+        NetMeshObjectIdentifier [] correctNeighbors = neighborsFromExternalizedMeshObject( externalized );
+        MeshObjectIdentifier []    currentNeighbors = ret.getNeighborManager().getNeighborMeshObjectIdentifiersFromSource( ret, incomingProxy );
+
+        ArrayHelper.Difference<MeshObjectIdentifier> neighborDifferences
+                = ArrayHelper.determineDifference( currentNeighbors, correctNeighbors, true, MeshObjectIdentifier.class );
+        for( MeshObjectIdentifier toRemove : neighborDifferences.getRemovals() ) {
+            try {
+                ret.rippleUnrelate( (NetMeshObjectIdentifier) toRemove, getMeshBase(), externalized.getTimeUpdated() );
+            } catch( NotRelatedException ex ) {
+                // happens for the other end of the relationship
+            }
+        }
+        for( MeshObjectIdentifier toAdd : neighborDifferences.getAdditions() ) {
+            try {
+                ret.rippleRelate( (NetMeshObjectIdentifier) toAdd, externalized.getTimeUpdated() );
+            } catch( RelatedAlreadyException ex ) {
+                // happens for the other end of the relationship
+            }
+        }
         
         // roles
-//        for( NetMeshObjectIdentifier neighborIdentifier : correctNeighbors ) { // only those that ExternalizedMeshObject knows something about
-//            MeshTypeIdentifier [] correctRoles;
-//            MeshTypeIdentifier [] currentRoles;
-//            ArrayHelper.Difference<MeshTypeIdentifier> roleDifferences;
-//
-//            try {
-//                correctRoles = roleTypesFromExternalizedMeshObject( externalized, neighborIdentifier );
-//                currentRoles = ret.getRoleTypeIdentifiers( neighborIdentifier );
-//            } catch( NotRelatedException ex ) {
-//                log.error( ex );
-//                continue;
-//            }
-//            roleDifferences = ArrayHelper.determineDifference( currentRoles, correctRoles, true, MeshTypeIdentifier.class );
-//            if( roleDifferences.getAdditions().length > 0 ) {
-//                try {
-//                    ret.rippleBless( roleTypesFromIdentifiers( roleDifferences.getAdditions()), neighborIdentifier, externalized.getTimeUpdated() );
-//                } catch( RoleTypeBlessedAlreadyException ex ) {
-//                    log.error( ex );
-//                } catch( EntityNotBlessedException ex ) {
-//                    log.error( ex );
-//                } catch( NotRelatedException ex ) {
-//                    log.error( ex );
-//                } catch( IsAbstractException ex ) {
-//                    log.error( ex );
-//                }
-//            }
-//            if( roleDifferences.getRemovals().length > 0 ) {
-//                try {
-//                    ret.rippleUnbless( roleTypesFromIdentifiers( roleDifferences.getRemovals()), neighborIdentifier, externalized.getTimeUpdated() );
-//                } catch( RoleTypeNotBlessedException ex ) {
-//                    log.error( ex );
-//                } catch( NotRelatedException ex ) {
-//                    log.error( ex );
-//                }
-//            }
-//        }
+        for( NetMeshObjectIdentifier neighborIdentifier : correctNeighbors ) { // only those that ExternalizedMeshObject knows something about
+            MeshTypeIdentifier [] correctRoles;
+            MeshTypeIdentifier [] currentRoles;
+            ArrayHelper.Difference<MeshTypeIdentifier> roleDifferences;
+
+            try {
+                correctRoles = roleTypesFromExternalizedMeshObject( externalized, neighborIdentifier );
+                currentRoles = ret.getRoleTypeIdentifiers( neighborIdentifier );
+            } catch( NotRelatedException ex ) {
+                log.error( ex );
+                continue;
+            }
+            roleDifferences = ArrayHelper.determineDifference( currentRoles, correctRoles, true, MeshTypeIdentifier.class );
+            if( roleDifferences.getRemovals().length > 0 ) {
+                try {
+                    ret.rippleUnbless( roleTypesFromIdentifiers( roleDifferences.getRemovals()), neighborIdentifier, externalized.getTimeUpdated() );
+                } catch( RoleTypeNotBlessedException ex ) {
+                    log.error( ex );
+                } catch( NotRelatedException ex ) {
+                    log.error( ex );
+                }
+            }
+            if( roleDifferences.getAdditions().length > 0 ) {
+                try {
+                    ret.rippleBless( roleTypesFromIdentifiers( roleDifferences.getAdditions()), neighborIdentifier, externalized.getTimeUpdated() );
+                } catch( RoleTypeBlessedAlreadyException ex ) {
+                    log.error( ex );
+                } catch( EntityNotBlessedException ex ) {
+                    log.error( ex );
+                } catch( NotRelatedException ex ) {
+                    log.error( ex );
+                } catch( IsAbstractException ex ) {
+                    log.error( ex );
+                }
+            }
+        }
         
         // properties
         HashMap<PropertyType,PropertyValue> correctProperties = propertiesFromExternalizedMeshObject( externalized );

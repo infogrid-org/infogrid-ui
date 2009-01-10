@@ -22,6 +22,7 @@ import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.model.Feeds.FeedsSubjectArea;
+import org.infogrid.model.Web.WebSubjectArea;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.Probe.ProbeSubjectArea;
@@ -64,6 +65,7 @@ public class RssTest1
         checkEqualsOutOfSequence(
                 home1.getTypes(),
                 new EntityType[] {
+                        WebSubjectArea.WEBRESOURCE,
                         FeedsSubjectArea.RSSFEED,
                         ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION },
                 "home object has wrong type" );

@@ -35,7 +35,7 @@ public class DefaultProxyFactory
      */
     public static DefaultProxyFactory create(
             ProxyMessageEndpointFactory endpointFactory,
-            ProxyPolicyFactory        proxyPolicyFactory )
+            ProxyPolicyFactory          proxyPolicyFactory )
     {
         DefaultProxyFactory ret = new DefaultProxyFactory( endpointFactory, proxyPolicyFactory );
         
@@ -70,9 +70,9 @@ public class DefaultProxyFactory
             FactoryException
     {
         ProxyMessageEndpoint endpoint = theEndpointFactory.obtainFor( partnerMeshBaseIdentifier, theNetMeshBase.getIdentifier() );
-        ProxyPolicy        policy   = theProxyPolicyFactory.obtainFor( partnerMeshBaseIdentifier, arg );// in the future, this should become configurable
+        ProxyPolicy          policy   = theProxyPolicyFactory.obtainFor( partnerMeshBaseIdentifier, arg );// in the future, this should become configurable
 
-        Proxy ret = DefaultProxy.create( endpoint, theNetMeshBase, policy );
+        Proxy ret = DefaultProxy.create( endpoint, theNetMeshBase, policy, partnerMeshBaseIdentifier );
         ret.setFactory( this );
 
         // we don't need to start communicating here yet -- it suffices that we start
@@ -108,6 +108,7 @@ public class DefaultProxyFactory
                 ep,
                 theNetMeshBase,
                 policy,
+                externalized.getNetworkIdentifierOfPartner(),
                 externalized.getTimeCreated(),
                 externalized.getTimeUpdated(),
                 externalized.getTimeRead(),

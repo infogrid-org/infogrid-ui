@@ -26,6 +26,7 @@ import org.infogrid.model.Feeds.FeedsSubjectArea;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Test.TestSubjectArea;
+import org.infogrid.model.Web.WebSubjectArea;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.feeds.atom.AtomProbe;
 import org.infogrid.probe.feeds.TEST.AbstractFeedTest;
@@ -65,9 +66,10 @@ public class AtomTest2
         checkEqualsOutOfSequence(
                 home1.getTypes(),
                 new EntityType[] {
-                    FeedsSubjectArea.ATOMFEED,
-                    TestSubjectArea.C,
-                    ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION
+                        WebSubjectArea.WEBRESOURCE,
+                        FeedsSubjectArea.ATOMFEED,
+                        TestSubjectArea.C,
+                        ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION
                 },
                 "home object has wrong type" );
 

@@ -151,6 +151,7 @@ public class DomMeshObjectSetProbe
             String timeRead         = MeshObjectSetProbeUtils.getTextContent( attrs, TIME_READ_TAG );
             String timeAutoDeletes  = MeshObjectSetProbeUtils.getTextContent( attrs, TIME_AUTO_DELETES_TAG );
             String giveUpLock       = MeshObjectSetProbeUtils.getTextContent( attrs, GIVE_UP_LOCK_TAG );
+            String giveUpHome       = MeshObjectSetProbeUtils.getTextContent( attrs, GIVE_UP_HOME_TAG );
             String proxyTowardsHome = MeshObjectSetProbeUtils.getTextContent( attrs, PROXY_TOWARDS_HOME_TAG );
 
             ExternalizedMeshObject theObjectBeingParsed = new ExternalizedMeshObject();
@@ -172,6 +173,9 @@ public class DomMeshObjectSetProbe
             }
             if( YES_TAG.equals( giveUpLock )) {
                 theObjectBeingParsed.setGiveUpLock( true );
+            }
+            if( YES_TAG.equals( giveUpHome )) {
+                theObjectBeingParsed.setGiveUpHome( true );
             }
             if( proxyTowardsHome != null && proxyTowardsHome.length() > 0 ) {
                 theObjectBeingParsed.setProxyTowardsHome(

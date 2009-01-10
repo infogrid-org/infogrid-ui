@@ -71,20 +71,20 @@ public class AllTests
 //                new TestSpec(
 //                        ProbeTest8.class ),
 
-                new TestSpec(
+                new TestSpec( // works
                         YadisTest1.class ),
 
-                new TestSpec(
+                new TestSpec( // works
                         YadisTest2.class ),
 
-                new TestSpec(
+                new TestSpec( // works
                         YadisTest3.class ),
 
-                new TestSpec(
+                new TestSpec( // works
                         YadisTest4.class ),
 
                 new TestSpec(
-                        YadisTest5.class,
+                        YadisTest5.class, // works
                         AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" )),
 
                 new TestSpec( // property updates
@@ -166,6 +166,9 @@ public class AllTests
 
                 new TestSpec(
                         ForwardReferenceTest5.class ),
+
+//                new TestSpec(
+//                        ForwardReferenceTest6.class ),
 
                 new TestSpec(
                         ProbeMatchTest1.class ),

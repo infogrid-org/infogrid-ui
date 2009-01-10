@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -27,6 +27,7 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -38,15 +39,13 @@ import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
-import org.infogrid.probe.m.MProbeDirectory;
-import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
 
 /**
- * Tests that ForwardReferences blessed with type X can resolve into MeshObjects that aren't
- * blessed with type X.
+ * Tests that all the right events are being generated when relationships to both unresolved and
+ * resolved ForwardReferences change.
  */
-public class ForwardReferenceTest4
+public class ForwardReferenceTest6
         extends
             AbstractForwardReferenceTest
 {
@@ -59,33 +58,68 @@ public class ForwardReferenceTest4
         throws
             Exception
     {
+        long delay = 3500L;
+
         log.info( "accessing outer probe" );
-        
+
         MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY );
 
         checkObject( abc, "abc not found" );
-        checkEquals( IteratorElementCounter.countIteratorElements( base.proxies()), 1, "wrong number of proxies in main NetMeshBase" );
 
         //
-        
+
         log.info( "Finding ForwardReference" );
-        
+
         NetMeshObject fwdReference = (NetMeshObject) abc.traverseToNeighborMeshObjects().getSingleMember();
-        checkObject(    fwdReference, "fwdReference not found" );
-        checkCondition( fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Not blessed by right type" );
-        checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.B, false ), "Blessed by wrong type" );
-        checkEquals(    fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
+        checkObject( fwdReference, "fwdReference not found" );
 
-        // wait some
-        
-        Thread.sleep( 3500L );
-        
-        checkEquals( fwdReference.getPropertyValue( TestSubjectArea.B_U ), "resolved", "ForwardReference was not successfully resolved: " + fwdReference.getIdentifier().toExternalForm() );
+        MeshObjectSet fwdReferenceNeighbors = fwdReference.traverseToNeighborMeshObjects();
+        checkEquals( fwdReferenceNeighbors.size(), 1, "Wrong number of neighbors of ForwardReference prior to resolution" );
 
-        checkEquals(    fwdReference.getAllProxies().length, 1, "Wrong number of proxies on forward reference" );
-        checkCondition( fwdReference.getAllProxies()[0].getPartnerMeshBaseIdentifier().equals( INNER_URL ), "Wrong proxy on forward reference" );
-        checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Still blessed with (A)" );
-        checkCondition( fwdReference.isBlessedBy( TestSubjectArea.B,  false ), "Not blessed by the right type (B)" );
+        //
+
+        log.info( "Waiting for ForwardReference resolution" );
+
+        sleepFor( delay );
+
+        MeshObjectSet fwdReferenceNeighbors2 = fwdReference.traverseToNeighborMeshObjects();
+        checkEquals( fwdReferenceNeighbors2.size(), 1, "Wrong number of neighbors of ForwardReference after resolution" );
+
+        //
+
+        log.info( "Now run the inner probe again" );
+
+        base.getShadowMeshBaseFor( INNER_URL ).doUpdateNow();
+
+        sleepFor( delay );
+
+        MeshObjectSet fwdReferenceNeighbors3 = fwdReference.traverseToNeighborMeshObjects();
+        checkEquals( fwdReferenceNeighbors3.size(), 2, "Wrong number of neighbors of ForwardReference after inner re-run (1)" );
+
+        base.getShadowMeshBaseFor( INNER_URL ).doUpdateNow();
+
+        sleepFor( delay );
+
+        MeshObjectSet fwdReferenceNeighbors4 = fwdReference.traverseToNeighborMeshObjects();
+        checkEquals( fwdReferenceNeighbors4.size(), 3, "Wrong number of neighbors of ForwardReference after inner re-run (2)" );
+
+        //
+
+        log.info( "Now run the outer probe again" );
+
+        base.getShadowMeshBaseFor( OUTER_URL ).doUpdateNow();
+
+        sleepFor( delay );
+
+        MeshObjectSet fwdReferenceNeighbors5 = fwdReference.traverseToNeighborMeshObjects();
+        checkEquals( fwdReferenceNeighbors5.size(), 4, "Wrong number of neighbors of ForwardReference after outer re-run (1)" );
+
+        base.getShadowMeshBaseFor( OUTER_URL ).doUpdateNow();
+
+        sleepFor( delay );
+
+        MeshObjectSet fwdReferenceNeighbors6 = fwdReference.traverseToNeighborMeshObjects();
+        checkEquals( fwdReferenceNeighbors6.size(), 5, "Wrong number of neighbors of ForwardReference after outer re-run (2)" );
     }
 
     /**
@@ -96,7 +130,7 @@ public class ForwardReferenceTest4
     public static void main(
             String [] args )
     {
-        ForwardReferenceTest4 test = null;
+        ForwardReferenceTest6 test = null;
         try {
             if( args.length > 0 ) {
                 System.err.println( "Synopsis: <no args>" );
@@ -104,7 +138,7 @@ public class ForwardReferenceTest4
                 System.exit( 1 );
             }
 
-            test = new ForwardReferenceTest4( args );
+            test = new ForwardReferenceTest6( args );
             test.run();
 
         } catch( Throwable ex ) {
@@ -124,16 +158,16 @@ public class ForwardReferenceTest4
 
     /**
      * Constructor.
-     * 
+     *
      * @param args command-line arguments
      * @throws Exception all sorts of things can go wrong during a test
      */
-    public ForwardReferenceTest4(
+    public ForwardReferenceTest6(
             String [] args )
         throws
             Exception
     {
-        super( ForwardReferenceTest4.class );
+        super( ForwardReferenceTest6.class );
 
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 OUTER_URL.toExternalForm(),
@@ -145,7 +179,7 @@ public class ForwardReferenceTest4
     }
 
     // Our Logger
-    private static Log log = Log.getLogInstance( ForwardReferenceTest4.class);
+    private static Log log = Log.getLogInstance( ForwardReferenceTest6.class);
 
     /**
      * URL for the outer Probe.
@@ -179,6 +213,16 @@ public class ForwardReferenceTest4
     }
 
     /**
+     * A counter that is incremented every time the OuterTestApiProbe is run.
+     */
+    static int outerProbeRunCounter = 0;
+
+    /**
+     * A counter that is incremented every time the InnerTestApiProbe is run.
+     */
+    static int innerProbeRunCounter = 0;
+
+    /**
      * The Probe to the outer data feed.
      */
     public static class OuterTestApiProbe
@@ -207,12 +251,21 @@ public class ForwardReferenceTest4
         {
             StagingMeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
 
-            mb.getHomeObject().bless( TestSubjectArea.AA );
-            
+            MeshObject home = mb.getHomeObject();
+
+            home.bless( TestSubjectArea.AA );
+
             MeshObject fwdRef = life.createForwardReference( INNER_URL, TestSubjectArea.A );
             fwdRef.setPropertyValue( TestSubjectArea.A_X, StringValue.create( "forwardreference" ));
-            
-            mb.getHomeObject().relate( fwdRef );
+
+            home.relateAndBless( TestSubjectArea.AR1A.getSource(), fwdRef );
+
+            for( int i=0 ; i<outerProbeRunCounter ; ++i ) {
+                MeshObject other = life.createMeshObject( mb.getMeshObjectIdentifierFactory().fromExternalForm( "#outer-" + i ), TestSubjectArea.AA );
+
+                fwdRef.relateAndBless( TestSubjectArea.AR1A.getSource(), other );
+            }
+            ++outerProbeRunCounter;
         }
     }
 
@@ -243,11 +296,21 @@ public class ForwardReferenceTest4
                 ModuleException,
                 URISyntaxException
         {
+            StagingMeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
+
             MeshObject home = mb.getHomeObject();
-            
+
+            home.bless( TestSubjectArea.AA );
             home.bless( TestSubjectArea.B );
-            
-            home.setPropertyValue( TestSubjectArea.B_U, StringValue.create( "resolved" ) );
+
+            home.setPropertyValue( TestSubjectArea.A_X, StringValue.create( "resolved" ) );
+
+            for( int i=0 ; i<innerProbeRunCounter ; ++i ) {
+                MeshObject other = life.createMeshObject( mb.getMeshObjectIdentifierFactory().fromExternalForm( "#inner-" + i ), TestSubjectArea.AA );
+
+                home.relateAndBless( TestSubjectArea.AR1A.getSource(), other );
+            }
+            ++innerProbeRunCounter;
         }
     }
 }

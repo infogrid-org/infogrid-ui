@@ -20,6 +20,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.Transaction;
+import org.infogrid.model.Blob.BlobSubjectArea;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.probe.ProbeDirectory.StreamProbeDescriptor;
 import org.infogrid.probe.blob.BlobProbe;
@@ -47,7 +48,7 @@ public class ShadowTest3
         MeshObject home = base.accessLocally( testFile1Id );
 
         checkObject( home, "home not found" );
-//        checkCondition( home.isBlessedBy( BlobSubjectArea.BLOB_OBJECT ), "Not blessed as a Blob" );
+        checkCondition( home.isBlessedBy( BlobSubjectArea.BLOBOBJECT ), "Not blessed as a Blob" );
         
         //
 
@@ -55,8 +56,8 @@ public class ShadowTest3
         
         Transaction tx = base.createTransactionNow();
 
-        MeshObject other1 = base.getMeshBaseLifecycleManager().createMeshObject();
-        MeshObject other2 = base.getMeshBaseLifecycleManager().createMeshObject();
+        MeshObject other1 = base.getMeshBaseLifecycleManager().createMeshObject( base.getMeshObjectIdentifierFactory().fromExternalForm( "other1" ));
+        MeshObject other2 = base.getMeshBaseLifecycleManager().createMeshObject( base.getMeshObjectIdentifierFactory().fromExternalForm( "other2" ));
         
         tx.commitTransaction();
 
@@ -93,8 +94,12 @@ public class ShadowTest3
         
         MeshObjectSet found1 = other2.traverseToNeighborMeshObjects();
         MeshObjectSet found2 = found1.traverseToNeighborMeshObjects();
+
+        Thread.sleep( 3500L ); // allow ForwardReference resolution to work
+
+        MeshObjectSet found3 = found2.traverseToNeighborMeshObjects();
         
-        checkEquals( found2.size(), 11, "Wrong number of objects found" ); // that's the 9 Yadis services, other1 and other2
+        checkEquals( found3.size(), 10, "Wrong number of objects found" ); // that's the 9 Yadis services, plus home
     }
 
     /**

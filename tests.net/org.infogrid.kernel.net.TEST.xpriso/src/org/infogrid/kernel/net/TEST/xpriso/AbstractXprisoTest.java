@@ -17,6 +17,7 @@ package org.infogrid.kernel.net.TEST.xpriso;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
@@ -32,6 +33,7 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 
@@ -244,6 +246,135 @@ public abstract class AbstractXprisoTest
             ret &= checkEquals( proxyTowardHome.getIdentifier(), obj.getProxyTowardsHomeReplica().getPartnerMeshBaseIdentifier(), msg + ": wrong proxyTowardLock" );
         }
         return ret;
+    }
+
+    /**
+     * Check the position of the relationship Proxies.
+     *
+     * @param obj1 the start object of the relationship
+     * @param obj2 the destination object of the relationship
+     * @param proxiesTowards the NetMeshBases to which the proxies are supposed to be pointing
+     * @param msg the message to print when the proxies are not correct
+     * @return true if check passed
+     * @throws Exception all sorts of things may go wrong in tests
+     */
+    protected boolean checkRelationshipProxies(
+            NetMeshObject  obj1,
+            NetMeshObject  obj2,
+            NetMeshBase [] proxiesTowards,
+            String         msg )
+        throws
+            Exception
+    {
+        return checkRelationshipProxies( obj1, obj2.getIdentifier(), proxiesTowards, msg );
+    }
+
+    /**
+     * Check the position of the relationship Proxies.
+     *
+     * @param obj1 the start object of the relationship
+     * @param obj2Identifier identiifer of the destination object of the relationship
+     * @param proxiesTowards the NetMeshBases to which the proxies are supposed to be pointing
+     * @param msg the message to print when the proxies are not correct
+     * @return true if check passed
+     * @throws Exception all sorts of things may go wrong in tests
+     */
+    protected boolean checkRelationshipProxies(
+            NetMeshObject           obj1,
+            NetMeshObjectIdentifier obj2Identifier,
+            NetMeshBase []          proxiesTowards,
+            String                  msg )
+        throws
+            Exception
+    {
+        Proxy [] relationshipProxies = obj1.getRelationshipProxiesFor( obj2Identifier );
+
+        if( relationshipProxies == null || relationshipProxies.length == 0 ) {
+            if( !( proxiesTowards == null || proxiesTowards.length == 0 )) {
+                reportError(
+                        msg
+                        + ": "
+                        + obj1.getIdentifier().toExternalForm()
+                        + " -> "
+                        + obj2Identifier.toExternalForm()
+                        + " has no proxies, should have "
+                        + proxiesTowards.length );
+                return false;
+            } else {
+                return true; // no proxies is correct
+            }
+        } else if( proxiesTowards == null || proxiesTowards.length == 0 ) {
+                reportError(
+                        msg
+                        + ": "
+                        + obj1.getIdentifier().toExternalForm()
+                        + " -> "
+                        + obj2Identifier.toExternalForm()
+                        + " has "
+                        + relationshipProxies.length
+                        + " proxies, should have 0: "
+                        + listRelationshipProxies( relationshipProxies ));
+            return false;
+        }
+
+        boolean ret = true;
+        if( relationshipProxies.length != proxiesTowards.length ) {
+                reportError(
+                        msg
+                        + ": "
+                        + obj1.getIdentifier().toExternalForm()
+                        + " -> "
+                        + obj2Identifier.toExternalForm()
+                        + " has "
+                        + relationshipProxies.length
+                        + " proxies, should have "
+                        + proxiesTowards.length
+                        + ": "
+                        + listRelationshipProxies( relationshipProxies ));
+
+            ret = false;
+
+        } else {
+            NetMeshBaseIdentifier [] relationshipProxiesIdentifiers = new NetMeshBaseIdentifier[ relationshipProxies.length ];
+            NetMeshBaseIdentifier [] proxiesTowardsIdentifiers      = new NetMeshBaseIdentifier[ proxiesTowards.length ];
+            for( int i=0 ; i<relationshipProxies.length ; ++i ) {
+                relationshipProxiesIdentifiers[i] = relationshipProxies[i].getPartnerMeshBaseIdentifier();
+            }
+            for( int i=0 ; i<proxiesTowards.length ; ++i ) {
+                proxiesTowardsIdentifiers[i] = proxiesTowards[i].getIdentifier();
+            }
+
+            if( !checkEqualsOutOfSequence( relationshipProxiesIdentifiers, proxiesTowardsIdentifiers, null )) {
+                StringBuilder buf = new StringBuilder();
+                buf.append( msg ).append( ": not the same content: " );
+                buf.append( ArrayHelper.join( ", ", relationshipProxiesIdentifiers ));
+                buf.append( " vs. " );
+                buf.append( ArrayHelper.join( ", ", proxiesTowardsIdentifiers ));
+                reportError( buf.toString() );
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Convert an array of relationship Proxies to a String.
+     *
+     * @param relProxies the relationship Proxies
+     * @return the String
+     */
+    protected String listRelationshipProxies(
+            Proxy [] relProxies )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( "{ " );
+        String sep = "";
+        for( Proxy p : relProxies ) {
+            buf.append( sep );
+            buf.append( p.getPartnerMeshBaseIdentifier().toExternalForm() );
+            sep = ", ";
+        }
+        buf.append( " }" );
+        return buf.toString();
     }
 
     /**

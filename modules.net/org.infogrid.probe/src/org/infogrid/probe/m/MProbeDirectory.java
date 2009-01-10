@@ -14,10 +14,10 @@
 
 package org.infogrid.probe.m;
 
-import org.infogrid.probe.AbstractProbeDirectory;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import org.infogrid.probe.AbstractProbeDirectory;
+import org.infogrid.probe.yadis.XrdsProbe;
 
 /**
  * Simple in-memory implementation of ProbeDirectory.
@@ -27,19 +27,43 @@ public class MProbeDirectory
             AbstractProbeDirectory
 {
     /**
-     * Factory method to create an empty MProbeDirectory.
+     * Default factory method to create an MProbeDirectory that only knows about XRDS.
      *
      * @return the created MProbeDirectory
      */
     public static MProbeDirectory create()
     {
-        return new MProbeDirectory(
+        ArrayList<XmlDomProbeDescriptor> domProbes = new ArrayList<XmlDomProbeDescriptor>();
+        domProbes.add( new XmlDomProbeDescriptor(
+                "XRDS",
+                "XRDS",
+                XrdsProbe.class ));
+
+        MProbeDirectory ret = new MProbeDirectory(
+                domProbes,
+                new ArrayList<StreamProbeDescriptor>(),
+                new ArrayList<ApiProbeDescriptor>(),
+                new ArrayList<ExactMatchDescriptor>(),
+                new ArrayList<PatternMatchDescriptor>(),
+                null );
+        return ret;
+    }
+
+    /**
+     * Factory method to create an empty MProbeDirectory.
+     *
+     * @return the created MProbeDirectory
+     */
+    public static MProbeDirectory createEmpty()
+    {
+        MProbeDirectory ret = new MProbeDirectory(
                 new ArrayList<XmlDomProbeDescriptor>(),
                 new ArrayList<StreamProbeDescriptor>(),
                 new ArrayList<ApiProbeDescriptor>(),
                 new ArrayList<ExactMatchDescriptor>(),
                 new ArrayList<PatternMatchDescriptor>(),
                 null );
+        return ret;
     }
 
     /**
@@ -61,13 +85,14 @@ public class MProbeDirectory
             Collection<PatternMatchDescriptor> patternMatches,
             StreamProbeDescriptor              defaultStreamProbe )
     {
-        return new MProbeDirectory(
+        MProbeDirectory ret = new MProbeDirectory(
                 new ArrayList<XmlDomProbeDescriptor>(),
                 new ArrayList<StreamProbeDescriptor>(),
                 new ArrayList<ApiProbeDescriptor>(),
                 new ArrayList<ExactMatchDescriptor>(),
                 new ArrayList<PatternMatchDescriptor>(),
                 null );
+        return ret;
     }
 
     /**

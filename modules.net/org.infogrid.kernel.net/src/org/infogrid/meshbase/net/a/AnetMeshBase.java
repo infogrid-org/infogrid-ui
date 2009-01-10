@@ -973,6 +973,8 @@ public abstract class AnetMeshBase
     public void registerIncomingProxy(
             Proxy incomingProxy )
     {
+        checkDead();
+
         synchronized( theThreadProxyTable ) {
             Proxy found = theThreadProxyTable.put( Thread.currentThread(), incomingProxy );
             if( found != null ) {

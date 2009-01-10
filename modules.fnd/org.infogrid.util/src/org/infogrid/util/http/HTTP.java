@@ -214,6 +214,8 @@ public abstract class HTTP
             HttpURLConnection realConn = (HttpURLConnection) conn;
 
             realConn.setInstanceFollowRedirects( followRedirects );
+            realConn.setConnectTimeout( HTTP_CONNECT_TIMEOUT );
+            realConn.setReadTimeout(    HTTP_READ_TIMEOUT );
         }
 
         if( cookies != null && !cookies.isEmpty() ) {
@@ -777,6 +779,16 @@ public abstract class HTTP
             new SimpleDateFormat( "EEE dd-MMM-yy HH:mm:ss z" ),
             new SimpleDateFormat( "EEE dd MMM yy HH:mm:ss z" ),
     };
+
+    /**
+     * Timeout for establishing HTTP connections, in milliseconds.
+     */
+    protected static final int HTTP_CONNECT_TIMEOUT = 5000;
+
+    /**
+     * Timeout for reading from an established HTTP connection, in milliseconds.
+     */
+    protected static final int HTTP_READ_TIMEOUT = 5000;
 
     /**
      * Encapsulates the response from an HTTP request.

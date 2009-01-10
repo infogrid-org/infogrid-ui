@@ -28,6 +28,8 @@ import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
+import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
+import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.meshbase.net.security.NetAccessManager;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -372,6 +374,17 @@ public abstract class AShadowMeshBase
     public final boolean isNeeded()
     {
         return theDispatcher.isNeeded();
+    }
+
+    /**
+     * Obtain the ProxyPolicyFactory of this ShadowMeshBase.
+     *
+     * @return the ProxyPolicyFactory
+     */
+    public ProxyPolicyFactory getProxyPolicyFactory()
+    {
+        ProxyPolicyFactory ret = NiceAndTrustingProxyPolicyFactory.create();
+        return ret;
     }
 
     /**

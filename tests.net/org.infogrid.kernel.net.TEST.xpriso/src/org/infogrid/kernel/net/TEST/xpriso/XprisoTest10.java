@@ -127,6 +127,8 @@ public class XprisoTest10
         
         tx.commitTransaction();
 
+        checkRelationshipProxies( obj1_mb1, obj2_mb1, null, "wrong relationship proxies in MB1" );
+
         obj1_mb2 = null;
         
         Thread.sleep( 3500L );
@@ -162,6 +164,9 @@ public class XprisoTest10
 
         checkProxies( obj2_mb1, new NetMeshBase[] { mb2 }, null, null, "obj2_mb1 has wrong proxies" );
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1 },  mb1,  mb1, "obj2_mb2 has wrong proxies" );
+
+        checkRelationshipProxies( obj1_mb1, obj2_mb1, null,                      "wrong relationship proxies in MB1" );
+        checkRelationshipProxies( obj1_mb2, obj2_mb2, new NetMeshBase[] { mb1 }, "wrong relationship proxies in MB2" );
 
         //
 

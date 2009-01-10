@@ -345,7 +345,7 @@ public class XprisoTest8
         throws
             Exception
     {
-        super( XprisoTest7.class );
+        super( XprisoTest7_5.class );
         
         MPingPongNetMessageEndpointFactory endpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
         endpointFactory.setNameServer( theNameServer );

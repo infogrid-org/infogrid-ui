@@ -18,9 +18,9 @@ import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
 import org.infogrid.meshbase.net.proxy.AbstractProxyFactory;
+import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicy;
 import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.meshbase.net.proxy.ProxyMessageEndpoint;
-import org.infogrid.probe.shadow.externalized.ExternalizedShadowProxy;
+import org.infogrid.meshbase.net.proxy.ProxyPolicy;
 import org.infogrid.util.FactoryException;
 
 /**
@@ -64,7 +64,9 @@ public class PlaceholderShadowProxyFactory
         throws
             FactoryException
     {
-        Proxy ret = DefaultShadowProxy.create( null, theNetMeshBase );
+        ProxyPolicy policy = theProxyPolicyFactory.obtainFor( partnerMeshBaseIdentifier, arg );// in the future, this should become configurable
+
+        Proxy ret = PlaceholderShadowProxy.create( theNetMeshBase, policy, partnerMeshBaseIdentifier );
         ret.setFactory( this );
 
         return ret;
@@ -82,37 +84,14 @@ public class PlaceholderShadowProxyFactory
         throws
             FactoryException
     {
-        ExternalizedShadowProxy realExternalized = (ExternalizedShadowProxy) externalized;
+        NiceAndTrustingProxyPolicy policy = NiceAndTrustingProxyPolicy.create( // in the future, this should become configurable -- FIXME
+                externalized.getCoherenceSpecification() );
 
-        Proxy ret;
-        if( realExternalized.getIsPlaceholder() ) {
-            ret = DefaultShadowProxy.restoreProxy(
-                    null,
-                    theNetMeshBase,
-                    true,
-                    externalized.getTimeCreated(),
-                    externalized.getTimeUpdated(),
-                    externalized.getTimeRead(),
-                    externalized.getTimeExpires() );
+        Proxy ret = PlaceholderShadowProxy.restoreProxy(
+                theNetMeshBase,
+                policy,
+                externalized.getNetworkIdentifierOfPartner());
 
-        } else {        
-            ProxyMessageEndpoint ep = theEndpointFactory.restoreNetMessageEndpoint(
-                    externalized.getNetworkIdentifierOfPartner(),
-                    externalized.getNetworkIdentifier(),
-                    externalized.getLastSentToken(),
-                    externalized.getLastReceivedToken(),
-                    externalized.messagesLastSent(),
-                    externalized.messagesToBeSent() );
-
-            ret = DefaultShadowProxy.restoreProxy(
-                    ep,
-                    theNetMeshBase,
-                    false,
-                    externalized.getTimeCreated(),
-                    externalized.getTimeUpdated(),
-                    externalized.getTimeRead(),
-                    externalized.getTimeExpires() );
-        }  
         return ret;
     }
 }

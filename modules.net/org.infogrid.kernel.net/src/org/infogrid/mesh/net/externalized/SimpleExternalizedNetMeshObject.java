@@ -213,7 +213,7 @@ public class SimpleExternalizedNetMeshObject
                 equivalents );
 
         theGiveUpHome = giveUpHomeReplica;
-        theGiveUpLock        = giveUpLock;
+        theGiveUpLock = giveUpLock;
 
         theProxyIdentifiers = proxyIdentifiers != null ? proxyIdentifiers : new NetMeshBaseIdentifier[0];
 

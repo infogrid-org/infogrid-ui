@@ -16,6 +16,7 @@ package org.infogrid.meshbase.net.proxy;
 
 import org.infogrid.comm.ReceivingMessageEndpoint;
 import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.util.logging.Log;
 
@@ -24,7 +25,7 @@ import org.infogrid.util.logging.Log;
  */
 public class DefaultProxy
         extends
-            AbstractProxy
+            AbstractCommunicatingProxy
 {
     private static final Log log = Log.getLogInstance( DefaultProxy.class ); // our own, private logger
 
@@ -34,14 +35,16 @@ public class DefaultProxy
      * @param ep the communications endpoint
      * @param mb the NetMeshBase this Proxy belongs to
      * @param policy the ProxyPolicy to use
+     * @param partnerIdentifier identifier of the partner NetMeshBase with which this Proxy communicates
      * @return the created DefaultProxy
      */
     public static DefaultProxy create(
-            ProxyMessageEndpoint ep,
-            NetMeshBase          mb,
-            ProxyPolicy          policy )
+            ProxyMessageEndpoint  ep,
+            NetMeshBase           mb,
+            ProxyPolicy           policy,
+            NetMeshBaseIdentifier partnerIdentifier )
     {
-        DefaultProxy ret = new DefaultProxy( ep, mb, policy );
+        DefaultProxy ret = new DefaultProxy( ep, mb, policy, partnerIdentifier );
 
         if( log.isDebugEnabled() ) {
             log.debug( "Created " + ret, new RuntimeException( "marker" ));
@@ -55,6 +58,7 @@ public class DefaultProxy
      * @param ep the communications endpoint
      * @param mb the NetMeshBase this Proxy belongs to
      * @param policy the ProxyPolicy to use
+     * @param partnerIdentifier identifier of the partner NetMeshBase with which this Proxy communicates
      * @param timeCreated the timeCreated to use
      * @param timeUpdated the timeUpdated to use
      * @param timeRead the timeRead to use
@@ -62,15 +66,16 @@ public class DefaultProxy
      * @return the restored DefaultProxy
      */
     public static DefaultProxy restoreProxy(
-            ProxyMessageEndpoint ep,
-            NetMeshBase          mb,
-            ProxyPolicy          policy,
-            long                 timeCreated,
-            long                 timeUpdated,
-            long                 timeRead,
-            long                 timeExpires )
+            ProxyMessageEndpoint  ep,
+            NetMeshBase           mb,
+            ProxyPolicy           policy,
+            NetMeshBaseIdentifier partnerIdentifier,
+            long                  timeCreated,
+            long                  timeUpdated,
+            long                  timeRead,
+            long                  timeExpires )
     {
-        DefaultProxy ret = new DefaultProxy( ep, mb, policy, timeCreated, timeUpdated, timeRead, timeExpires );
+        DefaultProxy ret = new DefaultProxy( ep, mb, policy, partnerIdentifier, timeCreated, timeUpdated, timeRead, timeExpires );
 
         if( log.isDebugEnabled() ) {
             log.debug( "Restored " + ret, new RuntimeException( "marker" ));
@@ -84,13 +89,15 @@ public class DefaultProxy
      * @param ep the communications endpoint
      * @param mb the NetMeshBase this Proxy belongs to
      * @param policy the ProxyPolicy to use
+     * @param partnerIdentifier identifier of the partner NetMeshBase with which this Proxy communicates
      */
     protected DefaultProxy(
-            ProxyMessageEndpoint ep,
-            NetMeshBase          mb,
-            ProxyPolicy          policy )
+            ProxyMessageEndpoint  ep,
+            NetMeshBase           mb,
+            ProxyPolicy           policy,
+            NetMeshBaseIdentifier partnerIdentifier )
     {
-        super( ep, mb, policy );
+        super( ep, mb, policy, partnerIdentifier );
     }
 
     /**
@@ -99,21 +106,23 @@ public class DefaultProxy
      * @param ep the communications endpoint
      * @param mb the NetMeshBase this Proxy belongs to
      * @param policy the ProxyPolicy to use
+     * @param partnerIdentifier identifier of the partner NetMeshBase with which this Proxy communicates
      * @param timeCreated the timeCreated to use
      * @param timeUpdated the timeUpdated to use
      * @param timeRead the timeRead to use
      * @param timeExpires the timeExpires to use
      */
     protected DefaultProxy(
-            ProxyMessageEndpoint ep,
-            NetMeshBase          mb,
-            ProxyPolicy          policy,
-            long                 timeCreated,
-            long                 timeUpdated,
-            long                 timeRead,
-            long                 timeExpires )
+            ProxyMessageEndpoint  ep,
+            NetMeshBase           mb,
+            ProxyPolicy           policy,
+            NetMeshBaseIdentifier partnerIdentifier,
+            long                  timeCreated,
+            long                  timeUpdated,
+            long                  timeRead,
+            long                  timeExpires )
     {
-        super( ep, mb, policy );
+        super( ep, mb, policy, partnerIdentifier );
         
         theTimeCreated = timeCreated;
         theTimeUpdated = timeUpdated;

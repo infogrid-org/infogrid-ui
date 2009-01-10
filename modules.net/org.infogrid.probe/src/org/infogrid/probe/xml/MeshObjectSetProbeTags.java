@@ -184,6 +184,9 @@ public interface MeshObjectSetProbeTags
     /** Tag indicating whether this replica gives up the lock when asked. */
     public static final String GIVE_UP_LOCK_TAG = "GiveUpLock";
 
+    /** Tag indicating whether this replica gives up the home replica when asked. */
+    public static final String GIVE_UP_HOME_TAG = "GiveUpHome";
+
     /** Tag saying "yes". */
     public static final String YES_TAG = "yes";
 

@@ -328,6 +328,7 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_lid_model_openid_auth}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_lid_model_yadis}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_lid_openid}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Probe}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_model_Web}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="jar"/>
@@ -668,6 +669,7 @@ is divided into following sections:
         <ant antfile="${project.org_infogrid_lid_model_openid_auth}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_lid_model_yadis}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_lid_openid}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Probe}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Web}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="clean"/>

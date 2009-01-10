@@ -22,9 +22,8 @@ import org.infogrid.httpd.HttpErrorResponse;
 import org.infogrid.httpd.HttpRequest;
 import org.infogrid.httpd.HttpResponse;
 import org.infogrid.httpd.HttpResponseFactory;
-import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -43,16 +42,15 @@ public class YadisTest4
         throws
             Exception
     {
-        log.info( "accessing test server" );
-        
-        ShadowMeshBase meshBase1 = theProbeManager1.obtainFor( theNetworkIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
-        MeshObject     home      = meshBase1.getHomeObject();
-        
-        // 
-        
+        log.info( "accessing test data source" );
+
+        NetMeshObject shadowHome = theMeshBase.accessLocally( theNetworkIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+
+        //
+
         log.info( "Checking for correct results" );
-        
-        checkYadisResults( home, 1 );
+
+        checkYadisResultsDirect( shadowHome, 1 );
     }
 
     /**

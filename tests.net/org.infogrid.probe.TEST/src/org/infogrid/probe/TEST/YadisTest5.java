@@ -26,10 +26,10 @@ import org.infogrid.httpd.HttpResponse;
 import org.infogrid.httpd.HttpResponseFactory;
 import org.infogrid.lid.model.yadis.YadisSubjectArea;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.model.primitives.IntegerValue;
-import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -48,30 +48,30 @@ public class YadisTest5
         throws
             Exception
     {
-        log.info( "accessing test server" );
-        
-        ShadowMeshBase meshBase1 = theProbeManager1.obtainFor( theNetworkIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
-        MeshObject     home      = meshBase1.getHomeObject();
-        
-        // 
-        
+        log.info( "accessing test data source" );
+
+        NetMeshObject shadowHome = theMeshBase.accessLocally( theNetworkIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+
+        //
+
         log.info( "Checking for correct results" );
-        
-        MeshObjectSet services = home.traverse( YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getSource() );
+
+        MeshObjectSet services = shadowHome.traverse( YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getSource() );
         checkEquals( services.size(), 9, "Wrong number of services found" );
-        
+
         boolean found [] = new boolean[ 9 ];
         for( int i=0 ; i<found.length ; ++i ) {
             MeshObject current = services.get( i );
-            
+
             checkCondition( current.isBlessedBy( YadisSubjectArea.XRDSSERVICE ), "Index " + i + " is not a Service" );
-            
+
             IntegerValue priority = (IntegerValue) current.getPropertyValue( YadisSubjectArea.XRDSSERVICE_PRIORITY );
             found[ (int) priority.longValue() - 1 ] = true;
         }
         for( int i=0 ; i<found.length ; ++i ) {
             checkCondition( found[i], "Index " + i + " not found" );
         }
+
     }
 
     /**

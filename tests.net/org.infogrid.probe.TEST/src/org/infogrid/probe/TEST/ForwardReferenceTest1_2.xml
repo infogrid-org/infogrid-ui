@@ -19,5 +19,10 @@
     <MeshType>org.infogrid.model.Test#AA</MeshType>
     <MeshType>org.infogrid.model.Test#B</MeshType>
     <Property type="org.infogrid.model.Test#A/X"><StringValue>resolved</StringValue></Property>
+    <Relationship ID="#other"/>
+  </MeshObject>
+  <MeshObject ID="#other">
+    <MeshType>org.infogrid.model.Test#B</MeshType>
+    <Relationship ID=""/>
   </MeshObject>
 </MeshObjectSet>

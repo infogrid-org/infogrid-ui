@@ -292,6 +292,27 @@ public class ExternalizedMeshObject
     }
 
     /**
+     * Determine whether we are giving up the home replica status.
+     *
+     * @return true if we give up the home replica status
+     */
+    public boolean getGiveUpHome()
+    {
+        return theGiveUpHome;
+    }
+
+    /**
+     * Set whether we are giving up the home replica status.
+     *
+     * @param newValue the new home replica status
+     */
+    public void setGiveUpHome(
+            boolean newValue )
+    {
+        theGiveUpHome = newValue;
+    }
+
+    /**
      * The Identifier.
      */
     protected String theIdentifier;
@@ -350,6 +371,11 @@ public class ExternalizedMeshObject
      * The GiveUpLock property.
      */
     protected boolean theGiveUpLock;
+
+    /**
+     * The GiveUpLock property.
+     */
+    protected boolean theGiveUpHome;
 
     /**
      * Buffered Relationship.

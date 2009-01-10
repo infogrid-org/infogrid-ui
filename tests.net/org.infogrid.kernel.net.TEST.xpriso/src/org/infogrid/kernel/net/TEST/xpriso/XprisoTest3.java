@@ -54,7 +54,7 @@ public class XprisoTest3
 
         tx1.commitTransaction();
 
-        checkCondition( obj_mb1.getAllProxies() == null, "obj_mb1 has proxies" );
+        checkNotObject( obj_mb1.getAllProxies(), "obj_mb1 has proxies" );
 
         //
 

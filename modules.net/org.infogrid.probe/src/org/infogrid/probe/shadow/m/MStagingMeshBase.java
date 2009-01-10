@@ -23,14 +23,15 @@ import org.infogrid.mesh.set.m.ImmutableMMeshObjectSetFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
+import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.meshbase.net.security.NetAccessManager;
 
 import org.infogrid.probe.StagingMeshBase;
-import org.infogrid.probe.shadow.proxy.PlaceholderShadowProxyFactory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.a.AStagingMeshBase;
 
 import org.infogrid.probe.shadow.a.AStagingMeshBaseLifecycleManager;
+import org.infogrid.probe.shadow.proxy.DefaultShadowProxyFactory;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.MapCursorIterator;
@@ -64,8 +65,11 @@ public class MStagingMeshBase
         MCachingHashMap<MeshObjectIdentifier,MeshObject> objectStorage = MCachingHashMap.create();
         MCachingHashMap<NetMeshBaseIdentifier,Proxy>     proxyStorage  = MCachingHashMap.create();
 
-        PlaceholderShadowProxyFactory proxyFactory = PlaceholderShadowProxyFactory.create();
-        ProxyManager                  proxyManager = ProxyManager.create( proxyFactory, proxyStorage );
+        ProxyPolicyFactory proxyPolicyFactory = shadow.getProxyPolicyFactory();
+
+        // PlaceholderShadowProxyFactory proxyFactory = PlaceholderShadowProxyFactory.create();
+        DefaultShadowProxyFactory proxyFactory = DefaultShadowProxyFactory.create( null, proxyPolicyFactory );
+        ProxyManager              proxyManager = ProxyManager.create( proxyFactory, proxyStorage );
 
         AStagingMeshBaseLifecycleManager life      = AStagingMeshBaseLifecycleManager.create();
         NetAccessManager                 accessMgr = null;

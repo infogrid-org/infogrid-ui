@@ -27,8 +27,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.infogrid.lid.model.yadis.YadisSubjectArea;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -52,6 +54,7 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Probe.ProbeUpdateSpecification;
+import org.infogrid.model.Web.WebSubjectArea;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.FloatValue;
@@ -467,6 +470,7 @@ public class ProbeDispatcher
 
         String yadisServicesXml  = null;
         String yadisServicesHtml = null;
+        String yadisUrl          = null;
 
         long streamDataCreated      = 0L;
         long streamDataLastModified = 0L;
@@ -493,14 +497,15 @@ public class ProbeDispatcher
                 // now ask again, without the XRDS mime type
                 httpResponse = HTTP.http_get( url, HTTP_GET_ACCEPT_HEADER );
 
+                if( yadisServicesXml != null && yadisServicesXml.equals( httpResponse.getContentAsString() )) {
+                    // directly served the XRDS, HTTP_GET_ACCEPT_HEADER made no difference
+                    yadisServicesXml = null;
+                }
+
             } else {
-                String yadisUrl = httpResponse.getSingleHttpHeaderField( "X-XRDS-Location" );
+                yadisUrl = httpResponse.getSingleHttpHeaderField( "X-XRDS-Location" );
                 if( yadisUrl == null ) {
                     yadisUrl = httpResponse.getSingleHttpHeaderField( "X-YADIS-Location" );
-                }
-                if( yadisUrl != null ) {
-                    HTTP.Response yadisResponse = HTTP.http_get( yadisUrl );
-                    yadisServicesXml = yadisResponse.getContentAsString();
                 }
             }
             
@@ -548,10 +553,11 @@ public class ProbeDispatcher
                 contentType = ProbeDispatcher.guessContentTypeFromUrl( url );
 
             } else if( "text/xml".equals( contentType )) {
-                contentType = XML_MIME_TYPE; // makes it easier down the road
+                contentType = "application/xml"; // makes it easier down the road
 
             }
             if(    yadisServicesXml == null
+                && yadisUrl         == null
                 && (    "text/html".equals( contentType )
                      || "text/xhtml".equals( contentType )
                      || "application/xhtml+xml".equals( contentType )) )
@@ -566,9 +572,20 @@ public class ProbeDispatcher
                 log.debug( this + " in handleStream(): content type is " + contentType );
             }
 
+            try {
+                newBase.getHomeObject().bless( WebSubjectArea.WEBRESOURCE );
+
+            } catch( EntityBlessedAlreadyException ex ) {
+                log.error( ex );
+            } catch( IsAbstractException ex ) {
+                log.error( ex );
+            } catch( NotPermittedException ex ) {
+                log.error( ex );
+            }
+
             InputStream inStream = new ByteArrayInputStream( content );
             try {
-                if( XML_MIME_TYPE.equals( contentType )) {
+                if( XML_MIME_TYPE_PATTERN.matcher( contentType ).matches()) {
                     probe = handleXml(
                             oldBase,
                             newBase,
@@ -583,18 +600,42 @@ public class ProbeDispatcher
                             inStream );
                 }
             } catch( ProbeException.DontHaveProbe ex ) {
-                if( yadisServicesXml == null && yadisServicesHtml == null ) {
+                if( yadisServicesXml == null && yadisServicesHtml == null && yadisUrl == null ) {
                     throw ex; // if we have Yadis services, don't throw this exception
                 }
             }
 
             if( theServiceFactory == null && ( yadisServicesXml != null || yadisServicesHtml != null )) {
-                theServiceFactory = new YadisServiceFactory( theShadowMeshBase.getMeshBaseIdentifierFactory(), getDocumentBuilder() );
+                theServiceFactory = new YadisServiceFactory(
+                        theShadowMeshBase.getMeshBaseIdentifierFactory(),
+                        getDocumentBuilder() );
             }
             if( yadisServicesXml != null ) {
                 theServiceFactory.addYadisServicesFromXml( sourceIdentifier, yadisServicesXml, newBase );
             } else if( yadisServicesHtml != null ) {
                 theServiceFactory.addYadisServicesFromHtml( sourceIdentifier, yadisServicesHtml, newBase );
+            } else if( yadisUrl != null ) {
+                StagingMeshBaseLifecycleManager life = newBase.getMeshBaseLifecycleManager();
+
+                try {
+                    NetMeshObject fwdRef = life.createForwardReference(
+                                    newBase.getMeshBaseIdentifierFactory().fromExternalForm( yadisUrl ),
+                                    WebSubjectArea.WEBRESOURCE );
+
+                    newBase.getHomeObject().relateAndBless(
+                            YadisSubjectArea.WEBRESOURCE_HASXRDSLINKTO_WEBRESOURCE.getSource(), fwdRef );
+
+                } catch( MeshObjectIdentifierNotUniqueException ex ) {
+                    log.error( ex );
+                } catch( EntityNotBlessedException ex ) {
+                    log.error( ex );
+                } catch( RelatedAlreadyException ex ) {
+                    log.error( ex );
+                } catch( IsAbstractException ex ) {
+                    log.error( ex );
+                } catch( NotPermittedException ex ) {
+                    log.error( ex );
+                }
             }
             
         }
@@ -1967,7 +2008,7 @@ public class ProbeDispatcher
     /**
      * We expect this MIME type to indicate that a stream is XML.
      */
-    public static final String XML_MIME_TYPE = "application/xml";
+    public static final Pattern XML_MIME_TYPE_PATTERN = Pattern.compile( "application/(.+\\+)?xml" );
 
     /**
      * This MIME type indicates that a stream is unknown.
