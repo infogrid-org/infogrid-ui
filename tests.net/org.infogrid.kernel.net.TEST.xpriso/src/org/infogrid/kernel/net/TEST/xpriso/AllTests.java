@@ -32,8 +32,8 @@ public class AllTests
             String [] args )
     {
         TestSpec [] tests = {
-                new TestSpec( XprisoMessageSerializationTest1.class ),
 
+                new TestSpec( XprisoMessageSerializationTest1.class ),
                 new TestSpec( XprisoTest1.class ),
                 new TestSpec( XprisoTest1a.class ),
                 new TestSpec( XprisoTest1b.class ),
@@ -46,13 +46,13 @@ public class AllTests
                 new TestSpec( XprisoTest6_5a.class ),
                 new TestSpec( XprisoTest6_5b.class ),
                 new TestSpec( XprisoTest6_5c.class ),
-//                new TestSpec( XprisoTest7.class ), broken
-//                new TestSpec( XprisoTest7_5.class ), broken
+                new TestSpec( XprisoTest7.class ),
+                new TestSpec( XprisoTest7_5.class ),
                 new TestSpec( XprisoTest8.class ),
                 new TestSpec( XprisoTest9.class ),
                 new TestSpec( XprisoTest10.class ),
                 // new TestSpec( XprisoTest11.class ), // FAILS (minor). Requires memory debugger to make progress. See also ProbeTest6
-//                new TestSpec( XprisoTest12.class ), broken
+                new TestSpec( XprisoTest12.class ), // broken
                 new TestSpec( XprisoTest13.class ),
                 new TestSpec( XprisoTest14.class ),
                 // new TestSpec( XprisoTest15.class ) // FIXME, to be written: accessLocally to two replicas in different NetMeshBases in parallel

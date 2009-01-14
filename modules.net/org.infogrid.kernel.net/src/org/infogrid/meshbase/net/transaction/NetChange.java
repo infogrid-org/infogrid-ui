@@ -21,7 +21,9 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.transaction.CannotApplyChangeException;
 import org.infogrid.meshbase.transaction.Change;
+import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.util.CreateWhenNeeded;
 
 /**
  * Extends Change to cover the NetMeshBase use cases, and return the more specific
@@ -60,6 +62,7 @@ public interface NetChange<S,SID,V,VID>
      * current Thread.</p>
      *
      * @param base the NetMeshBase in which to apply the NetChange
+     * @param perhapsTx the Transaction to use, if any
      * @param incomingProxy the Proxy through which this NetChange was received
      * @return the NetMeshObject to which the NetChange was applied
      * @throws CannotApplyChangeException thrown if the NetChange could not be applied, e.g because
@@ -68,8 +71,9 @@ public interface NetChange<S,SID,V,VID>
      *         could not be created
      */
     public NetMeshObject potentiallyApplyToReplicaIn(
-            NetMeshBase base,
-            Proxy       incomingProxy )
+            NetMeshBase                   base,
+            CreateWhenNeeded<Transaction> perhapsTx,
+            Proxy                         incomingProxy )
         throws
             CannotApplyChangeException,
             TransactionException;

@@ -167,8 +167,8 @@ public class AllTests
                 new TestSpec(
                         ForwardReferenceTest5.class ),
 
-//                new TestSpec(
-//                        ForwardReferenceTest6.class ),
+                new TestSpec(
+                        ForwardReferenceTest6.class ),
 
                 new TestSpec(
                         ProbeMatchTest1.class ),

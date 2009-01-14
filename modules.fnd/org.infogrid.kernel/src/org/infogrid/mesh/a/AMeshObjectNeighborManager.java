@@ -16,9 +16,9 @@ package org.infogrid.mesh.a;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotRelatedException;
+import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.logging.Log;
 
 /**
  * Abstraction to managers neighbors and associated information
@@ -28,8 +28,6 @@ import org.infogrid.util.logging.Log;
  */
 public class AMeshObjectNeighborManager
 {
-    private static final Log log = Log.getLogInstance( AMeshObjectNeighborManager.class ); // our own, private logger
-
     /**
      * Constructor for subclasses only. Use SINGLETON.
      */
@@ -169,11 +167,14 @@ public class AMeshObjectNeighborManager
      * @param subject the MeshObject in question
      * @param neighborIdentifier identifier of the neighbor
      * @param neighborRoleTypes RoleTypes, or null, for the neighbor
+     * @throws RelatedAlreadyException thrown if the subject and the neighbor are related already
      */
     public void appendNeighbor(
             AMeshObject          subject,
             MeshObjectIdentifier neighborIdentifier,
             RoleType []          neighborRoleTypes )
+        throws
+            RelatedAlreadyException
     {
         synchronized( subject ) {
             internalAppendNeighbor( subject, neighborIdentifier, neighborRoleTypes );
@@ -186,14 +187,17 @@ public class AMeshObjectNeighborManager
      * @param subject the MeshObject in question
      * @param neighborIdentifier identifier of the neighbor
      * @param neighborRoleTypes RoleTypes, or null, for the neighbor
+     * @throws RelatedAlreadyException thrown if the subject and the neighbor are related already
      */
     protected void internalAppendNeighbor(
             AMeshObject          subject,
             MeshObjectIdentifier neighborIdentifier,
             RoleType []          neighborRoleTypes )
+        throws
+            RelatedAlreadyException
     {
         if( determineRelationshipIndex( subject, neighborIdentifier ) != -1 ) {
-            log.error( "Have relationship already between " + subject + " and " + neighborIdentifier );
+            throw new RelatedAlreadyException( subject, neighborIdentifier );
         }
 
         if( subject.theNeighborIdentifiers == null || subject.theNeighborIdentifiers.length == 0 ) {
@@ -210,16 +214,18 @@ public class AMeshObjectNeighborManager
      *
      * @param subject the MeshObject in question
      * @param neighborIdentifier identifier of the neighbor
+     * @throws NotRelatedException thrown if the subject and the neighbor aren't related
      */
     public void removeNeighbor(
             AMeshObject          subject,
             MeshObjectIdentifier neighborIdentifier )
+        throws
+            NotRelatedException
     {
         synchronized( subject ) {
             int found = determineRelationshipIndex( subject, neighborIdentifier );
             if( found < 0 ) {
-                log.error( subject + ": neighbor not found " + neighborIdentifier );
-                return;
+                throw new NotRelatedException( subject, neighborIdentifier );
             }
             internalRemoveNeighbor( subject, found );
         }
@@ -245,11 +251,14 @@ public class AMeshObjectNeighborManager
      * @param subject the MeshObject in question
      * @param neighborIdentifier identifier of the neighbor
      * @param toAdd the RoleType to add
+     * @throws NotRelatedException thrown if the subject and the neighbor aren't related
      */
     public void appendRoleType(
             AMeshObject          subject,
             MeshObjectIdentifier neighborIdentifier,
             RoleType             toAdd )
+        throws
+            NotRelatedException
     {
         appendRoleTypes( subject, neighborIdentifier, new RoleType[] { toAdd } );
     }
@@ -260,17 +269,19 @@ public class AMeshObjectNeighborManager
      * @param subject the MeshObject in question
      * @param neighborIdentifier identifier of the neighbor
      * @param toAdd the RoleTypes to add
+     * @throws NotRelatedException thrown if the subject and the neighbor aren't related
      */
     public void appendRoleTypes(
             AMeshObject          subject,
             MeshObjectIdentifier neighborIdentifier,
             RoleType []          toAdd )
+        throws
+            NotRelatedException
     {
         synchronized( subject ) {
             int found = determineRelationshipIndex( subject, neighborIdentifier );
             if( found < 0 ) {
-                log.error( subject + ": neighbor not found " + neighborIdentifier );
-                return;
+                throw new NotRelatedException( subject, neighborIdentifier );
             }
             internalAppendRoleTypes( subject, found, toAdd );
         }
@@ -301,17 +312,19 @@ public class AMeshObjectNeighborManager
      * @param subject the MeshObject in question
      * @param neighborIdentifier identifier of the neighbor
      * @param toRemove the RoleType to remove
+     * @throws NotRelatedException thrown if the subject and the neighbor aren't related
      */
     public void removeRoleType(
             AMeshObject          subject,
             MeshObjectIdentifier neighborIdentifier,
             RoleType             toRemove )
+        throws
+            NotRelatedException
     {
         synchronized( subject ) {
             int found = determineRelationshipIndex( subject, neighborIdentifier );
             if( found < 0 ) {
-                log.error( subject + ": neighbor not found " + neighborIdentifier );
-                return;
+                throw new NotRelatedException( subject, neighborIdentifier );
             }
             internalRemoveRoleTypes( subject, found, toRemove );
         }

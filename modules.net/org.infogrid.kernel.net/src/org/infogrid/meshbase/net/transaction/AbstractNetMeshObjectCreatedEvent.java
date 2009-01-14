@@ -31,6 +31,7 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
+import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -147,6 +148,7 @@ public abstract class AbstractNetMeshObjectCreatedEvent
      * current Thread.</p>
      *
      * @param base the NetMeshBase in which to apply the NetChange
+     * @param perhapsTx the Transaction to use, if any
      * @param incomingProxy the Proxy through which this NetChange was received
      * @return the NetMeshObject to which the NetChange was applied
      * @throws CannotApplyChangeException thrown if the NetChange could not be applied, e.g because
@@ -155,18 +157,16 @@ public abstract class AbstractNetMeshObjectCreatedEvent
      *         could not be created
      */
     public NetMeshObject potentiallyApplyToReplicaIn(
-            NetMeshBase base,
-            Proxy       incomingProxy )
+            NetMeshBase                   base,
+            CreateWhenNeeded<Transaction> perhapsTx,
+            Proxy                         incomingProxy )
         throws
             CannotApplyChangeException,
             TransactionException
     {
         setResolver( base );
 
-        Transaction tx = null;
-
         ModelBase modelBase = base.getModelBase();
-
         resolveEntityTypes();
         
         PropertyType [] thePropertyTypes = new PropertyType[ theExternalizedMeshObject.getPropertyTypes().length ];
@@ -180,7 +180,7 @@ public abstract class AbstractNetMeshObjectCreatedEvent
         }
             
         try {
-            tx = base.createTransactionNowIfNeeded();
+            perhapsTx.obtain(); // can ignore return value
 
             NetMeshObject newObject = base.getMeshBaseLifecycleManager().createMeshObject(
                         getAffectedMeshObjectIdentifier(),
@@ -199,11 +199,6 @@ public abstract class AbstractNetMeshObjectCreatedEvent
 
         } catch( Throwable ex ) {
             throw new CannotApplyChangeException.ExceptionOccurred( base, ex );
-                
-        } finally {
-            if( tx != null ) {
-                tx.commitTransaction();
-            }
         }
     }
 

@@ -469,11 +469,11 @@ public class AMeshObject
                 }
 
                 oldNeighborIdentifiers = nMgr.getNeighborIdentifiers( this );
-                roleTypes              = nMgr.getRoleTypesFor( this,         neighborIdentifier ); // will throw NotRelatedException
+                roleTypes              = nMgr.getRoleTypesFor(        this, neighborIdentifier ); // will throw NotRelatedException
 
                 if( realNeighbor != null ) {
                     oldNeighborNeighborIdentifiers = nMgr.getNeighborIdentifiers( realNeighbor );
-                    neighborRoleTypes              = nMgr.getRoleTypesFor( realNeighbor, here ); // will throw NotRelatedException
+                    neighborRoleTypes              = nMgr.getRoleTypesFor(        realNeighbor, here ); // will throw NotRelatedException
                 }
 
                 // check that the RoleTypes with the other side let us
@@ -836,14 +836,14 @@ public class AMeshObject
     {
         internalUnbless( thisEnds, otherObject.getIdentifier(), true, 0L );
     }
-    
+
     /**
      * Internal helper to implement a method. While on this level, it does not appear that
      * factoring out this method makes any sense, subclasses may appreciate it.
      * 
      * @param roleTypesToRemoveHere the RoleType of the RelationshipType at the end that this MeshObject is attached to, and that shall be removed
      * @param neighborIdentifier identifier of the other MeshObject whose relationship to this MeshObject shall be unblessed
-     * @param isMaster if true, this is the master replica
+     * @param strict if true, be strict; if false, tolerate errors
      * @param timeUpdated the value for the timeUpdated property after this operation. -1 indicates "don't change"
      * @throws RoleTypeNotBlessedException thrown if the relationship to the other MeshObject does not support the RoleType
      * @throws NotRelatedException thrown if this MeshObject is not currently related to otherObject
@@ -853,7 +853,7 @@ public class AMeshObject
     protected void internalUnbless(
             RoleType []          roleTypesToRemoveHere,
             MeshObjectIdentifier neighborIdentifier,
-            boolean              isMaster,
+            boolean              strict,
             long                 timeUpdated )
         throws
             RoleTypeNotBlessedException,
@@ -910,23 +910,25 @@ public class AMeshObject
                 for( int i=0 ; i<roleTypesToRemoveHere.length ; ++i ) {
                     roleTypesToRemoveThere[i] = roleTypesToRemoveHere[i].getInverseRoleType();
                 }
-                
-                for( RoleType thisEnd : roleTypesToRemoveHere ) {
-                    RoleType otherEnd = thisEnd.getInverseRoleType();
 
-                    if( oldRoleTypesHere == null || !ArrayHelper.isIn( thisEnd, oldRoleTypesHere, false )) {
-                        throw new RoleTypeNotBlessedException( this, thisEnd, realNeighbor );
-                    }
-                    if( realNeighbor != null ) {
-                        if( oldRoleTypesThere == null || !ArrayHelper.isIn( otherEnd, oldRoleTypesThere, false )) {
-                            throw new RoleTypeNotBlessedException( realNeighbor, otherEnd, this );
+                if( strict ) {
+                    for( RoleType thisEnd : roleTypesToRemoveHere ) {
+                        RoleType otherEnd = thisEnd.getInverseRoleType();
+
+                        if( oldRoleTypesHere == null || !ArrayHelper.isIn( thisEnd, oldRoleTypesHere, false )) {
+                            throw new RoleTypeNotBlessedException( this, thisEnd, realNeighbor );
+                        }
+                        if( realNeighbor != null ) {
+                            if( oldRoleTypesThere == null || !ArrayHelper.isIn( otherEnd, oldRoleTypesThere, false )) {
+                                throw new RoleTypeNotBlessedException( realNeighbor, otherEnd, this );
+                            }
                         }
                     }
-                }
 
-                this.checkPermittedUnbless( roleTypesToRemoveHere, neighborIdentifier, neighbor );
-                if( realNeighbor != null ) {
-                    realNeighbor.checkPermittedUnbless( roleTypesToRemoveThere, getIdentifier(), this );
+                    this.checkPermittedUnbless( roleTypesToRemoveHere, neighborIdentifier, neighbor );
+                    if( realNeighbor != null ) {
+                        realNeighbor.checkPermittedUnbless( roleTypesToRemoveThere, getIdentifier(), this );
+                    }
                 }
 
 //                for( MeshObjectIdentifier hereNeighborIdentifier : neighborIdentifiers ) {
@@ -962,13 +964,37 @@ public class AMeshObject
 //                                realOtherSide.getIdentifier() );
 //                    }
 //                }
-                
-                for( RoleType thisEnd : roleTypesToRemoveHere ) {
-                    RoleType otherEnd = thisEnd.getInverseRoleType();
 
-                    nMgr.removeRoleType( this, neighborIdentifier, thisEnd );
-                    if( realNeighbor != null ) {
-                        nMgr.removeRoleType( realNeighbor, theIdentifier, otherEnd );
+                if( strict ) {
+                    for( RoleType thisEnd : roleTypesToRemoveHere ) {
+                        RoleType otherEnd = thisEnd.getInverseRoleType();
+
+                        nMgr.removeRoleType( this, neighborIdentifier, thisEnd );
+                        if( realNeighbor != null ) {
+                            nMgr.removeRoleType( realNeighbor, theIdentifier, otherEnd );
+                        }
+                    }
+                } else {
+                    // same thing, but ignoring exceptions
+                    for( RoleType thisEnd : roleTypesToRemoveHere ) {
+                        RoleType otherEnd = thisEnd.getInverseRoleType();
+
+                        try {
+                            nMgr.removeRoleType( this, neighborIdentifier, thisEnd );
+                        } catch( Throwable t ) {
+                            if( log.isDebugEnabled() ) {
+                                log.debug( t );
+                            }
+                        }
+                        if( realNeighbor != null ) {
+                            try {
+                                nMgr.removeRoleType( realNeighbor, theIdentifier, otherEnd );
+                            } catch( Throwable t ) {
+                                if( log.isDebugEnabled() ) {
+                                    log.debug( t );
+                                }
+                            }
+                        }
                     }
                 }
 

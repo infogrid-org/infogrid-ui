@@ -128,13 +128,14 @@ public abstract class AbstractSendingMessageEndpoint<T>
             theFuture = theExecutorService.schedule( task, actual, TimeUnit.MILLISECONDS );
 
         } catch( RejectedExecutionException ex ) {
-            log.warn(
-                    this    + ": could not schedule task "
-                            + task
-                            + ", perhaps the ExecutorService "
-                            + theExecutorService
-                            + " has been terminated?",
-                    ex );
+            if( !theExecutorService.isShutdown() ) {
+                log.warn(
+                        this    + ": could not schedule task "
+                                + task
+                                + " with ExecutorService "
+                                + theExecutorService,
+                        ex );
+            }
         }
     }
     

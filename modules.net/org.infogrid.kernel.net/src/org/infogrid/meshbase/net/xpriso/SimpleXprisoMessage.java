@@ -30,6 +30,7 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.Log;
 
 /**
  * This implementation of XprisoMessage is fully initialized in the
@@ -42,6 +43,7 @@ public class SimpleXprisoMessage
             XprisoMessage,
             Serializable
 {
+    private static final Log  log              = Log.getLogInstance( SimpleXprisoMessage.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
@@ -55,7 +57,12 @@ public class SimpleXprisoMessage
             NetMeshBaseIdentifier sender,
             NetMeshBaseIdentifier receiver )
     {
-        return new SimpleXprisoMessage( sender, receiver );
+        SimpleXprisoMessage ret = new SimpleXprisoMessage( sender, receiver );
+
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret, new Exception( "marker" ));
+        }
+        return ret;
     }
 
     /**

@@ -31,6 +31,7 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.Log;
 
 /**
  * An XprisoMessage that is suitable for parsers that pick up one item at a time, instead of
@@ -40,6 +41,8 @@ public class ParserFriendlyXprisoMessage
         extends
             AbstractXprisoMessage
 {
+    private static final Log log = Log.getLogInstance( ParserFriendlyXprisoMessage.class ); // our own, private logger
+
     /**
      * Factory method.
      *
@@ -52,6 +55,10 @@ public class ParserFriendlyXprisoMessage
             NetMeshBaseIdentifier receiver )
     {
         ParserFriendlyXprisoMessage ret = new ParserFriendlyXprisoMessage( sender, receiver );
+
+        if( log.isDebugEnabled() ) {
+            log.debug( "created " + ret, new Exception( "marker" ));
+        }
         return ret;
     }
 

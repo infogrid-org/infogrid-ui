@@ -44,11 +44,12 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
-import org.infogrid.meshbase.security.AccessManager;
 import org.infogrid.meshbase.security.IdentityChangeException;
 import org.infogrid.meshbase.transaction.CannotApplyChangeException;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.util.CreateWhenNeeded;
+import org.infogrid.util.CreateWhenNeededException;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.RemoteQueryTimeoutException;
@@ -402,9 +403,7 @@ public abstract class AbstractCommunicatingProxy
             theWaitForHomeResponseEndpoint.messageReceived( instructions.getIncomingXprisoMessageEndpoint(), incoming );
         }
 
-        
-        NetMeshBaseLifecycleManager life   = theMeshBase.getMeshBaseLifecycleManager();
-        NetAccessManager            access = theMeshBase.getAccessManager();
+        NetMeshBaseLifecycleManager life = theMeshBase.getMeshBaseLifecycleManager();
         
         for( NetMeshObject current : instructions.getRegisterReplicationsIfNotAlready()) {
             try {
@@ -419,10 +418,32 @@ public abstract class AbstractCommunicatingProxy
             }
         }
 
-        Transaction tx = null;
+        CreateWhenNeeded<Transaction> perhapsTx = new CreateWhenNeeded<Transaction>() {
+                /**
+                 * Instantiation method.
+                 *
+                 * @return the instantiated object
+                 */
+                protected Transaction instantiate()
+                    throws
+                        Throwable
+                {
+                    Transaction      tx     = theMeshBase.createTransactionAsapIfNeeded();
+                    NetAccessManager access = theMeshBase.getAccessManager();
+
+                    if( access != null && !access.isSu() ) {
+                        try {
+                            access.sudo();
+                        } catch( IdentityChangeException ex ) {
+                            log.error( ex );
+                        }
+                    }
+                    return tx;
+                }
+        };
         try {
             for( RippleInstructions current : instructions.getRippleCreates() ) {
-                tx = ensureRights( access, tx );
+                perhapsTx.obtain();  // can ignore return value
                 NetMeshObject obj = null;
                 try {
                     obj = life.rippleCreate(
@@ -439,7 +460,7 @@ public abstract class AbstractCommunicatingProxy
                 }
             }
             for( RippleInstructions current : instructions.getRippleResynchronizes() ) {
-                tx = ensureRights( access, tx );
+                perhapsTx.obtain();  // can ignore return value
                 NetMeshObject obj = null;
                 try {
                     obj = life.rippleResynchronize(
@@ -458,7 +479,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectTypeAddedEvent event : instructions.getTypeAdditions() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -470,7 +491,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectEquivalentsAddedEvent event : instructions.getEquivalentsAdditions() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -482,7 +503,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectNeighborAddedEvent event : instructions.getNeighborAdditions() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -494,7 +515,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectRoleAddedEvent event : instructions.getRoleAdditions() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -506,7 +527,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectPropertyChangeEvent event : instructions.getPropertyChanges() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -518,7 +539,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectRoleRemovedEvent event : instructions.getRoleRemovals() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -530,7 +551,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectNeighborRemovedEvent event : instructions.getNeighborRemovals() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -542,7 +563,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectEquivalentsRemovedEvent event : instructions.getEquivalentsRemovals() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -554,7 +575,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectTypeRemovedEvent event : instructions.getTypeRemovals() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -566,7 +587,7 @@ public abstract class AbstractCommunicatingProxy
             for( NetMeshObjectDeletedEvent event : instructions.getDeletions() ) {
                 NetMeshObject obj = null;
                 try {
-                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, this );
+                    obj = event.potentiallyApplyToReplicaIn( theMeshBase, perhapsTx, this );
                 } catch( CannotApplyChangeException ex ) {
                     log.error( ex );
                 } finally {
@@ -575,11 +596,14 @@ public abstract class AbstractCommunicatingProxy
                     }
                 }
             }
+        } catch( CreateWhenNeededException ex ) {
+            log.error( ex.getCause() );
+
         } catch( TransactionException ex ) {
             log.error( ex );
         } finally {
-            if( tx != null ) {
-                tx.commitTransaction();
+            if( perhapsTx.hasBeenCreated() ) {
+                perhapsTx.obtain().commitTransaction();
             }
         }
 
@@ -667,7 +691,7 @@ public abstract class AbstractCommunicatingProxy
 
         if( instructions.getCeaseCommunications() ) {
             // it's all over
-            ( ( SmartFactory<NetMeshBaseIdentifier, Proxy, CoherenceSpecification> ) theFactory ).remove( getPartnerMeshBaseIdentifier() );
+            ((SmartFactory<NetMeshBaseIdentifier, Proxy, CoherenceSpecification>) theFactory ).remove( getPartnerMeshBaseIdentifier() );
         }
     }
         
@@ -776,34 +800,6 @@ public abstract class AbstractCommunicatingProxy
         proxyUpdated();
     }
     
-    /**
-     * Helper method to make sure the current Thread has been initialized right.
-     * 
-     * @param access the AccessManager to use
-     * @param tx the current Transaction, if any
-     * @return the current Transaction, if any
-     * @throws TransactionException thrown if a Transaction should have been created, but could not
-     */
-    protected Transaction ensureRights(
-            AccessManager access,
-            Transaction tx )
-        throws
-            TransactionException
-    {
-        if( tx == null ) {
-            tx = theMeshBase.createTransactionAsapIfNeeded();
-
-            if( access != null && !access.isSu() ) {
-                try {
-                    access.sudo();
-                } catch( IdentityChangeException ex ) {
-                    log.error( ex );
-                }
-            }
-        }
-        return tx;
-    }
-
     /**
      * The BidirectionalMessageEndpoint to use to talk to our partner NetMeshBase's Proxy.
      */

@@ -31,6 +31,7 @@ import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -170,9 +171,9 @@ public class DefaultShadowProxyPolicy
      */
     @Override
     protected void processIncomingRequestedHomeReplicas(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
         // do absolutely nothing
     }
@@ -181,20 +182,20 @@ public class DefaultShadowProxyPolicy
      * Process the incoming request: conveyed objects. The shadow only accepts any objects
      * if the Probe is a WritableProbe and the home is being pushed here.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      * @param isResponseToOngoingQuery if true, this message was sent in response to a query
      */
     @Override
     protected void processIncomingConveyedObjects(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing,
-            boolean                     isResponseToOngoingQuery )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing,
+            boolean                                       isResponseToOngoingQuery )
     {
         XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        ShadowMeshBase              theMeshBase = (ShadowMeshBase) proxy.getNetMeshBase();
+        ShadowMeshBase              theMeshBase = (ShadowMeshBase) incomingProxy.getNetMeshBase();
     
     // conveyed objects
         NetMeshObjectIdentifier [] push  = incoming.getPushHomeReplicas();
@@ -236,13 +237,14 @@ public class DefaultShadowProxyPolicy
                 // now do the right thing
                 if( wantIt ) {
                     RippleInstructions ripple = RippleInstructions.create( current );
-                    ripple.setProxies( new Proxy[] { proxy } );
+                    ripple.setProxies( new Proxy[] { incomingProxy } );
                     ripple.setProxyTowardsHomeIndex( gotHome ? -1 : 0 );
                     ripple.setProxyTowardsLockIndex( gotLock ? -1 : 0 );
                     ret.addRippleCreate( ripple );
                     
                 } else {
                     // don't want it
+                    ParserFriendlyXprisoMessage outgoing = perhapsOutgoing.obtain();
                     if( gotLock ) {
                         outgoing.addPushLockObject( identifier );
                     }

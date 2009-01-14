@@ -368,11 +368,11 @@ public interface MeshObject
             boolean considerEquivalents );
 
     /**
-     * Obtain the MeshObjectIdentifier of the neighbors of this MeshObject. This is sometimes a
+     * Obtain the MeshObjectIdentifiers of the neighbors of this MeshObject. This is sometimes a
      * more efficient operation than to traverse to the neighbors and determine the
      * MeshObjectIdentifiers from there.
      *
-     * @return the MeshObjectIdentifier of the neighbors, if any
+     * @return the MeshObjectIdentifiers of the neighbors, if any
      */
     public abstract MeshObjectIdentifier [] getNeighborMeshObjectIdentifiers();
     

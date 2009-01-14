@@ -219,6 +219,35 @@ public class AnetMeshObject
     }
 
     /**
+     * Obtain the NetMeshObjectIdentifiers of the neighbors of this MeshObject. This is sometimes a
+     * more efficient operation than to traverse to the neighbors and determine the
+     * NetMeshObjectIdentifiers from there.
+     *
+     * @return the NetMeshObjectIdentifiers of the neighbors, if any
+     */
+    @Override
+    public NetMeshObjectIdentifier [] getNeighborMeshObjectIdentifiers()
+    {
+        return (NetMeshObjectIdentifier []) super.getNeighborMeshObjectIdentifiers();
+    }
+
+    /**
+     * Obtain the NetMeshObjectIdentifiers of the neighbors of this MeshObject, as conveyed by
+     * a given Proxy.
+     *
+     * @param p the Proxy
+     * @return the NetMeshObjectIdentifiers of the neighbors, if any, according to the Proxy
+     */
+    public NetMeshObjectIdentifier [] getNeighborMeshObjectIdentifiersAccordingTo(
+            Proxy p )
+    {
+        AnetMeshObjectNeighborManager nMgr = getNeighborManager();
+
+        NetMeshObjectIdentifier [] ret = nMgr.getNeighborMeshObjectIdentifiersFromSource( this, p );
+        return ret;
+    }
+
+    /**
       * Determine whether this replica has update rights.
       *
       * @return returns true if this is replica has the update rights

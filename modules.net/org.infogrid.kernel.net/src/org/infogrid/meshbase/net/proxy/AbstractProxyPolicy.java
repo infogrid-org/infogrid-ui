@@ -48,6 +48,7 @@ import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.transaction.Change;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.RemoteQueryTimeoutException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
@@ -210,26 +211,37 @@ public abstract class AbstractProxyPolicy
             NetMeshObject [] localReplicas,
             boolean []       isNewProxy,
             long             duration,
-            Proxy            proxy )
+            final Proxy      proxy )
     {
         ProxyProcessingInstructions ret = createInstructions();
         
-        ret.setStartCommunicating( true );
+        CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing = new CreateWhenNeeded<ParserFriendlyXprisoMessage>() {
+                /**
+                 * Instantiation method.
+                 *
+                 * @return the instantiated object
+                 */
+                protected ParserFriendlyXprisoMessage instantiate()
+                {
+                    ParserFriendlyXprisoMessage ret = ParserFriendlyXprisoMessage.create(
+                            proxy.getNetMeshBase().getIdentifier(),
+                            proxy.getPartnerMeshBaseIdentifier() );
+                    return ret;
+                }
+        };
 
-        ParserFriendlyXprisoMessage outgoing = ParserFriendlyXprisoMessage.create(
-                proxy.getNetMeshBase().getIdentifier(),
-                proxy.getPartnerMeshBaseIdentifier() );
-        
         for( int i=0 ; i<localReplicas.length ; ++i ) {
-            if( addPotentiallyConvey( localReplicas[i], outgoing, proxy, isNewProxy[i] )) {
-                outgoing.addPushLockObject( localReplicas[i].getIdentifier() );
+            if( addPotentiallyConvey( localReplicas[i], perhapsOutgoing, proxy, isNewProxy[i] )) {
+                perhapsOutgoing.obtain().addPushLockObject( localReplicas[i].getIdentifier() );
                 ret.addSurrenderLock( localReplicas[i] ); // this includes the addRegisterReplicationIfNotAlready functionality
             }
         }
+        if( perhapsOutgoing.hasBeenCreated() ) {
+            ret.setStartCommunicating( true );
+            ret.setSendViaWaitForLockResponseEndpoint( perhapsOutgoing.obtain() );
+            ret.setWaitForLockResponseEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
+        }
 
-        ret.setSendViaWaitForLockResponseEndpoint( outgoing );
-        ret.setWaitForLockResponseEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
-        
         return ret;
     }
 
@@ -284,26 +296,38 @@ public abstract class AbstractProxyPolicy
             NetMeshObject [] localReplicas,
             boolean []       isNewProxy,
             long             duration,
-            Proxy            proxy )
+            final Proxy      proxy )
     {
         ProxyProcessingInstructions ret = createInstructions();
         
-        ret.setStartCommunicating( true );
-
-        ParserFriendlyXprisoMessage outgoing = ParserFriendlyXprisoMessage.create(
-                proxy.getNetMeshBase().getIdentifier(),
-                proxy.getPartnerMeshBaseIdentifier() );
+        CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing = new CreateWhenNeeded<ParserFriendlyXprisoMessage>() {
+                /**
+                 * Instantiation method.
+                 *
+                 * @return the instantiated object
+                 */
+                protected ParserFriendlyXprisoMessage instantiate()
+                {
+                    ParserFriendlyXprisoMessage ret = ParserFriendlyXprisoMessage.create(
+                            proxy.getNetMeshBase().getIdentifier(),
+                            proxy.getPartnerMeshBaseIdentifier() );
+                    return ret;
+                }
+        };
         
         for( int i=0 ; i<localReplicas.length ; ++i ) {
-            if( addPotentiallyConvey( localReplicas[i], outgoing, proxy, isNewProxy[i] )) {
-                outgoing.addPushHomeReplica( localReplicas[i].getIdentifier() );
+            if( addPotentiallyConvey( localReplicas[i], perhapsOutgoing, proxy, isNewProxy[i] )) {
+                perhapsOutgoing.obtain().addPushHomeReplica( localReplicas[i].getIdentifier() );
                 ret.addSurrenderHome( localReplicas[i] ); // this includes the addRegisterReplicationIfNotAlready functionality
             }
         }
 
-        ret.setSendViaWaitForHomeResponseEndpoint( outgoing );
-        ret.setWaitForHomeResponseEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
-        
+        if( perhapsOutgoing.hasBeenCreated() ) {
+            ret.setStartCommunicating( true );
+
+            ret.setSendViaWaitForHomeResponseEndpoint( perhapsOutgoing.obtain() );
+            ret.setWaitForHomeResponseEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
+        }
         return ret;
     }
 
@@ -411,16 +435,27 @@ public abstract class AbstractProxyPolicy
      */
      public ProxyProcessingInstructions calculateForTransactionCommitted(
             Transaction tx,
-            Proxy       proxy )
+            final Proxy proxy )
     {
         ProxyProcessingInstructions ret = createInstructions();
         
         ret.setStartCommunicating( true );
         // ret.setReclaimedLockObjects( identifiers );
 
-        ParserFriendlyXprisoMessage outgoing = ParserFriendlyXprisoMessage.create(
-                proxy.getNetMeshBase().getIdentifier(),
-                proxy.getPartnerMeshBaseIdentifier() );
+        CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing = new CreateWhenNeeded<ParserFriendlyXprisoMessage>() {
+                /**
+                 * Instantiation method.
+                 *
+                 * @return the instantiated object
+                 */
+                protected ParserFriendlyXprisoMessage instantiate()
+                {
+                    ParserFriendlyXprisoMessage ret = ParserFriendlyXprisoMessage.create(
+                            proxy.getNetMeshBase().getIdentifier(),
+                            proxy.getPartnerMeshBaseIdentifier() );
+                    return ret;
+                }
+        };
 
         Change [] changes = tx.getChangeSet().getChanges();
 
@@ -438,53 +473,55 @@ public abstract class AbstractProxyPolicy
                 
                 if( current instanceof ReplicaPurgedEvent ) {
                     // affectedObject is null
-                    outgoing.addRequestedCanceledObject( currentIdentifier );
+                    perhapsOutgoing.obtain().addRequestedCanceledObject( currentIdentifier );
 
                 } else if( current instanceof NetMeshObjectBecameDeadStateEvent ) {
                     // ignore
 
                 } else if( current instanceof NetMeshObjectDeletedEvent ) {
                     NetMeshObjectDeletedEvent realCurrent = (NetMeshObjectDeletedEvent) current;
-                    outgoing.addDeleteChange( realCurrent );
+                    perhapsOutgoing.obtain().addDeleteChange( realCurrent );
 
                 } else if( current instanceof NetMeshObjectEquivalentsAddedEvent ) {
                     NetMeshObjectEquivalentsAddedEvent realCurrent = (NetMeshObjectEquivalentsAddedEvent) current;
-                    outgoing.addEquivalentAddition( realCurrent );
+                    perhapsOutgoing.obtain().addEquivalentAddition( realCurrent );
 
                 } else if( current instanceof NetMeshObjectEquivalentsRemovedEvent ) {
                     NetMeshObjectEquivalentsRemovedEvent realCurrent = (NetMeshObjectEquivalentsRemovedEvent) current;
-                    outgoing.addEquivalentRemoval( realCurrent );
+                    perhapsOutgoing.obtain().addEquivalentRemoval( realCurrent );
 
                 } else if( current instanceof NetMeshObjectNeighborAddedEvent ) {
                     NetMeshObjectNeighborAddedEvent realCurrent = (NetMeshObjectNeighborAddedEvent) current;
-                    outgoing.addNeighborAddition( realCurrent );
+                    perhapsOutgoing.obtain().addNeighborAddition( realCurrent );
                     
                     NetMeshObject neighbor = realCurrent.getNeighborMeshObject();
-                    potentiallyConvey.add( neighbor );
+                    if( neighbor != null ) {
+                        potentiallyConvey.add( neighbor );
+                    }
 
                 } else if( current instanceof NetMeshObjectNeighborRemovedEvent ) {
                     NetMeshObjectNeighborRemovedEvent realCurrent = (NetMeshObjectNeighborRemovedEvent) current;
-                    outgoing.addNeighborRemoval( realCurrent );
+                    perhapsOutgoing.obtain().addNeighborRemoval( realCurrent );
 
                 } else if( current instanceof NetMeshObjectPropertyChangeEvent ) {
                     NetMeshObjectPropertyChangeEvent realCurrent = (NetMeshObjectPropertyChangeEvent) current;
-                    outgoing.addPropertyChange( realCurrent );
+                    perhapsOutgoing.obtain().addPropertyChange( realCurrent );
 
                 } else if( current instanceof NetMeshObjectRoleAddedEvent ) {
                     NetMeshObjectRoleAddedEvent realCurrent = (NetMeshObjectRoleAddedEvent) current;
-                    outgoing.addRoleAddition( realCurrent );
+                    perhapsOutgoing.obtain().addRoleAddition( realCurrent );
 
                 } else if( current instanceof NetMeshObjectRoleRemovedEvent ) {
                     NetMeshObjectRoleRemovedEvent realCurrent = (NetMeshObjectRoleRemovedEvent) current;
-                    outgoing.addRoleRemoval( realCurrent );
+                    perhapsOutgoing.obtain().addRoleRemoval( realCurrent );
 
                 } else if( current instanceof NetMeshObjectTypeAddedEvent ) {
                     NetMeshObjectTypeAddedEvent realCurrent = (NetMeshObjectTypeAddedEvent) current;
-                    outgoing.addTypeAddition( realCurrent );
+                    perhapsOutgoing.obtain().addTypeAddition( realCurrent );
 
                 } else if( current instanceof NetMeshObjectTypeRemovedEvent ) {
                     NetMeshObjectTypeRemovedEvent realCurrent = (NetMeshObjectTypeRemovedEvent) current;
-                    outgoing.addTypeRemoval( realCurrent );
+                    perhapsOutgoing.obtain().addTypeRemoval( realCurrent );
 
                 } else if( current instanceof ReplicaCreatedEvent ) {
                     // skip
@@ -496,14 +533,14 @@ public abstract class AbstractProxyPolicy
         }
         
         for( NetMeshObject current : potentiallyConvey ) {
-            if( addPotentiallyConvey( current, outgoing, proxy )) {
+            if( addPotentiallyConvey( current, perhapsOutgoing, proxy )) {
                 ret.addRegisterReplicationIfNotAlready( current );
             }
         }
         
-        if( !outgoing.isEmpty() ) {
+        if( perhapsOutgoing.hasBeenCreated() && !perhapsOutgoing.obtain().isEmpty() ) {
             ret.setStartCommunicating(  true );
-            ret.setSendViaEndpoint( outgoing );
+            ret.setSendViaEndpoint( perhapsOutgoing.obtain() );
         }
         if( !ret.isEmpty() ) {
             return ret;
@@ -527,41 +564,51 @@ public abstract class AbstractProxyPolicy
             ReceivingMessageEndpoint<XprisoMessage> endpoint,
             XprisoMessage                           incoming,
             boolean                                 isResponseToOngoingQuery,
-            Proxy                                   proxy )
+            final Proxy                             proxy )
     {
-        NetMeshBase theMeshBase = proxy.getNetMeshBase();
-        
         ProxyProcessingInstructions ret = createInstructions();
 
         ret.setIncomingXprisoMessageEndpoint( endpoint );
         ret.setIncomingXprisoMessage( incoming );
 
-        ParserFriendlyXprisoMessage outgoing = ParserFriendlyXprisoMessage.create(
-                theMeshBase.getIdentifier(),
-                proxy.getPartnerMeshBaseIdentifier() );
+        CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing = new CreateWhenNeeded<ParserFriendlyXprisoMessage>() {
+                /**
+                 * Instantiation method.
+                 *
+                 * @return the instantiated object
+                 */
+                protected ParserFriendlyXprisoMessage instantiate()
+                {
+                    ParserFriendlyXprisoMessage ret = ParserFriendlyXprisoMessage.create(
+                            proxy.getNetMeshBase().getIdentifier(),
+                            proxy.getPartnerMeshBaseIdentifier() );
+                    return ret;
+                }
+        };
+
+        processIncomingRequestedFirstTimeObjects(      proxy, ret, perhapsOutgoing );
+        processIncomingRequestedResynchronizeReplicas( proxy, ret, perhapsOutgoing );
+        processIncomingRequestedHomeReplicas(          proxy, ret, perhapsOutgoing );
+        processIncomingRequestedLockObjects(           proxy, ret, perhapsOutgoing );
+        processIncomingReclaimedLockObjects(           proxy, ret, perhapsOutgoing );
+        processIncomingCanceledObjects(                proxy, ret, perhapsOutgoing );
+        processIncomingConveyedObjects(                proxy, ret, perhapsOutgoing, isResponseToOngoingQuery );
+        processIncomingPushedLocks(                    proxy, ret, perhapsOutgoing );
+        processIncomingPushedHomes(                    proxy, ret, perhapsOutgoing );
+        processIncomingPropertyChanges(                proxy, ret, perhapsOutgoing );
+        processIncomingTypeChanges(                    proxy, ret, perhapsOutgoing );
+        processIncomingNeighborRoleChanges(            proxy, ret, perhapsOutgoing );
+        processIncomingEquivalentChanges(              proxy, ret, perhapsOutgoing );
+        processIncomingDeleteChanges(                  proxy, ret, perhapsOutgoing );
 
         if( incoming.getRequestId() != 0 ) {
-            outgoing.setResponseId( incoming.getRequestId() ); // make this message as a response
+            perhapsOutgoing.obtain().setResponseId( incoming.getRequestId() ); // make this message as a response
         }
 
-        processIncomingRequestedFirstTimeObjects(      proxy, ret, outgoing );
-        processIncomingRequestedResynchronizeReplicas( proxy, ret, outgoing );
-        processIncomingRequestedHomeReplicas(          proxy, ret, outgoing );
-        processIncomingRequestedLockObjects(           proxy, ret, outgoing );
-        processIncomingReclaimedLockObjects(           proxy, ret, outgoing );
-        processIncomingCanceledObjects(                proxy, ret, outgoing );
-        processIncomingConveyedObjects(                proxy, ret, outgoing, isResponseToOngoingQuery );
-        processIncomingPushedLocks(                    proxy, ret, outgoing );
-        processIncomingPushedHomes(                    proxy, ret, outgoing );
-        processIncomingPropertyChanges(                proxy, ret, outgoing );
-        processIncomingTypeChanges(                    proxy, ret, outgoing );
-        processIncomingNeighborRoleChanges(            proxy, ret, outgoing );
-        processIncomingEquivalentChanges(              proxy, ret, outgoing );
-        processIncomingDeleteChanges(                  proxy, ret, outgoing );
+        // send message
+        if( perhapsOutgoing.hasBeenCreated() && !perhapsOutgoing.obtain().isEmpty() ) {
 
-    // send message
-        if( !outgoing.isEmpty() ) {
-            ret.setSendViaEndpoint( outgoing );
+            ret.setSendViaEndpoint( perhapsOutgoing.obtain() );
         }
 
         return ret;
@@ -570,17 +617,17 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: first-time requested objects.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingRequestedFirstTimeObjects(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // requested first-time objects
         if( arrayHasContent( incoming.getRequestedFirstTimeObjects() ) ) {
@@ -598,7 +645,7 @@ public abstract class AbstractProxyPolicy
 
             for( int i=0 ; i<firstTimeObjects.length ; ++i ) {
                 if( firstTimeObjects[i] != null ) {
-                    if( addPotentiallyConvey( firstTimeObjects[i], outgoing, proxy ) ) {
+                    if( addPotentiallyConvey( firstTimeObjects[i], perhapsOutgoing, incomingProxy ) ) {
                         ret.addRegisterReplicationIfNotAlready( firstTimeObjects[i] );
                     }
                 }
@@ -609,17 +656,17 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: resynchronize replicas.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingRequestedResynchronizeReplicas(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // requested resynchronized objects
         if( arrayHasContent( incoming.getRequestedResynchronizeReplicas())) {
@@ -627,7 +674,7 @@ public abstract class AbstractProxyPolicy
             
             for( int i=0 ; i<resync.length ; ++i ) {
                 if( resync[i] != null ) {
-                    if( addPotentiallyConvey( resync[i], outgoing, proxy )) {
+                    if( addPotentiallyConvey( resync[i], perhapsOutgoing, incomingProxy )) {
                         ret.addRegisterReplicationIfNotAlready( resync[i] );
                     }
                 }
@@ -638,17 +685,17 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: requested home replicas.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingRequestedHomeReplicas(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // requested home replicas
         if( arrayHasContent( incoming.getRequestedHomeReplicas())) {
@@ -687,9 +734,10 @@ public abstract class AbstractProxyPolicy
                 }
             }
             for( NetMeshObject current : toSurrender ) {
-                addPotentiallyConvey( current, outgoing, proxy );
+                addPotentiallyConvey( current, perhapsOutgoing, incomingProxy );
                 ret.addSurrenderHome( current ); // this includes the addRegisterReplicationIfNotAlready functionality
-                outgoing.addPushHomeReplica( current.getIdentifier() );
+
+                perhapsOutgoing.obtain().addPushHomeReplica( current.getIdentifier() );
             }
         }
     }
@@ -697,17 +745,17 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: requested locks.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingRequestedLockObjects(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // requested locks
         if( arrayHasContent( incoming.getRequestedLockObjects())) {
@@ -746,9 +794,10 @@ public abstract class AbstractProxyPolicy
                 }
             }
             for( NetMeshObject current : toSurrender ) {
-                addPotentiallyConvey( current, outgoing, proxy );
+                addPotentiallyConvey( current, perhapsOutgoing, incomingProxy );
                 ret.addSurrenderLock( current ); // this includes the addRegisterReplicationIfNotAlready functionality
-                outgoing.addPushLockObject( current.getIdentifier() );
+
+                perhapsOutgoing.obtain().addPushLockObject( current.getIdentifier() );
             }
         }
     }
@@ -756,17 +805,17 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: reclaimed locks.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingReclaimedLockObjects(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // reclaimed locks
         if( arrayHasContent( incoming.getReclaimedLockObjects())) {
@@ -781,17 +830,17 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: objects to be canceled.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingCanceledObjects(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
         
     // canceled objects
         if( arrayHasContent( incoming.getRequestedCanceledObjects())) {
@@ -808,35 +857,35 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: conveyed objects.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      * @param isResponseToOngoingQuery if true, this message was sent in response to a query
      */
     protected void processIncomingConveyedObjects(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing,
-            boolean                     isResponseToOngoingQuery )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing,
+            boolean                                       isResponseToOngoingQuery )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
     
     // conveyed objects
         if( arrayHasContent( incoming.getConveyedMeshObjects())) {
-            for( ExternalizedNetMeshObject current : incoming.getConveyedMeshObjects() ) {
+            for( ExternalizedNetMeshObject externalized : incoming.getConveyedMeshObjects() ) {
 
-                RippleInstructions ripple = RippleInstructions.create( current );
-                ripple.setProxies( new Proxy[] { proxy } );
+                RippleInstructions ripple = RippleInstructions.create( externalized );
+                ripple.setProxies( new Proxy[] { incomingProxy } );
                 ripple.setProxyTowardsHomeIndex( 0 );
                 ripple.setProxyTowardsLockIndex( 0 );
 
-                NetMeshObject found = theMeshBase.findMeshObjectByIdentifier( current.getIdentifier() );
+                NetMeshObject found = theMeshBase.findMeshObjectByIdentifier( externalized.getIdentifier() );
 
-                boolean noHomeProxy
-                        = current.getProxyTowardsHomeNetworkIdentifier() == null;
-                boolean differentHomeProxy
-                        =  !noHomeProxy && !proxy.getPartnerMeshBaseIdentifier().equals( current.getProxyTowardsHomeNetworkIdentifier());
+                boolean externalizedHasHomeProxy
+                        = externalized.getProxyTowardsHomeNetworkIdentifier() != null;
+                boolean externalizedHasDifferentHomeProxy
+                        =  externalizedHasHomeProxy && !incomingProxy.getPartnerMeshBaseIdentifier().equals( externalized.getProxyTowardsHomeNetworkIdentifier() );
 
                 // This is a bit tricky. We distinguish three main dimensions:
                 // 1. conveyed MeshObject does or does not already exist locally, and if so, whether its home proxy points in a different direction:
@@ -849,15 +898,14 @@ public abstract class AbstractProxyPolicy
                 //        code (2 alternatives): differentHomeProxy
                 // 3. the incoming message is or is not a response to a request that was originated locally
                 //        code (2 alternatives): isResponseToOngoingQuery
+                // These three dimensions are captured in the 3-level if/then/else with 3x2x2 different choices.
                 //
                 // In response, the choices are:
                 // A: do nothing | rippleCreate | rippleResynchronize
                 // B: do nothing | cancel lease from current proxyTorwardsHome
                 // C: do nothing | create instruction to issue resynchronize message with home proxy specified in conveyed MeshObject
                 // D: do nothing | cancel lease of offered conveyed object
-                
-                // This produces 3x2x2 different choices, reflected in the following code:
-
+ 
                 boolean doRippleCreate        = false;
                 boolean doRippleResynchronize = false;
                 
@@ -867,7 +915,7 @@ public abstract class AbstractProxyPolicy
                 boolean issueResyncMessage = false;
                 
                 if( found == null ) {
-                    if( differentHomeProxy ) {
+                    if( externalizedHasDifferentHomeProxy ) {
                         if( isResponseToOngoingQuery ) {
                             // 1.1.1 -- we don't have it yet, but asked for it, and its home is somewhere else
                             
@@ -895,47 +943,51 @@ public abstract class AbstractProxyPolicy
                         }
                     }
                     
-                } else if( found.getProxyTowardsHomeReplica() == proxy ) { // found != null
-                    if( differentHomeProxy ) {
+                } else if( found.getProxyTowardsHomeReplica() == incomingProxy ) { // found != null
+                    if( externalizedHasDifferentHomeProxy ) {
                         if( isResponseToOngoingQuery ) {
                             // 2.1.1 -- we have it, but asked for it, message comes from the home, but its home is somewhere else
-                            
+                            // e.g. an unresolved ForwardReference arrives in response to a request
+
                             doRippleResynchronize = true;
                             issueResyncMessage    = true;
 
                         } else { // !isResponseToOngoingQuery
                             // 2.1.2 -- we have it, but didn't ask, message comes from the home, but its home is somewhere else
                             
-                            doRippleResynchronize = true;
-                            issueResyncMessage    = true;
+                            // do nothing, we don't care
+                            // cancelOfferedLease = true;  // externalizedHasNoRelationshipsNotFoundLocally( found, externalized )
+                            cancelOfferedLease = externalizedHasNoRelationshipsNotFoundLocally( found, externalized );
                         }
 
                     } else { // !differentHomeProxy
                         if( isResponseToOngoingQuery ) {
                             // 2.2.1 -- we have it, but asked for it, message comes from the home, and we have the right home
                             
-                            // do nothing, everything is great
+                            // to be safe, do a resync because we just got a fresh copy of authoritative data
+                            doRippleResynchronize = true;
                             
                         } else { // !isResponseToOngoingQuery
                             // 2.2.2 -- we have it, but didn't ask, message comes from the home, and we have the right home
                             
-                            // do nothing, everything is great
+                            // to be safe, do a resync because we just got a fresh copy of authoritative data
+                            doRippleResynchronize = true;
                         }                        
                     }
                     
                 } else { // found != null && found.getProxyTowardsHomeReplica() != proxy
-                    if( differentHomeProxy ) {
+                    if( externalizedHasDifferentHomeProxy ) {
                         if( isResponseToOngoingQuery ) {
                             // 3.1.1 -- we have it, but asked for it, message comes from somewhere else, and its home is somewhere else
-                            
-                            // ignore, not worth doing
-                            cancelCurrentLease = true;
+
+                            // only accept lead if it has unique information about relationships
+                            cancelOfferedLease = externalizedHasNoRelationshipsNotFoundLocally( found, externalized );
                             
                         } else { // !isResponseToOngoingQuery
                             // 3.1.2 -- we have it, didn't ask for it, message comes from somewhere else, and its home is somewhere else
                             
-                            // ignore, not worth doing
-                            cancelCurrentLease = true;
+                            // only accept lead if it has unique information about relationships
+                            cancelOfferedLease = externalizedHasNoRelationshipsNotFoundLocally( found, externalized );
                         }
 
                     } else { // !differentHomeProxy
@@ -945,8 +997,10 @@ public abstract class AbstractProxyPolicy
                             // this is the response from the home object to resync requests
                             // FIXME: This section is currently not reached. See comment in 3.2.2
                             
-                            cancelCurrentLease    = true;
-                            doRippleResynchronize = true;
+                            // do nothing, we don't care. Note: resync requests are not RPC-style, so responses to
+                            // resync requests always have isResponseToOngoingQuery==false
+//                            cancelOfferedLease = true;
+                            cancelOfferedLease = externalizedHasNoRelationshipsNotFoundLocally( found, externalized );
                             
                         } else { // !isResponseToOngoingQuery
                             // 3.2.2 -- we have it, didn't ask for it, message comes from the home, and we thought we have the right home
@@ -957,7 +1011,8 @@ public abstract class AbstractProxyPolicy
                             // currently, responses to resync requests are not RPC-style calls, so we isResponseToOngoingQuery
                             // is false. Can we make them RPC-style synchronous calls to carry the requestID & responseID?
 
-                            cancelCurrentLease    = true;
+//                            cancelCurrentLease    = true;
+                            cancelCurrentLease = currentProxyHasNoRelationshipsNotFoundExternally( found, externalized );
                             doRippleResynchronize = true;
                         }
                     }
@@ -967,7 +1022,7 @@ public abstract class AbstractProxyPolicy
                 // A:
                 if( doRippleCreate ) {
                     if( doRippleResynchronize ) {
-                        log.error( "programming error: create or resync, not both" );
+                        log.error( "programming error: create or resync, not both: " + externalized );
                     } else {
                         ret.addRippleCreate( ripple );
                     }
@@ -982,41 +1037,87 @@ public abstract class AbstractProxyPolicy
                 
                 // C:
                 if( cancelOfferedLease ) {
-                    outgoing.addRequestedCanceledObject( current.getIdentifier() );
+                    perhapsOutgoing.obtain().addRequestedCanceledObject( externalized.getIdentifier() );
                 }
                 
                 // D:
                 if( issueResyncMessage ) {
                     ret.addToResynchronizeInstructions(
-                            current.getIdentifier(),
-                            current.getProxyTowardsHomeNetworkIdentifier());
+                            externalized.getIdentifier(),
+                            externalized.getProxyTowardsHomeNetworkIdentifier());
                 }
             }
         }
     }
 
     /**
+     * Helper method to determine whether an ExternalizedNetMeshObject carries relationships
+     * that we don't know of locally.
+     *
+     * @param local the local NetMeshObject
+     * @param externalized the externalized NetMeshObject
+     * @return true if the ExternalizedNetMeshObject has at least one neighbor not known locally
+     */
+    protected boolean externalizedHasNoRelationshipsNotFoundLocally(
+            NetMeshObject             local,
+            ExternalizedNetMeshObject externalized )
+    {
+        NetMeshObjectIdentifier [] localIdentifiers = local.getNeighborMeshObjectIdentifiers();
+
+        for( NetMeshObjectIdentifier current : externalized.getNeighbors() ) {
+            if( !ArrayHelper.isIn( current, localIdentifiers, true )) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Helper method to determine whether the current home Proxy is a better or worse source
+     * for relationships than an ExternalizedNetMeshObject.
+     *
+     * @param local the local NetMeshObject
+     * @param externalized the externalized NetMeshObject
+     * @return true if the NetMeshObject's home Proxy has no neighbor not known to the externalized NetMeshObject
+     */
+    protected boolean currentProxyHasNoRelationshipsNotFoundExternally(
+            NetMeshObject             local,
+            ExternalizedNetMeshObject externalized )
+    {
+        Proxy homeProxy = local.getProxyTowardsHomeReplica();
+
+        NetMeshObjectIdentifier [] localIdentifiers = local.getNeighborMeshObjectIdentifiersAccordingTo( homeProxy );
+        NetMeshObjectIdentifier [] externalIdentifiers = externalized.getNeighbors();
+
+        for( NetMeshObjectIdentifier current : localIdentifiers ) {
+            if( !ArrayHelper.isIn( current, externalIdentifiers, true )) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Process the incoming request: pushed locks.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingPushedLocks(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
         
-    // pushed locks
         if( arrayHasContent( incoming.getPushLockObjects())) {
             NetMeshObject [] locks = theMeshBase.findMeshObjectsByIdentifier( incoming.getPushLockObjects() );
             
             for( int i=0 ; i<locks.length ; ++i ) {
                 if( locks[i] != null ) {
-                    locks[i].proxyOnlyPushLock( proxy );
+                    locks[i].proxyOnlyPushLock( incomingProxy );
                 }
             }
         }
@@ -1025,25 +1126,24 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: pushed home replicas.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingPushedHomes(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
-        
-    // pushed homes
+        XprisoMessage incoming    = ret.getIncomingXprisoMessage();
+        NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
+
         if( arrayHasContent( incoming.getPushHomeReplicas() )) {
             NetMeshObject [] homes = theMeshBase.findMeshObjectsByIdentifier( incoming.getPushHomeReplicas() );
             
             for( int i=0 ; i<homes.length ; ++i ) {
                 if( homes[i] != null ) {
-                    homes[i].proxyOnlyPushHomeReplica( proxy );
+                    homes[i].proxyOnlyPushHomeReplica( incomingProxy );
                 }
             }
         }
@@ -1052,42 +1152,38 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: property changes.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingPropertyChanges(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
-        
-    // property changes
+        XprisoMessage incoming = ret.getIncomingXprisoMessage();
+
         if( arrayHasContent( incoming.getPropertyChanges() )) {
             NetMeshObjectPropertyChangeEvent [] events = incoming.getPropertyChanges();
             
             ret.setPropertyChanges( events );
-        }    
+        }
     }
     
     /**
      * Process the incoming request: type changes.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingTypeChanges(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
-        
-    // type changes
+        XprisoMessage incoming = ret.getIncomingXprisoMessage();
+
         if( arrayHasContent( incoming.getTypeAdditions())) {
             NetMeshObjectTypeAddedEvent [] events = incoming.getTypeAdditions();
             
@@ -1103,24 +1199,22 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: neighbor and role changes.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingNeighborRoleChanges(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
-        
-    // neighbor and role changes
+        XprisoMessage incoming = ret.getIncomingXprisoMessage();
+
         if( arrayHasContent( incoming.getNeighborAdditions())) {
             NetMeshObjectNeighborAddedEvent [] events = incoming.getNeighborAdditions();
 
             for( NetMeshObjectNeighborAddedEvent current : events ) {
-                if( acceptRelationshipEvent( proxy, current )) {
+                if( acceptRelationshipEvent( incomingProxy, current )) {
                     ret.addNeighborAddition( current );
                 }
             }
@@ -1129,7 +1223,7 @@ public abstract class AbstractProxyPolicy
             NetMeshObjectNeighborRemovedEvent [] events = incoming.getNeighborRemovals();
             
             for( NetMeshObjectNeighborRemovedEvent current : events ) {
-                if( acceptRelationshipEvent( proxy, current )) {
+                if( acceptRelationshipEvent( incomingProxy, current )) {
                     ret.addNeighborRemoval( current );
                 }
             }
@@ -1139,7 +1233,7 @@ public abstract class AbstractProxyPolicy
             NetMeshObjectRoleAddedEvent [] events = incoming.getRoleAdditions();
             
             for( NetMeshObjectRoleAddedEvent current : events ) {
-                if( acceptRelationshipEvent( proxy, current )) {
+                if( acceptRelationshipEvent( incomingProxy, current )) {
                     ret.addRoleAddition( current );
                 }
             }
@@ -1148,7 +1242,7 @@ public abstract class AbstractProxyPolicy
             NetMeshObjectRoleRemovedEvent [] events = incoming.getRoleRemovals();
             
             for( NetMeshObjectRoleRemovedEvent current : events ) {
-                if( acceptRelationshipEvent( proxy, current )) {
+                if( acceptRelationshipEvent( incomingProxy, current )) {
                     ret.addRoleRemoval( current );
                 }
             }
@@ -1158,24 +1252,22 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: equivalence changes.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingEquivalentChanges(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
-        
-    // equivalent changes
+        XprisoMessage incoming = ret.getIncomingXprisoMessage();
+
         if( arrayHasContent( incoming.getEquivalentsAdditions())) {
             NetMeshObjectEquivalentsAddedEvent [] events = incoming.getEquivalentsAdditions();
             
             for( NetMeshObjectEquivalentsAddedEvent current : events ) {
-                if( acceptRelationshipEvent( proxy, current )) {
+                if( acceptRelationshipEvent( incomingProxy, current )) {
                     ret.addEquivalentsAddition( current );
                 }
             }
@@ -1184,7 +1276,7 @@ public abstract class AbstractProxyPolicy
             NetMeshObjectEquivalentsRemovedEvent [] events = incoming.getEquivalentsRemovals();
             
             for( NetMeshObjectEquivalentsRemovedEvent current : events ) {
-                if( acceptRelationshipEvent( proxy, current )) {
+                if( acceptRelationshipEvent( incomingProxy, current )) {
                     ret.addEquivalentsRemoval( current );
                 }
             }
@@ -1194,19 +1286,17 @@ public abstract class AbstractProxyPolicy
     /**
      * Process the incoming request: delete changes.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     protected void processIncomingDeleteChanges(
-            Proxy                       proxy,
-            ProxyProcessingInstructions ret,
-            ParserFriendlyXprisoMessage outgoing )
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
     {
-        XprisoMessage               incoming    = ret.getIncomingXprisoMessage();
-        NetMeshBase                 theMeshBase = proxy.getNetMeshBase();
-        
-    // deletions
+        XprisoMessage incoming = ret.getIncomingXprisoMessage();
+
         if( arrayHasContent( incoming.getDeletions())) {
             NetMeshObjectDeletedEvent [] events = incoming.getDeletions();
             
@@ -1236,21 +1326,23 @@ public abstract class AbstractProxyPolicy
      * Helper method to add a NetMeshObject to an outgoing XprisoMessage to be conveyed, if needed.
      * 
      * @param obj the potentially added NetMeshObject
-     * @param outgoing the XprisoMessage
+     * @param perhapsOutgoing the outgoing message being assembled
      * @param proxy the Proxy via which the XprisoMessage will be sent
      * @param needsToBeSent if false, do not send. 
      * @return true if the NetMeshObject was added
      */
     protected boolean addPotentiallyConvey(
-            NetMeshObject               obj,
-            ParserFriendlyXprisoMessage outgoing,
-            Proxy                       proxy,
-            boolean                     needsToBeSent )
+            NetMeshObject                                 obj,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing,
+            Proxy                                         proxy,
+            boolean                                       needsToBeSent )
     {
         // make sure we don't have it already
-        for( ExternalizedNetMeshObject current : outgoing.getConveyedMeshObjects() ) {
-            if( current.getIdentifier().equals( obj.getIdentifier() )) {
-                return false;
+        if( perhapsOutgoing.hasBeenCreated() ) {
+            for( ExternalizedNetMeshObject current : perhapsOutgoing.obtain().getConveyedMeshObjects() ) {
+                if( current.getIdentifier().equals( obj.getIdentifier() )) {
+                    return false;
+                }
             }
         }
         
@@ -1259,7 +1351,7 @@ public abstract class AbstractProxyPolicy
             return false;
         }
         ExternalizedNetMeshObject toAdd = obj.asExternalized( !thePointsReplicasToItself );
-        outgoing.addConveyedMeshObject( toAdd );
+        perhapsOutgoing.obtain().addConveyedMeshObject( toAdd );
 
         return true;
     }
@@ -1268,16 +1360,16 @@ public abstract class AbstractProxyPolicy
      * Helper method to add a NetMeshObject to an outgoing XprisoMessage to be conveyed, if needed.
      * 
      * @param obj the potentially added NetMeshObject
-     * @param outgoing the XprisoMessage
+     * @param perhapsOutgoing the outgoing message being assembled
      * @param proxy the Proxy via which the XprisoMessage will be sent
      * @return true if the NetMeshObject was added
      */
     protected boolean addPotentiallyConvey(
-            NetMeshObject               obj,
-            ParserFriendlyXprisoMessage outgoing,
-            Proxy                       proxy )
+            NetMeshObject                                 obj,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing,
+            Proxy                                         proxy )
     {
-        return addPotentiallyConvey( obj, outgoing, proxy, !Utils.hasReplicaInDirection( obj, proxy ));
+        return addPotentiallyConvey( obj, perhapsOutgoing, proxy, !Utils.hasReplicaInDirection( obj, proxy ));
     }
 
     /**

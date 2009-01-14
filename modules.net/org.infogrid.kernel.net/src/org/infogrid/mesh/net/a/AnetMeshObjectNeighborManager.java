@@ -16,6 +16,7 @@ package org.infogrid.mesh.net.a;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotRelatedException;
+import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.a.AMeshObject;
 import org.infogrid.mesh.a.AMeshObjectNeighborManager;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
@@ -39,12 +40,15 @@ public class AnetMeshObjectNeighborManager
      * @param subject the MeshObject in question
      * @param neighborIdentifier identifier of the neighbor
      * @param neighborRoleTypes RoleTypes, or null, for the neighbor
+     * @throws RelatedAlreadyException thrown if the subject and the neighbor are related already
      */
     @Override
     public void appendNeighbor(
             AMeshObject          subject,
             MeshObjectIdentifier neighborIdentifier,
             RoleType []          neighborRoleTypes )
+        throws
+            RelatedAlreadyException
     {
         AnetMeshObject realSubject = (AnetMeshObject) subject;
         Proxy          incoming    = realSubject.getMeshBase().determineIncomingProxy();
@@ -68,12 +72,15 @@ public class AnetMeshObjectNeighborManager
      * @param neighborIdentifier identifier of the neighbor
      * @param neighborRoleTypes RoleTypes, or null, for the neighbor
      * @param relationshipProxies the relationship proxies for this relationship
+     * @throws RelatedAlreadyException thrown if the subject and the neighbor are related already
      */
     protected void internalAppendNeighbor(
             AnetMeshObject       subject,
             MeshObjectIdentifier neighborIdentifier,
             RoleType []          neighborRoleTypes,
             Proxy []             relationshipProxies )
+        throws
+            RelatedAlreadyException
     {
         internalAppendNeighbor( subject, neighborIdentifier, neighborRoleTypes );
 

@@ -25,6 +25,7 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
+import org.infogrid.util.CreateWhenNeeded;
 
 /**
  * Event that indicates a NetMeshObject was blessed with one or more EntityTypes.
@@ -152,6 +153,7 @@ public class NetMeshObjectTypeAddedEvent
      * current Thread.</p>
      *
      * @param base the NetMeshBase in which to apply the NetChange
+     * @param perhapsTx the Transaction to use, if any
      * @param incomingProxy the Proxy through which this NetChange was received
      * @return the NetMeshObject to which the NetChange was applied
      * @throws CannotApplyChangeException thrown if the NetChange could not be applied, e.g because
@@ -160,20 +162,19 @@ public class NetMeshObjectTypeAddedEvent
      *         could not be created
      */
     public NetMeshObject potentiallyApplyToReplicaIn(
-            NetMeshBase base,
-            Proxy       incomingProxy )
+            NetMeshBase                   base,
+            CreateWhenNeeded<Transaction> perhapsTx,
+            Proxy                         incomingProxy )
         throws
             CannotApplyChangeException,
             TransactionException
     {
         setResolver( base );
 
-        Transaction tx = null; 
-
         try {
             NetMeshObject otherObject = (NetMeshObject) getSource();
             if( otherObject != null && incomingProxy == otherObject.getProxyTowardsLockReplica() ) {
-                tx = base.createTransactionNowIfNeeded();
+                perhapsTx.obtain(); // can ignore return value
 
                 EntityType [] types = getDeltaValue();
                 otherObject.rippleBless( types, getTimeEventOccurred() );
@@ -185,11 +186,6 @@ public class NetMeshObjectTypeAddedEvent
 
         } catch( Throwable ex ) {
             throw new CannotApplyChangeException.ExceptionOccurred( base, ex );
-
-        } finally {
-            if( tx != null ) {
-                tx.commitTransaction();
-            }
         }
     }
 

@@ -48,6 +48,25 @@ public interface NetMeshObject
     public abstract NetMeshBase getMeshBase();
 
     /**
+     * Obtain the NetMeshObjectIdentifiers of the neighbors of this MeshObject. This is sometimes a
+     * more efficient operation than to traverse to the neighbors and determine the
+     * NetMeshObjectIdentifiers from there.
+     *
+     * @return the NetMeshObjectIdentifiers of the neighbors, if any
+     */
+    public abstract NetMeshObjectIdentifier [] getNeighborMeshObjectIdentifiers();
+
+    /**
+     * Obtain the NetMeshObjectIdentifiers of the neighbors of this MeshObject, as conveyed by
+     * a given Proxy.
+     * 
+     * @param p the Proxy
+     * @return the NetMeshObjectIdentifiers of the neighbors, if any, according to the Proxy
+     */
+    public abstract NetMeshObjectIdentifier [] getNeighborMeshObjectIdentifiersAccordingTo(
+            Proxy p );
+
+    /**
       * Determine whether this replica has update rights.
       *
       * @return returns true if this is replica has the update rights

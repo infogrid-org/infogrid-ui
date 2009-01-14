@@ -29,6 +29,7 @@ import org.infogrid.meshbase.transaction.CannotApplyChangeException;
 import org.infogrid.meshbase.transaction.MeshObjectDeletedEvent;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.util.CreateWhenNeeded;
 
 /**
  * Abstract superclass to hold the common behavior of NetMeshObjectDeletedEvent
@@ -106,20 +107,19 @@ public abstract class AbstractNetMeshObjectDeletedEvent
      *         could not be created
      */
     public NetMeshObject potentiallyApplyToReplicaIn(
-            NetMeshBase base,
-            Proxy       incomingProxy )
+            NetMeshBase                   base,
+            CreateWhenNeeded<Transaction> perhapsTx,
+            Proxy                         incomingProxy )
         throws
             CannotApplyChangeException,
             TransactionException
     {
         setResolver( base );
 
-        Transaction tx = null;
-
         try {
             NetMeshObject ret = base.findMeshObjectByIdentifier( getAffectedMeshObjectIdentifier() );
             if( ret != null && incomingProxy == ret.getProxyTowardsLockReplica() ) {
-                tx = base.createTransactionNowIfNeeded();
+                perhapsTx.obtain(); // can ignore return value
 
                 NetMeshObjectIdentifier otherObjectIdentifier = getAffectedMeshObjectIdentifier();
 
@@ -135,11 +135,6 @@ public abstract class AbstractNetMeshObjectDeletedEvent
 
         } catch( Throwable ex ) {
             throw new CannotApplyChangeException.ExceptionOccurred( base, ex );
-            
-        } finally {
-            if( tx != null ) {
-                tx.commitTransaction();
-            }
         }
     }
 

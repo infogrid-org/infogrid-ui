@@ -26,6 +26,7 @@ import org.infogrid.meshbase.transaction.MeshObjectBecameDeadStateEvent;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.util.CreateWhenNeeded;
 
 /**
  * This indicates that a NetMeshObject became dead by being purged.
@@ -90,6 +91,7 @@ public class NetMeshObjectBecamePurgedStateEvent
      * current Thread.</p>
      *
      * @param base the NetMeshBase in which to apply the NetChange
+     * @param perhapsTx the Transaction to use, if any
      * @param incomingProxy the Proxy through which this NetChange was received
      * @return the NetMeshObject to which the NetChange was applied
      * @throws CannotApplyChangeException thrown if the NetChange could not be applied, e.g because
@@ -98,18 +100,17 @@ public class NetMeshObjectBecamePurgedStateEvent
      *         could not be created
      */
     public NetMeshObject potentiallyApplyToReplicaIn(
-            NetMeshBase base,
-            Proxy       incomingProxy )
+            NetMeshBase                   base,
+            CreateWhenNeeded<Transaction> perhapsTx,
+            Proxy                         incomingProxy )
         throws
             CannotApplyChangeException,
             TransactionException
     {
-        Transaction tx = null;
         try {
             NetMeshObject ret = base.findMeshObjectByIdentifier( getAffectedMeshObjectIdentifier() );
             if( ret != null && incomingProxy == ret.getProxyTowardsLockReplica() ) {
-
-                tx = base.createTransactionNowIfNeeded();
+                perhapsTx.obtain(); // can ignore return value
 
                 NetMeshObjectIdentifier otherObjectIdentifier = getAffectedMeshObjectIdentifier();
 
@@ -126,11 +127,6 @@ public class NetMeshObjectBecamePurgedStateEvent
 
         } catch( Throwable ex ) {
             throw new CannotApplyChangeException.ExceptionOccurred( base, ex );
-            
-        } finally {
-            if( tx != null ) {
-                tx.commitTransaction();
-            }
         }        
     }
 

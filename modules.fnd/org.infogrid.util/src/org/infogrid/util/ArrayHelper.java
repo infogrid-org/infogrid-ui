@@ -1625,7 +1625,34 @@ public abstract class ArrayHelper
             return theRemovals;
         }
 
+        /**
+         * Obtain String representation, for debugging.
+         *
+         * @return String representation
+         */
+        @Override
+        public String toString()
+        {
+            return StringHelper.objectLogString(
+                    this,
+                    new String[] {
+                        "theAdditions",
+                        "theRemovals"
+                    },
+                    new Object[] {
+                        theAdditions,
+                        theRemovals
+                    } );
+        }
+
+        /**
+         * The additions.
+         */
         protected T [] theAdditions;
+
+        /**
+         * The removals.
+         */
         protected T [] theRemovals;
     }
     
