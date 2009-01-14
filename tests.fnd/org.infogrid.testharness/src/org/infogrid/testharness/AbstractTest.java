@@ -429,11 +429,11 @@ public abstract class AbstractTest
     }
 
     /**
-     * Report error if the first argument does not start with the second argument String
+     * Report error if the first argument does not start with the second argument String.
      *
      * @param one first argument to compare
      * @param two second argument to compare
-     * @param msg message to print when arguments aren't equal
+     * @param msg message to print when test fails
      * @return true if check passed
      */
     public final boolean checkStartsWith(
@@ -450,6 +450,35 @@ public abstract class AbstractTest
             }
         }
         if( one.startsWith( two )) {
+            return true;
+        } else {
+            reportError( msg, "\"" + one + "\" (class: " + one.getClass().getName() + ") vs. " + ( (two==null) ? "null" : ( "\"" + two + "\" (class: " + two.getClass().getName() + ")" )) );
+            return false;
+        }
+    }
+
+    /**
+     * Report error if the first argument does start with the second argument String.
+     *
+     * @param one first argument to compare
+     * @param two second argument to compare
+     * @param msg message to print when test fails
+     * @return true if check passed
+     */
+    public final boolean checkNotStartsWith(
+            String one,
+            String two,
+            String msg )
+    {
+        if( one == null ) {
+            if( two == null ) {
+                return true;
+            } else {
+                reportError( msg, "null vs. \"" + two + "\" (class: " + two.getClass().getName() + ")" );
+                return false;
+            }
+        }
+        if( !one.startsWith( two )) {
             return true;
         } else {
             reportError( msg, "\"" + one + "\" (class: " + one.getClass().getName() + ") vs. " + ( (two==null) ? "null" : ( "\"" + two + "\" (class: " + two.getClass().getName() + ")" )) );
