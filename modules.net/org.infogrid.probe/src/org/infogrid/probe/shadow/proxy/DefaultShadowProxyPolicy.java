@@ -165,9 +165,9 @@ public class DefaultShadowProxyPolicy
     /**
      * Process the incoming request: requested home replicas.
      * 
-     * @param proxy the incoming Proxy
+     * @param incomingProxy the incoming Proxy
      * @param ret the instructions being assembled assembled
-     * @param outgoing the outgoing message being assembled
+     * @param perhapsOutgoing the outgoing message being assembled
      */
     @Override
     protected void processIncomingRequestedHomeReplicas(

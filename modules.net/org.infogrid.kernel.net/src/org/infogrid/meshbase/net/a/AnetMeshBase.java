@@ -666,7 +666,7 @@ public abstract class AnetMeshBase
                         continue; // skip
                     }
 
-                    if( ! pivotName.equals( correctRemotePaths[runningIndex].getAccessPath()[0] )) {
+                    if( ! pivotName.equals( correctRemotePaths[runningIndex].getAccessPath()[0].getNetMeshBaseIdentifier() )) {
                         continue; // has different pivot
                     }
 

@@ -56,6 +56,7 @@ public class AllTests
                 new TestSpec( XprisoTest13.class ),
                 new TestSpec( XprisoTest14.class ),
                 // new TestSpec( XprisoTest15.class ) // FIXME, to be written: accessLocally to two replicas in different NetMeshBases in parallel
+                new TestSpec( XprisoTest16.class )
         };
 
         runTests( tests );
