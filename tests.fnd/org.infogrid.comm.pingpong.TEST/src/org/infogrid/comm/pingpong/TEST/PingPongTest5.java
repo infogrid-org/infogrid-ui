@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -44,8 +44,8 @@ public class PingPongTest5
             throws
                 Exception
     {
-        MPingPongMessageEndpoint<String> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 500L, 5000L, 0.f, exec );
-        MPingPongMessageEndpoint<String> ep2 = new FailingMessageEndpoint(      "ep2", 1000L, 500L, 5000L, 0.f, exec );
+        MPingPongMessageEndpoint<String> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 1000L, 500L, 5000L, 0.f, exec );
+        MPingPongMessageEndpoint<String> ep2 = new FailingMessageEndpoint(      "ep2", 1000L, 1000L, 500L, 5000L, 0.f, exec );
         
         MyListener l1 = new MyListener( ep1, 'A' );
         MyListener l2 = new MyListener( ep2, '0' );
@@ -255,15 +255,16 @@ public class PingPongTest5
     {
         public FailingMessageEndpoint(
                 String                   name,
-                long                     deltaRespond,
+                long                     deltaRespondNoMessage,
+                long                     deltaRespondWithMessage,
                 long                     deltaResend,
                 long                     deltaRecover,
                 double                   randomVariation,
                 ScheduledExecutorService exec )
         {
-            super(
-                    name,
-                    deltaRespond,
+            super(  name,
+                    deltaRespondNoMessage,
+                    deltaRespondWithMessage,
                     deltaResend,
                     deltaRecover,
                     randomVariation,

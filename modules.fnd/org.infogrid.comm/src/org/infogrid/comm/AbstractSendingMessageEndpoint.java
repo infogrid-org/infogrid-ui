@@ -76,6 +76,7 @@ public abstract class AbstractSendingMessageEndpoint<T>
         synchronized( theMessagesToBeSent ) {
             theMessagesToBeSent.add( msg );
         }
+
         theListeners.fireEvent( msg, MESSAGE_ENQUEUED );
     }
 
@@ -107,7 +108,7 @@ public abstract class AbstractSendingMessageEndpoint<T>
     /**
      * Calculate the next time of something, given a base and the random variation.
      *
-     * @param base the base value of the property, e.g. theDeltaRespond
+     * @param base the base value of the property, e.g. theDeltaRecover
      * @return the next time
      */
     protected long calculateRandomizedFuture(
@@ -125,7 +126,7 @@ public abstract class AbstractSendingMessageEndpoint<T>
      * Schedule a future task.
      *
      * @param task the TimedTask to schedule
-     * @param base the base value of the time delay, e.g. theDeltaRespond
+     * @param base the base value of the time delay, e.g. theDeltaRecover
      */
     protected void schedule(
             TimedTask task,
@@ -375,6 +376,11 @@ public abstract class AbstractSendingMessageEndpoint<T>
          */
         public void run()
         {
+            ScheduledFuture<?> f = theFuture;
+            if( f != null ) {
+                f.cancel( false ); // that way, we can invoke this run() method ourselves, not just the scheduler can
+            }
+
             AbstractSendingMessageEndpoint ep = theEndpointRef.get();
             
             if( ep != null ) {

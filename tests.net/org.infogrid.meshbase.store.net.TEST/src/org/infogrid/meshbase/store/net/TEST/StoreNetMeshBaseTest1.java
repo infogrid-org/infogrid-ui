@@ -8,30 +8,32 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.store.net.TEST;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
+import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecificationFactory;
+import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
 import org.infogrid.meshbase.store.net.NetStoreMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.Test.TestSubjectArea;
-import org.infogrid.model.primitives.StringValue;
 import org.infogrid.store.IterableStore;
 import org.infogrid.store.Store;
 import org.infogrid.store.StoreListener;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.store.prefixing.PrefixingStore;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
-
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 /**
  * Makes sure we do the right number of writes and reads.
@@ -61,14 +63,23 @@ public class StoreNetMeshBaseTest1
 
         log.info( "Creating MeshBase" );
 
+        NetMeshObjectAccessSpecificationFactory theAccessSpecificationFactory
+                = DefaultNetMeshObjectAccessSpecificationFactory.create(
+                        theNetworkIdentifier,
+                        theMeshBaseIdentifierFactory );
+
+        NiceAndTrustingProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create();
+
         super.startClock();
         long t1 = System.currentTimeMillis();
 
         NetStoreMeshBase mb = NetStoreMeshBase.create(
                 theNetworkIdentifier,
+                theAccessSpecificationFactory,
                 theModelBase,
                 null,
                 null,
+                proxyPolicyFactory,
                 meshObjectStore,
                 proxyStore,
                 rootContext );
@@ -135,6 +146,9 @@ public class StoreNetMeshBaseTest1
         checkEquals( listener.theFailedGets.size(), 0,            "Wrong number of failedGets" );
         checkEquals( listener.theDeletes.size(),    0,            "Wrong number of deletes" );
         listener.reset();
+
+        mb.die();
+        // no exec to kill off here
     }
 
     /**

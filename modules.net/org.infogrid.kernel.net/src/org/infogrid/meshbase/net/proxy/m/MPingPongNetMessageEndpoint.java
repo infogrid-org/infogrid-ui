@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -48,7 +48,8 @@ public class MPingPongNetMessageEndpoint
      * @param partnerIdentifier identifier of the partner NetMeshBase
      * @param myIdentifier identifier of the NetMeshBase on whose behalf this endpoint communicates
      * @param nameServer the NameServer to use to to resolve identifiers
-     * @param deltaRespond the number of milliseconds until this PingPongMessageEndpoint returns the token
+     * @param deltaRespondNoMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if no message is in the queue
+     * @param deltaRespondWithMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if a message is in the queue
      * @param deltaResend  the number of milliseconds until this PingPongMessageEndpoint resends the token if sending the token failed
      * @param deltaRecover the number of milliseconds until this PingPongMessageEndpoint decides that the token
      *                     was not received by the partner PingPongMessageEndpoint, and resends
@@ -61,7 +62,8 @@ public class MPingPongNetMessageEndpoint
             NetMeshBaseIdentifier                                   partnerIdentifier,
             NetMeshBaseIdentifier                                   myIdentifier,
             NameServer<NetMeshBaseIdentifier,? extends NetMeshBase> nameServer,
-            long                                                    deltaRespond,
+            long                                                    deltaRespondNoMessage,
+            long                                                    deltaRespondWithMessage,
             long                                                    deltaResend,
             long                                                    deltaRecover,
             double                                                  randomVariation,
@@ -72,7 +74,8 @@ public class MPingPongNetMessageEndpoint
                 partnerIdentifier,
                 myIdentifier,
                 nameServer,
-                deltaRespond,
+                deltaRespondNoMessage,
+                deltaRespondWithMessage,
                 deltaResend,
                 deltaRecover,
                 randomVariation,
@@ -95,7 +98,8 @@ public class MPingPongNetMessageEndpoint
      * @param partnerIdentifier identifier of the partner NetMeshBase
      * @param myIdentifier identifier of the NetMeshBase on whose behalf this endpoint communicates
      * @param nameServer the NameServer to use to to resolve identifiers
-     * @param deltaRespond the number of milliseconds until this PingPongMessageEndpoint returns the token
+     * @param deltaRespondNoMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if no message is in the queue
+     * @param deltaRespondWithMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if a message is in the queue
      * @param deltaResend  the number of milliseconds until this PingPongMessageEndpoint resends the token if sending the token failed
      * @param deltaRecover the number of milliseconds until this PingPongMessageEndpoint decides that the token
      *                     was not received by the partner PingPongMessageEndpoint, and resends
@@ -112,7 +116,8 @@ public class MPingPongNetMessageEndpoint
             NetMeshBaseIdentifier                                   partnerIdentifier,
             NetMeshBaseIdentifier                                   myIdentifier,
             NameServer<NetMeshBaseIdentifier,? extends NetMeshBase> nameServer,
-            long                                                    deltaRespond,
+            long                                                    deltaRespondNoMessage,
+            long                                                    deltaRespondWithMessage,
             long                                                    deltaResend,
             long                                                    deltaRecover,
             double                                                  randomVariation,
@@ -127,7 +132,8 @@ public class MPingPongNetMessageEndpoint
                 partnerIdentifier,
                 myIdentifier,
                 nameServer,
-                deltaRespond,
+                deltaRespondNoMessage,
+                deltaRespondWithMessage,
                 deltaResend,
                 deltaRecover,
                 randomVariation,
@@ -150,7 +156,8 @@ public class MPingPongNetMessageEndpoint
      * @param partnerIdentifier identifier of the partner NetMeshBase
      * @param myIdentifier identifier of the NetMeshBase on whose behalf this endpoint communicates
      * @param nameServer the NameServer to use to to resolve identifiers
-     * @param deltaRespond the number of milliseconds until this PingPongMessageEndpoint returns the token
+     * @param deltaRespondNoMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if no message is in the queue
+     * @param deltaRespondWithMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if a message is in the queue
      * @param deltaResend  the number of milliseconds until this PingPongMessageEndpoint resends the token if sending the token failed
      * @param deltaRecover the number of milliseconds until this PingPongMessageEndpoint decides that the token
      *                     was not received by the partner PingPongMessageEndpoint, and resends
@@ -166,7 +173,8 @@ public class MPingPongNetMessageEndpoint
             NetMeshBaseIdentifier                                   partnerIdentifier,
             NetMeshBaseIdentifier                                   myIdentifier,
             NameServer<NetMeshBaseIdentifier,? extends NetMeshBase> nameServer,
-            long                                                    deltaRespond,
+            long                                                    deltaRespondNoMessage,
+            long                                                    deltaRespondWithMessage,
             long                                                    deltaResend,
             long                                                    deltaRecover,
             double                                                  randomVariation,
@@ -177,7 +185,8 @@ public class MPingPongNetMessageEndpoint
             List<XprisoMessage>                                     messagesToBeSent )
     {
         super(  name,
-                deltaRespond,
+                deltaRespondNoMessage,
+                deltaRespondWithMessage,
                 deltaResend,
                 deltaRecover,
                 randomVariation,

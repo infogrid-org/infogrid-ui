@@ -43,8 +43,8 @@ public class PingPongTest3
             throws
                 Exception
     {
-        MPingPongMessageEndpoint<String> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 500L, 5000L, 0.f, exec1 );
-        MPingPongMessageEndpoint<String> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 500L, 5000L, 0.f, exec2 );
+        MPingPongMessageEndpoint<String> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 1000L, 500L, 5000L, 0.f, exec1 );
+        MPingPongMessageEndpoint<String> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 1000L, 500L, 5000L, 0.f, exec2 );
         
         MyListener l1 = new MyListener( ep1, "one",   10L );
         MyListener l2 = new MyListener( ep2, "two", 8000L );

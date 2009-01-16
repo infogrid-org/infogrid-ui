@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -35,8 +35,8 @@ public class PingPongRpcTest1
             throws
                 Throwable
     {
-        MPingPongMessageEndpoint<PingPongRpcTestMessage> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 500L, 10000L, 0.f, exec );
-        MPingPongMessageEndpoint<PingPongRpcTestMessage> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 500L, 10000L, 0.f, exec );
+        MPingPongMessageEndpoint<PingPongRpcTestMessage> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 1000L, 500L, 10000L, 0.f, exec );
+        MPingPongMessageEndpoint<PingPongRpcTestMessage> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 1000L, 500L, 10000L, 0.f, exec );
         
         MyListener l2 = new MyListener( ep2 );
         ep2.addDirectMessageEndpointListener( l2 );

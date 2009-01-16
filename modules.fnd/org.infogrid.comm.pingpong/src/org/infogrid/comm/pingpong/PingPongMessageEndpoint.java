@@ -50,7 +50,8 @@ public abstract class PingPongMessageEndpoint<T>
      * Constructor for subclasses only.
      *
      * @param name the name of the MessageEndpoint (for debugging only)
-     * @param deltaRespond the number of milliseconds until this PingPongMessageEndpoint returns the token
+     * @param deltaRespondNoMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if no message is in the queue
+     * @param deltaRespondWithMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if a message is in the queue
      * @param deltaResend  the number of milliseconds until this PingPongMessageEndpoint resends the token if sending the token failed
      * @param deltaRecover the number of milliseconds until this PingPongMessageEndpoint decides that the token
      *                     was not received by the partner PingPongMessageEndpoint, and resends
@@ -63,7 +64,8 @@ public abstract class PingPongMessageEndpoint<T>
      */
     protected PingPongMessageEndpoint(
             String                   name,
-            long                     deltaRespond,
+            long                     deltaRespondNoMessage,
+            long                     deltaRespondWithMessage,
             long                     deltaResend,
             long                     deltaRecover,
             double                   randomVariation,
@@ -75,9 +77,10 @@ public abstract class PingPongMessageEndpoint<T>
     {
         super( name, randomVariation, exec, messagesToBeSent );
 
-        theDeltaRespond    = deltaRespond;
-        theDeltaResend     = deltaResend;
-        theDeltaRecover    = deltaRecover;
+        theDeltaRespondNoMessage   = deltaRespondNoMessage;
+        theDeltaRespondWithMessage = deltaRespondWithMessage;
+        theDeltaResend             = deltaResend;
+        theDeltaRecover            = deltaRecover;
 
         theLastSentToken     = lastSentToken;
         theLastReceivedToken = lastReceivedToken;
@@ -313,7 +316,15 @@ public abstract class PingPongMessageEndpoint<T>
             logHigh.error( t );
 
         } finally {
-            schedule( new RespondTask( this ), theDeltaRespond );
+            boolean slow;
+            if( !theMessagesToBeSent.isEmpty() ) {
+                schedule( new RespondTask( this ), theDeltaRespondWithMessage );
+                slow = false;
+
+            } else {
+                schedule( new RespondTask( this ), theDeltaRespondNoMessage );
+                slow = true;
+            }
 
             if( fireEvents ) {
                 theListeners.fireEvent( token, TOKEN_RECEIVED );
@@ -323,8 +334,37 @@ public abstract class PingPongMessageEndpoint<T>
                     }
                 }
             }
+
+            if( slow && !theMessagesToBeSent.isEmpty() ) {
+                // if our listeners have entered messages into the queue during callback ("response")
+                TimedTask t = theFutureTask;
+                if( t != null ) {
+                    t.cancel();
+                }
+                schedule( new RespondTask( this ), theDeltaRespondWithMessage );
+            }
         }
     }
+
+    /**
+     * Send a message as quickly as possible.
+     *
+     * @param msg the Message to send.
+     */
+    @Override
+    public void sendMessageAsap(
+            T msg )
+    {
+        enqueueMessageForSend( msg );
+        if( !hasToken() ) {
+            sendGrabTokenMessage();
+        }
+    }
+
+    /**
+     * Send a message to the partner indicating that we'd like to have the token back as quickly as possible.
+     */
+    protected abstract void sendGrabTokenMessage();
 
     /**
      * Obtain the token that was last sent.
@@ -391,10 +431,17 @@ public abstract class PingPongMessageEndpoint<T>
     }
 
     /**
-     * The time until we respond with a ping to an incoming pong.
+     * The time until we respond with a ping to an incoming pong, assumning no
+     * message has been queued.
      */
-    protected long theDeltaRespond;
-    
+    protected long theDeltaRespondNoMessage;
+
+    /**
+     * The time until we respond with a ping to an incoming pong, assumning that
+     * at least one message has been queued.
+     */
+    protected long theDeltaRespondWithMessage;
+
     /**
      * The time until we retry to send the token if sending the token failed.
      */

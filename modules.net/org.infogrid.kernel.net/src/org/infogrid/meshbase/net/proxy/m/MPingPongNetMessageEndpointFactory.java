@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -91,7 +91,8 @@ public class MPingPongNetMessageEndpointFactory
                 partnerIdentifier,
                 myIdentifier,
                 theNameServer,
-                deltaRespond,
+                deltaRespondNoMessage,
+                deltaRespondWithMessage,
                 deltaResend,
                 deltaRecover,
                 randomVariation,
@@ -106,12 +107,12 @@ public class MPingPongNetMessageEndpointFactory
      * @throws FactoryException catch-all Exception, consider its cause
      */
     public ProxyMessageEndpoint restoreNetMessageEndpoint(
-            NetMeshBaseIdentifier   partnerIdentifier,
-            NetMeshBaseIdentifier   myIdentifier,
-            long                lastTokenSent,
-            long                lastTokenReceived,
-            List<XprisoMessage> lastMessagesSent,
-            List<XprisoMessage> messagesToBeSent )
+            NetMeshBaseIdentifier partnerIdentifier,
+            NetMeshBaseIdentifier myIdentifier,
+            long                  lastTokenSent,
+            long                  lastTokenReceived,
+            List<XprisoMessage>   lastMessagesSent,
+            List<XprisoMessage>   messagesToBeSent )
         throws
             FactoryException
     {
@@ -120,7 +121,8 @@ public class MPingPongNetMessageEndpointFactory
                 partnerIdentifier,
                 myIdentifier,
                 theNameServer,
-                deltaRespond,
+                deltaRespondNoMessage,
+                deltaRespondWithMessage,
                 deltaResend,
                 deltaRecover,
                 randomVariation,
@@ -149,10 +151,15 @@ public class MPingPongNetMessageEndpointFactory
     protected static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( MPingPongNetMessageEndpointFactory.class );
     
     /**
-     * Milliseconds from ping to pong.
+     * Milliseconds from ping to pong if no message is in the queue.
      */
-    protected static long deltaRespond = theResourceHelper.getResourceLongOrDefault( "DeltaRespond", 1000L );
-    
+    protected static long deltaRespondNoMessage = theResourceHelper.getResourceLongOrDefault( "DeltaRespondNoMessage", 1000L );
+
+    /**
+     * Milliseconds from ping to pong if a message is in the queue.
+     */
+    protected static long deltaRespondWithMessage = theResourceHelper.getResourceLongOrDefault( "DeltaRespondWithMessage", 1000L );
+
     /**
      * Millisecond until we attempt to resend failed messages.
      */
