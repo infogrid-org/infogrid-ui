@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,6 +24,7 @@ import org.infogrid.comm.SendingMessageEndpoint;
 import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
 import org.infogrid.comm.pingpong.m.MPingPongMessageEndpoint;
 import org.infogrid.testharness.AbstractTest;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -45,8 +46,8 @@ public class PingPongTest3
         MPingPongMessageEndpoint<String> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 500L, 5000L, 0.f, exec1 );
         MPingPongMessageEndpoint<String> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 500L, 5000L, 0.f, exec2 );
         
-        MyListener l1 = new MyListener( ep1, "one ",   10L );
-        MyListener l2 = new MyListener( ep2, "two ", 8000L );
+        MyListener l1 = new MyListener( ep1, "one",   10L );
+        MyListener l2 = new MyListener( ep2, "two", 8000L );
         ep1.addDirectMessageEndpointListener( l1 );
         ep2.addDirectMessageEndpointListener( l2 );
 
@@ -180,13 +181,14 @@ public class PingPongTest3
                 ReceivingMessageEndpoint<String> endpoint,
                 String                           msg )
         {
-            log.debug( this + " received message " + msg );
-            
             Integer current = receivedMessages.get( msg );
             if( current == null ) {
                 receivedMessages.put( msg, 1 );
+                log.debug( this + " received message " + msg );
+
             } else {
                 receivedMessages.put( msg, current+1 );
+                log.warn( this + " received DUPLICATE (" + (current+1) + ") message " + msg );
             }
             
             // only sleep the first time a non-null message was received
@@ -230,7 +232,7 @@ public class PingPongTest3
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " enqueued message " + msg );
+            log.debug( this + " enqueued message " + msg + ", to be sent is now: " + StringHelper.objectLogString( endpoint.messagesToBeSent() ));
         }
     
         /**

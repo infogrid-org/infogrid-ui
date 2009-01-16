@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -33,7 +33,7 @@ public abstract class AbstractFireAndForgetSendingMessageEndpoint<T>
     private static final Log log = Log.getLogInstance( AbstractFireAndForgetSendingMessageEndpoint.class ); // our own, private logger
 
     /**
-     * Constructor for subclasses only
+     * Constructor for subclasses only.
      * 
      * @param name the name of the MessageEndpoint (for debugging only)
      * @param randomVariation the random component to add to the various times
@@ -61,8 +61,8 @@ public abstract class AbstractFireAndForgetSendingMessageEndpoint<T>
         super.enqueueMessageForSend( msg );
         
         synchronized( this ) {
-            if( theFuture != null ) {
-                theFuture.cancel( false ); // This is pessimistic if enqueueMessageForSend is invoked N times very rapidly
+            if( theFutureTask != null ) {
+                theFutureTask.cancel(); // This is pessimistic if enqueueMessageForSend is invoked N times very rapidly
             }
             super.schedule( new SendTask( this ), 0 ); // immediately
         }
@@ -101,9 +101,9 @@ public abstract class AbstractFireAndForgetSendingMessageEndpoint<T>
         
         if( !failed.isEmpty() ) {
             synchronized( this ) {
-                theMessagesToBeSent.addAll( failed ); // appending at the end -- good idea? FIXME?
+                theMessagesToBeSent.addAll( 0, failed ); // prepending at the beginning
         
-                if( theFuture == null || theFuture.isCancelled() ) {
+                if( theFutureTask == null || theFutureTask.isCancelled() ) {
                     schedule( new ResendTask( this ), 0 );
                 }
             }
@@ -158,4 +158,4 @@ public abstract class AbstractFireAndForgetSendingMessageEndpoint<T>
             super( ep );
         }        
     }
-    }
+}

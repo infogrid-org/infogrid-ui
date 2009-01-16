@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -168,6 +168,8 @@ public class PingPongTest2
             log.debug( this + " received message " + msg );
             lastMessageReceived = msg;
             theEndpoint.enqueueMessageForSend( thePrefix + msg );
+
+            checkCondition( theEndpoint.hasToken(), "Endpoint wrongly does not have token: " + theEndpoint );
         }
 
         /**
@@ -181,6 +183,8 @@ public class PingPongTest2
                 String                         msg )
         {
             log.debug( this + " sent message " + msg );
+
+            checkCondition( !theEndpoint.hasToken(), "Endpoint wrongly has token: " + theEndpoint );
         }
 
         /**
@@ -226,17 +230,19 @@ public class PingPongTest2
             }
         }
 
-        public void clear()
-        {
-            received = 0;
-            sent     = 0;
-        }
+        /**
+         * The endpoint through which we communicate.
+         */
+        protected PingPongMessageEndpoint<String> theEndpoint;
 
-        PingPongMessageEndpoint<String> theEndpoint;
-        String                          thePrefix;
-        String                          lastMessageReceived;
-        
-        int received;
-        int sent;
+        /**
+         * String to prepend to message before responding.
+         */
+        protected String thePrefix;
+
+        /**
+         * Caches the last received message.
+         */
+        protected String lastMessageReceived;
     }
 }

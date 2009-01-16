@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -336,7 +336,7 @@ public class WaitForResponseEndpoint<T extends CarriesInvocationId>
     /**
      * The ongoing invocations.
      */
-    protected HashMap<Long,Object> theOngoingInvocations = new HashMap<Long,Object>();
+    protected final HashMap<Long,Object> theOngoingInvocations = new HashMap<Long,Object>();
     
     /**
      * The assembled result(s).

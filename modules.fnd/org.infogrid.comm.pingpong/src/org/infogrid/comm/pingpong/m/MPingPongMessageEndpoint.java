@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.infogrid.comm.MessageEndpointIsDeadException;
 import org.infogrid.comm.MessageSendException;
 import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
@@ -206,11 +205,24 @@ public class MPingPongMessageEndpoint<T>
     }
 
     /**
-     * Set the partner endpoint.
+     * Set the partner endpoint and start communicating.
      *
      * @param partner the partner
      */
     public void setPartnerAndInitiateCommunications(
+            MPingPongMessageEndpoint<T> partner )
+    {
+        setPartner( partner );
+        
+        startCommunicating();
+    }
+    
+    /**
+     * Set the partner endpoint.
+     *
+     * @param partner the partner
+     */
+    public void setPartner(
             MPingPongMessageEndpoint<T> partner )
     {
         if( thePartner != null ) {
@@ -222,10 +234,8 @@ public class MPingPongMessageEndpoint<T>
         thePartner = partner;
 
         thePartner.thePartner = this; // point back to us
-        
-        startCommunicating();
     }
-    
+
     /**
      * Send a message via the next ping or pong.
      *
@@ -239,6 +249,19 @@ public class MPingPongMessageEndpoint<T>
             throw new IllegalStateException( this + " is dead" );
         }
         super.enqueueMessageForSend( msg );
+    }
+
+    /**
+     * Send a message as quickly as possible.
+     *
+     * @param msg the Message to send.
+     */
+    @Override
+    public void sendMessageAsap(
+            T msg )
+    {
+        // FIXME
+        super.sendMessageAsap( msg );
     }
 
     /**
@@ -314,12 +337,12 @@ public class MPingPongMessageEndpoint<T>
     {
         isGracefullyDead = true;
         
-        if( theFuture != null ) {
+        if( theFutureTask != null ) {
             if( log.isDebugEnabled() ) {
                 log.debug( this + " canceling future" );
             }
-            theFuture.cancel( false );
-            theFuture = null;
+            theFutureTask.cancel();
+            theFutureTask = null;
         }
     }
 
@@ -338,7 +361,7 @@ public class MPingPongMessageEndpoint<T>
                     "isGracefullyDead",
                     "theLastReceivedToken",
                     "theLastSentToken",
-                    "theFuture",
+                    "theFutureTask",
                     "theMessagesToBeSent"
                 },
                 new Object[] {
@@ -346,7 +369,7 @@ public class MPingPongMessageEndpoint<T>
                     isGracefullyDead,
                     theLastReceivedToken,
                     theLastSentToken,
-                    theFuture != null ? theFuture.getDelay( TimeUnit.MILLISECONDS ) : -1L,
+                    theFutureTask,
                     theMessagesToBeSent
                 });
     }

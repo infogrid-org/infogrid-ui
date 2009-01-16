@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -27,11 +27,19 @@ public interface SendingMessageEndpoint<T>
             MessageEndpoint<T>
 {
     /**
-     * Send a message.
+     * Send a message on the regular schedule.
      *
      * @param msg the Message to send.
      */
     public void enqueueMessageForSend(
+            T msg );
+
+    /**
+     * Send a message as quickly as possible.
+     *
+     * @param msg the Message to send.
+     */
+    public void sendMessageAsap(
             T msg );
 
     /**
