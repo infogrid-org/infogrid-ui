@@ -26,6 +26,7 @@ org.infogrid.model.Test
 org.infogrid.model.SecurityTest
 org.infogrid.model.Viewlet
 org.infogrid.model.Wiki
+org.infogrid.model.Requirement
 org.infogrid.store
 org.infogrid.store.filesystem
 org.infogrid.store.hadoop
