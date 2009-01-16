@@ -8,12 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.store.net.TEST;
 
+import java.lang.ref.WeakReference;
+import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -26,9 +28,6 @@ import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.util.logging.Log;
-
-import java.lang.ref.WeakReference;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Makes sure that replication info is written correctly into the Store.

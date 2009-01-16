@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -263,7 +263,7 @@ public abstract class AbstractStoreNetMeshBaseTest
                 new DefaultNetMeshBaseIdentifierFactory.Protocol( "http", true ),
                 new DefaultNetMeshBaseIdentifierFactory.Protocol( "test", false ) 
             } );
-    
+
     /**
      * The name of the database that we use to store test data.
      */

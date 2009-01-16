@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -160,7 +160,7 @@ public class XprisoTest1b
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = createThreadPool( 2 ); // gotta have two threads
+    protected ScheduledExecutorService exec = createThreadPool( 3 ); // gotta have three threads
 
     // Our Logger
     private static Log log = Log.getLogInstance( XprisoTest1b.class );
