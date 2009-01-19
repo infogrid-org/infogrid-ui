@@ -159,6 +159,13 @@ public class DefaultNetMeshBaseIdentifierFactory
                 String zapped = m.group( 1 ) + m.group( 2 );
 
                 string = zapped;
+            } else {
+                m = thePort443Pattern.matcher( string );
+                if( m.matches() ) {
+                    String zapped = m.group( 1 ) + m.group( 2 );
+
+                    string = zapped;
+                }
             }
         }
 
@@ -360,7 +367,13 @@ public class DefaultNetMeshBaseIdentifierFactory
      * The pattern that allows us to remove a unnecessary port 80 from a URL spec.
      */
     public static final Pattern thePort80Pattern = Pattern.compile(
-            "^(http[s]?://[^/:]+):80(/.*)$" );
+            "^(http://[^/:]+):80(/.*)$" );
+
+    /**
+     * The pattern that allows us to remove a unnecessary port 443 from a URL spec.
+     */
+    public static final Pattern thePort443Pattern = Pattern.compile(
+            "^(https://[^/:]+):443(/.*)$" );
 
     /**
      * The default protocols for this class.
