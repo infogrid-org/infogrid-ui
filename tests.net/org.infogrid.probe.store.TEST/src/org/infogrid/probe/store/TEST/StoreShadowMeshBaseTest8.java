@@ -122,10 +122,10 @@ public class StoreShadowMeshBaseTest8
         base.die();
         base          = null;
 
-        sleepUntilIsGone( baseRef,          4000L, "MeshBase still here, should have been garbage collected" );
-        sleepUntilIsGone( foundRef,         4000L, "MeshObject still here, should have been garbage collected" );
-        sleepUntilIsGone( foundInShadowRef, 4000L, "MeshObject still here, should have been garbage collected" );
-        sleepUntilIsGone( shadowRef,        4000L, "Shadow still here, should have been garbage collected" );
+        sleepUntilIsGone( baseRef,          10000L, "MeshBase still here, should have been garbage collected" );
+        sleepUntilIsGone( foundRef,          1000L, "MeshObject still here, should have been garbage collected" );
+        sleepUntilIsGone( foundInShadowRef,  1000L, "MeshObject still here, should have been garbage collected" );
+        sleepUntilIsGone( shadowRef,         1000L, "Shadow still here, should have been garbage collected" );
 
         //
         
