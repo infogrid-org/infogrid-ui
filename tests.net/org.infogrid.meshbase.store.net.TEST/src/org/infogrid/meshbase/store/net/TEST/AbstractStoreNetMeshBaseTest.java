@@ -275,6 +275,12 @@ public abstract class AbstractStoreNetMeshBaseTest
     public static final String TEST_TABLE_NAME = "SqlStoreMeshBaseTest";
 
     /**
+     * Expected duration within which at least one ping-pong round trip can be completed.
+     * Milliseconds.
+     */
+    protected static final long PINGPONG_ROUNDTRIP_DURATION = 100L;
+
+    /**
      * Holds the SQL driver.
      */
     static Object theSqlDriver;

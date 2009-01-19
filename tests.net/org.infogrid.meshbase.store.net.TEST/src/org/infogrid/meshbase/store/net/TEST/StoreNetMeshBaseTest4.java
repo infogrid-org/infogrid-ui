@@ -83,8 +83,7 @@ public class StoreNetMeshBaseTest4
         
         log.info( "Sleeping for a bit, recording where we are" );
 
-        Thread.sleep( 8000L );
-// Thread.sleep( 1000000L );
+        Thread.sleep( 1000L ); // should  not really need this
         
         mb1_p1.getMessageEndpoint().stopCommunicating();
         mb2_p1.getMessageEndpoint().stopCommunicating();

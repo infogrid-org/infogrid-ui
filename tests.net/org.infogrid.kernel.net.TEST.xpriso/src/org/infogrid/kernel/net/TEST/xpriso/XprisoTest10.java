@@ -101,7 +101,7 @@ public class XprisoTest10
 
         mb2.sweepAllNow();
 
-        Thread.sleep( 3500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         checkEquals( mb2.size(), 1, "wrong number of objects after sweeping" );
 
@@ -131,7 +131,7 @@ public class XprisoTest10
 
         obj1_mb2 = null;
         
-        Thread.sleep( 3500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -183,7 +183,7 @@ public class XprisoTest10
 
         //
 
-        Thread.sleep( 3500L ); // allow message delivery
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION ); // allow message delivery
 
         log.info( "Check that we got all locks back in mb1 that aren't kept in mb2" );
 

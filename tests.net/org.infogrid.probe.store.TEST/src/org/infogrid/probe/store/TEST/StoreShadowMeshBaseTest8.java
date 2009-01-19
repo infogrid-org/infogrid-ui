@@ -122,19 +122,10 @@ public class StoreShadowMeshBaseTest8
         base.die();
         base          = null;
 
-        Thread.sleep( 4000L );
-        collectGarbage();
-        
-        //
-        
-        log.info( "Checking that MeshBase is gone" );
-        
-        checkCondition( baseRef.get()          == null, "MeshBase still here" );
-        checkCondition( foundRef.get()         == null, "MeshObject still here" );
-        checkCondition( foundInShadowRef.get() == null, "MeshObject still here" );
-        checkCondition( shadowRef.get()        == null, "Shadow still here" );
-
-        Thread.sleep( 3000L );
+        sleepUntilIsGone( baseRef,          4000L, "MeshBase still here, should have been garbage collected" );
+        sleepUntilIsGone( foundRef,         4000L, "MeshObject still here, should have been garbage collected" );
+        sleepUntilIsGone( foundInShadowRef, 4000L, "MeshObject still here, should have been garbage collected" );
+        sleepUntilIsGone( shadowRef,        4000L, "Shadow still here, should have been garbage collected" );
 
         //
         

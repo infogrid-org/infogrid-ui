@@ -108,7 +108,7 @@ public class XprisoTest6
         
         log.info( "Sleeping a bit, then checking that events have propagated" );
 
-        Thread.sleep( 5000L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         checkEquals( obj1_mb2_listener.theEvents.size(), 2, "Wrong number of events received" );
             // neighbor added, and role added

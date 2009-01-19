@@ -70,6 +70,7 @@ public class XprisoTest9
         //
 
         log.info( "Replicating first object" );
+
         NetMeshObject obj1_mb2 = mb2.accessLocally(
                 mb1.getIdentifier(),
                 obj1_mb1.getIdentifier() );
@@ -106,7 +107,7 @@ public class XprisoTest9
 
         mb2.sweepAllNow();
 
-        Thread.sleep( 2500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         checkEquals( mb2.size(), 1, "wrong number of objects after sweeping" );
 

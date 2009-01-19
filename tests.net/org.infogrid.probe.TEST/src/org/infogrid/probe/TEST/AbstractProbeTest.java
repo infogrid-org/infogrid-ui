@@ -284,4 +284,9 @@ public abstract class AbstractProbeTest
                     new DefaultNetMeshBaseIdentifierFactory.Protocol( PROTOCOL_NAME, false )
             } );
 
+    /**
+     * Expected duration within which at least one ping-pong round trip can be completed.
+     * Milliseconds.
+     */
+    protected static final long PINGPONG_ROUNDTRIP_DURATION = 100L;
 }

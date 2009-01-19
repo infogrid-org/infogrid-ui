@@ -45,17 +45,75 @@ public class MPingPongNetMessageEndpointFactory
     public static MPingPongNetMessageEndpointFactory create(
             ScheduledExecutorService exec )
     {
-        return new MPingPongNetMessageEndpointFactory( exec );
+        long   deltaRespondNoMessage   = theResourceHelper.getResourceLongOrDefault(   "DeltaRespondNoMessage",   60L * 1000L ); // 1 minute
+        long   deltaRespondWithMessage = theResourceHelper.getResourceLongOrDefault(   "DeltaRespondWithMessage", 10L ); // quickly but still deterministic
+        long   deltaResend             = theResourceHelper.getResourceLongOrDefault(   "DeltaResend",             500L );
+        long   deltaRecover            = theResourceHelper.getResourceLongOrDefault(   "DeltaRecover",            deltaRespondNoMessage * 5L ); // 5 times longer
+        double randomVariation         = theResourceHelper.getResourceDoubleOrDefault( "RandomVariation",         0.02 ); // 2%
+
+        return new MPingPongNetMessageEndpointFactory(
+                deltaRespondNoMessage,
+                deltaRespondWithMessage,
+                deltaResend,
+                deltaRecover,
+                randomVariation,
+                exec );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param deltaRespondNoMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if no message is in the queue
+     * @param deltaRespondWithMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if a message is in the queue
+     * @param deltaResend  the number of milliseconds until this PingPongMessageEndpoint resends the token if sending the token failed
+     * @param deltaRecover the number of milliseconds until this PingPongMessageEndpoint decides that the token
+     *                     was not received by the partner PingPongMessageEndpoint, and resends
+     * @param randomVariation the random component to add to the various times
+     * @param exec the ScheduledExecutorService to schedule communication-related events
+     * @return the created MPingPongNetMessageEndpointFactory
+     */
+    public static MPingPongNetMessageEndpointFactory create(
+            long                     deltaRespondNoMessage,
+            long                     deltaRespondWithMessage,
+            long                     deltaResend,
+            long                     deltaRecover,
+            double                   randomVariation,
+            ScheduledExecutorService exec )
+    {
+        return new MPingPongNetMessageEndpointFactory(
+                deltaRespondNoMessage,
+                deltaRespondWithMessage,
+                deltaResend,
+                deltaRecover,
+                randomVariation,
+                exec );
     }
 
     /**
      * Constructor.
      *
+     * @param deltaRespondNoMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if no message is in the queue
+     * @param deltaRespondWithMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if a message is in the queue
+     * @param deltaResend  the number of milliseconds until this PingPongMessageEndpoint resends the token if sending the token failed
+     * @param deltaRecover the number of milliseconds until this PingPongMessageEndpoint decides that the token
+     *                     was not received by the partner PingPongMessageEndpoint, and resends
+     * @param randomVariation the random component to add to the various times
      * @param exec the ScheduledExecutorService to schedule communication-related events
      */
     protected MPingPongNetMessageEndpointFactory(
+            long                     deltaRespondNoMessage,
+            long                     deltaRespondWithMessage,
+            long                     deltaResend,
+            long                     deltaRecover,
+            double                   randomVariation,
             ScheduledExecutorService exec )
     {
+        theDeltaRespondNoMessage   = deltaRespondNoMessage;
+        theDeltaRespondWithMessage = deltaRespondWithMessage;
+        theDeltaResend             = deltaResend;
+        theDeltaRecover            = deltaRecover;
+        theRandomVariation         = randomVariation;
+
         theExecService = exec;
     }
 
@@ -91,11 +149,11 @@ public class MPingPongNetMessageEndpointFactory
                 partnerIdentifier,
                 myIdentifier,
                 theNameServer,
-                deltaRespondNoMessage,
-                deltaRespondWithMessage,
-                deltaResend,
-                deltaRecover,
-                randomVariation,
+                theDeltaRespondNoMessage,
+                theDeltaRespondWithMessage,
+                theDeltaResend,
+                theDeltaRecover,
+                theRandomVariation,
                 theExecService );
 
         return ret;
@@ -121,11 +179,11 @@ public class MPingPongNetMessageEndpointFactory
                 partnerIdentifier,
                 myIdentifier,
                 theNameServer,
-                deltaRespondNoMessage,
-                deltaRespondWithMessage,
-                deltaResend,
-                deltaRecover,
-                randomVariation,
+                theDeltaRespondNoMessage,
+                theDeltaRespondWithMessage,
+                theDeltaResend,
+                theDeltaRecover,
+                theRandomVariation,
                 theExecService,
                 lastTokenSent,
                 lastTokenReceived,
@@ -153,25 +211,25 @@ public class MPingPongNetMessageEndpointFactory
     /**
      * Milliseconds from ping to pong if no message is in the queue.
      */
-    protected static long deltaRespondNoMessage = theResourceHelper.getResourceLongOrDefault( "DeltaRespondNoMessage", 1000L );
+    protected long theDeltaRespondNoMessage;
 
     /**
      * Milliseconds from ping to pong if a message is in the queue.
      */
-    protected static long deltaRespondWithMessage = theResourceHelper.getResourceLongOrDefault( "DeltaRespondWithMessage", 1000L );
+    protected long theDeltaRespondWithMessage;
 
     /**
      * Millisecond until we attempt to resend failed messages.
      */
-    protected static long deltaResend = theResourceHelper.getResourceLongOrDefault( "DeltaResend", 500L );
+    protected long theDeltaResend;
     
     /**
      * Millisecond until we attempt to recover.
      */
-    protected static long deltaRecover = theResourceHelper.getResourceLongOrDefault( "DeltaRecover", 5000L );
+    protected long theDeltaRecover;
     
     /**
      * Random variation, as percentage, of the respond and recover times.
      */
-    protected static double randomVariation = theResourceHelper.getResourceDoubleOrDefault( "RandomVariation", 0.02 ); // 2%
+    protected double theRandomVariation;
 }

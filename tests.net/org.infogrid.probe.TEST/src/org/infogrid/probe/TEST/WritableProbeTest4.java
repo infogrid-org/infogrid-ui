@@ -154,7 +154,7 @@ public class WritableProbeTest4
 
                         log.debug( "Waiting for replication to happen" );
 
-                        Thread.sleep( 2500L );
+                        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         NetMeshObject obj2 = mainBase.accessLocally(
                                 mainBase.getMeshObjectIdentifierFactory().fromExternalForm(
@@ -212,7 +212,7 @@ public class WritableProbeTest4
 
                         log.debug( "Waiting for replication to happen" );
 
-                        Thread.sleep( 2500L );
+                        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         NetMeshObject obj2 = mainBase.findMeshObjectByIdentifier(
                                 mainBase.getMeshObjectIdentifierFactory().fromExternalForm(

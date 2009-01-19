@@ -14,7 +14,6 @@
 
 package org.infogrid.probe.TEST;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
@@ -84,7 +83,7 @@ public abstract class AbstractWritableProbeTest
                 
                 testCases[i].afterFirstRun( base, shadow, shadowHomeInMain );
                 
-                Thread.sleep( 2500L );
+                Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                 // updating
                 myLog.info( "Now doing a manual update" );

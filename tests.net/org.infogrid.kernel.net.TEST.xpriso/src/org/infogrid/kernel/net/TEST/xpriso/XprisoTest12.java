@@ -21,7 +21,6 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
 import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicyFactory;
-import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
@@ -78,7 +77,7 @@ public class XprisoTest12
                         obj1_mb1.getIdentifier()));
         checkObject( obj1_mb3, "C not found" );
 
-        Thread.sleep( 10000L ); // make sure background resync works
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L ); // make sure background resync works
         
         checkProxies( obj1_mb1, new NetMeshBase[] { mb2, mb3 }, null, null,  "obj1_mb1 has wrong proxies" );
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1 },       mb1,  mb1,  "obj1_mb2 has wrong proxies" );

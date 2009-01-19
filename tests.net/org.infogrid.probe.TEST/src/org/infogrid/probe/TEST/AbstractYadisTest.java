@@ -76,6 +76,12 @@ public abstract class AbstractYadisTest
     @Override
     public void cleanup()
     {
+        try {
+            Thread.sleep( 200L ); // just a bit, so ripple effects can have died down
+        } catch( Throwable t ) {
+            log.error( t );
+        }
+        
         theMeshBase.die();
         theMeshBase = null;
 
@@ -136,7 +142,7 @@ public abstract class AbstractYadisTest
 
         checkEquals( xrdsCollection.size(), 1, "Wrong set of link destinations" );
 
-        Thread.sleep( 5000L ); // let ForwardReference resolution do its magic
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L ); // let ForwardReference resolution do its magic
 
         checkEqualsOutOfSequence(
                 xrdsCollection.get( 0 ).getTypes(),

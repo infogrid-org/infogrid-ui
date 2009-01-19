@@ -94,7 +94,7 @@ public class ForwardReferenceTest3
         
         // wait some
         
-        Thread.sleep( 3500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
         
         checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "ForwardReference was unexpectedly resolved: " + fwdReference.getIdentifier().toExternalForm() );
 
@@ -104,8 +104,6 @@ public class ForwardReferenceTest3
         
         checkEquals( listener.events.size(), 1, "found wrong number of events" );
         checkCondition( listener.events.get( 0 ) instanceof InitiateResynchronizeFailedEvent, "wrong type of event found" );
-        
-        
     }
 
     /**

@@ -89,10 +89,20 @@ public abstract class AnetMeshBase
             Context                                     context )
     {
         super( identifier, identifierFactory, setFactory, modelBase, life, accessMgr, cache, context );
-        
+
+        if( meshBaseIdentifierFactory == null ) {
+            throw new NullPointerException();
+        }
+        if( netMeshObjectAccessSpecificationFactory == null ) {
+            throw new NullPointerException();
+        }
+        if( proxyManager == null ) {
+            throw new NullPointerException();
+        }
+
         theMeshBaseIdentifierFactory               = meshBaseIdentifierFactory;
         theNetMeshObjectAccessSpecificationFactory = netMeshObjectAccessSpecificationFactory;
-        theProxyManager = proxyManager;
+        theProxyManager                            = proxyManager;
     }
 
     /**
@@ -936,6 +946,8 @@ public abstract class AnetMeshBase
      */
     public CursorIterator<Proxy> proxies()
     {
+        checkDead();
+        
         return theProxyManager.proxies();
     }
 
@@ -978,7 +990,7 @@ public abstract class AnetMeshBase
         synchronized( theThreadProxyTable ) {
             Proxy found = theThreadProxyTable.put( Thread.currentThread(), incomingProxy );
             if( found != null ) {
-                log.error( "This thread has a proxy already: " + found );
+                log.error( this + ": This thread has a proxy already: " + found + ", incoming is " + incomingProxy );
             }
         }
     }

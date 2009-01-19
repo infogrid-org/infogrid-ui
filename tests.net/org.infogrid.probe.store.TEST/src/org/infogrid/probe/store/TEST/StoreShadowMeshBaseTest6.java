@@ -61,6 +61,8 @@ public class StoreShadowMeshBaseTest6
                         theShadowProxyStore,
                         rootContext );
         //
+
+        startClock();
         
         log.info( "Setting up ProbeManager1" );
         
@@ -98,12 +100,9 @@ public class StoreShadowMeshBaseTest6
         home1         = null;
         shadowEndpointFactory.setNameServer( null );
         
-        Thread.sleep( 4000L );
-        collectGarbage();
+        sleepUntilIsGone( probeManager1Ref, 4000L, "ProbeManager1 still here, should have been garbage collected" );
+        sleepUntilIsGone( meshBase1Ref,     4000L, "ShadowMeshBase1 still here, should have been garbage collected" );
 
-        checkCondition( probeManager1Ref.get() == null, "ProbeManager1 still here, should have been garbage collected" );
-        checkCondition( meshBase1Ref.get() == null, "ShadowMeshBase1 still here, should have been garbage collected" );
-        
         //
         
         log.info( "Creating new ProbeManager with old data and new feed" );
@@ -114,7 +113,7 @@ public class StoreShadowMeshBaseTest6
         shadowEndpointFactory.setNameServer( probeManager2.getNetMeshBaseNameServer() );
         probeManager2.start( exec );
 
-        Thread.sleep( 2500L );
+        sleepUntil( 6500L );
 
         //
         

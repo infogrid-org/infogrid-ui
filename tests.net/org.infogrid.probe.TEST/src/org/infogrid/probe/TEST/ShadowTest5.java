@@ -107,7 +107,7 @@ public class ShadowTest5
         
         base.getShadowMeshBaseFor( TEST_URL ).doUpdateNow();
         
-        Thread.sleep( 3100L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         //
         

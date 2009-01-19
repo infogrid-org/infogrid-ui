@@ -50,10 +50,10 @@ public class MPingPongMessageEndpoint<T>
     {
         String name                    = "MPingPongMessageEndpoint";
         long   deltaRespondNoMessage   = theResourceHelper.getResourceLongOrDefault(   "DeltaRespondNoMessage",   1000L );
-        long   deltaRespondWithMessage = theResourceHelper.getResourceLongOrDefault(   "DeltaRespondWithMessage",    1L ); // quickly
+        long   deltaRespondWithMessage = theResourceHelper.getResourceLongOrDefault(   "DeltaRespondWithMessage",   10L ); // quickly but still deterministic
         long   deltaResend             = theResourceHelper.getResourceLongOrDefault(   "DeltaResend",              500L );
         long   deltaRecover            = theResourceHelper.getResourceLongOrDefault(   "DeltaRecover",            5000L );
-        double randomVariation         = theResourceHelper.getResourceDoubleOrDefault( "RandomVariation", 0.02 ); // 2%
+        double randomVariation         = theResourceHelper.getResourceDoubleOrDefault( "RandomVariation",          0.02 ); // 2%
 
         List<T> messagesToBeSent = new ArrayList<T>();
 
@@ -286,7 +286,7 @@ public class MPingPongMessageEndpoint<T>
     {
         TimedTask t = thePartner.theFutureTask;
         if( t instanceof RespondTask ) {
-            t.run();
+            thePartner.schedule( t, theDeltaRespondWithMessage );
         }
     }
 

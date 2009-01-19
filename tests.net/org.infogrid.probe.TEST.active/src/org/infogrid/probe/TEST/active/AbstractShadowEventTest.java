@@ -34,6 +34,8 @@ public abstract class AbstractShadowEventTest
 
     /**
      * Constructor.
+     *
+     * @param testClass the Class to be tested
      */
     protected AbstractShadowEventTest(
             Class testClass )
@@ -55,6 +57,12 @@ public abstract class AbstractShadowEventTest
      * Factory for NetMeshBaseIdentifiers.
      */
     protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+
+    /**
+     * Expected duration within which at least one ping-pong round trip can be completed.
+     * Milliseconds.
+     */
+    protected static final long PINGPONG_ROUNDTRIP_DURATION = 100L;
 }
 
 

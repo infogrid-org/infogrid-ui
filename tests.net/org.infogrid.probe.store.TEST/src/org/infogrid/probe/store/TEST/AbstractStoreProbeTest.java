@@ -201,6 +201,12 @@ public abstract class AbstractStoreProbeTest
     public static final String TEST_TABLE_NAME = "StoreProbeTest";
 
     /**
+     * Expected duration within which at least one ping-pong round trip can be completed.
+     * Milliseconds.
+     */
+    protected static final long PINGPONG_ROUNDTRIP_DURATION = 100L;
+
+    /**
      * The SQL driver.
      */
     static Object theSqlDriver;

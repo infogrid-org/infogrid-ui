@@ -87,6 +87,29 @@ public abstract class AbstractMeshBase
             CachingMap<MeshObjectIdentifier,MeshObject> cache,
             Context                                     context )
     {
+        if( identifier == null ) {
+            throw new NullPointerException();
+        }
+        if( identifierFactory == null ) {
+            throw new NullPointerException();
+        }
+        if( setFactory == null ) {
+            throw new NullPointerException();
+        }
+        if( modelBase == null ) {
+            throw new NullPointerException();
+        }
+        if( life == null ) {
+            throw new NullPointerException();
+        }
+        // accessMgr may be null
+        if( cache == null ) {
+            throw new NullPointerException();
+        }
+        if( context == null ) {
+            throw new NullPointerException();
+        }
+
         this.theMeshBaseIdentifier          = identifier;
         this.theMeshObjectIdentifierFactory = identifierFactory;
         this.theMeshObjectSetFactory        = setFactory;
@@ -400,6 +423,9 @@ public abstract class AbstractMeshBase
     {
         if( log.isDebugEnabled() ) {
             log.debug( this + ".die()" );
+        }
+        if( theCurrentTransaction != null ) {
+            throw new IllegalStateException( "Transaction currently active: " + theCurrentTransaction );
         }
 
         makeDead();

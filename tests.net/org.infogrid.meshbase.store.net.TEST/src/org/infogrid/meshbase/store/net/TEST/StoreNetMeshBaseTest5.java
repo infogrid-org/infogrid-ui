@@ -96,7 +96,7 @@ public class StoreNetMeshBaseTest5
         
         obj1_mb2 = mb2.findMeshObjectByIdentifier( obj1Name );
         
-        Thread.sleep( 5000L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         tx = mb2.createTransactionAsap();
         
@@ -107,7 +107,7 @@ public class StoreNetMeshBaseTest5
 
         //
 
-        Thread.sleep( 2500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         log.info( "checking that property propagated" );
 

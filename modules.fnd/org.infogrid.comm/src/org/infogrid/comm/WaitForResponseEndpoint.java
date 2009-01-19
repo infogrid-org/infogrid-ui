@@ -14,16 +14,14 @@
 
 package org.infogrid.comm;
 
-import org.infogrid.util.RemoteQueryTimeoutException;
-import org.infogrid.util.ResourceHelper;
-
-import org.infogrid.util.logging.Log;
-import org.infogrid.util.StringHelper;
-import org.infogrid.util.UniqueIdentifierCreator;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import org.infogrid.util.logging.Log;
+import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
+import org.infogrid.util.UniqueIdentifierCreator;
 
 /**
  * An BidirectionalMessageEndpoint that suspents the thread sending a message until a
@@ -121,7 +119,7 @@ public class WaitForResponseEndpoint<T extends CarriesInvocationId>
             theOngoingInvocations.put( invocationId, syncObject );        
         }
 
-        theMessageEndpoint.enqueueMessageForSend( message );
+        theMessageEndpoint.sendMessageAsap( message );
         
         try {
             synchronized( syncObject ) {

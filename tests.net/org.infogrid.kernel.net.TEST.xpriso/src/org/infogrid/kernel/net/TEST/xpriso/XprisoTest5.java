@@ -87,7 +87,7 @@ public class XprisoTest5
         
         log.info( "Sleeping a bit, then checking blessing has propagated" );
 
-        Thread.sleep( 5000L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         checkEqualsOutOfSequence( obj_mb2.getTypes(), obj_mb1.getTypes(), "Wrong types" );
 
@@ -105,7 +105,7 @@ public class XprisoTest5
         
         tx2.commitTransaction();
         
-        Thread.sleep( 5000L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         checkEqualsOutOfSequence( obj_mb2.getTypes(), obj_mb1.getTypes(), "Wrong types" );
 

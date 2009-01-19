@@ -16,7 +16,6 @@ package org.infogrid.probe.TEST;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.comm.AbstractMessageEndpointListener;
 import org.infogrid.comm.MessageEndpoint;
@@ -88,7 +87,14 @@ public class ProbeTest7
 
         shadowEndpointFactory.setNameServer( probeManager.getNetMeshBaseNameServer() );
 
-        MPingPongNetMessageEndpointFactory endpointFactory = new MPingPongNetMessageEndpointFactory( exec ) {
+        MPingPongNetMessageEndpointFactory endpointFactory = new MPingPongNetMessageEndpointFactory(
+                1000L,
+                1000L,
+                500L,
+                5000L,
+                0.02,
+                exec )
+        {
                 @Override
                 public MPingPongNetMessageEndpoint obtainFor(
                         NetMeshBaseIdentifier partnerIdentifier,
@@ -161,7 +167,7 @@ public class ProbeTest7
         log.debug( "Resetting counter and sleeping for a while" );
         
         theListener.reset();
-        Thread.sleep( 10000L );
+        Thread.sleep( 5000L ); // not sure what is a good duration here
 
         //
         

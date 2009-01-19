@@ -97,7 +97,7 @@ public class XprisoTest4
         
         log.info( "Sleeping a bit, then checking property value has propagated" );
 
-        Thread.sleep( 5000L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         checkEquals( obj_mb2.getPropertyValue( TestSubjectArea.A_X ), obj_mb1.getPropertyValue( TestSubjectArea.A_X ), "Wrong property value" );
         checkProxies( obj_mb1, new NetMeshBase[] { mb2 }, null, null, "obj_mb1 has wrong proxies" );
@@ -116,7 +116,7 @@ public class XprisoTest4
         
         checkEquals( obj_mb2.getPropertyValue( TestSubjectArea.A_X ), values[2], "failed to set value" );
 
-        Thread.sleep( 5000L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         checkEquals( obj_mb2.getPropertyValue( TestSubjectArea.A_X ), obj_mb1.getPropertyValue( TestSubjectArea.A_X ), "Wrong property value" );
         checkProxies( obj_mb1, new NetMeshBase[] { mb2 }, null, mb2,  "obj_mb1 has wrong proxies" );

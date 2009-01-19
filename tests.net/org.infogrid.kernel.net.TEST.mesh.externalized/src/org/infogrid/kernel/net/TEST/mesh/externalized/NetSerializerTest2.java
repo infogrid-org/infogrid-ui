@@ -52,7 +52,7 @@ public class NetSerializerTest2
         NetMMeshBase mb = NetMMeshBase.create(
                 nmbid,
                 DefaultNetMeshObjectAccessSpecificationFactory.create( nmbid, theFactory ),
-                null,
+                theModelBase,
                 null,
                 proxyFactory,
                 SimpleContext.createRoot( "root" ));

@@ -46,8 +46,6 @@ public class XprisoTest6_5a
         throws
             Exception
     {
-        long delay = 2500L; // make debugging easier
-        
         log.info( "Instantiating objects in mb1" );
 
         Transaction tx1 = mb1.createTransactionAsap();
@@ -74,7 +72,7 @@ public class XprisoTest6_5a
         checkProxies( obj1_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj2_mb1, null, null, null, "obj2_mb1 has proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -102,7 +100,7 @@ public class XprisoTest6_5a
         checkNotObject( obj1_mb2.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb2" );
         checkNotObject( obj2_mb2.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb2" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -113,7 +111,7 @@ public class XprisoTest6_5a
 
         tx2.commitTransaction();
 
-        Thread.sleep( 2L*delay );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
         

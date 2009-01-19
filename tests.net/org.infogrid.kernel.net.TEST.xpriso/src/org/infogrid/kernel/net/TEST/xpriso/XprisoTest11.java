@@ -101,7 +101,7 @@ public class XprisoTest11
 
         mb2.sweepAllNow();
 
-        Thread.sleep( 2500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         
         checkEquals( mb2.size(), 1, "wrong number of objects after sweeping" );
 

@@ -95,7 +95,7 @@ public class ShadowTest3
         MeshObjectSet found1 = other2.traverseToNeighborMeshObjects();
         MeshObjectSet found2 = found1.traverseToNeighborMeshObjects();
 
-        Thread.sleep( 3500L ); // allow ForwardReference resolution to work
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L ); // allow ForwardReference resolution to work
 
         MeshObjectSet found3 = found2.traverseToNeighborMeshObjects();
         

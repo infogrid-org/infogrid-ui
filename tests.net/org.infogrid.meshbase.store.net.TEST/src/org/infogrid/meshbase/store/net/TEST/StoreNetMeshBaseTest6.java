@@ -91,8 +91,8 @@ public class StoreNetMeshBaseTest6
         mb1A = null;
         mb2A = null;
         
-        sleepUntilIsGone( mb1ARef, 5000L, "MB1 still here" );
-        sleepUntilIsGone( mb2ARef, 50000L, "MB2 still here" );
+        sleepUntilIsGone( mb1ARef, 15000L, "MB1 still here" );
+        sleepUntilIsGone( mb2ARef, 15000L, "MB2 still here" );
         sleepUntilIsGone( obj1_1ARef, 1000L, "obj1_1 still here" );
         sleepUntilIsGone( obj1_2ARef, 1000L, "obj1_2 still here" );
         
@@ -125,7 +125,7 @@ public class StoreNetMeshBaseTest6
         
         tx1B.commitTransaction();
         
-        Thread.sleep( 5000L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         NetMeshObject obj1_2B = mb2B.findMeshObjectByIdentifier( id1 );
         checkObject( obj1_2B, "obj1_2 not found" );

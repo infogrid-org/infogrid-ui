@@ -80,11 +80,8 @@ public class StoreShadowMeshBaseTest5
         meshBase2 = null;
         home2     = null;
         
-        sleepUntil( 4000L );
-        collectGarbage();
-
-        checkCondition( meshBase1Ref.get() == null, "ShadowMeshBase1 still here, should have been garbage collected" );
-        checkCondition( meshBase2Ref.get() == null, "ShadowMeshBase2 still here, should have been garbage collected" );
+        sleepUntilIsGone( meshBase1Ref, 12000L, "ShadowMeshBase1 still here, should have been garbage collected" );
+        sleepUntilIsGone( meshBase2Ref, 12000L, "ShadowMeshBase2 still here, should have been garbage collected" );
         
         copyFile( testFile1b, testFile1 );
         copyFile( testFile2b, testFile2 );

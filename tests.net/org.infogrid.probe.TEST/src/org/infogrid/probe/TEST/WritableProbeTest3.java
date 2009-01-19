@@ -148,7 +148,7 @@ public class WritableProbeTest3
 
                         log.debug( "Waiting for replication to happen" );
 
-                        Thread.sleep( 2500L );
+                        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         checkCondition(  shadowHomeInMain.isBlessedBy( SIMPLE1 ), "Unblessed the wrong thing" );
                         checkCondition(  shadowHomeInMain.isBlessedBy( SIMPLE2 ), "Did not revert to old value" );
@@ -200,7 +200,7 @@ public class WritableProbeTest3
 
                         log.debug( "Waiting for replication to happen" );
 
-                        Thread.sleep( 2500L );
+                        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         checkCondition( !shadowHomeInMain.isBlessedBy( SIMPLE1 ), "Could not unbless" );
                         checkCondition( !shadowHomeInMain.isBlessedBy( SIMPLE2 ), "Could not unbless" );

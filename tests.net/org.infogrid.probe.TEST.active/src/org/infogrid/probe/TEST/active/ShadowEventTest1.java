@@ -16,7 +16,6 @@ package org.infogrid.probe.TEST.active;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
@@ -139,7 +138,7 @@ public class ShadowEventTest1
 
             shadow.doUpdateNow();
             
-            Thread.sleep( 2500L ); // wait for ping-pong to do its magic
+            Thread.sleep( PINGPONG_ROUNDTRIP_DURATION ); // wait for ping-pong to do its magic
 
             destPassiveSet = home.traverse( TestSubjectArea.RR.getSource() );
 

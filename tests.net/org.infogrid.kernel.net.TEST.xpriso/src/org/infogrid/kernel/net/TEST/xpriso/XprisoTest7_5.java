@@ -47,8 +47,6 @@ public class XprisoTest7_5
         throws
             Exception
     {
-        long delay = 2500L; // make debugging easier
-        
         log.info( "Instantiating objects in mb1" );
 
         Transaction tx1 = mb1.createTransactionAsap();
@@ -79,7 +77,7 @@ public class XprisoTest7_5
         checkProxies( obj1_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj2_mb1, null, null, null, "obj2_mb1 has proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -96,7 +94,7 @@ public class XprisoTest7_5
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj1_mb2 has wrong proxies" );
         checkProxies( obj2_mb1, null,                      null, null, "obj2_mb1 has proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -114,7 +112,7 @@ public class XprisoTest7_5
         checkProxies( obj1_mb3, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj1_mb3 has wrong proxies" );
         checkProxies( obj2_mb1, null,                           null, null, "obj2_mb1 has proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -140,7 +138,7 @@ public class XprisoTest7_5
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1, mb3 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
         checkProxies( obj2_mb3, new NetMeshBase[] { mb2 },      mb2,  mb2,  "obj2_mb3 has wrong proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -161,7 +159,7 @@ public class XprisoTest7_5
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1, mb3 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
         checkProxies( obj2_mb3, new NetMeshBase[] { mb2 },      mb2,  mb2,  "obj2_mb3 has wrong proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
         
@@ -184,7 +182,7 @@ public class XprisoTest7_5
         checkProxies( obj2_mb3, new NetMeshBase[] { mb2 },           mb2,  mb2,  "obj2_mb3 has wrong proxies" );
         checkProxies( obj2_mb4, new NetMeshBase[] { mb2 },           mb2,  mb2,  "obj2_mb4 has wrong proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -195,7 +193,7 @@ public class XprisoTest7_5
 
         tx2.commitTransaction();
 
-        Thread.sleep( 5L*delay ); // 4L*delay );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 5L );
 
         log.debug( "Checking proxies (7)" );
 

@@ -20,7 +20,6 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.model.Test.TestSubjectArea;
-import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
 
@@ -60,7 +59,7 @@ public class ForwardReferenceTest1
 
         // wait some
         
-        Thread.sleep( 3500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION*3L );
 
         checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "resolved", "ForwardReference was not successfully resolved: " + fwdReference.getIdentifier().toExternalForm() );
 
@@ -137,9 +136,4 @@ public class ForwardReferenceTest1
      * The NetworkIdentifer of the first test file.
      */
     protected NetMeshBaseIdentifier testFile1Id;
-
-    /**
-     * The ProbeDirectory to use.
-     */
-    protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
 }

@@ -16,7 +16,6 @@ package org.infogrid.probe.store.TEST;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
@@ -51,11 +50,12 @@ public class StoreShadowMeshBaseTest4
 
         //
 
+        startClock();
+
         log.info( "accessing test files with meshBase: " + testFile1Id.toExternalForm() );
         
         ShadowMeshBase meshBase1 = theProbeManager1.obtainFor(
                     testFile1Id,
-                    // CoherenceSpecification.ONE_TIME_ONLY );
                     new CoherenceSpecification.Periodic( 3000L ));
         checkObject( meshBase1, "MeshBase1 not created" );
         
@@ -73,14 +73,11 @@ public class StoreShadowMeshBaseTest4
         meshBase1 = null;
         home1     = null;
         
-        Thread.sleep( 4000L );
-        collectGarbage();
-
-        checkCondition( meshBase1Ref.get() == null, "ShadowMeshBase1 still here, should have been garbage collected" );
+        sleepUntilIsGone( meshBase1Ref, 4000L, "ShadowMeshBase still here, should have been garbage collected" );
         
         copyFile( testFile1b, testFile1 );
 
-        Thread.sleep( 4000L );
+        sleepUntil( 3000L * 3 + 1000L );
 
         //
         

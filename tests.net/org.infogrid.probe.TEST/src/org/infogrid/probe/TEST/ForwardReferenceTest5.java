@@ -77,7 +77,7 @@ public class ForwardReferenceTest5
 
         // wait some
         
-        Thread.sleep( 3500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
         
         checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "resolved", "ForwardReference was not successfully resolved: " + fwdReference.getIdentifier().toExternalForm() );
 

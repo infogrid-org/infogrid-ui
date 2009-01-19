@@ -58,8 +58,6 @@ public class ForwardReferenceTest6
         throws
             Exception
     {
-        long delay = 3500L;
-
         log.info( "accessing outer probe" );
 
         MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY );
@@ -82,7 +80,7 @@ public class ForwardReferenceTest6
 
         log.info( "Waiting for ForwardReference resolution" );
 
-        sleepFor( delay );
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION * 3L );
 
         MeshObjectSet fwdReferenceNeighbors2 = fwdReference.traverseToNeighborMeshObjects();
         checkEquals( fwdReferenceNeighbors2.size(), neighborNumber, "Wrong number of neighbors of ForwardReference after resolution" );
@@ -95,7 +93,7 @@ public class ForwardReferenceTest6
             base.getShadowMeshBaseFor( INNER_URL ).doUpdateNow();
 
             ++neighborNumber;
-            sleepFor( delay );
+            sleepFor( PINGPONG_ROUNDTRIP_DURATION * 3L ); // longer than needed, but this is a test so let's be safe
 
             MeshObjectSet fwdReferenceNeighbors3 = fwdReference.traverseToNeighborMeshObjects();
             checkEquals( fwdReferenceNeighbors3.size(), neighborNumber, "Wrong number of neighbors of ForwardReference after inner re-run (1)" );
@@ -103,7 +101,7 @@ public class ForwardReferenceTest6
             base.getShadowMeshBaseFor( INNER_URL ).doUpdateNow();
 
             ++neighborNumber;
-            sleepFor( delay );
+            sleepFor( PINGPONG_ROUNDTRIP_DURATION * 3L ); // longer than needed, but this is a test so let's be safe
 
             MeshObjectSet fwdReferenceNeighbors4 = fwdReference.traverseToNeighborMeshObjects();
             checkEquals( fwdReferenceNeighbors4.size(), neighborNumber, "Wrong number of neighbors of ForwardReference after inner re-run (2)" );
@@ -116,7 +114,7 @@ public class ForwardReferenceTest6
         base.getShadowMeshBaseFor( OUTER_URL ).doUpdateNow();
 
         ++neighborNumber;
-        sleepFor( delay );
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION * 3L ); // longer than needed, but this is a test so let's be safe
 
         MeshObjectSet fwdReferenceNeighbors5 = fwdReference.traverseToNeighborMeshObjects();
         checkEquals( fwdReferenceNeighbors5.size(), neighborNumber, "Wrong number of neighbors of ForwardReference after outer re-run (1)" );
@@ -124,7 +122,7 @@ public class ForwardReferenceTest6
         base.getShadowMeshBaseFor( OUTER_URL ).doUpdateNow();
 
         ++neighborNumber;
-        sleepFor( delay );
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION * 3L ); // longer than needed, but this is a test so let's be safe
 
         MeshObjectSet fwdReferenceNeighbors6 = fwdReference.traverseToNeighborMeshObjects();
         checkEquals( fwdReferenceNeighbors6.size(), neighborNumber, "Wrong number of neighbors of ForwardReference after outer re-run (2)" );

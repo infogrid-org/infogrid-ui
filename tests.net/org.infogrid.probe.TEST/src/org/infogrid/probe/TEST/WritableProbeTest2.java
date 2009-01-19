@@ -144,7 +144,7 @@ public class WritableProbeTest2
 
                         log.debug( "Waiting for replication to happen" );
 
-                        Thread.sleep( 2500L );
+                        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         checkCondition( shadowHomeInMain.isBlessedBy( OLD_VALUE ), "did not revert to old value" );
 
@@ -193,7 +193,7 @@ public class WritableProbeTest2
 
                         log.debug( "Waiting for replication to happen" );
 
-                        Thread.sleep( 2500L );
+                        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         checkCondition( shadowHomeInMain.isBlessedBy( FINAL_VALUE ), "did not set to final value" );
                     }

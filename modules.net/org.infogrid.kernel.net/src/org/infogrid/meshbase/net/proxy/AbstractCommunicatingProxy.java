@@ -681,7 +681,7 @@ public abstract class AbstractCommunicatingProxy
         
         outgoing = instructions.getSendViaEndpoint();
         if( outgoing != null ) {
-            theEndpoint.enqueueMessageForSend( outgoing );
+            theEndpoint.sendMessageAsap( outgoing );
         }
         if( incoming != null ) {
             theWaitForReplicaResponseEndpoint.messageReceived( instructions.getIncomingXprisoMessageEndpoint(), incoming );

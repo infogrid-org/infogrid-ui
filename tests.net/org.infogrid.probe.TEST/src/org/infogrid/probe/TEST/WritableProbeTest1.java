@@ -145,7 +145,7 @@ public class WritableProbeTest1
 
                         log.debug( "Waiting for replication to happen" );
 
-                        Thread.sleep( 2500L );
+                        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         checkEquals( shadowHomeInMain.getPropertyValue( TestSubjectArea.A_X ), OLD_VALUE, "did not revert to old value" );
 
@@ -194,7 +194,7 @@ public class WritableProbeTest1
 
                         log.debug( "Waiting for replication to happen" );
 
-                        Thread.sleep( 2500L );
+                        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         checkEquals( shadowHomeInMain.getPropertyValue( TestSubjectArea.A_X ), FINAL_VALUE, "did not set to final value" );
                     }

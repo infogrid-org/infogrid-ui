@@ -17,7 +17,6 @@ package org.infogrid.probe.store.TEST;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
@@ -92,11 +91,8 @@ public class StoreShadowMeshBaseTest1
         meshBase1 = null;
         home1     = null;
         other1    = null;
-        
-        Thread.sleep( 12000L );
-        collectGarbage();
-        
-        checkCondition( meshBase1Ref.get() == null, "ShadowMeshBase still here, should have been garbage collected" );
+
+        sleepUntilIsGone( meshBase1Ref, 12000L, "ShadowMeshBase still here, should have been garbage collected" );
         
         //
         

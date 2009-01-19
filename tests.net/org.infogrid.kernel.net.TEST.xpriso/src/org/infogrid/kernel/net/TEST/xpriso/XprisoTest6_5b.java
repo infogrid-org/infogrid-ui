@@ -46,8 +46,6 @@ public class XprisoTest6_5b
         throws
             Exception
     {
-        long delay = 2500L; // make debugging easier
-        
         log.info( "Instantiating objects in mb1" );
 
         Transaction tx1 = mb1.createTransactionAsap();
@@ -74,7 +72,7 @@ public class XprisoTest6_5b
         checkProxies( obj1_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj2_mb1, null, null, null, "obj2_mb1 has proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -97,7 +95,7 @@ public class XprisoTest6_5b
         checkProxies( obj2_mb1, new NetMeshBase[] { mb2 }, null, null, "obj2_mb1 has wrong proxies" );
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
         checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
@@ -113,7 +111,7 @@ public class XprisoTest6_5b
 
         tx2.commitTransaction();
 
-        Thread.sleep( 2L*delay );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
         

@@ -46,8 +46,6 @@ public class XprisoTest7
         throws
             Exception
     {
-        long delay = 2500L; // make debugging easier
-
         log.info( "Instantiating objects in mb1" );
 
         Transaction tx1 = mb1.createTransactionAsap();
@@ -78,7 +76,7 @@ public class XprisoTest7
         checkProxies( obj1_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj2_mb1, null, null, null, "obj2_mb1 has proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -95,7 +93,7 @@ public class XprisoTest7
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj1_mb2 has wrong proxies" );
         checkProxies( obj2_mb1, null,                      null, null, "obj2_mb1 has proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -113,7 +111,7 @@ public class XprisoTest7
         checkProxies( obj1_mb3, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj1_mb3 has wrong proxies" );
         checkProxies( obj2_mb1, null,                           null, null, "obj2_mb1 has proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -139,7 +137,7 @@ public class XprisoTest7
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1, mb3 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
         checkProxies( obj2_mb3, new NetMeshBase[] { mb2 },      mb2,  mb2,  "obj2_mb3 has wrong proxies" );
 
-        Thread.sleep( delay );
+        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -150,7 +148,7 @@ public class XprisoTest7
 
         tx2.commitTransaction();
 
-        Thread.sleep( 5L*delay ); // 4L*delay );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 5L );
 
         log.debug( "Checking proxies (7)" );
 
@@ -252,14 +250,19 @@ public class XprisoTest7
     {
         super( XprisoTest7.class );
 
-        MPingPongNetMessageEndpointFactory endpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
-        endpointFactory.setNameServer( theNameServer );
+        MPingPongNetMessageEndpointFactory endpointFactory1 = MPingPongNetMessageEndpointFactory.create( exec1 );
+        MPingPongNetMessageEndpointFactory endpointFactory2 = MPingPongNetMessageEndpointFactory.create( exec2 );
+        MPingPongNetMessageEndpointFactory endpointFactory3 = MPingPongNetMessageEndpointFactory.create( exec3 );
+
+        endpointFactory1.setNameServer( theNameServer );
+        endpointFactory2.setNameServer( theNameServer );
+        endpointFactory3.setNameServer( theNameServer );
 
         ProxyPolicyFactory proxyPolicyFactory = NiceAndTrustingProxyPolicyFactory.create( true );
 
-        mb1 = NetMMeshBase.create( net1, theModelBase, null, endpointFactory, proxyPolicyFactory, rootContext );
-        mb2 = NetMMeshBase.create( net2, theModelBase, null, endpointFactory, proxyPolicyFactory, rootContext );
-        mb3 = NetMMeshBase.create( net3, theModelBase, null, endpointFactory, proxyPolicyFactory, rootContext );
+        mb1 = NetMMeshBase.create( net1, theModelBase, null, endpointFactory1, proxyPolicyFactory, rootContext );
+        mb2 = NetMMeshBase.create( net2, theModelBase, null, endpointFactory2, proxyPolicyFactory, rootContext );
+        mb3 = NetMMeshBase.create( net3, theModelBase, null, endpointFactory3, proxyPolicyFactory, rootContext );
 
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb2.getIdentifier(), mb2 );
@@ -276,7 +279,9 @@ public class XprisoTest7
         mb2.die();
         mb3.die();
 
-        exec.shutdown();
+        exec1.shutdown();
+        exec2.shutdown();
+        exec3.shutdown();
     }
 
     /**
@@ -317,7 +322,9 @@ public class XprisoTest7
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = createThreadPool( 3 ); // I think we need three
+    protected ScheduledExecutorService exec1 = createThreadPool( 1 ); // I think we need three
+    protected ScheduledExecutorService exec2 = createThreadPool( 1 ); // I think we need three
+    protected ScheduledExecutorService exec3 = createThreadPool( 1 ); // I think we need three
 
     // Our Logger
     private static Log log = Log.getLogInstance( XprisoTest7_5.class );

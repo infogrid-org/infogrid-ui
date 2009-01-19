@@ -400,4 +400,10 @@ public abstract class AbstractXprisoTest
      * The root context for these tests.
      */
     protected static final Context rootContext = SimpleContext.createRoot( "root-context" );
+
+    /**
+     * Expected duration within which at least one ping-pong round trip can be completed.
+     * Milliseconds.
+     */
+    protected static final long PINGPONG_ROUNDTRIP_DURATION = 100L;
 }

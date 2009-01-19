@@ -108,7 +108,7 @@ public class XprisoTest8
                 tx_3.commitTransaction();
             }
         }
-        Thread.sleep( 3500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 2L );
 
         checkCondition( exceptionThrown, "DoNotHaveLock exception not thrown" );
         checkProxies( obj1_mb1, new NetMeshBase[] { mb2 }, null, null, "obj1_mb1 has wrong proxies" );
@@ -134,7 +134,7 @@ public class XprisoTest8
         }
         checkCondition( !exceptionThrown, "DoNotHaveLock exception thrown" );
 
-        Thread.sleep( 3500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 2L );
 
         checkTypesReplication(      obj1_mb1, obj1_mb3, "Types not the same" );
         checkPropertiesReplication( obj1_mb1, obj1_mb3, "Properties not the same" );
@@ -212,7 +212,7 @@ public class XprisoTest8
         checkPropertiesReplication( obj2_mb4, obj2_mb2, "Properties not the same" );
         checkNeighborsReplication(  obj2_mb4, obj2_mb2, "Neighbors not the same" );
 
-        Thread.sleep( 3500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 2L );
         
         NetMeshObject obj2_mb3 = mb3.findMeshObjectByIdentifier( obj2_mb4.getIdentifier() );
 
@@ -265,7 +265,7 @@ public class XprisoTest8
         }
         checkCondition( !exceptionThrown, "DoNotHaveLock exception thrown" );
 
-        Thread.sleep( 4500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L );
         checkPropertiesReplication( obj2_mb4, obj2_mb2, "attribute change did not propagate" );
 
         checkProxies( obj2_mb2, new NetMeshBase[] { mb3 },      null,  mb3, "obj2_mb2 has wrong proxies" );
@@ -292,7 +292,7 @@ public class XprisoTest8
         }
         checkCondition( !exceptionThrown, "DoNotHaveLock exception thrown" );
 
-        Thread.sleep( 4500L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L );
         checkPropertiesReplication( obj2_mb4, obj2_mb2, "attribute change did not propagate" );
         
         checkProxies( obj2_mb2, new NetMeshBase[] { mb3 },      null, null, "obj2_mb2 has wrong proxies" );
