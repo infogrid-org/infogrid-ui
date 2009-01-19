@@ -24,8 +24,7 @@ import org.infogrid.util.ResourceHelper;
 import sun.net.smtp.SmtpClient;
 
 /**
- * A message endpoint for sending messages via SMTP. The method 
- * enqueueMessageForSend is used for asynchronous sending of messages.
+ * A message endpoint for sending messages via SMTP.
  * 
  * @param <T> the message type
  */

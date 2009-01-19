@@ -53,10 +53,10 @@ public class SmtpSendingMessageEndpointTest1
         for( int i=0 ; i<testMessages.length ; ++i ) {
             log.info( "About to send message " + i );
             
-            endpoint.enqueueMessageForSend( testMessages[i] );
+            endpoint.sendMessageAsap( testMessages[i] );
         }
         
-        Thread.sleep( 5000L );
+        Thread.sleep( 1000L );
         
         List<SimpleSmtpSendableMessage> leftover = endpoint.messagesToBeSent();
         checkEquals( leftover.size(), 0, "still messages left to send" );

@@ -14,10 +14,6 @@
 
 package org.infogrid.httpd;
 
-import org.infogrid.httpd.util.TraceableInputStream;
-import org.infogrid.httpd.util.TraceableOutputStream;
-import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.logging.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -25,13 +21,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-
 import java.util.LinkedList;
+import org.infogrid.httpd.util.TraceableInputStream;
+import org.infogrid.httpd.util.TraceableOutputStream;
+import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.logging.Log;
 
 /**
   * A Runnable that accepts socket connections on the ServerSocket.
@@ -319,7 +317,7 @@ public class HttpAcceptor
     /**
      * The work queue.
      */
-    private LinkedList<Socket> theWorkQueue = new LinkedList<Socket>();
+    private final LinkedList<Socket> theWorkQueue = new LinkedList<Socket>();
 
     /**
      * The logger, if any.
