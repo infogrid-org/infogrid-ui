@@ -152,30 +152,31 @@ public class CommandlineBootLoader
             theRootModule.run( runClassName, runMethodName, remainingArgs );
 
         } catch( Throwable ex ) {
-            StringBuffer buf = new StringBuffer();
-            if( theInstallation != null && theModuleRegistry != null && theInstallation.useModuleClassLoaders() /* && theInstallation.isShowModuleRegistry() */ ) {
-                Iterator iter = theModuleRegistry.advertisementIterator();
-                PrintStream out = System.err;
-                for( int i=0 ; iter.hasNext() ; ++i ) {
-                    ModuleAdvertisement adv = (ModuleAdvertisement) iter.next();
-                    out.printf( "    %3d", i );
-                    out.print( ": Name: '" );
-                    out.print( adv.getModuleName() );
-                    if( adv.getModuleVersion() != null ) {
-                        out.print( "', Version: " );
-                        out.print( adv.getModuleVersion() );
-                    }
-                    try {
-                        out.print( "', ClassLoader: " );
-                        Module m = theModuleRegistry.resolve( adv, true );
-                        out.println( moduleClassLoaderHierarchy( 0, m.getClassLoader() ));
-                    } catch( Exception ex2 ) {
-                        out.print( "<Exception>" + ex2.getClass().getName() );
-                    }
-                    out.println();
-                }
-            }
-            fatal( buf.length() > 0 ? buf.toString() : null, ex );
+//            StringBuffer buf = new StringBuffer();
+//            if( theInstallation != null && theModuleRegistry != null && theInstallation.useModuleClassLoaders() /* && theInstallation.isShowModuleRegistry() */ ) {
+//                Iterator iter = theModuleRegistry.advertisementIterator();
+//                PrintStream out = System.err;
+//                for( int i=0 ; iter.hasNext() ; ++i ) {
+//                    ModuleAdvertisement adv = (ModuleAdvertisement) iter.next();
+//                    out.printf( "    %3d", i );
+//                    out.print( ": Name: '" );
+//                    out.print( adv.getModuleName() );
+//                    if( adv.getModuleVersion() != null ) {
+//                        out.print( "', Version: " );
+//                        out.print( adv.getModuleVersion() );
+//                    }
+//                    try {
+//                        out.print( "', ClassLoader: " );
+//                        Module m = theModuleRegistry.resolve( adv, true );
+//                        out.println( moduleClassLoaderHierarchy( 0, m.getClassLoader() ));
+//                    } catch( Exception ex2 ) {
+//                        out.print( "<Exception>" + ex2.getClass().getName() );
+//                    }
+//                    out.println();
+//                }
+//            }
+//            fatal( buf.length() > 0 ? buf.toString() : null, ex );
+            fatal( null, ex );
         }
     }
 

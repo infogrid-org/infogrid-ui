@@ -14,10 +14,6 @@
 
 package org.infogrid.module.commandline;
 
-import org.infogrid.module.ModuleErrorHandler;
-import org.infogrid.module.SoftwareInstallation;
-import org.infogrid.module.SoftwareInstallationException;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.infogrid.module.ModuleErrorHandler;
+import org.infogrid.module.SoftwareInstallation;
+import org.infogrid.module.SoftwareInstallationException;
 
 /**
  * A local software installation.
