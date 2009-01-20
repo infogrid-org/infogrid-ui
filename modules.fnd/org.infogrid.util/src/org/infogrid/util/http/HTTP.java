@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 
@@ -754,9 +755,14 @@ public abstract class HTTP
     }
 
     /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( HTTP.class );
+
+    /**
      * Our default HTTP client version.
      */
-    protected static final String DEFAULT_VERSION = "current";
+    protected static final String DEFAULT_VERSION = theResourceHelper.getResourceStringOrDefault( "DefaultVersion", "current" );
 
     /**
      * The Pattern to extract the charset from the content type.
@@ -783,12 +789,12 @@ public abstract class HTTP
     /**
      * Timeout for establishing HTTP connections, in milliseconds.
      */
-    protected static final int HTTP_CONNECT_TIMEOUT = 5000;
+    protected static final int HTTP_CONNECT_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpConnectTimeout", 5000 );
 
     /**
      * Timeout for reading from an established HTTP connection, in milliseconds.
      */
-    protected static final int HTTP_READ_TIMEOUT = 5000;
+    protected static final int HTTP_READ_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpReadTimeout", 5000 );
 
     /**
      * Encapsulates the response from an HTTP request.
