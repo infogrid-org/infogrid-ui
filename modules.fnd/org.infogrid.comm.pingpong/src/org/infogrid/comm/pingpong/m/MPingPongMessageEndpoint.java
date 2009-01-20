@@ -346,12 +346,18 @@ public class MPingPongMessageEndpoint<T>
      * @return the List
      */
     @SuppressWarnings(value={"unchecked"})
-    public synchronized List<T> messagesLastSent()
+    public List<T> messagesLastSent()
     {
-        ArrayList<T> ret = new ArrayList<T>( theMessagesSentLast != null ? theMessagesSentLast.size() : 1 );
+        List<T>      found = theMessagesSentLast; // this avoids a warning about synchronizing on a non-final member variable
+        ArrayList<T> ret   = new ArrayList<T>( found != null ? found.size() : 1 );
 
-        if( theMessagesSentLast != null && !theMessagesSentLast.isEmpty() ) {
-            ret.addAll( theMessagesSentLast );
+        if( found != null ) {
+            synchronized( found ) {
+                if( !found.isEmpty() ) {
+                    ret.addAll( found );
+                }
+                return ret;
+            }
         }
         return ret;
     }
