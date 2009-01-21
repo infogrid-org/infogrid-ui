@@ -19,7 +19,6 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-import org.infogrid.mesh.net.a.DefaultAnetMeshObjectIdentifier;
 import org.infogrid.mesh.set.m.ImmutableMMeshObjectSetFactory;
 import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -562,7 +561,11 @@ public class NetStoreMeshBase
                 proxyManager,
                 context );
 
-        HOME_OBJECT_IDENTIFIER = DefaultAnetMeshObjectIdentifier.create( identifier, "" );
+        try {
+            HOME_OBJECT_IDENTIFIER = identifierFactory.fromExternalForm( "#" );
+        } catch( Throwable t ) {
+            log.error( t );
+        }
     }
 
     /**

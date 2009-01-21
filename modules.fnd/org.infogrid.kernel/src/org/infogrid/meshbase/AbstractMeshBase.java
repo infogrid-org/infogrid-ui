@@ -48,6 +48,7 @@ import org.infogrid.util.FlexiblePropertyChangeListenerSet;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
@@ -1361,6 +1362,24 @@ public abstract class AbstractMeshBase
         if( listeners != null ) {
             listeners.fireEvent( theEvent );
         }
+    }
+
+    /**
+     * Convert to String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theMeshBaseIdentifier"
+                },
+                new Object[] {
+                    theMeshBaseIdentifier
+                });
     }
 
     /**

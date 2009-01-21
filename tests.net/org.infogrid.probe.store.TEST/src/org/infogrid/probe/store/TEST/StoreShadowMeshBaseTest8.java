@@ -16,7 +16,6 @@ package org.infogrid.probe.store.TEST;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;

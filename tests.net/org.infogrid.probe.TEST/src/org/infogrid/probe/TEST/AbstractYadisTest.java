@@ -15,7 +15,6 @@
 package org.infogrid.probe.TEST;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.httpd.HttpResponseFactory;
 import org.infogrid.httpd.server.HttpServer;
@@ -202,7 +201,10 @@ public abstract class AbstractYadisTest
             for( MeshObject endpoint : endpoints ) {
                 getLog().debug( "Looking at Endpoint " + endpoint );
 
-                checkEqualsOutOfSequence( endpoint.getTypes(), new MeshType[] { WebSubjectArea.WEBRESOURCE }, "endpoint not blessed" );
+                checkCondition( endpoint.isBlessedBy( WebSubjectArea.WEBRESOURCE ), "endpoint not blessed" );
+
+                MeshObjectSet reverseServices = endpoint.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getDestination() );
+                checkEquals( reverseServices.size(), nServices, "Wrong number of reverse services" );
             }
         }
     }
@@ -254,17 +256,42 @@ public abstract class AbstractYadisTest
     }
 
     /**
+     * Root identifier of the web server.
+     */
+    protected static final String WEB_SERVER_IDENTIFIER = "http://localhost:" + SERVER_PORT + "/";
+
+    /**
+     * Identifier of the identity.
+     */
+    protected static final String IDENTITY_LOCAL_IDENTIFIER = "identity";
+
+    /**
+     * Identifier of the XRDS file.
+     */
+    protected static final String XRDS_LOCAL_IDENTIFIER = "xrds";
+
+    /**
+     * Identifier of the identity.
+     */
+    protected static final String IDENTITY_IDENTIFIER = WEB_SERVER_IDENTIFIER + IDENTITY_LOCAL_IDENTIFIER;
+
+    /**
+     * Identifier of the XRDS file.
+     */
+    protected static final String XRDS_IDENTIFIER = WEB_SERVER_IDENTIFIER + XRDS_LOCAL_IDENTIFIER;
+
+    /**
      * The NetMeshBaseIdentifier of the first test file.
      */
-    protected static final NetMeshBaseIdentifier theNetworkIdentifier;
+    protected static final NetMeshBaseIdentifier theIdentityIdentifier;
     static {
         NetMeshBaseIdentifier temp = null;
         try {
-            temp = theMeshBaseIdentifierFactory.fromExternalForm( "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + SERVER_PORT + "/" );
+            temp = theMeshBaseIdentifierFactory.fromExternalForm( IDENTITY_IDENTIFIER );
         } catch( Throwable t ) {
             log.error( t );
         }
-        theNetworkIdentifier = temp;
+        theIdentityIdentifier = temp;
     }
 
     /**
@@ -276,12 +303,12 @@ public abstract class AbstractYadisTest
             + " <xrd:XRD>\n"
             + "  <xrd:Service priority=\"1\">\n"
             + "   <xrd:Type>http://lid.netmesh.org/minimum-lid/2.0b10</xrd:Type>\n"
-            + "   <xrd:URI>http://mylid.net/test</xrd:URI>\n"
+            + "   <xrd:URI>" + IDENTITY_IDENTIFIER + "</xrd:URI>\n"
             + "  </xrd:Service>\n"
             + "  <xrd:Service priority=\"9\">\n"
             + "   <xrd:Type>http://openid.net/signon/1.0</xrd:Type>\n"
-            + "   <xrd:URI>http://mylid.net/test1</xrd:URI>\n"
-            + "   <openid:Delegate xmlns:openid=\"http://openid.net/xmlns/1.0\">http://mylid.net/test2</openid:Delegate>\n"
+            + "   <xrd:URI>" + IDENTITY_IDENTIFIER + "</xrd:URI>\n"
+            + "   <openid:Delegate xmlns:openid=\"http://openid.net/xmlns/1.0\">" + IDENTITY_IDENTIFIER + "</openid:Delegate>\n"
             + "  </xrd:Service>\n"
             + " </xrd:XRD>\n"
             + "</XRDS>\n";
@@ -306,7 +333,7 @@ public abstract class AbstractYadisTest
             = "<html>\n"
             + " <head>\n"
             + "  <title>Test file</title>\n"
-            + "  <meta http-equiv='x-xrds-location' content='" + theNetworkIdentifier.toExternalForm() + "xrds'>\n"
+            + "  <meta http-equiv='x-xrds-location' content='" + XRDS_IDENTIFIER + "'>\n"
             + " </head>\n"
             + " <body>\n"
             + "  <h1>Test file</h1>\n"
@@ -320,7 +347,7 @@ public abstract class AbstractYadisTest
             = "<html>\n"
             + " <head>\n"
             + "  <title>Test file</title>\n"
-            + "  <link rel=\"openid.server\" href=\"http://mylid.net/test1\"\n"
+            + "  <link rel=\"openid.server\" href=\"" + IDENTITY_IDENTIFIER + "\"\n"
             + " </head>\n"
             + " <body>\n"
             + "  <h1>Test file</h1>\n"

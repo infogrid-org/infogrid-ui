@@ -72,20 +72,33 @@ public class AllTests
 //                        ProbeTest8.class ),
 
                 new TestSpec(
-                        YadisTest1.class ),
+                        YadisTest1.class.getName() + " (delay 0)", YadisTest1.class, "0" ),
+                new TestSpec(
+                        YadisTest1.class.getName() + " (delay 4000)", YadisTest1.class, "4000" ),
 
                 new TestSpec(
-                        YadisTest2.class ),
+                        YadisTest2.class.getName() + " (delay 0)", YadisTest2.class, "0" ),
+                new TestSpec(
+                        YadisTest2.class.getName() + " (delay 4000)", YadisTest2.class, "4000" ),
 
                 new TestSpec(
-                        YadisTest3.class ),
+                        YadisTest3.class.getName() + " (delay 0)", YadisTest3.class, "0" ),
+                new TestSpec(
+                        YadisTest3.class.getName() + " (delay 4000)", YadisTest3.class, "4000" ),
 
                 new TestSpec(
-                        YadisTest4.class ),
+                        YadisTest4.class.getName() + " (delay 0)", YadisTest4.class, "0" ),
+                new TestSpec(
+                        YadisTest4.class.getName() + " (delay 4000)", YadisTest4.class, "4000" ),
 
                 new TestSpec(
-                        YadisTest5.class,
-                        AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" )),
+                        YadisTest5.class.getName() + " (delay 0)", YadisTest5.class,
+                        AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
+                        "0" ),
+                new TestSpec(
+                        YadisTest5.class.getName() + " (delay 4000)", YadisTest5.class,
+                        AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
+                        "4000"),
 
                 new TestSpec( // property updates
                             WritableProbeTest1.class ),
@@ -169,6 +182,12 @@ public class AllTests
 
                 new TestSpec(
                         ForwardReferenceTest6.class ),
+
+                new TestSpec(
+                        ForwardReferenceTest7.class ),
+
+                new TestSpec(
+                        ForwardReferenceTest8.class ),
 
                 new TestSpec(
                         ProbeMatchTest1.class ),

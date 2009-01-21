@@ -17,6 +17,7 @@ package org.infogrid.mesh.net.a;
 import org.infogrid.mesh.a.DefaultAMeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
 
 /**
  * Implements NetMeshObjectIdentifier for the Anet implementation.
@@ -30,20 +31,22 @@ public class DefaultAnetMeshObjectIdentifier
     /**
      * Factory method.
      *
+     * @param factory the DefaultAnetMeshObjectIdentifierFactory that created this identifier
      * @param baseIdentifier identifier of the NetMeshBase relative to which a localId is specified
      * @param localId the localId of the to-be-created DefaultAnetMeshObjectIdentifier
      * @return the created DefaultAnetMeshObjectIdentifier
      * @throws IllegalArgumentException thrown if a non-null localId contains a period.
      */
     public static DefaultAnetMeshObjectIdentifier create(
-            NetMeshBaseIdentifier baseIdentifier,
-            String                localId )
+            DefaultAnetMeshObjectIdentifierFactory factory,
+            NetMeshBaseIdentifier                  baseIdentifier,
+            String                                 localId )
     {
         if( baseIdentifier == null ) {
             throw new NullPointerException();
         }
         
-        if( localId != null && localId.indexOf( '.' ) >= 0 ) {
+        if( localId != null && factory.treatAsGlobalIdentifier( localId )) {
             throw new IllegalArgumentException( "DefaultAnetMeshObjectIdentifier's localId must not contain a period: " + localId );
         }
         
@@ -51,22 +54,35 @@ public class DefaultAnetMeshObjectIdentifier
             localId = null;
         }
         
-        return new DefaultAnetMeshObjectIdentifier( baseIdentifier, localId );
+        return new DefaultAnetMeshObjectIdentifier( factory, baseIdentifier, localId );
     }
 
     /**
      * Private constructor.
      * 
+     * @param factory the DefaultAnetMeshObjectIdentifierFactory that created this identifier
      * @param baseIdentifier identifier of the NetMeshBase relative to which a localId is specified
      * @param localId the localId of the to-be-created MeshObjectIdentifier
      */
     protected DefaultAnetMeshObjectIdentifier(
-            NetMeshBaseIdentifier baseIdentifier,
-            String                localId )
+            DefaultAnetMeshObjectIdentifierFactory factory,
+            NetMeshBaseIdentifier                  baseIdentifier,
+            String                                 localId )
     {
-        super( localId );
+        super( factory, localId );
 
         theNetMeshBaseIdentifier = baseIdentifier;
+    }
+
+    /**
+     * Obtain the factory that created this identifier.
+     *
+     * @return the factory
+     */
+    @Override
+    public DefaultAnetMeshObjectIdentifierFactory getFactory()
+    {
+        return (DefaultAnetMeshObjectIdentifierFactory) super.getFactory();
     }
 
     /**

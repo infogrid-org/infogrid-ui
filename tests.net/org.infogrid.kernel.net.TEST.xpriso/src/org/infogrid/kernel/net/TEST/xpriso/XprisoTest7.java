@@ -165,10 +165,7 @@ public class XprisoTest7
         checkProxies( obj2_mb3, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj2_mb3 has wrong proxies" );
 
         checkRelationshipProxies( obj1_mb1, obj2_mb1, new NetMeshBase[] { mb2 },      "obj1_mb1-obj2_mb1 has wrong relationship proxies" );
-        checkRelationshipProxies( obj1_mb2, obj2_mb2, new NetMeshBase[] { mb3 },      "obj1_mb2-obj2_mb2 has wrong relationship proxies" );
-                // There is a question whether in MB2, there should be any relationship proxy at all.
-                // Or if there should, that it should be both towards MB1 and MB3.
-                // For right now, this is as designed.
+        checkRelationshipProxies( obj1_mb2, obj2_mb2, null,                           "obj1_mb2-obj2_mb2 has wrong relationship proxies" );
         checkRelationshipProxies( obj1_mb3, obj2_mb3, new NetMeshBase[] { mb1, mb2 }, "obj1_mb3-obj2_mb3 has wrong relationship proxies" );
 
         //

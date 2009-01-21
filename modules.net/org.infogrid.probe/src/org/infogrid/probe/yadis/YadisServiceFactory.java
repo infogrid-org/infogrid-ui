@@ -30,7 +30,9 @@ import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
+import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
@@ -287,17 +289,24 @@ public class YadisServiceFactory
                                 StringValue.create( delegateIdentifier.toExternalForm() ));
                     }
                     
-                    NetMeshObject endpoint = base.getMeshBaseLifecycleManager().createForwardReference(
-                            identityServerIdentifier,
-                            WebSubjectArea.WEBRESOURCE );
+                    NetMeshObject endpoint = findOrCreateForwardReferenceAndBless(
+                            base.getMeshObjectIdentifierFactory().fromExternalForm( identityServerIdentifier, null ),
+                            WebSubjectArea.WEBRESOURCE,
+                            base );
 
                     // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( identityServer ));
 
-                    serviceMeshObject.relateAndBless(
+                    if( !serviceMeshObject.isRelated( endpoint )) {
+                        serviceMeshObject.relate( endpoint );
+                    }
+                    serviceMeshObject.blessRelationship(
                             YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource(),
                             endpoint );
 
-                    serviceMeshObject.relateAndBless(
+                    if( !serviceMeshObject.isRelated( subject )) {
+                        serviceMeshObject.relate( subject );
+                    }
+                    serviceMeshObject.blessRelationship(
                             YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getDestination(),
                             subject );
 
@@ -312,6 +321,10 @@ public class YadisServiceFactory
                 } catch( IllegalPropertyValueException ex ) {
                     log.error( ex );
                 } catch( RelatedAlreadyException ex ) {
+                    log.error( ex );
+                } catch( NotRelatedException ex ) {
+                    log.error( ex );
+                } catch( RoleTypeBlessedAlreadyException ex ) {
                     log.error( ex );
                 }
             }

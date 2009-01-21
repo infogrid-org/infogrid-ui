@@ -17,6 +17,7 @@ package org.infogrid.meshbase.net;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
+import org.infogrid.util.logging.Log;
 
 /**
  * Factors out common behaviors of NetMeshObjectAccessSpecificationFactory implementations.
@@ -25,6 +26,8 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
         implements
             NetMeshObjectAccessSpecificationFactory
 {
+    private static final Log log = Log.getLogInstance( AbstractNetMeshObjectAccessSpecificationFactory.class ); // our own, private logger
+
     /**
      * Constructor for subclasses only, use factory method.
      * 
@@ -95,8 +98,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
         if( hash >= 0 ) {
             pathString   = raw.substring( 0, hash );
             objectString = raw.substring( hash+1 );
-
-        } else if( raw.indexOf( '.' ) >= 0 ) {
+        } else if( theMeshObjectIdentifierFactory.treatAsGlobalIdentifier( raw )) {
             pathString   = raw;
             objectString = null;
         } else {
@@ -105,7 +107,6 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
         }
 
         NetMeshBaseAccessSpecification [] pathElements;
-        
         if( pathString != null && pathString.length() > 0 ) {
             String [] pathElementStrings = pathString.split( "!" );
 
@@ -117,12 +118,10 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             pathElements = new NetMeshBaseAccessSpecification[0];
         }
         
-        NetMeshObjectIdentifier object = null;
-        if( objectString != null ) {
-            object = theMeshObjectIdentifierFactory.fromExternalForm( objectString );
-        }
+        NetMeshObjectIdentifier object = theMeshObjectIdentifierFactory.fromExternalForm( objectString );
         
         NetMeshObjectAccessSpecification ret = new DefaultNetMeshObjectAccessSpecification(
+                this,
                 pathElements,
                 object );
         return ret;
@@ -132,16 +131,17 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * Factory method to obtain a NetMeshObjectAccessSpecification to a locally available MeshObject. This
      * is a degenerate form of NetMeshObjectAccessSpecification, but useful for API consistency.
      * 
-     * @param extName Identifier of the local NetMeshObject
+     * @param remoteIdentifier Identifier of the local NetMeshObject
      * @return created NetMeshObjectAccessSpecification
      */
     public DefaultNetMeshObjectAccessSpecification obtainToLocalObject(
-            NetMeshObjectIdentifier extName )
+            NetMeshObjectIdentifier remoteIdentifier )
     {
         return new DefaultNetMeshObjectAccessSpecification(
+                this,
                 new NetMeshBaseAccessSpecification[] {
-                        theNetMeshBaseAccessSpecificationFactory.obtain( extName.getNetMeshBaseIdentifier() ) },
-                extName );
+                        theNetMeshBaseAccessSpecificationFactory.obtain( remoteIdentifier.getNetMeshBaseIdentifier() ) },
+                remoteIdentifier );
     }
 
     /**
@@ -154,10 +154,17 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier oneElementName )
     {
-        return new DefaultNetMeshObjectAccessSpecification(
-                new NetMeshBaseAccessSpecification[] {
-                        theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName ) },
-                null );
+        try {
+            return new DefaultNetMeshObjectAccessSpecification(
+                    this,
+                    new NetMeshBaseAccessSpecification[] {
+                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName ) },
+                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ));
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -165,17 +172,18 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * requesting a non-default NetMeshObject.
      * 
      * @param oneElementName the NetMeshBaseIdentifier
-     * @param extName Identifier of the remote non-default NetMeshObject
+     * @param remoteIdentifier Identifier of the remote non-default NetMeshObject
      * @return created NetMeshObjectAccessSpecification
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier    oneElementName,
-            NetMeshObjectIdentifier  extName )
+            NetMeshObjectIdentifier  remoteIdentifier )
     {
         return new DefaultNetMeshObjectAccessSpecification(
+                this,
                 new NetMeshBaseAccessSpecification[] {
                         theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName ) },
-                extName );
+                remoteIdentifier );
     }
 
     /**
@@ -191,10 +199,17 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             NetMeshBaseIdentifier oneElementName,
             ScopeSpecification    scope )
     {
-        return new DefaultNetMeshObjectAccessSpecification(
-                new NetMeshBaseAccessSpecification[] {
-                        theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope ) },
-                null );
+        try {
+            return new DefaultNetMeshObjectAccessSpecification(
+                    this,
+                    new NetMeshBaseAccessSpecification[] {
+                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope ) },
+                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ));
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -210,10 +225,17 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             NetMeshBaseIdentifier  oneElementName,
             CoherenceSpecification coherence )
     {
-        return new DefaultNetMeshObjectAccessSpecification(
-                new NetMeshBaseAccessSpecification[] {
-                        theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, coherence ) },
-                null );
+        try {
+            return new DefaultNetMeshObjectAccessSpecification(
+                    this,
+                    new NetMeshBaseAccessSpecification[] {
+                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, coherence ) },
+                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ));
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -222,19 +244,20 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * specifying a non-default ScopeSpecification.
      * 
      * @param oneElementName the NetMeshBaseIdentifier
-     * @param extName Identifier of the remote non-default NetMeshObject
+     * @param remoteIdentifier Identifier of the remote non-default NetMeshObject
      * @param scope the ScopeSpecification
      * @return created NetMeshObjectAccessSpecification
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier   oneElementName,
-            NetMeshObjectIdentifier extName,
+            NetMeshObjectIdentifier remoteIdentifier,
             ScopeSpecification      scope )
     {
         return new DefaultNetMeshObjectAccessSpecification(
+                this,
                 new NetMeshBaseAccessSpecification[] {
                         theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope ) },
-                extName );
+                remoteIdentifier );
     }
 
     /**
@@ -243,19 +266,20 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * specifying a non-default CoherenceSpecification.
      * 
      * @param oneElementName the NetMeshBaseIdentifier
-     * @param extName Identifier of the remote non-default MeshObject
+     * @param remoteIdentifier Identifier of the remote non-default MeshObject
      * @param coherence the CoherenceSpecification
      * @return created NetMeshObjectAccessSpecification
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier   oneElementName,
-            NetMeshObjectIdentifier extName,
+            NetMeshObjectIdentifier remoteIdentifier,
             CoherenceSpecification  coherence )
     {
         return new DefaultNetMeshObjectAccessSpecification(
+                this,
                 new NetMeshBaseAccessSpecification[] {
                         theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, coherence ) },
-                extName );
+                remoteIdentifier );
     }
 
     /**
@@ -273,10 +297,17 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             ScopeSpecification     scope,
             CoherenceSpecification coherence )
     {
-        return new DefaultNetMeshObjectAccessSpecification(
-                new NetMeshBaseAccessSpecification[] {
-                        theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope, coherence ) },
-                null );
+        try {
+            return new DefaultNetMeshObjectAccessSpecification(
+                    this,
+                    new NetMeshBaseAccessSpecification[] {
+                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope, coherence ) },
+                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ));
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -285,21 +316,22 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * specifying a non-default ScopeSpecification and a non-default CoherenceSpecification.
      * 
      * @param oneElementName the NetMeshBaseIdentifier
-     * @param extName Identifier of the remote non-default MeshObject
+     * @param remoteIdentifier Identifier of the remote non-default MeshObject
      * @param scope the ScopeSpecification
      * @param coherence the CoherenceSpecification
      * @return created NetMeshObjectAccessSpecification
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier   oneElementName,
-            NetMeshObjectIdentifier extName,
+            NetMeshObjectIdentifier remoteIdentifier,
             ScopeSpecification      scope,
             CoherenceSpecification  coherence )
     {
         return new DefaultNetMeshObjectAccessSpecification(
+                this,
                 new NetMeshBaseAccessSpecification[] {
                         theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope, coherence ) },
-                extName );
+                remoteIdentifier );
     }
 
     /**
@@ -312,9 +344,16 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseAccessSpecification [] elements )
     {
-        return new DefaultNetMeshObjectAccessSpecification(
-                elements,
-                null );
+        try {
+            return new DefaultNetMeshObjectAccessSpecification(
+                    this,
+                    elements,
+                    theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ].getNetMeshBaseIdentifier(), null ));
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -323,16 +362,17 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * requesting a non-default MeshObject.
      * 
      * @param elements the NetMeshBaseAccessSpecifications, in sequence
-     * @param extName Identifier of the remote non-default MeshObject
+     * @param remoteIdentifier Identifier of the remote non-default MeshObject
      * @return created NetMeshObjectAccessSpecification
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseAccessSpecification [] elements,
-            NetMeshObjectIdentifier           extName )
+            NetMeshObjectIdentifier           remoteIdentifier )
     {
         return new DefaultNetMeshObjectAccessSpecification(
+                this,
                 elements,
-                extName );
+                remoteIdentifier );
     }
 
     /**
@@ -345,9 +385,16 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier [] elements )
     {
-        return new DefaultNetMeshObjectAccessSpecification(
-                createSeveral( elements ),
-                null );
+        try {
+            return new DefaultNetMeshObjectAccessSpecification(
+                    this,
+                    createSeveral( elements ),
+                    theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ], null ));
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -356,16 +403,17 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * requesting a non-default MeshObject.
      * 
      * @param elements the NetMeshBaseIdentifiers, in sequence
-     * @param extName Identifier of the remote non-default MeshObject
+     * @param remoteIdentifier Identifier of the remote non-default MeshObject
      * @return created NetMeshObjectAccessSpecification
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier [] elements,
-            NetMeshObjectIdentifier  extName )
+            NetMeshObjectIdentifier  remoteIdentifier )
     {
         return new DefaultNetMeshObjectAccessSpecification(
+                this,
                 createSeveral( elements ),
-                extName );
+                remoteIdentifier );
     }
     
     /**

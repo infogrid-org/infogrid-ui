@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.a.DefaultAnetMeshObjectIdentifier;
+import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.a.DefaultAMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
@@ -62,10 +63,10 @@ public class DefaultAnetMeshObjectIdentifierFactory
             NetMeshBaseIdentifier        meshBaseIdentifier,
             NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
     {
-        theMeshBaseIdentifier     = meshBaseIdentifier;
+        theMeshBaseIdentifier        = meshBaseIdentifier;
         theMeshBaseIdentifierFactory = meshBaseIdentifierFactory;
 
-        NET_HOME_OBJECT = new HomeObject( theMeshBaseIdentifier  );
+        NET_HOME_OBJECT = new HomeObject( this, theMeshBaseIdentifier );
     }
 
     /**
@@ -130,7 +131,7 @@ public class DefaultAnetMeshObjectIdentifierFactory
             URISyntaxException
     {
         if( raw == null ) {
-            return null;
+            return new HomeObject( this, contextIdentifier );
         }
         
         NetMeshBaseIdentifier meshBase;
@@ -148,19 +149,20 @@ public class DefaultAnetMeshObjectIdentifierFactory
             } else {
                 meshBase = theMeshBaseIdentifierFactory.fromExternalForm( raw.substring( 0, hash ));
             }
-            local    = raw.substring( hash+1 );
-        } else if( raw.indexOf( '.' ) >= 0 ) {
+            local = raw.substring( hash+1 );
+        } else if( treatAsGlobalIdentifier( raw )) {
             if( guess ) {
                 meshBase = theMeshBaseIdentifierFactory.guessFromExternalForm( raw );
             } else {
                 meshBase = theMeshBaseIdentifierFactory.fromExternalForm( raw );
             }
-            local    = null;
+            local = null;
         } else {
             meshBase = contextIdentifier;
             local    = raw;
         }
         ret = DefaultAnetMeshObjectIdentifier.create(
+                this,
                 meshBase,
                 local );
         return ret;
@@ -227,6 +229,29 @@ public class DefaultAnetMeshObjectIdentifierFactory
             URISyntaxException
     {
         return obtain( theMeshBaseIdentifier, uri.toASCIIString(), false );
+    }
+
+    /**
+     * Determine whether a given String is to be treated as a global identifier. This
+     * method encodes our policy of the String is ambiguous.
+     *
+     * @param raw the String
+     * @return true if the String is to be treated as a global identifier
+     */
+    public boolean treatAsGlobalIdentifier(
+            String raw )
+    {
+        if( raw.indexOf( '.' ) >= 0 ) {
+            return true;
+        }
+        try {
+            MeshBaseIdentifier found = theMeshBaseIdentifierFactory.fromExternalForm( raw );
+            return true;
+
+        } catch( URISyntaxException ex ) {
+            // ignore
+        }
+        return false;
     }
 
     /**
@@ -312,12 +337,14 @@ public class DefaultAnetMeshObjectIdentifierFactory
         /**
          * Constructor.
          * 
+         * @param factory the DefaultAnetMeshObjectIdentifierFactory that created this identifier
          * @param meshBaseIdentifier the NetMeshBaseIdentifier of the owning NetMeshBase
          */
         public HomeObject(
-                NetMeshBaseIdentifier meshBaseIdentifier )
+                DefaultAnetMeshObjectIdentifierFactory factory,
+                NetMeshBaseIdentifier                  meshBaseIdentifier )
         {
-            super( meshBaseIdentifier, null );
+            super( factory, meshBaseIdentifier, null );
         }
     }
 }

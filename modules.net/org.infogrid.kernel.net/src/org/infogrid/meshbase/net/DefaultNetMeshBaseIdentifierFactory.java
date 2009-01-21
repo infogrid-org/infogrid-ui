@@ -275,6 +275,23 @@ public class DefaultNetMeshBaseIdentifierFactory
     }
 
     /**
+     * Recreate a NetMeshBaseIdentifier from an external form. Be strict about syntax.
+     *
+     * @param context the NetMeshBaseIdentifier that forms the context
+     * @param raw the external form
+     * @return the created NetMeshBaseIdentifier
+     * @throws URISyntaxException thrown if a parsing error occurred
+     */
+    public NetMeshBaseIdentifier fromExternalForm(
+            NetMeshBaseIdentifier context,
+            String                raw )
+        throws
+            URISyntaxException
+    {
+        return obtain( context, raw, false );
+    }
+
+    /**
      * Convert this StringRepresentation back to a NetMeshBaseIdentifier.
      *
      * @param representation the StringRepresentation in which this String is represented

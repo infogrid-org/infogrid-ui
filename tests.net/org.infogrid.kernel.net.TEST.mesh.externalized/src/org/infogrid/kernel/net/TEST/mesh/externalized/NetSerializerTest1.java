@@ -45,7 +45,7 @@ public class NetSerializerTest1
                 
                 log.info( "value: \"" + original + "\", serialized: \"" + encoded + "\"" );
 
-                decoded = theFactory.fromExternalForm( encoded );
+                decoded = theMeshBaseIdentifierFactory.fromExternalForm( encoded );
 
                 checkEquals( original, decoded, "incorrect deserialization" );
 
@@ -130,8 +130,8 @@ public class NetSerializerTest1
     static {
         try {
             testData = new NetMeshBaseIdentifier [] {
-                    theFactory.fromExternalForm( "http://www.r-objects.com/" ),
-                    theFactory.fromExternalForm( "http://foo.example.com/abc.jsp&def=ghi,,/&amp;xyz." )
+                    theMeshBaseIdentifierFactory.fromExternalForm( "http://www.r-objects.com/" ),
+                    theMeshBaseIdentifierFactory.fromExternalForm( "http://foo.example.com/abc.jsp&def=ghi,,/&amp;xyz." )
             };
         } catch( Throwable t ) {
             log.error( t );

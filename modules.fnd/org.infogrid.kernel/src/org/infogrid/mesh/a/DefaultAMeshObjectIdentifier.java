@@ -29,28 +29,43 @@ public class DefaultAMeshObjectIdentifier
     /**
      * Factory method.
      *
-     * @param localId the localId of the to-be-DefaultAMeshObjectIdentifier ReferenceValue
+     * @param factory the DefaultAMeshObjectIdentifierFactory that created this identifier
+     * @param localId the localId of the to-be-DefaultAMeshObjectIdentifier
      * @return the created DefaultAMeshObjectIdentifier
      */
     public static DefaultAMeshObjectIdentifier create(
-            String localId )
+            DefaultAMeshObjectIdentifierFactory factory,
+            String                              localId )
     {
         if( localId == null || localId.length() == 0 ) {
-            return DefaultAMeshObjectIdentifierFactory.HOME_OBJECT;
+            return factory.HOME_OBJECT;
         }
 
-        return new DefaultAMeshObjectIdentifier( localId );
+        return new DefaultAMeshObjectIdentifier( factory, localId );
     }
 
     /**
      * Private constructor, use factory method.
      * 
+     * @param factory the DefaultAMeshObjectIdentifierFactory that created this identifier
      * @param localId the localId of the to-be-created DefaultAMeshObjectIdentifier
      */
     protected DefaultAMeshObjectIdentifier(
-            String localId )
+            DefaultAMeshObjectIdentifierFactory factory,
+            String                              localId )
     {
+        theFactory = factory;
         theLocalId = localId;
+    }
+
+    /**
+     * Obtain the factory that created this identifier.
+     *
+     * @return the factory
+     */
+    public DefaultAMeshObjectIdentifierFactory getFactory()
+    {
+        return theFactory;
     }
 
     /**
@@ -132,21 +147,6 @@ public class DefaultAMeshObjectIdentifier
     }
 
     /**
-     * Re-construct a DefaultAMeshObjectIdentifier from an external form.
-     *
-     * @param raw the external form of the DefaultAMeshObjectIdentifier
-     * @return the created DefaultAMeshObjectIdentifier
-     */
-    public static MeshObjectIdentifier fromExternalForm(
-            String raw )
-    {
-        if( raw == null ) {
-            return null;
-        }
-        return DefaultAMeshObjectIdentifier.create( raw );
-    }
-
-    /**
      * Obtain a String representation of this instance that can be shown to the user.
      * 
      * @param rep the StringRepresentation
@@ -203,7 +203,12 @@ public class DefaultAMeshObjectIdentifier
     {
         return "";
     }
-    
+
+    /**
+     * The factory that created this identifier.
+     */
+    protected DefaultAMeshObjectIdentifierFactory theFactory;
+
     /**
      * The real value for the localId.
      */

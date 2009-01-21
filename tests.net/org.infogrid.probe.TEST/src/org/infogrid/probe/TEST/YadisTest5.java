@@ -50,7 +50,7 @@ public class YadisTest5
     {
         log.info( "accessing test data source" );
 
-        NetMeshObject shadowHome = theMeshBase.accessLocally( theNetworkIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        NetMeshObject shadowHome = theMeshBase.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
 
         //
 
@@ -84,8 +84,8 @@ public class YadisTest5
     {
         YadisTest5 test = null;
         try {
-            if( args.length > 0 ) {
-                System.err.println( "Synopsis: <no arguments>" );
+            if( args.length != 2 ) {
+                System.err.println( "Synopsis: <file name> <delay>" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -119,11 +119,11 @@ public class YadisTest5
         throws
             Exception
     {
-        super( YadisTest1.class, new MyResponseFactory( args[0] ) );
+        super( YadisTest1.class, new MyResponseFactory( args[0], Long.valueOf( args[1] ) ));
     }
 
     // Our Logger
-    private static Log log = Log.getLogInstance( YadisTest5.class);
+    private static Log log = Log.getLogInstance( YadisTest5.class );
 
     /**
       * A HttpResponseFactory that acts as the RelyingParty.
@@ -136,11 +136,14 @@ public class YadisTest5
          * Constructor.
          * 
          * @param xrdsFileName file name of the XRDS file.
+         * @param delay the delay by the web server
          */
         public MyResponseFactory(
-                String xrdsFileName )
+                String xrdsFileName,
+                long   delay )
         {
             theXrdsFileName = xrdsFileName;
+            theDelay        = delay;
         }
 
         /**
@@ -153,8 +156,9 @@ public class YadisTest5
                 HttpRequest request )
         {
             String accept = request.getHttpParameters().get( "Accept" );
-            
-            if( "GET".equals( request.getMethod() ) && "/".equals( request.getRelativeBaseUri() )) {             
+
+            HttpResponse ret;
+            if( "GET".equals( request.getMethod() ) && ( "/" + IDENTITY_LOCAL_IDENTIFIER ).equals( request.getRelativeBaseUri() )) {
                 HttpEntity entity;
                 if( accept != null && accept.indexOf( "application/xrds+xml") >= 0 ) {
                     entity = new HttpEntity() {
@@ -185,16 +189,30 @@ public class YadisTest5
                     };
                 
                 }
-                HttpResponse ret = HttpEntityResponse.create( request, true, entity );
-                return ret;
+                ret = HttpEntityResponse.create( request, true, entity );
+
             } else {
-                return HttpErrorResponse.create( request, "500", null );
+                ret = HttpErrorResponse.create( request, "500", null );
             }
+
+            if( theDelay > 0L ) {
+                try {
+                    Thread.sleep( theDelay );
+                } catch( Throwable t ) {
+                    log.error( t );
+                }
+            }
+            return ret;
         }
         
         /**
          * The name of the XRDS file.
          */
         protected String theXrdsFileName;
+
+        /**
+         * Captures the slowness of a web server.
+         */
+        protected long theDelay;
     }
 }

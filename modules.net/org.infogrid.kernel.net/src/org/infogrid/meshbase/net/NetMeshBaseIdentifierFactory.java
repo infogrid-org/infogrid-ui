@@ -29,6 +29,20 @@ public interface NetMeshBaseIdentifierFactory
             IdentifierFactory
 {
     /**
+     * Recreate a NetMeshBaseIdentifier from an external form. Be strict about syntax.
+     *
+     * @param context the NetMeshBaseIdentifier that forms the context
+     * @param raw the external form
+     * @return the created NetMeshBaseIdentifier
+     * @throws URISyntaxException thrown if a parsing error occurred
+     */
+    public NetMeshBaseIdentifier fromExternalForm(
+            NetMeshBaseIdentifier context,
+            String                raw )
+        throws
+            URISyntaxException;
+
+    /**
      * Recreate a NetMeshBaseIdentifier from an external form.
      *
      * @param raw the external form

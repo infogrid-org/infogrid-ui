@@ -46,19 +46,19 @@ public class NetSerializerTest2
         throws
             Exception
     {
-        NetMeshBaseIdentifier nmbid        = theFactory.fromExternalForm( "http://here.local/" );
+        NetMeshBaseIdentifier nmbid        = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" );
         DefaultProxyFactory   proxyFactory = DefaultProxyFactory.create( null, NiceAndTrustingProxyPolicyFactory.create() );
 
         NetMMeshBase mb = NetMMeshBase.create(
                 nmbid,
-                DefaultNetMeshObjectAccessSpecificationFactory.create( nmbid, theFactory ),
+                DefaultNetMeshObjectAccessSpecificationFactory.create( nmbid, theMeshBaseIdentifierFactory ),
                 theModelBase,
                 null,
                 proxyFactory,
                 SimpleContext.createRoot( "root" ));
         
         NetMeshBaseIdentifier [] testData = new NetMeshBaseIdentifier [] {
-                theFactory.fromExternalForm( "http://www.r-objects.com/" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "http://www.r-objects.com/" ),
                 // NetMeshBaseIdentifier.obtain( "=testing" ),  // FIXME XRI's don't currently work
                 // NetMeshBaseIdentifier.obtain( "@testing@abc" ),
         };

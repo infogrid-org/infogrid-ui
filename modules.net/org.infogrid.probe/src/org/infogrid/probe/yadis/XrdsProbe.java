@@ -300,7 +300,7 @@ public class XrdsProbe
                 String realFound = found.toString().trim();
                 NetMeshObjectIdentifier endpointIdentifier = base.getMeshObjectIdentifierFactory().fromExternalForm( realFound );
 
-                NetMeshObject endpoint = findOrCreateAndBless(
+                NetMeshObject endpoint = findOrCreateForwardReferenceAndBless(
                         endpointIdentifier,
                         WebSubjectArea.WEBRESOURCE,
                         base );
@@ -425,7 +425,7 @@ public class XrdsProbe
     }
 
     /**
-     * Find a MeshObject with a certain identifier; if not found, instantiate
+     * Find a ForwardReference MeshObject with a certain identifier; if not found, instantiate
      * a new one and bless it with an EntityType.
      *
      * @param identifier the identifier of the MeshObject to be found or created
@@ -436,7 +436,7 @@ public class XrdsProbe
      * @throws NotPermittedException an operation was not permitted. This should not happen.
      * @throws MeshObjectIdentifierNotUniqueException an identifier was not unique. This should not happen.
      */
-    protected NetMeshObject findOrCreateAndBless(
+    protected NetMeshObject findOrCreateForwardReferenceAndBless(
             NetMeshObjectIdentifier identifier,
             EntityType              type,
             StagingMeshBase         base )

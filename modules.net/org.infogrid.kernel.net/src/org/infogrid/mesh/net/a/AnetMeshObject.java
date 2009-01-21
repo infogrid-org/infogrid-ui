@@ -1693,37 +1693,76 @@ public class AnetMeshObject
 
         AnetMeshObjectNeighborManager nMgr = getNeighborManager();
 
-        RoleType []         oldRoleTypes = nMgr.getRoleTypesFor( this, neighborIdentifier ); // throws NotRelatedException
-        ArrayList<RoleType> toAdd        = new ArrayList<RoleType>();
+        RoleType []         oldRoleTypesHere = nMgr.getRoleTypesFor( this, neighborIdentifier ); // throws NotRelatedException
+        ArrayList<RoleType> toAddHere        = new ArrayList<RoleType>();
 
-        if( oldRoleTypes != null && oldRoleTypes.length > 0 ) {
+        if( oldRoleTypesHere != null && oldRoleTypesHere.length > 0 ) {
             boolean foundRole = false;
 
             for( int i=0 ; i<theTypes.length ; ++i ) {
-                for( int j=0 ; j<oldRoleTypes.length ; ++j ) {
-                    if( theTypes[i].equals( oldRoleTypes[j] )) {
+                for( int j=0 ; j<oldRoleTypesHere.length ; ++j ) {
+                    if( theTypes[i].equals( oldRoleTypesHere[j] )) {
                         foundRole = true;
                         break;
                     }
                 }
                 if( !foundRole ) {
-                    toAdd.add( theTypes[i] );
+                    toAddHere.add( theTypes[i] );
                 }
             }
 
         } else {
             for( RoleType current : theTypes ) {
-                toAdd.add( current );
+                toAddHere.add( current );
             }
         }
 
-        RoleType [] added = ArrayHelper.copyIntoNewArray( toAdd, RoleType.class );
+        RoleType [] addedHere = ArrayHelper.copyIntoNewArray( toAddHere, RoleType.class );
+        nMgr.appendRoleTypes( this, neighborIdentifier, addedHere );
 
-        nMgr.appendRoleTypes( this, neighborIdentifier, added );
+        AnetMeshObject neighbor   = (AnetMeshObject) theMeshBase.findMeshObjectByIdentifier( neighborIdentifier );
+        RoleType []    addedThere = null;
+        RoleType []    oldRoleTypesThere = null;
 
-        updateLastUpdated( timeUpdated, theTimeUpdated );
+        if( neighbor != null ) {
+            oldRoleTypesThere              = nMgr.getRoleTypesFor( neighbor, theIdentifier );
+            ArrayList<RoleType> toAddThere = new ArrayList<RoleType>();
 
-        fireTypesAdded( oldRoleTypes, added, nMgr.getRoleTypesFor( this, neighborIdentifier ), neighborIdentifier, theMeshBase );
+            if( oldRoleTypesThere != null && oldRoleTypesThere.length > 0 ) {
+                boolean foundRole = false;
+
+                for( int i=0 ; i<theTypes.length ; ++i ) {
+                    for( int j=0 ; j<oldRoleTypesThere.length ; ++j ) {
+                        if( theTypes[i].getInverseRoleType().equals( oldRoleTypesThere[j] )) {
+                            foundRole = true;
+                            break;
+                        }
+                    }
+                    if( !foundRole ) {
+                        toAddThere.add( theTypes[i].getInverseRoleType());
+                    }
+                }
+            } else {
+                for( RoleType current : theTypes ) {
+                    toAddThere.add( current.getInverseRoleType() );
+                }
+            }
+
+            addedThere = ArrayHelper.copyIntoNewArray( toAddThere, RoleType.class );
+            nMgr.appendRoleTypes( neighbor, theIdentifier, addedThere );
+        }
+
+
+        if( addedHere.length > 0 || ( addedThere != null && addedThere.length > 0 )) {
+            updateLastUpdated( timeUpdated, theTimeUpdated );
+        }
+
+        if( addedHere.length > 0 ) {
+            fireTypesAdded( oldRoleTypesHere, addedHere, nMgr.getRoleTypesFor( this, neighborIdentifier ), neighborIdentifier, theMeshBase );
+        }
+        if( neighbor != null && addedThere != null && addedThere.length > 0 ) {
+            neighbor.fireTypesAdded( oldRoleTypesThere, addedThere, nMgr.getRoleTypesFor( neighbor, theIdentifier ), theIdentifier, theMeshBase );
+        }
     }
 
     /**

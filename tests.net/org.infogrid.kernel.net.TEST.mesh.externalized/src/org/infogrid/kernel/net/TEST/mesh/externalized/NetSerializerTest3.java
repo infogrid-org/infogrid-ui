@@ -45,7 +45,7 @@ public class NetSerializerTest3
 
             NetMeshBaseIdentifier found = null;
             try {
-                found = theFactory.fromExternalForm( testData[i] );
+                found = theMeshBaseIdentifierFactory.fromExternalForm( testData[i] );
                 
                 reportError( "No exception thrown for " + testData[i] );
 

@@ -15,7 +15,6 @@
 package org.infogrid.meshbase.net;
 
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-import org.infogrid.mesh.net.a.DefaultAnetMeshObjectIdentifier;
 import org.infogrid.util.StringHelper;
 
 /**
@@ -28,23 +27,39 @@ public class DefaultNetMeshObjectAccessSpecification
     private final static long serialVersionUID = 1L; // helps with serialization
 
     /**
-     * Constructor.
+     * Constructor. Use factory class to instantiate.
      *
+     * @param factory the factory that created this object
      * @param accessPath the sequence of network locations to traverse to find one where we can access the MeshObject
-     * @param extName   the identifier of the MeshObject there, if different from the default
+     * @param remoteIdentifier the identifier of the MeshObject there, if different from the default
      */
     protected DefaultNetMeshObjectAccessSpecification(
-            NetMeshBaseAccessSpecification [] accessPath,
-            NetMeshObjectIdentifier           extName )
+            NetMeshObjectAccessSpecificationFactory factory,
+            NetMeshBaseAccessSpecification []       accessPath,
+            NetMeshObjectIdentifier                 remoteIdentifier )
     {
+        theFactory          = factory;
         theAccessPath       = accessPath != null ? accessPath : new NetMeshBaseAccessSpecification[0];
-        theRemoteIdentifier = extName;
+        theRemoteIdentifier = remoteIdentifier;
         
         for( int i=0 ; i<theAccessPath.length ; ++i ) {
             if( theAccessPath[i] == null ) {
                 throw new IllegalArgumentException( "No AccessPath component in NetMeshObjectAccessSpecification must be null" );
             }
         }
+        if( remoteIdentifier == null ) {
+            throw new NullPointerException();
+        }
+    }
+
+    /**
+     * Obtain the factory that created this object.
+     *
+     * @return the factory
+     */
+    public NetMeshObjectAccessSpecificationFactory getFactory()
+    {
+        return theFactory;
     }
 
     /**
@@ -76,18 +91,7 @@ public class DefaultNetMeshObjectAccessSpecification
      */
     public NetMeshObjectIdentifier getNetMeshObjectIdentifier()
     {
-        NetMeshObjectIdentifier ret;
-        if( theRemoteIdentifier != null ) {
-            ret = theRemoteIdentifier;
-
-        } else  if( theAccessPath == null || theAccessPath.length == 0 ) {
-            // FIXME -- not sure this should reference an "A" implementation here
-            ret = DefaultAnetMeshObjectIdentifier.create( null, null );
-
-        } else {
-            ret = DefaultAnetMeshObjectIdentifier.create( theAccessPath[ theAccessPath.length-1 ].getNetMeshBaseIdentifier(), null );
-        }
-        return ret;
+        return theRemoteIdentifier;
     }
 
     /**
@@ -233,6 +237,11 @@ public class DefaultNetMeshObjectAccessSpecification
                     theRemoteIdentifier
                 });
     }
+
+    /**
+     * The factory that created this object.
+     */
+    protected NetMeshObjectAccessSpecificationFactory theFactory;
 
     /**
      * The NetMeshBaseIdentifier path.

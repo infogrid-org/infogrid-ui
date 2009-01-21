@@ -44,7 +44,7 @@ public class YadisTest3
     {
         log.info( "accessing test data source" );
 
-        NetMeshObject shadowHome = theMeshBase.accessLocally( theNetworkIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        NetMeshObject shadowHome = theMeshBase.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
 
         //
 
@@ -63,8 +63,8 @@ public class YadisTest3
     {
         YadisTest3 test = null;
         try {
-            if( args.length > 0 ) {
-                System.err.println( "Synopsis: <no arguments>" );
+            if( args.length != 1 ) {
+                System.err.println( "Synopsis: <delay>" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -98,11 +98,11 @@ public class YadisTest3
         throws
             Exception
     {
-        super( YadisTest3.class, new MyResponseFactory() );
+        super( YadisTest3.class, new MyResponseFactory( Long.valueOf( args[0] ) ));
     }
 
     // Our Logger
-    private static Log log = Log.getLogInstance( YadisTest3.class);
+    private static Log log = Log.getLogInstance( YadisTest3.class );
 
     /**
       * A HttpResponseFactory that acts as the RelyingParty.
@@ -112,6 +112,17 @@ public class YadisTest3
             HttpResponseFactory
     {
         /**
+         * Constructor.
+         *
+         * @param delay the delay by the web server
+         */
+        public MyResponseFactory(
+                long delay )
+        {
+            theDelay = delay;
+        }
+
+        /**
           * Factory method for a HttpResponse.
           *
           * @param request the HttpRequest for which we create a HttpResponse
@@ -120,7 +131,8 @@ public class YadisTest3
         public HttpResponse createResponse(
                 HttpRequest request )
         {
-            if( "GET".equals( request.getMethod() ) && "/".equals( request.getRelativeBaseUri() )) {             
+            HttpResponse ret;
+            if( "GET".equals( request.getMethod() ) && ( "/" + IDENTITY_LOCAL_IDENTIFIER ).equals( request.getRelativeBaseUri() )) {
                 HttpEntity entity = new HttpEntity() {
                         public boolean canRead() {
                             return true;
@@ -132,9 +144,9 @@ public class YadisTest3
                             return "text/html";
                         }
                 };                
-                HttpResponse ret = HttpEntityResponse.create( request, true, entity );
-                return ret;
-            } else if( "GET".equals( request.getMethod() ) && "/xrds".equals( request.getRelativeBaseUri() )) {             
+                ret = HttpEntityResponse.create( request, true, entity );
+
+            } else if( "GET".equals( request.getMethod() ) && ( "/" + XRDS_LOCAL_IDENTIFIER ).equals( request.getRelativeBaseUri() )) {
                 HttpEntity entity = new HttpEntity() {
                         public boolean canRead() {
                             return true;
@@ -146,11 +158,25 @@ public class YadisTest3
                             return "application/xrds+xml";
                         }
                 };                
-                HttpResponse ret = HttpEntityResponse.create( request, true, entity );
-                return ret;
+                ret = HttpEntityResponse.create( request, true, entity );
+
             } else {
-                return HttpErrorResponse.create( request, "500", null );
+                ret = HttpErrorResponse.create( request, "500", null );
             }
+
+            if( theDelay > 0L ) {
+                try {
+                    Thread.sleep( theDelay );
+                } catch( Throwable t ) {
+                    log.error( t );
+                }
+            }
+            return ret;
         }
+
+        /**
+         * Captures the slowness of a web server.
+         */
+        protected long theDelay;
     }
 }

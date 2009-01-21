@@ -23,6 +23,13 @@ import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 public interface NetMeshObjectAccessSpecification
 {
     /**
+     * Obtain the factory that created this object.
+     *
+     * @return the factory
+     */
+    public NetMeshObjectAccessSpecificationFactory getFactory();
+
+    /**
      * Obtain the NetMeshBaseAccessSpecification path.
      * 
      * @return the path we traverse to the NetMeshObject we want to access. May be of length 0.

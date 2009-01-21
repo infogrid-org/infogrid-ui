@@ -58,7 +58,7 @@ public class DefaultAMeshObjectIdentifierFactory
         throws
             URISyntaxException
     {
-        return DefaultAMeshObjectIdentifier.create( raw );
+        return DefaultAMeshObjectIdentifier.create( this, raw );
     }
 
     /**
@@ -120,7 +120,7 @@ public class DefaultAMeshObjectIdentifierFactory
             URISyntaxException
     {
         // on this level, everything is opaque
-        return DefaultAMeshObjectIdentifier.create( raw );
+        return DefaultAMeshObjectIdentifier.create( this, raw );
     }
 
     /**
@@ -136,5 +136,5 @@ public class DefaultAMeshObjectIdentifierFactory
     /**
      * The Home Object's identifier. Subclass to avoid having to make the constructor public.
      */
-    public static final DefaultAMeshObjectIdentifier HOME_OBJECT = new DefaultAMeshObjectIdentifier( null ) {};
+    public final DefaultAMeshObjectIdentifier HOME_OBJECT = new DefaultAMeshObjectIdentifier( this, null ) {};
 }
