@@ -41,8 +41,11 @@ public abstract class AbstractPropertyCompareTag
     @Override
     protected void initializeToDefaults()
     {
-        theValue     = null;
-        theValueName = null;
+        theValue             = null;
+        theValueName         = null;
+        theMeshObject2Name   = null;
+        thePropertyType2Name = null;
+        thePropertyType2     = null;
         
         super.initializeToDefaults();
     }
@@ -94,6 +97,75 @@ public abstract class AbstractPropertyCompareTag
     }
 
     /**
+     * Obtain value of the meshObjectName property.
+     *
+     * @return value of the meshObjectName property
+     * @see #setMeshObjectName
+     */
+    public final String getMeshObject2Name()
+    {
+        return theMeshObject2Name;
+    }
+
+    /**
+     * Set value of the meshObjectName property.
+     *
+     * @param newValue new value of the meshObjectName property
+     * @see #getMeshObjectName
+     */
+    public final void setMeshObject2Name(
+            String newValue )
+    {
+        theMeshObject2Name = newValue;
+    }
+
+    /**
+     * Obtain value of the propertyTypeName property.
+     *
+     * @return value of the propertyTypeName property
+     * @see #setPropertyTypeName
+     */
+    public final String getPropertyType2Name()
+    {
+        return thePropertyType2Name;
+    }
+
+    /**
+     * Set value of the propertyTypeName property.
+     *
+     * @param newValue new value of the propertyTypeName property
+     * @see #getPropertyTypeName
+     */
+    public final void setPropertyType2Name(
+            String newValue )
+    {
+        thePropertyType2Name = newValue;
+    }
+
+    /**
+     * Obtain value of the propertyType property.
+     *
+     * @return value of the propertyType property
+     * @see #setPropertyType
+     */
+    public final String getPropertyType2()
+    {
+        return thePropertyType2;
+    }
+
+    /**
+     * Set value of the propertyType property.
+     *
+     * @param newValue new value of the propertyType property
+     * @see #getPropertyType
+     */
+    public final void setPropertyType2(
+            String newValue )
+    {
+        thePropertyType2 = newValue;
+    }
+
+    /**
      * Determine the relative relationship between the comparison operators.
      * This returns values in analogy to the values returned by <code>String.compareTo</code>.
      *
@@ -108,12 +180,43 @@ public abstract class AbstractPropertyCompareTag
             IgnoreException
     {
         PropertyValue found = evaluate();
-        
+
+        if( theValueName != null && theValue != null ) {
+            throw new JspException( "Must not specify both valueName and value" );
+        }
+        if( thePropertyType2Name != null && thePropertyType2 != null ) {
+            throw new JspException( "Must not specify both propertyType2Name and propertyType2" );
+        }
+        if(    ( theValueName != null || theValue != null )
+            && ( theMeshObject2Name != null || thePropertyType2Name != null || thePropertyType2 != null ))
+        {
+            throw new JspException( "Must not specify both a second property and a value" );
+        }
+
         if( theValueName != null ) {
             PropertyValue comparison = (PropertyValue) lookupOrThrow( theValueName );
             
             return PropertyValue.compare( found, comparison );
+
+        } else if( theMeshObject2Name != null || thePropertyType2Name != null || thePropertyType2 != null ) {
+
+            // default to first set of attributes if not given here
+            String meshObject2Name   = theMeshObject2Name != null ? theMeshObject2Name : theMeshObjectName;
+            String propertyType2Name;
+            String propertyType2;
             
+            if( thePropertyType2Name != null || thePropertyType2 != null ) {
+                propertyType2Name = thePropertyType2Name;
+                propertyType2     = thePropertyType2;
+            } else {
+                propertyType2Name = thePropertyTypeName;
+                propertyType2     = thePropertyType;
+            }
+
+            PropertyValue value2 = determinePropertyValue( meshObject2Name, propertyType2Name, propertyType2, "propertyType2Name", "propertyType2" );
+
+            return PropertyValue.compare( found, value2 );
+
         } else {
             if( found == null ) {
                 if( theValue == null || theValue.equals( "null" )) {
@@ -136,5 +239,20 @@ public abstract class AbstractPropertyCompareTag
     /**
      * The valueName property.
      */
-    protected String theValueName;    
+    protected String theValueName;
+
+    /**
+     * String containing the name of the bean that is the MeshObject whose property is considered in the test.
+     */
+    protected String theMeshObject2Name;
+
+    /**
+     * String containing the name of the bean that is the PropertyType.
+     */
+    protected String thePropertyType2Name;
+
+    /**
+     * Identifier of the PropertyType. This is mutually exclusive with thePropertyTypeName.
+     */
+    protected String thePropertyType2;
 }

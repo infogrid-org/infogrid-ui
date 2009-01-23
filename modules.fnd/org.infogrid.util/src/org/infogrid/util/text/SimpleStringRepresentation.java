@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.infogrid.util.ArrayFacade;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 
@@ -264,6 +265,26 @@ public class SimpleStringRepresentation
     public StringRepresentation getDelegate()
     {
         return theDelegate;
+    }
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theName",
+                    "theDelegate"
+                },
+                new Object[] {
+                    theName,
+                    theDelegate
+                } );
     }
 
     /**

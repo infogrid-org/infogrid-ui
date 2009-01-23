@@ -283,6 +283,18 @@ public abstract class AShadowMeshBase
     }
 
     /**
+     * Cancel all future updates.
+     */
+    public void cancelFutureUpdates()
+    {
+        synchronized( theDispatcher ) { // we can't synchronize on the shadow, because incoming transactions need to be able to create threads
+            checkDead();
+
+            theDispatcher.cancelFutureUpdates();
+        }
+    }
+
+    /**
      * Obtain the time at which this ShadowMeshBase was created.
      *
      * @return the time at which this ShadowMeshBase was created, in System.currentTimeMillis() format
@@ -488,5 +500,5 @@ public abstract class AShadowMeshBase
     /**
      * The ProbeDispatcher to which we delegate most of the work.
      */
-    protected ProbeDispatcher theDispatcher;
+    protected final ProbeDispatcher theDispatcher;
 }

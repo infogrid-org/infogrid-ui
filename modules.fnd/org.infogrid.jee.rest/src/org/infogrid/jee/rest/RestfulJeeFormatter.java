@@ -234,7 +234,17 @@ public class RestfulJeeFormatter
         } 
         if( name == null || name.length() == 0 ) {
             throw new NullPointerException( "PropertyType name cannot be empty" );
-        } 
+        }
+
+        // Try by identifier first
+        PropertyType [] allTypes = obj.getAllPropertyTypes();
+        for( PropertyType current : allTypes ) {
+            if( current.getIdentifier().toExternalForm().equals( name )) {
+                return current;
+            }
+        }
+        
+        // Now try by shor name
         char firstChar = name.charAt( 0 );
         String capitalizedName;
         if( Character.isUpperCase( firstChar )) {
@@ -243,9 +253,8 @@ public class RestfulJeeFormatter
             capitalizedName = new StringBuilder( name.length() ).append( Character.toUpperCase( firstChar )).append( name.substring( 1 )).toString();
         }
 
-        PropertyType [] allTypes = obj.getAllPropertyTypes();
         for( PropertyType current : allTypes ) {
-            if( current.getName().equals( capitalizedName )) {
+            if( current.getName().toString().equals( capitalizedName )) {
                 return current;
             }
         }

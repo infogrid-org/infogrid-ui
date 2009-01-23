@@ -5,13 +5,14 @@ org.infogrid.model.Probe
 org.infogrid.model.VCard
 org.infogrid.meshbase.store.net
 # org.infogrid.lid.messaging
-org.infogrid.jee.lid
-org.infogrid.jee.rest.net
-org.infogrid.jee.viewlet.net
 org.infogrid.probe
 org.infogrid.probe.feeds
 org.infogrid.probe.store
 org.infogrid.probe.vcard
+org.infogrid.jee.lid
+org.infogrid.jee.probe
+org.infogrid.jee.rest.net
+org.infogrid.jee.viewlet.net
 org.infogrid.net.local
 org.infogrid.net.local.store
 org.infogrid.jee.rest.net.local

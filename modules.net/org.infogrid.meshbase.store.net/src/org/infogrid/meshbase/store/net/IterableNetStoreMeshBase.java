@@ -42,7 +42,6 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpointFactory;
 import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.store.IterableStore;
-import org.infogrid.store.Store;
 import org.infogrid.store.util.IterableStoreBackedSwappingHashMap;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.context.Context;
@@ -593,6 +592,18 @@ public class IterableNetStoreMeshBase
             log.error( ex );
             return 0;
         }
+    }
+
+    /**
+     * Determine the number of MeshObjects in this MeshBase. This redundant method
+     * is provided to make life easier for JavaBeans-aware software.
+     *
+     * @return the number of MeshObjects in this MeshBase
+     * @see #size()
+     */
+    public final int getSize()
+    {
+        return size();
     }
 
     /**

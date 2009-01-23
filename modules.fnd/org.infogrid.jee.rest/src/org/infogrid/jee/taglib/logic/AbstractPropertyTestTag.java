@@ -165,25 +165,50 @@ public abstract class AbstractPropertyTestTag
             JspException,
             IgnoreException
     {
-        MeshObject obj  = (MeshObject) lookupOrThrow( theMeshObjectName );
+        return determinePropertyValue( theMeshObjectName, thePropertyTypeName, thePropertyType, "propertyTypeName", "propertyType" );
+    }
+
+    /**
+     * Helper method to determine the value of a property.
+     *
+     * @param meshObjectName name of the bean holding the MeshObject
+     * @param propertyTypeName name of the bean holding the PropertyType
+     * @param propertyType name of the PropertyType
+     * @param propertyTypeNameString name of the attribute corresponding to propertyTypeName
+     * @param propertyTypeString name of the attribute corresponding to propertyType
+     * @return the PropertyValue
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     */
+    protected PropertyValue determinePropertyValue(
+            String meshObjectName,
+            String propertyTypeName,
+            String propertyType,
+            String propertyTypeNameString,
+            String propertyTypeString )
+        throws
+            JspException,
+            IgnoreException
+    {
+        MeshObject obj  = (MeshObject) lookupOrThrow( meshObjectName );
 
         PropertyType  type  = null;
         PropertyValue value = null;
-        
-        if( thePropertyType != null ) {
-            if( thePropertyTypeName != null ) {
-                throw new JspException( "Must not specify both propertyTypeName and propertyType" );
-            }
-            
-            type = findPropertyTypeOrThrow( obj, thePropertyType );
 
-        } else if( thePropertyTypeName == null ) {
-            throw new JspException( "Must specify either propertyTypeName or propertyType" );
+        if( propertyType != null ) {
+            if( propertyTypeName != null ) {
+                throw new JspException( "Must not specify both " + propertyTypeNameString + " and " + propertyTypeString );
+            }
+
+            type = findPropertyTypeOrThrow( obj, propertyType );
+
+        } else if( propertyTypeName == null ) {
+            throw new JspException( "Must specify either " + propertyTypeNameString + " or " + propertyTypeString );
         }
 
         if( value == null ) {
             if( type == null ) {
-                type = (PropertyType) lookupOrThrow( thePropertyTypeName );
+                type = (PropertyType) lookupOrThrow( propertyTypeName );
             }
 
             try {
@@ -191,7 +216,7 @@ public abstract class AbstractPropertyTestTag
 
             } catch( Exception ex ) {
                 throw new JspException( ex );
-            }        
+            }
         }
         return value;
     }

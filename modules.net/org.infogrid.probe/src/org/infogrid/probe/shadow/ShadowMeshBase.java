@@ -61,6 +61,11 @@ public interface ShadowMeshBase
             IsDeadException;
 
     /**
+     * Cancel all future updates.
+     */
+    public abstract void cancelFutureUpdates();
+
+    /**
      * Determine whether at the last run, this ShadowMeshBase used a WritableProbe.
      * 
      * @return true if at the last run, this ShadowMeshBase used a WritableProbe

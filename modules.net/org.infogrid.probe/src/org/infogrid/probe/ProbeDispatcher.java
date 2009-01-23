@@ -51,6 +51,8 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.Transaction;
+import org.infogrid.meshbase.transaction.TransactionAction;
+import org.infogrid.meshbase.transaction.TransactionActionException;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Probe.ProbeUpdateSpecification;
@@ -61,6 +63,7 @@ import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.model.primitives.IntegerValue;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleCapability;
 import org.infogrid.module.ModuleException;
@@ -279,7 +282,7 @@ public class ProbeDispatcher
                             log.error( ex3 );
                         }
                     }
-                        
+
                     ProbeUpdateSpecification spec = (ProbeUpdateSpecification) home.getTypedFacadeFor( ProbeSubjectArea.PROBEUPDATESPECIFICATION );
                     if( spec != null ) {
                         try {
@@ -298,14 +301,14 @@ public class ProbeDispatcher
                         } catch( Throwable ex3 ) { // this should never go wrong
                             log.error( ex3 );
                         }
-                        IntegerValue nextRun = null;
+                        TimeStampValue nextRun = null;
                         try {
                             nextRun = spec.getNextProbeRun();
                         } catch( NotPermittedException ex3 ) {
                             log.error( ex3 );
                         }
                         if( nextRun != null ) {
-                            ret = nextRun.value() - System.currentTimeMillis();
+                            ret = nextRun.getAsLong() - System.currentTimeMillis();
                         } else {
                             ret = -1L; // never again
                         }
@@ -371,6 +374,46 @@ public class ProbeDispatcher
             theDelayUntilNextUpdate = ret;
         }
         return ret;
+    }
+
+    /**
+     * Cancel all future updates.
+     */
+    public void cancelFutureUpdates()
+    {
+        try {
+            theShadowMeshBase.executeAsap( new TransactionAction() {
+                    /**
+                     * Execute the action. This will be invoked within valid Transaction
+                     * boundaries.
+                     *
+                     * @param tx the Transaction within which the code is invoked.
+                     * @throws TransactionActionException.Rollback thrown if the Transaction needs to be rolled back
+                     * @throws TransactionActionException.Retry thrown if the Transaction needs to be rolled back and retried
+                     * @throws TransactionException should never be thrown
+                     */
+                    public void execute(
+                            Transaction tx )
+                        throws
+                            TransactionActionException.Rollback,
+                            TransactionActionException.Retry,
+                            TransactionException
+                    {
+                        try {
+                            MeshObject               home = theShadowMeshBase.getHomeObject();
+                            ProbeUpdateSpecification spec = (ProbeUpdateSpecification) home.getTypedFacadeFor( ProbeSubjectArea.PROBEUPDATESPECIFICATION );
+
+                            spec.stopUpdating();
+                        } catch( NotBlessedException ex ) {
+                            log.warn(  ex );
+                        }
+                    }
+
+            });
+            
+        } catch( TransactionException ex ) {
+            log.error( ex );
+        }
     }
 
     /**
@@ -1485,11 +1528,11 @@ public class ProbeDispatcher
             theDelayUntilNextUpdate = 0L; // now if anything goes wrong
             MeshObject home = theShadowMeshBase.getHomeObject();
             try {
-                IntegerValue found = (IntegerValue) home.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_NEXTPROBERUN );
+                TimeStampValue found = (TimeStampValue) home.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_NEXTPROBERUN );
                 if( found == null ) {
                     return -1L;
                 }
-                theDelayUntilNextUpdate = found.value() - System.currentTimeMillis();
+                theDelayUntilNextUpdate = found.getAsLong() - System.currentTimeMillis();
                 if( theDelayUntilNextUpdate < 0L ) {
                     theDelayUntilNextUpdate = 0; // as soon as possible
                 }

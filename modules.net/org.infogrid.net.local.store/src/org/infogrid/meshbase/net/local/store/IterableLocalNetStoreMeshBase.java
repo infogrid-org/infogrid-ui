@@ -1101,6 +1101,18 @@ public class IterableLocalNetStoreMeshBase
     }
 
     /**
+     * Determine the number of MeshObjects in this MeshBase. This redundant method
+     * is provided to make life easier for JavaBeans-aware software.
+     *
+     * @return the number of MeshObjects in this MeshBase
+     * @see #size()
+     */
+    public final int getSize()
+    {
+        return size();
+    }
+
+    /**
      * Factory method for a IterableMeshBaseDifferencer, with this IterableMeshBase
      * being the comparison base.
      *

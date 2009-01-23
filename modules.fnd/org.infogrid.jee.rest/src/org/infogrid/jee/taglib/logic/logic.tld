@@ -24,9 +24,20 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>meshObject2Name</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyType2Name</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyType2</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>valueName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>value</name>
@@ -191,6 +202,19 @@
         </attribute>
         <attribute>
             <name>propertyType</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>meshObject2Name</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>propertyType2Name</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyType2</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>

@@ -27,6 +27,7 @@ public interface MeshTypeIdentifier
      * Create a derived MeshTypeIdentifier.
      *
      * @param suffix the suffix to append
+     * @return the derived MeshTypeIdentifier
      */
     public abstract MeshTypeIdentifier createDerivedMeshTypeIdentifier(
             String suffix );

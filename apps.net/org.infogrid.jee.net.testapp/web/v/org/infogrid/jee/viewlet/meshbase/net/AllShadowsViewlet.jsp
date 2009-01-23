@@ -14,7 +14,7 @@
  <ol>
   <c:forEach items="${Subject.meshBase.shadowMeshBases}" var="current" varStatus="currentStatus">
    <li>
-    <meshbase:meshBaseLink meshBaseName="current"><meshbase:meshBaseId meshBaseName="current"/></meshbase:meshBaseLink>
+    <meshbase:meshBaseLink meshBaseName="current">MeshBase <meshbase:meshBaseId meshBaseName="current"/></meshbase:meshBaseLink>
    </li>
   </c:forEach>
  </ol>

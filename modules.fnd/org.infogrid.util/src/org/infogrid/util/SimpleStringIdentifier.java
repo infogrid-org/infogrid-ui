@@ -138,6 +138,17 @@ public class SimpleStringIdentifier
     }
 
     /**
+     * Convert to String, for debugging.
+     *
+     * @return String format
+     */
+    @Override
+    public String toString()
+    {
+        return toExternalForm();
+    }
+
+    /**
      * The underlying String.
      */
     protected String theString;
