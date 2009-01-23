@@ -32,13 +32,14 @@ import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
+import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
+import org.infogrid.mesh.set.active.ActiveMeshObjectSetFactory;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetListener;
 import org.infogrid.mesh.set.active.MeshObjectAddedEvent;
 import org.infogrid.mesh.set.active.MeshObjectRemovedEvent;
 import org.infogrid.mesh.set.active.OrderedActiveMeshObjectSetReorderedEvent;
 import org.infogrid.mesh.set.active.m.ActiveMMeshObjectSetFactory;
 import org.infogrid.meshbase.net.CoherenceSpecification;
-import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -84,8 +85,10 @@ public class ShadowEventTest1
                 exec,
                 rootContext );
         
-        MeshObjectSetFactory passiveFactory = base.getMeshObjectSetFactory();
-        MeshObjectSetFactory activeFactory  = ActiveMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
+        MeshObjectSetFactory       passiveFactory = base.getMeshObjectSetFactory();
+        ActiveMeshObjectSetFactory activeFactory  = ActiveMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
+
+        activeFactory.setMeshBase( base );
         
         //
 
@@ -93,11 +96,9 @@ public class ShadowEventTest1
 
         MeshObject home = base.accessLocally( TEST1_URL );
 
-        MeshObjectSet       destPassiveSet = home.traverse( TestSubjectArea.RR.getSource() );
+        MeshObjectSet destPassiveSet = home.traverse( TestSubjectArea.RR.getSource() );
         
-        base.setMeshObjectSetFactory( activeFactory );
-        
-        ActiveMeshObjectSet destActiveSet  = (ActiveMeshObjectSet) home.traverse( TestSubjectArea.RR.getSource() );
+        ActiveMeshObjectSet destActiveSet  = activeFactory.createActiveMeshObjectSet( home, TestSubjectArea.RR.getSource() );
 
         meshObjectAddedCount   = 1; // we have one element already
         meshObjectRemovedCount = 0;
@@ -215,23 +216,8 @@ public class ShadowEventTest1
     /**
      * Our ThreadPool.
      */
-    protected ScheduledExecutorService exec = createThreadPool( 1 );
+    protected ScheduledExecutorService exec = createThreadPool( 2 );
     
-    /**
-     * The test protocol. In the real world this would be something like "jdbc".
-     */
-    private static final String PROTOCOL_NAME = "ShadowEventTest1Protocol";
-
-    /**
-     * Factory for NetMeshBaseIdentifiers.
-     */
-    private static final DefaultNetMeshBaseIdentifierFactory theIdentifierFactory
-            = DefaultNetMeshBaseIdentifierFactory.create(
-                    new DefaultNetMeshBaseIdentifierFactory.Protocol [] {
-                            new DefaultNetMeshBaseIdentifierFactory.Protocol(
-                                    PROTOCOL_NAME, false )
-            } );
-
     /**
      * The first URL that we are accessing.
      */
@@ -239,7 +225,7 @@ public class ShadowEventTest1
 
     static {
         try {
-            TEST1_URL = theIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://myhost.local/remainder" );
+            TEST1_URL = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://myhost.local/remainder" );
 
         } catch( Exception ex ) {
             log.error( ex );

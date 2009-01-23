@@ -54,9 +54,19 @@ public abstract class AbstractShadowEventTest
     protected static ModelBase theModelBase = ModelBaseSingleton.getSingleton();
     
     /**
+     * The test protocol. In the real world this would be something like "jdbc".
+     */
+    protected static final String PROTOCOL_NAME = "test";
+
+    /**
      * Factory for NetMeshBaseIdentifiers.
      */
-    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
+    protected static NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create(
+            new DefaultNetMeshBaseIdentifierFactory.Protocol[] {
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "http",        true ),
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "file",        true ),
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( PROTOCOL_NAME, false )
+            } );
 
     /**
      * Expected duration within which at least one ping-pong round trip can be completed.

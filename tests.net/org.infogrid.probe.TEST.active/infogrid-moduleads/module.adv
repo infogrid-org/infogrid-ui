@@ -25,18 +25,11 @@
   <requires name="org.infogrid.util.logging.log4j">
    <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/probe/TEST/active/Log.properties"/>
   </requires>
-  <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.kernel.active"/>
   <requires name="org.infogrid.modelbase.m"/>
-  <requires name="org.infogrid.kernel.net"/>
   <requires name="org.infogrid.net.local"/>
-  <requires name="org.infogrid.model.Probe"/>
   <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.probe"/>
-  <requires name="org.infogrid.lid"/>
-  <requires name="org.infogrid.lid.openid"/>
-  <requires name="org.infogrid.lid.yadis"/>
-  <requires name="org.infogrid.util"/>
   <requires name="org.infogrid.testharness"/>
  </dependencies>
 </standardmodule>
