@@ -183,6 +183,16 @@ public abstract class AShadowMeshBase
     }
 
     /**
+     * Obtain the ProbeManager that manages this ShadowMeshBase.
+     *
+     * @return the ProbeManager
+     */
+    public ProbeManager getProbeManager()
+    {
+        return theProbeManager;
+    }
+
+    /**
      * Determine whether at the last run, this ShadowMeshBase used a WritableProbe.
      * 
      * @return true if at the last run, this ShadowMeshBase used a WritableProbe
@@ -279,18 +289,6 @@ public abstract class AShadowMeshBase
 
                 return -1L;
             }
-        }
-    }
-
-    /**
-     * Cancel all future updates.
-     */
-    public void cancelFutureUpdates()
-    {
-        synchronized( theDispatcher ) { // we can't synchronize on the shadow, because incoming transactions need to be able to create threads
-            checkDead();
-
-            theDispatcher.cancelFutureUpdates();
         }
     }
 

@@ -15,6 +15,7 @@
 package org.infogrid.probe.manager.store;
 
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.probe.manager.AbstractProbeManager;
 import org.infogrid.store.IterableStore;
 import org.infogrid.probe.manager.PassiveProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
@@ -28,6 +29,8 @@ import org.infogrid.util.SwappingHashMap;
  */
 public class StorePassiveProbeManager
         extends
+            AbstractProbeManager
+        implements
             PassiveProbeManager
 {
     /**
@@ -64,6 +67,17 @@ public class StorePassiveProbeManager
 
         theMapListener = new MyMapListener();
         storage.addWeakSwappingHashMapListener( theMapListener ); // this must be weak 
+    }
+
+    /**
+     * We are not needed any more.
+     *
+     * @param isPermanent true if this is permanent
+     */
+    public void die(
+            boolean isPermanent )
+    {
+        // no op
     }
 
     /**

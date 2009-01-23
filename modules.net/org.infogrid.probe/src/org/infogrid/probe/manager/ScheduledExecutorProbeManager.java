@@ -16,15 +16,26 @@ package org.infogrid.probe.manager;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.NotBlessedException;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.transaction.Transaction;
+import org.infogrid.meshbase.transaction.TransactionAction;
+import org.infogrid.meshbase.transaction.TransactionActionException;
+import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.Probe.ProbeSubjectArea;
+import org.infogrid.model.Probe.ProbeUpdateSpecification;
+import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
 import org.infogrid.util.CachingMap;
@@ -39,6 +50,8 @@ import org.infogrid.util.logging.Log;
 public abstract class ScheduledExecutorProbeManager
         extends
             AbstractProbeManager
+        implements
+            ActiveProbeManager
 {
     private static final Log log = Log.getLogInstance( ScheduledExecutorProbeManager.class ); // our own, private logger
 
@@ -95,7 +108,7 @@ public abstract class ScheduledExecutorProbeManager
                         new ExecutorAdapter( new WeakReference<ScheduledExecutorProbeManager>( this ), key, nextTime ),
                         nextTime,
                         TimeUnit.MILLISECONDS );
-                theFutures.add( newFuture );
+                theFutures.put( key, newFuture );
             }
         }
     }
@@ -112,12 +125,89 @@ public abstract class ScheduledExecutorProbeManager
             throw new IllegalStateException( "Already stopped" );
         }
 
-        for( ScheduledFuture<Long> current : theFutures ) {
+        for( ScheduledFuture<Long> current : theFutures.values() ) {
             current.cancel( false );
         }
         theFutures.clear();
         
         theExecutorService = null;
+    }
+
+    /**
+     * Invoke a ShadowMeshBase update now
+     *
+     * @param shadow the ShadowMeshBase to update
+     * @throws ProbeException thrown if the update was unsuccessful
+     * @throws IsDeadException thrown in this ShadowMeshBase is dead already
+     */
+    public void doUpdateNow(
+            ShadowMeshBase shadow )
+        throws
+            ProbeException,
+            IsDeadException
+    {
+        Future<Long> f = theFutures.get( shadow.getIdentifier() );
+        if( f != null && !f.isCancelled() ) {
+            f.cancel( false );
+        }
+
+        long nextTime = shadow.doUpdateNow();
+
+        if( nextTime >= 0 ) {  // allow 0 for immediate execution
+            ScheduledFuture<Long> newFuture = theExecutorService.schedule(
+                    new ExecutorAdapter( new WeakReference<ScheduledExecutorProbeManager>( this ), shadow.getIdentifier(), nextTime ),
+                    nextTime,
+                    TimeUnit.MILLISECONDS );
+            theFutures.put( shadow.getIdentifier(), newFuture );
+        }
+    }
+
+    /**
+     * Stop future automatic updates for this ShadowMeshBase.
+     *
+     * @param shadow the ShadowMeshBase
+     */
+    public void disableFutureUpdates(
+            final ShadowMeshBase shadow )
+    {
+        Future<Long> f = theFutures.remove( shadow.getIdentifier() );
+        if( f != null && !f.isCancelled() ) {
+            f.cancel( false );
+        }
+
+        try {
+            shadow.executeAsap( new TransactionAction() {
+                    /**
+                     * Execute the action. This will be invoked within valid Transaction
+                     * boundaries.
+                     *
+                     * @param tx the Transaction within which the code is invoked.
+                     * @throws TransactionActionException.Rollback thrown if the Transaction needs to be rolled back
+                     * @throws TransactionActionException.Retry thrown if the Transaction needs to be rolled back and retried
+                     * @throws TransactionException should never be thrown
+                     */
+                    public void execute(
+                            Transaction tx )
+                        throws
+                            TransactionActionException.Rollback,
+                            TransactionActionException.Retry,
+                            TransactionException
+                    {
+                        try {
+                            MeshObject               home = shadow.getHomeObject();
+                            ProbeUpdateSpecification spec = (ProbeUpdateSpecification) home.getTypedFacadeFor( ProbeSubjectArea.PROBEUPDATESPECIFICATION );
+
+                            spec.stopUpdating();
+                        } catch( NotBlessedException ex ) {
+                            log.warn(  ex );
+                        }
+                    }
+
+            });
+
+        } catch( TransactionException ex ) {
+            log.error( ex );
+        }
     }
 
     /**
@@ -142,7 +232,7 @@ public abstract class ScheduledExecutorProbeManager
                     new ExecutorAdapter( new WeakReference<ScheduledExecutorProbeManager>( this ), key, nextTime ),
                     nextTime,
                     TimeUnit.MILLISECONDS );
-            theFutures.add( newFuture );
+            theFutures.put( key, newFuture );
         }
     }
 
@@ -177,8 +267,10 @@ public abstract class ScheduledExecutorProbeManager
     
     /**
      * The Futures currently waiting to be executed on behalf of this ScheduledExecutorProbeManager.
+     * This maps from the ShadowMeshBase's identifier to the Future.
      */
-    protected ArrayList<ScheduledFuture<Long>> theFutures = new ArrayList<ScheduledFuture<Long>>();
+    protected Map<NetMeshBaseIdentifier,ScheduledFuture<Long>> theFutures
+            = new HashMap<NetMeshBaseIdentifier,ScheduledFuture<Long>>();
 
     /**
      * The default thread-pool size.
@@ -265,7 +357,8 @@ public abstract class ScheduledExecutorProbeManager
                         if( log.isDebugEnabled() ) {
                             log.debug( this + ".call ... schedule in " + nextTime.longValue() );
                         }
-                        belongsTo.theExecutorService.schedule( this, nextTime.longValue(), TimeUnit.MILLISECONDS );
+                        ScheduledFuture<Long> f = belongsTo.theExecutorService.schedule( this, nextTime.longValue(), TimeUnit.MILLISECONDS );
+                        belongsTo.theFutures.put( theShadowIdentifier, f );
                     }
 
                 } catch( IsDeadException ex ) {

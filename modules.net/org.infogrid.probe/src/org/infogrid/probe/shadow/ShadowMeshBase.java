@@ -21,6 +21,7 @@ import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
+import org.infogrid.probe.manager.ProbeManager;
 import org.infogrid.probe.shadow.externalized.ExternalizedShadowMeshBase;
 import org.infogrid.util.FactoryCreatedObject;
 import org.infogrid.util.IsDeadException;
@@ -35,7 +36,16 @@ public interface ShadowMeshBase
             FactoryCreatedObject<NetMeshBaseIdentifier,ShadowMeshBase,CoherenceSpecification>
 {
     /**
-     * Invoke a run now.
+     * Obtain the ProbeManager that manages this ShadowMeshBase.
+     *
+     * @return the ProbeManager
+     */
+    public abstract ProbeManager getProbeManager();
+    
+    /**
+     * Invoke a run now. Note that invoking this method will not change the next time
+     * a ScheduledExecutorProbeManager will update the ShadowMeshBase. To impact that,
+     * call ScheduledExecutorProbeManager.doUpdateNow instead.
      *
      * @return desired time of the next update, in milliseconds. -1 indicates never.
      * @throws ProbeException thrown if the update was unsuccessful
@@ -47,7 +57,9 @@ public interface ShadowMeshBase
             IsDeadException;
 
     /**
-     * Invoke a run now.
+     * Invoke a run now. Note that invoking this method will not change the next time
+     * a ScheduledExecutorProbeManager will update the ShadowMeshBase. To impact that,
+     * call ScheduledExecutorProbeManager.doUpdateNow instead.
      *
      * @param coherence the requested CoherenceSpecification, if any
      * @return desired time of the next update, in milliseconds. -1 indicates never.
@@ -59,11 +71,6 @@ public interface ShadowMeshBase
         throws
             ProbeException,
             IsDeadException;
-
-    /**
-     * Cancel all future updates.
-     */
-    public abstract void cancelFutureUpdates();
 
     /**
      * Determine whether at the last run, this ShadowMeshBase used a WritableProbe.

@@ -16,7 +16,6 @@ package org.infogrid.probe.TEST;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.regex.Pattern;
 import org.infogrid.mesh.EntityBlessedAlreadyException;

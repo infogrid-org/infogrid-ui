@@ -161,6 +161,9 @@ public class AllTests
                         ShadowTest8.class ),
 
                 new TestSpec(
+                        ShadowTest9.class ),
+
+                new TestSpec(
                         ProbeUpdateCalculatorTest1.class ),
 
                 new TestSpec(

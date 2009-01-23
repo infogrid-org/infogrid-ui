@@ -15,11 +15,10 @@
 package org.infogrid.probe.manager.m;
 
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
+import org.infogrid.probe.manager.AbstractProbeManager;
+import org.infogrid.probe.manager.PassiveProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
-import org.infogrid.probe.manager.PassiveProbeManager;
-
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.MCachingHashMap;
 
@@ -28,6 +27,8 @@ import org.infogrid.util.MCachingHashMap;
  */
 public class MPassiveProbeManager
         extends
+            AbstractProbeManager
+        implements
             PassiveProbeManager
 {
     /**
@@ -55,5 +56,16 @@ public class MPassiveProbeManager
             CachingMap<NetMeshBaseIdentifier,ShadowMeshBase> storage )
     {
         super( delegateFactory, storage );
+    }
+
+    /**
+     * We are not needed any more.
+     *
+     * @param isPermanent true if this is permanent
+     */
+    public void die(
+            boolean isPermanent )
+    {
+        // no op
     }
 }

@@ -14,10 +14,10 @@
 
 package org.infogrid.probe.manager;
 
-import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
 import org.infogrid.util.SmartFactory;
@@ -43,7 +43,7 @@ public interface ProbeManager
      * 
      * @return the NameServer
      */
-    public MeshBaseNameServer getNetMeshBaseNameServer();
+    public NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> getNetMeshBaseNameServer();
     
     /**
      * Tell this ProbeManager that it is not needed any more.

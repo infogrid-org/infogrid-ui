@@ -14,10 +14,9 @@
 
 package org.infogrid.meshbase.net;
 
-import org.infogrid.util.ResourceHelper;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.infogrid.util.ResourceHelper;
 
 /**
  * Captures the requirements for coherence between replicas. This is an abstract

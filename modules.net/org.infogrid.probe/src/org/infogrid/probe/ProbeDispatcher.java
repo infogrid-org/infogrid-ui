@@ -51,8 +51,6 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.Transaction;
-import org.infogrid.meshbase.transaction.TransactionAction;
-import org.infogrid.meshbase.transaction.TransactionActionException;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Probe.ProbeUpdateSpecification;
@@ -374,46 +372,6 @@ public class ProbeDispatcher
             theDelayUntilNextUpdate = ret;
         }
         return ret;
-    }
-
-    /**
-     * Cancel all future updates.
-     */
-    public void cancelFutureUpdates()
-    {
-        try {
-            theShadowMeshBase.executeAsap( new TransactionAction() {
-                    /**
-                     * Execute the action. This will be invoked within valid Transaction
-                     * boundaries.
-                     *
-                     * @param tx the Transaction within which the code is invoked.
-                     * @throws TransactionActionException.Rollback thrown if the Transaction needs to be rolled back
-                     * @throws TransactionActionException.Retry thrown if the Transaction needs to be rolled back and retried
-                     * @throws TransactionException should never be thrown
-                     */
-                    public void execute(
-                            Transaction tx )
-                        throws
-                            TransactionActionException.Rollback,
-                            TransactionActionException.Retry,
-                            TransactionException
-                    {
-                        try {
-                            MeshObject               home = theShadowMeshBase.getHomeObject();
-                            ProbeUpdateSpecification spec = (ProbeUpdateSpecification) home.getTypedFacadeFor( ProbeSubjectArea.PROBEUPDATESPECIFICATION );
-
-                            spec.stopUpdating();
-                        } catch( NotBlessedException ex ) {
-                            log.warn(  ex );
-                        }
-                    }
-
-            });
-            
-        } catch( TransactionException ex ) {
-            log.error( ex );
-        }
     }
 
     /**
@@ -2047,7 +2005,7 @@ public class ProbeDispatcher
      * If the last Probe run used a Writeble Probe, this is true.
      */
     protected Boolean theUsesWritableProbe;
-    
+
     /**
      * We expect this MIME type to indicate that a stream is XML.
      */

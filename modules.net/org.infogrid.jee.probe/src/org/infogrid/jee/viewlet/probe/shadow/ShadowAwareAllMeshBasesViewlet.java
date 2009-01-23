@@ -24,6 +24,8 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.probe.manager.ActiveProbeManager;
+import org.infogrid.probe.manager.ProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.context.Context;
@@ -139,15 +141,32 @@ public class ShadowAwareAllMeshBasesViewlet
 
         ShadowMeshBase realFound = (ShadowMeshBase) found;
 
-        try {
-            if( doRunNow ) {
-                realFound.doUpdateNow();
-            } else if( doStop ) {
-                realFound.cancelFutureUpdates();
+        ProbeManager probeMgr = realFound.getProbeManager();
+        if( probeMgr instanceof ActiveProbeManager ) {
+            ActiveProbeManager realProbeMgr = (ActiveProbeManager) probeMgr;
+
+            try {
+                if( doRunNow ) {
+                    realProbeMgr.doUpdateNow( realFound );
+
+                } else if( doStop ) {
+                    realProbeMgr.disableFutureUpdates( realFound );
+                }
+            } catch( Throwable t ) {
+                log.warn( t );
+                response.reportProblem( t );
             }
-        } catch( Throwable t ) {
-            log.warn( t );
-            response.reportProblem( t );
+
+        } else {
+            try {
+                if( doRunNow ) {
+                    realFound.doUpdateNow();
+                } // else do nothing
+
+            } catch( Throwable t ) {
+                log.warn( t );
+                response.reportProblem( t );
+            }
         }
     }
 
