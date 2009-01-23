@@ -88,14 +88,15 @@ public class ShadowTest1
         MeshObject baseHome   = base.getHomeObject();
         MeshObject shadowHome = shadow.getHomeObject();
         
-        checkEquals( changes.size(), 4, "wrong number of changes" );
+        checkEquals( changes.size(), 5, "wrong number of changes" );
         // These changes should be:
         // 1. Home Object created
         // 2. Home Object deleted
         // 3. ProbeUpdateSpecification#ProbeRunCounter changed
         // 4. ProbeUpdateSpecification#LastRunUsedWritableProbe changed
+        // LastProbeRun different
 
-        if( changes.size() != 4 ) {
+        if( changes.size() != 5 ) {
             dumpChangeSet( changes, log );
         }
     }

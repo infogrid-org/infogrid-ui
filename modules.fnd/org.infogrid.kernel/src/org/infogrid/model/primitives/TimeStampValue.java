@@ -270,11 +270,24 @@ public final class TimeStampValue
     public Date getAsDate()
     {
         Calendar cal = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
-        cal.set( theYear, theMonth, theDay, theHour, theMinute, (int) theSecond );
+        cal.set( theYear, theMonth-1, theDay, theHour, theMinute, (int) theSecond ); // month counts from 0
 
         // FIXME -- millis?
 
         return cal.getTime();
+    }
+
+    /**
+     * Obtain this as a number of milliseconds in System.currentTimeMillis() format.
+     *
+     * @return this value in System.currentTimeMillis() format
+     */
+    public long getAsMillis()
+    {
+        Calendar cal = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
+        cal.set( theYear, theMonth-1, theDay, theHour, theMinute, (int) theSecond ); // month counts from 0
+
+        return cal.getTimeInMillis();
     }
 
     /**
@@ -296,16 +309,6 @@ public final class TimeStampValue
                 && (theSecond == ((TimeStampValue)otherValue).theSecond);
         }
         return false;
-    }
-
-    /**
-     * Convert to long representation like System.currentTimeMillis().
-     *
-     * @return long representation of this TimeStampValue
-     */
-    public long getAsLong()
-    {
-        return getAsDate().getTime();
     }
 
     /**

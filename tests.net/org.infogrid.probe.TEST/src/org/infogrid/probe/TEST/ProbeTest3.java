@@ -21,6 +21,7 @@ import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.meshbase.net.transaction.NetMeshObjectPropertyChangeEvent;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.manager.PassiveProbeManager;
 import org.infogrid.probe.manager.m.MPassiveProbeManager;
@@ -74,8 +75,13 @@ public class ProbeTest3
         IterableNetMeshBaseDifferencer diff_A_B       = new IterableNetMeshBaseDifferencer( meshBaseA );
         ChangeSet                   firstChangeSet = diff_A_B.determineChangeSet( meshBaseB );
 
-            checkEquals( firstChangeSet.size(), 0, "not the same content" );
-            if( firstChangeSet.size() > 0 ) {
+            checkEquals( firstChangeSet.size(), 1, "not the same content" );
+            checkCondition( firstChangeSet.getChange( 0 ) instanceof NetMeshObjectPropertyChangeEvent, "wrong change type" );
+            checkEquals(
+                    ((NetMeshObjectPropertyChangeEvent)firstChangeSet.getChange( 0 )).getPropertyTypeIdentifier().toExternalForm(),
+                    "org.infogrid.model.Probe#ProbeUpdateSpecification/LastProbeRun",
+                    "Wrong property changed" );
+            if( firstChangeSet.size() > 1 ) {
                 dumpChangeSet( firstChangeSet, log );
             }
 
@@ -129,7 +135,9 @@ public class ProbeTest3
         IterableNetMeshBaseDifferencer diff_A_C = new IterableNetMeshBaseDifferencer( meshBaseA );
         ChangeSet thirdChangeSet = diff_A_C.determineChangeSet( meshBaseC );
 
-            checkEquals( thirdChangeSet.size(), 1, "not the same content (except for ProbeUpdateCounter)" );
+            checkEquals( thirdChangeSet.size(), 2, "not the same content" );
+            // ProbeUpdateCounter
+            // LastProbeRun
             if( thirdChangeSet.size() > 0 ) {
                 dumpChangeSet( thirdChangeSet, log );
             }

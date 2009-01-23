@@ -308,7 +308,7 @@ public class ProbeDispatcher
                             log.error( ex3 );
                         }
                         if( nextRun != null ) {
-                            ret = nextRun.getAsLong() - System.currentTimeMillis();
+                            ret = nextRun.getAsMillis() - System.currentTimeMillis();
                         } else {
                             ret = -1L; // never again
                         }
@@ -1532,7 +1532,7 @@ public class ProbeDispatcher
                 if( found == null ) {
                     return -1L;
                 }
-                theDelayUntilNextUpdate = found.getAsLong() - System.currentTimeMillis();
+                theDelayUntilNextUpdate = found.getAsMillis() - System.currentTimeMillis();
                 if( theDelayUntilNextUpdate < 0L ) {
                     theDelayUntilNextUpdate = 0; // as soon as possible
                 }

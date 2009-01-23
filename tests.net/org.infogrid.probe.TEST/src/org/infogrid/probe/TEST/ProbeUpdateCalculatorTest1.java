@@ -24,6 +24,7 @@ import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.IsAbstractException;
+import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
@@ -146,7 +147,7 @@ public class ProbeUpdateCalculatorTest1
                 meshBase1.getHomeObject().getTypes(),
                 new EntityType[] { homeObjectType },
                 "wrong home object type for unchanging probe" );
-        
+
         Thread.sleep( noChangePoints[ noChangePoints.length-1 ] + 1000L ); // a bit longer than needed
         noChangeProbeManager.remove( theUnchangingDataSource );
 
