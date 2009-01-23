@@ -168,6 +168,9 @@ public abstract class AbstractMeshObjectNeighborChangeEvent
     public void setResolver(
             MeshBase mb )
     {
+        if( mb == null ) {
+            throw new NullPointerException( "must not set a null resolver" );
+        }
         if( theResolver != mb ) {
             theResolver = mb;
             clearCachedObjects();
