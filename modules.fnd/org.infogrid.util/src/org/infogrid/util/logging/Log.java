@@ -8,19 +8,18 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.logging;
 
+import java.text.MessageFormat;
+import java.util.Properties;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.AbstractLocalizedRuntimeException;
 import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.ResourceHelper;
-
-import java.text.MessageFormat;
-import java.util.Properties;
 
 /** 
   * <p>The central class in the org.infogrid.util.logging package.</p>
@@ -451,8 +450,8 @@ public abstract class Log
      * @param formatter       the LocLocalizedObjectFormatter use in user-visible messages
      */
     public final void userFatal(
-            Object                            parentComponent,
-            Throwable                         t,
+            Object                   parentComponent,
+            Throwable                t,
             LocalizedObjectFormatter formatter )
     {
         if( t instanceof AbstractLocalizedException ) {
@@ -696,8 +695,8 @@ public abstract class Log
      * @param formatter       the LocLocalizedObjectFormatter use in user-visible messages
      */
     public final void userWarn(
-            Object                            parentComponent,
-            Throwable                         t,
+            Object                   parentComponent,
+            Throwable                t,
             LocalizedObjectFormatter formatter )
     {
         if( t instanceof AbstractLocalizedException ) {
