@@ -654,19 +654,19 @@ public abstract class HTTP
     }
 
     /**
-     * Append an argument to a URL.
+     * Append an argument pair to a URL.
      *
      * @param url the URL to which we append the argument
-     * @param argument the argument, such as <tt>foo</tt> or <tt>foo=bar</tt>, without ambersand or question mark separators
+     * @param argumentPair the already-escaped argument, such as <tt>foo</tt> or <tt>foo=bar</tt>, without ambersand or question mark separators
      * @return the result
      */
-    public static URL appendArgumentToUrl(
+    public static URL appendArgumentPairToUrl(
             URL    url,
-            String argument )
+            String argumentPair )
     {
         try {
             String urlString = url.toExternalForm();
-            String ret = appendArgumentToUrl( urlString, argument );
+            String ret = appendArgumentPairToUrl( urlString, argumentPair );
             return new URL( ret );
         } catch( MalformedURLException ex ) {
             log.error( ex );
@@ -675,21 +675,85 @@ public abstract class HTTP
     }
 
     /**
+     * Append an argument pair to a URL.
+     *
+     * @param url the URL to which we append the argument
+     * @param argumentPair the already-escaped argument, such as <tt>foo</tt> or <tt>foo=bar</tt>, without ambersand or question mark separators
+     * @return the result
+     */
+    public static String appendArgumentPairToUrl(
+            String url,
+            String argumentPair )
+    {
+        StringBuilder buf = new StringBuilder( url.length() + argumentPair.length() + 5 ); // fudge
+        buf.append( url );
+        appendArgumentPairToUrl( buf, argumentPair );
+        return buf.toString();
+    }
+
+    /**
+     * Append an argument pair to a URL.
+     *
+     * @param url the URL to which we append the argument
+     * @param argumentPair the already-escaped argument, such as <tt>foo</tt> or <tt>foo=bar</tt>, without ambersand or question mark separators
+     * @return the result
+     */
+    public static StringBuilder appendArgumentPairToUrl(
+            StringBuilder url,
+            String        argumentPair )
+    {
+        if( url.indexOf( "?" ) >= 0 ) {
+            url.append(  '&' );
+        } else {
+            url.append(  '?' );
+        }
+        url.append( argumentPair );
+        return url;
+    }
+
+    /**
      * Append an argument to a URL.
      *
      * @param url the URL to which we append the argument
-     * @param argument the argument, such as <tt>foo</tt> or <tt>foo=bar</tt>, without ambersand or question mark separators
+     * @param name the name of the argument, not escaped yet
+     * @param value the value of the argument, not escaped yet
      * @return the result
      */
     public static String appendArgumentToUrl(
             String url,
-            String argument )
+            String name,
+            String value )
     {
-        if( url.indexOf( '?' ) >= 0 ) {
-            return url + "&" + argument;
+        StringBuilder buf = new StringBuilder( url.length() + name.length() + value.length() + 10 ); // fudge
+        buf.append( url );
+        appendArgumentToUrl( buf, name, value );
+        return buf.toString();
+    }
+
+    /**
+     * Append an argument to a URL.
+     *
+     * @param url the URL to which we append the argument
+     * @param name the name of the argument, not escaped yet
+     * @param value the value of the argument, not escaped yet
+     * @return the result
+     */
+    public static StringBuilder appendArgumentToUrl(
+            StringBuilder url,
+            String        name,
+            String        value )
+    {
+        if( url.indexOf( "?" ) >= 0 ) {
+            url.append(  '&' );
         } else {
-            return url + "?" + argument;
+            url.append(  '?' );
         }
+        url.append( encodeToValidUrlArgument( name ));
+        if( value != null ) {
+            url.append( '=' );
+            url.append( encodeToValidUrlArgument( value ));
+        }
+        return url;
     }
 
     /**
