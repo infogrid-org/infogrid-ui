@@ -38,7 +38,7 @@ public class TestAppInitializationFilter
         extends
             AbstractMRestfulAppInitializationFilter
 {
-    private static final Log log = Log.getLogInstance( TestAppInitializationFilter.class ); // our own, private logger
+    private static Log log; // because this is a filter, delay initialization
 
     /**
      * Constructor.
@@ -57,6 +57,9 @@ public class TestAppInitializationFilter
     protected void populateMeshBase(
             MeshBase mb )
     {
+        if( log == null ) {
+            log = Log.getLogInstance( TestAppInitializationFilter.class ); // our own, private logger
+        }
         MeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
         
         Transaction tx = null;

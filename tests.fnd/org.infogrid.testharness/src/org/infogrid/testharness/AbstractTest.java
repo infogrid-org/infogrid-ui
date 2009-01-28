@@ -651,7 +651,17 @@ public abstract class AbstractTest
         int length = tests.length;
         if( length != medians.length ) {
             ret = false;
-            reportError( msg, "different length: " + tests.length + " vs. " + medians.length );
+            reportError(
+                    msg,
+                    "different length: "
+                        + tests.length
+                        + " vs. "
+                        + medians.length
+                        + ": "
+                        + ArrayHelper.join( tests )
+                        + " vs. "
+                        + ArrayHelper.join( medians ) );
+
             if( length > medians.length ) {
                 length = medians.length;
             }

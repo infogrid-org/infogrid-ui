@@ -18,12 +18,11 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
 import org.infogrid.lid.LidClientAuthenticationPipelineStage;
 import org.infogrid.lid.LidClientAuthenticationStatus;
-import org.infogrid.lid.LidPersona;
 import org.infogrid.lid.LidProcessingPipeline;
-import org.infogrid.lid.LidResource;
-import org.infogrid.lid.LidResourceFinder;
-import org.infogrid.lid.LidResourceUnknownException;
+import org.infogrid.lid.LidHasIdentifierFinder;
 import org.infogrid.lid.yadis.YadisPipelineProcessingStage;
+import org.infogrid.util.CannotFindHasIdentifierException;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
@@ -65,7 +64,7 @@ public class DefaultOpenIdLidProcessingPipeline
         super( c );
         
         theOpenIdIdpSideAssociationStage = c.findContextObject(        OpenIdIdpSideAssociationPipelineStage.class );
-        theResourceFinder                = c.findContextObjectOrThrow( LidResourceFinder.class );
+        theResourceFinder                = c.findContextObjectOrThrow( LidHasIdentifierFinder.class );
         theYadisStage                    = c.findContextObject(        YadisPipelineProcessingStage.class );
         theAuthenticationStage           = c.findContextObject(        LidClientAuthenticationPipelineStage.class );
         theOpenIdSsoStage                = c.findContextObject(        OpenIdSsoPipelineStage.class );
@@ -86,9 +85,9 @@ public class DefaultOpenIdLidProcessingPipeline
         throws
             LidAbortProcessingPipelineException
     {
-        LidResource                   requestedResource = null;
+        HasIdentifier                 requestedResource = null;
         LidClientAuthenticationStatus clientAuthStatus  = null;
-        LidPersona                    clientPersona     = null;
+        HasIdentifier                 clientPersona     = null;
         
         // This needs to be at the beginning due to the LidAbortProcessingPipelineException
         String lid_target = lidRequest.getArgument( "lid-target" );
@@ -98,12 +97,16 @@ public class DefaultOpenIdLidProcessingPipeline
         lidRequest.setAttribute( LID_TARGET_ATTRIBUTE_NAME, lid_target );
 
         if( theOpenIdIdpSideAssociationStage != null ) {
-            theOpenIdIdpSideAssociationStage.processRequest( lidRequest, lidResponse );
+            try {
+                theOpenIdIdpSideAssociationStage.processRequest( lidRequest, lidResponse );
+            } catch( OpenIdAssociationException ex ) {
+                log.error( ex );
+            }
         }
 
         try {
-            requestedResource = theResourceFinder.findLidResource( lidRequest );
-        } catch( LidResourceUnknownException ex ) {
+            requestedResource = theResourceFinder.findFromRequest( lidRequest );
+        } catch( CannotFindHasIdentifierException ex ) {
             if( log.isInfoEnabled() ) {
                 log.info( ex );
             }
@@ -139,7 +142,7 @@ public class DefaultOpenIdLidProcessingPipeline
     /**
      * The service that knows how to find LidResources for incoming requests.
      */
-    protected LidResourceFinder theResourceFinder;
+    protected LidHasIdentifierFinder theResourceFinder;
 
     /**
      * The service that knows how to respond to Yadis requests.

@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.http.HTTP;
 
 /**
@@ -26,7 +27,7 @@ import org.infogrid.util.http.HTTP;
  */
 public class LidGpgPublicKeyNegotiator
     extends
-        AbstractFactory<String,String,Void>
+        AbstractFactory<Identifier,String,Void>
 {
     /**
      * Factory method.
@@ -37,13 +38,13 @@ public class LidGpgPublicKeyNegotiator
      * @throws FactoryException catch-all Exception, consider its cause
      */
     public String obtainFor(
-            String key,
-            Void   argument )
+            Identifier key,
+            Void       argument )
         throws
             FactoryException
     {
         try {
-            String url = HTTP.appendArgumentToUrl( key, "lid-meta=gpg%20--export%20--armor" );
+            String url = HTTP.appendArgumentPairToUrl( key.toExternalForm(), "lid-meta=gpg%20--export%20--armor" );
 
             HTTP.Response response = HTTP.http_get( url );
             if( !response.isSuccess() ) {

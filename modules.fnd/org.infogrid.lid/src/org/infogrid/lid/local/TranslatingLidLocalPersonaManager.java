@@ -12,14 +12,13 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.local;
 
 import java.util.Map;
 import java.util.Set;
 import org.infogrid.lid.credential.LidCredentialType;
-import org.infogrid.lid.credential.LidInvalidCredentialException;
+import org.infogrid.util.AbstractHasIdentifier;
 import org.infogrid.util.Identifier;
-import org.infogrid.util.http.SaneRequest;
 
 /**
  * Implements the LidLocalPersonaManager interface by delegating to another LidLocalPersonaManager
@@ -80,83 +79,17 @@ public abstract class TranslatingLidLocalPersonaManager
         }        
     }
 
-//    /**
-//     * Determine whether a a credential is valid for a given identifier.
-//     *
-//     * @param identifier the identifier for which the credential will be checked
-//     * @param type the type of credential to be checked
-//     * @param credential the credential to be checked
-//     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
-//     * @throws LidInvalidCredentialException thrown if the credential was invalid
-//     */
-//    public void checkCredential(
-//            String            identifier,
-//            LidCredentialType type,
-//            String            credential )
-//        throws
-//            LidPersonaUnknownException,
-//            LidInvalidCredentialException
-//    {
-//        if( identifier == null ) {
-//            throw new NullPointerException( "identifier must not be null" );
-//        }
-//        String delegateIdentifier = translateIdentifierForward( identifier );
-//
-//        try {
-//            theDelegate.checkCredential( delegateIdentifier, type, credential );
-//
-//        } catch( LidPersonaUnknownException ex ) {
-//            throw new LidPersonaUnknownException( identifier, ex );
-//
-//        } catch( LidInvalidCredentialException ex ) {
-//            throw new LidInvalidCredentialException( identifier, type, ex );
-//        }
-//    }
-//
-//    /**
-//     * Change the credential associated with a given identifier.
-//     *
-//     * @param identifier the identifier for which the credential will be changed
-//     * @param type the type of credential to be changed
-//     * @param credential the new credential
-//     * @throws UnsupportedOperationException thrown if this LidIdentityManager does not permit the changing of passwords
-//     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
-//     */
-//    public void changeCredential(
-//            String            identifier,
-//            LidCredentialType type,
-//            String            credential )
-//        throws
-//            UnsupportedOperationException,
-//            LidPersonaUnknownException
-//    {
-//        if( identifier == null ) {
-//            throw new NullPointerException( "identifier must not be null" );
-//        }
-//        String delegateIdentifier = translateIdentifierForward( identifier );
-//
-//        try {
-//            theDelegate.changeCredential(
-//                    delegateIdentifier,
-//                    type,
-//                    credential );
-//            
-//        } catch( LidPersonaUnknownException ex ) {
-//            throw new LidPersonaUnknownException( identifier, ex );
-//        }        
-//    }
-
     /**
      * Obtain a LidLocalPersona, given its identifier.
      *
      * @param identifier the identifier for which the LidLocalPersona will be retrieved
      * @return the found LidLocalPersona
-     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
-    public LidLocalPersona get(
+    public LidLocalPersona find(
             Identifier identifier )
         throws
-            LidPersonaUnknownException
+            LidLocalPersonaUnknownException
     {
         if( identifier == null ) {
             throw new NullPointerException( "identifier must not be null" );
@@ -164,12 +97,12 @@ public abstract class TranslatingLidLocalPersonaManager
         Identifier delegateIdentifier = translateIdentifierForward( identifier );
 
         try {
-            LidLocalPersona delegatePersona = theDelegate.get( delegateIdentifier );
+            LidLocalPersona delegatePersona = theDelegate.find( delegateIdentifier );
             LidLocalPersona ret             = translatePersonaBackward( delegatePersona );
             return ret;
 
-        } catch( LidPersonaUnknownException ex ) {
-            throw new LidPersonaUnknownException( identifier, ex );
+        } catch( LidLocalPersonaUnknownException ex ) {
+            throw new LidLocalPersonaUnknownException( identifier, ex );
         }        
     }
 
@@ -178,13 +111,13 @@ public abstract class TranslatingLidLocalPersonaManager
      * 
      * @param identifier the identifier of the LidLocalPersona that will be deleted
      * @throws UnsupportedOperationException thrown if this LidIdentityManager does not permit the deletion of LidLocalPersonas
-     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
     public void delete(
             Identifier identifier )
         throws
             UnsupportedOperationException,
-            LidPersonaUnknownException
+            LidLocalPersonaUnknownException
     {
         if( identifier == null ) {
             throw new NullPointerException( "identifier must not be null" );
@@ -195,8 +128,8 @@ public abstract class TranslatingLidLocalPersonaManager
             theDelegate.delete( delegateIdentifier );
 
         // we don't catch UnsupportedOperationException
-        } catch( LidPersonaUnknownException ex ) {
-            throw new LidPersonaUnknownException( identifier, ex );
+        } catch( LidLocalPersonaUnknownException ex ) {
+            throw new LidLocalPersonaUnknownException( identifier, ex );
         }
     }
     
@@ -266,7 +199,7 @@ public abstract class TranslatingLidLocalPersonaManager
      */
     static class TranslatingLidLocalPersona
             extends
-                AbstractLidResource
+                AbstractHasIdentifier
             implements
                 LidLocalPersona
     {
@@ -343,32 +276,6 @@ public abstract class TranslatingLidLocalPersonaManager
             theDelegate.setAttribute( key, value );
         }
 
-        /**
-         * Obtain the credential types available.
-         * 
-         * @return the credential types
-         */
-        public Set<LidCredentialType> getCredentialTypes()
-        {
-            return theDelegate.getCredentialTypes();
-        }
-
-        /**
-         * Perform a check of the validity of a presented credential.
-         * 
-         * @param credType the LidCredentialType to check
-         * @param request the incoming request carrying the presented credential
-         * @throws LidInvalidCredentialException thrown if the credential was invalid
-         */
-        public void checkCredential(
-                LidCredentialType credType,
-                SaneRequest       request )
-            throws
-                LidInvalidCredentialException
-        {
-            theDelegate.checkCredential( credType, request );
-        }
-        
         /**
          * The underlying LidLocalPersona from/to which we translate.
          */

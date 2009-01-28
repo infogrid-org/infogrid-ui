@@ -20,7 +20,7 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.VerbatimStructuredResponseTemplate;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
-import org.infogrid.lid.LidResource;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
@@ -68,7 +68,7 @@ public class YadisPipelineProcessingStage
     public void processRequest(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse,
-            LidResource        resource )
+            HasIdentifier      resource )
         throws
             LidAbortProcessingPipelineException
     {

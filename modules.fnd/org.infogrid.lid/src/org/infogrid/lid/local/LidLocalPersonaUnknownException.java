@@ -12,17 +12,18 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.local;
 
+import org.infogrid.util.CannotFindHasIdentifierException;
 import org.infogrid.util.Identifier;
 
 /**
  * Thrown if a LidPersona with this identifier is required for an operation but cannot
  * be found.
  */
-public class LidPersonaUnknownException
+public class LidLocalPersonaUnknownException
         extends
-            LidResourceUnknownException
+            CannotFindHasIdentifierException
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -31,7 +32,7 @@ public class LidPersonaUnknownException
      * 
      * @param identifier the identifier that could not be resolved into a LidPersona
      */
-    public LidPersonaUnknownException(
+    public LidLocalPersonaUnknownException(
             Identifier identifier )
     {
         super( identifier );
@@ -43,9 +44,9 @@ public class LidPersonaUnknownException
      * @param identifier the identifier that could not be resolved into a LidPersona
      * @param cause the underlying cause, if any
      */
-    public LidPersonaUnknownException(
-            Identifier    identifier,
-            Throwable cause )
+    public LidLocalPersonaUnknownException(
+            Identifier identifier,
+            Throwable  cause )
     {
         super( identifier, cause );
     }

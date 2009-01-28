@@ -14,6 +14,8 @@
 
 package org.infogrid.lid;
 
+import org.infogrid.util.http.SaneRequest;
+
 /**
  * Defines how to generate and validate LID nonces.
  */
@@ -27,11 +29,18 @@ public interface LidNonceManager
     public String generateNewNonce();
     
     /**
-     * Validate a presented nonce.
+     * Validate a LID nonce contained in a request.
      * 
-     * @param nonce the presented nonce
-     * @return true if the nonce is valid, false if it is not valid or unknown.
+     * @param request the request
+     * @throws LidInvalidNonceException thrown if the nonce was invalid
      */
-    public boolean validateNonce(
-            String nonce );
+    public void validateNonce(
+            SaneRequest request )
+        throws
+            LidInvalidNonceException;
+
+    /**
+     * Name of the URL parameter that indicates the LID nonce.
+     */
+    public static final String LID_NONCE_PARAMETER_NAME = "lid-nonce";
 }

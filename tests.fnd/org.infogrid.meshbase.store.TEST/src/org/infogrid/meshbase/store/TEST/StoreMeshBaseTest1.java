@@ -64,7 +64,6 @@ public class StoreMeshBaseTest1
         log.info( "Creating MeshBase" );
 
         super.startClock();
-        long t1 = System.currentTimeMillis();
 
         StoreMeshBase mb = StoreMeshBase.create(
                 theMeshBaseIdentifierFactory.fromExternalForm( "MeshBase" ),

@@ -19,8 +19,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import javax.sql.DataSource;
-import org.infogrid.store.AbstractStore;
-import org.infogrid.store.IterableStore;
+import org.infogrid.store.AbstractIterableStore;
 import org.infogrid.store.IterableStoreCursor;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
@@ -32,9 +31,7 @@ import org.infogrid.util.StringHelper;
  */
 public abstract class AbstractSqlStore
         extends
-            AbstractStore
-        implements
-            IterableStore
+            AbstractIterableStore
 {
     /**
      * Constructor for subclasses only.
@@ -193,16 +190,6 @@ public abstract class AbstractSqlStore
     }
 
     /**
-     * Obtain an Iterator over the content of this Store.
-     *
-     * @return the Iterator
-     */
-    public IterableStoreCursor getIterator()
-    {
-        return iterator();
-    }
-
-    /**
      * Find the key N rows up or down from the current key.
      *
      * @param key the current key
@@ -324,32 +311,6 @@ public abstract class AbstractSqlStore
         }
         long ret = ( stamp.getTime() / 1000 ) * 1000 + millis;
         return ret;
-    }
-
-    /**
-     * Determine the number of StoreValues in this Store.
-     *
-     * @return the number of StoreValues in this Store
-     * @throws IOException thrown if an I/O error occurred
-     */
-    public int size()
-        throws
-            IOException
-    {
-        return size( "" );
-    }
-    
-    /**
-     * Determine whether this Store is empty.
-     *
-     * @return true if this Store is empty
-     * @throws IOException thrown if an I/O error occurred
-     */
-    public boolean isEmpty()
-        throws
-            IOException
-    {
-        return size() == 0;
     }
 
     /**

@@ -21,8 +21,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
-import org.infogrid.store.AbstractStore;
-import org.infogrid.store.IterableStore;
+import org.infogrid.store.AbstractIterableStore;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
 import org.infogrid.store.StoreValue;
@@ -39,9 +38,7 @@ import org.infogrid.util.tree.TreeFacadeCursorIterator;
  */
 public class HadoopStore
         extends
-            AbstractStore
-        implements
-            IterableStore
+            AbstractIterableStore
 {
     private static final Log log = Log.getLogInstance( HadoopStore.class ); // our own, private logger
 
@@ -419,30 +416,6 @@ public class HadoopStore
     }
 
     /**
-     * Obtain an Iterator over the content of this Store.
-     *
-     * @return the Iterator
-     */
-    public HadoopStoreIterator getIterator()
-    {
-        return iterator();
-    }
-
-
-    /**
-     * Determine the number of StoreValues in this Store.
-     *
-     * @return the number of StoreValues in this Store
-     * @throws IOException thrown if an I/O error occurred
-     */
-    public int size()
-        throws
-            IOException
-    {
-        return size( "" );
-    }
-    
-    /**
      * Determine the number of StoreValues in this Store whose key starts with this String.
      *
      * @param startsWith the String the key starts with
@@ -467,19 +440,6 @@ public class HadoopStore
         FileStatus [] stati = theFileSystem.listStatus( theSubDir, filter );
         
         return stati.length;
-    }
-
-    /**
-     * Determine whether this Store is empty.
-     *
-     * @return true if this Store is empty
-     * @throws IOException thrown if an I/O error occurred
-     */
-    public boolean isEmpty()
-        throws
-            IOException
-    {
-        return size() == 0;
     }
 
     /**

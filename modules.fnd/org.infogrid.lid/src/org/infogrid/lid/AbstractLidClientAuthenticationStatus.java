@@ -17,7 +17,9 @@ package org.infogrid.lid;
 import java.util.Date;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.Identifier;
+import org.infogrid.util.StringHelper;
 
 /**
  * Factors out common functionality of LidClientAuthenticationStatus
@@ -42,13 +44,13 @@ public abstract class AbstractLidClientAuthenticationStatus
      */
     protected AbstractLidClientAuthenticationStatus(
             Identifier                       clientIdentifier,
-            LidPersona                       clientPersona,
+            HasIdentifier                    clientPersona,
             LidSession                       session,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
             Identifier                       sessionClientIdentifier,
-            LidPersona                       sessionClientPersona,
+            HasIdentifier                    sessionClientPersona,
             boolean                          wishesCancelSession )
     {
         theClientIdentifier = clientIdentifier;
@@ -311,7 +313,7 @@ public abstract class AbstractLidClientAuthenticationStatus
      * 
      * @return the LidPersona
      */
-    public LidPersona getClientPersona()
+    public HasIdentifier getClientPersona()
     {
         return theClientPersona;
     }
@@ -337,7 +339,7 @@ public abstract class AbstractLidClientAuthenticationStatus
      * @return LidPersona representing the client identified by the session going into this request, if any
      * @see #getSessionBelongsToIdentifier() 
      */
-    public LidPersona getSessionBelongsToPersona()
+    public HasIdentifier getSessionBelongsToPersona()
     {
         return theSessionClientPersona;
     }
@@ -356,14 +358,47 @@ public abstract class AbstractLidClientAuthenticationStatus
     }
 
     /**
+     * Obtain in String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theClientIdentifier",
+                    "theClientPersona",
+                    "theClientSession",
+                    "theCarriedValidCredentialTypes",
+                    "theCarriedInvalidCredentialTypes",
+                    "theInvalidCredentialExceptions",
+                    "theWishesCancelSession",
+                    "theSessionClientIdentifier",
+                    "theSessionClientPersona"
+                }, new Object[] {
+                    theClientIdentifier,
+                    theClientPersona,
+                    theClientSession,
+                    theCarriedValidCredentialTypes,
+                    theCarriedInvalidCredentialTypes,
+                    theInvalidCredentialExceptions,
+                    theWishesCancelSession,
+                    theSessionClientIdentifier,
+                    theSessionClientPersona
+                });
+    }
+
+    /**
      * The normalized identifier provided by the client.
      */
     protected Identifier theClientIdentifier;
     
     /**
-     * The determined client LidPersona.
+     * The determined client HasIdentifier.
      */
-    protected LidPersona theClientPersona;
+    protected HasIdentifier theClientPersona;
     
     /**
      * The current session of the client.
@@ -399,7 +434,7 @@ public abstract class AbstractLidClientAuthenticationStatus
     protected Identifier theSessionClientIdentifier;
     
     /**
-     * The client LidPersona as determined from the session, if any.
+     * The client HasIdentifier as determined from the session, if any.
      */
-    protected LidPersona theSessionClientPersona;
+    protected HasIdentifier theSessionClientPersona;
 }

@@ -12,8 +12,10 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.local.prepostfix;
 
+import org.infogrid.lid.local.LidLocalPersonaManager;
+import org.infogrid.lid.local.TranslatingLidLocalPersonaManager;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.SimpleStringIdentifier;
 

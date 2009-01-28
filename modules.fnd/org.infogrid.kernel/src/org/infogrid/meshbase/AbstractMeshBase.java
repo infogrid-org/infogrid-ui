@@ -43,8 +43,10 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.AbstractLiveDeadObject;
 import org.infogrid.util.CachingMap;
+import org.infogrid.util.CannotFindHasIdentifierException;
 import org.infogrid.util.FlexibleListenerSet;
 import org.infogrid.util.FlexiblePropertyChangeListenerSet;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
@@ -340,6 +342,29 @@ public abstract class AbstractMeshBase
             notFound[--count] = identifiers[i];
         }
         throw new MeshObjectsNotFoundException( this, ret, notFound );
+    }
+
+    /**
+     * Find a MeshObject from its Identifier.
+     *
+     * @param identifier the Identifier
+     * @return the found HasIdentifier
+     * @throws CannotFindHasIdentifierException thrown if the MeshObject cannot be found
+     */
+    public MeshObject find(
+            Identifier identifier )
+        throws
+            CannotFindHasIdentifierException
+    {
+        try {
+            return accessLocally( (MeshObjectIdentifier) identifier );
+
+        } catch( MeshObjectAccessException ex ) {
+            throw new CannotFindHasIdentifierException( identifier, ex );
+
+        } catch( NotPermittedException ex ) {
+            throw new CannotFindHasIdentifierException( identifier, ex );
+        }
     }
 
     /**
@@ -904,7 +929,7 @@ public abstract class AbstractMeshBase
     public void flushMeshObject(
             AbstractMeshObject obj )
     {
-        theCache.put( obj.getIdentifier(), obj );
+        theCache.putIgnorePrevious( obj.getIdentifier(), obj );
     }
 
     /**

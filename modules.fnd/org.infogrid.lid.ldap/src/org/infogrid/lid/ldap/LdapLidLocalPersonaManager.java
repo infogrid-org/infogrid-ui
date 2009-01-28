@@ -15,10 +15,7 @@
 package org.infogrid.lid.ldap;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
@@ -27,14 +24,10 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
 import org.infogrid.lid.AbstractReadOnlyLidLocalPersonaManager;
-import org.infogrid.lid.LidLocalPersona;
-import org.infogrid.lid.LidPersonaUnknownException;
-import org.infogrid.lid.AbstractLidLocalPersona;
-import org.infogrid.lid.credential.LidCredentialType;
-import org.infogrid.lid.credential.LidInvalidCredentialException;
-import org.infogrid.lid.credential.LidPasswordCredentialType;
+import org.infogrid.lid.local.LidLocalPersona;
+import org.infogrid.lid.local.LidLocalPersonaUnknownException;
+import org.infogrid.lid.local.SimpleLidLocalPersona;
 import org.infogrid.util.Identifier;
-import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -102,14 +95,14 @@ public class LdapLidLocalPersonaManager
         throws
             NamingException
     {
-        Properties passwordDirProps = (Properties) props.clone();
+        Properties managerProps = (Properties) props.clone();
 
-        props.put( javax.naming.Context.SECURITY_PRINCIPAL,      managerDn );
-        props.put( javax.naming.Context.SECURITY_CREDENTIALS,    managerPassword );
+        managerProps.put( javax.naming.Context.SECURITY_PRINCIPAL,      managerDn );
+        managerProps.put( javax.naming.Context.SECURITY_CREDENTIALS,    managerPassword );
 
-        DirContext dir = new InitialDirContext( props );
+        DirContext dir = new InitialDirContext( managerProps );
 
-        LdapLidLocalPersonaManager ret = new LdapLidLocalPersonaManager( dir, filter, controls, passwordDirProps );
+        LdapLidLocalPersonaManager ret = new LdapLidLocalPersonaManager( dir, filter, controls );
         return ret;
     }
 
@@ -119,18 +112,15 @@ public class LdapLidLocalPersonaManager
      * @param managerDir the DirContext, accessed by the LDAP manager, in which to find the identities
      * @param filter the LDAP filter expression
      * @param controls the SearchControls to use for queries
-     * @param passwordDirProps the Properties to use when attempting to check a password
      */
     protected LdapLidLocalPersonaManager(
             DirContext     managerDir,
             String         filter,
-            SearchControls controls,
-            Properties     passwordDirProps )
+            SearchControls controls )
     {
         theManagerDir       = managerDir;
         theFilter           = filter;
         theControls         = controls;
-        thePasswordDirProps = passwordDirProps;
     }
 
     /**
@@ -138,12 +128,12 @@ public class LdapLidLocalPersonaManager
      *
      * @param identifier the identifier for which the LidLocalPersona will be retrieved
      * @return the found LidLocalPersona
-     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
-    public LidLocalPersona get(
+    public LidLocalPersona find(
             Identifier identifier )
         throws
-            LidPersonaUnknownException
+            LidLocalPersonaUnknownException
     {
         NamingEnumeration found = null;
         String            s     = identifier.toExternalForm();
@@ -164,15 +154,15 @@ public class LdapLidLocalPersonaManager
                         attributes.put( att.getID(), value.toString() );
                     }
                 }                
-                LidLocalPersona ret = new LdapLidLocalPersona( identifier, attributes );
+                LidLocalPersona ret = SimpleLidLocalPersona.create( identifier, attributes );
                 
                 return ret;
             }
-            throw new LidPersonaUnknownException( identifier );
+            throw new LidLocalPersonaUnknownException( identifier );
 
         } catch( NamingException ex ) {
             log.error( ex );
-            throw new LidPersonaUnknownException( identifier );
+            throw new LidLocalPersonaUnknownException( identifier );
             
         } finally {
             if( found != null ) {
@@ -199,78 +189,4 @@ public class LdapLidLocalPersonaManager
      * The search controls.
      */
     protected SearchControls theControls;
-
-    /**
-     * The Properties to use when attempting to check a password.
-     */
-    protected Properties thePasswordDirProps;
-    
-    /**
-     * The Set of LidCredentialTypes available for LidLocalPersonas hosted by this LidLocalPersonaManager.
-     */
-    protected static final Set<LidCredentialType> CREDENTIAL_TYPES = new HashSet<LidCredentialType>();
-    static {
-            CREDENTIAL_TYPES.add( LidPasswordCredentialType.create());
-    };
-
-    /**
-     * Implementation of LidLocalPersona for this LidLocalPersonaManager.
-     */
-    class LdapLidLocalPersona
-            extends
-                AbstractLidLocalPersona
-    {
-        private static final long serialVersionUID = 1L; // helps with serialization
-
-        /**
-         * Constructor.
-         * 
-         * @param identifier the unique identifier of the persona, e.g. their identity URL
-         * @param attributes attributes of the persona, e.g. first name
-         */
-        protected LdapLidLocalPersona(
-                Identifier                    identifier,
-                Map<String,String>            attributes )
-        {
-            super( identifier, attributes, CREDENTIAL_TYPES );
-        }
-
-        /**
-         * Perform a check of the validity of a presented credential.
-         * 
-         * @param credType the LidCredentialType to check
-         * @param request the incoming request carrying the presented credential
-         * @throws LidInvalidCredentialException thrown if the credential was invalid
-         */
-        public void checkCredential(
-                LidCredentialType credType,
-                SaneRequest       request )
-            throws
-                LidInvalidCredentialException
-        {
-            if( !theCredentialTypes.contains( credType )) {
-                throw new LidInvalidCredentialException( theIdentifier, credType );
-            }
-            if( !request.matchArgument( "lid-credtype", "simple-password" )) {
-                throw new LidInvalidCredentialException( theIdentifier, credType );
-            }
-            String givenPassword = request.getArgument( "lid-credential" );
-            
-            Properties props = (Properties) thePasswordDirProps.clone();
-
-            props.put( javax.naming.Context.SECURITY_PRINCIPAL,      theIdentifier );
-            props.put( javax.naming.Context.SECURITY_CREDENTIALS,    givenPassword );
-
-            DirContext passwordDir; // for debugging
-            try {
-                passwordDir = new InitialDirContext( props );
-
-            } catch( NamingException ex ) {
-                if( log.isDebugEnabled() ) {
-                    log.debug( ex );
-                }
-                throw new LidInvalidCredentialException( theIdentifier, credType );
-            }
-        }
-    }            
 }

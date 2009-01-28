@@ -29,6 +29,7 @@ import org.infogrid.model.primitives.Role;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.text.HasStringRepresentation;
 
@@ -65,6 +66,7 @@ import org.infogrid.util.text.HasStringRepresentation;
  */
 public interface MeshObject
         extends
+            HasIdentifier,
             HasStringRepresentation
 {
     /**

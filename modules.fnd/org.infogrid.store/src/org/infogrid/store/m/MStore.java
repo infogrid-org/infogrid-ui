@@ -19,8 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import org.infogrid.store.AbstractStore;
-import org.infogrid.store.IterableStore;
+import org.infogrid.store.AbstractIterableStore;
 import org.infogrid.store.IterableStoreCursor;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
@@ -37,9 +36,7 @@ import org.infogrid.util.logging.Log;
  */
 public class MStore
         extends
-            AbstractStore
-        implements
-            IterableStore
+            AbstractIterableStore
 {
     private static final Log log = Log.getLogInstance( MStore.class ); // our own, private logger
     

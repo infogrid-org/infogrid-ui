@@ -107,6 +107,9 @@ public abstract class ModelBaseSingleton
     public static SubjectArea findSubjectArea(
             String identifierAsString )
     {
+        if( theSingleton == null ) {
+            throw new IllegalStateException( "no singleton ModelBase has been set" );
+        }
         MeshTypeIdentifier identifier = theSingleton.getMeshTypeIdentifierFactory().fromExternalForm( identifierAsString );
         
         try {
@@ -128,6 +131,9 @@ public abstract class ModelBaseSingleton
     public static EntityType findEntityType(
             String identifierAsString )
     {
+        if( theSingleton == null ) {
+            throw new IllegalStateException( "no singleton ModelBase has been set" );
+        }
         MeshTypeIdentifier identifier = theSingleton.getMeshTypeIdentifierFactory().fromExternalForm( identifierAsString );
         
         try {
@@ -149,6 +155,9 @@ public abstract class ModelBaseSingleton
     public static RelationshipType findRelationshipType(
             String identifierAsString )
     {
+        if( theSingleton == null ) {
+            throw new IllegalStateException( "no singleton ModelBase has been set" );
+        }
         MeshTypeIdentifier identifier = theSingleton.getMeshTypeIdentifierFactory().fromExternalForm( identifierAsString );
         
         try {
@@ -170,6 +179,9 @@ public abstract class ModelBaseSingleton
     public static PropertyType findPropertyType(
             String identifierAsString )
     {
+        if( theSingleton == null ) {
+            throw new IllegalStateException( "no singleton ModelBase has been set" );
+        }
         MeshTypeIdentifier identifier = theSingleton.getMeshTypeIdentifierFactory().fromExternalForm( identifierAsString );
         
         try {
@@ -191,6 +203,9 @@ public abstract class ModelBaseSingleton
     public static RoleType findRoleType(
             String identifierAsString )
     {
+        if( theSingleton == null ) {
+            throw new IllegalStateException( "no singleton ModelBase has been set" );
+        }
         MeshTypeIdentifier identifier = theSingleton.getMeshTypeIdentifierFactory().fromExternalForm( identifierAsString );
         
         try {

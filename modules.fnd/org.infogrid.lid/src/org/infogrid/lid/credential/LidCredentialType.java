@@ -14,7 +14,7 @@
 
 package org.infogrid.lid.credential;
 
-import org.infogrid.lid.LidLocalPersona;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.LocalizedObject;
 import org.infogrid.util.http.SaneRequest;
 
@@ -27,13 +27,6 @@ public interface LidCredentialType
         extends
             LocalizedObject
 {
-//    /**
-//     * Determine the computable short name of this LidCredentialType.
-//     * 
-//     * @return the computable short name
-//     */
-//    public abstract String getShortName();
-//
     /**
      * Determine the computable full-qualified name of this LidCredentialType.
      * 
@@ -41,18 +34,36 @@ public interface LidCredentialType
      */
     public abstract String getFullName();
 
-//    /**
-//     * Perform a check of the validity of a presented credential.
-//     * 
-//     * @param identifier the identifier for which credential was presented
-//     * @param request the incoming request carrying the presented credential
-//     * @param persona what is known locally about the persona
-//     * @throws LidInvalidCredentialException thrown if the credential was invalid
-//     */
-//    public abstract void checkCredential(
-//            String          identifier,
-//            SaneRequest     request,
-//            LidLocalPersona persona )
-//        throws
-//            LidInvalidCredentialException;
+    /**
+     * Determine whether this LidCredentialType is contained in this request.
+     *
+     * @param request the request
+     * @return true if this LidCredentialType is contained in this request
+     */
+    public abstract boolean isContainedIn(
+            SaneRequest request );
+
+    /**
+     * Determine whether the request contains a valid LidCredentialType of this type
+     * for the given subject.
+     *
+     * @param request the request
+     * @param subject the subject
+     * @throws LidInvalidCredentialException thrown if the contained LidCdedentialType is not valid for this subject
+     */
+    public abstract void checkCredential(
+            SaneRequest   request,
+            HasIdentifier subject )
+        throws
+            LidInvalidCredentialException;
+
+    /**
+     * Name of the URL parameter that indicates the LID credential type.
+     */
+    public static final String LID_CREDTYPE_PARAMETER_NAME = "lid-credtype";
+
+    /**
+     * Name of the URL parameter that indicates the LID credential.
+     */
+    public static final String LID_CREDENTIAL_PARAMETER_NAME = "lid-credential";
 }

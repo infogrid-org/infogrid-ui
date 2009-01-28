@@ -14,6 +14,8 @@
 
 package org.infogrid.lid;
 
+import org.infogrid.lid.local.AbstractLidLocalPersonaManager;
+import org.infogrid.lid.local.LidLocalPersona;
 import java.util.Map;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.util.Identifier;

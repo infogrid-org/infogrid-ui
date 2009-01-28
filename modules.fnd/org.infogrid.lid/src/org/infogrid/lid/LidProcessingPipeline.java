@@ -15,6 +15,7 @@
 package org.infogrid.lid;
 
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.http.SaneRequestUtils;
 
@@ -50,12 +51,12 @@ public interface LidProcessingPipeline
      * pipeline has been processed.
      */
     public static final String CLIENT_PERSONA_ATTRIBUTE_NAME
-            = SaneRequestUtils.classToAttributeName( LidPersona.class );
+            = SaneRequestUtils.classToAttributeName( HasIdentifier.class, "RequestingClient" );
 
     /**
-     * Name of the LidResource instance found in the request after the pipeline has
+     * Name of the HasIdentifier instance found in the request after the pipeline has
      * been processed.
      */
     public static final String REQUESTED_RESOURCE_ATTRIBUTE_NAME
-            = SaneRequestUtils.classToAttributeName( LidResource.class );
+            = SaneRequestUtils.classToAttributeName( HasIdentifier.class, "RequestedResource" );
 }

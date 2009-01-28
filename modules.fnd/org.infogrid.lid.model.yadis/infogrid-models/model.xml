@@ -50,6 +50,21 @@ the Type URI(s).</userdescription>
             </propertytype>
         </entitytype>
 
+        <entitytype ID="org.infogrid.lid.model.yadis#Endpoint">
+            <name>Endpoint</name>
+            <userdescription>This represents an endpoint of a Yadis/XRDS Service.</userdescription>
+
+            <propertytype ID="org.infogrid.lid.model.yadis#Endpoint/Priority">
+                <name>Priority</name>
+                <username>Priority</username>
+                <userdescription>Priority of this endpoint.</userdescription>
+                <datatype>
+                    <IntegerDataType/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+        </entitytype>
+
         <relationshiptype ID="org.infogrid.lid.model.yadis#XrdsServiceCollection_Collects_XrdsService">
             <name>XrdsServiceCollection_Collects_XrdsService</name>
             <username>Collects</username>
@@ -67,17 +82,31 @@ to the XRDS Service Collection itself.</userdescription>
             </dest>
         </relationshiptype>
 
-        <relationshiptype ID="org.infogrid.lid.model.yadis#XrdsService_IsProvidedAtEndpoint_WebResource">
-            <name>XrdsService_IsProvidedAtEndpoint_WebResource</name>
-            <username>is provided at end point</username>
+        <relationshiptype ID="org.infogrid.lid.model.yadis#XrdsService_IsProvidedAt_Endpoint">
+            <name>XrdsService_IsProvidedAt_Endpoint</name>
+            <username>is provided at</username>
             <userdescription>Expresses at which endpoints an XRDS Service is available.</userdescription>
             <src>
               <e>org.infogrid.lid.model.yadis#XrdsService</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.model.Web#WebResource</e>
+              <e>org.infogrid.lid.model.yadis#Endpoint</e>
               <MultiplicityValue>0:N</MultiplicityValue>
+            </dest>
+        </relationshiptype>
+
+        <relationshiptype ID="org.infogrid.lid.model.yadis#Endpoint_IsOperatedBy_WebResource">
+            <name>Endpoint_IsOperatedBy_WebResource</name>
+            <username>is operated by</username>
+            <userdescription>Expresses which WebResource acts as the Endpoint.</userdescription>
+            <src>
+              <e>org.infogrid.lid.model.yadis#Endpoint</e>
+              <MultiplicityValue>0:1</MultiplicityValue>
+            </src>
+            <dest>
+              <e>org.infogrid.model.Web#WebResource</e>
+              <MultiplicityValue>0:n</MultiplicityValue>
             </dest>
         </relationshiptype>
 

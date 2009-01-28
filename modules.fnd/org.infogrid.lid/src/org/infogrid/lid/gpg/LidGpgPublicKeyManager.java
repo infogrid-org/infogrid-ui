@@ -14,6 +14,7 @@
 
 package org.infogrid.lid.gpg;
 
+import org.infogrid.util.Identifier;
 import org.infogrid.util.SmartFactory;
 
 /**
@@ -23,6 +24,6 @@ import org.infogrid.util.SmartFactory;
  */
 public interface LidGpgPublicKeyManager
     extends
-        SmartFactory<String,String,Void>
+        SmartFactory<Identifier,String,Void>
 {
 }

@@ -273,12 +273,12 @@ public abstract class AbstractJeeViewlet
         // append lid-xpath
         String xpath = theCurrentRequest.getSaneRequest().getArgument( RestfulRequest.XPATH_PREFIX );
         if( xpath != null ) {
-            ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.XPATH_PREFIX + "=" + HTTP.encodeToValidUrlArgument( xpath ));
+            ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.XPATH_PREFIX, xpath );
         }
         // append lid-format
         String format = theCurrentRequest.getSaneRequest().getArgument( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
         if( format != null ) {
-            ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_FORMAT_PARAMETER_NAME + "=" + HTTP.encodeToValidUrlArgument( format ));
+            ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_FORMAT_PARAMETER_NAME, format );
         }
         return ret;
     }

@@ -12,20 +12,17 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.credential;
 
-import org.infogrid.util.Identifier;
+import org.infogrid.util.Factory;
+import org.infogrid.util.http.SaneRequest;
 
 /**
- * A resource that a client may want to access. On this level, we only know the resource has
- * an identifier.
+ * Factory for LidCredentialTypes contained in a particular SaneRequest.
  */
-public interface LidResource
+public interface LidCredentialTypesFactory
+    extends
+        Factory<SaneRequest,LidCredentialType[],Void>
 {
-    /**
-     * Obtain the resource's unique identifier.
-     * 
-     * @return the unique identifier
-     */
-    public Identifier getIdentifier();
+    // nothing
 }

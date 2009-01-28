@@ -16,6 +16,8 @@ package org.infogrid.lid;
 
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.lid.yadis.YadisPipelineProcessingStage;
+import org.infogrid.util.CannotFindHasIdentifierException;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
@@ -55,7 +57,7 @@ public class DefaultLidProcessingPipeline
     {
         super( c );
         
-        theResourceFinder      = c.findContextObject( LidResourceFinder.class );
+        theResourceFinder      = c.findContextObject( LidHasIdentifierFinder.class );
         theYadisStage          = c.findContextObject( YadisPipelineProcessingStage.class );
         theAuthenticationStage = c.findContextObject( LidClientAuthenticationPipelineStage.class );
     }
@@ -75,14 +77,14 @@ public class DefaultLidProcessingPipeline
         throws
             LidAbortProcessingPipelineException
     {
-        LidResource                   requestedResource = null;
+        HasIdentifier                 requestedResource = null;
         LidClientAuthenticationStatus clientAuthStatus  = null;
-        LidPersona                    clientPersona     = null;
+        HasIdentifier                 clientPersona     = null;
 
         if( theResourceFinder != null ) {
             try {
-                requestedResource = theResourceFinder.findLidResource( lidRequest );
-            } catch( LidResourceUnknownException ex ) {
+                requestedResource = theResourceFinder.findFromRequest( lidRequest );
+            } catch( CannotFindHasIdentifierException ex ) {
                 if( log.isInfoEnabled() ) {
                     log.info( ex );
                 }
@@ -111,7 +113,7 @@ public class DefaultLidProcessingPipeline
     /**
      * The service that knows how to find LidResources for incoming requests.
      */
-    protected LidResourceFinder theResourceFinder;
+    protected LidHasIdentifierFinder theResourceFinder;
 
     /**
      * The service that knows how to respond to Yadis requests.

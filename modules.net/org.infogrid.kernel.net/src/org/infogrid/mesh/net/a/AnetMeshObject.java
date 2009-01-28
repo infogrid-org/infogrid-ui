@@ -1955,7 +1955,9 @@ public class AnetMeshObject
                     "theTimeUpdated",
                     "theTimeRead",
                     "theTimeExpires",
-                    "theMeshBase.getNetworkIdentifier()"
+                    "types",
+                    "neighbors",
+                    "theMeshBase.getIdentifier()"
                 },
                 new Object[] {
                     theIdentifier,
@@ -1963,6 +1965,8 @@ public class AnetMeshObject
                     theTimeUpdated,
                     theTimeRead,
                     theTimeExpires,
+                    theMeshTypes != null ? theMeshTypes.keySet() : null,
+                    theNeighborIdentifiers,
                     theMeshBase != null ? theMeshBase.getIdentifier().toExternalForm() : null
                 });
     }

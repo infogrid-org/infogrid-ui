@@ -23,6 +23,7 @@ import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSorter;
 import org.infogrid.mesh.set.OrderedImmutableMeshObjectSet;
+import org.infogrid.mesh.set.OrderedMeshObjectSet;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.util.ArrayHelper;
 
@@ -216,6 +217,21 @@ public class ImmutableMMeshObjectSetFactory
 
     /**
      * Factory method to create an OrderedMeshObjectSet.
+     *
+     * @param contentInOrder the content of the OrderedMeshObjectSet, in order
+     * @return the created OrderedImmutableMeshObjectSet
+     */
+    public OrderedImmutableMeshObjectSet createOrderedImmutableMeshObjectSet(
+            MeshObject [] contentInOrder )
+    {
+        return new OrderedImmutableMMeshObjectSet(
+                this,
+                contentInOrder,
+                OrderedMeshObjectSet.UNLIMITED );
+    }
+
+    /**
+     * Factory method to create an OrderedMeshObjectSet.
      * 
      * @param content the content of the OrderedMeshObjectSet
      * @param sorter the MeshObjectSorter that determines the ordering within the OrderedMeshObjectSet
@@ -227,7 +243,7 @@ public class ImmutableMMeshObjectSetFactory
     {
         // I was thinking of sorting only when the content is actually requested, but
         // it's unlikely the user will request an ordered set and then not use it, so that
-        
+
         return new OrderedImmutableMMeshObjectSet(
                 this,
                 sorter.getOrderedInNew( content.getMeshObjects() ),

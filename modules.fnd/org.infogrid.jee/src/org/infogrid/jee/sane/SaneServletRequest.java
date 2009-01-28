@@ -122,8 +122,8 @@ public class SaneServletRequest
         // URL parameters override POSTed fields: more intuitive for the user
         if( "POST".equalsIgnoreCase( method ) ) { // we do our own parsing
             try {
-                int length = sRequest.getContentLength();
-                byte [] buf = StreamUtils.slurp( sRequest.getInputStream(), length );
+                int     length = sRequest.getContentLength();
+                byte [] buf    = StreamUtils.slurp( sRequest.getInputStream(), length );
 
                 postData = new String( buf, "utf-8" );
                 addToArguments( postData, true, arguments, postArguments );
@@ -239,7 +239,6 @@ public class SaneServletRequest
             postArguments = new HashMap<String,String[]>();
         }
 
-        char sep = '?';
         StringTokenizer pairTokenizer = new StringTokenizer( data, "&" );
         while( pairTokenizer.hasMoreTokens() ) {
             String    pair     = pairTokenizer.nextToken();

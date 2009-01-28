@@ -23,6 +23,8 @@ import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.Factory;
+import org.infogrid.util.Identifier;
+import org.infogrid.util.IdentifierFactory;
 import org.infogrid.util.PatientSmartFactory;
 
 /**
@@ -31,7 +33,7 @@ import org.infogrid.util.PatientSmartFactory;
  */
 public class StoreLidKeyPairManager
         extends
-            PatientSmartFactory<String,LidKeyPair,Void>
+            PatientSmartFactory<Identifier,LidKeyPair,Void>
         implements
             LidKeyPairManager
 {
@@ -39,17 +41,19 @@ public class StoreLidKeyPairManager
      * Factory method.
      *
      * @param nonceManager manages nonces for LID GPG operations
+     * @param identifierFactory the factory for identifiers to use
      * @param store the Store to use
      * @return the created StoreLidKeyPairManager
      */
     public static StoreLidKeyPairManager create(
-            LidNonceManager nonceManager,
-            Store           store )
+            LidNonceManager   nonceManager,
+            IdentifierFactory identifierFactory,
+            Store             store )
     {
-        StoreLidKeyPairMapper mapper = new StoreLidKeyPairMapper();
+        StoreLidKeyPairMapper mapper = StoreLidKeyPairMapper.create( identifierFactory );
         
         LidGpgKeyPairFactory delegateFactory = LidGpg.create( nonceManager );
-        StoreBackedSwappingHashMap<String,LidKeyPair> storage = StoreBackedSwappingHashMap.createWeak( mapper, store );
+        StoreBackedSwappingHashMap<Identifier,LidKeyPair> storage = StoreBackedSwappingHashMap.createWeak( mapper, store );
         
         StoreLidKeyPairManager ret = new StoreLidKeyPairManager( delegateFactory, storage );
         return ret;
@@ -62,8 +66,8 @@ public class StoreLidKeyPairManager
      * @param storage the storage to use
      */
     protected StoreLidKeyPairManager(
-            Factory<String,LidKeyPair,Void> delegateFactory,
-            CachingMap<String,LidKeyPair>   storage )
+            Factory<Identifier,LidKeyPair,Void> delegateFactory,
+            CachingMap<Identifier,LidKeyPair>   storage )
     {
         super( delegateFactory, storage );
     }

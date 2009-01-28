@@ -35,7 +35,7 @@ public abstract class AbstractAppInitializationFilter
         implements
             Filter
 {
-    private static final Log log = Log.getLogInstance( AbstractAppInitializationFilter.class ); // our own, private logger
+    private static Log log; // because this is a filter, it needs delayed initialization
 
     /**
      * Constructor.
@@ -93,8 +93,12 @@ public abstract class AbstractAppInitializationFilter
             if( !isInitialized ) {
                 try {
                     initialize( request, response );
+
                 } catch( Throwable t ) {
 
+                    if( log == null ) {
+                        log = Log.getLogInstance( AbstractAppInitializationFilter.class ); // our own, private logger
+                    }
                     log.error( t );
 
                     StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );

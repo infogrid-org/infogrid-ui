@@ -18,6 +18,7 @@ import java.util.Collection;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.Identifier;
 
 /**
@@ -43,13 +44,13 @@ public class SimpleLidClientAuthenticationStatus
      */
     public static SimpleLidClientAuthenticationStatus create(
             Identifier                       clientIdentifier,
-            LidPersona                       clientPersona,
+            HasIdentifier                    clientPersona,
             LidSession                       session,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
             Identifier                       sessionClientIdentifier,
-            LidPersona                       sessionClientPersona,
+            HasIdentifier                    sessionClientPersona,
             boolean                          wishesCancelSession )
     {
         SimpleLidClientAuthenticationStatus ret = new SimpleLidClientAuthenticationStatus(
@@ -82,13 +83,13 @@ public class SimpleLidClientAuthenticationStatus
      */
     public static SimpleLidClientAuthenticationStatus create(
             Identifier                                clientIdentifier,
-            LidPersona                                clientPersona,
+            HasIdentifier                             clientPersona,
             LidSession                                session,
             Collection<LidCredentialType>             carriedValidCredentialTypes,
             Collection<LidCredentialType>             carriedInvalidCredentialTypes,
             Collection<LidInvalidCredentialException> invalidCredentialExceptions,
             Identifier                                sessionClientIdentifier,
-            LidPersona                                sessionClientPersona,
+            HasIdentifier                             sessionClientPersona,
             boolean                                   wishesCancelSession )
     {
         SimpleLidClientAuthenticationStatus ret = SimpleLidClientAuthenticationStatus.create(
@@ -126,13 +127,13 @@ public class SimpleLidClientAuthenticationStatus
      */
     protected SimpleLidClientAuthenticationStatus(
             Identifier                       clientIdentifier,
-            LidPersona                       clientPersona,
+            HasIdentifier                    clientPersona,
             LidSession                       session,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
             Identifier                       sessionClientIdentifier,
-            LidPersona                       sessionClientPersona,
+            HasIdentifier                    sessionClientPersona,
             boolean                          wishesCancelSession )
     {
         super(  clientIdentifier,

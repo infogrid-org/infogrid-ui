@@ -15,6 +15,7 @@
 package org.infogrid.model.primitives;
 
 import java.io.Serializable;
+import org.infogrid.util.HasIdentifier;
 
 /**
   * The root of the inheritance hierarchy for the type objects. All classes whose
@@ -22,6 +23,7 @@ import java.io.Serializable;
   */
 public interface MeshType
     extends
+        HasIdentifier,
         Serializable
 {
     /**

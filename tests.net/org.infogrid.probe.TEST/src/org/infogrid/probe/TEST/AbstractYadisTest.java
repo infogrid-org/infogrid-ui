@@ -195,16 +195,29 @@ public abstract class AbstractYadisTest
                         + ArrayHelper.join( service.getTypes() ));
             }
             
-            MeshObjectSet endpoints = service.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource() );
+            MeshObjectSet endpoints = service.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource() );
             checkEquals( endpoints.size(), 1, "wrong number of endpoints" );
             
             for( MeshObject endpoint : endpoints ) {
                 getLog().debug( "Looking at Endpoint " + endpoint );
 
-                checkCondition( endpoint.isBlessedBy( WebSubjectArea.WEBRESOURCE ), "endpoint not blessed" );
+                checkCondition( endpoint.isBlessedBy( YadisSubjectArea.ENDPOINT ), "endpoint not blessed" );
 
-                MeshObjectSet reverseServices = endpoint.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getDestination() );
-                checkEquals( reverseServices.size(), nServices, "Wrong number of reverse services" );
+                MeshObjectSet reverseServices = endpoint.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getDestination() );
+                checkEquals( reverseServices.size(), 1, "Wrong number of reverse services" );
+
+                MeshObjectSet resources = endpoint.traverse( YadisSubjectArea.ENDPOINT_ISOPERATEDBY_WEBRESOURCE.getSource() );
+                checkEquals( resources.size(), 1, "wrong number of resources" );
+
+                for( MeshObject resource : resources ) {
+                    getLog().debug( "Looking at Resource " + resource );
+
+                    checkCondition( resource.isBlessedBy( WebSubjectArea.WEBRESOURCE ), "endpoint not blessed" );
+
+                    // needs more sophisticated test for reverse -- they only get replicated in over time (FIXME?)
+                    // MeshObjectSet reverseEndpoints = resource.traverse( YadisSubjectArea.ENDPOINT_ISOPERATEDBY_WEBRESOURCE.getDestination() );
+                    // checkEquals( reverseEndpoints.size(), nServices, "Wrong number of reverse endpoints" );
+                }
             }
         }
     }

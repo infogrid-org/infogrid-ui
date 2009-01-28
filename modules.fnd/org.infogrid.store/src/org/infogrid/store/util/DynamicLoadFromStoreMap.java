@@ -225,6 +225,23 @@ public abstract class DynamicLoadFromStoreMap<K,V>
     }
 
     /**
+     * Associates the specified value with the specified key in this map.
+     * This is the same operation as <code>put</code>, but does not return the previous
+     * value. In many cases, the return value of the put operation is ignored, but
+     * providing it may incur substantial overhead (e.g. reading the old value from
+     * disk); this method avoids that.
+     *
+     * @param key key with which the specified value is to be associated.
+     * @param value value to be associated with the specified key.
+     */
+    public void putIgnorePrevious(
+            K key,
+            V value )
+    {
+        V old = put( key, value );
+    }
+
+    /**
      * Removes the mapping for this key from this map if it is present.
      * 
      * @param key the key

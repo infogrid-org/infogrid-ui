@@ -15,12 +15,10 @@
 package org.infogrid.lid.store;
 
 import java.util.Map;
-import org.infogrid.lid.AbstractLidLocalPersona;
+import java.util.Set;
 import org.infogrid.lid.credential.LidCredentialType;
-import org.infogrid.lid.credential.LidInvalidCredentialException;
+import org.infogrid.lid.local.AbstractLidLocalPersona;
 import org.infogrid.util.Identifier;
-import org.infogrid.util.StringHelper;
-import org.infogrid.util.http.SaneRequest;
 
 /**
  * Implementation of LidLocalPersona for the LidLocalPersonaManager.
@@ -43,37 +41,19 @@ public class StoreLidLocalPersona
             Map<String,String>            attributes,
             Map<LidCredentialType,String> credentials )
     {
-        super( identifier, attributes, credentials.keySet() );
+        super( identifier, attributes );
 
         theCredentials = credentials;
     }
 
     /**
-     * Perform a check of the validity of a presented credential.
-     * 
-     * @param credType the LidCredentialType to check
-     * @param request the incoming request carrying the presented credential
-     * @throws LidInvalidCredentialException thrown if the credential was invalid
+     * Obtain the set of available credential types.
+     *
+     * @return the set of available credential types
      */
-    public void checkCredential(
-            LidCredentialType credType,
-            SaneRequest       request )
-        throws
-            LidInvalidCredentialException
+    public Set<LidCredentialType> getCredentialTypes()
     {
-        if( !theCredentialTypes.contains( credType ) ) {
-            throw new LidInvalidCredentialException( theIdentifier, credType );
-        }
-        if( !request.matchArgument( "lid-credtype", "simple-password" ) ) {
-            throw new LidInvalidCredentialException( theIdentifier, credType );
-        }
-        String givenPassword   = request.getArgument( "lid-credential" );
-        String correctPassword = theCredentials.get( credType );
-
-        int result = StringHelper.compareTo( givenPassword, correctPassword );
-        if( result != 0 ) {
-            throw new LidInvalidCredentialException( theIdentifier, credType );
-        }
+        return theCredentials.keySet();
     }
 
     /**
@@ -87,6 +67,7 @@ public class StoreLidLocalPersona
     {
         return theCredentials.get( type );
     }
+
     /**
      * Our credentials.
      */

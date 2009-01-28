@@ -203,19 +203,19 @@ public abstract class AMeshBase
                 writtenAlready.add( affectedName );
 
             } else if( currentChange instanceof MeshObjectPropertyChangeEvent ) {
-                theCache.put( affected.getIdentifier(), affected );
+                theCache.putIgnorePrevious( affected.getIdentifier(), affected );
                 writtenAlready.add( affectedName );
 
             } else if( currentChange instanceof AbstractMeshObjectNeighborChangeEvent ) { // either Added or Removed
-                theCache.put( affected.getIdentifier(), affected );
+                theCache.putIgnorePrevious( affected.getIdentifier(), affected );
                 writtenAlready.add( affectedName );
 
             } else if( currentChange instanceof AbstractMeshObjectTypeChangeEvent ) { // either Added or Removed
-                theCache.put( affected.getIdentifier(), affected );
+                theCache.putIgnorePrevious( affected.getIdentifier(), affected );
                 writtenAlready.add( affectedName );
 
             } else if( currentChange instanceof AbstractMeshObjectRoleChangeEvent ) { // either Added or Removed
-                theCache.put( affected.getIdentifier(), affected );
+                theCache.putIgnorePrevious( affected.getIdentifier(), affected );
                 writtenAlready.add( affectedName );
 
             } else if( currentChange instanceof MeshObjectCreatedEvent ) {

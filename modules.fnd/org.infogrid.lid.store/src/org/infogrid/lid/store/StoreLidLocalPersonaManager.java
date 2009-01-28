@@ -15,11 +15,11 @@
 package org.infogrid.lid.store;
 
 import java.util.Map;
-import org.infogrid.lid.AbstractLidLocalPersonaManager;
-import org.infogrid.lid.LidLocalPersona;
-import org.infogrid.lid.LidLocalPersonaExistsAlreadyException;
-import org.infogrid.lid.LidPersonaUnknownException;
+import org.infogrid.lid.local.AbstractLidLocalPersonaManager;
+import org.infogrid.lid.local.LidLocalPersona;
 import org.infogrid.lid.credential.LidCredentialType;
+import org.infogrid.lid.local.LidLocalPersonaExistsAlreadyException;
+import org.infogrid.lid.local.LidLocalPersonaUnknownException;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.AbstractFactory;
@@ -116,71 +116,21 @@ public class StoreLidLocalPersonaManager
         }
     }
 
-//    /**
-//     * Determine whether a a credential is valid for a given identifier.
-//     *
-//     * @param identifier the identifier for which the credential will be checked
-//     * @param type the type of credential to be checked
-//     * @param credential the credential to be checked
-//     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
-//     * @throws LidInvalidCredentialException thrown if the credential was invalid
-//     */
-//    public void checkCredential(
-//            String            identifier,
-//            LidCredentialType type,
-//            String            credential )
-//        throws
-//            LidPersonaUnknownException,
-//            LidInvalidCredentialException
-//    {
-//        LidLocalPersonaWithCredentials with = theDelegateFactory.get( identifier );
-//        if( with == null ) {
-//            throw new LidPersonaUnknownException( identifier );
-//        }
-//        String storedCredential = with.getCredentialFor( type );
-//        type.checkCredential( identifier, credential, storedCredential );
-//    }
-//
-//    /**
-//     * Change the credential associated with a given identifier.
-//     *
-//     * @param identifier the identifier for which the credential will be changed
-//     * @param type the type of credential to be changed
-//     * @param credential the new credential
-//     * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the changing of passwords
-//     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
-//     */
-//    public void changeCredential(
-//            String            identifier,
-//            LidCredentialType type,
-//            String            credential )
-//        throws
-//            UnsupportedOperationException,
-//            LidPersonaUnknownException
-//    {
-//        LidLocalPersonaWithCredentials with = theDelegateFactory.get( identifier );
-//        if( with == null ) {
-//            throw new LidPersonaUnknownException( identifier );
-//        }
-//        with.setCredentialFor( type, credential );
-//        theDelegateFactory.factoryCreatedObjectUpdated( with );
-//    }
-
     /**
      * Obtain a LidLocalPersona, given its identifier.
      *
      * @param identifier the identifier for which the LidLocalPersona will be retrieved
      * @return the found LidLocalPersona
-     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
-    public LidLocalPersona get(
+    public LidLocalPersona find(
             Identifier identifier )
         throws
-            LidPersonaUnknownException
+            LidLocalPersonaUnknownException
     {
         LidLocalPersona ret = theDelegateFactory.get( identifier );
         if( ret == null ) {
-            throw new LidPersonaUnknownException( identifier );
+            throw new LidLocalPersonaUnknownException( identifier );
         }
         return ret;
     }
@@ -190,17 +140,17 @@ public class StoreLidLocalPersonaManager
      * 
      * @param identifier the identifier of the LidLocalPersona that will be deleted
      * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the deletion of LidLocalPersonas
-     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
     public void delete(
             Identifier identifier )
         throws
             UnsupportedOperationException,
-            LidPersonaUnknownException
+            LidLocalPersonaUnknownException
     {
         LidLocalPersona found = theDelegateFactory.remove( identifier );
         if( found == null ) {
-            throw new LidPersonaUnknownException( identifier );
+            throw new LidLocalPersonaUnknownException( identifier );
         }
     }
 

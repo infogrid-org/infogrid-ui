@@ -72,12 +72,14 @@ public class OpenIdIdpSideAssociationPipelineStage
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
+     * @throws OpenIdAssociationException thrown is an OpenID association problem occurred
      * @throws LidAbortProcessingPipelineException thrown if processing is complete
      */
     public void processRequest(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
+            OpenIdAssociationException,
             LidAbortProcessingPipelineException
     {
         if( !"POST".equals( lidRequest.getMethod())) {
@@ -107,7 +109,7 @@ public class OpenIdIdpSideAssociationPipelineStage
         if(    DH_SHA1.equals( sessionType )
             && ( dh_consumer_public_string == null || dh_consumer_public_string.length() == 0 ))
         {
-             throw new OpenIdAssociationException.InvalidPublicKey( this );
+             throw new OpenIdAssociationException.InvalidPublicKey();
         }
         if( dh_consumer_public_string != null && dh_consumer_public_string.length() > 0 ) {
             dh_consumer_public = new BigInteger( Base64.base64decode( dh_consumer_public_string ));
@@ -122,13 +124,13 @@ public class OpenIdIdpSideAssociationPipelineStage
         // sanity check
         
         if( !HMAC_SHA1.equals( assocType )) {
-            throw new OpenIdAssociationException.UnknownAssociationType( this, assocType );
+            throw new OpenIdAssociationException.UnknownAssociationType( assocType );
         }
         if( sessionType != null && !DH_SHA1.equals( sessionType )) {
-            throw new OpenIdAssociationException.UnknownSessionType( this, sessionType );
+            throw new OpenIdAssociationException.UnknownSessionType( sessionType );
         }
         if( DH_SHA1.equals( sessionType ) && dh_consumer_public == null ) {
-            throw new OpenIdAssociationException.InvalidPublicKey( this );
+            throw new OpenIdAssociationException.InvalidPublicKey();
         }
         
         OpenIdIdpSideAssociation assoc = theAssociationManager.create();

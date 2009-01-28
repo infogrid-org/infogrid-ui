@@ -29,8 +29,6 @@ import org.infogrid.util.logging.Log;
 
 import java.io.IOException;
 import java.lang.ref.Reference;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * This is a <code>java.util.Map</code> that stores the values in the <code>Store</code>
@@ -76,6 +74,12 @@ public abstract class StoreBackedSwappingHashMap<K,V>
             StoreEntryMapper<K,V> mapper,
             Store                 store )
     {
+        if( mapper == null ) {
+            throw new NullPointerException();
+        }
+        if( store == null ) {
+            throw new NullPointerException();
+        }
         return new StoreBackedSwappingHashMap<K,V>( initialSize, mapper, store ) {
                 protected Reference<V> createReference(
                         K key,
@@ -117,6 +121,12 @@ public abstract class StoreBackedSwappingHashMap<K,V>
             StoreEntryMapper<K,V> mapper,
             Store                 store )
     {
+        if( mapper == null ) {
+            throw new NullPointerException();
+        }
+        if( store == null ) {
+            throw new NullPointerException();
+        }
         return new StoreBackedSwappingHashMap<K,V>( initialSize, mapper, store ) {
                 protected Reference<V> createReference(
                         K key,

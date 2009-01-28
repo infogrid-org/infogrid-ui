@@ -12,25 +12,34 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.local;
 
+import org.infogrid.util.Identifier;
+import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.http.SaneRequest;
 
 /**
- * Given a request, this interface is supported by objects that know how to find
- * the corresponding requested LidResource.
+ * Factors out common functionality of LidIdentityManagers.
  */
-public interface LidResourceFinder
+public abstract class AbstractLidLocalPersonaManager
+        implements
+            LidLocalPersonaManager
 {
     /**
      * Find the LidResource, or null.
      * 
      * @param request the incoming request
      * @return the found LidResource, or null
-     * @throws LidResourceUnknownException thrown if the resource could not be found
+     * @throws LidLocalPersonaUnknownException thrown if the resource could not be found
      */
-    public LidResource findLidResource(
+    public LidLocalPersona findLidResource(
             SaneRequest request )
         throws
-            LidResourceUnknownException;
+            LidLocalPersonaUnknownException
+    {
+        String          identifier = request.getAbsoluteBaseUri();
+        Identifier      realId     = SimpleStringIdentifier.create( identifier );
+        LidLocalPersona ret        = find( realId );
+        return ret;
+    }
 }

@@ -21,14 +21,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
+import java.net.URISyntaxException;
 
 /**
  * A StoreEntryMapper that uses Java Serialization, and thus can store and retrieve arbitrary
  * Java object graphs in a <code>Store</code>. It uses the key's <code>toString</code> method
  * to construct the String key needed by <code>Store</code>.
  * 
- * @param K the type of key
- * @param V the type of value
+ * @param <K> the type of key
+ * @param <V> the type of value
  */
 public abstract class SerializingStoreEntryMapper<K,V>
         implements
@@ -77,10 +78,13 @@ public abstract class SerializingStoreEntryMapper<K,V>
      * Map a String value that can be used for the Store to a key object.
      *
      * @param stringKey the key in String form
-     * @return the corresponding key object.
+     * @return the corresponding key object
+     * @throws URISyntaxException thrown if a stringKey could not be converted into a valid Identifier
      */
     public abstract K stringToKey(
-            String stringKey );
+            String stringKey )
+        throws
+            URISyntaxException;
 
     /**
      * Map a StoreValue to a value.

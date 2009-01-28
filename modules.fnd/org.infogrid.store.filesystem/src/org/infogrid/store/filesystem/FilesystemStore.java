@@ -20,8 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.infogrid.store.AbstractStore;
-import org.infogrid.store.IterableStore;
+import org.infogrid.store.AbstractIterableStore;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
 import org.infogrid.store.StoreValue;
@@ -39,9 +38,7 @@ import org.infogrid.util.tree.TreeFacadeCursorIterator;
  */
 public class FilesystemStore
         extends
-            AbstractStore
-        implements
-            IterableStore
+            AbstractIterableStore
 {
     private static final Log log = Log.getLogInstance( FilesystemStore.class ); // our own, private logger
 
@@ -435,27 +432,6 @@ public class FilesystemStore
     }
 
     /**
-     * Obtain an Iterator over the content of this Store.
-     *
-     * @return the Iterator
-     */
-    public FilesystemStoreIterator getIterator()
-    {
-        return iterator();
-    }
-
-
-    /**
-     * Determine the number of StoreValues in this Store.
-     *
-     * @return the number of StoreValues in this Store
-     */
-    public int size()
-    {
-        return size( "" );
-    }
-    
-    /**
      * Determine the number of StoreValues in this Store whose key starts with this String.
      *
      * @param startsWith the String the key starts with
@@ -475,16 +451,6 @@ public class FilesystemStore
             }
         }
         return ret;
-    }
-
-    /**
-     * Determine whether this Store is empty.
-     *
-     * @return true if this Store is empty
-     */
-    public boolean isEmpty()
-    {
-        return size() == 0;
     }
 
     /**

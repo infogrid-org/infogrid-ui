@@ -14,32 +14,28 @@
 
 package org.infogrid.lid;
 
-import org.infogrid.util.Identifier;
-import org.infogrid.util.SimpleStringIdentifier;
+import org.infogrid.util.CannotFindHasIdentifierException;
+import org.infogrid.util.HasIdentifier;
+import org.infogrid.util.HasIdentifierFinder;
 import org.infogrid.util.http.SaneRequest;
 
 /**
- * Factors out common functionality of LidIdentityManagers.
+ * Given a request, this interface is supported by objects that know how to find
+ * the corresponding requested HasIdentifier.
  */
-public abstract class AbstractLidLocalPersonaManager
-        implements
-            LidLocalPersonaManager
+public interface LidHasIdentifierFinder
+        extends
+            HasIdentifierFinder
 {
     /**
      * Find the LidResource, or null.
      * 
      * @param request the incoming request
      * @return the found LidResource, or null
-     * @throws LidResourceUnknownException thrown if the resource could not be found
+     * @throws CannotFindHasIdentifierException thrown if the resource could not be found
      */
-    public LidLocalPersona findLidResource(
+    public HasIdentifier findFromRequest(
             SaneRequest request )
         throws
-            LidResourceUnknownException
-    {
-        String          identifier = request.getAbsoluteBaseUri();
-        Identifier      realId     = SimpleStringIdentifier.create( identifier );
-        LidLocalPersona ret        = get( realId );
-        return ret;
-    }
+            CannotFindHasIdentifierException;
 }

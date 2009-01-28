@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.local;
 
 import org.infogrid.util.AbstractLocalizedException;
 

@@ -32,7 +32,7 @@ public class UnknownLidCredentialTypeException
      * @param credentialType name of the credential type that was not known
      */
     public UnknownLidCredentialTypeException(
-            LidCredentialTypeFactory sender,
+            LidCredentialTypesFactory sender,
             String                   credentialType )
     {
         super( sender );

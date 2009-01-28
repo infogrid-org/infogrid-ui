@@ -12,24 +12,17 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
-
-import org.infogrid.util.Identifier;
+package org.infogrid.util;
 
 /**
- * Manages externally provisioned identities.
+ * Supported by objects that have an identifier.
  */
-public interface LidRemotePersonaManager
+public interface HasIdentifier
 {
     /**
-     * Obtain a LidRemotePersona, given its identifier.
+     * Obtain the object's unique identifier.
      *
-     * @param identifier the identifier for which the LidRemotePersona will be retrieved
-     * @return the found LidRemotePersona
-     * @throws LidPersonaUnknownException thrown if no LidRemotePersona could be found with this identifier
+     * @return the unique identifier
      */
-    public abstract LidRemotePersona get(
-            Identifier identifier )
-        throws
-            LidPersonaUnknownException;
+    public Identifier getIdentifier();
 }

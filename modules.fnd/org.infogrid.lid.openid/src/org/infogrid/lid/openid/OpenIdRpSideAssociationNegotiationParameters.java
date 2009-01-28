@@ -14,8 +14,6 @@
 
 package org.infogrid.lid.openid;
 
-import org.infogrid.lid.LidProcessingPipelineStage;
-
 /**
  * Collects the parameters specified by a RelyingParty application for OpenID
  * association negotiation.
@@ -27,16 +25,13 @@ public class OpenIdRpSideAssociationNegotiationParameters
     /**
      * Factory method.
      * 
-     * @param pipelineStage the LidProcessingPipelineStage on behalf of which the negotiation is performed
      * @return default OpenIdRpSideAssociationNegotiationParameters
      */
-    public static OpenIdRpSideAssociationNegotiationParameters createWithDefaults(
-            LidProcessingPipelineStage pipelineStage )
+    public static OpenIdRpSideAssociationNegotiationParameters createWithDefaults()
     {
         return new OpenIdRpSideAssociationNegotiationParameters(
                 HMAC_SHA1,
-                DH_SHA1,
-                pipelineStage );
+                DH_SHA1 );
     }
 
     /**
@@ -44,15 +39,13 @@ public class OpenIdRpSideAssociationNegotiationParameters
      * 
      * @param wantedAssociationType the desired association type
      * @param wantedSessionType the desired session type
-     * @param pipelineStage the LidProcessingPipelineStage on behalf of which the negotiation is performed
      * @return default OpenIdRpSideAssociationNegotiationParameters
      */
     public static OpenIdRpSideAssociationNegotiationParameters create(
             String                     wantedAssociationType,
-            String                     wantedSessionType,
-            LidProcessingPipelineStage pipelineStage )
+            String                     wantedSessionType )
     {
-        return new OpenIdRpSideAssociationNegotiationParameters( wantedAssociationType, wantedSessionType, pipelineStage );
+        return new OpenIdRpSideAssociationNegotiationParameters( wantedAssociationType, wantedSessionType );
     }
 
     /**
@@ -60,16 +53,13 @@ public class OpenIdRpSideAssociationNegotiationParameters
      * 
      * @param wantedAssociationType the desired association type
      * @param wantedSessionType the desired session type
-     * @param pipelineStage the LidProcessingPipelineStage on behalf of which the negotiation is performed
      */
     protected OpenIdRpSideAssociationNegotiationParameters(
             String                     wantedAssociationType,
-            String                     wantedSessionType,
-            LidProcessingPipelineStage pipelineStage )
+            String                     wantedSessionType )
     {
         theWantedAssociationType = wantedAssociationType;
         theWantedSessionType     = wantedSessionType;
-        thePipelineStage         = pipelineStage;
     }
 
     /**
@@ -93,16 +83,6 @@ public class OpenIdRpSideAssociationNegotiationParameters
     }
     
     /**
-     * Obtain the LidProcessingPipelineStage on behalf of which the negotiation is performed.
-     * 
-     * @return the LidProcessingPipelineStage
-     */
-    public LidProcessingPipelineStage getLidProcessingPipelineStage()
-    {
-        return thePipelineStage;
-    }
-    
-    /**
      * The wanted association type.
      */
     protected String theWantedAssociationType;
@@ -111,9 +91,4 @@ public class OpenIdRpSideAssociationNegotiationParameters
      * The wanted session type.
      */
     protected String theWantedSessionType;
-    
-    /**
-     * The LidProcessingPipelineStage on behalf of which the negotiation is performed.
-     */
-    protected LidProcessingPipelineStage thePipelineStage;
 }

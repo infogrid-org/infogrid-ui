@@ -12,11 +12,9 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.local;
 
 import java.util.Map;
-import java.util.Set;
-import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.StringHelper;
 
@@ -36,16 +34,12 @@ public abstract class AbstractLidLocalPersona
      * 
      * @param identifier the unique identifier of the persona, e.g. their identity URL
      * @param attributes attributes of the persona, e.g. first name
-     * @param credentialTypes the credential types available to authenticate this LidLocalPersona
      */
     protected AbstractLidLocalPersona(
             Identifier             identifier,
-            Map<String,String>     attributes,
-            Set<LidCredentialType> credentialTypes )
+            Map<String,String>     attributes )
     {
         super( identifier, attributes );
-
-        theCredentialTypes = credentialTypes;
     }
     
     /**
@@ -56,16 +50,6 @@ public abstract class AbstractLidLocalPersona
     public boolean isHostedLocally()
     {
         return true;
-    }
-
-    /**
-     * Obtain the credential types available.
-     * 
-     * @return the credential types
-     */
-    public Set<LidCredentialType> getCredentialTypes()
-    {
-        return theCredentialTypes;
     }
 
     /**
@@ -87,9 +71,4 @@ public abstract class AbstractLidLocalPersona
                     theAttributes
                 });
     }
-
-    /**
-     * The credential types available.
-     */
-    protected Set<LidCredentialType> theCredentialTypes;
 }

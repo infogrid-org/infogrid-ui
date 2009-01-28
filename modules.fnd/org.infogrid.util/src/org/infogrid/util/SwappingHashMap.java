@@ -204,14 +204,53 @@ public abstract class SwappingHashMap<K,V>
      * @param value the new value for the key
      * @return the old value for the key, if any
      */
-    public synchronized V put(
+    public V put(
             K key,
             V value )
+    {
+        V ret = internalPut( key, value, true );
+
+        return ret;
+    }
+
+    /**
+     * Associates the specified value with the specified key in this map.
+     * This is the same operation as <code>put</code>, but does not return the previous
+     * value. In many cases, the return value of the put operation is ignored, but
+     * providing it may incur substantial overhead (e.g. reading the old value from
+     * disk); this method avoids that.
+     *
+     * @param key key with which the specified value is to be associated.
+     * @param value value to be associated with the specified key.
+     */
+    public void putIgnorePrevious(
+            K key,
+            V value )
+    {
+        V old = internalPut( key, value, false );
+    }
+
+    /**
+     * Helper method to avoid having almost the same code in two places.
+     *
+     * @param key the key for the value
+     * @param value the new value for the key
+     * @param attemptLoad if true, attempt to load the old value
+     * @return the old value for the key, if any
+     */
+    protected synchronized V internalPut(
+            K       key,
+            V       value,
+            boolean attemptLoad )
     {
         cleanup();
         Reference<V> found = theDelegate.put( key, createReference( key, value ));
         V ret = found != null ? found.get() : null;
-        
+
+        if( attemptLoad && ret == null ) {
+            ret = loadValueFromStorage( key );
+        }
+
         saveValueToStorage( key, value );
         theSwappingListeners.fireEvent( new Pair<K,V>( key, value ), 1 ); // this is here, not in the method, in order to allow for easy subclassing
 

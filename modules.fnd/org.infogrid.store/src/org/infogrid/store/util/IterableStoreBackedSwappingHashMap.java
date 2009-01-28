@@ -16,6 +16,7 @@ package org.infogrid.store.util;
 
 import java.io.IOException;
 import java.lang.ref.Reference;
+import java.net.URISyntaxException;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -87,6 +88,8 @@ public abstract class IterableStoreBackedSwappingHashMap<K,V>
      * @param mapper the <code>SStoreEntryMapper/code> to use
      * @param store the underlying <code>IterableStore</code>
      * @return the created <code>IterableStoreBackedSwappingHashMap</code>
+     * @param <K> the type of key
+     * @param <V> the type of value
      */
     public static <K,V> IterableStoreBackedSwappingHashMap<K,V> createWeak(
             StoreEntryMapper<K,V> mapper,
@@ -102,6 +105,9 @@ public abstract class IterableStoreBackedSwappingHashMap<K,V>
      * @param mapper the <code>StStoreEntryMappercode> to use
      * @param store the underlying <code>IterableStore</code>
      * @return the created <code>IterableStoreBackedSwappingHashMap</code>
+     * @param <K> the type of key
+     * @param <V> the type of value
+     * @param <A> the type of argument
      */
     public static <K,V,A> IterableStoreBackedSwappingHashMap<K,V> createWeak(
             int                   initialSize,
@@ -332,9 +338,15 @@ public abstract class IterableStoreBackedSwappingHashMap<K,V>
          */
         public K next()
         {
-            StoreValue value = theDelegate.next();
-            K          ret   = theMap.theMapper.stringToKey( value.getKey() );
-            return ret;
+            try {
+                StoreValue value = theDelegate.next();
+                K          ret   = theMap.theMapper.stringToKey( value.getKey() );
+                return ret;
+
+            } catch( URISyntaxException ex ) {
+                log.error( ex );
+                return null;
+            }
         }
 
         /**

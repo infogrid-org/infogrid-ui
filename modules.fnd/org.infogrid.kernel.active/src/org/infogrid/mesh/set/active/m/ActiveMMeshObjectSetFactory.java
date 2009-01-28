@@ -14,15 +14,17 @@
 
 package org.infogrid.mesh.set.active.m;
 
-import org.infogrid.mesh.set.active.*;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
-
 import org.infogrid.mesh.set.MeshObjectSorter;
 import org.infogrid.mesh.set.OrderedMeshObjectSet;
 import org.infogrid.mesh.set.TraversalPathSet;
+import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
+import org.infogrid.mesh.set.active.ActiveMeshObjectSetFactory;
+import org.infogrid.mesh.set.active.OrderedActiveMeshObjectSet;
+import org.infogrid.mesh.set.active.TraversalActiveMeshObjectSet;
 import org.infogrid.mesh.set.m.ImmutableMMeshObjectSetFactory;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.traversal.AlternativeCompoundTraversalSpecification;

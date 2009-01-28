@@ -14,6 +14,8 @@
 
 package org.infogrid.lid.gpg;
 
+import org.infogrid.util.Identifier;
+
 /**
  * A public/private key pair for LID purposes.
  */
@@ -27,9 +29,9 @@ public class LidKeyPair
      * @param privateKey the private key
      */
     public LidKeyPair(
-            String lid,
-            String publicKey,
-            String privateKey )
+            Identifier lid,
+            String     publicKey,
+            String     privateKey )
     {
         theLid        = lid;
         thePublicKey  = publicKey;
@@ -41,7 +43,7 @@ public class LidKeyPair
      * 
      * @return the LID identifier
      */
-    public String getLid()
+    public Identifier getLid()
     {
         return theLid;
     }
@@ -69,7 +71,7 @@ public class LidKeyPair
     /**
      * The LID identifier.
      */
-    protected String theLid;
+    protected Identifier theLid;
     
     /**
      * The public key.

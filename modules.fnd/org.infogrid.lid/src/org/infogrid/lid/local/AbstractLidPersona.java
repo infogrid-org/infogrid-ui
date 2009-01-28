@@ -12,11 +12,12 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.local;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+import org.infogrid.util.AbstractHasIdentifier;
 import org.infogrid.util.Identifier;
 
 /**
@@ -24,7 +25,7 @@ import org.infogrid.util.Identifier;
  */
 public abstract class AbstractLidPersona
         extends
-            AbstractLidResource
+            AbstractHasIdentifier
         implements
             LidPersona,
             Serializable

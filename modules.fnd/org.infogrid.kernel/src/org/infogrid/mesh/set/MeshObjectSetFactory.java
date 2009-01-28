@@ -200,6 +200,15 @@ public interface MeshObjectSetFactory
     /**
      * Factory method to create an OrderedMeshObjectSet.
      * 
+     * @param contentInOrder the content of the OrderedMeshObjectSet, in order
+     * @return the created OrderedImmutableMeshObjectSet
+     */
+    public OrderedImmutableMeshObjectSet createOrderedImmutableMeshObjectSet(
+            MeshObject [] contentInOrder );
+
+    /**
+     * Factory method to create an OrderedMeshObjectSet.
+     *
      * @param content the content of the OrderedMeshObjectSet
      * @param sorter the MeshObjectSorter that determines the ordering within the OrderedMeshObjectSet
      * @return the created OrderedImmutableMeshObjectSet

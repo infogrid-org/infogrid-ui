@@ -111,6 +111,7 @@ all secrets are exchanged in encrypted form.</userdescription>
             </propertytype>
         </entitytype>
 
+<!--
         <entitytype ID="org.infogrid.lid.model.lid#Principal">
             <name>Principal</name>
             <userdescription>A MeshObject that represents an pricipal, such as a user. It generally makes use of
@@ -243,7 +244,7 @@ one or more Yadis Services.</userdescription>
     }
           ]]></implementsMethod>
         </entitytype>
-        
+    -->
         <entitytype ID="org.infogrid.lid.model.lid#AuthenticationService">
             <name>AuthenticationService</name>
             <userdescription>A Yadis Service that is able to authenticate a principal. More specific subclasses
@@ -262,7 +263,7 @@ are provided for specific authentication protocols.</userdescription>
             <declaresMethod>
     public abstract String determineRedirectUrl(
             MeshObject                        principal,
-            String                            here,
+            String                            return_to,
             String                            trustRoot,
             org.infogrid.util.context.Context context )
         throws
@@ -288,27 +289,26 @@ are provided for specific authentication protocols.</userdescription>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
-            String                            here,
+            String                            return_to,
             String                            trustRoot,
             org.infogrid.util.context.Context context )
     {
-        org.infogrid.mesh.set.MeshObjectSet endpoints = this.traverse(
-                org.infogrid.lid.model.yadis.YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource() );
+        org.infogrid.mesh.set.OrderedMeshObjectSet endpoints
+                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpoints( the_Delegate );
         if( endpoints.isEmpty() ) {
-            throw new IllegalArgumentException( "no Endpoint found" );
+            return null;
         }
-        // FIXME, should use more complex selection algorithm
-        MeshObject selectedEndpoint = endpoints.getMeshObjects()[0];
+        MeshObject selectedEndpoint = endpoints.get(0);
         String     endpointUrl      = selectedEndpoint.getIdentifier().toExternalForm();
 
         String ret = endpointUrl;
 
-        String target = org.infogrid.util.http.HTTP.appendArgumentToUrl( here, "lid-credtype=gpg%20--clearsign" );
+        String target = org.infogrid.util.http.HTTP.appendArgumentPairToUrl( return_to, "lid-credtype=gpg%20--clearsign" );
 
-        ret = org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "lid-action=sso-approve" );
-        ret = org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "lid-target=" + org.infogrid.util.http.HTTP.encodeToValidUrlArgument( target.toString() ));
+        ret = org.infogrid.util.http.HTTP.appendArgumentPairToUrl( ret, "lid-action=sso-approve" );
+        ret = org.infogrid.util.http.HTTP.appendArgumentToUrl(     ret, "lid-target", target.toString() );
 
-        return ret.toString();
+        return ret;
     }
           ]]></implementsMethod>
           <synonym>http://lid.netmesh.org/sso/2.0</synonym>

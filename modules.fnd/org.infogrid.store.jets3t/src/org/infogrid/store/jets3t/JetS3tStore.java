@@ -19,8 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.infogrid.store.AbstractStore;
-import org.infogrid.store.IterableStore;
+import org.infogrid.store.AbstractIterableStore;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
 import org.infogrid.store.StoreValue;
@@ -40,9 +39,7 @@ import org.jets3t.service.model.S3Object;
  */
 public class JetS3tStore
         extends
-            AbstractStore
-        implements
-            IterableStore
+            AbstractIterableStore
 {
     private static final Log log = Log.getLogInstance( JetS3tStore.class ); // our own, private logger
 
@@ -526,30 +523,6 @@ public class JetS3tStore
     }
 
     /**
-     * Obtain an Iterator over the content of this Store.
-     *
-     * @return the Iterator
-     */
-    public JetS3tStoreIterator getIterator()
-    {
-        return iterator();
-    }
-
-
-    /**
-     * Determine the number of StoreValues in this Store.
-     *
-     * @return the number of StoreValues in this Store
-     * @throws IOException thrown if an I/O error occurred
-     */
-    public int size()
-        throws
-            IOException
-    {
-        return size( "" );
-    }
-    
-    /**
      * Determine the number of StoreValues in this Store whose key starts with this String.
      *
      * @param startsWith the String the key starts with
@@ -586,19 +559,6 @@ public class JetS3tStore
         } catch( S3ServiceException ex ) {
             throw new DelegatingIOException( ex );
         }
-    }
-
-    /**
-     * Determine whether this Store is empty.
-     *
-     * @return true if this Store is empty
-     * @throws IOException thrown if an I/O error occurred
-     */
-    public boolean isEmpty()
-        throws
-            IOException
-    {
-        return size() == 0;
     }
 
     /**

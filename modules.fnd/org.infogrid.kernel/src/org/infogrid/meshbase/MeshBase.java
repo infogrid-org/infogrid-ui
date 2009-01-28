@@ -33,6 +33,8 @@ import org.infogrid.util.LiveDeadObject;
 import org.infogrid.util.QuitListener;
 import org.infogrid.util.context.ObjectInContext;
 import org.infogrid.meshbase.transaction.TransactionAction;
+import org.infogrid.util.HasIdentifier;
+import org.infogrid.util.HasIdentifierFinder;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.text.HasStringRepresentation;
 
@@ -77,6 +79,8 @@ public interface MeshBase
             ObjectInContext,
             QuitListener,
             LiveDeadObject,
+            HasIdentifier,
+            HasIdentifierFinder,
             HasStringRepresentation
 {    
     /**

@@ -20,6 +20,8 @@ import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.Factory;
+import org.infogrid.util.Identifier;
+import org.infogrid.util.IdentifierFactory;
 import org.infogrid.util.PatientSmartFactory;
 
 /**
@@ -27,23 +29,25 @@ import org.infogrid.util.PatientSmartFactory;
  */
 public class StoreLidGpgPublicKeyManager
         extends
-            PatientSmartFactory<String,String,Void>
+            PatientSmartFactory<Identifier,String,Void>
         implements
             LidGpgPublicKeyManager
 {
     /**
      * Factory method.
      *
+     * @param identifierFactory the factory for identifiers to use
      * @param store the Store to use
      * @return the created StoreLidGpgPublicKeyManager
      */
     public static StoreLidGpgPublicKeyManager create(
-            Store store )
+            IdentifierFactory identifierFactory,
+            Store             store )
     {
-        StoreLidGpgPublicKeyMapper mapper = new StoreLidGpgPublicKeyMapper();
+        StoreLidGpgPublicKeyMapper mapper = new StoreLidGpgPublicKeyMapper( identifierFactory );
         
         LidGpgPublicKeyNegotiator delegateFactory = new LidGpgPublicKeyNegotiator();
-        StoreBackedSwappingHashMap<String,String> storage = StoreBackedSwappingHashMap.createWeak( mapper, store );
+        StoreBackedSwappingHashMap<Identifier,String> storage = StoreBackedSwappingHashMap.createWeak( mapper, store );
         
         StoreLidGpgPublicKeyManager ret = new StoreLidGpgPublicKeyManager( delegateFactory, storage );
         return ret;
@@ -56,8 +60,8 @@ public class StoreLidGpgPublicKeyManager
      * @param storage the storage to use
      */
     protected StoreLidGpgPublicKeyManager(
-            Factory<String,String,Void> delegateFactory,
-            CachingMap<String,String>   storage )
+            Factory<Identifier,String,Void> delegateFactory,
+            CachingMap<Identifier,String>   storage )
     {
         super( delegateFactory, storage );
     }

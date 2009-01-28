@@ -138,6 +138,9 @@ public class XrdsProbe
      * @param base the MeshBase in which to instantiate
      * @throws TransactionException thrown if invoked outside of proper Transaction boundaries. This should not happen.
      * @throws NotPermittedException an operation was not permitted. This should not happen.
+     * @throws IsAbstractException thrown if a MeshType was abstract. This should not happen.
+     * @throws IllegalPropertyTypeException thrown if a MeshObject did not carry a specified PropertyType. This should not happen.
+     * @throws IllegalPropertyValueException thrown if a property could not be set to the specified PropertyValue. This should not happen
      * @throws MeshObjectIdentifierNotUniqueException an identifier was not unique. This should not happen.
      * @throws URISyntaxException a syntax error occurred
      */
@@ -148,6 +151,9 @@ public class XrdsProbe
         throws
             TransactionException,
             NotPermittedException,
+            IsAbstractException,
+            IllegalPropertyTypeException,
+            IllegalPropertyValueException,
             MeshObjectIdentifierNotUniqueException,
             URISyntaxException
     {
@@ -231,6 +237,9 @@ public class XrdsProbe
      * @param base the MeshBase in which to instantiate
      * @throws TransactionException thrown if invoked outside of proper Transaction boundaries. This should not happen.
      * @throws NotPermittedException an operation was not permitted. This should not happen.
+     * @throws IsAbstractException thrown if a MeshType was abstract. This should not happen.
+     * @throws IllegalPropertyTypeException thrown if a MeshObject did not carry a specified PropertyType. This should not happen.
+     * @throws IllegalPropertyValueException thrown if a property could not be set to the specified PropertyValue. This should not happen
      * @throws MeshObjectIdentifierNotUniqueException an identifier was not unique. This should not happen.
      * @throws URISyntaxException a syntax error occurred
      */
@@ -243,6 +252,9 @@ public class XrdsProbe
         throws
             TransactionException,
             NotPermittedException,
+            IsAbstractException,
+            IllegalPropertyTypeException,
+            IllegalPropertyValueException,
             MeshObjectIdentifierNotUniqueException,
             URISyntaxException
     {
@@ -258,6 +270,8 @@ public class XrdsProbe
             log.error( ex );
             return;
         }
+
+        int epCounter = 0;
 
         NodeList infoList = serviceNode.getChildNodes();
         for( int k=0 ; k<infoList.getLength() ; ++k ) {
@@ -297,15 +311,20 @@ public class XrdsProbe
                     }
                 }
 
-                String realFound = found.toString().trim();
-                NetMeshObjectIdentifier endpointIdentifier = base.getMeshObjectIdentifierFactory().fromExternalForm( realFound );
+                NetMeshObject endpoint = base.getMeshBaseLifecycleManager().createMeshObject(
+                        base.getMeshObjectIdentifierFactory().fromExternalForm( serviceMeshObject.getIdentifier().toExternalForm() + "-endpoint-" + epCounter ),
+                        YadisSubjectArea.ENDPOINT );
+                endpoint.setPropertyValue( YadisSubjectArea.ENDPOINT_PRIORITY, decodePriorityValue( infoNode ));
+                ++epCounter;
 
-                NetMeshObject endpoint = findOrCreateForwardReferenceAndBless(
-                        endpointIdentifier,
+                String realFound = found.toString().trim();
+                NetMeshObjectIdentifier resourceIdentifier = base.getMeshObjectIdentifierFactory().fromExternalForm( realFound );
+
+                NetMeshObject resource = findOrCreateForwardReferenceAndBless(
+                        resourceIdentifier,
                         WebSubjectArea.WEBRESOURCE,
                         base );
 
-                // FIXME? endpoint.setPropertyValue( ServiceEndPoint.Priority_PROPERTYTYPE, decodePriorityValue( infoNode ));
                 // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( realFound ));
                 try {
                     serviceMeshObject.relate( endpoint );
@@ -314,7 +333,7 @@ public class XrdsProbe
                 }
                 try {
                     serviceMeshObject.blessRelationship(
-                            YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource(),
+                            YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource(),
                             endpoint );
 
                 } catch( BlessedAlreadyException ex ) {
@@ -323,7 +342,23 @@ public class XrdsProbe
                     log.error( ex );
                 } catch( NotRelatedException ex ) {
                     log.error( ex );
-                } catch( IsAbstractException ex ) {
+                }
+
+                try {
+                    endpoint.relate( resource );
+                } catch( RelatedAlreadyException ex ) {
+                    // ignore
+                }
+                try {
+                    endpoint.blessRelationship(
+                            YadisSubjectArea.ENDPOINT_ISOPERATEDBY_WEBRESOURCE.getSource(),
+                            resource );
+
+                } catch( BlessedAlreadyException ex ) {
+                    // ignore
+                } catch( EntityNotBlessedException ex ) {
+                    log.error( ex );
+                } catch( NotRelatedException ex ) {
                     log.error( ex );
                 }
             }

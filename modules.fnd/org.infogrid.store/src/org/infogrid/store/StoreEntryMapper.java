@@ -14,6 +14,8 @@
 
 package org.infogrid.store;
 
+import java.net.URISyntaxException;
+
 /**
  * Classes implementing this interface know how to map key-value pairs, of a
  * parameterized type, into and from a <code>Store</code>.
@@ -33,13 +35,16 @@ public interface StoreEntryMapper<K,V>
             K key );
 
     /**
-     * Map a String value that can be used for the Store to a key object.
+     * Map to a key a String value that can be used for the Store.
      *
-     * @param stringKey the key in String form
-     * @return the corresponding key object
+     * @param stringKey key the key in String form
+     * @return the corresponding key
+     * @throws URISyntaxException thrown if a stringKey could not be converted into a valid Identifier
      */
     public abstract K stringToKey(
-            String stringKey );
+            String stringKey )
+        throws
+            URISyntaxException;
 
     /**
      * Map a StoreValue to a value.

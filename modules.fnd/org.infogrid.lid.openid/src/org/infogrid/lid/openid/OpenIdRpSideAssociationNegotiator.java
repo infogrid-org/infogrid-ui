@@ -95,7 +95,7 @@ public class OpenIdRpSideAssociationNegotiator
             FactoryException
     {
         if( parameters == null ) {
-            throw new NullPointerException( "OpenIdRpSideAssociationNegotiationParameters is null" );
+            parameters = OpenIdRpSideAssociationNegotiationParameters.createWithDefaults();
         }
         StringBuffer sentContentBuf = new StringBuffer( 512 );
 
@@ -191,12 +191,12 @@ public class OpenIdRpSideAssociationNegotiator
         if( theAssociationType != null && !OpenIdRpSideAssociationNegotiationParameters.HMAC_SHA1.equals( theAssociationType )) {
             throw new FactoryException(
                     this,
-                    new OpenIdAssociationException.UnknownAssociationType( parameters.getLidProcessingPipelineStage(), theAssociationType ));
+                    new OpenIdAssociationException.UnknownAssociationType( theAssociationType ));
         }
         if( theSessionType != null && !OpenIdRpSideAssociationNegotiationParameters.DH_SHA1.equals( theSessionType )) {
             throw new FactoryException(
                     this,
-                    new OpenIdAssociationException.UnknownSessionType( parameters.getLidProcessingPipelineStage(), theSessionType ));
+                    new OpenIdAssociationException.UnknownSessionType( theSessionType ));
         }
         if( expires_in == Long.MIN_VALUE ) {
             if( replace_after != null ) {
@@ -208,7 +208,7 @@ public class OpenIdRpSideAssociationNegotiator
         if( expires_in < 0 ) {
             throw new FactoryException(
                     this,
-                    new OpenIdAssociationException.InvalidExpiration( parameters.getLidProcessingPipelineStage() ));
+                    new OpenIdAssociationException.InvalidExpiration());
         }
 
         if( issued != null ) {

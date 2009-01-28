@@ -15,13 +15,14 @@
 package org.infogrid.lid.gpg;
 
 import org.infogrid.util.Factory;
+import org.infogrid.util.Identifier;
 
 /**
  * Obtains and manages LID key pairs for given identities that are maintained locally.
  */
 public interface LidGpgKeyPairFactory
         extends
-            Factory<String,LidKeyPair,Void>
+            Factory<Identifier,LidKeyPair,Void>
 {
     // nothing
 }

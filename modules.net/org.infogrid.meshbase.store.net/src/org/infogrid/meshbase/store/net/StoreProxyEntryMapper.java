@@ -83,20 +83,17 @@ public class StoreProxyEntryMapper
      *
      * @param stringKey the key in String form
      * @return the corresponding key object
+     * @throws URISyntaxException thrown if a stringKey could not be converted into a valid Identifier
      */
     public NetMeshBaseIdentifier stringToKey(
             String stringKey )
+        throws
+            URISyntaxException
     {
-        try {
-            NetMeshBaseIdentifier ret = theMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( stringKey );
-            return ret;
-
-        } catch( URISyntaxException ex ) {
-            log.error( ex );
-
-            return null;
-        }
+        NetMeshBaseIdentifier ret = theMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( stringKey );
+        return ret;
     }
+
     /**
      * Map a StoreValue to a value.
      *

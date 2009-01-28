@@ -15,18 +15,45 @@
 package org.infogrid.lid.gpg.store;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
+import org.infogrid.util.Identifier;
+import org.infogrid.util.IdentifierFactory;
 
 /**
  * Maps LID public keys from and to the Store.
  */
 public class StoreLidGpgPublicKeyMapper
         implements
-            StoreEntryMapper<String,String>
+            StoreEntryMapper<Identifier,String>
 {
+    /**
+     * Factory method.
+     *
+     * @param identifierFactory the IdentifierFactory to use
+     * @return the created StoreLidGpgPublicKeyMapper
+     */
+    public static StoreLidGpgPublicKeyMapper create(
+            IdentifierFactory identifierFactory )
+    {
+        StoreLidGpgPublicKeyMapper ret = new StoreLidGpgPublicKeyMapper( identifierFactory );
+        return ret;
+    }
+
+    /**
+     * Constructor for subclasses only, use factory method.
+     * 
+     * @param identifierFactory the IdentifierFactory to use
+     */
+    protected StoreLidGpgPublicKeyMapper(
+            IdentifierFactory identifierFactory )
+    {
+        theIdentifierFactory = identifierFactory;
+    }
+
     /**
      * Map a key to a String value that can be used for the Store.
      *
@@ -34,9 +61,9 @@ public class StoreLidGpgPublicKeyMapper
      * @return the corresponding String value that can be used for the Store
      */
     public String keyToString(
-            String key )
+            Identifier key )
     {
-        return key;
+        return key.toExternalForm();
     }
 
     /**
@@ -44,11 +71,15 @@ public class StoreLidGpgPublicKeyMapper
      *
      * @param stringKey the key in String form
      * @return the corresponding key object
+     * @throws URISyntaxException thrown if a stringKey could not be converted into a valid Identifier
      */
-    public String stringToKey(
+    public Identifier stringToKey(
             String stringKey )
+        throws
+            URISyntaxException
     {
-        return stringKey;
+        Identifier ret = theIdentifierFactory.fromExternalForm( stringKey );
+        return ret;
     }
 
     /**
@@ -60,7 +91,7 @@ public class StoreLidGpgPublicKeyMapper
      * @throws StoreValueDecodingException thrown if the StoreValue could not been decoded
      */
     public String decodeValue(
-            String     key,
+            Identifier key,
             StoreValue value )
         throws
             StoreValueDecodingException
@@ -153,7 +184,11 @@ public class StoreLidGpgPublicKeyMapper
         }
     }
 
-    
+    /**
+     * The IdentifierFactory to use.
+     */
+    protected IdentifierFactory theIdentifierFactory;
+
     /**
      * The encoding to use.
      */

@@ -12,10 +12,11 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.lid.local;
 
 import java.util.Map;
 import org.infogrid.lid.credential.LidCredentialType;
+import org.infogrid.util.HasIdentifierFinder;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.http.SaneRequest;
 
@@ -24,7 +25,7 @@ import org.infogrid.util.http.SaneRequest;
  */
 public interface LidLocalPersonaManager
         extends
-            LidResourceFinder
+            HasIdentifierFinder
 {
     /**
      * Create a LidLocalPersona.
@@ -50,7 +51,7 @@ public interface LidLocalPersonaManager
 //     * @param identifier the identifier for which the credential will be checked
 //     * @param type the type of credential to be checked
 //     * @param credential the credential to be checked
-//     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+//     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
 //     * @throws LidInvalidCredentialException thrown if the credential was invalid
 //     */
 //    public abstract void checkCredential(
@@ -58,7 +59,7 @@ public interface LidLocalPersonaManager
 //            LidCredentialType type,
 //            String            credential )
 //        throws
-//            LidPersonaUnknownException,
+//            LidLocalPersonaUnknownException,
 //            LidInvalidCredentialException;
 //
 //    /**
@@ -68,7 +69,7 @@ public interface LidLocalPersonaManager
 //     * @param type the type of credential to be changed
 //     * @param credential the new credential
 //     * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the changing of passwords
-//     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+//     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
 //     */
 //    public void changeCredential(
 //            String            identifier,
@@ -76,42 +77,42 @@ public interface LidLocalPersonaManager
 //            String            credential )
 //        throws
 //            UnsupportedOperationException,
-//            LidPersonaUnknownException;
+//            LidLocalPersonaUnknownException;
 
     /**
      * Obtain a LidLocalPersona, given its identifier.
      *
      * @param identifier the identifier for which the LidLocalPersona will be retrieved
      * @return the found LidLocalPersona
-     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
-    public abstract LidLocalPersona get(
+    public abstract LidLocalPersona find(
             Identifier identifier )
         throws
-            LidPersonaUnknownException;
+            LidLocalPersonaUnknownException;
 
     /**
      * Find the LidResource, or null, which in this case is a LidLocalPersona.
      * 
      * @param request the incoming request
      * @return the found LidResource, or null
-     * @throws LidResourceUnknownException thrown if the resource could not be found
+     * @throws LidLocalPersonaUnknownException thrown if the resource could not be found
      */
     public LidLocalPersona findLidResource(
             SaneRequest request )
         throws
-            LidResourceUnknownException;
+            LidLocalPersonaUnknownException;
 
     /**
      * Delete a LidLocalPersona, given its identifier.
      * 
      * @param identifier the identifier of the LidLocalPersona that will be deleted
      * @throws UnsupportedOperationException thrown if this LidLocalPersonaManager does not permit the deletion of LidLocalPersonas
-     * @throws LidPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
      */
     public abstract void delete(
             Identifier identifier )
         throws
             UnsupportedOperationException,
-            LidPersonaUnknownException;
+            LidLocalPersonaUnknownException;
 }

@@ -14,8 +14,7 @@
 
 package org.infogrid.lid.openid;
 
-import org.infogrid.lid.LidAbortProcessingPipelineException;
-import org.infogrid.lid.LidProcessingPipelineStage;
+import org.infogrid.util.AbstractLocalizedException;
 
 /**
  * This Exception is thrown when an error occurred while attempting to set up or
@@ -23,19 +22,17 @@ import org.infogrid.lid.LidProcessingPipelineStage;
  */
 public abstract class OpenIdAssociationException
     extends
-        LidAbortProcessingPipelineException
+        AbstractLocalizedException
 {
     /**
      * Constructor.
      *
-     * @param source the LidProcessingPipelineStage that threw this exception
      * @param cause the Exception that caused this Exception
      */
     protected OpenIdAssociationException(
-            LidProcessingPipelineStage source,
-            Throwable                  cause )
+            Throwable cause )
     {
-        super( source, cause );
+        super( null, cause );
     }
 
     /**
@@ -50,16 +47,24 @@ public abstract class OpenIdAssociationException
         /**
          * Constructor.
          *
-         * @param source the LidProcessingPipelineStage that threw this exception
          * @param unknownType the type of Association that was unknown
          */
         public UnknownAssociationType(
-                LidProcessingPipelineStage source,
-                String                     unknownType )
+                String unknownType )
         {
-            super( source, null );
+            super( null );
             
             theUnknownType = unknownType;
+        }
+
+        /**
+         * Obtain resource parameters for the internationalization.
+         *
+         * @return the resource parameters
+         */
+        public Object [] getLocalizationParameters()
+        {
+            return new Object[] { theUnknownType };
         }
 
         /**
@@ -80,16 +85,24 @@ public abstract class OpenIdAssociationException
         /**
          * Constructor.
          *
-         * @param source the LidProcessingPipelineStage that threw this exception
          * @param unknownType the type of session that was unknown
          */
         public UnknownSessionType(
-                LidProcessingPipelineStage source,
-                String                     unknownType )
+                String unknownType )
         {
-            super( source, null );
+            super( null );
             
             theUnknownType = unknownType;
+        }
+
+        /**
+         * Obtain resource parameters for the internationalization.
+         *
+         * @return the resource parameters
+         */
+        public Object [] getLocalizationParameters()
+        {
+            return new Object[] { theUnknownType };
         }
 
         /**
@@ -110,13 +123,20 @@ public abstract class OpenIdAssociationException
 
         /**
          * Constructor.
-         * 
-         * @param source the LidProcessingPipelineStage that threw this exception
          */
-        public InvalidExpiration(
-                LidProcessingPipelineStage source )
+        public InvalidExpiration()
         {
-            super( source, null );
+            super( null );
+        }
+
+        /**
+         * Obtain resource parameters for the internationalization.
+         *
+         * @return the resource parameters
+         */
+        public Object [] getLocalizationParameters()
+        {
+            return new Object[] {};
         }
     }
 
@@ -131,13 +151,20 @@ public abstract class OpenIdAssociationException
 
         /**
          * Constructor.
-         * 
-         * @param source the LidProcessingPipelineStage that threw this exception
          */
-        public InvalidSecret(
-                LidProcessingPipelineStage source )
+        public InvalidSecret()
         {
-            super( source, null );
+            super( null );
+        }
+
+        /**
+         * Obtain resource parameters for the internationalization.
+         *
+         * @return the resource parameters
+         */
+        public Object [] getLocalizationParameters()
+        {
+            return new Object[] {};
         }
     }
 
@@ -153,14 +180,22 @@ public abstract class OpenIdAssociationException
         /**
          * Constructor.
          *
-         * @param source the LidProcessingPipelineStage that threw this exception
          * @param cause the cause of this Exception
          */
         public SyntaxError(
-                LidProcessingPipelineStage source,
-                Throwable                  cause )
+                Throwable cause )
         {
-            super( source, cause );
+            super( cause );
+        }
+
+        /**
+         * Obtain resource parameters for the internationalization.
+         *
+         * @return the resource parameters
+         */
+        public Object [] getLocalizationParameters()
+        {
+            return new Object[] {};
         }
     }
     
@@ -175,13 +210,20 @@ public abstract class OpenIdAssociationException
 
         /**
          * Constructor.
-         * 
-         * @param source the LidProcessingPipelineStage that threw this exception
          */
-        public InvalidPublicKey(
-                LidProcessingPipelineStage source )
+        public InvalidPublicKey()
         {
-            super( source, null );
+            super( null );
+        }
+
+        /**
+         * Obtain resource parameters for the internationalization.
+         *
+         * @return the resource parameters
+         */
+        public Object [] getLocalizationParameters()
+        {
+            return new Object[] {};
         }
     }
 }

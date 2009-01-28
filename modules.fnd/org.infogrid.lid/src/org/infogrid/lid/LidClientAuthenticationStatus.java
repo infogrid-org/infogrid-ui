@@ -17,6 +17,7 @@ package org.infogrid.lid;
 import java.util.Date;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
+import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.Identifier;
 
 /**
@@ -180,10 +181,10 @@ public interface LidClientAuthenticationStatus
      * Obtain what we know about the client with this client identifier here locally. If the persona
      * is not known locally, this will return <code>null</code>.
      * 
-     * @return the LidPersona
+     * @return the HasIdentifier
      * @see #getClientIdentifier
      */
-    public abstract LidPersona getClientPersona();
+    public abstract HasIdentifier getClientPersona();
     
     /**
      * Determine whether the client has indicated its desire to cancel the active session, if any.
@@ -203,7 +204,7 @@ public interface LidClientAuthenticationStatus
      * @return LidPersona representing the client identified by the session going into this request, if any
      * @see #getSessionBelongsToIdentifier() 
      */
-    public abstract LidPersona getSessionBelongsToPersona();
+    public abstract HasIdentifier getSessionBelongsToPersona();
 
     /**
      * Determine the identifier of the client of any authenticated session that was brought into this request.

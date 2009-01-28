@@ -15,8 +15,10 @@
 package org.infogrid.lid.store;
 
 import org.infogrid.lid.AbstractLidNonceManager;
+import org.infogrid.lid.LidInvalidNonceException;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Store implementation of LidNonceManager. THis works the opposite way one could
@@ -73,25 +75,29 @@ public class StoreLidNonceManager
     }
 
     /**
-     * Validate a presented nonce.
-     * 
-     * @param nonce the presented nonce
-     * @return true if the nonce is valid, false if it is not valid or unknown.
+     * Validate a LID nonce contained in a request.
+     *
+     * @param request the request
+     * @throws LidInvalidNonceException thrown if the nonce was invalid
      */
-    public boolean validateNonce(
-            String nonce )
+    public void validateNonce(
+            SaneRequest request )
+        throws
+            LidInvalidNonceException
     {
+        String nonce = request.getArgument( LID_NONCE_PARAMETER_NAME );
+
+        if( nonce == null || nonce.length() == 0 ) {
+            throw new LidInvalidNonceException.Empty();
+        }
         if( !validateNonceTimeRange( nonce )) {
-            return false;
+            throw new LidInvalidNonceException.InvalidTimeRange( nonce );
         }
         
         String found = theStorage.put( nonce, nonce );
-        if( found != null ) {
-            return false;
-        } else {
-            return true;
+        if( found == null ) {
+            throw new LidInvalidNonceException.NotKnown( nonce );
         }
-        
     }
 
     /**

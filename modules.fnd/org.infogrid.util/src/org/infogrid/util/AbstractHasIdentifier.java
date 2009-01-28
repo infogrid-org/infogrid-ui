@@ -8,34 +8,32 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
-package org.infogrid.lid;
-
-import org.infogrid.util.Identifier;
+package org.infogrid.util;
 
 /**
- * Collects features of LidResource that are common to many implementations.
+ * Collects features common to implementations of HasIdentifier.
  */
-public abstract class AbstractLidResource
+public abstract class AbstractHasIdentifier
         implements
-            LidResource
+            HasIdentifier
 {
     /**
      * Constructor for subclasses only.
      * 
-     * @param identifier the unique identifier of the persona, e.g. their identity URL
+     * @param identifier the unique identifier
      */
-    protected AbstractLidResource(
+    protected AbstractHasIdentifier(
             Identifier identifier )
     {
         theIdentifier = identifier;
     }
 
     /**
-     * Obtain the persona's unique identifier.
+     * Obtain the unique identifier.
      * 
      * @return the unique identifier
      */
@@ -45,7 +43,7 @@ public abstract class AbstractLidResource
     }
 
     /**
-     * The unique identifier of the LidResource.
+     * The unique identifier.
      */
     protected Identifier theIdentifier;
 }

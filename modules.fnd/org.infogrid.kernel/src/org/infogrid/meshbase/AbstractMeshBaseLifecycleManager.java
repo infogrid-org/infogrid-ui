@@ -490,21 +490,19 @@ public abstract class AbstractMeshBaseLifecycleManager
      *
      * @param obj the MeshObject to put into the storage
      * @param event the MeshObjectLifeCycleEvent
-     * @return the MeshObject in the store previously with the same identifier
      */
-    protected MeshObject putIntoMeshBase(
+    protected void putIntoMeshBase(
             AbstractMeshObject       obj,
             MeshObjectLifecycleEvent event )
     {
         AbstractMeshBase realBase = (AbstractMeshBase) theMeshBase;
-        MeshObject       ret      = realBase.theCache.put( obj.getIdentifier(), obj );
+
+        realBase.theCache.putIgnorePrevious( obj.getIdentifier(), obj );
         
         if( event != null ) {
             realBase.getCurrentTransaction().addChange( event );
             realBase.notifyLifecycleEvent( event );
         }
-        
-        return ret;
     }
 
     /**

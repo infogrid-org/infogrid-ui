@@ -95,6 +95,12 @@ public class YadisServiceFactory
             log.error( ex );
         } catch( MeshObjectIdentifierNotUniqueException ex ) {
             log.error( ex );
+        } catch( IsAbstractException ex ) {
+            log.error( ex );
+        } catch( IllegalPropertyTypeException ex ) {
+            log.error( ex );
+        } catch( IllegalPropertyValueException ex ) {
+            log.error( ex );
         } catch( IOException ex ) {
             log.warn( ex );
         } catch( SAXException ex ) {
@@ -276,10 +282,9 @@ public class YadisServiceFactory
                     log.error( ex );
                 }
 
-                String prefix = "YadisService-0";
                 try {
                     NetMeshObject serviceMeshObject = base.getMeshBaseLifecycleManager().createMeshObject(
-                            base.getMeshObjectIdentifierFactory().fromExternalForm( prefix ),
+                            base.getMeshObjectIdentifierFactory().fromExternalForm( "YadisService-0" ),
                             YadisSubjectArea.XRDSSERVICE );
 
                     serviceMeshObject.bless( AuthSubjectArea.AUTHENTICATION1_0SERVICE ); // FIXME? OpenIDAuthentication.TYPE );
@@ -288,20 +293,25 @@ public class YadisServiceFactory
                                 AuthSubjectArea.AUTHENTICATIONSERVICE_DELEGATE,
                                 StringValue.create( delegateIdentifier.toExternalForm() ));
                     }
+
+                    NetMeshObject endpoint = base.getMeshBaseLifecycleManager().createMeshObject(
+                            base.getMeshObjectIdentifierFactory().fromExternalForm( "Endpoint=0" ),
+                            YadisSubjectArea.ENDPOINT );
+                    // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( identityServer ));
                     
-                    NetMeshObject endpoint = findOrCreateForwardReferenceAndBless(
+                    serviceMeshObject.relateAndBless( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource(), endpoint );
+
+                    NetMeshObject resource = findOrCreateForwardReferenceAndBless(
                             base.getMeshObjectIdentifierFactory().fromExternalForm( identityServerIdentifier, null ),
                             WebSubjectArea.WEBRESOURCE,
                             base );
 
-                    // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( identityServer ));
-
-                    if( !serviceMeshObject.isRelated( endpoint )) {
-                        serviceMeshObject.relate( endpoint );
+                    if( !endpoint.isRelated( resource )) {
+                        endpoint.relate( resource );
                     }
-                    serviceMeshObject.blessRelationship(
-                            YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource(),
-                            endpoint );
+                    endpoint.blessRelationship(
+                            YadisSubjectArea.ENDPOINT_ISOPERATEDBY_WEBRESOURCE.getSource(),
+                            resource );
 
                     if( !serviceMeshObject.isRelated( subject )) {
                         serviceMeshObject.relate( subject );

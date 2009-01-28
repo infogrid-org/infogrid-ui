@@ -56,7 +56,7 @@
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
-            String                            here,
+            String                            return_to,
             String                            trustRoot,
             org.infogrid.util.context.Context context )
         throws
@@ -64,50 +64,48 @@
             org.infogrid.util.FactoryException
     {
         org.infogrid.lid.openid.OpenIdRpSideAssociationManager assocMgr
-                = context.findContextObjectOrThrow(
-                        org.infogrid.lid.openid.OpenIdRpSideAssociationManager.class );
+                = context.findContextObjectOrThrow( org.infogrid.lid.openid.OpenIdRpSideAssociationManager.class );
                         
         org.infogrid.lid.LidNonceManager nonceMgr
-                = context.findContextObjectOrThrow(
-                        org.infogrid.lid.LidNonceManager.class );
+                = context.findContextObjectOrThrow( org.infogrid.lid.LidNonceManager.class );
 
-        org.infogrid.mesh.set.MeshObjectSet endpoints = traverse(
-                org.infogrid.lid.model.yadis.YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource() );
+        org.infogrid.mesh.set.OrderedMeshObjectSet endpoints
+                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpoints( the_Delegate );
         if( endpoints.isEmpty() ) {
             return null;
         }
-
-        // FIXME, should use more complex selection algorithm
-        MeshObject selectedEndpoint = endpoints.getMeshObjects()[0];
+        MeshObject selectedEndpoint = endpoints.get(0);
         String     endpointUrl      = selectedEndpoint.getIdentifier().toExternalForm();
+
         String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
         String     theUrl           = principal.getIdentifier().toExternalForm();
 
         if( trustRoot == null ) {
-            trustRoot = here;
+            trustRoot = return_to;
         }
 
         StringBuilder ret = new StringBuilder();
-        ret.append( org.infogrid.util.http.HTTP.appendArgumentToUrl( endpointUrl, "openid.mode=checkid_setup" ));
+        ret.append( endpointUrl );
+        org.infogrid.util.http.HTTP.appendArgumentPairToUrl( ret, "openid.mode=checkid_setup" );
         if( theDelegate != null ) {
-            ret.append( "&openid.identity=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( theDelegate ));
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", theDelegate );
         } else {
-            ret.append( "&openid.identity=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( theUrl ));
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", theUrl );
         }
 
         // add a nonce to the return-to URL
         String nonce = nonceMgr.generateNewNonce();
-            
-        here = org.infogrid.util.http.HTTP.appendArgumentToUrl( here, "lid-nonce=" + org.infogrid.util.http.HTTP.encodeToValidUrlArgument( nonce ));
 
-        ret.append( "&openid.return_to="  ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( here ));
-        ret.append( "&openid.trust_root=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( trustRoot ));
+        return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
+
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", trustRoot );
 
         org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
                 // may throw exception
 
         if( association != null ) {
-            ret.append( "&openid.assoc_handle=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( association.getAssociationHandle() ));
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.assoc_handle", association.getAssociationHandle() );
         }
         return ret.toString();
     }        
@@ -123,7 +121,7 @@
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
-            String                            here,
+            String                            return_to,
             String                            trustRoot,
             org.infogrid.util.context.Context context )
         throws
@@ -131,50 +129,48 @@
             org.infogrid.util.FactoryException
     {
         org.infogrid.lid.openid.OpenIdRpSideAssociationManager assocMgr
-                = context.findContextObjectOrThrow(
-                        org.infogrid.lid.openid.OpenIdRpSideAssociationManager.class );
+                = context.findContextObjectOrThrow( org.infogrid.lid.openid.OpenIdRpSideAssociationManager.class );
                         
         org.infogrid.lid.LidNonceManager nonceMgr
-                = (org.infogrid.lid.LidNonceManager) context.findContextObjectOrThrow(
-                        org.infogrid.lid.LidNonceManager.class );
+                = context.findContextObjectOrThrow( org.infogrid.lid.LidNonceManager.class );
 
-        org.infogrid.mesh.set.MeshObjectSet endpoints = traverse(
-                org.infogrid.lid.model.yadis.YadisSubjectArea.XRDSSERVICE_ISPROVIDEDATENDPOINT_WEBRESOURCE.getSource() );
+        org.infogrid.mesh.set.OrderedMeshObjectSet endpoints
+                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpoints( the_Delegate );
         if( endpoints.isEmpty() ) {
             return null;
         }
-
-        // FIXME, should use more complex selection algorithm
-        MeshObject selectedEndpoint = endpoints.getMeshObjects()[0];
+        MeshObject selectedEndpoint = endpoints.get(0);
         String     endpointUrl      = selectedEndpoint.getIdentifier().toExternalForm();
+
         String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
         String     theUrl           = principal.getIdentifier().toExternalForm();
 
         if( trustRoot == null ) {
-            trustRoot = here;
+            trustRoot = return_to;
         }
 
         StringBuilder ret = new StringBuilder();
-        ret.append( org.infogrid.util.http.HTTP.appendArgumentToUrl( endpointUrl, "openid.mode=checkid_setup" ));
+        ret.append( endpointUrl );
+        org.infogrid.util.http.HTTP.appendArgumentPairToUrl( ret, "openid.mode=checkid_setup" );
         if( theDelegate != null ) {
-            ret.append( "&openid.identity=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( theDelegate ));
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", theDelegate );
         } else {
-            ret.append( "&openid.identity=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( theUrl ));
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", theUrl );
         }
 
         // add a nonce to the return-to URL
         String nonce = nonceMgr.generateNewNonce();
             
-        here = org.infogrid.util.http.HTTP.appendArgumentToUrl( here, "lid-nonce=" + org.infogrid.util.http.HTTP.encodeToValidUrlArgument( nonce ));
+        return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
 
-        ret.append( "&openid.return_to="  ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( here ));
-        ret.append( "&openid.trust_root=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( trustRoot ));
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", trustRoot );
 
         org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
                 // may throw exception
 
         if( association != null ) {
-            ret.append( "&openid.assoc_handle=" ).append( org.infogrid.util.http.HTTP.encodeToValidUrlArgument( association.getAssociationHandle() ));
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.assoc_handle", association.getAssociationHandle() );
         }
         return ret.toString();
     }        
@@ -190,15 +186,64 @@
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
-            String                            here,
+            String                            return_to,
             String                            trustRoot,
             org.infogrid.util.context.Context context )
         throws
             org.infogrid.mesh.NotPermittedException,
             org.infogrid.util.FactoryException
     {
-        throw new UnsupportedOperationException();
-    }
+        org.infogrid.lid.openid.OpenIdRpSideAssociationManager assocMgr
+                = context.findContextObjectOrThrow( org.infogrid.lid.openid.OpenIdRpSideAssociationManager.class );
+
+        org.infogrid.lid.LidNonceManager nonceMgr
+                = context.findContextObjectOrThrow( org.infogrid.lid.LidNonceManager.class );
+
+        org.infogrid.mesh.set.OrderedMeshObjectSet endpoints
+                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpoints( the_Delegate );
+        if( endpoints.isEmpty() ) {
+            return null;
+        }
+
+        MeshObject selectedEndpoint = endpoints.get(0);
+        String     endpointUrl      = selectedEndpoint.getIdentifier().toExternalForm();
+
+        String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
+        String     theUrl           = principal.getIdentifier().toExternalForm();
+
+        if( trustRoot == null ) {
+            trustRoot = return_to;
+        }
+
+        StringBuilder ret = new StringBuilder();
+        ret.append( endpointUrl );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl(     ret, "openid.ns", "http://specs.openid.net/auth/2.0" );
+        org.infogrid.util.http.HTTP.appendArgumentPairToUrl( ret, "openid.mode=checkid_setup" );
+        if( theDelegate != null ) {
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.claimed_id", theDelegate );
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity",   theDelegate );
+        } else {
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.claimed_id", theUrl );
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity",   theUrl );
+        }
+
+        // add a nonce to the return-to URL
+        String nonce = nonceMgr.generateNewNonce();
+
+        return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
+
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", trustRoot );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.realm",      trustRoot );
+
+        org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
+                // may throw exception
+
+        if( association != null ) {
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.assoc_handle", association.getAssociationHandle() );
+        }
+        return ret.toString();
+        }
           ]]></implementsMethod>
           <synonym>http://specs.openid.net/auth/2.0/signon</synonym>
         </entitytype>

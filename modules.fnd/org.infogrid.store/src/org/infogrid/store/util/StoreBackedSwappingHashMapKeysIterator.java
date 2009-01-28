@@ -14,6 +14,7 @@
 
 package org.infogrid.store.util;
 
+import java.net.URISyntaxException;
 import org.infogrid.store.IterableStoreCursor;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
@@ -22,6 +23,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 
 import java.util.NoSuchElementException;
+import org.infogrid.util.logging.Log;
 
 /**
  * Iterator over all keys in an InterableStoreBackedMap.
@@ -33,6 +35,8 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
         extends
             AbstractCursorIterator<K>
 {
+    private static final Log log = Log.getLogInstance( StoreBackedSwappingHashMapKeysIterator.class ); // our own, private logger
+
     /**
      * Constructor.
      *
@@ -73,10 +77,16 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
     @Override
     public K peekNext()
     {
-        StoreValue value = theDelegate.peekNext();
-        K          ret   = theMapper.stringToKey( value.getKey() );
+        try {
+            StoreValue value = theDelegate.peekNext();
+            K          ret   = theMapper.stringToKey( value.getKey() );
 
-        return ret;
+            return ret;
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
     
     /**
@@ -88,10 +98,16 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
     @Override
     public K peekPrevious()
     {
-        StoreValue value = theDelegate.peekNext();
-        K          ret   = theMapper.stringToKey( value.getKey() );
+        try {
+            StoreValue value = theDelegate.peekNext();
+            K          ret   = theMapper.stringToKey( value.getKey() );
 
-        return ret;
+            return ret;
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -160,10 +176,16 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
      */
     public K next()
     {
-        StoreValue value = theDelegate.next();
-        K          ret   = theMapper.stringToKey( value.getKey() );
+        try {
+            StoreValue value = theDelegate.next();
+            K          ret   = theMapper.stringToKey( value.getKey() );
 
-        return ret;
+            return ret;
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -181,7 +203,13 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
         K          [] ret     = ArrayHelper.createArray( theArrayComponentType, n );
         
         for( int i=0 ; i<values.length ; ++i ) {
-            ret[i] = theMapper.stringToKey( values[i].getKey() );
+            try {
+                ret[i] = theMapper.stringToKey( values[i].getKey() );
+
+            } catch( URISyntaxException ex ) {
+                log.error( ex );
+                return null;
+            }
         }
         
         return ret;
@@ -195,10 +223,16 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
      */
     public K previous()
     {
-        StoreValue value = theDelegate.previous();
-        K          ret   = theMapper.stringToKey( value.getKey() );
+        try {
+            StoreValue value = theDelegate.previous();
+            K          ret   = theMapper.stringToKey( value.getKey() );
 
-        return ret;
+            return ret;
+
+        } catch( URISyntaxException ex ) {
+            log.error( ex );
+            return null;
+        }
     }
 
     /**
@@ -221,7 +255,13 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
         K          [] ret     = ArrayHelper.createArray( theArrayComponentType, n );
         
         for( int i=0 ; i<values.length ; ++i ) {
-            ret[i] = theMapper.stringToKey( values[i].getKey() );
+            try {
+                ret[i] = theMapper.stringToKey( values[i].getKey() );
+
+            } catch( URISyntaxException ex ) {
+                log.error( ex );
+                return null;
+            }
         }
         
         return ret;

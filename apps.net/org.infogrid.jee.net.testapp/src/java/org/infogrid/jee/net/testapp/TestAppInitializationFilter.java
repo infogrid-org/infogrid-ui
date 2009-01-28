@@ -42,7 +42,7 @@ public class TestAppInitializationFilter
         extends
             AbstractMNetLocalRestfulAppInitializationFilter
 {
-    private Log log = Log.getLogInstance( TestAppInitializationFilter.class );
+    private static Log log; // because this a filter, need to delay initialization
     
     /**
      * Constructor for subclasses only, use factory method.
@@ -105,6 +105,9 @@ public class TestAppInitializationFilter
     protected void populateNetMeshBase(
             NetMeshBase mb )
     {
+        if( log == null ) {
+            log = Log.getLogInstance( TestAppInitializationFilter.class ); // our own, private logger
+        }
         Transaction tx = null;
         try {
             NetMeshBaseLifecycleManager    life = mb.getMeshBaseLifecycleManager();

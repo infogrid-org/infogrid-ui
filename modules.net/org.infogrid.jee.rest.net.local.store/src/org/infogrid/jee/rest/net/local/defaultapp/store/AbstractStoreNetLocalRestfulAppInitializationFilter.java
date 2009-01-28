@@ -46,7 +46,6 @@ import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.store.IterableStore;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.logging.Log;
 
 /**
  * Common functionality of application initialization filters that are net-enabled and REST-ful.
@@ -55,8 +54,6 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         extends
             AbstractRestfulAppInitializationFilter
 {
-    private static final Log log = Log.getLogInstance( AbstractStoreNetLocalRestfulAppInitializationFilter.class  ); // our own, private logger
-
     /**
      * Constructor.
      */

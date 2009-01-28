@@ -12,22 +12,22 @@
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.util;
 
 /**
- * Manages identities.
+ * Knows how to find a HasIdentifier from its Identifier.
  */
-public interface LidPersonaManager
+public interface HasIdentifierFinder
 {
     /**
-     * Obtain a LidPersona, given its identifier.
+     * Find a HasIdentifier from its Identifier.
      *
-     * @param identifier the identifier for which the LidPersona will be retrieved
-     * @return the found LidPersona
-     * @throws LidPersonaUnknownException thrown if no LidPersona exists with this identifier
+     * @param identifier the Identifier
+     * @return the found HasIdentifier
+     * @throws CannotFindHasIdentifierException thrown if the HasIdentifier cannot be found
      */
-    public abstract LidPersona get(
-            String identifier )
+    public HasIdentifier find(
+            Identifier identifier )
         throws
-            LidPersonaUnknownException;
+            CannotFindHasIdentifierException;
 }
