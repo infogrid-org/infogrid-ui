@@ -16,6 +16,7 @@ package org.infogrid.lid.credential;
 
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.Identifier;
+import org.infogrid.util.StringHelper;
 
 /**
  * Thrown if a credential was provided that was invalid.
@@ -85,6 +86,26 @@ public class LidInvalidCredentialException
     public Object [] getLocalizationParameters()
     {
         return new Object[] { theIdentifier, theType };
+    }
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                        "theIdentifier",
+                        "theType"
+                },
+                new Object[] {
+                        theIdentifier,
+                        theType,
+                } );
     }
 
     /**

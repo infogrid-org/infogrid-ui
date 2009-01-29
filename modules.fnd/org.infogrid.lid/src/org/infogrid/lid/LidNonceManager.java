@@ -27,7 +27,7 @@ public interface LidNonceManager
      * @return the newly generated nonce
      */
     public String generateNewNonce();
-    
+
     /**
      * Validate a LID nonce contained in a request.
      * 
@@ -36,6 +36,19 @@ public interface LidNonceManager
      */
     public void validateNonce(
             SaneRequest request )
+        throws
+            LidInvalidNonceException;
+
+    /**
+     * Validate a LID nonce contained in a request with the given URL parameter.
+     *
+     * @param request the request
+     * @param name the name of the URL parameter
+     * @throws LidInvalidNonceException thrown if the nonce was invalid
+     */
+    public void validateNonce(
+            SaneRequest request,
+            String      name )
         throws
             LidInvalidNonceException;
 

@@ -23,7 +23,7 @@ import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
- * Configures the default InfoGridWebApp with log4j logging, the template framework, and
+ * Configures the default InfoGridWebApp with the template framework, and
  * a net-enabled REST-ful JeeFormatter.
  */
 public class DefaultNetRestfulInitializationFilter

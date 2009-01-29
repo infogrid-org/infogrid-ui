@@ -14,6 +14,8 @@
 
 package org.infogrid.lid.openid;
 
+import org.infogrid.util.StringHelper;
+
 /**
  * An association, as held by an OpenID relying party.
  */
@@ -118,6 +120,32 @@ public class OpenIdRpSideAssociation
 
             throw new IllegalStateException( errorString );
         }
+    }
+
+    /**
+     * Convert to String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theServerUrl",
+                    "theAssociationHandle",
+                    "theIssuedTime",
+                    "theExpiryTime",
+                    "theSharedSecret"
+                },
+                new Object[] {
+                    theServerUrl,
+                    theAssociationHandle,
+                    theIssuedTime,
+                    theExpiryTime,
+                    theSharedSecret
+                });
     }
     
     /**

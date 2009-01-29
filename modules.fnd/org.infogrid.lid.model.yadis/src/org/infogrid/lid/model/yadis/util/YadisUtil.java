@@ -18,10 +18,15 @@ import java.util.ArrayList;
 import org.infogrid.lid.model.yadis.YadisSubjectArea;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.ByPropertyValueSorter;
+import org.infogrid.mesh.set.ByRelatedMeshObjectSelector;
+import org.infogrid.mesh.set.ByTypeMeshObjectSelector;
+import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
 import org.infogrid.mesh.set.MeshObjectSorter;
 import org.infogrid.mesh.set.OrderedMeshObjectSet;
+import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
 import org.infogrid.util.ArrayHelper;
 
 /**
@@ -35,6 +40,41 @@ public abstract class YadisUtil
     private YadisUtil()
     {
         // nothing
+    }
+
+    /**
+     * Given a client, return the set of associated services of a particular type, in order of priority.
+     *
+     * @param client the client
+     * @param type the tyupe of services to look for
+     * @return the set of services, in order of priority
+     */
+    public static OrderedMeshObjectSet determineServicesFor(
+            MeshObject client,
+            EntityType type )
+    {
+        MeshObjectSetFactory factory = client.getMeshBase().getMeshObjectSetFactory();
+
+        MeshObjectSelector servicesSelector = ( type != null ) ? ByTypeMeshObjectSelector.create( type ) : null;
+
+    // Client may either be blessed with XrdsCollection itself, or reference one
+        MeshObjectSet directAuthServices = client.traverse( YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getSource() );
+        if( servicesSelector != null ) {
+            directAuthServices = factory.createImmutableMeshObjectSet( directAuthServices, servicesSelector );
+        }
+
+        MeshObjectSet indirectAuthServices = client.traverse( YadisSubjectArea.WEBRESOURCE_HASXRDSLINKTO_WEBRESOURCE.getSource() );
+        indirectAuthServices = indirectAuthServices.traverse( YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getSource() );
+        if( servicesSelector != null ) {
+            indirectAuthServices = factory.createImmutableMeshObjectSet( indirectAuthServices, servicesSelector );
+        }
+
+        MeshObjectSet allAuthServices = factory.createImmutableMeshObjectSetUnification( directAuthServices, indirectAuthServices );
+        allAuthServices = factory.createImmutableMeshObjectSet( allAuthServices, theHasEndpointSelector );
+
+        OrderedMeshObjectSet ret = factory.createOrderedImmutableMeshObjectSet( allAuthServices, theByPrioritySorter );
+
+        return ret;
     }
 
     /**
@@ -70,4 +110,13 @@ public abstract class YadisUtil
      */
     public static final MeshObjectSorter theByPrioritySorter
             = ByPropertyValueSorter.create( YadisSubjectArea.XRDSSERVICE_PRIORITY );
+
+    /**
+     * The selector for authentication services that have at least one endpoint.
+     */
+    protected static final MeshObjectSelector theHasEndpointSelector
+            = ByRelatedMeshObjectSelector.createOneOrMore(
+                    SequentialCompoundTraversalSpecification.create(
+                            YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource(),
+                            YadisSubjectArea.ENDPOINT_ISOPERATEDBY_WEBRESOURCE.getSource() ));
 }

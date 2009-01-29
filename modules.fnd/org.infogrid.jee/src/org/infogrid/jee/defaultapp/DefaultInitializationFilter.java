@@ -96,7 +96,6 @@ public class DefaultInitializationFilter
             } catch( IllegalStateException ex ) {
                 // have one already, that's fine (a parallel thread was faster)
             }
-            log = Log.getLogInstance( getClass() );
         }
     }
 
@@ -119,6 +118,9 @@ public class DefaultInitializationFilter
             Method factoryMethod = appClass.getMethod( "create", String.class);
 
             theApp = (InfoGridWebApp) factoryMethod.invoke( null, theDefaultMeshBaseIdentifier );
+
+            log = Log.getLogInstance( getClass() );
+
             return theApp;
 
         } catch( ClassNotFoundException ex ) {
@@ -167,7 +169,7 @@ public class DefaultInitializationFilter
 
         ResourceHelper.initializeLogging();
 
-        log = Log.getLogInstance( InfoGridWebApp.class );
+        log = Log.getLogInstance( getClass() );
 
         // Context
         SimpleContext rootContext = SimpleContext.createRoot( rootModule + " root context" );

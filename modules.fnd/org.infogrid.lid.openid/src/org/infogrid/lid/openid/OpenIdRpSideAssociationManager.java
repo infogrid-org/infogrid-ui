@@ -18,6 +18,13 @@ import org.infogrid.util.SmartFactory;
 
 /**
  * Knows how to manage RelyingParty-side OpenID associations.
+ * <p>The parameters are as follows:</p>
+ * <ul>
+ *  <li>key: the identity provider endpoint URL</li>
+ *  <li>value: the found or created OpenIdRpSideAssociation</li>
+ *  <li>argument: negotiation parameters, e.g. which crypto to use</li>
+ * </ul>
+ * <p>Note that this is not keyed by association handle, but by identity provider URL.</p>
  */
 public interface OpenIdRpSideAssociationManager
     extends

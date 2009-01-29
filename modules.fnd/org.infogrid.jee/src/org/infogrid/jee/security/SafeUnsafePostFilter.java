@@ -15,6 +15,8 @@
 package org.infogrid.jee.security;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -70,10 +72,27 @@ public class SafeUnsafePostFilter
         {
             HttpServletRequest realRequest = (HttpServletRequest) request;
             if( "POST".equalsIgnoreCase( realRequest.getMethod() )) {
-                SaneRequest sane  = SaneServletRequest.create( realRequest );
-                String      token = sane.getPostArgument( INPUT_FIELD_NAME );
-                
-                isSafe = theFormTokenService.validateToken( token );
+
+                String relativePath = realRequest.getServletPath();
+                boolean process;
+
+                if( theExcludedPattern != null ) {
+                    Matcher m = theExcludedPattern.matcher( relativePath );
+                    if( m.matches() ) {
+                        process = false;
+                    } else {
+                        process = true;
+                    }
+                } else {
+                    process = true;
+                }
+
+                if( process ) {
+                    SaneRequest sane  = SaneServletRequest.create( realRequest );
+                    String      token = sane.getPostArgument( INPUT_FIELD_NAME );
+
+                    isSafe = theFormTokenService.validateToken( token );
+                }
             }
         }
         request.setAttribute( SAFE_UNSAFE_FLAG, isSafe );
@@ -92,6 +111,11 @@ public class SafeUnsafePostFilter
             ServletException
     {
         theFilterConfig  = filterConfig;
+
+        String excludeRegex = filterConfig.getInitParameter( EXCLUDE_REGEX_PARAMETER );
+        if( excludeRegex != null && excludeRegex.length() > 0 ) {
+            theExcludedPattern = Pattern.compile( excludeRegex );
+        }
     }
     
     /**
@@ -227,6 +251,16 @@ public class SafeUnsafePostFilter
      */
     protected FilterConfig theFilterConfig = null;
     
+    /**
+     * Regular expression that identifies excluded requests.
+     */
+    protected Pattern theExcludedPattern;
+
+    /**
+     * Name of the Filter configuration parameter that contains the regular expression to exclude.
+     */
+    public static final String EXCLUDE_REGEX_PARAMETER = "EXCLUDE_REGEX";
+
     /**
      * Name of the attribute in the incoming request that indicates whether this is a safe request or not.
      */

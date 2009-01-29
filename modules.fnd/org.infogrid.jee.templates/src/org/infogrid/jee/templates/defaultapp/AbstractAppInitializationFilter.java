@@ -96,10 +96,7 @@ public abstract class AbstractAppInitializationFilter
 
                 } catch( Throwable t ) {
 
-                    if( log == null ) {
-                        log = Log.getLogInstance( AbstractAppInitializationFilter.class ); // our own, private logger
-                    }
-                    log.error( t );
+                    getLog().error( t );
 
                     StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
                     if( structured != null ) {
@@ -177,6 +174,19 @@ public abstract class AbstractAppInitializationFilter
     }
 
     /**
+     * Initialize and get the log.
+     *
+     * @return the log
+     */
+    private static Log getLog()
+    {
+        if( log == null ) {
+            log = Log.getLogInstance( AbstractAppInitializationFilter.class ); // our own, private logger
+        }
+        return log;
+    }
+
+    /**
      * The filter configuration object this Filter is associated with.
      */
     protected FilterConfig theFilterConfig = null;
@@ -185,5 +195,4 @@ public abstract class AbstractAppInitializationFilter
      * Have the Stores been successfully initialized.
      */
     protected boolean isInitialized = false;
-
 }

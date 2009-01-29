@@ -132,6 +132,28 @@ public class PatientSmartFactory<K,V,A>
     }
     
     /**
+     * Convert to String format, for debugging.
+     *
+     * @return String format
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theDelegateFactory",
+                    "theKeyValueMap",
+                    "theOngoingObjectCreations"
+                },
+                new Object[] {
+                    theDelegateFactory,
+                    theKeyValueMap,
+                    theOngoingObjectCreations
+                } );
+    }
+
+    /**
      * The currently ongoing creations of value. This is important
      * to avoid to create a value twice if two concurrent Threads
      * ask for the same value.

@@ -104,9 +104,6 @@ public class HttpShellFilter
      */
     public HttpShellFilter()
     {
-        if( log == null ) {
-            log = Log.getLogInstance( HttpShellFilter.class ); // our own, private logger
-        }
     }
 
     /**
@@ -135,7 +132,7 @@ public class HttpShellFilter
             performFactoryOperations( lidRequest );
         
         } catch( Throwable ex ) {
-            log.warn( ex );
+            getLog().warn( ex );
             
             @SuppressWarnings( "unchecked" )
             List<Throwable> problems = (List<Throwable>) request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
@@ -178,7 +175,7 @@ public class HttpShellFilter
             v.performVerb( lidRequest );
 
         } else {
-            log.warn( "Ignoring unsafe POST " + lidRequest );
+            getLog().warn( "Ignoring unsafe POST " + lidRequest );
         }
     }
 
@@ -199,7 +196,20 @@ public class HttpShellFilter
     public void destroy()
     {
     }
-    
+
+    /**
+     * Initialize and get the log.
+     *
+     * @return the log
+     */
+    private static Log getLog()
+    {
+        if( log == null ) {
+            log = Log.getLogInstance( HttpShellFilter.class ); // our own, private logger
+        }
+        return log;
+    }
+
     /**
      * The Filter configuration object.
      */

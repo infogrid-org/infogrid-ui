@@ -20,6 +20,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Factors out functionality common to LidNonceManagers.
@@ -63,6 +64,20 @@ public abstract class AbstractLidNonceManager
         nonce.append( 'Z' );
 
         return nonce.toString();
+    }
+
+    /**
+     * Validate a LID nonce contained in a request.
+     *
+     * @param request the request
+     * @throws LidInvalidNonceException thrown if the nonce was invalid
+     */
+    public void validateNonce(
+            SaneRequest request )
+        throws
+            LidInvalidNonceException
+    {
+        validateNonce( request, LID_NONCE_PARAMETER_NAME );
     }
 
     /**

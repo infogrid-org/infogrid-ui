@@ -57,9 +57,6 @@ public class TestAppInitializationFilter
     protected void populateMeshBase(
             MeshBase mb )
     {
-        if( log == null ) {
-            log = Log.getLogInstance( TestAppInitializationFilter.class ); // our own, private logger
-        }
         MeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
         
         Transaction tx = null;
@@ -74,15 +71,15 @@ public class TestAppInitializationFilter
             mb.getHomeObject().relate( image );
             
         } catch( URISyntaxException ex ) {
-            log.error( ex );
+            getLog().error( ex );
         } catch( MeshObjectIdentifierNotUniqueException ex ) {
-            log.error( ex );
+            getLog().error( ex );
         } catch( IsAbstractException ex ) {
-            log.error( ex );
+            getLog().error( ex );
         } catch( RelatedAlreadyException ex ) {
-            log.error( ex );
+            getLog().error( ex );
         } catch( NotPermittedException ex ) {
-            log.error( ex );
+            getLog().error( ex );
         } catch( TransactionException ex ) {
             if( tx != null ) {
                 tx.commitTransaction();
@@ -103,5 +100,18 @@ public class TestAppInitializationFilter
 
         ViewletFactory vlFact = new TestAppViewletFactory();
         rootContext.addContextObject( vlFact );
+    }
+
+    /**
+     * Initialize and get the log.
+     *
+     * @return the log
+     */
+    private static Log getLog()
+    {
+        if( log == null ) {
+            log = Log.getLogInstance( TestAppInitializationFilter.class ); // our own, private logger
+        }
+        return log;
     }
 }

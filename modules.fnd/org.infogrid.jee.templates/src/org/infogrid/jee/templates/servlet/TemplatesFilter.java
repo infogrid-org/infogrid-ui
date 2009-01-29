@@ -50,9 +50,6 @@ public class TemplatesFilter
      */
     public TemplatesFilter()
     {
-        if( log == null ) {
-            log = Log.getLogInstance( TemplatesFilter.class ); // our own, private logger
-        }
     }
 
     /**
@@ -88,7 +85,7 @@ public class TemplatesFilter
 
         } catch( Throwable ex ) {
             lastException = ex;
-            log.error( ex );
+            getLog().error( ex );
 
         } finally {
             request.removeAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
@@ -114,7 +111,7 @@ public class TemplatesFilter
         } else {
             // process structured response
             if( !bufferedResponse.isEmpty() ) {
-                log.warn( "Have both responses: " + structured + " vs. " + bufferedResponse );
+                getLog().warn( "Have both responses: " + structured + " vs. " + bufferedResponse );
                 // will ignore bufferedResponse and only process structuredResponse
             }
 
@@ -161,6 +158,19 @@ public class TemplatesFilter
             FilterConfig filterConfig )
     {
         theFilterConfig = filterConfig;
+    }
+
+    /**
+     * Initialize and get the log.
+     *
+     * @return the log
+     */
+    private static Log getLog()
+    {
+        if( log == null ) {
+            log = Log.getLogInstance( TemplatesFilter.class ); // our own, private logger
+        }
+        return log;
     }
 
     /**

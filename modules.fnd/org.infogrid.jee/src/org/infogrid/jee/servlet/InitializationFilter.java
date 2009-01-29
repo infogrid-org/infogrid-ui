@@ -117,9 +117,8 @@ public class InitializationFilter
             chain.doFilter( request, response );
 
         } catch( Throwable t ) {
-            if( log != null ) {
-                log.error( t );
-            }
+            getLog().error( t );
+
             try {
                 processException( realRequest, realResponse, t ); // may throw again
             } catch( ServletException t2 ) {
@@ -208,7 +207,6 @@ public class InitializationFilter
             } catch( IllegalStateException ex ) {
                 // have one already, that's fine (a parallel thread was faster)
             }
-            log = Log.getLogInstance( getClass() );
         }
     }
 
@@ -233,6 +231,19 @@ public class InitializationFilter
         theFilterConfig = filterConfig;
         
         theDefaultMeshBaseIdentifier = theFilterConfig.getInitParameter( DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER );
+    }
+
+    /**
+     * Initialize and get the log.
+     *
+     * @return the log
+     */
+    private static Log getLog()
+    {
+        if( log == null ) {
+            log = Log.getLogInstance( InitializationFilter.class ); // our own, private logger
+        }
+        return log;
     }
 
     /**

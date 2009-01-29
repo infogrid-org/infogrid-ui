@@ -43,7 +43,7 @@ public class LidSessionFilter
         implements
             Filter
 {
-    private static final Log log = Log.getLogInstance( LidSessionFilter.class ); // our own, private logger
+    private static Log log; // initialize later
 
     /**
      * Main filter method.
@@ -87,7 +87,7 @@ public class LidSessionFilter
                     setCaller = true;
 
                 } catch( Throwable t ) {
-                    log.error( t );
+                    getLog().error( t );
                 }
 
             }        
@@ -122,6 +122,19 @@ public class LidSessionFilter
         
         theSessionManager = app.getApplicationContext().findContextObjectOrThrow( LidSessionManager.class );
         theNetMeshBase    = app.getApplicationContext().findContextObjectOrThrow( NetMeshBase.class );
+    }
+
+    /**
+     * Initialize and get the log.
+     *
+     * @return the log
+     */
+    private static Log getLog()
+    {
+        if( log == null ) {
+            log = Log.getLogInstance( LidSessionFilter.class ); // our own, private logger
+        }
+        return log;
     }
 
     /**

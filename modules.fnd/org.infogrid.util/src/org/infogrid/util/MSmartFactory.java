@@ -422,6 +422,26 @@ public class MSmartFactory<K,V,A>
     }
 
     /**
+     * Convert to String format, for debugging.
+     *
+     * @return String format
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theDelegateFactory",
+                    "theKeyValueMap"
+                },
+                new Object[] {
+                    theDelegateFactory,
+                    theKeyValueMap
+                } );
+    }
+
+    /**
      * The delegate Factory.
      */
     protected Factory<K,V,A> theDelegateFactory;

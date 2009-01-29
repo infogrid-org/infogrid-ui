@@ -34,8 +34,6 @@ public class StructuredResponse
         implements
             HasHeaderPreferences
 {
-    private static final Log log = Log.getLogInstance( StructuredResponse.class ); // our own, private logger
-
     /**
      * Factory method.
      *
@@ -375,7 +373,7 @@ public class StructuredResponse
             theCurrentProblems.add( t );
 
         } else {
-            log.error( "Too many problems. Ignored ", t );
+            Log.getLogInstance( StructuredResponse.class ).error( "Too many problems. Ignored ", t ); // late initialization
         }
     }
 

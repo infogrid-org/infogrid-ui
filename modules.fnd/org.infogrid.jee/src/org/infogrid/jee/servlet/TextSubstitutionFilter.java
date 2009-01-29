@@ -79,10 +79,7 @@ public class TextSubstitutionFilter
                 chain.doFilter( request, delegatedResponse );
 
             } catch( Throwable t ) {
-                if( log == null ) {
-                    log = Log.getLogInstance( TextSubstitutionFilter.class ); // our own, private logger
-                }
-                log.error( t );
+                getLog().error( t );
 
             } finally {
 
@@ -111,10 +108,7 @@ public class TextSubstitutionFilter
                 if( bufferedBytes != null ) {
                     if( bufferedString != null ) {
                         // don't know what to do here -- defaults to "string gets processed, bytes ignore"
-                        if( log == null ) {
-                            log = Log.getLogInstance( TextSubstitutionFilter.class ); // our own, private logger
-                        }
-                        log.warn( "Have both String and byte content, don't know what to do: " + request );
+                        getLog().warn( "Have both String and byte content, don't know what to do: " + request );
                     }
                 } else if( bufferedString == null ) {
                     // both null, i.e. there is no content (e.g. because of not-modified-since.). Do nothing.
@@ -217,6 +211,19 @@ public class TextSubstitutionFilter
             HttpServletResponse response )
     {
         return theReplacementMap;
+    }
+
+    /**
+     * Initialize and get the log.
+     *
+     * @return the log
+     */
+    private static Log getLog()
+    {
+        if( log == null ) {
+            log = Log.getLogInstance( TextSubstitutionFilter.class ); // our own, private logger
+        }
+        return log;
     }
 
     /**

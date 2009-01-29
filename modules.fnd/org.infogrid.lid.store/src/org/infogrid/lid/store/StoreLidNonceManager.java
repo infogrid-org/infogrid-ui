@@ -75,17 +75,19 @@ public class StoreLidNonceManager
     }
 
     /**
-     * Validate a LID nonce contained in a request.
+     * Validate a LID nonce contained in a request with the given URL parameter.
      *
      * @param request the request
+     * @param name the name of the URL parameter
      * @throws LidInvalidNonceException thrown if the nonce was invalid
      */
     public void validateNonce(
-            SaneRequest request )
+            SaneRequest request,
+            String      name )
         throws
             LidInvalidNonceException
     {
-        String nonce = request.getArgument( LID_NONCE_PARAMETER_NAME );
+        String nonce = request.getArgument( name );
 
         if( nonce == null || nonce.length() == 0 ) {
             throw new LidInvalidNonceException.Empty();

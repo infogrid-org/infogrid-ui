@@ -29,6 +29,7 @@ import org.infogrid.util.logging.Log;
 
 import java.io.IOException;
 import java.lang.ref.Reference;
+import org.infogrid.util.StringHelper;
 
 /**
  * This is a <code>java.util.Map</code> that stores the values in the <code>Store</code>
@@ -394,6 +395,26 @@ public abstract class StoreBackedSwappingHashMap<K,V>
             V value )
     {
         saveValueToStorage( key, value );
+    }
+
+    /**
+     * Convert to String format, for debugging.
+     *
+     * @return String format
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theStore",
+                    "theMapper"
+                },
+                new Object[] {
+                    theStore,
+                    theMapper,
+                } );
     }
 
     /**

@@ -15,6 +15,7 @@
 package org.infogrid.lid.openid;
 
 import org.infogrid.lid.credential.LidInvalidCredentialException;
+import org.infogrid.lid.openid.auth.AbstractOpenIdCredentialType;
 import org.infogrid.util.Identifier;
 
 /**
@@ -34,7 +35,7 @@ public class OpenIdNoAssociationException
      */
     public OpenIdNoAssociationException(
             Identifier                   identifier,
-            OpenIdCredentialType type )
+            AbstractOpenIdCredentialType type )
     {
         super( identifier, type );
     }

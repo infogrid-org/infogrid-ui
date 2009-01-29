@@ -31,6 +31,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CompositeIterator;
 import org.infogrid.util.OneElementIterator;
 import org.infogrid.util.StreamUtils;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.AbstractSaneRequest;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneCookie;
@@ -661,6 +662,56 @@ public class SaneServletRequest
     public Enumeration<String> getAttributeNames()
     {
         return theDelegate.getAttributeNames();
+    }
+
+    /**
+     * Convert to String format, for debugging.
+     *
+     * @return String format
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theDelegate",
+                    "theMethod",
+                    "theServer",
+                    "theHttpHost",
+                    "theHttpHostOnly",
+                    "thePort",
+                    "theRelativeBaseUri",
+                    "theRelativeFullUri",
+                    "theCookies",
+                    "theProtocol",
+                    "theQueryString",
+                    "theAbsoluteContextUri",
+                    "theContextPath",
+                    "theArguments",
+                    "thePostArguments",
+                    "theRequestedMimeTypes",
+                    "theClientIp"
+                },
+                new Object[] {
+                    theDelegate,
+                    theMethod,
+                    theServer,
+                    theHttpHost,
+                    theHttpHostOnly,
+                    thePort,
+                    theRelativeBaseUri,
+                    theRelativeFullUri,
+                    theCookies,
+                    theProtocol,
+                    theQueryString,
+                    theAbsoluteContextUri,
+                    theContextPath,
+                    theArguments,
+                    thePostArguments,
+                    theRequestedMimeTypes,
+                    theClientIp
+                } );
     }
 
     /**
