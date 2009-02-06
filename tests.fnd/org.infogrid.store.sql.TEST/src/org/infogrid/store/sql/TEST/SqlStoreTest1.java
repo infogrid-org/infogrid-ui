@@ -18,7 +18,6 @@ import org.infogrid.store.Store;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreListener;
 import org.infogrid.store.StoreValue;
-import org.infogrid.store.sql.SqlStoreIOException;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StreamUtils;
 import org.infogrid.util.logging.Log;

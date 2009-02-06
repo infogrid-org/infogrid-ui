@@ -18,6 +18,7 @@ import org.infogrid.lid.local.LidLocalPersonaManager;
 import org.infogrid.lid.local.TranslatingLidLocalPersonaManager;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.SimpleStringIdentifier;
+import org.infogrid.util.StringHelper;
 
 /**
  * Maps local usernames into identity URLs by prefixing or postfixing
@@ -145,7 +146,29 @@ public class PrePostfixTranslatingLocalPersonaManager
         Identifier ret = SimpleStringIdentifier.create( almost.toString());
         return ret;
     }
-    
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "thePrefix",
+                    "thePostfix",
+                    "theDelegate"
+                },
+                new Object[] {
+                    thePrefix,
+                    thePostfix,
+                    theDelegate
+                } );
+    }
+
     /**
      * The prefix.
      */

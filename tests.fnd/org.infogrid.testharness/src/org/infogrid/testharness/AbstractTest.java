@@ -630,20 +630,20 @@ public abstract class AbstractTest
             long    offset,
             String  msg )
     {
+        long [] adjustedTests = new long[ tests.length ];
+        for( int i=0 ; i<tests.length ; ++i ) {
+            adjustedTests[i] = tests[i] - offset;
+        }
+        StringBuilder buf = new StringBuilder();
+        buf.append( "checkInMarginRange( " );
+        buf.append( ArrayHelper.arrayToString( adjustedTests ));
+        buf.append( ", " );
+        buf.append( ArrayHelper.arrayToString( medians ));
+        buf.append( ", " );
+        buf.append( jitter );
+        buf.append( ", " );
+        buf.append( margin );
         if( getLog().isDebugEnabled() ) {
-            long [] adjustedTests = new long[ tests.length ];
-            for( int i=0 ; i<tests.length ; ++i ) {
-                adjustedTests[i] = tests[i] - offset;
-            }
-            StringBuilder buf = new StringBuilder();
-            buf.append( "checkInMarginRange( " );
-            buf.append( ArrayHelper.arrayToString( adjustedTests ));
-            buf.append( ", " );
-            buf.append( ArrayHelper.arrayToString( medians ));
-            buf.append( ", " );
-            buf.append( jitter );
-            buf.append( ", " );
-            buf.append( margin );
             getLog().debug( buf.toString() );
         }
         
@@ -654,11 +654,11 @@ public abstract class AbstractTest
             reportError(
                     msg,
                     "different length: "
-                        + tests.length
+                        + adjustedTests.length
                         + " vs. "
                         + medians.length
                         + ": "
-                        + ArrayHelper.join( tests )
+                        + ArrayHelper.join( adjustedTests )
                         + " vs. "
                         + ArrayHelper.join( medians ) );
 

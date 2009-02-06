@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -76,6 +77,24 @@ public class DefaultLidCredentialTypesFactory
         }
 
         return ArrayHelper.copyIntoNewArray( ret, LidCredentialType.class );
+    }
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theAvailableCredentialTypes"
+                },
+                new Object[] {
+                    theAvailableCredentialTypes
+                } );
     }
 
     /**
