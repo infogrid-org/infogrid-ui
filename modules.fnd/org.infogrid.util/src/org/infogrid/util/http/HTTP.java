@@ -924,19 +924,30 @@ public abstract class HTTP
                                 String key2   = current.substring( 0, equals ).trim();
                                 String value2 = current.substring( equals+1 ).trim();
 
-                                if( "domain".equalsIgnoreCase( key2 )) {
+                                key2 = key2.toLowerCase();
+
+                                if( "domain".equals( key2 )) {
                                     cookieDomain = value2;
-                                } else if( "path".equalsIgnoreCase( key2 )) {
+                                } else if( "path".equals( key2 )) {
                                     cookiePath = value2;
-                                } else if( "expires".equalsIgnoreCase( key2 )) {
+                                } else if( "expires".equals( key2 )) {
                                     try {
                                         cookieExpires = parseCookieDateTime( value2 );
                                     } catch( ParseException ex ) {
                                         log.error( ex );
                                     }
+                                } else if( "version".equals( key2 )) {
+                                    // skip
+                                } else if( "max-age".equals( key2 )) {
+                                    int seconds = Integer.parseInt( value2 );
+                                    cookieExpires = new Date( System.currentTimeMillis() + 1000L * seconds );
                                 } else {
                                     cookieName  = key2;
-                                    cookieValue = value2;
+                                    if( value2.startsWith( "\"" ) && value2.endsWith( "\"" )) {
+                                        cookieValue = value2.substring( 1, value2.length()-1 );
+                                    } else {
+                                        cookieValue = value2;
+                                    }
                                 }
                             }
                         }
