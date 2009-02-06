@@ -14,7 +14,6 @@
 
 package org.infogrid.lid.openid;
 
-import java.net.Inet4Address;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -34,13 +33,19 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
 
     /**
      * Constructor, for subclasses only.
-     * 
+     *
+     * @param associationHandlePrefix prefix for the generated association handles
+     * @param associationDuration validity period for new associations
      * @param storage storage for the associations
      */
     protected AbstractOpenIdIdpSideAssociationManager(
+            String                                      associationHandlePrefix,
+            long                                        associationDuration,
             CachingMap<String,OpenIdIdpSideAssociation> storage )
     {
-        theAssociations = storage;
+        theAssociationHandlePrefix = associationHandlePrefix;
+        theAssociationDuration     = associationDuration;
+        theAssociations            = storage;
     }
 
     /**
@@ -68,7 +73,7 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
             String handle, 
             long   timeCreated )
     {
-        long    timeExpires = timeCreated + theDefaultAssociationDuration;
+        long    timeExpires = timeCreated + theAssociationDuration;
         byte [] secret      = CryptUtils.randomWithBits( 160 );
         
         OpenIdIdpSideAssociation ret = OpenIdIdpSideAssociation.create(
@@ -96,7 +101,7 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
             String seed )
     {
         StringBuffer associationHandleBuf = new StringBuffer( 64 );
-        associationHandleBuf.append( theAssociationHandleRoot );
+        associationHandleBuf.append( theAssociationHandlePrefix );
         associationHandleBuf.append( seed );
 
         return associationHandleBuf.toString();
@@ -229,9 +234,7 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
     /**
      * Default duration from the time a new association is created to the time it expires.
      */
-    protected long theDefaultAssociationDuration = theResourceHelper.getResourceLongOrDefault(
-            "DefaultAssociationDuration",
-            30L * 24L * 60L * 60L * 1000L ); // one month
+    protected long theAssociationDuration;
 
     /**
      * Association storage.
@@ -241,23 +244,5 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
     /**
      * The String that forms the root of the AssociationHandle.
      */
-    protected static final String theAssociationHandleRoot;
-    static {
-        
-        String tmp = theResourceHelper.getResourceStringOrNull( "AssociationHandleRoot" );
-        if( tmp == null ) {
-            try {
-                StringBuffer buf = new StringBuffer();
-                buf.append( "infogrid.org-" );
-                buf.append( Inet4Address.getLocalHost().getHostAddress() );
-                buf.append( "-" );
-                tmp = buf.toString();
-
-            } catch( Exception ex ) {
-                log.error( ex );
-                tmp = "infogrid-org-u-";
-            }
-        }
-        theAssociationHandleRoot = tmp;
-    }
+    protected String theAssociationHandlePrefix;
 }

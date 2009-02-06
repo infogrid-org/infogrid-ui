@@ -65,7 +65,7 @@
     public String determineRedirectUrl(
             MeshObject                        principal,
             String                            return_to,
-            String                            trustRoot,
+            String                            realm,
             org.infogrid.util.context.Context context )
         throws
             org.infogrid.mesh.NotPermittedException,
@@ -88,8 +88,8 @@
         String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
         String     theUrl           = principal.getIdentifier().toExternalForm();
 
-        if( trustRoot == null ) {
-            trustRoot = return_to;
+        if( realm == null ) {
+            realm = return_to;
         }
 
         StringBuilder ret = new StringBuilder();
@@ -107,7 +107,7 @@
         return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
 
         org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
-        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", trustRoot );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", realm );
 
         org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
                 // may throw exception
@@ -130,7 +130,7 @@
     public String determineRedirectUrl(
             MeshObject                        principal,
             String                            return_to,
-            String                            trustRoot,
+            String                            realm,
             org.infogrid.util.context.Context context )
         throws
             org.infogrid.mesh.NotPermittedException,
@@ -153,8 +153,8 @@
         String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
         String     theUrl           = principal.getIdentifier().toExternalForm();
 
-        if( trustRoot == null ) {
-            trustRoot = return_to;
+        if( realm == null ) {
+            realm = return_to;
         }
 
         StringBuilder ret = new StringBuilder();
@@ -172,7 +172,7 @@
         return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
 
         org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
-        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", trustRoot );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", realm );
 
         org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
                 // may throw exception
@@ -195,7 +195,7 @@
     public String determineRedirectUrl(
             MeshObject                        principal,
             String                            return_to,
-            String                            trustRoot,
+            String                            realm,
             org.infogrid.util.context.Context context )
         throws
             org.infogrid.mesh.NotPermittedException,
@@ -219,8 +219,8 @@
         String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
         String     theUrl           = principal.getIdentifier().toExternalForm();
 
-        if( trustRoot == null ) {
-            trustRoot = return_to;
+        if( realm == null ) {
+            realm = return_to;
         }
 
         StringBuilder ret = new StringBuilder();
@@ -241,8 +241,8 @@
         return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
 
         org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
-        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", trustRoot );
-        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.realm",      trustRoot );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", realm );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.realm",      realm );
 
         org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
                 // may throw exception

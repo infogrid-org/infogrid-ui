@@ -264,7 +264,7 @@ are provided for specific authentication protocols.</userdescription>
     public abstract String determineRedirectUrl(
             MeshObject                        principal,
             String                            return_to,
-            String                            trustRoot,
+            String                            realm,
             org.infogrid.util.context.Context context )
         throws
             org.infogrid.mesh.NotPermittedException,
@@ -290,7 +290,7 @@ are provided for specific authentication protocols.</userdescription>
     public String determineRedirectUrl(
             MeshObject                        principal,
             String                            return_to,
-            String                            trustRoot,
+            String                            realm,
             org.infogrid.util.context.Context context )
     {
         org.infogrid.mesh.set.OrderedMeshObjectSet endpoints

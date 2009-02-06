@@ -90,22 +90,22 @@ public class DefaultLidProcessingPipeline
                 }
             }
         }
+        lidRequest.setAttribute( REQUESTED_RESOURCE_ATTRIBUTE_NAME, requestedResource );
         
-        if( theYadisStage != null && requestedResource != null ) {
+        if( theYadisStage != null ) {
+            // this also needs to be invoked if requestedResource is null
             theYadisStage.processRequest( lidRequest, lidResponse, requestedResource );
         }
         
         if( theAuthenticationStage != null ) {
             clientAuthStatus = theAuthenticationStage.determineAuthenticationStatus( lidRequest, lidResponse );
         }
+        lidRequest.setAttribute( CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME, clientAuthStatus );
         
         if( clientAuthStatus != null ) {
             clientPersona = clientAuthStatus.getClientPersona();
         }
-
-        lidRequest.setAttribute( CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME, clientAuthStatus );
-        lidRequest.setAttribute( CLIENT_PERSONA_ATTRIBUTE_NAME,               clientPersona );
-        lidRequest.setAttribute( REQUESTED_RESOURCE_ATTRIBUTE_NAME,           requestedResource );
+        lidRequest.setAttribute( CLIENT_PERSONA_ATTRIBUTE_NAME, clientPersona );
 
         return clientAuthStatus;
     }

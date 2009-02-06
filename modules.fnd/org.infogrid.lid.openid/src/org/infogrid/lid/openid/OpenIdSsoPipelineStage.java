@@ -137,6 +137,9 @@ public class OpenIdSsoPipelineStage
         if( !"GET".equals( lidRequest.getMethod() )) {
             return;
         }
+        if( theSmartAssociationManager == null ) {
+            return;
+        }
         
         String identifier   = lidRequest.getArgument( "openid.identity" );
         String assoc_handle = lidRequest.getArgument( "openid.assoc_handle" );
@@ -172,7 +175,6 @@ public class OpenIdSsoPipelineStage
                 shouldSso = true;
             }
         }
-        shouldSso &= identifier.equals( clientAuthStatus.getClientIdentifier().toExternalForm() );
 
         // assemble response
         
@@ -253,6 +255,9 @@ public class OpenIdSsoPipelineStage
             LidAbortProcessingPipelineException
     {
         if( !"POST".equals( lidRequest.getMethod() )) {
+            return;
+        }
+        if( theDumbAssociationManager == null ) {
             return;
         }
 

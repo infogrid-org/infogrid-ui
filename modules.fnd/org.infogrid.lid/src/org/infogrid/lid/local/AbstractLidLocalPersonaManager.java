@@ -32,7 +32,7 @@ public abstract class AbstractLidLocalPersonaManager
      * @return the found LidResource, or null
      * @throws LidLocalPersonaUnknownException thrown if the resource could not be found
      */
-    public LidLocalPersona findLidResource(
+    public LidLocalPersona findFromRequest(
             SaneRequest request )
         throws
             LidLocalPersonaUnknownException

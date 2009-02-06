@@ -15,8 +15,8 @@
 package org.infogrid.lid.local;
 
 import java.util.Map;
+import org.infogrid.lid.LidHasIdentifierFinder;
 import org.infogrid.lid.credential.LidCredentialType;
-import org.infogrid.util.HasIdentifierFinder;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.http.SaneRequest;
 
@@ -25,7 +25,7 @@ import org.infogrid.util.http.SaneRequest;
  */
 public interface LidLocalPersonaManager
         extends
-            HasIdentifierFinder
+            LidHasIdentifierFinder
 {
     /**
      * Create a LidLocalPersona.
@@ -98,7 +98,7 @@ public interface LidLocalPersonaManager
      * @return the found LidResource, or null
      * @throws LidLocalPersonaUnknownException thrown if the resource could not be found
      */
-    public LidLocalPersona findLidResource(
+    public LidLocalPersona findFromRequest(
             SaneRequest request )
         throws
             LidLocalPersonaUnknownException;
