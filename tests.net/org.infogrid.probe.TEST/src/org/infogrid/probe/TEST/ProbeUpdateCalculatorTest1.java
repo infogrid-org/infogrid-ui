@@ -24,7 +24,6 @@ import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.IsAbstractException;
-import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
@@ -37,6 +36,7 @@ import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.FloatValue;
+import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.module.ModuleException;
 import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeDirectory;
@@ -76,16 +76,17 @@ public class ProbeUpdateCalculatorTest1
                 ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION,
                 new long[] { 0, 3000L, 6000L, 9000L, 12000L, 15000L } );
 
+        float ad = 1.2f;
         testOne(
-                new CoherenceSpecification.AdaptivePeriodic( 3000L, 10000, 1.1f ),
+                new CoherenceSpecification.AdaptivePeriodic( 3000L, 10000, ad ),
                 ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION,
                 new long[] {
                     0L,
                     3000L,
-                    3000L + (long) (3000f*1.1f),
-                    3000L + (long) (3000f*1.1f) + (long) (3000f*1.1f*1.1f),
-                    3000L + (long) (3000f*1.1f) + (long) (3000f*1.1f*1.1f) + (long) (3000f*1.1f*1.1f*1.1f),
-                    3000L + (long) (3000f*1.1f) + (long) (3000f*1.1f*1.1f) + (long) (3000f*1.1f*1.1f*1.1f) + (long) (3000f*1.1f*1.1f*1.1f*1.1f),
+                    3000L + (long) (3000f*ad),
+                    3000L + (long) (3000f*ad) + (long) (3000f*ad*ad),
+                    3000L + (long) (3000f*ad) + (long) (3000f*ad*ad) + (long) (3000f*ad*ad*ad),
+                    3000L + (long) (3000f*ad) + (long) (3000f*ad*ad) + (long) (3000f*ad*ad*ad) + (long) (3000f*ad*ad*ad*ad),
                 },
                 new long[] {
                     0L,
@@ -139,7 +140,7 @@ public class ProbeUpdateCalculatorTest1
         noChangeProbeManager.start( theExec );
 
         log.info( "Starting NoChange test for " + coherence );
-        startClock();
+        theStartTime = startClock();
 
         ShadowMeshBase meshBase1 = noChangeProbeManager.obtainFor( theUnchangingDataSource, coherence );
 
@@ -162,7 +163,7 @@ public class ProbeUpdateCalculatorTest1
         changeProbeManager.start( theExec );
 
         log.info( "Starting WithChange test for " + coherence );
-        startClock();
+        theStartTime = startClock();
 
         ShadowMeshBase meshBase2 = changeProbeManager.obtainFor( theChangingDataSource, coherence );
 
@@ -273,6 +274,7 @@ public class ProbeUpdateCalculatorTest1
     protected ShadowMeshBaseFactory theShadowFactory;
     
     protected static ArrayList<Long> theInvokedAt;
+    protected static long theStartTime;
 
     protected NetMeshBaseIdentifier theChangingDataSource   = theMeshBaseIdentifierFactory.fromExternalForm( "test://here.local/change" );
     protected NetMeshBaseIdentifier theUnchangingDataSource = theMeshBaseIdentifierFactory.fromExternalForm( "test://here.local/nochange" );
@@ -285,7 +287,7 @@ public class ProbeUpdateCalculatorTest1
                 ApiProbe
     {
         public void readFromApi(
-                NetMeshBaseIdentifier      networkId,
+                NetMeshBaseIdentifier  networkId,
                 CoherenceSpecification coherence,
                 StagingMeshBase        mb )
             throws
@@ -306,7 +308,7 @@ public class ProbeUpdateCalculatorTest1
         {
             long now = System.currentTimeMillis();
             if( log.isDebugEnabled() ) {
-                log.debug( this + ".readFromApi() invoked " + now );
+                log.debug( this + ".readFromApi() invoked at " + (now-theStartTime) + ": " + TimeStampValue.create( now ));
             }
             theInvokedAt.add( now );
             return; // do nothing
@@ -321,7 +323,7 @@ public class ProbeUpdateCalculatorTest1
                 ApiProbe
     {
         public void readFromApi(
-                NetMeshBaseIdentifier      networkId,
+                NetMeshBaseIdentifier  networkId,
                 CoherenceSpecification coherence,
                 StagingMeshBase        mb )
             throws
@@ -342,7 +344,7 @@ public class ProbeUpdateCalculatorTest1
         {
             long now = System.currentTimeMillis();
             if( log.isDebugEnabled() ) {
-                log.debug( this + ".readFromApi() invoked " + now );
+                log.debug( this + ".readFromApi() invoked at " + (now-theStartTime) + ": " + TimeStampValue.create( now ));
             }
 
             theInvokedAt.add( now );

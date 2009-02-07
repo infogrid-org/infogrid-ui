@@ -270,9 +270,14 @@ public final class TimeStampValue
     public Date getAsDate()
     {
         Calendar cal = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
-        cal.set( theYear, theMonth-1, theDay, theHour, theMinute, (int) theSecond ); // month counts from 0
 
-        // FIXME -- millis?
+        cal.set( Calendar.YEAR,        theYear );
+        cal.set( Calendar.MONTH,       theMonth-1 ); // month counts from 0
+        cal.set( Calendar.DATE,        theDay );
+        cal.set( Calendar.HOUR_OF_DAY, theHour );
+        cal.set( Calendar.MINUTE,      theMinute );
+        cal.set( Calendar.SECOND,      (int) theSecond );
+        cal.set( Calendar.MILLISECOND, ((int) (theSecond * 1000f)) % 1000 );
 
         return cal.getTime();
     }
@@ -285,7 +290,14 @@ public final class TimeStampValue
     public long getAsMillis()
     {
         Calendar cal = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
-        cal.set( theYear, theMonth-1, theDay, theHour, theMinute, (int) theSecond ); // month counts from 0
+
+        cal.set( Calendar.YEAR,        theYear );
+        cal.set( Calendar.MONTH,       theMonth-1 ); // month counts from 0
+        cal.set( Calendar.DATE,        theDay );
+        cal.set( Calendar.HOUR_OF_DAY, theHour );
+        cal.set( Calendar.MINUTE,      theMinute );
+        cal.set( Calendar.SECOND,      (int) theSecond );
+        cal.set( Calendar.MILLISECOND, ((int) (theSecond * 1000f)) % 1000 );
 
         return cal.getTimeInMillis();
     }
@@ -322,14 +334,29 @@ public final class TimeStampValue
         StringBuffer buf = new StringBuffer();
         buf.append( theYear );
         buf.append( "/" );
+        if( theMonth < 10 ) {
+            buf.append( "0" );
+        }
         buf.append( theMonth );
         buf.append( "/" );
+        if( theDay < 10 ) {
+            buf.append( "0" );
+        }
         buf.append( theDay );
         buf.append( " " );
+        if( theHour < 10 ) {
+            buf.append( "0" );
+        }
         buf.append( theHour );
         buf.append( ":" );
+        if( theMinute < 10 ) {
+            buf.append( "0" );
+        }
         buf.append( theMinute );
         buf.append( ":" );
+        if( theSecond < 10 ) {
+            buf.append( "0" );
+        }
         buf.append( theSecond );
         return buf.toString();
     }

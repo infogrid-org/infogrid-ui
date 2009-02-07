@@ -311,7 +311,6 @@ public class ProbeDispatcher
                             ret = -1L; // never again
                         }
                     }
-
                 } catch( NotBlessedException ex2 ) {
                     throw new ProbeException.Other( sourceIdentifier, ex2 ); // should never happen
 
@@ -370,6 +369,9 @@ public class ProbeDispatcher
                 }
             }
             theDelayUntilNextUpdate = ret;
+        }
+        if( log.isDebugEnabled() ) {
+            log.debug( this + ".doUpdateNow( " + coherence + " ) returning " + ret );
         }
         return ret;
     }
