@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import org.infogrid.module.ModuleRequirement;
-import org.infogrid.testharness.AbstractTest;
 import org.infogrid.testharness.AbstractTestGroup;
 import org.infogrid.testharness.AbstractTestGroup.TestSpec;
 import org.infogrid.testharness.tomcat.TomcatProxy;
@@ -43,9 +42,12 @@ public class AllTests
         throws
             Exception
     {
+        if( args.length != 1 ) {
+            throw new IllegalArgumentException( "Must specify Tomcat properties file name on command-line" );
+        }
+        String tomcatPropertiesFile = args[0];
         ModuleRequirement toTest = ModuleRequirement.create1( "org.infogrid.jee.net.testapp" );
-        TomcatProxy       tomcat = TomcatProxyConfiguredByProperties.create(
-                new File( AbstractTest.fileSystemFileName( AllTests.class, "tomcat.properties" ))) ;
+        TomcatProxy       tomcat = TomcatProxyConfiguredByProperties.create( new File( tomcatPropertiesFile )) ;
 
         URL appUrl;
         try {

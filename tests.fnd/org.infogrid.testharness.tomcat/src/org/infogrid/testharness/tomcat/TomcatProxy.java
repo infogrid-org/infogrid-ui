@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.infogrid.module.Module;
@@ -195,7 +196,10 @@ public abstract class TomcatProxy
                 // apparently Tomcat does not respond with proper HTTP error codes
                 throw new IOException( "Could not deploy: " + responseCode + ", " + new String( responseContent ));
             }
-            
+        } catch( ConnectException ex ) {
+            log.error( "Failed to connect to URL " + url.toExternalForm() );
+            throw ex;
+
         } finally {
             if( ops != null ) {
                 ops.close();

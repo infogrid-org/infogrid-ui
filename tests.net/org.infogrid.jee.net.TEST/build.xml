@@ -22,10 +22,21 @@
          xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
 
     <description>Builds, tests, and runs the project org.infogrid.jee.net.TEST.</description>
+    <property name="org.infogrid.testharness.tomcat.propertyfile.local" value="src/org/infogrid/jee/net/TEST/tomcat.properties"/>
     <import file="../../tools/infogrid-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
 
     <target name="-pre-compile" depends="-module-setup"/>
+    <target name="set-build-properties">
+        <condition property="org.infogrid.testharness.tomcat.propertyfile" value="${org.infogrid.testharness.tomcat.propertyfile.default}">
+            <isset property="org.infogrid.testharness.tomcat.propertyfile.default"/>
+        </condition>
+        <condition property="org.infogrid.testharness.tomcat.propertyfile" value="${org.infogrid.testharness.tomcat.propertyfile.local}">
+            <not>
+                <isset property="org.infogrid.testharness.tomcat.propertyfile.default"/>
+            </not>
+        </condition>
+    </target>
 
     <!-- take out all the dependencies for the debug & run targets, so no automatic recompile etc.  -->
     <target name="debug" if="netbeans.home" depends="-debug-start-debugger,-debug-start-debuggee" description="Debug project in IDE."/>
@@ -35,13 +46,6 @@
                 <arg line="${application.args}"/>
             </customize>
         </j2seproject1:java>
-    </target>
-    <target name="-debug-start-debuggee" depends="init">
-        <j2seproject3:debug>
-            <customize>
-                <arg line="${application.args}"/>
-            </customize>
-        </j2seproject3:debug>
     </target>
 </project>
 
