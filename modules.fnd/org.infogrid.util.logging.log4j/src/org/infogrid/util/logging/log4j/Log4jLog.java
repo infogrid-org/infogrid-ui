@@ -46,19 +46,37 @@ public class Log4jLog
         }
 
         // what a hack. Otherwise log4j will try the Thread context ClassLoader
+        //
+        // This catches a lot of exceptions. They may be thrown in very restrictive environments,
+        // such as Tomcat on debian.
         ClassLoader currentContextLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( Log4jLog.class.getClassLoader() );
 
-            // it is essential to do this remove before the configure, otherwise we will lose System.err
-            LogManager.getRootLogger().removeAppender( rootAppender );
+        } catch( Throwable t ) {
+            currentContextLoader = null;
+            // nothing (FIXME?)
+        }
 
+        // it is essential to do this remove before the configure, otherwise we will lose System.err
+        LogManager.getRootLogger().removeAppender( rootAppender );
+
+        try {
             PropertyConfigurator.configure( newProperties );
+        } catch( Throwable t ) {
+        }
 
+        try {
             Log.configure( newProperties );
+        } catch( Throwable t ) {
+        }
 
-        } finally {
-            Thread.currentThread().setContextClassLoader( currentContextLoader );
+        if( currentContextLoader != null ) {
+            try {
+                Thread.currentThread().setContextClassLoader( currentContextLoader );
+            } catch( Throwable t ) {
+                // nothing (FIXME?)
+            }
         }
     }
 

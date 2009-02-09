@@ -38,7 +38,7 @@ public class AllMeshObjectsTest1
     {
         log.info( "Looking at all the MeshObjectIdentifiers" );
         
-        HTTP.Response r = HTTP.http_get( theApplicationUrl );
+        HTTP.Response r = HTTP.http_get( theApplicationUrl + "/" );
         checkRegex( "200",       r.getResponseCode(), "wrong response code" );
         checkRegex( "text/html", r.getContentType(),  "wrong mime type" );
 
