@@ -15,17 +15,19 @@
 package org.infogrid.jee.viewlet.meshbase;
 
 import java.util.Iterator;
-import javax.servlet.ServletException;
 import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.rest.RestfulRequest;
-import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
+import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
+import org.infogrid.viewlet.DefaultViewletFactoryChoice;
+import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.Viewlet;
+import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
  * A Viewlet that shows all locally known MeshBases.
@@ -51,6 +53,27 @@ public class AllMeshBasesViewlet
         viewed.setViewlet( ret );
 
         return ret;
+    }
+
+    /**
+     * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
+     *
+     * @param matchQuality the match quality
+     * @return the ViewletFactoryChoice
+     */
+    public static ViewletFactoryChoice choice(
+            double matchQuality )
+    {
+        return new DefaultViewletFactoryChoice( AllMeshBasesViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet(
+                        MeshObjectsToView        toView,
+                        Context                  c )
+                    throws
+                        CannotViewException
+                {
+                    return create( c );
+                }
+        };
     }
 
     /**

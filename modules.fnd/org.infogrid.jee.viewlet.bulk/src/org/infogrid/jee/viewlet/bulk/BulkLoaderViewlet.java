@@ -31,7 +31,12 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
+import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
+import org.infogrid.viewlet.DefaultViewletFactoryChoice;
+import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.Viewlet;
+import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
  * This Viewlet allows the user to bulk-load data into a MeshBase.
@@ -56,6 +61,27 @@ public class BulkLoaderViewlet
 
         viewed.setViewlet( ret );
         return ret;
+    }
+
+    /**
+     * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
+     *
+     * @param matchQuality the match quality
+     * @return the ViewletFactoryChoice
+     */
+    public static ViewletFactoryChoice choice(
+            double matchQuality )
+    {
+        return new DefaultViewletFactoryChoice( BulkLoaderViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet(
+                        MeshObjectsToView        toView,
+                        Context                  c )
+                    throws
+                        CannotViewException
+                {
+                    return create( c );
+                }
+        };
     }
 
     /**

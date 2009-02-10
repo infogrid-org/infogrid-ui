@@ -14,14 +14,12 @@
 
 package org.infogrid.viewlet;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import org.infogrid.module.ModuleCapability;
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.StandardModuleAdvertisement;
-
 import org.infogrid.util.ArrayHelper;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Adds Module framework awareness to the AbstractViewletFactory. This allows a

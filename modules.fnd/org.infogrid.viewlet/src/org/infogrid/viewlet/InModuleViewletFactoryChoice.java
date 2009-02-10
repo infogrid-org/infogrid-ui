@@ -14,6 +14,8 @@
 
 package org.infogrid.viewlet;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.primitives.EntityType;
@@ -32,7 +34,7 @@ import org.infogrid.util.logging.Log;
  * ViewletFactoryChoice referencing a ModuleCapability in a Module.
  */
 public class InModuleViewletFactoryChoice
-        extends
+        implements
             ViewletFactoryChoice
 {
     private static final Log log = Log.getLogInstance( InModuleViewletFactoryChoice.class ); // our own, private logger
@@ -179,7 +181,7 @@ public class InModuleViewletFactoryChoice
      * @param c the Context to use
      * @return the instantiated Viewlet
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings( { "unchecked" } )
     public Viewlet instantiateViewlet(
             MeshObjectsToView toView,
             Context           c )
@@ -208,6 +210,45 @@ public class InModuleViewletFactoryChoice
             log.error( ex );
             throw new org.infogrid.viewlet.CannotViewException.InternalError( null, toView, ex );
             
+        }
+    }
+
+    /**
+     * Helper method to instantiate a ViewletFactoryChoice into a Viewlet. The use of this
+     * method is optional by implementations.
+     *
+     * @param toView the MeshObjectsToView; only used for error reporting
+     * @param viewletClass the Viewlet Class to instantiate
+     * @param c the Context to use
+     * @return the instantiated Viewlet
+     * @throws CannotViewException if, against expectations, the Viewlet corresponding
+     *         to this ViewletFactoryChoice could not view the MeshObjectsToView after
+     *         all. This usually indicates a programming error.
+     */
+    protected static Viewlet instantiateViewlet(
+            MeshObjectsToView        toView,
+            Class<? extends Viewlet> viewletClass,
+            Context                  c )
+        throws
+            CannotViewException
+    {
+        try {
+            Method factoryMethod = viewletClass.getMethod(
+                    "create",
+                    Context.class );
+
+            Object ret = factoryMethod.invoke(
+                    null, // static method
+                    c );
+
+            return (Viewlet) ret;
+
+        } catch( NoSuchMethodException ex ) {
+            throw new CannotViewException.InternalError( null, toView, ex );
+        } catch( IllegalAccessException ex ) {
+            throw new CannotViewException.InternalError( null, toView, ex );
+        } catch( InvocationTargetException ex ) {
+            throw new CannotViewException.InternalError( null, toView, ex );
         }
     }
 

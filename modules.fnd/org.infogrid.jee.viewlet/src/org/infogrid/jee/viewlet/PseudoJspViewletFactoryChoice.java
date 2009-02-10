@@ -14,13 +14,8 @@
 
 package org.infogrid.jee.viewlet;
 
-import java.util.ArrayList;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.context.Context;
-import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewletFactoryChoice;
-import org.infogrid.viewlet.MeshObjectsToView;
-import org.infogrid.viewlet.Viewlet;
 
 /**
  * <p>A ViewletFactoryChoice that instantiates the SimpleJeeViewlet as default, pretending to
@@ -29,38 +24,38 @@ import org.infogrid.viewlet.Viewlet;
  *    pseudoClassName that does not add any functionality itself.</p>
  * <p>The main purpose of this class is to avoid having to write empty Viewlet classes.</p>
  */
-public class PseudoJspViewletFactoryChoice
+public abstract class PseudoJspViewletFactoryChoice
         extends
             DefaultViewletFactoryChoice
 {
-    /**
-     * Factory method.
-     *
-     * @param pseudoClassName the name of the (non-exististing) Viewlet class
-     * @return the created PseudoJspViewletFactoryChoice
-     */
-    public static PseudoJspViewletFactoryChoice create(
-            String pseudoClassName )
-    {
-        PseudoJspViewletFactoryChoice ret = create( pseudoClassName, AVERAGE_MATCH_QUALITY );
-        return ret;
-    }
-
-    /**
-     * Factory method.
-     *
-     * @param pseudoClassName the name of the (non-exististing) Viewlet class
-     * @param matchQuality the match quality
-     * @return the created PseudoJspViewletFactoryChoice
-     */
-    public static PseudoJspViewletFactoryChoice create(
-            String pseudoClassName,
-            double matchQuality )
-    {
-        PseudoJspViewletFactoryChoice ret = new PseudoJspViewletFactoryChoice( pseudoClassName, matchQuality );
-        return ret;
-    }
-
+//    /**
+//     * Factory method.
+//     *
+//     * @param pseudoClassName the name of the (non-exististing) Viewlet class
+//     * @return the created PseudoJspViewletFactoryChoice
+//     */
+//    public static PseudoJspViewletFactoryChoice create(
+//            String pseudoClassName )
+//    {
+//        PseudoJspViewletFactoryChoice ret = create( pseudoClassName, AVERAGE_MATCH_QUALITY );
+//        return ret;
+//    }
+//
+//    /**
+//     * Factory method.
+//     *
+//     * @param pseudoClassName the name of the (non-exististing) Viewlet class
+//     * @param matchQuality the match quality
+//     * @return the created PseudoJspViewletFactoryChoice
+//     */
+//    public static PseudoJspViewletFactoryChoice create(
+//            String pseudoClassName,
+//            double matchQuality )
+//    {
+//        PseudoJspViewletFactoryChoice ret = new PseudoJspViewletFactoryChoice( pseudoClassName, matchQuality );
+//        return ret;
+//    }
+//
     /**
      * Constructor for subclasses only, use factory method.
      * 
@@ -100,49 +95,6 @@ public class PseudoJspViewletFactoryChoice
     public String getName()
     {
         return thePseudoClassName;
-    }
-
-    /**
-     * Internal helper method that recursively looks up the names of all interface
-     * and class names supported by a Class.
-     *
-     * @param clazz the Class
-     * @param found the set of names found
-     */
-    @Override
-    protected void determineClassNames(
-            Class             clazz,
-            ArrayList<String> found )
-    {
-        // We do what our superclass does, but add thePseudoClassName
-        
-        super.determineClassNames( clazz, found );
-        found.add( thePseudoClassName );
-    }
-
-    /**
-     * Helper method to instantiate a ViewletFactoryChoice into a Viewlet. The use of this
-     * method is optional by implementations.
-     * 
-     * @param toView the MeshObjectsToView; only used for error reporting
-     * @param viewletClass the Viewlet Class to instantiate
-     * @param c the Context to use
-     * @return the instantiated Viewlet
-     * @throws CannotViewException if, against expectations, the Viewlet corresponding
-     *         to this ViewletFactoryChoice could not view the MeshObjectsToView after
-     *         all. This usually indicates a programming error.
-     */
-    @Override
-    protected Viewlet instantiateViewlet(
-            MeshObjectsToView        toView,
-            Class<? extends Viewlet> viewletClass,
-            Context                  c )
-        throws
-            CannotViewException
-    {
-        PseudoJspViewlet ret = PseudoJspViewlet.create( thePseudoClassName, c );
-        
-        return ret;
     }
 
     /**

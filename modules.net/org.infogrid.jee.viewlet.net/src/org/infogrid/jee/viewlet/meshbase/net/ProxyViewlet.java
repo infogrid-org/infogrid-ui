@@ -26,7 +26,12 @@ import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
+import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
+import org.infogrid.viewlet.DefaultViewletFactoryChoice;
+import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.Viewlet;
+import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
  * Viewlet that displays one particular Proxy. This is not exactly REST-ful as
@@ -51,6 +56,27 @@ public class ProxyViewlet
         viewed.setViewlet( ret );
 
         return ret;
+    }
+
+    /**
+     * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
+     *
+     * @param matchQuality the match quality
+     * @return the ViewletFactoryChoice
+     */
+    public static ViewletFactoryChoice choice(
+            double matchQuality )
+    {
+        return new DefaultViewletFactoryChoice( ProxyViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet(
+                        MeshObjectsToView        toView,
+                        Context                  c )
+                    throws
+                        CannotViewException
+                {
+                    return create( c );
+                }
+        };
     }
 
     /**

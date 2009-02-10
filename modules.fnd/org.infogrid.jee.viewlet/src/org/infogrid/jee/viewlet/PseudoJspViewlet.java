@@ -16,7 +16,11 @@ package org.infogrid.jee.viewlet;
 
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
+import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
+import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.Viewlet;
+import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
  * A Viewlet Class that can impersonate any other Viewlet, as long as the Viewlet
@@ -43,6 +47,29 @@ public class PseudoJspViewlet
         viewed.setViewlet( ret );
 
         return ret;
+    }
+
+    /**
+     * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
+     *
+     * @param pseudoClassName the fully-qualified class name of the class that will be impersonated
+     * @param matchQuality the match quality
+     * @return the ViewletFactoryChoice
+     */
+    public static ViewletFactoryChoice choice(
+            final String pseudoClassName,
+            double       matchQuality )
+    {
+        return new PseudoJspViewletFactoryChoice( pseudoClassName, matchQuality ) {
+                public Viewlet instantiateViewlet(
+                        MeshObjectsToView        toView,
+                        Context                  c )
+                    throws
+                        CannotViewException
+                {
+                    return create( pseudoClassName, c );
+                }
+        };
     }
 
     /**

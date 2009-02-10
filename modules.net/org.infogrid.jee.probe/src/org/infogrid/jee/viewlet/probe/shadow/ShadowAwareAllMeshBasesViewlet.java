@@ -32,7 +32,12 @@ import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
+import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
+import org.infogrid.viewlet.DefaultViewletFactoryChoice;
+import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.Viewlet;
+import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
  * Adds the ability to start/stop ShadowMeshBases to AllMeshBasesViewlet.
@@ -58,6 +63,27 @@ public class ShadowAwareAllMeshBasesViewlet
         viewed.setViewlet( ret );
 
         return ret;
+    }
+
+    /**
+     * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
+     *
+     * @param matchQuality the match quality
+     * @return the ViewletFactoryChoice
+     */
+    public static ViewletFactoryChoice choice(
+            double matchQuality )
+    {
+        return new DefaultViewletFactoryChoice( ShadowAwareAllMeshBasesViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet(
+                        MeshObjectsToView        toView,
+                        Context                  c )
+                    throws
+                        CannotViewException
+                {
+                    return create( c );
+                }
+        };
     }
 
     /**

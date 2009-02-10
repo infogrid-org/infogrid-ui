@@ -16,35 +16,34 @@ package org.infogrid.jee.viewlet;
 
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
-import org.infogrid.viewlet.DefaultViewedMeshObjects;
 
 /**
  * Very simple implementation of Viewlet that provides no special features. It
  * uses a path parameter, to be given upon creation, for the content Servlet.
  */
-public class SimpleJeeViewlet
+public abstract class SimpleJeeViewlet
         extends
             AbstractJeeViewlet
 {
-    /**
-     * Factory method.
-     *
-     * @param path the path for the RequestDispatcher
-     * @param c the application context
-     * @return the created Viewlet
-     */
-    public static SimpleJeeViewlet create(
-            String  path,
-            Context c )
-    {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
-        SimpleJeeViewlet         ret    = new SimpleJeeViewlet( path, viewed, c );
-
-        viewed.setViewlet( ret );
-
-        return ret;
-    }
-
+//    /**
+//     * Factory method.
+//     *
+//     * @param path the path for the RequestDispatcher
+//     * @param c the application context
+//     * @return the created Viewlet
+//     */
+//    public static SimpleJeeViewlet create(
+//            String  path,
+//            Context c )
+//    {
+//        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+//        SimpleJeeViewlet         ret    = new SimpleJeeViewlet( path, viewed, c );
+//
+//        viewed.setViewlet( ret );
+//
+//        return ret;
+//    }
+//
     /**
      * Constructor. This is protected: use factory method or subclass.
      *

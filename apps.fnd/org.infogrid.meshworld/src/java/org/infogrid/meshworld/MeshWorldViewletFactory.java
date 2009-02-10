@@ -16,7 +16,7 @@ package org.infogrid.meshworld;
 
 import java.util.ArrayList;
 import org.infogrid.jee.viewlet.JeeViewlet;
-import org.infogrid.jee.viewlet.PseudoJspViewletFactoryChoice;
+import org.infogrid.jee.viewlet.PseudoJspViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
@@ -25,7 +25,6 @@ import org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.Wiki.WikiSubjectArea;
 import org.infogrid.viewlet.AbstractViewletFactory;
-import org.infogrid.viewlet.DefaultViewletFactoryChoice;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 import org.infogrid.util.ArrayHelper;
@@ -59,16 +58,16 @@ public class MeshWorldViewletFactory
         
         MeshObject subject = theObjectsToView.getSubject();
         if( subject.getMeshBase().getHomeObject() == subject ) {
-            ret.add( DefaultViewletFactoryChoice.create( AllMeshObjectsViewlet.class, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( AllMeshTypesViewlet.class,   ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( BulkLoaderViewlet.class,     ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( AllMeshObjectsViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( AllMeshTypesViewlet.choice(   ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( BulkLoaderViewlet.choice(     ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         }
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
-            ret.add( DefaultViewletFactoryChoice.create( WikiObjectDisplayViewlet.class, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( WikiObjectEditViewlet.class,    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
+            ret.add( WikiObjectDisplayViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( WikiObjectEditViewlet.choice(    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
-        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
-        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",         ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

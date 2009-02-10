@@ -15,7 +15,7 @@
 package org.infogrid.meshworld.net;
 
 import java.util.ArrayList;
-import org.infogrid.jee.viewlet.PseudoJspViewletFactoryChoice;
+import org.infogrid.jee.viewlet.PseudoJspViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
@@ -31,7 +31,6 @@ import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.Wiki.WikiSubjectArea;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.viewlet.AbstractViewletFactory;
-import org.infogrid.viewlet.DefaultViewletFactoryChoice;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
@@ -67,26 +66,26 @@ public class NetMeshWorldViewletFactory
 
         // NetMeshBase's Home Object
         if( base.getHomeObject() == subject ) {
-            ret.add( DefaultViewletFactoryChoice.create( AllMeshObjectsViewlet.class,          ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( AllMeshTypesViewlet.class,            ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( BulkLoaderViewlet.class,              ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( ProxiesViewlet.class,                 ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( ShadowAwareAllMeshBasesViewlet.class, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( AllMeshObjectsViewlet.choice(          ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( AllMeshTypesViewlet.choice(            ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( BulkLoaderViewlet.choice(              ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( ProxiesViewlet.choice(                 ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( ShadowAwareAllMeshBasesViewlet.choice( ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 
             Proxy p = theObjectsToView.getViewletParameters() != null ? (Proxy) theObjectsToView.getViewletParameters().get( NetViewletDispatcherServlet.PROXY_NAME ) : null;
             if( p != null ) {
-                ret.add( DefaultViewletFactoryChoice.create( ProxyViewlet.class, ViewletFactoryChoice.PERFECT_MATCH_QUALITY+1.d )); // not quite perfect
+                ret.add( ProxyViewlet.choice( ViewletFactoryChoice.PERFECT_MATCH_QUALITY+1.d )); // not quite perfect
             }
         }
         
         // Type-based rules
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
-            ret.add( DefaultViewletFactoryChoice.create( WikiObjectDisplayViewlet.class, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( DefaultViewletFactoryChoice.create( WikiObjectEditViewlet.class,    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
+            ret.add( WikiObjectDisplayViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( WikiObjectEditViewlet.choice(    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
-        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
-        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
-        ret.add( PseudoJspViewletFactoryChoice.create( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",                ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
+        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",                ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

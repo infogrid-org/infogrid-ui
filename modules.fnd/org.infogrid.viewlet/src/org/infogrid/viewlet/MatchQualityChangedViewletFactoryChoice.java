@@ -22,7 +22,7 @@ import org.infogrid.util.context.Context;
  */
 public class MatchQualityChangedViewletFactoryChoice
         extends
-            ViewletFactoryChoice
+            AbstractViewletFactoryChoice
 {
     /**
      * Constructor.
@@ -34,8 +34,9 @@ public class MatchQualityChangedViewletFactoryChoice
             double               matchQuality,
             ViewletFactoryChoice delegate )
     {
-        theMatchQuality = matchQuality;
-        theDelegate     = delegate;
+        super( matchQuality );
+
+        theDelegate= delegate;
     }
     
     /**
@@ -53,6 +54,7 @@ public class MatchQualityChangedViewletFactoryChoice
      * 
      * @return the Viewlet's name
      */
+    @Override
     public String getName()
     {
         return theDelegate.getName();
@@ -108,11 +110,6 @@ public class MatchQualityChangedViewletFactoryChoice
     {
         return theDelegate.instantiateViewlet( toView, c );
     }
-    
-    /**
-     * The overridden match quality.
-     */
-    protected double theMatchQuality;
     
     /**
      * The underlying ViewletFactoryChoice that we override and delegate to.
