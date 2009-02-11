@@ -203,11 +203,27 @@ public abstract class AbstractJeeViewlet
      * 
      * @return the full URI, as String
      */
-    public String getRequestURI()
+    public String getFullRequestURI()
     {
         String ret;
         if( theCurrentRequest != null ) {
             ret = theCurrentRequest.getSaneRequest().getAbsoluteFullUri();
+        } else {
+            ret = null;
+        }
+        return ret;
+    }
+
+    /**
+     * Obtain the base URI of the incoming request.
+     *
+     * @return the base URI, as String
+     */
+    public String getBaseRequestURI()
+    {
+        String ret;
+        if( theCurrentRequest != null ) {
+            ret = theCurrentRequest.getSaneRequest().getAbsoluteBaseUri();
         } else {
             ret = null;
         }
@@ -268,7 +284,7 @@ public abstract class AbstractJeeViewlet
      */
     public String getPostUrl()
     {
-        String ret = getRequestURI();
+        String ret = getBaseRequestURI();
         
         // append lid-xpath
         String xpath = theCurrentRequest.getSaneRequest().getArgument( RestfulRequest.XPATH_PREFIX );

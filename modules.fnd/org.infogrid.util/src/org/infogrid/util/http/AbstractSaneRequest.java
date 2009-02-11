@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import org.infogrid.util.logging.Log;
 
 /**
  * Factors out functionality common to many implementations of SaneRequest.
@@ -26,6 +27,8 @@ public abstract class AbstractSaneRequest
         implements
             SaneRequest
 {
+    private static final Log log = Log.getLogInstance( AbstractSaneRequest.class ); // our own, private logger
+
     /**
      * Private constructor, for subclasses only.
      */
@@ -168,9 +171,28 @@ public abstract class AbstractSaneRequest
             return null;
         } else if( almost.length == 1 ) {
             return almost[0];
-        } else {
-            throw new IllegalStateException( "Argument " + name + " has " + almost.length + " values" );
         }
+        // let it pass if all of them have the same value
+        boolean letPass = true;
+        String firstValue = almost[0];
+        for( int i=1 ; i<almost.length ; ++i ) {
+            if( firstValue == null ) {
+                if( almost[i] != null ) {
+                    letPass = false;
+                    break;
+                }
+            } else if( !firstValue.equals( almost[i] )) {
+                letPass = false;
+                break;
+            }
+        }
+
+        if( !letPass ) {
+            throw new IllegalStateException( "Argument " + name + " has " + almost.length + " values" );
+        } else {
+            log.warn( "Multiple arguments but with same value: " + name + " -> " + firstValue );
+        }
+        return firstValue;
     }
 
     /**

@@ -9,7 +9,7 @@
  %>
 <feed version="0.3"
       xmlns:ig="http://infogrid.org/xmlns/1"
-      id="${Viewlet.requestURI}">
+      id="${Viewlet.fullRequestURI}">
  <title type="text">Objects found by traversing ${Viewlet.traversalSpecification} 
      from: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Html" maxLength="30"/>
  </title>

@@ -12,7 +12,7 @@
   <title>Objects found by traversing ${Viewlet.traversalSpecification} 
      from: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Html" maxLength="30"/>
   </title>
-  <link>${Viewlet.requestURI}</link>
+  <link>${Viewlet.fullRequestURI}</link>
   <generator>InfoGrid.org org.infogrid.jee.viewlet.objectset.ObjectSetViewlet</generator>
   <mesh:blessedByIterate meshObjectName="Subject" blessedByLoopVar="blessedBy">
    <ig:MeshType><mesh:meshTypeId meshTypeName="blessedBy" stringRepresentation="Plain" /></ig:MeshType>
