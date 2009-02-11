@@ -14,6 +14,8 @@
 
 package org.infogrid.jee.viewlet;
 
+import java.util.ArrayList;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.viewlet.DefaultViewletFactoryChoice;
 
@@ -28,34 +30,6 @@ public abstract class PseudoJspViewletFactoryChoice
         extends
             DefaultViewletFactoryChoice
 {
-//    /**
-//     * Factory method.
-//     *
-//     * @param pseudoClassName the name of the (non-exististing) Viewlet class
-//     * @return the created PseudoJspViewletFactoryChoice
-//     */
-//    public static PseudoJspViewletFactoryChoice create(
-//            String pseudoClassName )
-//    {
-//        PseudoJspViewletFactoryChoice ret = create( pseudoClassName, AVERAGE_MATCH_QUALITY );
-//        return ret;
-//    }
-//
-//    /**
-//     * Factory method.
-//     *
-//     * @param pseudoClassName the name of the (non-exististing) Viewlet class
-//     * @param matchQuality the match quality
-//     * @return the created PseudoJspViewletFactoryChoice
-//     */
-//    public static PseudoJspViewletFactoryChoice create(
-//            String pseudoClassName,
-//            double matchQuality )
-//    {
-//        PseudoJspViewletFactoryChoice ret = new PseudoJspViewletFactoryChoice( pseudoClassName, matchQuality );
-//        return ret;
-//    }
-//
     /**
      * Constructor for subclasses only, use factory method.
      * 
@@ -95,6 +69,24 @@ public abstract class PseudoJspViewletFactoryChoice
     public String getName()
     {
         return thePseudoClassName;
+    }
+
+    /**
+      * Obtain the names of the interfaces provided by this ViewletFactoryChoice.
+      *
+      * @return the names of the interfaces provided by this ViewletFactoryChoice.
+      */
+    @Override
+    public String [] getInterfaceNames()
+    {
+        ArrayList<String> almost = new ArrayList<String>();
+
+        almost.add( thePseudoClassName );
+
+        determineClassNames( theViewletClass, almost );
+
+        String [] ret = ArrayHelper.copyIntoNewArray( almost, String.class );
+        return ret;
     }
 
     /**
