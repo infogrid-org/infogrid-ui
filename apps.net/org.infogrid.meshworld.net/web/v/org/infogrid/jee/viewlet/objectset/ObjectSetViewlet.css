@@ -1,19 +1,12 @@
-div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table.neighbors > * > * > .role {
-    width: 50%;
+div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table.objects > * > * > * {
+    padding: 10px 0;
 }
-div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table.neighbors > * > * > .neighbor {
-    width: 50%;
+div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table.objects > * > tr.identifier > * {
+    border-top: dotted #b0b0b0 1px;
 }
-
-
-div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table > * > tr > .type {
-    border-bottom: 0px;
+div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table.objects > * > * > th.identifier {
+    width: 20%;
 }
-div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table > * > tr > * {
-    padding: 5px;
-    border-width: 0px 1px;
-    border-style: dotted;
-}
-div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table > * > tr > td {
-    border-width: 1px 1px 1px 1px;
+div.org-infogrid-jee-viewlet-objectset-ObjectSetViewlet > table.objects > * > * > td.type {
+    width: 20%;
 }
