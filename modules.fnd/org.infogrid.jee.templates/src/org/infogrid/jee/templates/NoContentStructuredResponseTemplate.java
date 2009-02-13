@@ -16,6 +16,7 @@ package org.infogrid.jee.templates;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -33,18 +34,21 @@ public class NoContentStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @return the created JspStructuredResponseTemplate
+     * @param c the Context to use
      */
     public static NoContentStructuredResponseTemplate create(
             SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
         NoContentStructuredResponseTemplate ret = new NoContentStructuredResponseTemplate(
                 request,
                 requestedTemplate,
                 userRequestedTemplate,
-                structured );
+                structured,
+                c );
 
         return ret;
     }
@@ -56,14 +60,16 @@ public class NoContentStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param c the Context to use
      */
     protected NoContentStructuredResponseTemplate(
             SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
-        super( request, requestedTemplate, userRequestedTemplate, structured );
+        super( request, requestedTemplate, userRequestedTemplate, structured, c );
     }
 
     /**

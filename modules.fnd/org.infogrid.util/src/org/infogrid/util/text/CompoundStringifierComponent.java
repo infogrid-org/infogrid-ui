@@ -14,26 +14,27 @@
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.ArrayFacade;
-
 import java.util.Iterator;
+import org.infogrid.util.ArrayFacade;
 
 /**
  * A component in the CompoundStringifier. This is not quite symmetric: the <code>format</code> argument
  * takes all arguments of the CompoundStringifier (and picks out the ones that apply), while the
  * Iterator only returns this CompoundStringifierComponent's contribution.
  * 
- * @param T the type of the Objects to be stringified
+ * @param <T> the type of the Objects to be stringified
  */
 public interface CompoundStringifierComponent<T>
 {
     /**
      * Format zero or one Objects in the ArrayFacade.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format
      * @return the formatted String
      */
     public String format(
+            String         soFar,
             ArrayFacade<T> arg );
     
     /**

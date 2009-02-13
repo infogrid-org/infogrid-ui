@@ -64,13 +64,15 @@ public class IntegerStringifier
     /**
      * Format an Object using this Stringifier.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      */
     public String format(
+            String  soFar,
             Integer arg )
     {
-        return super.format( arg.longValue() );
+        return super.format( soFar, arg.longValue() );
     }
     
     /**

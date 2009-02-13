@@ -170,4 +170,25 @@ public class DefaultMeshObjectSorter
      * The user-visible name for this MeshObjectSorter.
      */
     protected String theUserName;
+
+    /**
+     * Default instance of this class that sorts by the MeshObject's identifier. While
+     * this is not necessarily a comprehensible ordering to the user, it exists on
+     * all MeshObjects and will always remain the same.
+     */
+    public static final DefaultMeshObjectSorter BY_IDENTIFIER = new DefaultMeshObjectSorter(
+            new Comparator<MeshObject>() {
+                    public int compare(
+                            MeshObject o1,
+                            MeshObject o2 )
+                    {
+                        String id1 = o1.getIdentifier().toExternalForm();
+                        String id2 = o2.getIdentifier().toExternalForm();
+
+                        int ret = id1.compareTo( id2 );
+                        return ret;
+                    }
+
+            },
+            DefaultMeshObjectSorter.class.getName() + ".BY_IDENTIFIER" );
 }

@@ -54,6 +54,10 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>target</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>stringRepresentation</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

@@ -35,6 +35,7 @@ public class ArrayStringifier<T>
      *
      * @param delegate the delegate to which all element stringifications are delegated
      * @return the created ArrayStringifier
+     * @param <T> the type of the Objects to be stringified
      */
     public static <T> ArrayStringifier<T> create(
             Stringifier<T> delegate )
@@ -50,6 +51,7 @@ public class ArrayStringifier<T>
      * @param delegate the delegate to which all element stringifications are delegated
      * @param middle the string to insert in the middle
      * @return the created ArrayStringifier
+     * @param <T> the type of the Objects to be stringified
      */
     public static <T> ArrayStringifier<T> create(
             Stringifier<T> delegate,
@@ -68,6 +70,7 @@ public class ArrayStringifier<T>
      * @param middle the string to insert in the middle
      * @param end the string to append at the end
      * @return the created ArrayStringifier
+     * @param <T> the type of the Objects to be stringified
      */
     public static <T> ArrayStringifier<T> create(
             Stringifier<T> delegate,
@@ -90,6 +93,7 @@ public class ArrayStringifier<T>
      * @param end the string to append at the end
      * @param empty what to emit instead if the array is empty
      * @return the created ArrayStringifier
+     * @param <T> the type of the Objects to be stringified
      */
     public static <T> ArrayStringifier<T> create(
             Stringifier<T> delegate,
@@ -157,10 +161,12 @@ public class ArrayStringifier<T>
     /**
      * Format an Object using this Stringifier.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      */
     public String format(
+            String         soFar,
             ArrayFacade<T> arg )
     {
         if( arg == null || arg.getArray().length == 0 ) {
@@ -187,7 +193,7 @@ public class ArrayStringifier<T>
             if( sep != null ) {
                 ret.append( sep );
             }
-            String childInput = theDelegate.format( data[i] );
+            String childInput = theDelegate.format( soFar + ret.toString(), data[i] );
             if( childInput != null ) {
                 ret.append( childInput );
             }
@@ -202,6 +208,7 @@ public class ArrayStringifier<T>
     /**
      * Format an Object using this Stringifier.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
@@ -209,14 +216,15 @@ public class ArrayStringifier<T>
      */
     @SuppressWarnings(value={"unchecked"})
     public String attemptFormat(
+            String soFar,
             Object arg )
         throws
             ClassCastException
     {
         if( arg instanceof ArrayFacade ) {
-            return format( (ArrayFacade<T>) arg );
+            return format( soFar, (ArrayFacade<T>) arg );
         } else {
-            return format( ArrayFacade.<T>create( (T []) arg ));
+            return format( soFar, ArrayFacade.<T>create( (T []) arg ));
         }
     }
 

@@ -2407,15 +2407,19 @@ public class AnetMeshObject
     }
 
     /**
-     * Obtain the start part of a String representation of this MeshBase that acts
+     * Obtain the start part of a String representation of this object that acts
      * as a link/hyperlink and can be shown to the user.
-     * 
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     @Override
     public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
@@ -2435,6 +2439,9 @@ public class AnetMeshObject
             } else {
                 key = NON_DEFAULT_MESH_BASE_LINK_START_ENTRY;
             }
+        }
+        if( target == null ) {
+            target = "_self";
         }
 
         String meshBaseExternalForm = theMeshBase.getIdentifier().toExternalForm();
@@ -2475,7 +2482,9 @@ public class AnetMeshObject
                 key,
                 meshObjectExternalForm,
                 contextPath,
-                meshBaseExternalForm );
+                meshBaseExternalForm,
+                additionalArguments,
+                target );
 
         return ret;        
     }

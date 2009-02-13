@@ -47,10 +47,12 @@ public class DoubleStringifier
     /**
      * Format an Object using this Stringifier. This may be null.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      */
     public String format(
+            String soFar,
             Double arg )
     {
         String ret = String.valueOf( arg );
@@ -60,20 +62,22 @@ public class DoubleStringifier
     /**
      * Format an Object using this Stringifier. This may be null.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
+            String soFar,
             Object arg )
         throws
             ClassCastException
     {
         if( arg instanceof Float ) {
-            return format( ((Float)arg).doubleValue() );
+            return format( soFar, ((Float)arg).doubleValue() );
         } else {
-            return format( (Double) arg );
+            return format( soFar, (Double) arg );
         }
     }
     

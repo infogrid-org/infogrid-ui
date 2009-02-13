@@ -14,11 +14,10 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringifierException;
-
 import java.awt.Color;
 import java.io.ObjectStreamException;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentationContext;
 
 /**

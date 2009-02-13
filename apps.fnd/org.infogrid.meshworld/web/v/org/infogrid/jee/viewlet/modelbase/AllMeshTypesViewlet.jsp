@@ -9,7 +9,6 @@
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/modelbase/AllMeshTypesViewlet.css"/>
 <v:viewletAlternatives />
-<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <h1>All MeshTypes in the ModelBase</h1>
  <c:forEach var="sa" items="${Viewlet.subjectAreas}">

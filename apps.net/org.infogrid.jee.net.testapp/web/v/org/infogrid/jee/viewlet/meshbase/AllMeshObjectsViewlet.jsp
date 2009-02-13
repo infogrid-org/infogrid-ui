@@ -9,6 +9,7 @@
  %><%@ taglib prefix="v"           uri="/v/org/infogrid/jee/taglib/viewlet/viewlet.tld"
  %><%@ taglib prefix="c"           uri="http://java.sun.com/jsp/jstl/core"
  %>
+<v:viewletAlternatives />
 <v:viewlet>
  <h1>All MeshObjects in the MeshBase</h1>
  <ol>

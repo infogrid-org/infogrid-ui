@@ -24,6 +24,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.context.ContextDirectory;
+import org.infogrid.util.context.SimpleContextDirectory;
 import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -76,8 +78,25 @@ public abstract class InfoGridWebApp
      */
     protected InfoGridWebApp(
             Context applicationContext )
-    {        
+    {
+        this( applicationContext, SimpleContextDirectory.create() );
+    }
+
+    /**
+     * Constructor, for subclasses.
+     *
+     * @param applicationContext the main application Context. This context holds all the
+     *        well-known objects needed by the application
+     * @param contextDirectory the ContextDirectory to use
+     */
+    protected InfoGridWebApp(
+            Context          applicationContext,
+            ContextDirectory contextDirectory )
+    {
         theApplicationContext = applicationContext;
+        theContextDirectory   = contextDirectory;
+
+        theContextDirectory.addContext( applicationContext );
     }
 
     /**
@@ -88,6 +107,16 @@ public abstract class InfoGridWebApp
     public final Context getApplicationContext()
     {
         return theApplicationContext;
+    }
+
+    /**
+     * Obtain the ContextDirectory for this application, if any.
+     *
+     * @return the ContextDirectory
+     */
+    public final ContextDirectory getContextDirectory()
+    {
+        return theContextDirectory;
     }
 
     /**
@@ -293,6 +322,11 @@ public abstract class InfoGridWebApp
      * The application context.
      */
     protected Context theApplicationContext;
+
+    /**
+     * The context directory.
+     */
+    protected ContextDirectory theContextDirectory;
 
     /**
      * The singleton instance of this class.

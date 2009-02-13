@@ -20,7 +20,7 @@ import java.io.Writer;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.JeeFormatter;
-import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -38,19 +38,22 @@ public class VerbatimStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
+     * @param c the Context to use
      * @return the created JspStructuredResponseTemplate
      */
     public static VerbatimStructuredResponseTemplate create(
             SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
         VerbatimStructuredResponseTemplate ret = new VerbatimStructuredResponseTemplate(
                 request,
                 requestedTemplate,
                 userRequestedTemplate,
-                structured );
+                structured,
+                c );
         return ret;
     }
 
@@ -61,14 +64,16 @@ public class VerbatimStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param c the Context to use
      */
     protected VerbatimStructuredResponseTemplate(
             SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
-        super( request, requestedTemplate, userRequestedTemplate, structured );
+        super( request, requestedTemplate, userRequestedTemplate, structured, c );
     }
 
     /**
@@ -93,7 +98,7 @@ public class VerbatimStructuredResponseTemplate
         
         // stream default section(s)
         
-        JeeFormatter theFormatter = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( JeeFormatter.class );
+        JeeFormatter theFormatter = getContext().findContextObjectOrThrow( JeeFormatter.class );
         
         List<Throwable> reportedProblems = structured.problems();
         String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, "Text" );                

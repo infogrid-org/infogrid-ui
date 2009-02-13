@@ -153,7 +153,7 @@ public class SimpleStringRepresentation
             String                formatString = rh.getResourceString( theName + entry );
             AnyMessageStringifier stringifier  = AnyMessageStringifier.create( formatString, theStringifierMap );
 
-            String ret = stringifier.format( ArrayFacade.<Object>create( args ));
+            String ret = stringifier.format( null, ArrayFacade.<Object>create( args ));
             return ret;
 
         } catch( StringifierException ex ) {
@@ -248,7 +248,7 @@ public class SimpleStringRepresentation
             }
 
             Object [] args = { message, localizedMessage, t };
-            String ret = stringifier.format( ArrayFacade.<Object>create( args ));
+            String ret = stringifier.format( null, ArrayFacade.<Object>create( args ));
             return ret;
 
         } catch( StringifierException ex ) {
@@ -319,7 +319,7 @@ public class SimpleStringRepresentation
         map.put( "double",         DoubleStringifier.create() );
         map.put( "stacktrace",     StacktraceStringifier.create() );
         map.put( "htmlstacktrace", HtmlStacktraceStringifier.create() );
-
+        map.put( "urlappend",      UrlAppendStringifier.create() );
         DEFAULT_STRINGIFIER_MAP = map;
     }
 
@@ -339,14 +339,16 @@ public class SimpleStringRepresentation
         /**
          * Format an Object using this Stringifier. This may be null.
          *
+         * @param soFar the String so far, if any
          * @param arg the Object to format, or null
          * @return the formatted String
          */
         @Override
         public String format(
+                String soFar,
                 String arg )
         {
-            String raw = super.format( arg );
+            String raw = super.format( soFar, arg );
 
             String ret = raw.replaceAll( "\\*/", "&#42;/" );
             return ret;

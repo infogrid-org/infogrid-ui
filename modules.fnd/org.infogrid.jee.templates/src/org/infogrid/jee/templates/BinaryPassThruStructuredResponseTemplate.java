@@ -17,6 +17,7 @@ package org.infogrid.jee.templates;
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -31,15 +32,18 @@ public class BinaryPassThruStructuredResponseTemplate
      *
      * @param request the incoming HTTP request
      * @param structured the StructuredResponse that contains the response
+     * @param c the Context to use
      * @return the created JspStructuredResponseTemplate
      */
     public static BinaryPassThruStructuredResponseTemplate create(
             SaneRequest        request,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
         BinaryPassThruStructuredResponseTemplate ret = new BinaryPassThruStructuredResponseTemplate(
                 request,
-                structured );
+                structured,
+                c );
         return ret;
     }
 
@@ -48,12 +52,14 @@ public class BinaryPassThruStructuredResponseTemplate
      * 
      * @param request the incoming HTTP request
      * @param structured the StructuredResponse that contains the response
+     * @param c the Context to use
      */
     protected BinaryPassThruStructuredResponseTemplate(
             SaneRequest        request,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
-        super( request, null, null, structured );
+        super( request, null, null, structured, c );
     }
 
     /**

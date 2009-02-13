@@ -23,6 +23,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 
 import java.util.NoSuchElementException;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -399,6 +400,26 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
     {
         int ret = theDelegate.moveToAfterLast();
         return ret;
+    }
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theDelegate",
+                    "theCache"
+                },
+                new Object[] {
+                    theDelegate,
+                    theCache
+                });
     }
 
     /**

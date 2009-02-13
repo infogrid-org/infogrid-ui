@@ -44,17 +44,19 @@ class CompoundStringifierPlaceholder<T>
     /**
      * Format zero or one Object in the ArrayFacade.
      *
+     * @param soFar the String so far, if any
      * @param args the Objects to format
      * @return the formatted String
      * @throws IllegalArgumentException thrown if this component does not support the formatting of this Object
      */
     public String format(
+            String         soFar,
             ArrayFacade<T> args )
     {
         T [] realArgs = args.getArray();
 
         T localArg = realArgs[ thePlaceholderIndex ];
-        String ret = theStringifier.attemptFormat( localArg );
+        String ret = theStringifier.attemptFormat( soFar, localArg );
 
         return ret;
     }

@@ -313,9 +313,9 @@ public abstract class AbstractInfoGridBodyTag
         
         Object ret;
         if( theFormatter.isTrue( theIgnore )) {
-            ret = theFormatter.nestedLookupOrThrow( pageContext, name, theScope );
-        } else {
             ret = theFormatter.nestedLookup( pageContext, name, theScope );
+        } else {
+            ret = theFormatter.nestedLookupOrThrow( pageContext, name, theScope );
         }
         return ret;
     }

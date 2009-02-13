@@ -16,9 +16,9 @@ package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.util.http.SaneRequest;
@@ -64,9 +64,7 @@ public class RefreshTag
     {
         StructuredResponse theResponse = (StructuredResponse) lookupOrThrow(
                 StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-        RestfulRequest restful = (RestfulRequest) lookupOrThrow(
-                RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
-        SaneRequest saneRequest = restful.getSaneRequest();
+        SaneRequest saneRequest = (SaneRequest) lookupOrThrow( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
 
         String href = saneRequest.getAbsoluteFullUri();
         href = theFormatter.filter( href );
@@ -79,7 +77,7 @@ public class RefreshTag
 
         StringBuilder css = new StringBuilder();
         css.append( "<link rel=\"stylesheet\" href=\"" );
-        css.append( restful.getContextPath() );
+        css.append( saneRequest.getContextPath() );
         css.append( "/v/" );
         css.append( getClass().getName().replace( '.' , '/' ));
         css.append( ".css" );

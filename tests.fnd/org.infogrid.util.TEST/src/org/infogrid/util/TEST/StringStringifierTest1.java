@@ -45,7 +45,7 @@ public class StringStringifierTest1
         
         String            data1a = "abc";
         StringStringifier str1   = StringStringifier.create( );
-        String            res1a  = str1.format( data1a );
+        String            res1a  = str1.format( null, data1a );
         
         checkEquals( data1a, res1a, "not the same" );
 

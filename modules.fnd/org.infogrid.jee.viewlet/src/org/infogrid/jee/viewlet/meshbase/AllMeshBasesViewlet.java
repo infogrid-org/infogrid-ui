@@ -98,8 +98,11 @@ public class AllMeshBasesViewlet
     {
         InfoGridWebApp app = InfoGridWebApp.getSingleton();
 
+        // Context c = app.getApplicationContext();
+        Context c = getContext();
+
         @SuppressWarnings( "unchecked" )
-        NameServer<MeshBaseIdentifier,MeshBase> ns  = app.getApplicationContext().findContextObjectOrThrow( NameServer.class );
+        NameServer<MeshBaseIdentifier,MeshBase> ns  = c.findContextObjectOrThrow( NameServer.class );
         
         Iterator<MeshBase> ret = ns.values().iterator();
         

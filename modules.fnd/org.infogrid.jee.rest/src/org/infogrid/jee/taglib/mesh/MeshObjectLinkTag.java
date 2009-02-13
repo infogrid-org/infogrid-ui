@@ -47,6 +47,7 @@ public class MeshObjectLinkTag
         theMeshObjectName       = null;
         theRootPath             = null;
         theAddArguments         = null;
+        theTarget               = null;
         theStringRepresentation = null;
 
         super.initializeToDefaults();
@@ -122,6 +123,29 @@ public class MeshObjectLinkTag
     }
 
     /**
+     * Obtain value of the target property.
+     *
+     * @return value of the target property
+     * @see #setTarget
+     */
+    public String getTarget()
+    {
+        return theTarget;
+    }
+
+    /**
+     * Set value of the target property.
+     *
+     * @param newValue new value of the target property
+     * @see #getTarget
+     */
+    public void setTarget(
+            String newValue )
+    {
+        theTarget = newValue;
+    }
+
+    /**
      * Obtain value of the stringRepresentation property.
      *
      * @return value of the stringRepresentation property
@@ -158,7 +182,7 @@ public class MeshObjectLinkTag
     {
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
  
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, theStringRepresentation );
+        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, theAddArguments, theTarget, theStringRepresentation );
         print( text );
 
         return EVAL_BODY_INCLUDE;
@@ -199,6 +223,11 @@ public class MeshObjectLinkTag
      * The arguments to append to the URL, separated by &.
      */
     protected String theAddArguments;
+
+    /**
+     * The HTML frame to target, if any.
+     */
+    protected String theTarget;
 
     /**
      * Name of the String representation.

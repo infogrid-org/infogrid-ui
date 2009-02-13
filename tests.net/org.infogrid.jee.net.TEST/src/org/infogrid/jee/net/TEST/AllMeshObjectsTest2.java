@@ -45,8 +45,8 @@ public class AllMeshObjectsTest2
         String content = r.getContentAsString();
         
         String [] objects = {
-            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]\">&lt;HOME&gt; in NetMeshBase custom://example.org/a/?foo=bar&amp;argl=brgl</a>",
-            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]%23xxx\">custom://example.org/a/?foo=bar&amp;argl=brgl#xxx in NetMeshBase custom://example.org/a/?foo=bar&amp;argl=brgl</a>"
+            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]\" target=\"_self\">&lt;HOME&gt; in NetMeshBase custom://example.org/a/?foo=bar&amp;argl=brgl</a>",
+            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]%23xxx\" target=\"_self\">custom://example.org/a/?foo=bar&amp;argl=brgl#xxx in NetMeshBase custom://example.org/a/?foo=bar&amp;argl=brgl</a>"
         };
         for( int i=0 ; i<objects.length ; ++i ) {
             checkCondition( content.indexOf( objects[i] ) >=0, "Not found: " + objects[i] );

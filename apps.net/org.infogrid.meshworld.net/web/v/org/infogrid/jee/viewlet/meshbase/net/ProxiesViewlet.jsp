@@ -9,7 +9,6 @@
  %><%@ taglib prefix="c"           uri="http://java.sun.com/jsp/jstl/core"
  %>
 <v:viewletAlternatives />
-<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <h1>Proxies for NetMeshBase at: <meshbase:meshBaseId meshBaseName="Subject.MeshBase" stringRepresentation="Plain" filter="true" maxLength="30"/></h1>
  <table class="proxies">

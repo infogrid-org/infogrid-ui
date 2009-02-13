@@ -32,6 +32,8 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.util.FactoryException;
+import org.infogrid.util.context.Context;
+import org.infogrid.util.context.ContextDirectory;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
@@ -78,6 +80,22 @@ public class TemplatesFilter
 
         request.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
 
+        Context c          = app.getApplicationContext();
+        String  reqContext = saneRequest.getArgument( LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+
+        if( reqContext != null ) {
+            ContextDirectory dir   = app.getContextDirectory();
+            Context          found = dir.getContext( reqContext );
+            if( found != null ) {
+                c = found;
+
+                request.setAttribute( LID_APPLICATION_CONTEXT_PARAMETER_NAME, found );
+            }
+        }
+
+
+
+
         BufferedServletResponse bufferedResponse = new BufferedServletResponse( realResponse );
         Throwable               lastException    = null;
         try {
@@ -116,7 +134,7 @@ public class TemplatesFilter
             }
 
             try {
-                StructuredResponseTemplateFactory templateFactory = app.getApplicationContext().findContextObjectOrThrow( StructuredResponseTemplateFactory.class );
+                StructuredResponseTemplateFactory templateFactory = c.findContextObjectOrThrow( StructuredResponseTemplateFactory.class );
                 StructuredResponseTemplate        template        = templateFactory.obtainFor( saneRequest, structured );
 
                 template.doOutput( realResponse, structured );
@@ -177,4 +195,13 @@ public class TemplatesFilter
      * The Filter configuration object.
      */
     protected FilterConfig theFilterConfig;
+
+    /**
+     * Name of the LID application context parameter. For simplicity, this is used for two purposes:
+     * <ol>
+     *  <li>URL argument, to indicate a String representation of a context</li>
+     *  <li>request parameter, to capture the Context that was determined by resolving the String representation
+     * </ol>
+     */
+    public static final String LID_APPLICATION_CONTEXT_PARAMETER_NAME = "lid-appcontext";
 }

@@ -373,6 +373,8 @@ public class RestfulJeeFormatter
      * @param pageContext the PageContext object for this page
      * @param mesh the MeshObject whose identifier is to be formatted
      * @param rootPath alternate root path to use, if any
+     * @param addArguments additional arguments to the URL, if any
+     * @param target the HTML target, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      */
@@ -380,12 +382,14 @@ public class RestfulJeeFormatter
             PageContext        pageContext,
             MeshObject         mesh,
             String             rootPath,
+            String             addArguments,
+            String             target,
             String             stringRepresentation )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String ret = mesh.toStringRepresentationLinkStart( rep, context );
+        String ret = mesh.toStringRepresentationLinkStart( addArguments, target, rep, context );
         return ret;
     }
 
@@ -477,6 +481,8 @@ public class RestfulJeeFormatter
      * @param pageContext the PageContext object for this page
      * @param base the MeshBase whose identifier is to be formatted
      * @param rootPath alternate root path to use, if any
+     * @param addArguments additional arguments to the URL, if any
+     * @param target the HTML target, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      */
@@ -484,12 +490,14 @@ public class RestfulJeeFormatter
             PageContext        pageContext,
             MeshBase           base,
             String             rootPath,
+            String             addArguments,
+            String             target,
             String             stringRepresentation )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String ret = base.toStringRepresentationLinkStart( rep, context );
+        String ret = base.toStringRepresentationLinkStart( addArguments, target, rep, context );
         return ret;
     }
 

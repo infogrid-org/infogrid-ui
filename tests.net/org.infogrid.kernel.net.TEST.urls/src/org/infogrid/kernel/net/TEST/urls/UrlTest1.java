@@ -84,46 +84,96 @@ public class UrlTest1
         SimpleStringRepresentationContext mb1Context = SimpleStringRepresentationContext.create( mb1Map );
         SimpleStringRepresentationContext mb2Context = SimpleStringRepresentationContext.create( mb2Map );
         
-        String obj1_mb1_different_default    = obj1_mb1.toStringRepresentationLinkStart( rep, mb1Context );
-        String obj1_mb1_different_nonDefault = obj1_mb1.toStringRepresentationLinkStart( rep, mb2Context );
+        String target = "foo";
+
+        String obj1_mb1_different_default_target      = obj1_mb1.toStringRepresentationLinkStart( null, target, rep, mb1Context );
+        String obj1_mb1_different_nonDefault_target   = obj1_mb1.toStringRepresentationLinkStart( null, target, rep, mb2Context );
+        String obj1_mb1_different_default_notarget    = obj1_mb1.toStringRepresentationLinkStart( null, null, rep, mb1Context );
+        String obj1_mb1_different_nonDefault_notarget = obj1_mb1.toStringRepresentationLinkStart( null, null, rep, mb2Context );
         
-        String obj2_mb1_different_default    = obj2_mb1.toStringRepresentationLinkStart( rep, mb1Context );
-        String obj2_mb1_different_nonDefault = obj2_mb1.toStringRepresentationLinkStart( rep, mb2Context );
+        String obj2_mb1_different_default_target      = obj2_mb1.toStringRepresentationLinkStart( null, target, rep, mb1Context );
+        String obj2_mb1_different_nonDefault_target   = obj2_mb1.toStringRepresentationLinkStart( null, target, rep, mb2Context );
+        String obj2_mb1_different_default_notarget    = obj2_mb1.toStringRepresentationLinkStart( null, null, rep, mb1Context );
+        String obj2_mb1_different_nonDefault_notarget = obj2_mb1.toStringRepresentationLinkStart( null, null, rep, mb2Context );
 
         checkEquals(
-                obj1_mb1_different_default,
+                obj1_mb1_different_default_target,
                 "<a href=\""
                         + contextUrl
                         + "/%23xxx"
+                        + "\" target=\""
+                        + target
                         + "\">",
                 "obj1_mb1_different_default is wrong" );
         checkEquals(
-                obj1_mb1_different_nonDefault,
+                obj1_mb1_different_nonDefault_target,
                 "<a href=\""
                         + contextUrl
                         + "/[meshbase="
                         + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
                         + "]"
-                        + "%23xxx\">",
+                        + "%23xxx"
+                        + "\" target=\""
+                        + target
+                        + "\">",
+                "obj1_mb1_different_nonDefault is wrong" );
+        checkEquals(
+                obj1_mb1_different_default_notarget,
+                "<a href=\""
+                        + contextUrl
+                        + "/%23xxx"
+                        + "\" target=\"_self\">",
+                "obj1_mb1_different_default is wrong" );
+        checkEquals(
+                obj1_mb1_different_nonDefault_notarget,
+                "<a href=\""
+                        + contextUrl
+                        + "/[meshbase="
+                        + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
+                        + "]"
+                        + "%23xxx"
+                        + "\" target=\"_self\">",
                 "obj1_mb1_different_nonDefault is wrong" );
 
         checkEquals(
-                obj2_mb1_different_default,
+                obj2_mb1_different_default_target,
                 "<a href=\""
                         + contextUrl
                         + "/"
                         + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\" target=\""
+                        + target
                         + "\">",
                 "obj2_mb1_different_default is wrong" );
         checkEquals(
-                obj2_mb1_different_nonDefault,
+                obj2_mb1_different_nonDefault_target,
                 "<a href=\""
                         + contextUrl
                         + "/[meshbase="
                         + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
                         + "]"
                         + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\" target=\""
+                        + target
                         + "\">",
+                "obj2_mb1_different_nonDefault is wrong" );
+        checkEquals(
+                obj2_mb1_different_default_notarget,
+                "<a href=\""
+                        + contextUrl
+                        + "/"
+                        + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\" target=\"_self\">",
+                "obj2_mb1_different_default is wrong" );
+        checkEquals(
+                obj2_mb1_different_nonDefault_notarget,
+                "<a href=\""
+                        + contextUrl
+                        + "/[meshbase="
+                        + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
+                        + "]"
+                        + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\" target=\"_self\">",
                 "obj2_mb1_different_nonDefault is wrong" );
     }
 

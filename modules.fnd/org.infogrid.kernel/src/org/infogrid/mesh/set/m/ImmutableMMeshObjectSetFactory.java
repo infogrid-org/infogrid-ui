@@ -68,10 +68,10 @@ public class ImmutableMMeshObjectSetFactory
      * 
      * @return the empty MeshObjectSet
      */
-    public ImmutableMeshObjectSet obtainEmptyImmutableMeshObjectSet()
+    public OrderedImmutableMeshObjectSet obtainEmptyImmutableMeshObjectSet()
     {
         if( theEmptySet == null ) {
-            theEmptySet = new ImmutableMMeshObjectSet( this, new MeshObject[0] );
+            theEmptySet = new OrderedImmutableMMeshObjectSet( this, new MeshObject[0], 0 );
         }
         return theEmptySet;
     }
@@ -289,5 +289,5 @@ public class ImmutableMMeshObjectSetFactory
     /**
      * Buffer for an empty MeshObjectSet.
      */
-    protected ImmutableMMeshObjectSet theEmptySet;
+    protected OrderedImmutableMeshObjectSet theEmptySet;
 }

@@ -142,15 +142,18 @@ public class SimpleModelPrimitivesStringRepresentation
      * Stringifies EnumeratedValues.
      */
     public static class EnumeratedValueStringifier
-            implements Stringifier<EnumeratedValue>
+            implements
+                Stringifier<EnumeratedValue>
     {
         /**
          * Format an Object using this Stringifier. This may be null.
          *
+         * @param soFar the String so far, if any
          * @param arg the Object to format, or null
          * @return the formatted String
          */
         public String format(
+                String          soFar,
                 EnumeratedValue arg )
         {
             String ret = arg.getUserVisibleName().value();
@@ -160,17 +163,19 @@ public class SimpleModelPrimitivesStringRepresentation
         /**
          * Format an Object using this Stringifier. This may be null.
          *
+         * @param soFar the String so far, if any
          * @param arg the Object to format, or null
          * @return the formatted String
          * @throws ClassCastException thrown if this Stringifier could not format the provided Object
          *         because the provided Object was not of a type supported by this Stringifier
          */
         public String attemptFormat(
+                String soFar,
                 Object arg )
             throws
                 ClassCastException
         {
-            return format( (EnumeratedValue) arg );
+            return format( soFar, (EnumeratedValue) arg );
         }
 
         /**
@@ -221,14 +226,16 @@ public class SimpleModelPrimitivesStringRepresentation
         /**
          * Format an Object using this Stringifier. This may be null.
          *
+         * @param soFar the String so far, if any
          * @param arg the Object to format, or null
          * @return the formatted String
          */
         @Override
         public String format(
+                String soFar,
                 String arg )
         {
-            String s   = super.format( arg );
+            String s   = super.format( soFar, arg );
             String ret = s.replaceAll( "#", "%23" );
 
             return ret;
@@ -265,10 +272,12 @@ public class SimpleModelPrimitivesStringRepresentation
         /**
          * Format an Object using this Stringifier.
          *
+         * @param soFar the String so far, if any
          * @param arg the Object to format, or null
          * @return the formatted String
          */
         public String format(
+                String        soFar,
                 PropertyValue arg )
         {
             String ret = arg.getJavaConstructorString( "loader", "type" );
@@ -278,12 +287,14 @@ public class SimpleModelPrimitivesStringRepresentation
         /**
          * Format an Object using this Stringifier. This may be null.
          *
+         * @param soFar the String so far, if any
          * @param arg the Object to format, or null
          * @return the formatted String
          * @throws ClassCastException thrown if this Stringifier could not format the provided Object
          *         because the provided Object was not of a type supported by this Stringifier
          */
         public String attemptFormat(
+                String soFar,
                 Object arg )
             throws
                 ClassCastException
@@ -291,7 +302,7 @@ public class SimpleModelPrimitivesStringRepresentation
             if( arg == null ) {
                 return "null";
             } else if( arg instanceof PropertyValue ) {
-                return format( (PropertyValue) arg );
+                return format( soFar, (PropertyValue) arg );
             } else if( arg instanceof String ) {
                 return StringValue.encodeAsJavaString( (String) arg );
             } else if( arg instanceof Number ) {
@@ -369,10 +380,12 @@ public class SimpleModelPrimitivesStringRepresentation
         /**
          * Format an Object using this Stringifier.
          *
+         * @param soFar the String so far, if any
          * @param arg the Object to format, or null
          * @return the formatted String
          */
         public String format(
+                String            soFar,
                 MultiplicityValue arg )
         {
             StringBuilder ret = new StringBuilder();
@@ -394,18 +407,20 @@ public class SimpleModelPrimitivesStringRepresentation
         /**
          * Format an Object using this Stringifier. This may be null.
          *
+         * @param soFar the String so far, if any
          * @param arg the Object to format, or null
          * @return the formatted String
          * @throws ClassCastException thrown if this Stringifier could not format the provided Object
          *         because the provided Object was not of a type supported by this Stringifier
          */
         public String attemptFormat(
+                String soFar,
                 Object arg )
             throws
                 ClassCastException
         {
             if( arg instanceof MultiplicityValue ) {
-                return format( (MultiplicityValue) arg );
+                return format( soFar, (MultiplicityValue) arg );
             } else {
                 return (String) arg;
             }

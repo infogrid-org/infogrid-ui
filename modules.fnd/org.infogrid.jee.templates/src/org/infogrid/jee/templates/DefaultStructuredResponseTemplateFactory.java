@@ -16,9 +16,11 @@ package org.infogrid.jee.templates;
 
 import javax.servlet.RequestDispatcher;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.templates.servlet.TemplatesFilter;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -98,23 +100,34 @@ public class DefaultStructuredResponseTemplateFactory
             // internally requested template overrides user-requested template
             requestedTemplateName = userRequestedTemplateName;
         }
+
+        Context c = (Context) request.getAttribute( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+        if( c == null ) {
+            c = InfoGridWebApp.getSingleton().getApplicationContext();
+        }
         
         if( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME.equals( requestedTemplateName )) {
-            ret = NoContentStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured );
+            ret = NoContentStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured, c );
 
         } else if( VerbatimStructuredResponseTemplate.VERBATIM_TEXT_TEMPLATE_NAME.equals( requestedTemplateName )) {
-            ret = VerbatimStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured );
+            ret = VerbatimStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured, c );
 
         } else {
-            RequestDispatcher dispatcher = findRequestDispatcher( request, structured, requestedTemplateName, mime );
+            RequestDispatcher dispatcher = null;
 
-            if( dispatcher == null && ( requestedTemplateName != null && requestedTemplateName.length() > 0 )) {
+            if( requestedTemplateName != null ) {
+                dispatcher = findRequestDispatcher( request, structured, requestedTemplateName, mime );
+            }
+
+            if( dispatcher == null ) {
                 // try default template if named template did not work
                 dispatcher = findRequestDispatcher( request, structured, theDefaultTemplateName, mime );
             }
             if( dispatcher == null && mime == null ) {
                 // if no mime type is specified, default to html
-                dispatcher = findRequestDispatcher( request, structured, requestedTemplateName, "text/html" );
+                if( requestedTemplateName != null ) {
+                    dispatcher = findRequestDispatcher( request, structured, requestedTemplateName, "text/html" );
+                }
                 if( dispatcher == null && ( requestedTemplateName != null && requestedTemplateName.length() > 0 )) {
                     // try default template if named template did not work
                     dispatcher = findRequestDispatcher( request, structured, theDefaultTemplateName, "text/html" );
@@ -127,11 +140,12 @@ public class DefaultStructuredResponseTemplateFactory
                         request,
                         requestedTemplateName,
                         userRequestedTemplateName,
-                        structured );
+                        structured,
+                        c );
 
             } else if( mime != null && !mime.startsWith( "text/" )) {
                 // binary content
-                ret = BinaryPassThruStructuredResponseTemplate.create( request, structured );
+                ret = BinaryPassThruStructuredResponseTemplate.create( request, structured, c );
                 
             } else {
                 // all hope is lost, we have to stream verbatim whatever it is that is in structured
@@ -139,7 +153,8 @@ public class DefaultStructuredResponseTemplateFactory
                         request,
                         requestedTemplateName,
                         userRequestedTemplateName,
-                        structured );
+                        structured,
+                        c );
             }
         }
         return ret;
@@ -178,10 +193,6 @@ public class DefaultStructuredResponseTemplateFactory
             String             templateName,
             String             mime )
     {
-        if( templateName == null || templateName.length() == 0 ) {
-            templateName = theDefaultTemplateName;
-        }
-
         StringBuilder jspPath = new StringBuilder();
         jspPath.append( PATH_TO_TEMPLATES );
         jspPath.append( templateName ).append( "/" );

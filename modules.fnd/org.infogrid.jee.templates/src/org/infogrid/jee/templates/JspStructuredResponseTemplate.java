@@ -19,6 +19,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -37,6 +38,7 @@ public class JspStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param c the Context to use
      * @return the created JspStructuredResponseTemplate
      */
     public static JspStructuredResponseTemplate create(
@@ -44,14 +46,16 @@ public class JspStructuredResponseTemplate
             SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
         JspStructuredResponseTemplate ret = new JspStructuredResponseTemplate(
                 dispatcher,
                 request,
                 requestedTemplate,
                 userRequestedTemplate,
-                structured );
+                structured,
+                c );
         return ret;
     }
 
@@ -63,15 +67,17 @@ public class JspStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param c the Context to use
      */
     protected JspStructuredResponseTemplate(
             RequestDispatcher  dispatcher,
             SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
-        super( request, requestedTemplate, userRequestedTemplate, structured );
+        super( request, requestedTemplate, userRequestedTemplate, structured, c );
 
         theRequestDispatcher = dispatcher;
     }

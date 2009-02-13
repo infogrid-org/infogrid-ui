@@ -7,7 +7,6 @@
  %><%@ taglib prefix="c"     uri="http://java.sun.com/jsp/jstl/core"
  %>
 <v:viewletAlternatives />
-<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
     <u:safeForm method="post" action="${Viewlet.postUrl}">
         <table style="width: 100%">

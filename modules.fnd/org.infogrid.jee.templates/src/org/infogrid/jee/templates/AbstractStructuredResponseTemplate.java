@@ -19,7 +19,8 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.CarriesHttpStatusCodeException;
-import org.infogrid.util.http.HTTP;
+import org.infogrid.util.context.AbstractObjectInContext;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -28,6 +29,8 @@ import org.infogrid.util.http.SaneRequest;
  * next. All other section's attributes of that kind are ignored
  */
 public abstract class AbstractStructuredResponseTemplate
+        extends
+            AbstractObjectInContext
         implements
             StructuredResponseTemplate
 {
@@ -38,13 +41,17 @@ public abstract class AbstractStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param c the Context to use
      */
     protected AbstractStructuredResponseTemplate(
             SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
-            StructuredResponse structured )
+            StructuredResponse structured,
+            Context            c )
     {
+        super( c );
+
         theRequest               = request;
         theStructured            = structured;
         theRequestedTemplate     = requestedTemplate;
@@ -161,16 +168,6 @@ public abstract class AbstractStructuredResponseTemplate
         throws
             IOException
     {
-        if( theUserRequestedTemplate != null ) {
-            
-            Cookie toSend = new Cookie( LID_TEMPLATE_COOKIE_NAME, HTTP.encodeToValidUrlArgument( theRequestedTemplate ));
-            
-            toSend.setPath( theRequest.getContextPath() );
-            toSend.setMaxAge( 60 * 60 * 24 * 365 * 10 ); // 10 years
-            
-            delegate.addCookie( toSend );
-        }
-        
         for( HasHeaderPreferences current : toConsider( structured ) ) {
             for( Cookie c : current.getCookies()) {
                 delegate.addCookie( c );

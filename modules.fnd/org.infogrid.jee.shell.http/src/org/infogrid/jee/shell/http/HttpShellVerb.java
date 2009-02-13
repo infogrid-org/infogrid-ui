@@ -131,6 +131,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
          * @throws IdentifierNotUniqueException thrown if the Identifier of a to-be-created MeshObject exists already
          * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
@@ -146,7 +147,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 IsAbstractException,
                 EntityBlessedAlreadyException,
@@ -174,7 +176,7 @@ public enum HttpShellVerb
                 subject = mb.getMeshBaseLifecycleManager().createMeshObject();
             }
             potentiallyBlessEntityTypes( lidRequest, subject, mb, false );
-            potentiallySetProperties(    lidRequest, subject, mb, false );
+            potentiallySetProperties(    lidRequest, subject, mb, c, false );
             potentiallyRelateAndBless(   lidRequest, subject, object, mb, false );
         }
     },
@@ -279,7 +281,7 @@ public enum HttpShellVerb
 
             if( meshBaseString != null ) {
                 try {
-                    MeshBaseIdentifierFactory idFact = app.getApplicationContext().findContextObjectOrThrow( MeshBaseIdentifierFactory.class );
+                    MeshBaseIdentifierFactory idFact = appContext.findContextObjectOrThrow( MeshBaseIdentifierFactory.class );
                     meshBaseName                     = idFact.fromExternalForm( meshBaseString );
 
                 } catch( URISyntaxException ex ) {
@@ -291,7 +293,7 @@ public enum HttpShellVerb
             if( meshBaseName != null ) {
                 meshBase = meshBaseNameServer.get( meshBaseName );
             } else {
-                meshBase = app.getApplicationContext().findContextObjectOrThrow( MeshBase.class );
+                meshBase = appContext.findContextObjectOrThrow( MeshBase.class );
             }
 
             if( meshBase == null ) {
@@ -301,8 +303,8 @@ public enum HttpShellVerb
             MeshObjectIdentifier subjectName;
             MeshObjectIdentifier objectName;
             try {
-                subjectName = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), getParsingRepresentation(), subjectString );
-                objectName  = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), getParsingRepresentation(), objectString );
+                subjectName = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), getParsingRepresentation( appContext ), subjectString );
+                objectName  = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), getParsingRepresentation( appContext ), objectString );
 
             } catch( URISyntaxException ex ) {
                 throw new HttpShellException( ex );
@@ -321,7 +323,7 @@ public enum HttpShellVerb
             try {
                 tx = meshBase.createTransactionAsapIfNeeded();
 
-                performVerbWithinTransaction( lidRequest, subjectName, subject, objectName, object, meshBase );
+                performVerbWithinTransaction( lidRequest, subjectName, subject, objectName, object, meshBase, appContext );
 
             } catch( EssentialArgumentMissingException ex ) {
                 throw new HttpShellException( ex );
@@ -390,6 +392,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
          * @throws IdentifierNotUniqueException thrown if the Identifier of a to-be-created MeshObject exists already
          * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
@@ -405,7 +408,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 IsAbstractException,
                 EntityBlessedAlreadyException,
@@ -427,7 +431,7 @@ public enum HttpShellVerb
             // That's all that's left here
             
             potentiallyBlessEntityTypes( lidRequest, subject, mb, false );
-            potentiallySetProperties(    lidRequest, subject, mb, false );
+            potentiallySetProperties(    lidRequest, subject, mb, c, false );
             potentiallyRelateAndBless(   lidRequest, subject, object, mb, false );
         }
     },
@@ -463,6 +467,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws MeshObjectsNotFoundException thrown if one or more MeshObjects essential to the operation cannot be found
          * @throws NotPermittedException thrown if the caller did not have sufficient privileges for the operation
          * @throws TransactionException thrown if invoked outside of proper Transaction boundaries
@@ -474,7 +479,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 MeshObjectsNotFoundException,
                 NotPermittedException,
@@ -549,6 +555,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
          * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
          * @throws MeshObjectsNotFoundException thrown if one or more MeshObjects essential to the operation cannot be found
@@ -564,7 +571,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 IsAbstractException,
                 EntityBlessedAlreadyException,
@@ -585,7 +593,7 @@ public enum HttpShellVerb
                 throw new MeshObjectsNotFoundException( mb, subjectIdentifier );
             }
             potentiallyBlessEntityTypes( lidRequest, subject, mb, true );
-            potentiallySetProperties(    lidRequest, subject, mb, false );
+            potentiallySetProperties(    lidRequest, subject, mb, c, false );
             potentiallyRelateAndBless(   lidRequest, subject, object, mb, false );
         }
     },
@@ -627,6 +635,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws MeshObjectsNotFoundException thrown if one or more MeshObjects essential to the operation cannot be found
          * @throws MeshTypeNotFoundException thrown if a MeshType essential to the operation cannot be found
          * @throws NotPermittedException thrown if the caller did not have sufficient privileges for the operation
@@ -639,7 +648,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 EntityNotBlessedException,
                 MeshObjectsNotFoundException,
@@ -720,6 +730,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
          * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
          * @throws MeshObjectsNotFoundException thrown if one or more MeshObjects essential to the operation cannot be found
@@ -735,7 +746,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 IsAbstractException,
                 EntityBlessedAlreadyException,
@@ -760,7 +772,7 @@ public enum HttpShellVerb
             }
             potentiallyBlessEntityTypes( lidRequest, subject, mb, false );
             potentiallyRelateAndBless( lidRequest, subject, object, mb, true );
-            potentiallySetProperties( lidRequest, subject, mb, false );
+            potentiallySetProperties( lidRequest, subject, mb, c, false );
         }
     },
     
@@ -801,6 +813,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
          * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
          * @throws MeshObjectsNotFoundException thrown if one or more MeshObjects essential to the operation cannot be found
@@ -816,7 +829,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 EssentialArgumentMissingException,
                 InconsistentArgumentsException,
@@ -835,7 +849,7 @@ public enum HttpShellVerb
                 throw new MeshObjectsNotFoundException( mb, objectIdentifier );
             }
             subject.unrelate( object );
-            potentiallySetProperties( lidRequest, subject, mb, false );
+            potentiallySetProperties( lidRequest, subject, mb, c, false );
         }
     },
     
@@ -901,6 +915,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
          * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
          * @throws MeshTypeNotFoundException thrown if a MeshType essential to the operation cannot be found
@@ -916,7 +931,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 IsAbstractException,
                 EssentialArgumentMissingException,
@@ -940,7 +956,7 @@ public enum HttpShellVerb
             }
 
             potentiallyRelateAndBless( lidRequest, subject, object, mb, true );
-            potentiallySetProperties( lidRequest, subject, mb, false );
+            potentiallySetProperties( lidRequest, subject, mb, c, false );
        }
     },
 
@@ -987,6 +1003,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
          * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
          * @throws MeshObjectsNotFoundException thrown if one or more MeshObjects essential to the operation cannot be found
@@ -1002,7 +1019,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 EssentialArgumentMissingException,
                 InconsistentArgumentsException,
@@ -1025,7 +1043,7 @@ public enum HttpShellVerb
             RoleType [] roleTypes = determineRoleTypes( lidRequest, mb );
 
             subject.unblessRelationship( roleTypes, object ); // may throw 
-            potentiallySetProperties( lidRequest, subject, mb, false );
+            potentiallySetProperties( lidRequest, subject, mb, c, false );
         }
     },
 
@@ -1073,6 +1091,7 @@ public enum HttpShellVerb
          * @param objectIdentifier the Identifier of the specified object MeshObject
          * @param object the object MeshObject
          * @param mb the MeshBase on which to perform the operation
+         * @param c the Context to use
          * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
          * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
          * @throws MeshObjectsNotFoundException thrown if one or more MeshObjects essential to the operation cannot be found
@@ -1088,7 +1107,8 @@ public enum HttpShellVerb
                 MeshObject           subject,
                 MeshObjectIdentifier objectIdentifier,
                 MeshObject           object,
-                MeshBase             mb )
+                MeshBase             mb,
+                Context              c )
             throws
                 EssentialArgumentMissingException,
                 InconsistentArgumentsException,
@@ -1103,7 +1123,7 @@ public enum HttpShellVerb
                 throw new MeshObjectsNotFoundException( mb, subjectIdentifier );
             }
 
-            potentiallySetProperties( lidRequest, subject, mb, true );
+            potentiallySetProperties( lidRequest, subject, mb, c, true );
         }
     };
 
@@ -1163,7 +1183,7 @@ public enum HttpShellVerb
 
         if( meshBaseString != null ) {
             try {
-                MeshBaseIdentifierFactory idFact = app.getApplicationContext().findContextObjectOrThrow( MeshBaseIdentifierFactory.class );
+                MeshBaseIdentifierFactory idFact = appContext.findContextObjectOrThrow( MeshBaseIdentifierFactory.class );
                 meshBaseName                     = idFact.fromExternalForm( meshBaseString );
 
             } catch( URISyntaxException ex ) {
@@ -1175,7 +1195,7 @@ public enum HttpShellVerb
         if( meshBaseName != null ) {
             meshBase = meshBaseNameServer.get( meshBaseName );
         } else {
-            meshBase = app.getApplicationContext().findContextObjectOrThrow( MeshBase.class );
+            meshBase = appContext.findContextObjectOrThrow( MeshBase.class );
         }
 
         if( meshBase == null ) {
@@ -1185,8 +1205,8 @@ public enum HttpShellVerb
         MeshObjectIdentifier subjectName;
         MeshObjectIdentifier objectName;
         try {
-            subjectName = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), getParsingRepresentation(), subjectString );
-            objectName  = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), getParsingRepresentation(), objectString );
+            subjectName = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), getParsingRepresentation( appContext ), subjectString );
+            objectName  = formatter.fromMeshObjectIdentifier( meshBase.getMeshObjectIdentifierFactory(), getParsingRepresentation( appContext ), objectString );
 
         } catch( URISyntaxException ex ) {
             throw new HttpShellException( ex );
@@ -1199,7 +1219,7 @@ public enum HttpShellVerb
         try {
             tx = meshBase.createTransactionAsapIfNeeded();
 
-            performVerbWithinTransaction( lidRequest, subjectName, subject, objectName, object, meshBase );
+            performVerbWithinTransaction( lidRequest, subjectName, subject, objectName, object, meshBase, appContext );
 
         } catch( EssentialArgumentMissingException ex ) {
             throw new HttpShellException( ex );
@@ -1268,6 +1288,7 @@ public enum HttpShellVerb
      * @param objectIdentifier the Identifier of the specified object MeshObject
      * @param object the object MeshObject
      * @param mb the MeshBase on which to perform the operation
+     * @param c the Context to use
      * @throws IsAbstractException thrown if a to-be-instantiated MeshType was abstract
      * @throws EntityNotBlessedException thrown if an operation required a MeshObject to be blessed but it was not
      * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
@@ -1293,7 +1314,8 @@ public enum HttpShellVerb
             MeshObject           subject,
             MeshObjectIdentifier objectIdentifier,
             MeshObject           object,
-            MeshBase             mb )
+            MeshBase             mb,
+            Context              c )
         throws
             IsAbstractException,
             EntityNotBlessedException,
@@ -1420,6 +1442,7 @@ public enum HttpShellVerb
      * @param lidRequest the incoming request
      * @param subject the subject MeshObject
      * @param mb the MeshBase on which to perform the operation
+     * @param c the Context to use
      * @param throwExceptions if true, throw Exceptions. If false, silently ignore all errors
      * @throws EssentialArgumentMissingException thrown if an argument was missing that is essential for the operation
      * @throws InconsistentArgumentsException thrown if provided arguments are inconsistent with each other
@@ -1433,6 +1456,7 @@ public enum HttpShellVerb
             SaneRequest        lidRequest,
             MeshObject         subject,
             MeshBase           mb,
+            Context            c,
             boolean            throwExceptions )
         throws
             NotPermittedException,
@@ -1478,7 +1502,7 @@ public enum HttpShellVerb
                 if( propertyValuesStrings[i].length() == 0 ) {
                     value = null;
                 } else {
-                    value = propertyType.fromStringRepresentation( getParsingRepresentation(), propertyValuesStrings[i] );
+                    value = propertyType.fromStringRepresentation( getParsingRepresentation( c ), propertyValuesStrings[i] );
                 }
 
                 try {
@@ -1489,7 +1513,7 @@ public enum HttpShellVerb
 
             } else {
                 try {
-                    PropertyValue value = propertyType.fromStringRepresentation( getParsingRepresentation(), propertyValuesStrings[i] );
+                    PropertyValue value = propertyType.fromStringRepresentation( getParsingRepresentation( c ), propertyValuesStrings[i] );
 
                     subject.setPropertyValue( propertyType, value );
 
@@ -1678,14 +1702,16 @@ public enum HttpShellVerb
 
     /**
      * Helper method to determine the StringRepresentation to use for parsing.
-     * 
+     *
+     * @param c the Context to use
      * @return the StringRepresentation
      */
-    protected StringRepresentation getParsingRepresentation()
+    protected StringRepresentation getParsingRepresentation(
+            Context c )
     {
         // never mind multiple threads
         if( theParsingRepresentation == null ) {
-            StringRepresentationDirectory dir = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( StringRepresentationDirectory.class );
+            StringRepresentationDirectory dir = c.findContextObjectOrThrow( StringRepresentationDirectory.class );
             
             try {
                 theParsingRepresentation = dir.obtainFor( StringRepresentationDirectory.TEXT_PLAIN_NAME );

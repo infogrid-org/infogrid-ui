@@ -46,7 +46,7 @@ public interface Context
      * specify a more concrete class.</p>
      * <p>If the context object cannot be found, return <code>null</code>.</p>
      *
-     * @param classOfContextObject class of the object that we are looking for it
+     * @param classOfContextObject class of the object that we are looking for
      * @return the found object, or null
      * @param <T> the type of Context object to find
      */
@@ -61,7 +61,7 @@ public interface Context
      * <p>If the context object cannot be found, throw a
      *  {@link ContextObjectNotFoundException ContextObjectNotFoundException}.</p>
      *
-     * @param classOfContextObject class of the object that we are looking for it
+     * @param classOfContextObject class of the object that we are looking for
      * @return the found object
      * @throws ContextObjectNotFoundException if the Context object was not found
      * @param <T> the type of Context object to find
@@ -94,6 +94,7 @@ public interface Context
     /**
      * Obtain an iterator over all context objects of this type.
      * 
+     * @param classOfContextObject class of the objects that we are looking for
      * @return the iterator
      * @param <T> the type of Context object to find
      */

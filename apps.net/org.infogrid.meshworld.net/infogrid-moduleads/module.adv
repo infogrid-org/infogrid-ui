@@ -38,6 +38,7 @@
   <requires name="org.infogrid.jee.templates"/>
   <requires name="org.infogrid.jee.shell.http"/>
   <requires name="org.infogrid.jee.viewlet.bulk"/>
+  <requires name="org.infogrid.jee.viewlet.graphtree"/>
   <requires name="org.infogrid.jee.viewlet.wikiobject"/>
   <requires name="org.infogrid.kernel.net"/>
   <requires name="org.infogrid.meshbase.store.net"/>

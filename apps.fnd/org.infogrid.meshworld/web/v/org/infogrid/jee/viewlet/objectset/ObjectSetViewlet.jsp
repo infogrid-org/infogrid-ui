@@ -9,7 +9,6 @@
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/objectset/ObjectSetViewlet.css"/>
 <v:viewletAlternatives />
-<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <h1>ObjectSet found related to: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Html" maxLength="30"/></h1>
  <table class="objects">

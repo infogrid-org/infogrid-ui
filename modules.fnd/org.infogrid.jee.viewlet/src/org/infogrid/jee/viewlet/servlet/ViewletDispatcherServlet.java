@@ -31,6 +31,7 @@ import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.servlet.TemplatesFilter;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
@@ -79,13 +80,18 @@ public class ViewletDispatcherServlet
         StructuredResponse structured     = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
         InfoGridWebApp      app     = InfoGridWebApp.getSingleton();
-        Context             c       = app.getApplicationContext();
+        Context             c       = (Context) saneRequest.getAttribute( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+
+        if( c == null ) {
+            c = app.getApplicationContext();
+        }
         TraversalDictionary dict    = c.findContextObject( TraversalDictionary.class ); // optional
         MeshBase            mb      = c.findContextObject( MeshBase.class );
 
         if( mb == null ) {
             throw new ContextMeshBaseNotFoundException();
         }
+
         RestfulRequest restfulRequest = createRestfulRequest(
                 saneRequest,
                 servletRequest.getContextPath(),

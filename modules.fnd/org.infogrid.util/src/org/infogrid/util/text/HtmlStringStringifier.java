@@ -17,7 +17,7 @@ package org.infogrid.util.text;
 import org.infogrid.util.ResourceHelper;
 
 /**
- * Stringifies a String until valid HTML symtax. For example, this replaces
+ * Stringifies a String until valid HTML syntax. For example, this replaces
  * <code>&gt;</code> with <code>&amp;gt;</code>.
  */
 public class HtmlStringStringifier
@@ -45,14 +45,16 @@ public class HtmlStringStringifier
     /**
      * Format an Object using this Stringifier. This may be null.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      */
     @Override
     public String format(
+            String soFar,
             String arg )
     {
-        String raw = super.format( arg );
+        String raw = super.format( soFar, arg );
         
         String ret = stringToHtml( raw );
         

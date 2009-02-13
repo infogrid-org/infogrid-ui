@@ -98,9 +98,14 @@ public class AMeshObjectEquivalenceSetComparator
             }
         }
 
-        MeshObjectIdentifier [] ret = (MeshObjectIdentifier[]) Array.newInstance( meshObject.getClass(), 2 );
-        ret[0] = left;
-        ret[1] = right;
+        MeshObjectIdentifier [] ret;
+        if( left != null || right != null ) {
+            ret = (MeshObjectIdentifier[]) Array.newInstance( meshObject.getClass(), 2 );
+            ret[0] = left;
+            ret[1] = right;
+        } else {
+            ret = null;
+        }
 
         return ret;
     }

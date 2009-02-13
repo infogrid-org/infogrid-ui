@@ -24,7 +24,7 @@ import org.infogrid.util.ArrayFacade;
  * result of a {@link #format format} operation is a concatenation of the child
  * Stringifiers' results of their respective {@link #format format} operation.
  * 
- * @param T the type of the Objects to be stringified
+ * @param <T> the type of the Objects to be stringified
  */
 public abstract class CompoundStringifier<T>
         implements
@@ -75,17 +75,19 @@ public abstract class CompoundStringifier<T>
     /**
      * Format an Object using this Stringifier.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      */
     public String format(
+            String         soFar,
             ArrayFacade<T> arg )
     {
         StringBuffer ret = new StringBuffer();
         for( int i=0 ; i<theComponents.length ; ++i ) {
             CompoundStringifierComponent<T> current = theComponents[i];
             
-            String found = current.format( arg );
+            String found = current.format( soFar + ret.toString(), arg );
             
             ret.append( found );
         }
@@ -95,6 +97,7 @@ public abstract class CompoundStringifier<T>
     /**
      * Format an Object using this Stringifier.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
@@ -102,11 +105,12 @@ public abstract class CompoundStringifier<T>
      */
     @SuppressWarnings(value={"unchecked"})
     public String attemptFormat(
+            String soFar,
             Object arg )
         throws
             ClassCastException
     {
-        return format( (ArrayFacade<T>) arg );
+        return format( soFar, (ArrayFacade<T>) arg );
     }
 
     /**

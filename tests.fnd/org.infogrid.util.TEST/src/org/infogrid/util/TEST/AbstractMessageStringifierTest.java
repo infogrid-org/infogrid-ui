@@ -67,7 +67,7 @@ public abstract class AbstractMessageStringifierTest
 
         ArrayFacade<Object> temp = new ArrayFacade<Object>( current.theData );
 
-        String result1a = str1.format( temp );
+        String result1a = str1.format( null, temp );
         
         current.checkResult( this, result1a, "wrong formatting result" );
 

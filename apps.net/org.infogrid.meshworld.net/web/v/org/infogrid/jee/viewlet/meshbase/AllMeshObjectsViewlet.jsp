@@ -9,7 +9,6 @@
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/meshbase/AllMeshObjectsViewlet.css"/>
 <v:viewletAlternatives />
-<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <div class="slide-in-button">
   <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Create"/></a>

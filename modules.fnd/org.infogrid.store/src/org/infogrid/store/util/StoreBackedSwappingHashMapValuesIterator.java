@@ -21,6 +21,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 
 import java.util.NoSuchElementException;
+import org.infogrid.util.StringHelper;
 
 /**
  * Iterates over the values in a StoreBackedSwappingHashMap.
@@ -324,6 +325,24 @@ public class StoreBackedSwappingHashMapValuesIterator<K,V>
     {
         int ret = theKeysIterator.moveToAfterLast();
         return ret;
+    }
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theKeysIterator"
+                },
+                new Object[] {
+                    theKeysIterator
+                });
     }
 
     /**

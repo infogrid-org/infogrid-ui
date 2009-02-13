@@ -8,6 +8,7 @@
  %><%@ taglib prefix="tmpl"        uri="/v/org/infogrid/jee/taglib/templates/templates.tld"
  %><%@ taglib prefix="c"           uri="http://java.sun.com/jsp/jstl/core"
  %>
+<v:viewletAlternatives />
 <v:viewlet>
  <h1>Property Sheet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Html"/></h1>
  <%@ include file="/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet/audit.jsp" %> 

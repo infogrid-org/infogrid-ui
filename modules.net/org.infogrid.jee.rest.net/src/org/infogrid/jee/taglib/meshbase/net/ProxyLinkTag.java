@@ -46,6 +46,7 @@ public class ProxyLinkTag
         theProxyName            = null;
         theRootPath             = null;
         theAddArguments         = null;
+        theTarget               = null;
         theStringRepresentation = null;
 
         super.initializeToDefaults();
@@ -121,6 +122,29 @@ public class ProxyLinkTag
     }
 
     /**
+     * Obtain value of the target property.
+     *
+     * @return value of the target property
+     * @see #setTarget
+     */
+    public String getTarget()
+    {
+        return theTarget;
+    }
+
+    /**
+     * Set value of the target property.
+     *
+     * @param newValue new value of the target property
+     * @see #getTarget
+     */
+    public void setTarget(
+            String newValue )
+    {
+        theTarget = newValue;
+    }
+
+    /**
      * Obtain value of the stringRepresentation property.
      *
      * @return value of the stringRepresentation property
@@ -157,7 +181,7 @@ public class ProxyLinkTag
     {
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
         
-        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkStart( pageContext, p, theRootPath, theStringRepresentation );        
+        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkStart( pageContext, p, theRootPath, theAddArguments, theTarget, theStringRepresentation );
         print( text );
 
         return EVAL_BODY_INCLUDE;
@@ -198,6 +222,11 @@ public class ProxyLinkTag
      * The arguments to append to the URL, separated by &.
      */
     protected String theAddArguments;
+
+    /**
+     * The HTML target, if any.
+     */
+    protected String theTarget;
 
     /**
      * Name of the String representation.

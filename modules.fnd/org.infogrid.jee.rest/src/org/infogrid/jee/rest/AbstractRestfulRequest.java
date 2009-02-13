@@ -124,7 +124,7 @@ public abstract class AbstractRestfulRequest
     /**
      * Obtain the requested MIME type, if any.
      * 
-     * @return the requuested MIME type, if any
+     * @return the requested MIME type, if any
      */
     public String getRequestedMimeType()
     {

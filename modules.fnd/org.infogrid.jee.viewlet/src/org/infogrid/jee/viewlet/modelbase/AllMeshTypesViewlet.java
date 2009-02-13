@@ -15,7 +15,6 @@
 package org.infogrid.jee.viewlet.modelbase;
 
 import java.util.Iterator;
-import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.modelbase.ModelBase;
@@ -93,8 +92,9 @@ public class AllMeshTypesViewlet
      */
     public Iterator<SubjectArea> getSubjectAreas()
     {
-        InfoGridWebApp app = InfoGridWebApp.getSingleton();
-        ModelBase      mb  = app.getApplicationContext().findContextObjectOrThrow( ModelBase.class );
+        // Context   c  = InfoGridWebApp.getSingleton().getApplicationContext();
+        Context   c  = getContext();
+        ModelBase mb = c.findContextObjectOrThrow( ModelBase.class );
         
         return mb.subjectAreaIterator();
     }

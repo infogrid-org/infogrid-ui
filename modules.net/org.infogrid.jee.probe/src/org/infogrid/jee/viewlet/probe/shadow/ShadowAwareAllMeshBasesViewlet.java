@@ -139,8 +139,9 @@ public class ShadowAwareAllMeshBasesViewlet
             return; // silently fail
         }
 
-        InfoGridWebApp app = InfoGridWebApp.getSingleton();
-        Context        c   = app.getApplicationContext();
+//        InfoGridWebApp app = InfoGridWebApp.getSingleton();
+//        Context        c   = app.getApplicationContext();
+        Context c = getContext();
 
         NetMeshBase           mainMeshBase       = c.findContextObjectOrThrow( NetMeshBase.class );
         NetMeshBaseIdentifier meshBaseIdentifier;

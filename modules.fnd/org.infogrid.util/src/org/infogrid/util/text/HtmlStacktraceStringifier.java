@@ -74,14 +74,16 @@ public class HtmlStacktraceStringifier
     /**
      * Format an Object using this Stringifier. This may be null.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      */
     @Override
     public String format(
+            String    soFar,
             Throwable arg )
     {
-        String raw = super.format( arg );
+        String raw = super.format( soFar, arg );
         
         String ret = raw; // HtmlStringStringifier.stringToHtml( raw );
         

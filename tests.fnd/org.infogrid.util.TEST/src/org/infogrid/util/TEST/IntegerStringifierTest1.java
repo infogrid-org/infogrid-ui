@@ -44,7 +44,7 @@ public class IntegerStringifierTest1
         
         int                data1a = 15243;
         IntegerStringifier str1   = IntegerStringifier.create( );
-        String             res1a  = str1.format( data1a );
+        String             res1a  = str1.format( null, data1a );
         
         checkEquals( String.valueOf( data1a ), res1a, "not the same" );
 

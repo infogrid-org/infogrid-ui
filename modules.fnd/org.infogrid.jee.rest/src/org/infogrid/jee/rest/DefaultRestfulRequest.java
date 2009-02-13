@@ -25,6 +25,7 @@ import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 
@@ -136,7 +137,33 @@ public class DefaultRestfulRequest
             throw new IllegalArgumentException( "Cannot process incoming relative URI " + relativeBaseUrl + " that is outside of context path " + theContextPath );
         }
     }
-    
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theRequestedMeshBaseIdentifier",
+                    "theRequestedMeshObjectIdentifier",
+                    "theRequestedTraversal",
+                    "theRequestedViewletClass",
+                    "theRequestedMimeType"
+                },
+                new Object[] {
+                    theRequestedMeshBaseIdentifier,
+                    theRequestedMeshObjectIdentifier,
+                    theRequestedTraversal,
+                    theRequestedViewletClass,
+                    theRequestedMimeType
+                });
+    }
+
     /**
      * The identifier of the default MeshBase.
      */

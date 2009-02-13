@@ -47,7 +47,7 @@ public interface MeshObjectSetFactory
      * 
      * @return the empty MeshObjectSet
      */
-    public ImmutableMeshObjectSet obtainEmptyImmutableMeshObjectSet();
+    public OrderedImmutableMeshObjectSet obtainEmptyImmutableMeshObjectSet();
 
     /**
      * Factory method to construct a MeshObjectSet with the single specified member.

@@ -8,7 +8,6 @@
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet.css"/>
 <v:viewletAlternatives />
-<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <table class="audit"> <!-- IE is unable to render float:right correctly, so here is a table for you -->
   <tr>

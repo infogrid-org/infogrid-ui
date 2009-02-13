@@ -115,6 +115,8 @@ public class NetRestfulJeeFormatter
      * @param pageContext the PageContext object for this page
      * @param p the Proxy whose identifier is to be formatted
      * @param rootPath alternate root path to use, if any
+     * @param addArguments additional arguments to the URL, if any
+     * @param target the HTML target, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      */
@@ -122,6 +124,8 @@ public class NetRestfulJeeFormatter
             PageContext pageContext,
             Proxy       p,
             String      rootPath,
+            String      addArguments,
+            String      target,
             String      stringRepresentation )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
@@ -129,7 +133,7 @@ public class NetRestfulJeeFormatter
 
         context = perhapsOverrideStringRepresentationContext( rootPath, context );
 
-        String ret = p.toStringRepresentationLinkStart( rep, context );
+        String ret = p.toStringRepresentationLinkStart( addArguments, target, rep, context );
         return ret;
     }
 

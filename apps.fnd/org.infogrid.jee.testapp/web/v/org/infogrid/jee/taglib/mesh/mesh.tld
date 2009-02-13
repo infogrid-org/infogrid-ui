@@ -3,10 +3,10 @@
     <tlib-version>1.0</tlib-version>
     <short-name>mesh</short-name>
     <uri>/v/org/infogrid/jee/taglib/mesh/mesh.tld</uri>
-    
+
     <!-- Tags are ordered alphabetically by Java Class name. Makes it easier
          to find them in the IDE. -->
-         
+
     <tag>
         <name>blessedByIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectBlessedByIterateTag</tag-class>
@@ -33,7 +33,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>durationSinceTimeCreated</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectSinceTimeCreatedTag</tag-class>
@@ -59,7 +59,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>durationSinceTimeRead</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectSinceTimeReadTag</tag-class>
@@ -110,7 +110,7 @@
             <name>scope</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    </tag>    
+    </tag>
 
     <tag>
         <name>meshObjectId</name>
@@ -141,7 +141,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>meshObjectLink</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectLinkTag</tag-class>
@@ -156,6 +156,10 @@
         </attribute>
         <attribute>
             <name>addArguments</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>target</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -209,7 +213,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>neighborIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectNeighborIterateTag</tag-class>
@@ -231,7 +235,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
      <tag>
         <name>propertyIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectPropertyIterateTag</tag-class>
@@ -304,8 +308,8 @@
             <name>scope</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    </tag> 
-    
+    </tag>
+
     <tag>
         <name>roleIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectRoleIterateTag</tag-class>
@@ -374,7 +378,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>timeRead</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectTimeReadTag</tag-class>
@@ -412,7 +416,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>timeUpdated</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectTimeUpdatedTag</tag-class>
@@ -450,7 +454,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>type</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshTypeTag</tag-class>
@@ -496,7 +500,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>property</name>
         <tag-class>org.infogrid.jee.taglib.mesh.PropertyTag</tag-class>
@@ -540,7 +544,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>propertyValue</name>
         <tag-class>org.infogrid.jee.taglib.mesh.PropertyValueTag</tag-class>

@@ -53,7 +53,7 @@ public class DefaultTemplatesInitializationFilter
         rootContext.addContextObject( formatter );
 
         // StructuredResponseTemplateFactory
-        StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create( "default" );
+        StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create();
         rootContext.addContextObject( tmplFactory );
 
         StringRepresentationDirectory srepdir = SimpleStringRepresentationDirectory.create();

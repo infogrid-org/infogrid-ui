@@ -31,28 +31,32 @@ import java.util.Iterator;
  *    <code>java.text.MessageFormat</code>, this framework allows the specification of sub-formatters
  *    for specific arguments; they are not hard-coded as in case of <code>java.text.MessageFormat</code>.</p>
  * 
- * @param T the type of the Objects to be stringified
+ * @param <T> the type of the Objects to be stringified
  */
 public interface Stringifier<T>
 {
     /**
      * Format an Object using this Stringifier.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      */
     public abstract String format(
-            T arg );
+            String soFar,
+            T      arg );
     
     /**
      * Format an Object using this Stringifier. This may be null.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public abstract String attemptFormat(
+            String soFar,
             Object arg )
         throws
             ClassCastException;

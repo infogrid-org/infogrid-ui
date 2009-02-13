@@ -9,7 +9,6 @@
  %><%@ taglib prefix="c"        uri="http://java.sun.com/jsp/jstl/core"
  %>
 <v:viewletAlternatives />
-<mesh:refresh>Reload page</mesh:refresh>
 <v:viewlet>
  <h1>All locally known MeshBases</h1>
  <ol>

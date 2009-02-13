@@ -23,7 +23,7 @@ import java.util.Iterator;
 /**
  * The constant blocks of text inside a (compound) MessageStringifier.
  * 
- * @param T the type of the Objects to be stringified
+ * @param <T> the type of the Objects to be stringified
  */
 public class ConstantStringifierComponent<T>
         implements
@@ -44,10 +44,12 @@ public class ConstantStringifierComponent<T>
      * Format zero or one Objects in the ArrayFacade. The implementation here
      * only returns the constant String.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format
      * @return the formatted String
      */
     public String format(
+            String         soFar,
             ArrayFacade<T> arg )
     {
         // regardless of argument, we always return the same

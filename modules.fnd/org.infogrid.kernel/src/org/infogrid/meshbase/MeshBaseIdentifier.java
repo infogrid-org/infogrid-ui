@@ -78,30 +78,36 @@ public class MeshBaseIdentifier
     }
 
     /**
-     * Obtain the start part of a String representation of this MeshBase that acts
+     * Obtain the start part of a String representation of this object that acts
      * as a link/hyperlink and can be shown to the user.
-     * 
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
-        String contextPath  = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        String contextPath  = context != null ? (String) context.get( StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
         String externalForm = toExternalForm();
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 DEFAULT_LINK_START_ENTRY,
                 contextPath,
-                externalForm );
+                externalForm,
+                additionalArguments,
+                target );
         return ret;
     }
 
     /**
-     * Obtain the end part of a String representation of this MeshBase that acts
+     * Obtain the end part of a String representation of this object that acts
      * as a link/hyperlink and can be shown to the user.
      * 
      * @param rep the StringRepresentation
@@ -112,7 +118,7 @@ public class MeshBaseIdentifier
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
-        String contextPath  = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        String contextPath  = context != null ? (String) context.get( StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
         String externalForm = toExternalForm();
 
         String ret = rep.formatEntry(

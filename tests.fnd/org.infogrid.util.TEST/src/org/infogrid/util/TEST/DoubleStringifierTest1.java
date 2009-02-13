@@ -45,7 +45,7 @@ public class DoubleStringifierTest1
         
         double            data1a = 15.243;
         DoubleStringifier str1   = DoubleStringifier.create();
-        String            res1a  = str1.format( data1a );
+        String            res1a  = str1.format( null, data1a );
         
         checkEquals( String.valueOf( data1a ), res1a, "not the same" );
 

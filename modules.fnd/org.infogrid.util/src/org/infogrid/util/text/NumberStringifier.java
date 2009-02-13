@@ -33,11 +33,13 @@ public abstract class NumberStringifier
     /**
      * Format a numeric value using this Stringifier.
      *
+     * @param soFar the String so far, if any
      * @param arg the numerica value, as long
      * @return the formatted String
      */
     protected String format(
-            long arg )
+            String soFar,
+            long   arg )
     {
         if( theDigits <= 0 ) {
             String ret = String.valueOf( arg );
@@ -70,22 +72,24 @@ public abstract class NumberStringifier
     /**
      * Format an Object using this Stringifier. This may be null.
      *
+     * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
+            String soFar,
             Object arg )
         throws
             ClassCastException
     {
         if( arg instanceof Short ) {
-            return format( ((Short)arg).longValue() );
+            return format( soFar, ((Short)arg).longValue() );
         } else if( arg instanceof Long ) {
-            return format( ((Long)arg).longValue() );
+            return format( soFar, ((Long)arg).longValue() );
         } else {
-            return format( ((Integer)arg).longValue() );
+            return format( soFar, ((Integer)arg).longValue() );
         }
     }
     

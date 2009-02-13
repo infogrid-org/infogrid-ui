@@ -175,14 +175,18 @@ public class DefaultAMeshObjectIdentifier
     }
 
     /**
-     * Obtain the start part of a String representation of this MeshBase that acts
+     * Obtain the start part of a String representation of this object that acts
      * as a link/hyperlink and can be shown to the user.
-     * 
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
      */
     public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
@@ -190,7 +194,7 @@ public class DefaultAMeshObjectIdentifier
     }
 
     /**
-     * Obtain the end part of a String representation of this MeshBase that acts
+     * Obtain the end part of a String representation of this object that acts
      * as a link/hyperlink and can be shown to the user.
      * 
      * @param rep the StringRepresentation
