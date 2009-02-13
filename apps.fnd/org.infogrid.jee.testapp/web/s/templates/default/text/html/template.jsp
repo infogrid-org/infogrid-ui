@@ -26,7 +26,6 @@
   </div>
   <div id="canvas-middle">
    <div class="canvas-main">
-    <v:viewletAlternatives />
     <mesh:refresh>Reload page</mesh:refresh>
     <tmpl:ifErrors>
      <div class="errors">

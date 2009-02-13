@@ -15,7 +15,6 @@
   <tmpl:inline sectionName="html-head"/>
  </head>
  <body>
-  <v:viewletAlternatives />
   <mesh:refresh>Reload page</mesh:refresh>
   <tmpl:ifErrors>
    <div class="errors">
