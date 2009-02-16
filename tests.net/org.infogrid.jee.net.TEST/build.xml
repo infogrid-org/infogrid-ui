@@ -22,7 +22,7 @@
          xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
 
     <description>Builds, tests, and runs the project org.infogrid.jee.net.TEST.</description>
-    <property name="org.infogrid.testharness.tomcat.propertyfile.local" value="src/org/infogrid/jee/net/TEST/tomcat.properties"/>
+    <property name="org.infogrid.testharness.tomcat.propertyfile.local" value="src/org/infogrid/jee/net/TEST/tomcat55.properties"/>
     <import file="../../tools/infogrid-ant-library.xml"/>
     <import file="nbproject/build-impl.xml"/>
 
