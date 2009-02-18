@@ -8,16 +8,20 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net;
 
+import org.infogrid.util.Identifier;
+
 /**
  * Specifies how to access a NetMeshBase.
  */
 public interface NetMeshBaseAccessSpecification
+        extends
+            Identifier
 {
     /**
      * Obtain the NetMeshBaseIdentifier.
@@ -39,13 +43,6 @@ public interface NetMeshBaseAccessSpecification
      * @return the CoherenceSpecification
      */
     public CoherenceSpecification getCoherenceSpecification();
-
-    /**
-     * Convert NetMeshBaseAccessSpecification into an external form.
-     *
-     * @return the external form
-     */
-    public String toExternalForm();
 
     /**
      * The default scope for the object graph that we want.

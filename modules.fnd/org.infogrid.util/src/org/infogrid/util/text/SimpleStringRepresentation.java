@@ -8,18 +8,17 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
 
-import java.util.HashMap;
 import java.util.Map;
 import org.infogrid.util.ArrayFacade;
+import org.infogrid.util.DelegatingMap;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
-import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -30,32 +29,6 @@ public class SimpleStringRepresentation
             StringRepresentation
 {
     private static final Log log = Log.getLogInstance( SimpleStringRepresentation.class ); // our own, private logger
-
-    /**
-     * Smart factory method, using the default StringifierMap.
-     *
-     * @param name the name of the StringRepresentation
-     * @return the created StringRepresentation
-     */
-    public static synchronized SimpleStringRepresentation create(
-            String name )
-    {
-        return create( name, DEFAULT_STRINGIFIER_MAP );
-    }
-
-    /**
-     * Smart factory method, using the default StringifierMap.
-     *
-     * @param name the name of the StringRepresentation
-     * @param delegate the StringRepresentation to use if this instance cannot perform the operation
-     * @return the created StringRepresentation
-     */
-    public static synchronized SimpleStringRepresentation create(
-            String               name,
-            StringRepresentation delegate )
-    {
-        return create( name, DEFAULT_STRINGIFIER_MAP );
-    }
 
     /**
      * Smart factory method.
@@ -101,9 +74,13 @@ public class SimpleStringRepresentation
             Map<String,Stringifier<? extends Object>> map,
             StringRepresentation                      delegate )
     {
-        theName           = name;
-        theStringifierMap = map;
-        theDelegate       = delegate;
+        theName                = name;
+        theLocalStringifierMap = map;
+        theDelegate            = delegate;
+
+        if( delegate != null ) {
+            theRecursiveStringifierMap = DelegatingMap.create( theLocalStringifierMap, delegate.getRecursiveStringifierMap() );
+        }
     }
     
     /**
@@ -148,18 +125,25 @@ public class SimpleStringRepresentation
             String                                   entry,
             Object...                                args )
     {
-        ResourceHelper rh = ResourceHelper.getInstance( classOfFormattedObject, true );
-        try {
-            String                formatString = rh.getResourceString( theName + entry );
-            AnyMessageStringifier stringifier  = AnyMessageStringifier.create( formatString, theStringifierMap );
+        ResourceHelper rh           = ResourceHelper.getInstance( classOfFormattedObject, true );
+        String         formatString = rh.getResourceStringOrDefault( theName + entry, null );
 
-            String ret = stringifier.format( null, ArrayFacade.<Object>create( args ));
-            return ret;
+        if( formatString != null ) {
+            try {
+                AnyMessageStringifier stringifier = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
 
-        } catch( StringifierException ex ) {
-            log.error( ex );
-            return null;
+                String ret = stringifier.format( null, ArrayFacade.<Object>create( args ));
+                return ret;
+
+            } catch( StringifierException ex ) {
+                log.error( ex );
+                return null;
+            }
         }
+        if( theDelegate != null ) {
+            return theDelegate.formatEntry( classOfFormattedObject, entry, args );
+        }
+        return rh.getResourceString( theName + entry ); // will emit warning
     }
 
     /**
@@ -179,11 +163,19 @@ public class SimpleStringRepresentation
             StringifierException
     {
         ResourceHelper        rh           = ResourceHelper.getInstance( classOfFormattedObject );
-        String                formatString = rh.getResourceString( theName + entry );
-        AnyMessageStringifier stringifier  = AnyMessageStringifier.create( formatString, theStringifierMap );
+        String                formatString = rh.getResourceStringOrDefault( theName + entry, null );
 
-        Object [] ret = stringifier.unformat( s ).getArray();
-        return ret;
+        if( formatString != null ) {
+            AnyMessageStringifier stringifier  = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
+
+            Object [] ret = stringifier.unformat( s ).getArray();
+            return ret;
+        }
+        if( theDelegate != null ) {
+            return theDelegate.parseEntry( classOfFormattedObject, entry, s );
+        }
+        Object ignore = rh.getResourceString( theName + entry ); // will emit warning
+        return new Object[0];
     }
 
     /**
@@ -235,7 +227,7 @@ public class SimpleStringRepresentation
     {
         try {
             String                formatString = theResourceHelper.getResourceString( theName + "ThrowableMessage" );
-            AnyMessageStringifier stringifier  = AnyMessageStringifier.create( formatString, theStringifierMap );
+            AnyMessageStringifier stringifier  = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
 
             String message          = t.getMessage();
             String localizedMessage = t.getLocalizedMessage();
@@ -254,6 +246,31 @@ public class SimpleStringRepresentation
         } catch( StringifierException ex ) {
             log.error( ex );
             return null;
+        }
+    }
+
+    /**
+     * Obtain the local StringifierMap. This enables modification of the map.
+     *
+     * @return the stringifier map
+     */
+    public Map<String,Stringifier<? extends Object>> getLocalStringifierMap()
+    {
+        return theLocalStringifierMap;
+
+    }
+
+    /**
+     * Obtain the StringifierMap that recursively contains the maps of all delegates.
+     *
+     * @return the stringifier map
+     */
+    public Map<String,Stringifier<? extends Object>> getRecursiveStringifierMap()
+    {
+        if( theRecursiveStringifierMap != null ) {
+            return theRecursiveStringifierMap;
+        } else {
+            return theLocalStringifierMap;
         }
     }
 
@@ -293,9 +310,14 @@ public class SimpleStringRepresentation
     protected String theName;
 
     /**
+     * The local StringifierMap to be used with this StringRepresentation.
+     */
+    protected Map<String,Stringifier<? extends Object>> theLocalStringifierMap;
+
+    /**
      * The StringifierMap to be used with this StringRepresentation.
      */
-    protected Map<String,Stringifier<? extends Object>> theStringifierMap;
+    protected DelegatingMap<String,Stringifier<? extends Object>> theRecursiveStringifierMap;
 
     /**
      * The delegate StringRepresentation, if any.
@@ -303,91 +325,7 @@ public class SimpleStringRepresentation
     protected StringRepresentation theDelegate;
 
     /**
-     * The default map for the compound stringifier.
-     */
-    protected static final Map<String,Stringifier<? extends Object>> DEFAULT_STRINGIFIER_MAP;
-
-    static {
-        HashMap<String,Stringifier<? extends Object>> map = new HashMap<String,Stringifier<? extends Object>>();
-                
-        map.put( "int",            LongStringifier.create() );
-        map.put( "int2",           LongStringifier.create( 2 ) );
-        map.put( "int4",           LongStringifier.create( 4 ) );
-        map.put( "string",         StringStringifier.create() );
-        map.put( "htmlstring",     new MyHtmlStringStringifier() );
-        map.put( "urlstring",      new MyUrlStringStringifier() );
-        map.put( "double",         DoubleStringifier.create() );
-        map.put( "stacktrace",     StacktraceStringifier.create() );
-        map.put( "htmlstacktrace", HtmlStacktraceStringifier.create() );
-        map.put( "urlappend",      UrlAppendStringifier.create() );
-        DEFAULT_STRINGIFIER_MAP = map;
-    }
-
-    /**
      * Our ResourceHelper.
      */
     private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( SimpleStringRepresentation.class );
-    
-    /**
-     * Overrides HtmlStringStringifier to make sure we aren't emitting asterisk-slash (the Java
-     * end of comment string.
-     */
-    static class MyHtmlStringStringifier
-            extends
-                HtmlStringStringifier
-    {
-        /**
-         * Format an Object using this Stringifier. This may be null.
-         *
-         * @param soFar the String so far, if any
-         * @param arg the Object to format, or null
-         * @return the formatted String
-         */
-        @Override
-        public String format(
-                String soFar,
-                String arg )
-        {
-            String raw = super.format( soFar, arg );
-
-            String ret = raw.replaceAll( "\\*/", "&#42;/" );
-            return ret;
-        }
-    }
-
-    /**
-     * Overrides StringStringifier to make Strings suitable for appending as arguments to URLs.
-     */
-    static class MyUrlStringStringifier
-            extends
-                StringStringifier
-        {
-        /**
-         * Overridable method to possibly escape a String first.
-         *
-         * @param s the String to be escaped
-         * @return the escaped String
-         */
-        @Override
-        protected String escape(
-                String s )
-        {
-            String ret = HTTP.encodeToValidUrlArgument( s );
-            return ret;
-        }
-
-        /**
-         * Overridable method to possibly unescape a String first.
-         *
-         * @param s the String to be unescaped
-         * @return the unescaped String
-         */
-        @Override
-        protected String unescape(
-                String s )
-        {
-            String ret = HTTP.decodeUrlArgument( s );
-            return ret;
-        }        
-    }
 }

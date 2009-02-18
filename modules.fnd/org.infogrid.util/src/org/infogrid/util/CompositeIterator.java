@@ -8,14 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -29,27 +31,157 @@ public class CompositeIterator<E>
             Enumeration<E>
 {
     /**
-     * Constructor.
+     * Factory method.
      *
      * @param delegates the Iterators to delegate to, in sequence
+     * @return the created CompositeIterator
+     * @param <E> the type of element to iterate over
      */
-    public CompositeIterator(
+    public static <E> CompositeIterator<E> createFromIterators(
+            List<Iterator<E>> delegates )
+    {
+        return new CompositeIterator<E>( delegates );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegates the Iterators to delegate to, in sequence
+     * @return the created CompositeIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeIterator<E> createFromIterators(
             Iterator<E> [] delegates )
     {
-        theDelegates = delegates;
-        theIndex     = 0;        
+        List<Iterator<E>> delegates2 = new ArrayList<Iterator<E>>( delegates.length );
+        for( int i=0 ; i<delegates.length ; ++i ) {
+            delegates2.add( delegates[i] );
+        }
+        return new CompositeIterator<E>( delegates2 );
     }
-    
+
+    /**
+     * Factory method.
+     *
+     * @param delegate1 the first Iterator to delegate to
+     * @param delegate2 the second Iterator to delegate to
+     * @return the created CompositeIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeIterator<E> createFromIterators(
+            Iterator<E> delegate1,
+            Iterator<E> delegate2 )
+    {
+        List<Iterator<E>> delegates2 = new ArrayList<Iterator<E>>( 2 );
+        delegates2.add( delegate1 );
+        delegates2.add( delegate2 );
+
+        return new CompositeIterator<E>( delegates2 );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegate1 the first Iterator to delegate to
+     * @param delegate2 the second Iterator to delegate to
+     * @param delegate3 the third Iterator to delegate to
+     * @return the created CompositeIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeIterator<E> createFromIterators(
+            Iterator<E> delegate1,
+            Iterator<E> delegate2,
+            Iterator<E> delegate3 )
+    {
+        List<Iterator<E>> delegates2 = new ArrayList<Iterator<E>>( 2 );
+        delegates2.add( delegate1 );
+        delegates2.add( delegate2 );
+        delegates2.add( delegate3 );
+
+        return new CompositeIterator<E>( delegates2 );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegates the Enumerations to delegate to, in sequence
+     * @return the created CompositeIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeIterator<E> createFromEnumerations(
+            List<Enumeration<E>> delegates )
+    {
+        return new CompositeIterator<E>( delegates );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegates the Enumeration to delegate to, in sequence
+     * @return the created CompositeIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeIterator<E> createFromEnumerations(
+            Enumeration<E> [] delegates )
+    {
+        List<Enumeration<E>> delegates2 = new ArrayList<Enumeration<E>>( delegates.length );
+        for( int i=0 ; i<delegates.length ; ++i ) {
+            delegates2.add( delegates[i] );
+        }
+        return new CompositeIterator<E>( delegates2 );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegate1 the first Enumeration to delegate to
+     * @param delegate2 the second Enumeration to delegate to
+     * @return the created CompositeIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeIterator<E> createFromEnumerations(
+            Enumeration<E> delegate1,
+            Enumeration<E> delegate2 )
+    {
+        List<Enumeration<E>> delegates2 = new ArrayList<Enumeration<E>>( 2 );
+        delegates2.add( delegate1 );
+        delegates2.add( delegate2 );
+
+        return new CompositeIterator<E>( delegates2 );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegate1 the first Enumeration to delegate to
+     * @param delegate2 the second Enumeration to delegate to
+     * @param delegate3 the third Enumeration to delegate to
+     * @return the created CompositeIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeIterator<E> createFromEnumerations(
+            Enumeration<E> delegate1,
+            Enumeration<E> delegate2,
+            Enumeration<E> delegate3 )
+    {
+        List<Enumeration<E>> delegates2 = new ArrayList<Enumeration<E>>( 3 );
+        delegates2.add( delegate1 );
+        delegates2.add( delegate2 );
+        delegates2.add( delegate3 );
+
+        return new CompositeIterator<E>( delegates2 );
+    }
+
     /**
      * Constructor.
      *
      * @param delegates the Iterators to delegate to, in sequence
      */
     public CompositeIterator(
-            Enumeration<E> [] delegates )
+            List<?> delegates )
     {
         theDelegates = delegates;
-        theIndex     = 0;
+        theIndex     = 0;        
     }
     
     /**
@@ -59,10 +191,10 @@ public class CompositeIterator<E>
      */
     public boolean hasNext()
     {
-        if( theIndex >= theDelegates.length ) {
+        if( theIndex >= theDelegates.size() ) {
             return false;
         } else {
-            return hasNext( theDelegates[theIndex] );
+            return hasNext( theDelegates.get( theIndex ) );
         }
     }
 
@@ -75,15 +207,17 @@ public class CompositeIterator<E>
     @SuppressWarnings(value={"unchecked"})
     public E next()
     {
-        if( theIndex >= theDelegates.length ) {
+        if( theIndex >= theDelegates.size() ) {
             throw new NoSuchElementException();
         }
 
-        E ret;
-        if( theDelegates[theIndex] instanceof Enumeration ) {
-            ret = (E) ((Enumeration) theDelegates[theIndex] ).nextElement();
+        Object current = theDelegates.get( theIndex );
+        E      ret;
+
+        if( current instanceof Enumeration ) {
+            ret = (E) ((Enumeration) current ).nextElement();
         } else {
-            ret = ((Iterator<E>) theDelegates[theIndex] ).next();
+            ret = ((Iterator<E>) current ).next();
         }
         
         goAdvance();
@@ -105,13 +239,16 @@ public class CompositeIterator<E>
      */
     public void remove()
     {
-        if( theIndex >= theDelegates.length ) {
+        if( theIndex >= theDelegates.size() ) {
             throw new IllegalStateException();
         }
-        if( theDelegates[theIndex] instanceof Enumeration ) {
+
+        Object current = theDelegates.get( theIndex );
+
+        if( current instanceof Enumeration ) {
             throw new UnsupportedOperationException( "underlying java.util.Enumeration does not support this method" );
         } else {
-            ((Iterator) theDelegates[theIndex]).remove();
+            ((Iterator) current).remove();
         }
     }
 
@@ -145,11 +282,11 @@ public class CompositeIterator<E>
     protected void goAdvance()
     {
         while( true ) {
-            if( theIndex >= theDelegates.length ) {
+            if( theIndex >= theDelegates.size() ) {
                 break; // we are done, no more
             }
             
-            if( hasNext( theDelegates[theIndex] ) ) {
+            if( hasNext( theDelegates.get( theIndex ) ) ) {
                 break; // found one
             }
             
@@ -177,7 +314,7 @@ public class CompositeIterator<E>
      * The delegate Iterators from which the elements are obtained. This is stored as
      * <code>Object</code> so both Iterators and Enumerations are supported.
      */
-    protected Object [] theDelegates;
+    protected List<?> theDelegates;
     
     /**
      * Index into theDelegates array that identifies the currently active Iterator.

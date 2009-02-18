@@ -26,13 +26,13 @@
   </div>
   <div id="canvas-middle">
    <div class="canvas-main">
-    <mesh:refresh>Reload page</mesh:refresh>
     <tmpl:ifErrors>
      <div class="errors">
       <h2>Errors:</h2>
       <tmpl:inlineErrors stringRepresentation="Html"/>
      </div>
     </tmpl:ifErrors>
+    <mesh:refresh>Reload page</mesh:refresh>
     <tmpl:inline sectionName="text-default"/>
    </div>
   </div>

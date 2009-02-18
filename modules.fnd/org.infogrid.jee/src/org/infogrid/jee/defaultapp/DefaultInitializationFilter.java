@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -31,8 +31,8 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 
 /**
  * Configures the default InfoGridWebApp with log4j logging.
@@ -191,12 +191,18 @@ public class DefaultInitializationFilter
     protected void initializeContextObjects(
             Context rootContext )
     {
-        // Formatter
-        JeeFormatter formatter = JeeFormatter.create();
-        rootContext.addContextObject( formatter );
+        StringRepresentationDirectory srepdir = rootContext.findContextObject( StringRepresentationDirectory.class );
+        if( srepdir == null ) {
+            srepdir = StringRepresentationDirectorySingleton.getSingleton();
+            rootContext.addContextObject( srepdir );
+        }
 
-        StringRepresentationDirectory srepdir = SimpleStringRepresentationDirectory.create();
-        rootContext.addContextObject( srepdir );
+        // Formatter
+        JeeFormatter formatter = rootContext.findContextObject( JeeFormatter.class );
+        if( formatter == null ) {
+            formatter = JeeFormatter.create( srepdir );
+            rootContext.addContextObject( formatter );
+        }
     }
 
     /**

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -41,4 +41,19 @@ public interface StringRepresentationDirectory
      * the default text/html formatting.
      */
     public static final String TEXT_HTML_NAME = "Html";
+
+    /**
+     * Name of the StringRepresentation, which may be contained in this StringRepresentationDirectory,
+     * that contains the default Java formatting.
+     */
+    public static final String TEXT_JAVA_NAME = "Java";
+
+    /**
+     * Name of the StringRepresentation, which may be contained in this StringRepresentationDirectory,
+     * that contains the default JavaDoc formatting.
+     *
+     * Use lowercase d in Javadoc to avoid name collisions with entries in resource files that
+     * belong to the "Java" formatting and start with "Doc".
+     */
+    public static final String TEXT_JAVADOC_NAME = "Javadoc";
 }

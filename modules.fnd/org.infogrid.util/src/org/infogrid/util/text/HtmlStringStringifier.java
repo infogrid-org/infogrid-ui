@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,7 +17,7 @@ package org.infogrid.util.text;
 import org.infogrid.util.ResourceHelper;
 
 /**
- * Stringifies a String until valid HTML syntax. For example, this replaces
+ * Stringifies a String using valid HTML syntax. For example, this replaces
  * <code>&gt;</code> with <code>&amp;gt;</code>.
  */
 public class HtmlStringStringifier

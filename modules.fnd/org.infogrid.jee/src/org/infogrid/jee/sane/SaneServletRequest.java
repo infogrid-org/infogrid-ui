@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -512,15 +512,15 @@ public class SaneServletRequest
                     break;
             }
             
-            return new CompositeIterator<Locale>( new Enumeration[] {
+            return CompositeIterator.<Locale>createFromEnumerations(
                 OneElementIterator.<Locale>create( cookieLocale ),
-                fromHttp,
-                OneElementIterator.<Locale>create( Locale.getDefault() ) } );
+                (Enumeration<Locale>) fromHttp,
+                OneElementIterator.<Locale>create( Locale.getDefault() ) );
 
         } else {
-            return new CompositeIterator<Locale>( new Enumeration[] {
-                fromHttp,
-                OneElementIterator.<Locale>create( Locale.getDefault() ) } );
+            return CompositeIterator.<Locale>createFromEnumerations(
+                (Enumeration<Locale>) fromHttp,
+                OneElementIterator.<Locale>create( Locale.getDefault() ) );
         }
     }
 

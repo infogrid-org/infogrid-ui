@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -31,42 +31,42 @@ public class MessageSendException
     /**
      * Constructor.
      *
-     * @param message the message that could not be sent
+     * @param messageToSend the message that could not be sent
      */
     public MessageSendException(
-            List<? extends Object> message )
+            List<? extends Object> messageToSend )
     {
-        theMessage = message;
+        theMessageToSend = messageToSend;
     }
 
     /**
      * Constructor.
      *
-     * @param message the message
+     * @param messageToSend the message that could not be sent
      * @param cause the cause for the Exception
      */
     public MessageSendException(
-            List<? extends Object> message,
+            List<? extends Object> messageToSend,
             Throwable              cause )
     {
         super( cause );
         
-        theMessage = message;
+        theMessageToSend = messageToSend;
     }
     
     /**
      * Constructor.
      *
-     * @param message the message
+     * @param messageToSend the message that could not be sent
      * @param errorMessage the error message
      */
     public MessageSendException(
-            List<? extends Object> message,
+            List<? extends Object> messageToSend,
             String                 errorMessage )
     {
         super( errorMessage );
         
-        theMessage = message;
+        theMessageToSend = messageToSend;
     }
     
     /**
@@ -83,9 +83,19 @@ public class MessageSendException
     {
         super( errorMessage, cause );
         
-        theMessage = message;
+        theMessageToSend = message;
     }
-    
+
+    /**
+     * Obtain the message that could not be sent.
+     *
+     * @return the message
+     */
+    public List<? extends Object> getMessageToSend()
+    {
+        return theMessageToSend;
+    }
+
     /**
      * Obtain resource parameters for the internationalization.
      *
@@ -93,11 +103,11 @@ public class MessageSendException
      */    
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { getMessage(), theMessage };
+        return new Object[] { getMessage(), theMessageToSend };
     }
 
     /**
      * The message that could not be sent.
      */
-    protected List<? extends Object> theMessage;
+    protected List<? extends Object> theMessageToSend;
 }

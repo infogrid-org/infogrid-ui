@@ -8,7 +8,7 @@
 #
 # For more information about InfoGrid go to http://infogrid.org/
 #
-# Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+# Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 # All rights reserved.
 #
 # (end of header)
@@ -17,12 +17,18 @@
 # check-in
 
 FLAGS="-i";
+THISYEAR="2009";
 
 echo '** Checking that no funny paths exist. **'
 grep ${FLAGS} '\.\./\.\./\.\.' {modules*,apps*,tests*}/*/nbproject/project.properties
 
 echo '** Checking that the vendor is set right. **'
 grep ${FLAGS} application.vendor {modules*,apps*,tests*}/*/nbproject/project.properties | grep -v InfoGrid.org
+
+echo '** Checking copyright. **'
+for f in `svn status | egrep -v '^D|^\?' | awk '{ print $2 }'`; do
+	egrep -H '(copyright|Copyright|&copy).*-[0-9]{4}' $f | grep -v "${THISYEAR}" > /dev/null && echo $f
+done
 
 for pattern in "$@"; do
 	echo '** Checking that pattern' ${pattern} 'does not exist. **'

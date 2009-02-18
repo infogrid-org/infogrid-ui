@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,25 +16,29 @@ package org.infogrid.jee.rest;
 
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.servlet.InitializationFilter;
+import org.infogrid.jee.templates.servlet.TemplatesFilter;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
-import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentation;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
-import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationDirectory;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
+import org.infogrid.util.http.HTTP;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications
@@ -44,17 +48,6 @@ public class RestfulJeeFormatter
         extends
             JeeFormatter
 {
-    /**
-     * Factory method.
-     * 
-     * @return the created JeeFormatter
-     */
-    public static RestfulJeeFormatter create()
-    {
-        SimpleModelPrimitivesStringRepresentationDirectory stringRepDir = SimpleModelPrimitivesStringRepresentationDirectory.create();
-        return new RestfulJeeFormatter( stringRepDir );
-    }
-    
     /**
      * Factory method.
      * 
@@ -389,6 +382,8 @@ public class RestfulJeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
+        addArguments = potentiallyAddAppContext( (HttpServletRequest) pageContext.getRequest(), addArguments );
+
         String ret = mesh.toStringRepresentationLinkStart( addArguments, target, rep, context );
         return ret;
     }
@@ -497,6 +492,8 @@ public class RestfulJeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
+        addArguments = potentiallyAddAppContext( (HttpServletRequest) pageContext.getRequest(), addArguments );
+
         String ret = base.toStringRepresentationLinkStart( addArguments, target, rep, context );
         return ret;
     }
@@ -544,7 +541,7 @@ public class RestfulJeeFormatter
             temp.append( in.substring( 1 ).toLowerCase() );
             sanitized = temp.toString();
         }
-        StringRepresentation ret = SimpleModelPrimitivesStringRepresentation.create( sanitized );
+        StringRepresentation ret = StringRepresentationDirectorySingleton.getSingleton().get( sanitized );
         return ret;
     }
 
@@ -569,5 +566,47 @@ public class RestfulJeeFormatter
         } else {
             return false;
         }
+    }
+
+    /**
+     * Helper method to potentially add the application context in link specifications.
+     *
+     * @param request the incoming request
+     * @param addArguments the existing addArguments parameter
+     * @return the new addArguments parameter
+     */
+    public static String potentiallyAddAppContext(
+            HttpServletRequest request,
+            String             addArguments )
+    {
+        SaneRequest sane       = SaneServletRequest.create( request );
+        String      appContext = sane.getArgument( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+
+        String ret = addArguments; // by default, do nothing
+        if( appContext != null ) {
+            // don't override existing parameter, only if not given
+            boolean haveAlready = true;
+            if( addArguments == null ) {
+                haveAlready = false;
+            } else {
+                String pattern = TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME + "=";
+                if( !addArguments.startsWith( pattern ) && addArguments.indexOf( "&" + pattern ) < 0 ) {
+                    haveAlready = false;
+                }
+            }
+
+            if( !haveAlready ) {
+                StringBuilder toAdd = new StringBuilder();
+                if( addArguments != null && addArguments.length() > 0 ) {
+                    toAdd.append( '&' );
+                }
+                toAdd.append( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+                toAdd.append( '=' );
+                toAdd.append( HTTP.encodeToValidUrlArgument( appContext ));
+
+                ret = toAdd.toString();
+            }
+        }
+        return ret;
     }
 }

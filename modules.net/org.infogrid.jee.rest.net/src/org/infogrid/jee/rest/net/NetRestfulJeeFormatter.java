@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,7 +19,6 @@ import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationDirectory;
 import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -36,21 +35,10 @@ public class NetRestfulJeeFormatter
     /**
      * Factory method.
      * 
-     * @return the created JeeFormatter
-     */
-    public static NetRestfulJeeFormatter create()
-    {
-        SimpleModelPrimitivesStringRepresentationDirectory stringRepDir = SimpleModelPrimitivesStringRepresentationDirectory.create();
-        return new NetRestfulJeeFormatter( stringRepDir );
-    }
-    
-    /**
-     * Factory method.
-     * 
      * @param stringRepDir the StringRepresentationDirectory to use
-     * @return the created JeeFormatter
+     * @return the created NetRestfulJeeFormatter
      */
-    public static RestfulJeeFormatter create(
+    public static NetRestfulJeeFormatter create(
             StringRepresentationDirectory stringRepDir )
     {
         return new NetRestfulJeeFormatter( stringRepDir );

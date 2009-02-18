@@ -8,13 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.shell.http;
 
-import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.AbstractDelegatingLocalizedException;
 
 /**
  * Thrown when something went wrong in the
@@ -23,7 +23,7 @@ import org.infogrid.util.AbstractLocalizedException;
  */
 public final class HttpShellException
     extends
-        AbstractLocalizedException
+        AbstractDelegatingLocalizedException
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -37,15 +37,5 @@ public final class HttpShellException
             Throwable cause )
     {
         super( null, cause ); // use this constructor, in order to avoid that Throwable calls cause.toString().
-    }
-
-    /**
-     * Obtain resource parameters for the internationalization.
-     *
-     * @return the resource parameters
-     */
-    public Object [] getLocalizationParameters()
-    {
-        return new Object[] { getCause() };
     }
 }

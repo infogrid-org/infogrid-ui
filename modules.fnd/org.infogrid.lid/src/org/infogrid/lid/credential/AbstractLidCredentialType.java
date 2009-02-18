@@ -8,23 +8,19 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid.credential;
 
-import org.infogrid.util.AbstractLocalizedObject;
-import org.infogrid.util.LocalizedObject;
-import org.infogrid.util.LocalizedObjectFormatter;
-import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * Factors out functionality common to LidCredentialTypes.
  */
 public abstract class AbstractLidCredentialType
-        extends
-            AbstractLocalizedObject
         implements
             LidCredentialType
 {
@@ -47,15 +43,55 @@ public abstract class AbstractLidCredentialType
     }
 
     /**
-     * Determine the correct internationalized string that can be shown to the
-     * user.
+     * Obtain a String representation of this instance that can be shown to the user.
      *
-     * @param formatter the formatter to use for data objects to be displayed as part of the message
-     * @return the internationalized string
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
-    public String getLocalizedMessage(
-            LocalizedObjectFormatter formatter )
+    public String toStringRepresentation(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        return ResourceHelper.getInstance( getClass() ).getResourceString( LocalizedObject.MESSAGE_PARAMETER );
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY, getFullName() );
     }
+
+    /**
+     * Obtain the start part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * The default entry in the resouce files, prefixed by the StringRepresentation's prefix.
+     */
+    public static final String DEFAULT_ENTRY = "Message";
 }

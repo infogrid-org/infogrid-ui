@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -30,7 +30,6 @@ import org.infogrid.util.FactoryException;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -42,17 +41,6 @@ public class JeeFormatter
 {
     private static final Log log = Log.getLogInstance( JeeFormatter.class ); // our own, private logger
 
-    /**
-     * Factory method.
-     * 
-     * @return the created JeeFormatter
-     */
-    public static JeeFormatter create()
-    {
-        StringRepresentationDirectory stringRepDir = SimpleStringRepresentationDirectory.create();
-        return new JeeFormatter( stringRepDir );
-    }
-    
     /**
      * Factory method.
      * 

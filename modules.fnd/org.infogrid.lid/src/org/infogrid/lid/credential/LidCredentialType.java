@@ -8,15 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid.credential;
 
 import org.infogrid.util.HasIdentifier;
-import org.infogrid.util.LocalizedObject;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.HasStringRepresentation;
 
 /**
  * Represents a credential type, such as a password. All classes implementing
@@ -25,7 +25,7 @@ import org.infogrid.util.http.SaneRequest;
  */
 public interface LidCredentialType
         extends
-            LocalizedObject
+            HasStringRepresentation
 {
     /**
      * Determine the computable full-qualified name of this LidCredentialType.

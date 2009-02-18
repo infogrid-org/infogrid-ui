@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,6 @@ import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
@@ -83,7 +82,7 @@ public class NamingReportingException
             contextDump.append( rep.formatEntry( getClass(), "NoBindings" ));
         }
         
-        String ret = rep.formatEntry( getClass(), "Message", theName, contextDump.toString(), this );
+        String ret = rep.formatEntry( getClass(), "String", theName, contextDump.toString(), this );
         return ret;
     }
     
@@ -176,9 +175,4 @@ public class NamingReportingException
      * The naming Context in which the problem occurred.
      */
     protected Context theNamingContext;
-
-    /**
-     * Our ResourceHelper.
-     */
-    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( NamingReportingException.class );
 }

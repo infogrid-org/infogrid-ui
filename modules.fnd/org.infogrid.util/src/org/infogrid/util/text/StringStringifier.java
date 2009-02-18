@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -73,7 +73,13 @@ public class StringStringifier
         throws
             ClassCastException
     {
-        return format( soFar, (String) arg );
+        if( arg == null ) {
+            return "";
+        } else if( arg instanceof String ) {
+            return format( soFar, (String) arg );
+        } else {
+            return format( soFar, String.valueOf( arg )); // fallback
+        }
     }
     
     /**

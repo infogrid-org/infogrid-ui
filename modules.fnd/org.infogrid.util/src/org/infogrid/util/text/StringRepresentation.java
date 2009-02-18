@@ -8,11 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
+
+import java.util.Map;
 
 /**
  * One way of representing Objects as Strings.
@@ -75,4 +77,18 @@ public interface StringRepresentation
     public String formatThrowable(
             Throwable                   t,
             StringRepresentationContext context );
+
+    /**
+     * Obtain the local StringifierMap. This enables modification of the map.
+     *
+     * @return the stringifier map
+     */
+    public Map<String,Stringifier<? extends Object>> getLocalStringifierMap();
+
+    /**
+     * Obtain the StringifierMap that recursively contains the maps of all delegates.
+     *
+     * @return the stringifier map
+     */
+    public Map<String,Stringifier<? extends Object>> getRecursiveStringifierMap();
 }

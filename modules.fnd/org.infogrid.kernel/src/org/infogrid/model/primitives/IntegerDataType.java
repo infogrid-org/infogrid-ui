@@ -8,18 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringifierException;
-
 import java.io.ObjectStreamException;
+import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringifierException;
 
 /**
   * This is an integer DataType for PropertyValue with explicity minimum and maximum values.

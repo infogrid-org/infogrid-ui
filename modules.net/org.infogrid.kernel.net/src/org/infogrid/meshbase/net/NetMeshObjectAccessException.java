@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -87,18 +87,7 @@ public class NetMeshObjectAccessException
     @Override
     public Object [] getLocalizationParameters()
     {
-        String [] ret = new String[ theFailedPaths.length ];
-
-        for( int i=0 ; i<theFailedPaths.length ; ++i ) {
-            // we have to pick something that the user can understand
-            NetMeshBaseAccessSpecification [] path = theFailedPaths[i].getAccessPath();
-            if( path != null && path.length > 0 ) {
-                ret[i] = path[0].toExternalForm();
-            } else {
-                ret[i] = theFailedPaths[i].getNetMeshObjectIdentifier().toExternalForm();
-            }
-        }
-        return ret;
+        return new Object[] { theFailedPaths }; // single-element array
     }
 
     /**

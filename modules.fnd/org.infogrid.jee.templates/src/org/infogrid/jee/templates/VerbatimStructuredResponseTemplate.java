@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
  * A ResponseTemplate that returns the default sections in the StructuredResponse without
@@ -101,7 +102,7 @@ public class VerbatimStructuredResponseTemplate
         JeeFormatter theFormatter = getContext().findContextObjectOrThrow( JeeFormatter.class );
         
         List<Throwable> reportedProblems = structured.problems();
-        String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, "Text" );                
+        String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, StringRepresentationDirectory.TEXT_PLAIN_NAME );
         if( errorContent != null ) {
             Writer w = delegate.getWriter();
             w.write( errorContent );

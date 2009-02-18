@@ -1,4 +1,3 @@
-
 //
 // This file is part of InfoGrid(tm). You may not use this file except in
 // compliance with the InfoGrid license. The InfoGrid license and important
@@ -9,11 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util;
+
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 
 /**
  * A FactoryException that is also localized.
@@ -77,24 +81,6 @@ public abstract class AbstractLocalizedFactoryException
     }
 
     /**
-     * Determine the correct internationalized string that can be shown to the
-     * user when the LocalizedException is thrown.
-     *
-     * @param formatter the formatter to use for data objects to be displayed as part of the message
-     * @return the internationalized string
-     */
-    public String getLocalizedMessage(
-            LocalizedObjectFormatter formatter )
-    {
-        return AbstractLocalizedException.constructLocalizedMessage(
-                this,
-                findResourceHelperForLocalizedMessage(),
-                getLocalizationParameters(),
-                findMessageParameter(),
-                formatter );
-    }
-
-    /**
      * Obtain localized message, per JDK 1.5.
      *
      * @return localized message
@@ -102,7 +88,9 @@ public abstract class AbstractLocalizedFactoryException
     @Override
     public String getLocalizedMessage()
     {
-        return getLocalizedMessage( null );
+        return toStringRepresentation(
+                StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
+                null );
     }
 
     /**
@@ -111,6 +99,73 @@ public abstract class AbstractLocalizedFactoryException
      * @return the resource parameters
      */    
     public abstract Object [] getLocalizationParameters();
+
+    /**
+     * Obtain a String representation of this instance that can be shown to the user.
+     * This is only a default implementation; subclasses will want to override.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentation(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return AbstractLocalizedException.constructStringRepresentation(
+                this,
+                rep,
+                context,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findStringRepresentationParameter() );
+    }
+
+    /**
+     * Obtain the start part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return AbstractLocalizedException.constructStringRepresentationLinkStart(
+                this,
+                rep,
+                context,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findStringRepresentationLinkStartParameter() );
+    }
+
+    /**
+     * Obtain the end part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return AbstractLocalizedException.constructStringRepresentationLinkEnd(
+                this,
+                rep,
+                context,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findStringRepresentationLinkEndParameter() );
+    }
 
     /**
      * Allow subclasses to override which ResourceHelper to use.
@@ -130,7 +185,6 @@ public abstract class AbstractLocalizedFactoryException
     protected ResourceHelper findResourceHelperForLocalizedMessageViaEnclosingClass()
     {
         String className = getClass().getName();
-        String key;
         int    dollar = className.indexOf( '$' );
         if( dollar >= 0 ) {
             className = className.substring( 0, dollar );
@@ -139,31 +193,53 @@ public abstract class AbstractLocalizedFactoryException
     }
     
     /**
-     * Allow subclasses to override which key to use in the Resource file for the message.
+     * Allow subclasses to override which key to use in the Resource file for the string representation.
      *
      * @return the key
      */
-    protected String findMessageParameter()
+    protected String findStringRepresentationParameter()
     {
-        return MESSAGE_PARAMETER;
+        return STRING_REPRESENTATION_KEY;
     }
-    
+
+    /**
+     * Allow subclasses to override which key to use in the Resource file for the link start string representation.
+     *
+     * @return the key
+     */
+    protected String findStringRepresentationLinkStartParameter()
+    {
+        return STRING_REPRESENTATION_LINK_START_KEY;
+    }
+
+    /**
+     * Allow subclasses to override which key to use in the Resource file for the link end string representation.
+     *
+     * @return the key
+     */
+    protected String findStringRepresentationLinkEndParameter()
+    {
+        return STRING_REPRESENTATION_LINK_END_KEY;
+    }
+
     /**
      * This method can be invoked by subclasses to obtain a suitable message key
      * for the same resource file for all inner classes.
      *
-     * @return the key
+     * @param key the key
+     * @return the modified key
      */
-    protected String findMessageParameterViaEnclosingClass()
+    protected String findParameterViaEnclosingClass(
+            String key )
     {
         String className = getClass().getName();
-        String key;
+        String ret;
         int    dollar = className.indexOf( '$' );
         if( dollar >= 0 ) {
-            key = className.substring( dollar+1 ) + "-" + MESSAGE_PARAMETER;
+            ret = className.substring( dollar+1 ) + "-" + key;
         } else {
-            key = MESSAGE_PARAMETER;
+            ret = key;
         }
-        return key;
+        return ret;
     }
 }

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,9 +18,10 @@ import org.infogrid.jee.defaultapp.DefaultInitializationFilter;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationDirectorySingleton;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 
 /**
  * Configures the default InfoGridWebApp with log4j logging, the template framework, and
@@ -50,15 +51,18 @@ public class DefaultRestfulInitializationFilter
         // do NOT invoke super.initializeContextObjects( rootContext );
         // we use better subclasses ourselves
         
+        ModelPrimitivesStringRepresentationDirectorySingleton.initialize();
+
+        StringRepresentationDirectory srepdir = StringRepresentationDirectorySingleton.getSingleton();
+        rootContext.addContextObject( srepdir );
+
         // Formatter
-        RestfulJeeFormatter formatter = RestfulJeeFormatter.create();
+        RestfulJeeFormatter formatter = RestfulJeeFormatter.create( srepdir );
         rootContext.addContextObject( formatter );
 
         // StructuredResponseTemplateFactory
         StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create();
         rootContext.addContextObject( tmplFactory );
 
-        StringRepresentationDirectory srepdir = SimpleStringRepresentationDirectory.create();
-        rootContext.addContextObject( srepdir );
     }
 }

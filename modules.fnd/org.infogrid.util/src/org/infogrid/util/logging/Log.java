@@ -18,8 +18,9 @@ import java.text.MessageFormat;
 import java.util.Properties;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.AbstractLocalizedRuntimeException;
-import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /** 
   * <p>The central class in the org.infogrid.util.logging package.</p>
@@ -447,24 +448,26 @@ public abstract class Log
      * 
      * @param parentComponent center a possible dialog against this parent component
      * @param t               Throwable to be logged
-     * @param formatter       the LocLocalizedObjectFormatter use in user-visible messages
+     * @param rep             the StringRepresentation to use
+     * @param context         the StringRepresentationContext to use
      */
     public final void userFatal(
-            Object                   parentComponent,
-            Throwable                t,
-            LocalizedObjectFormatter formatter )
+            Object                      parentComponent,
+            Throwable                   t,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userFatal(
-                    realEx.getLocalizedMessage( formatter ),
+                    realEx.toStringRepresentation( rep, context ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userFatal(
-                    realEx.getLocalizedMessage( formatter ),
+                    realEx.toStringRepresentation( rep, context ),
                     parentComponent,
                     realEx );
 
@@ -568,26 +571,28 @@ public abstract class Log
      * class must be independent of the underlying GUI technology, the parentComponent
      * parameter is of type Object. In an AWT context, it would pop up an AWT dialog.
      * 
-     * @param parentComponent center the dialog against this parent component
+     * @param parentComponent center a possible dialog against this parent component
      * @param t               Throwable to be logged
-     * @param formatter       the LocLocalizedObjectFormatter use in user-visible messages
+     * @param rep             the StringRepresentation to use
+     * @param context         the StringRepresentationContext to use
      */
     public final void userError(
-            Object    parentComponent,
-            Throwable t,
-            LocalizedObjectFormatter formatter )
+            Object                      parentComponent,
+            Throwable                   t,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userError(
-                    realEx.getLocalizedMessage( formatter ),
+                    realEx.toStringRepresentation( rep, context ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userError(
-                    realEx.getLocalizedMessage( formatter ),
+                    realEx.toStringRepresentation( rep, context ),
                     parentComponent,
                     realEx );
         } else {
@@ -690,26 +695,28 @@ public abstract class Log
      * class must be independent of the underlying GUI technology, the parentComponent
      * parameter is of type Object. In an AWT context, it would pop up an AWT dialog.
      * 
-     * @param parentComponent center the dialog against this parent component
+     * @param parentComponent center a possible dialog against this parent component
      * @param t               Throwable to be logged
-     * @param formatter       the LocLocalizedObjectFormatter use in user-visible messages
+     * @param rep             the StringRepresentation to use
+     * @param context         the StringRepresentationContext to use
      */
     public final void userWarn(
-            Object                   parentComponent,
-            Throwable                t,
-            LocalizedObjectFormatter formatter )
+            Object                      parentComponent,
+            Throwable                   t,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userWarn(
-                    realEx.getLocalizedMessage( formatter ),
+                    realEx.toStringRepresentation( rep, context ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userWarn(
-                    realEx.getLocalizedMessage( formatter ),
+                    realEx.toStringRepresentation( rep, context ),
                     parentComponent,
                     realEx );
 

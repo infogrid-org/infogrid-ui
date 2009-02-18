@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -26,12 +26,13 @@ import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.meshbase.transaction.Transaction;
-import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentation;
-import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationDirectory;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationDirectorySingleton;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 
 /**
  * Tests conversion of NetMeshObjectIdentifiers into URLs.
@@ -49,6 +50,8 @@ public class UrlTest1
         throws
             Exception
     {
+        ModelPrimitivesStringRepresentationDirectorySingleton.initialize();
+
         NetMeshBaseLifecycleManager life1 = mb1.getMeshBaseLifecycleManager();
         NetMeshBaseLifecycleManager life2 = mb2.getMeshBaseLifecycleManager();
 
@@ -68,7 +71,7 @@ public class UrlTest1
         
         log.info( "Checking HTML urls with different context" );
 
-        StringRepresentation rep = SimpleModelPrimitivesStringRepresentation.create( SimpleModelPrimitivesStringRepresentationDirectory.TEXT_HTML_NAME );
+        StringRepresentation rep = StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_HTML_NAME );
         
         String contextUrl = "http://example.org/foo";
         

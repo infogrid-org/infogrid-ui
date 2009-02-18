@@ -8,18 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.probe;
 
+import java.io.IOException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.ResourceHelper;
-
-import java.io.IOException;
 
 /**
   * Subclasses of this Exception indicate that something went wrong when attempting
@@ -67,20 +65,6 @@ public abstract class ProbeException
         return ResourceHelper.getInstance( ProbeException.class );
     }
     
-    /**
-     * Allow subclasses to override which key to use in the Resource file for the message.
-     *
-     * @return the key
-     */
-    @Override
-    protected String findMessageParameter()
-    {
-        String ret = getClass().getName();
-        ret = ret.substring( ret.lastIndexOf( '$' )+1 );
-        ret = MESSAGE_PARAMETER + '-' + ret;
-        return ret;
-    }
-
     /**
      * Obtain resource parameters for the internationalization.
      *

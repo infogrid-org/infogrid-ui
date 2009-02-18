@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,9 +16,11 @@ package org.infogrid.viewlet;
 
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.util.FactoryException;
-import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.text.HasStringRepresentation;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * No Viewlet could be found with the the required Viewlet type.
@@ -26,6 +28,8 @@ import org.infogrid.util.StringHelper;
 public class NoViewletFoundException
         extends
             FactoryException
+        implements
+            HasStringRepresentation
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -84,38 +88,66 @@ public class NoViewletFoundException
     }
 
     /**
-     * Determine the correct internationalized string that can be shown to the
-     * user when the LocalizedException is thrown.
+     * Obtain a String representation of this instance that can be shown to the user.
      *
-     * @param formatter the formatter to use for data objects to be displayed as part of the message
-     * @return the internationalized string
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
      */
-    public String getLocalizedMessage(
-            LocalizedObjectFormatter formatter )
+    public String toStringRepresentation(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
     {
-        String ret;
         if( theObjectsToView.getViewletTypeName() == null ) {
-            if( formatter != null ) {
-                ret = theResourceHelper.getResourceStringWithArguments(
-                        "NoViewletFoundWithoutTypeMessage",
-                        formatter.asLocalizedString( theObjectsToView.getSubject() ));
-            } else {
-                ret = theResourceHelper.getResourceStringWithArguments(
-                        "NoViewletFoundWithoutTypeMessage",
-                        theObjectsToView.getSubject() );
-            }
+            return rep.formatEntry(
+                    getClass(),
+                    DEFAULT_NO_VIEWLET_TYPE_ENTRY,
+                    theObjectsToView.getSubject(),
+                    theObjectsToView.getSubject().getIdentifier(),
+                    theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+
         } else {
-            if( formatter != null ) {
-                ret = theResourceHelper.getResourceStringWithArguments(
-                        "NoViewletFoundWithTypeMessage",
-                        formatter.asLocalizedString( theObjectsToView.getSubject() ));
-            } else {
-                ret = theResourceHelper.getResourceStringWithArguments(
-                        "NoViewletFoundWithTypeMessage",
-                        theObjectsToView.getSubject() );
-            }
+            return rep.formatEntry(
+                    getClass(),
+                    DEFAULT_VIEWLET_TYPE_ENTRY,
+                    theObjectsToView.getSubject(),
+                    theObjectsToView.getSubject().getIdentifier(),
+                    theObjectsToView.getSubject().getIdentifier().toExternalForm() );
         }
-        return ret;
+    }
+
+    /**
+     * Obtain the start part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
     }
 
     /**
@@ -131,5 +163,22 @@ public class NoViewletFoundException
     /**
      * Our ResourceHelper.
      */
-    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance(  NoViewletFoundException.class );
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( NoViewletFoundException.class );
+
+    /**
+     * The default entry in the resouce files, prefixed by the StringRepresentation's prefix.
+     */
+    public static final String DEFAULT_ENTRY = "Message";
+
+    /**
+     * The default entry in the resouce files for the case where no ViewletType has
+     * been specified, prefixed by the StringRepresentation's prefix.
+     */
+    public static final String DEFAULT_NO_VIEWLET_TYPE_ENTRY = "MessageNoViewletType";
+
+    /**
+     * The default entry in the resouce files for the case where a ViewletType has
+     * been specified, prefixed by the StringRepresentation's prefix.
+     */
+    public static final String DEFAULT_VIEWLET_TYPE_ENTRY = "MessageViewletType";
 }

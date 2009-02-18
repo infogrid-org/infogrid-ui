@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -28,26 +28,6 @@ public class SimpleStringRepresentationDirectory
         implements
             StringRepresentationDirectory
 {
-    /**
-     * Factory method.
-     *
-     * @return the created SimpleStringRepresentationDirectory
-     */
-    public static SimpleStringRepresentationDirectory create()
-    {
-        MCachingHashMap<String,StringRepresentation> storage = MCachingHashMap.create();
-        
-        SimpleStringRepresentation plain = SimpleStringRepresentation.create( TEXT_PLAIN_NAME );
-        SimpleStringRepresentation html  = SimpleStringRepresentation.create( TEXT_HTML_NAME, plain );
-        
-        SimpleStringRepresentationDirectory ret = new SimpleStringRepresentationDirectory( null, storage, html );
-        
-        ret.put( plain.getName(), plain );
-        ret.put(  html.getName(), html  );
-        
-        return ret;
-    }
-
     /**
      * Factory method.
      *

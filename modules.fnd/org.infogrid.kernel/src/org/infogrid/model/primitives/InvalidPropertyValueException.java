@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,7 +24,6 @@ import org.infogrid.util.ResourceHelper;
 public abstract class InvalidPropertyValueException
         extends
             AbstractLocalizedRuntimeException
-
 {
     /**
      * All subclasses have a common ResourceHelper for all inner classes.
@@ -43,8 +42,30 @@ public abstract class InvalidPropertyValueException
      * @return the key
      */
     @Override
-    protected String findMessageParameter()
+    protected String findStringRepresentationParameter()
     {
-        return findMessageParameterViaEnclosingClass();
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_KEY );
+    }
+
+    /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the key
+     */
+    @Override
+    protected String findStringRepresentationLinkStartParameter()
+    {
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_LINK_START_KEY );
+    }
+
+    /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the key
+     */
+    @Override
+    protected String findStringRepresentationLinkEndParameter()
+    {
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_LINK_END_KEY );
     }
 }

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,7 +23,7 @@ import org.infogrid.codegen.impl.ImplementationGenerator;
 import org.infogrid.codegen.intfc.InterfaceGenerator;
 import org.infogrid.codegen.modelloader.ModelLoaderGenerator;
 import org.infogrid.model.primitives.SubjectArea;
-import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentation;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationDirectorySingleton;
 import org.infogrid.module.ModelModule;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleActivator;
@@ -33,6 +33,7 @@ import org.infogrid.module.ModuleRequirement;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
  * The InfoGrid code generator.
@@ -91,7 +92,10 @@ public class CodeGenerator
 
         Object base = modelBaseModule.activateRecursively(); // return value is ignored but may be helpful in debugging
 
-        SimpleModelPrimitivesStringRepresentation commentsRepresentation = SimpleModelPrimitivesStringRepresentation.create( "Javadoc" );
+        ModelPrimitivesStringRepresentationDirectorySingleton.initialize();
+
+        StringRepresentation commentsRepresentation
+                = ModelPrimitivesStringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_JAVADOC_NAME );
         
         CodeGenerator generator         = new CodeGenerator( outputDir, commentsRepresentation );
         List<File>    moduleDirectories = theModuleRegistry.getSoftwareInstallation().getInstallModuleDirectories();

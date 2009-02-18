@@ -8,15 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util;
 
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 
 /**
  * Superclass for RuntimeExceptions that knows how to internationalize themselves.
@@ -28,8 +29,7 @@ public abstract class AbstractLocalizedRuntimeException
     extends
         RuntimeException
     implements
-        LocalizedException,
-        HasStringRepresentation
+        LocalizedException
 {
     /**
      * Constructor with no message.
@@ -74,24 +74,6 @@ public abstract class AbstractLocalizedRuntimeException
     }
 
     /**
-     * Determine the correct internationalized string that can be shown to the
-     * user when the LocalizedException is thrown.
-     *
-     * @param formatter the formatter to use for data objects to be displayed as part of the message
-     * @return the internationalized string
-     */
-    public String getLocalizedMessage(
-            LocalizedObjectFormatter formatter )
-    {
-        return AbstractLocalizedException.constructLocalizedMessage(
-                this,
-                findResourceHelperForLocalizedMessage(),
-                getLocalizationParameters(),
-                findMessageParameter(),
-                formatter );
-    }
-
-    /**
      * Obtain localized message, per JDK 1.5.
      *
      * @return localized message
@@ -99,14 +81,16 @@ public abstract class AbstractLocalizedRuntimeException
     @Override
     public String getLocalizedMessage()
     {
-        return getLocalizedMessage( null );
+        return toStringRepresentation(
+                StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
+                null );
     }
 
     /**
      * Obtain resource parameters for the internationalization.
      *
      * @return the resource parameters
-     */    
+     */
     public abstract Object [] getLocalizationParameters();
 
     /**
@@ -121,35 +105,13 @@ public abstract class AbstractLocalizedRuntimeException
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
-        Throwable cause     = getCause();
-        Throwable rootCause = cause;
-
-        if( rootCause != null ) {
-            while( true ) {
-                Throwable t = rootCause.getCause();
-                if( t == null ) {
-                    break;
-                }
-                rootCause = t;
-            }
-        }
-        
-        String ret = rep.formatEntry(
-                getClass(), // dispatch to the right subtype
-                STRING_REPRESENTATION_KEY,
-                getMessage(),
-                getLocalizedMessage(),
-                getStackTrace(),
-                cause,
-                cause != null ? cause.getMessage() : null,
-                cause != null ? cause.getLocalizedMessage() : null,
-                cause != null ? cause.getStackTrace() : null,
-                rootCause,
-                rootCause != null ? rootCause.getMessage() : null,
-                rootCause != null ? rootCause.getLocalizedMessage() : null,
-                rootCause != null ? rootCause.getStackTrace() : null );
-
-        return ret;
+        return AbstractLocalizedException.constructStringRepresentation(
+                this,
+                rep,
+                context,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findStringRepresentationParameter() );
     }
 
     /**
@@ -168,7 +130,13 @@ public abstract class AbstractLocalizedRuntimeException
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
-        return "";
+        return AbstractLocalizedException.constructStringRepresentationLinkStart(
+                this,
+                rep,
+                context,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findStringRepresentationLinkStartParameter() );
     }
 
     /**
@@ -179,11 +147,17 @@ public abstract class AbstractLocalizedRuntimeException
      * @param context the StringRepresentationContext of this object
      * @return String representation
      */
-    public final String toStringRepresentationLinkEnd(
+    public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
-        return "";
+        return AbstractLocalizedException.constructStringRepresentationLinkEnd(
+                this,
+                rep,
+                context,
+                findResourceHelperForLocalizedMessage(),
+                getLocalizationParameters(),
+                findStringRepresentationLinkEndParameter() );
     }
 
     /**
@@ -195,7 +169,7 @@ public abstract class AbstractLocalizedRuntimeException
     {
         return ResourceHelper.getInstance( getClass() );
     }
-    
+
     /**
      * Allow subclasses to override which ResourceHelper to use.
      *
@@ -204,40 +178,61 @@ public abstract class AbstractLocalizedRuntimeException
     protected ResourceHelper findResourceHelperForLocalizedMessageViaEnclosingClass()
     {
         String className = getClass().getName();
-        String key;
         int    dollar = className.indexOf( '$' );
         if( dollar >= 0 ) {
             className = className.substring( 0, dollar );
         }
         return ResourceHelper.getInstance( className, getClass().getClassLoader() );
     }
-    
+
     /**
-     * Allow subclasses to override which key to use in the Resource file for the message.
+     * Allow subclasses to override which key to use in the Resource file for the string representation.
      *
      * @return the key
      */
-    protected String findMessageParameter()
+    protected String findStringRepresentationParameter()
     {
-        return MESSAGE_PARAMETER;
+        return STRING_REPRESENTATION_KEY;
+    }
+
+    /**
+     * Allow subclasses to override which key to use in the Resource file for the link start string representation.
+     *
+     * @return the key
+     */
+    protected String findStringRepresentationLinkStartParameter()
+    {
+        return STRING_REPRESENTATION_LINK_START_KEY;
+    }
+
+    /**
+     * Allow subclasses to override which key to use in the Resource file for the link end string representation.
+     *
+     * @return the key
+     */
+    protected String findStringRepresentationLinkEndParameter()
+    {
+        return STRING_REPRESENTATION_LINK_END_KEY;
     }
 
     /**
      * This method can be invoked by subclasses to obtain a suitable message key
      * for the same resource file for all inner classes.
      *
-     * @return the key
+     * @param key the key
+     * @return the modified key
      */
-    protected String findMessageParameterViaEnclosingClass()
+    protected String findParameterViaEnclosingClass(
+            String key )
     {
         String className = getClass().getName();
-        String key;
+        String ret;
         int    dollar = className.indexOf( '$' );
         if( dollar >= 0 ) {
-            key = className.substring( dollar+1 ) + "-" + MESSAGE_PARAMETER;
+            ret = className.substring( dollar+1 ) + "-" + key;
         } else {
-            key = MESSAGE_PARAMETER;
+            ret = key;
         }
-        return key;
+        return ret;
     }
 }

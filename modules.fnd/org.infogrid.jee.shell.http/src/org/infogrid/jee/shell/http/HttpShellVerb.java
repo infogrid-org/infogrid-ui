@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -49,14 +49,14 @@ import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
-import org.infogrid.util.LocalizedObject;
-import org.infogrid.util.LocalizedObjectFormatter;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
@@ -65,7 +65,7 @@ import org.infogrid.util.text.StringRepresentationDirectory;
  */
 public enum HttpShellVerb
         implements
-            LocalizedObject
+            HasStringRepresentation
 {
     /**
      * <p>Create a <code>MeshObject</code>.</p>
@@ -1361,38 +1361,6 @@ public enum HttpShellVerb
     }
 
     /**
-     * Determine the correct internationalized string that can be shown to the
-     * user representing this object.
-     *
-     * @return the internationalized string
-     */
-    public String getLocalizedMessage()
-    {
-        return getLocalizedMessage( null );
-    }
-
-    /**
-     * Determine the correct internationalized string that can be shown to the
-     * user representing this object.
-     *
-     * @param formatter the formatter to use for data objects to be displayed as part of the message
-     * @return the internationalized string
-     */
-    public String getLocalizedMessage(
-            LocalizedObjectFormatter formatter )
-    {
-        String inst;
-        if( formatter != null ) {
-            inst = formatter.asLocalizedString( this );
-        } else {
-            inst = toString();
-        }
-
-        String ret = theResourceHelper.getResourceStringWithArguments( MESSAGE_PARAMETER + "-" + toString(), inst );
-        return ret;
-    }
-
-    /**
      * Bless the subject with one or more <code>EntityTypes</code>, if this request has
      * this side effect.
      *
@@ -1723,6 +1691,59 @@ public enum HttpShellVerb
         }
         return theParsingRepresentation;
     }
+
+    /**
+     * Obtain a String representation of this instance that can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentation(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY + "-" + toString(), toString() );
+    }
+
+    /**
+     * Obtain the start part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * The default entry in the resouce files, prefixed by the StringRepresentation's prefix.
+     */
+    public static final String DEFAULT_ENTRY = "String";
 
     /**
      * Name of the tag in the protocol.

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -44,6 +44,49 @@ public class CompositeCursorIterator<E>
             Class<E>                arrayComponentType )
     {
         CompositeCursorIterator<E> ret = new CompositeCursorIterator<E>( delegates, 0, arrayComponentType );
+        return ret;
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegates the underlying delegate iterators
+     * @param arrayComponentType the <code>Class</code> that should be used to create arrays for return values
+     * @return the created CompositeCursorIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeCursorIterator<E> create(
+            CursorIterator<E> [] delegates,
+            Class<E>             arrayComponentType )
+    {
+        List<CursorIterator<E>> temp = new ArrayList<CursorIterator<E>>();
+        for( CursorIterator<E> current : delegates ) {
+            temp.add( current );
+        }
+
+        CompositeCursorIterator<E> ret = new CompositeCursorIterator<E>( temp, 0, arrayComponentType );
+        return ret;
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegate1 the first underlying delegate iterator
+     * @param delegate2 the second underlying delegate iterator
+     * @param arrayComponentType the <code>Class</code> that should be used to create arrays for return values
+     * @return the created CompositeCursorIterator
+     * @param <E> the type of element to iterate over
+     */
+    public static <E> CompositeCursorIterator<E> create(
+            CursorIterator<E> delegate1,
+            CursorIterator<E> delegate2,
+            Class<E>          arrayComponentType )
+    {
+        List<CursorIterator<E>> temp = new ArrayList<CursorIterator<E>>();
+        temp.add( delegate1 );
+        temp.add( delegate2 );
+
+        CompositeCursorIterator<E> ret = new CompositeCursorIterator<E>( temp, 0, arrayComponentType );
         return ret;
     }
 

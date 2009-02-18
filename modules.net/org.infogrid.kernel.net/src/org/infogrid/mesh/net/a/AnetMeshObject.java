@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -2376,7 +2376,7 @@ public class AnetMeshObject
             StringRepresentationContext context )
     {
         boolean isDefaultMeshBase = context != null ? ( getMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
-        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        String  contextPath       = context != null ? (String) context.get( StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
         
         String key;
         if( isDefaultMeshBase ) {

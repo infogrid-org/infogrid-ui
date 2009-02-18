@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -365,7 +365,7 @@ public class ArrayMap<K,V>
     /**
      * Storage for the ArrayMap.
      */
-    protected ArrayList<Map.Entry<K,V>> theStorage;
+    protected final ArrayList<Map.Entry<K,V>> theStorage;
     
     /**
      * View into the entries, allocated as needed.
