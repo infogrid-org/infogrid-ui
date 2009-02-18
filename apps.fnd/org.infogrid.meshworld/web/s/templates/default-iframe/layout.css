@@ -1,4 +1,4 @@
-/* Defines the layout of the application, taking the master styles into account in master.css */
+/* Defines the layout of the application for this app's iframe appcontext. */
 
 h1 {
     margin: 10px 0;
