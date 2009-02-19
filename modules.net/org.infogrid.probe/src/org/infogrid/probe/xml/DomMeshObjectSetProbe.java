@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -53,6 +53,7 @@ import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimePeriodValue;
 import org.infogrid.model.primitives.TimeStampValue;
+import org.infogrid.model.primitives.UnknownEnumeratedValueException;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
@@ -256,6 +257,8 @@ public class DomMeshObjectSetProbe
                                 }
                             } catch( MeshTypeWithIdentifierNotFoundException ex ) {
                                 throw new ProbeException.SyntaxError( dataSourceIdentifier, "Cannot find PropertyType with " + propertyIdentifier, ex );
+                            } catch( UnknownEnumeratedValueException ex ) {
+                                throw new ProbeException.SyntaxError( dataSourceIdentifier, "Invalid key " + content.trim() + " for EnumeratedDataType on PropertyType " + propertyIdentifier, ex );
                             }
                             
                         } else if( EXTENT_VALUE_TAG.equals( grandNodeName )) {

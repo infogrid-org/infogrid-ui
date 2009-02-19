@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -53,6 +53,7 @@ import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimePeriodValue;
 import org.infogrid.model.primitives.TimeStampValue;
+import org.infogrid.model.primitives.UnknownEnumeratedValueException;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
@@ -532,7 +533,9 @@ public class SaxMeshObjectSetProbe
                     log.error( "MeshType with " + propertyTypeName + " is not a PropertyType" );
                 }
             } catch( MeshTypeWithIdentifierNotFoundException ex) {
-                log.error( "Cannot find PropertyType with " + propertyTypeName );
+                log.error( "Cannot find PropertyType with " + propertyTypeName, ex );
+            } catch( UnknownEnumeratedValueException ex ) {
+                log.error( "Invalid key " + theCharacters.toString().trim() + " for EnumeratedDataType on PropertyType " + propertyTypeName, ex );
             }
 
         } else if( EXTENT_VALUE_TAG.equals( qName )) {

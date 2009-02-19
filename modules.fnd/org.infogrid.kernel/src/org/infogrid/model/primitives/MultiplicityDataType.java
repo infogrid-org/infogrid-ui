@@ -8,17 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.model.primitives;
 
+import java.io.ObjectStreamException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
-
-import java.io.ObjectStreamException;
 import org.infogrid.util.text.StringRepresentationContext;
 
 /**
@@ -177,26 +176,14 @@ public class MultiplicityDataType
             Object [] found = representation.parseEntry( MultiplicityValue.class, MultiplicityValue.DEFAULT_ENTRY, s );
 
             switch( found.length ) {
-                case 2:
+                case 1:
                     break;
 
                 default:
                     throw new PropertyValueParsingException( this, representation, s );
             }
 
-            int [] values = new int[2];
-            for( int i=0 ; i<2 ; ++i ) {
-                if( "N".equalsIgnoreCase( (String) found[i] )) {
-                    values[i] = MultiplicityValue.N;
-                } else if( "*".equals( (String) found[i] )) {
-                    values[i] = MultiplicityValue.N;
-                } else {
-                    values[i] = Integer.parseInt( (String) found[i] );
-                }
-            }
-            MultiplicityValue ret = MultiplicityValue.create(
-                    values[0],
-                    values[1] );
+            MultiplicityValue ret = (MultiplicityValue) found[0];
 
             return ret;
 

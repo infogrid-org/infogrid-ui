@@ -1002,7 +1002,9 @@ public class JeeFormatter
             {
                 buf.append( sep );
             }
+            buf.append( "<div class=\"error\">" );
             buf.append( temp );
+            buf.append( "</div>" );
             sep = "\n";
         }
         return buf.toString();        

@@ -63,6 +63,5 @@ public class DefaultRestfulInitializationFilter
         // StructuredResponseTemplateFactory
         StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create();
         rootContext.addContextObject( tmplFactory );
-
     }
 }

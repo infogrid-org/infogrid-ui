@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,6 +23,7 @@ import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.util.logging.Log;
 
 import java.io.IOException;
+import org.infogrid.model.primitives.UnknownEnumeratedValueException;
 
 /**
  * <p>An abstract supertype for classes that know how to load
@@ -55,13 +56,15 @@ public abstract class ModelLoader
      * @throws InheritanceConflictException thrown if there was a conflict in the inheritance hierarchy of
      *         the newly loaded model
      * @throws IOException thrown if reading the model failed
+     * @throws UnknownEnumeratedValueException thrown if an invalid EnumeratedValue was specified
      */
     public final SubjectArea [] loadAndCheckModel(
             MeshTypeLifecycleManager theInstantiator )
         throws
             MeshTypeNotFoundException,
             InheritanceConflictException,
-            IOException
+            IOException,
+            UnknownEnumeratedValueException
     {
         LoaderMeshTypeLifecycleManager delegate = new LoaderMeshTypeLifecycleManager( theInstantiator );
 
@@ -95,13 +98,15 @@ public abstract class ModelLoader
      * @throws InheritanceConflictException thrown if there was a conflict in the inheritance hierarchy
      *          of the newly loaded model
      * @throws IOException thrown if reading the model failed
+     * @throws UnknownEnumeratedValueException thrown if an invalid EnumeratedValue was specified
      */
     protected abstract SubjectArea [] loadModel(
             MeshTypeLifecycleManager theInstantiator )
         throws
             MeshTypeNotFoundException,
             InheritanceConflictException,
-            IOException;
+            IOException,
+            UnknownEnumeratedValueException;
 
     /**
      * Obtain the correct logger of the subclass.

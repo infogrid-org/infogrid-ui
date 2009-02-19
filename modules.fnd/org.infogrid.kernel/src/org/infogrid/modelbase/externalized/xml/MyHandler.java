@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -57,6 +57,7 @@ import org.infogrid.model.primitives.TimePeriodDataType;
 import org.infogrid.model.primitives.TimePeriodValue;
 import org.infogrid.model.primitives.TimeStampDataType;
 import org.infogrid.model.primitives.TimeStampValue;
+import org.infogrid.model.primitives.UnknownEnumeratedValueException;
 import org.infogrid.model.primitives.externalized.xml.PropertyValueXmlEncoder;
 import org.infogrid.model.traversal.SelectiveTraversalSpecification;
 import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
@@ -1251,7 +1252,13 @@ public class MyHandler
             ret = ColorValue.create( value );
 
         } else if( type instanceof EnumeratedDataType ) {
-            ret = ((EnumeratedDataType)type).select( raw );
+            try {
+                ret = ((EnumeratedDataType)type).select( raw );
+
+            } catch( UnknownEnumeratedValueException.Key ex ) {
+                log.error( "Error when attempting to find key '" + raw + "' in EnumeratedDataType", ex );
+                ret = ((EnumeratedDataType)type).getDefaultValue();
+            }
 
         } else if( type instanceof ExtentDataType ) {
             int colon = raw.indexOf( ':' );

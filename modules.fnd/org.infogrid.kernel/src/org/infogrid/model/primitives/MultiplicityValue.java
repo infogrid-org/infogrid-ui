@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -226,8 +226,7 @@ public final class MultiplicityValue
         return rep.formatEntry(
                 getClass(),
                 DEFAULT_ENTRY,
-                ( minimum == N ) ? N_SYMBOL : String.valueOf( minimum ),
-                ( maximum == N ) ? N_SYMBOL : String.valueOf( maximum )) ;
+                this );
     }
 
     /**

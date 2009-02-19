@@ -1,3 +1,4 @@
+//
 // This file is part of InfoGrid(tm). You may not use this file except in
 // compliance with the InfoGrid license. The InfoGrid license and important
 // disclaimers are contained in the file LICENSE.InfoGrid.txt that you should
@@ -7,14 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.model.primitives;
 
 import java.io.ObjectStreamException;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -294,16 +294,18 @@ public class EnumeratedDataType
      *
      * @param key the selector to find the right element of this domain
      * @return the found EnumeratedValue
-     * @throws IllegalArgumentException if the EnumeratedValue has not been found
+     * @throws UnknownEnumeratedValueException.Key if the EnumeratedValue cannot be found
      */
     public EnumeratedValue select(
             String key )
+        throws
+            UnknownEnumeratedValueException.Key
     {
         EnumeratedValue ret = selectOrNull( key );
         if( ret != null ) {
             return ret;
         } else {
-            throw new IllegalArgumentException( "Unknown key \"" + key + "\" in select on enum " + this );
+            throw new UnknownEnumeratedValueException.Key( this, key );
         }
     }
 
@@ -330,16 +332,18 @@ public class EnumeratedDataType
      *
      * @param userVisibleName the selector to find the right element of this domain
      * @return the found EnumeratedValue
-     * @throws IllegalArgumentException if the EnumeratedValue has not been found
+     * @throws UnknownEnumeratedValueException.UserVisible if the EnumeratedValue cannot be found
      */
     public EnumeratedValue selectByUserVisibleName(
             String userVisibleName )
+        throws
+            UnknownEnumeratedValueException.UserVisible
     {
         EnumeratedValue ret = selectByUserVisibleNameOrNull( userVisibleName );
         if( ret != null ) {
             return ret;
         } else {
-            throw new IllegalArgumentException( "Unknown user-visible name \"" + userVisibleName + "\" in select on enum " + this );
+            throw new UnknownEnumeratedValueException.UserVisible( this, userVisibleName );
         }
     }
 
@@ -519,6 +523,9 @@ public class EnumeratedDataType
             return ret;
 
         } catch( StringifierException ex ) {
+            throw new PropertyValueParsingException( this, representation, s, ex );
+
+        } catch( UnknownEnumeratedValueException ex ) {
             throw new PropertyValueParsingException( this, representation, s, ex );
 
         } catch( ClassCastException ex ) {

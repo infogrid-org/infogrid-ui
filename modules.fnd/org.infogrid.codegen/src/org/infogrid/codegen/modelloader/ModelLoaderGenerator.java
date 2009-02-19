@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -245,7 +245,8 @@ public class ModelLoaderGenerator
         outStream.println( "        throws" );
         outStream.println( "            MeshTypeNotFoundException," );
         outStream.println( "            InheritanceConflictException," );
-        outStream.println( "            IOException" );
+        outStream.println( "            IOException," );
+        outStream.println( "            org.infogrid.model.primitives.UnknownEnumeratedValueException" );
         outStream.println( "    {" );
 
         generateLoggingStatement( outStream );

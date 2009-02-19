@@ -24,7 +24,7 @@ import org.infogrid.util.text.StringifierParsingChoice;
 import org.infogrid.util.text.StringifierValueParsingChoice;
 
 /**
-     * StringStringifier for multiplicity values.
+ * StringStringifier for multiplicity values.
  */
 public class MultiplicityValueStringStringifier
         implements
@@ -123,19 +123,24 @@ public class MultiplicityValueStringStringifier
         int min;
         int max;
 
-        if( MultiplicityValue.N_SYMBOL.equals( first )) {
-            min = MultiplicityValue.N;
-        } else {
-            min = Integer.parseInt( first );
-        }
-        if( MultiplicityValue.N_SYMBOL.equals( second )) {
-            max = MultiplicityValue.N;
-        } else {
-            max = Integer.parseInt( second );
-        }
+        try {
+            if( MultiplicityValue.N_SYMBOL.equals( first )) {
+                min = MultiplicityValue.N;
+            } else {
+                min = Integer.parseInt( first );
+            }
+            if( MultiplicityValue.N_SYMBOL.equals( second )) {
+                max = MultiplicityValue.N;
+            } else {
+                max = Integer.parseInt( second );
+            }
 
-        MultiplicityValue ret = MultiplicityValue.create( min, max );
-        return ret;
+            MultiplicityValue ret = MultiplicityValue.create( min, max );
+            return ret;
+
+        } catch( NumberFormatException ex ) {
+            throw new StringifierParseException( this, null, ex );
+        }
     }
 
     /**
@@ -164,7 +169,7 @@ public class MultiplicityValueStringStringifier
             StringifierValueParsingChoice<MultiplicityValue> choice = new StringifierValueParsingChoice<MultiplicityValue>(
                         startIndex,
                         endIndex,
-                        found);
+                        found );
 
             OneElementIterator<StringifierParsingChoice<MultiplicityValue>> ret
                     = OneElementIterator.<StringifierParsingChoice<MultiplicityValue>>create( choice );

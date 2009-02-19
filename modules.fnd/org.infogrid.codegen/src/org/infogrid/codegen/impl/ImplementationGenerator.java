@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -323,7 +323,8 @@ public class ImplementationGenerator
         outStream.println( "            org.infogrid.mesh.IllegalPropertyTypeException," );
         outStream.println( "            org.infogrid.mesh.IllegalPropertyValueException," );
         outStream.println( "            org.infogrid.mesh.NotPermittedException," );
-        outStream.println( "            org.infogrid.meshbase.transaction.TransactionException" );
+        outStream.println( "            org.infogrid.meshbase.transaction.TransactionException," );
+        outStream.println( "            org.infogrid.model.primitives.UnknownEnumeratedValueException" );
         outStream.println( "    {" );
         
         PropertyType [] pts = theMeshType.getAllPropertyTypes();

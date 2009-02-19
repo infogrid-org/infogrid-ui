@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -95,7 +95,10 @@ public class MeshWorldAppInitializationFilter
         rootContext.addContextObject( mainVlFact );
         iframeContext.addContextObject( iframeVlFact );
 
-        StructuredResponseTemplateFactory iframeRtFact = DefaultStructuredResponseTemplateFactory.create( "default-iframe" );
+        StructuredResponseTemplateFactory iframeRtFact
+                = DefaultStructuredResponseTemplateFactory.create(
+                        "default-iframe",
+                        DefaultStructuredResponseTemplateFactory.DEFAULT_MIME_TYPE );
         iframeContext.addContextObject( iframeRtFact );
     }
 }

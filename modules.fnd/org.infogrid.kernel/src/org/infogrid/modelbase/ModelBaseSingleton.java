@@ -8,25 +8,23 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.modelbase;
 
+import java.io.IOException;
+import java.io.InputStream;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.SubjectArea;
-
+import org.infogrid.model.primitives.UnknownEnumeratedValueException;
 import org.infogrid.modelbase.externalized.xml.XmlModelLoader;
-
 import org.infogrid.util.logging.Log;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * This class helps us to find the singleton instance of (an implementation of)
@@ -74,6 +72,7 @@ public abstract class ModelBaseSingleton
      * @throws MeshTypeNotFoundException thrown if a required MeshType was not found (e.g. when a subtype was looking for its non-existing supertype)
      * @throws InheritanceConflictException thrown if the specified PropertyType overriding was inconsistent with the model
      * @throws IOException thrown if an I/O error occurred during reading
+     * @throws UnknownEnumeratedValueException thrown if an invalid EnumeratedValue was specified
      */
     public static SubjectArea [] loadModel(
             String      xmlResource,
@@ -82,7 +81,8 @@ public abstract class ModelBaseSingleton
         throws
             MeshTypeNotFoundException,
             InheritanceConflictException,
-            IOException
+            IOException,
+            UnknownEnumeratedValueException
     {
         if( theSingleton == null ) {
             throw new IllegalStateException( "no singleton ModelBase has been set" );

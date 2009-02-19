@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -47,6 +47,7 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimePeriodValue;
 import org.infogrid.model.primitives.TimeStampValue;
+import org.infogrid.model.primitives.UnknownEnumeratedValueException;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.ProbeException;
@@ -330,8 +331,12 @@ public abstract class AbstractFeedProbe
                 
                 String content = realChild.getTextContent();
 
-                PropertyValue ret = realType.select( content );
-                return ret;
+                try {
+                    PropertyValue ret = realType.select( content );
+                    return ret;
+                } catch( UnknownEnumeratedValueException ex ) {
+                    throw new ProbeException.SyntaxError( dataSourceIdentifier, "Invalid key " + content + " for EnumeratedDataType on PropertyType " + type.getIdentifier(), ex );
+                }
                             
             } else if( MeshObjectSetProbeTags.EXTENT_VALUE_TAG.equals( localName )) {
                 String w = realChild.getAttribute( MeshObjectSetProbeTags.EXTENT_VALUE_WIDTH_TAG );

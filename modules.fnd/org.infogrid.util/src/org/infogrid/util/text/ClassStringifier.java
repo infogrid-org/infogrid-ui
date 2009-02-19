@@ -71,7 +71,15 @@ public class ClassStringifier
         throws
             ClassCastException
     {
-        return format( soFar, (Class) arg );
+        if( arg == null ) {
+            return format( soFar, null );
+
+        } else if( arg instanceof Class ) {
+            return format( soFar, (Class) arg );
+
+        } else {
+            return format( soFar, arg.getClass() );
+        }
     }
 
     /**

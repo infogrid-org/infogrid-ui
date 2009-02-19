@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -38,6 +38,7 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.VCard.VCardSubjectArea;
+import org.infogrid.model.primitives.UnknownEnumeratedValueException;
 import org.infogrid.module.ModuleException;
 import org.infogrid.probe.NonXmlStreamProbe;
 import org.infogrid.probe.ProbeException;
@@ -45,6 +46,7 @@ import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.Log;
 
 /**
  * This Probe knows how to read VCards (RFC 2426). It instantiates VCard, subtypes of
@@ -54,6 +56,8 @@ public class VCardProbe
         implements
            NonXmlStreamProbe
 {
+    private static final Log log = Log.getLogInstance( VCardProbe.class ); // our own, private logger
+
     /**
      * Constructor.
      */
@@ -351,20 +355,24 @@ public class VCardProbe
             for( int j=0 ; j<params.length ; ++j ) {
                 String param = params[j];
 
-                if( "dom".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.PHYSICALADDRESS_SCOPE, VCardSubjectArea.PHYSICALADDRESS_SCOPE_type.select( "Dom" ));
-                } else if( "intl".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.PHYSICALADDRESS_SCOPE, VCardSubjectArea.PHYSICALADDRESS_SCOPE_type.select( "Intl" ));
-                } else if( "postal".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.PHYSICALADDRESS_ISPOSTAL, BooleanValue.TRUE );
-                } else if( "parcel".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.PHYSICALADDRESS_ISPARCEL, BooleanValue.TRUE );
-                } else if( "home".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISHOME, BooleanValue.TRUE );
-                } else if( "work".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISWORK, BooleanValue.TRUE );
-                } else if( "pref".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISPREFERRED, BooleanValue.TRUE );
+                try {
+                    if( "dom".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.PHYSICALADDRESS_SCOPE, VCardSubjectArea.PHYSICALADDRESS_SCOPE_type.select( "Dom" ));
+                    } else if( "intl".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.PHYSICALADDRESS_SCOPE, VCardSubjectArea.PHYSICALADDRESS_SCOPE_type.select( "Intl" ));
+                    } else if( "postal".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.PHYSICALADDRESS_ISPOSTAL, BooleanValue.TRUE );
+                    } else if( "parcel".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.PHYSICALADDRESS_ISPARCEL, BooleanValue.TRUE );
+                    } else if( "home".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISHOME, BooleanValue.TRUE );
+                    } else if( "work".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISWORK, BooleanValue.TRUE );
+                    } else if( "pref".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISPREFERRED, BooleanValue.TRUE );
+                    }
+                } catch( UnknownEnumeratedValueException ex ) {
+                    log.error( ex );
                 }
             }
 
@@ -383,7 +391,11 @@ public class VCardProbe
                     freshMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( "co-em-" + i ),
                     VCardSubjectArea.COMMUNICATIONADDRESS );
 
-            adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "E-mail" ) );
+            try {
+                adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "E-mail" ) );
+            } catch( UnknownEnumeratedValueException ex ) {
+                log.error( ex );
+            }
 
             String [] params = emailLine.theParams;
             if( params.length == 1 && params[0].startsWith( "TYPE=" )) {
@@ -425,32 +437,36 @@ public class VCardProbe
             for( int j=0 ; j<params.length ; ++j ) {
                 String param = params[j];
 
-                if( "home".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISHOME, BooleanValue.TRUE );
-                } else if( "msg".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_HASMESSAGEBOX, BooleanValue.TRUE );
-                } else if( "work".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISWORK, BooleanValue.TRUE );
-                } else if( "pref".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISPREFERRED, BooleanValue.TRUE );
-                } else if( "voice".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_ISVOICE, BooleanValue.TRUE );
-                } else if( "fax".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Fax" ) );
-                } else if( "cell".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Mobile" ) );
-                } else if( "video".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Video" ) );
-                } else if( "pager".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Pager" ) );
-                } else if( "bbs".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Bbs" ) );
-                } else if( "modem".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Modem" ) );
-                } else if( "car".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Car" ) );
-                } else if( "isdn".equalsIgnoreCase( param )) {
-                    adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "ISDN" ) );
+                try {
+                    if( "home".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISHOME, BooleanValue.TRUE );
+                    } else if( "msg".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_HASMESSAGEBOX, BooleanValue.TRUE );
+                    } else if( "work".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISWORK, BooleanValue.TRUE );
+                    } else if( "pref".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.ADDRESS_ISPREFERRED, BooleanValue.TRUE );
+                    } else if( "voice".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_ISVOICE, BooleanValue.TRUE );
+                    } else if( "fax".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Fax" ) );
+                    } else if( "cell".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Mobile" ) );
+                    } else if( "video".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Video" ) );
+                    } else if( "pager".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Pager" ) );
+                    } else if( "bbs".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Bbs" ) );
+                    } else if( "modem".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Modem" ) );
+                    } else if( "car".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "Car" ) );
+                    } else if( "isdn".equalsIgnoreCase( param )) {
+                        adr.setPropertyValue( VCardSubjectArea.COMMUNICATIONADDRESS_TYPE, VCardSubjectArea.COMMUNICATIONADDRESS_TYPE_type.select( "ISDN" ) );
+                    }
+                } catch( UnknownEnumeratedValueException ex ) {
+                    log.error( ex );
                 }
             }
 

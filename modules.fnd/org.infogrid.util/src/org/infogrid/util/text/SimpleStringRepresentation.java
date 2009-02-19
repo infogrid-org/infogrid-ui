@@ -239,7 +239,7 @@ public class SimpleStringRepresentation
                 localizedMessage = t.getClass().getName();
             }
 
-            Object [] args = { message, localizedMessage, t };
+            Object [] args = { t.getClass(), message, localizedMessage, t };
             String ret = stringifier.format( null, ArrayFacade.<Object>create( args ));
             return ret;
 
