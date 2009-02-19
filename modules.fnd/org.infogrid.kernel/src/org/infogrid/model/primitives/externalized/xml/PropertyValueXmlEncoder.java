@@ -14,7 +14,6 @@
 
 package org.infogrid.model.primitives.externalized.xml;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -148,9 +147,9 @@ public class PropertyValueXmlEncoder
             buf.append( "</" ).append( BOOLEAN_VALUE_TAG ).append( ">" );
 
         } else if( value instanceof ColorValue ) {
-            Color theColor = ((ColorValue)value).value();
+            ColorValue realValue = (ColorValue)value;
             buf.append( "<" ).append( COLOR_VALUE_TAG ).append( ">" );
-            buf.append( String.valueOf( theColor.getRGB()) );
+            buf.append( String.valueOf( realValue.getRGB()) );
             buf.append( "</" ).append( COLOR_VALUE_TAG ).append( ">" );
 
         } else if( value instanceof EnumeratedValue ) {

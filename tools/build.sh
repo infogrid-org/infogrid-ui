@@ -53,10 +53,13 @@ do_all=1;
 verbose=1;
 help=1;
 ANTFLAGS=;
+CONFIG=;
 
 for arg in $*; do
 	if [ "${ANTFLAGS}" = 'ANTFLAGS' ]; then
 		ANTFLAGS="$arg";
+	elif [ "${CONFIG}" = 'CONFIG' ]; then
+		CONFIG="$arg";
 	elif [ "$arg" = '-clean' ]; then
 		do_clean=0;
 	elif [ "$arg" = '-build' ]; then
@@ -73,6 +76,8 @@ for arg in $*; do
 		help=0;
 	elif [ "$arg" = '-a' ]; then
 		do_all=0;
+	elif [ "$arg" = '-c' ]; then
+		CONFIG='CONFIG';
 	elif [ "$arg" = '-antflags' ]; then
 		ANTFLAGS='ANTFLAGS';
 	elif [ "$arg" = 'modules.fnd' ]; then
@@ -105,7 +110,7 @@ done
 # echo args ${do_clean} ${do_build} ${do_doc} ${do_run} ${do_modules_fnd} ${do_modules_net} ${do_apps_fnd} ${do_apps_net} ${do_tests_fnd} ${do_tests_net} ${do_dist_fnd} ${do_dist_net} ${do_debian_fnd} ${do_debian_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
 # exit 0;
 
-if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
+if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' -o "${CONFIG}" = 'CONFIG' ]; then
 	echo Synopsis:
 	echo "    ${script} [-v][-h][-n] [-clean][-build][-doc][-run] [-antflags <flags>] [<category>...]"
 	echo "        -v: verbose output"
@@ -118,8 +123,17 @@ if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' ]; then
 	echo "        -run: run"
 	echo "            (more than one of -clean,-build,-doc,-run may be given. Default is -build,-doc,-run)"
 	echo "        -antflags <flags>: pass flags to ant invocation"
+	echo "        -c <configfile>: use configuration file"
 	echo "        <category>: one or more of modules.fnd, modules.net, apps.fnd, apps.net, tests.fnd, tests.net, dist.fnd, dist.net, debian.fnd, debian.net"
 	exit 1;
+fi
+
+if [ "${CONFIG}" != '' ]; then
+	if [ ! -r "${CONFIG}" ]; then
+		echo ERROR: Configuration file "${CONFIG}" cannot be read.
+		exit 1;
+	fi
+	ANTFLAGS="${ANTFLAGS} -Dbuild-properties=../../${CONFIG}"
 fi
 
 if [ "${do_all}" = 0 ]; then

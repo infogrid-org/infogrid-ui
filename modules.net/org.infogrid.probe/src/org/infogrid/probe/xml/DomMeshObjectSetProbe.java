@@ -14,7 +14,6 @@
 
 package org.infogrid.probe.xml;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -240,11 +239,11 @@ public class DomMeshObjectSetProbe
                             String blue  = MeshObjectSetProbeUtils.getTextContent( grandAttrs, COLOR_VALUE_BLUE_TAG );
                             String alpha = MeshObjectSetProbeUtils.getTextContent( grandAttrs, COLOR_VALUE_ALPHA_TAG );
 
-                            propValue = ColorValue.create( new Color(
+                            propValue = ColorValue.create(
                                     Float.parseFloat( red ),
                                     Float.parseFloat( green ),
                                     Float.parseFloat( blue ),
-                                    Float.parseFloat( alpha )));
+                                    Float.parseFloat( alpha ));
                             
                         } else if( ENUMERATED_VALUE_TAG.equals( grandNodeName )) {
                             try {

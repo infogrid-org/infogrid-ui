@@ -8,20 +8,21 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.text.StringRepresentation;
-
 import java.awt.Color;
+import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
 /**
-  * This is a color value for PropertyValue.
-  */
+ * This is a color value for PropertyValue.
+ * This used to go through java.awt.Color, but it turns out that in headless mode, that
+ * class may not exist.
+ */
 public final class ColorValue
         extends
             PropertyValue
@@ -41,7 +42,7 @@ public final class ColorValue
         if( value == null ) {
             throw new IllegalArgumentException( "null value" );
         }
-        return new ColorValue( value );
+        return new ColorValue( value.getRGB() );
     }
 
     /**
@@ -57,7 +58,7 @@ public final class ColorValue
         if( value == null ) {
             return null;
         }
-        return new ColorValue( value );
+        return new ColorValue( value.getRGB() );
     }
 
     /**
@@ -69,10 +70,84 @@ public final class ColorValue
     public static ColorValue create(
             int value )
     {
-        // We go through Java's Color because they are doing messy stuff there
-        // with alpha channel defaults, and we don't want to hard code any dependency
-        // on this into our code ...
-        return new ColorValue( new Color( value ));
+        return new ColorValue( value );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @return the created ColorValue
+     */
+    public static ColorValue create(
+            int r,
+            int g,
+            int b )
+    {
+        return create( r, g, b, 255 );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @param a the alpha component
+     * @return the created ColorValue
+     */
+    public static ColorValue create(
+            int r,
+            int g,
+            int b,
+            int a )
+    {
+        ColorValue ret = new ColorValue(
+                  (( a & 0xFF ) << 24 )
+                | (( r & 0xFF ) << 16 )
+                | (( g & 0xFF ) <<  8 )
+                | (( b & 0xFF ) <<  0 ));
+
+        return ret;
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @return the created ColorValue
+     */
+    public static ColorValue create(
+            float r,
+            float g,
+            float b )
+    {
+        return create( r, g, b, 1.0f );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @param a the alpha component
+     * @return the created ColorValue
+     */
+    public static ColorValue create(
+            float r,
+            float g,
+            float b,
+            float a )
+    {
+        return create(
+                (int) (r*255+0.5),
+                (int) (g*255+0.5),
+                (int) (b*255+0.5));
     }
 
     /**
@@ -81,9 +156,9 @@ public final class ColorValue
       * @param value the JDK's definition of Color
       */
     private ColorValue(
-            Color value )
+            int value )
     {
-        this.theValue = value.getRGB();
+        this.theValue = value;
     }
 
     /**

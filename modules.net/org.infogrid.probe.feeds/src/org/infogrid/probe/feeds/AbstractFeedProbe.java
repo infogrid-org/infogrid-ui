@@ -14,7 +14,6 @@
 
 package org.infogrid.probe.feeds;
 
-import java.awt.Color;
 import java.net.URISyntaxException;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
@@ -319,8 +318,7 @@ public abstract class AbstractFeedProbe
                 String blue  = realChild.getAttribute( MeshObjectSetProbeTags.COLOR_VALUE_BLUE_TAG );
                 String alpha = realChild.getAttribute( MeshObjectSetProbeTags.COLOR_VALUE_ALPHA_TAG );
 
-                Color col = new Color( Integer.parseInt( red ), Integer.parseInt( green ), Integer.parseInt( blue ), Integer.parseInt( alpha ));
-                PropertyValue ret = ColorValue.createOrNull( col );
+                PropertyValue ret = ColorValue.create( Integer.parseInt( red ), Integer.parseInt( green ), Integer.parseInt( blue ), Integer.parseInt( alpha ));
                 return ret;
                 
             } else if( MeshObjectSetProbeTags.ENUMERATED_VALUE_TAG.equals( localName )) {

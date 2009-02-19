@@ -14,11 +14,9 @@
 
 package org.infogrid.meshbase.store.TEST;
 
-import java.awt.Color;
 import java.util.Date;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
-import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.store.StoreMeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -205,7 +203,7 @@ public class StoreMeshBaseTest6
                         "2",
                         BlobValue.create( "An <b>important&trade;</b>&#33; HTML String" ),
                         BooleanValue.create( false ),
-                        ColorValue.create( new Color( 255, 255, 255, 255 )),
+                        ColorValue.create( 255, 255, 255, 255 ),
                         ((EnumeratedDataType)TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE.getDataType()).select( "Value2" ),
                         ExtentValue.create( -12.34, 56.78 ),
                         FloatValue.create( -12.34 ),

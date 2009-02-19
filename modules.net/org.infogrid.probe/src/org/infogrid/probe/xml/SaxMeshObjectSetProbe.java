@@ -14,7 +14,6 @@
 
 package org.infogrid.probe.xml;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -351,11 +350,11 @@ public class SaxMeshObjectSetProbe
             String blue  = attrs.getValue( COLOR_VALUE_BLUE_TAG );
             String alpha = attrs.getValue( COLOR_VALUE_ALPHA_TAG );
             
-            theObjectBeingParsed.setCurrentPropertyValue( ColorValue.create( new Color(
+            theObjectBeingParsed.setCurrentPropertyValue( ColorValue.create(
                     Float.parseFloat( red ),
                     Float.parseFloat( green ),
                     Float.parseFloat( blue ),
-                    Float.parseFloat( alpha ))));
+                    Float.parseFloat( alpha )));
         } else if( ENUMERATED_VALUE_TAG.equals( qName )) {
             // no op
         } else if( EXTENT_VALUE_TAG.equals( qName )) {

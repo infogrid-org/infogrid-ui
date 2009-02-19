@@ -14,7 +14,6 @@
 
 package org.infogrid.modelbase.externalized.xml;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -1262,11 +1261,10 @@ public class XmlModelExporter
         }
 
         if( value instanceof ColorValue ) {
-            Color theColor = ((ColorValue)value).value();
             if( writeTag ) {
                 theWriter.write( "Color:" );
             }
-            theWriter.write( String.valueOf( theColor.getRGB() ));
+            theWriter.write( String.valueOf( ((ColorValue)value).getRGB() ));
             return;
         }
 

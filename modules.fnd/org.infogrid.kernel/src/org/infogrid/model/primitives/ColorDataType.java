@@ -14,7 +14,6 @@
 
 package org.infogrid.model.primitives;
 
-import java.awt.Color;
 import java.io.ObjectStreamException;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
@@ -185,23 +184,23 @@ public final class ColorDataType
         try {
             Object [] found = representation.parseEntry( ColorValue.class, ColorValue.DEFAULT_ENTRY, s );
 
-            Color color;
+            ColorValue ret;
 
             switch( found.length ) {
                 case 1:
-                    color = new Color(
+                    ret = ColorValue.create(
                             ((Long) found[0]).intValue());
                     break;
 
                 case 3:
-                    color = new Color(
+                    ret = ColorValue.create(
                             ((Long) found[0]).intValue(),
                             ((Long) found[1]).intValue(),
                             ((Long) found[2]).intValue() );
                     break;
 
                 case 4:
-                    color = new Color(
+                    ret = ColorValue.create(
                             ((Long) found[0]).intValue(),
                             ((Long) found[1]).intValue(),
                             ((Long) found[2]).intValue(),
@@ -211,8 +210,6 @@ public final class ColorDataType
                 default:
                     throw new PropertyValueParsingException( this, representation, s );
             }
-
-            ColorValue ret = ColorValue.create( color );
 
             return ret;
 
