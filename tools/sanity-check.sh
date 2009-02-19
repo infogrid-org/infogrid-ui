@@ -26,8 +26,8 @@ echo '** Checking that the vendor is set right. **'
 grep ${FLAGS} application.vendor {modules*,apps*,tests*}/*/nbproject/project.properties | grep -v InfoGrid.org
 
 echo '** Checking copyright. **'
-for f in `svn status | egrep -v '^D|^\?' | awk '{ print $2 }'`; do
-	egrep -H '(copyright|Copyright|&copy).*-[0-9]{4}' $f | grep -v "${THISYEAR}" > /dev/null && echo $f
+for f in `svn status | egrep -v '^D|^\?' | cut -c 8-`; do
+        egrep -H '(copyright|Copyright|&copy|\(C\)).*[0-9]{4}' $f | grep -v "${THISYEAR}" > /dev/null && echo $f
 done
 
 for pattern in "$@"; do
