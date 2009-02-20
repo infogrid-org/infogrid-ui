@@ -46,7 +46,7 @@ for arg in $*; do
 	elif [ "$arg" = '-deploy' ]; then
 		do_deploy=0;
 	elif [ "$arg" = '-undeploy' ]; then
-		do_deploy=0;
+		do_undeploy=0;
 	elif [ "$arg" = '-n' ]; then
 		do_nothing=0;
 	elif [ "$arg" = '-v' ]; then
