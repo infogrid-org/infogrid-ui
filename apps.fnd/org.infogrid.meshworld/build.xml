@@ -16,7 +16,7 @@
 <project name="org.infogrid.meshworld" default="default" basedir=".">
     <description>Builds, tests, and runs the project org.infogrid.meshworld.</description>
     <import file="../../tools/infogrid-ant-library.xml"/>
-	<import file="nbproject/build-impl.xml"/>
+    <import file="nbproject/build-impl.xml"/>
 
     <target name="-pre-compile" depends="-module-setup"/>
 

@@ -125,15 +125,13 @@ public class LidGpgClearSignCredentialType
             throw new LidInvalidCredentialException( subject.getIdentifier(), this );
         }
 
+        String  fullUri    = request.getAbsoluteFullUri();
+        String  postString = request.getPostData();
+
         try {
-            theGpg.importPublicKey( thePublicKey );
-
-            String  fullUri    = request.getAbsoluteFullUri();
-            String  postString = request.getPostData();
-
             String signedText = theGpg.reconstructSignedMessage( fullUri, postString, credential );
 
-            boolean ret = theGpg.validateSignedText( personaIdentifier, signedText );
+            boolean ret = theGpg.validateSignedText( personaIdentifier, signedText, thePublicKey );
             if( !ret ) {
                 throw new LidInvalidCredentialException( subject.getIdentifier(), this );
             }

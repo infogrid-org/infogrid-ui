@@ -40,22 +40,21 @@ public class StoreLidKeyPairManager
     /**
      * Factory method.
      *
-     * @param nonceManager manages nonces for LID GPG operations
+     * @param keyPairFactory factory for key pairs
      * @param identifierFactory the factory for identifiers to use
      * @param store the Store to use
      * @return the created StoreLidKeyPairManager
      */
     public static StoreLidKeyPairManager create(
-            LidNonceManager   nonceManager,
-            IdentifierFactory identifierFactory,
-            Store             store )
+            LidGpgKeyPairFactory keyPairFactory,
+            IdentifierFactory    identifierFactory,
+            Store                store )
     {
         StoreLidKeyPairMapper mapper = StoreLidKeyPairMapper.create( identifierFactory );
         
-        LidGpgKeyPairFactory delegateFactory = LidGpg.create( nonceManager );
         StoreBackedSwappingHashMap<Identifier,LidKeyPair> storage = StoreBackedSwappingHashMap.createWeak( mapper, store );
         
-        StoreLidKeyPairManager ret = new StoreLidKeyPairManager( delegateFactory, storage );
+        StoreLidKeyPairManager ret = new StoreLidKeyPairManager( keyPairFactory, storage );
         return ret;
     }
 

@@ -174,9 +174,14 @@ public class DefaultInitializationFilter
         // Context
         SimpleContext rootContext = SimpleContext.createRoot( rootModule + " root context" );
         rootContext.addContextObject( theThisModule.getModuleRegistry() );
-        
-        initializeContextObjects( rootContext );
-        
+
+        try {
+            initializeContextObjects( rootContext );
+
+        } catch( Throwable t ) {
+            throw new ServletException( "could not initialize context objects", t );
+        }
+
         // app
         DefaultInfoGridWebApp ret = new DefaultInfoGridWebApp( rootContext );
 
@@ -187,9 +192,12 @@ public class DefaultInitializationFilter
      * Initialize the context objects. This may be overridden by subclasses.
      *
      * @param rootContext the root Context
+     * @throws Exception initialization may fail
      */
     protected void initializeContextObjects(
             Context rootContext )
+        throws
+            Exception
     {
         StringRepresentationDirectory srepdir = rootContext.findContextObject( StringRepresentationDirectory.class );
         if( srepdir == null ) {

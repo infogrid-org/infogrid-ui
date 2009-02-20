@@ -91,10 +91,13 @@ public class TestAppInitializationFilter
      * Initialize the context objects. This may be overridden by subclasses.
      *
      * @param rootContext the root Context
+     * @throws Exception initialization may fail
      */
     @Override
     protected void initializeContextObjects(
             Context rootContext )
+        throws
+            Exception
     {
         super.initializeContextObjects( rootContext );
 

@@ -106,9 +106,12 @@ public abstract class AbstractRestfulAppInitializationFilter
      * Initialize the context objects. This may be overridden by subclasses.
      *
      * @param rootContext the root Context
+     * @throws Exception initialization may fail
      */
     protected void initializeContextObjects(
             Context rootContext )
+        throws
+            Exception
     {
         // nothing on this level
     }

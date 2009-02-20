@@ -43,10 +43,13 @@ public class DefaultRestfulInitializationFilter
      * Initialize the context objects. This may be overridden by subclasses.
      *
      * @param rootContext the root Context
+     * @throws Exception initialization may fail
      */
     @Override
     protected void initializeContextObjects(
             Context rootContext )
+        throws
+            Exception
     {
         // do NOT invoke super.initializeContextObjects( rootContext );
         // we use better subclasses ourselves
