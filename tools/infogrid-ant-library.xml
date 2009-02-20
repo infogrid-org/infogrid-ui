@@ -190,30 +190,30 @@
   </target>
 
 <!-- We override fail-on-error -->
-    <target name="-init-macrodef-java">
-        <macrodef name="java" uri="http://www.netbeans.org/ns/j2se-project/1">
-            <attribute default="${main.class}" name="classname"/>
-            <element name="customize" optional="true"/>
-            <sequential>
-                <java classname="@{classname}" dir="${work.dir}" fork="true" failonerror="true">
-                    <jvmarg line="${run.jvmargs}"/>
-                    <classpath>
-                        <path path="${run.classpath}"/>
-                    </classpath>
-                    <syspropertyset>
-                        <propertyref prefix="run-sys-prop."/>
-                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
-                    </syspropertyset>
-                    <customize/>
-                </java>
-            </sequential>
-        </macrodef>
-    </target>
+  <target name="-init-macrodef-java">
+    <macrodef name="java" uri="http://www.netbeans.org/ns/j2se-project/1">
+      <attribute default="${main.class}" name="classname"/>
+      <element name="customize" optional="true"/>
+      <sequential>
+        <java classname="@{classname}" dir="${work.dir}" fork="true" failonerror="true">
+          <jvmarg line="${run.jvmargs}"/>
+          <classpath>
+            <path path="${run.classpath}"/>
+          </classpath>
+          <syspropertyset>
+            <propertyref prefix="run-sys-prop."/>
+            <mapper from="run-sys-prop.*" to="*" type="glob"/>
+          </syspropertyset>
+          <customize/>
+        </java>
+      </sequential>
+    </macrodef>
+  </target>
 
 <!-- override javadoc so we don't have to set the additional parameters in each module -->
-    <target depends="init" name="-javadoc-build">
-        <mkdir dir="${dist.javadoc.dir}"/>
-	<javadoc additionalparam="${javadoc.additionalparam} -stylesheetfile ${infogrid.org.tools}/module-stylesheet.css -doctitle &quot;Module ${ant.project.name}&quot; -overview ${basedir}/${build.dir}/module-description.html"
+  <target depends="init" name="-javadoc-build">
+    <mkdir dir="${dist.javadoc.dir}"/>
+    <javadoc additionalparam="${javadoc.additionalparam} -stylesheetfile ${infogrid.org.tools}/module-stylesheet.css -doctitle &quot;Module ${ant.project.name}&quot; -overview ${basedir}/${build.dir}/module-description.html"
                  author="${javadoc.author}"
                  charset="UTF-8"
                  destdir="${dist.javadoc.dir}"
@@ -230,65 +230,65 @@
                  useexternalfile="true"
                  version="${javadoc.version}"
                  windowtitle="${javadoc.windowtitle}">
-            <classpath>
-                <path path="${javac.classpath}"/>
-            </classpath>
-            <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
-                <filename name="**/*.java"/>
-            </fileset>
-            <fileset dir="${src.module-generated.dir}" excludes="${excludes}" includes="${includes}">
-                <filename name="**/*.java"/>
-            </fileset>
-        </javadoc>
-    </target>
+      <classpath>
+        <path path="${javac.classpath}"/>
+      </classpath>
+      <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+        <filename name="**/*.java"/>
+      </fileset>
+      <fileset dir="${src.module-generated.dir}" excludes="${excludes}" includes="${includes}">
+        <filename name="**/*.java"/>
+      </fileset>
+    </javadoc>
+  </target>
 
 <!-- override pre-init so it is easy to set up automated builds -->
-    <target name="-pre-init" depends="read-build-properties,set-build-properties" />
-    <target name="set-build-properties"/>
+  <target name="-pre-init" depends="read-build-properties,set-build-properties" />
+  <target name="set-build-properties"/>
 
-    <target name="read-build-properties" if="build-properties">
-        <available file="${build-properties}" property="build-properties-present"/>
-	<fail unless="build-properties-present" message="Build property file ${build-properties} not found."/>
-	<property file="${build-properties}"/>
-    </target>
+  <target name="read-build-properties" if="build-properties">
+    <available file="${build-properties}" property="build-properties-present"/>
+    <fail unless="build-properties-present" message="Build property file ${build-properties} not found."/>
+    <property file="${build-properties}"/>
+  </target>
 
 <!-- Debian target -->
 
-    <path id="ant-deb.classpath">
-        <pathelement location="../../vendors/code.google.com/p/ant-deb-task/ant-deb.jar"/>
-    </path>
+  <path id="ant-deb.classpath">
+    <pathelement location="../../vendors/code.google.com/p/ant-deb-task/ant-deb.jar"/>
+  </path>
 
-    <taskdef name="debian-package" classname="com.googlecode.ant_deb_task.Deb" classpathref="ant-deb.classpath"/>
+  <taskdef name="debian-package" classname="com.googlecode.ant_deb_task.Deb" classpathref="ant-deb.classpath"/>
 
-    <target name="debian-package-war" depends="-init-project">
-      <mkdir dir="dist"/>
-      <mkdir dir="dist/debian"/>
-      <tstamp>
-        <format property="touch.time" pattern="yyyyMMdd'Z'hhmmss" timezone="UTC"/>
-      </tstamp>
+  <target name="debian-package-war" depends="-init-project">
+    <mkdir dir="dist"/>
+    <mkdir dir="dist/debian"/>
+    <tstamp>
+      <format property="touch.time" pattern="yyyyMMdd'Z'hhmmss" timezone="UTC"/>
+    </tstamp>
 
-      <echo message="Debian dependencies are ${debian.dependencies}"/>
-      <fail message="Property debian.dependencies not set.">
-        <condition>
-          <not>
-            <isset property="debian.dependencies"/>
-          </not>
-        </condition>
-      </fail>
+    <echo message="Debian dependencies are ${debian.dependencies}"/>
+    <fail message="Property debian.dependencies not set.">
+      <condition>
+        <not>
+          <isset property="debian.dependencies"/>
+        </not>
+      </condition>
+    </fail>
 
-      <!-- We know this is a WAR project, so the file will exist. -->
-      <copy file="web/META-INF/context.xml" tofile="dist/${ant.project.name}.xml"/>
-      <copy file="${infogrid.org.tools.debian}/security.policy" tofile="dist/debian/60${ant.project.name}.policy"/>
-      <replace file="dist/debian/60${ant.project.name}.policy" token="@PACKAGE_NAME@" value="${ant.project.name}"/>
+    <!-- We know this is a WAR project, so the file will exist. -->
+    <copy file="web/META-INF/context.xml" tofile="dist/${ant.project.name}.xml"/>
+    <copy file="${infogrid.org.tools.debian}/security.policy" tofile="dist/debian/60${ant.project.name}.policy"/>
+    <replace file="dist/debian/60${ant.project.name}.policy" token="@PACKAGE_NAME@" value="${ant.project.name}"/>
 
-      <copy file="${infogrid.org.tools.debian}/postinst" tofile="dist/debian/postinst"/>
-      <copy file="${infogrid.org.tools.debian}/prerm"    tofile="dist/debian/prerm"/>
-      <copy file="${infogrid.org.tools.debian}/postrm"   tofile="dist/debian/postrm"/>
-      <replace file="dist/debian/postinst" token="@PACKAGE_NAME@" value="${ant.project.name}"/>
-      <replace file="dist/debian/prerm"    token="@PACKAGE_NAME@" value="${ant.project.name}"/>
-      <replace file="dist/debian/postrm"   token="@PACKAGE_NAME@" value="${ant.project.name}"/>
+    <copy file="${infogrid.org.tools.debian}/postinst" tofile="dist/debian/postinst"/>
+    <copy file="${infogrid.org.tools.debian}/prerm"    tofile="dist/debian/prerm"/>
+    <copy file="${infogrid.org.tools.debian}/postrm"   tofile="dist/debian/postrm"/>
+    <replace file="dist/debian/postinst" token="@PACKAGE_NAME@" value="${ant.project.name}"/>
+    <replace file="dist/debian/prerm"    token="@PACKAGE_NAME@" value="${ant.project.name}"/>
+    <replace file="dist/debian/postrm"   token="@PACKAGE_NAME@" value="${ant.project.name}"/>
 
-      <debian-package
+    <debian-package
               package="${ant.project.name}"
               todir="dist"
               section="web"
@@ -296,27 +296,26 @@
               prerm="dist/debian/prerm"
               postrm="dist/debian/postrm"
               depends="${debian.dependencies}">
-        <version upstream="2.0.0-${touch.time}"/>
-        <maintainer name="InfoGrid Build Master" email="buildmaster@infogrid.org"/>
-        <description synopsis="InfoGrid module ${ant.project.name}">
+      <version upstream="2.0.0-${touch.time}"/>
+      <maintainer name="InfoGrid Build Master" email="buildmaster@infogrid.org"/>
+      <description synopsis="InfoGrid module ${ant.project.name}">
 For documentation, please refer to InfoGrid.org.
-        </description>
-        <tarfileset prefix="var/lib/tomcat5.5/webapps" dir="dist">
-          <include name="${ant.project.name}.war"/>
-        </tarfileset>
-        <!-- We include a number of files that we don't really need to distribute, but
-             doing so helps apt-get remove to clean up in all the right places -->
-        <tarfileset prefix="var/lib/tomcat5.5/conf/Catalina/localhost" dir="dist">
-          <include name="${ant.project.name}.xml"/>
-        </tarfileset>
+      </description>
+      <tarfileset prefix="var/lib/tomcat5.5/webapps" dir="dist">
+        <include name="${ant.project.name}.war"/>
+      </tarfileset>
+      <!-- We include a number of files that we don't really need to distribute, but
+           doing so helps apt-get remove to clean up in all the right places -->
+      <tarfileset prefix="var/lib/tomcat5.5/conf/Catalina/localhost" dir="dist">
+        <include name="${ant.project.name}.xml"/>
+      </tarfileset>
        
-        <tarfileset prefix="var/lib/tomcat5.5/conf/Catalina/localhost/${ant.project.name}" dir="../../tools/debian">
-          <include name="tldCache.ser"/>
-        </tarfileset>
-        <tarfileset prefix="etc/tomcat5.5/policy.d" dir="dist/debian">
-          <include name="60${ant.project.name}.policy"/>
-        </tarfileset>
-      </debian-package>
-    </target>
-
+      <tarfileset prefix="var/lib/tomcat5.5/conf/Catalina/localhost/${ant.project.name}" dir="../../tools/debian">
+        <include name="tldCache.ser"/>
+      </tarfileset>
+      <tarfileset prefix="etc/tomcat5.5/policy.d" dir="dist/debian">
+        <include name="60${ant.project.name}.policy"/>
+      </tarfileset>
+    </debian-package>
+  </target>
 </project>
