@@ -318,4 +318,30 @@ For documentation, please refer to InfoGrid.org.
       </tarfileset>
     </debian-package>
   </target>
+
+  <path id="deployer.classpath">
+    <fileset dir="../../vendors/tomcat.apache.org/apache-tomcat-deployer/lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+  <taskdef resource="org/apache/catalina/ant/catalina.tasks"
+           classpathref="deployer.classpath"/>
+
+  <target name="tomcat-deploy" depends="-pre-init" description="Deploy to Tomcat per current settings">
+    <exec executable="pwd" outputproperty="pwd"/> <!-- stupid deploy task does not get the current directory right -->
+    <deploy path="/${ant.project.name}"
+            war="${pwd}/dist/${ant.project.name}.war"
+            url="${ManagerUrl}"
+            username="${AdminUser}"
+            password="${AdminPassword}"
+            update="true" />
+  </target>
+
+  <target name="tomcat-undeploy" depends="-pre-init" description="Undeploy from Tomcat per current settings">
+    <exec executable="pwd" outputproperty="pwd"/> <!-- stupid deploy task does not get the current directory right -->
+    <undeploy path="/${ant.project.name}"
+            url="${ManagerUrl}"
+            username="${AdminUser}"
+            password="${AdminPassword}" />
+  </target>
 </project>
