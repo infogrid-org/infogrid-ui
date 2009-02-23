@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -27,10 +27,10 @@ import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.lid.LidCookies;
 import org.infogrid.lid.LidSession;
 import org.infogrid.lid.LidSessionManager;
-import org.infogrid.mesh.net.NetMeshObject;
-import org.infogrid.mesh.net.NetMeshObjectIdentifier;
+import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.security.ThreadIdentityManager;
-import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.http.SaneRequest;
@@ -78,9 +78,9 @@ public class LidSessionFilter
             if( userSession != null && userSession.isStillValid() && userSession.getCookieValue().equals( session )) {
 
                 try {
-                    NetMeshObjectIdentifier callerId = theNetMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( lidString );
+                    MeshObjectIdentifier callerId = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( lidString );
 
-                    NetMeshObject caller = theNetMeshBase.accessLocally( callerId );
+                    MeshObject caller = theMeshBase.accessLocally( callerId );
                     
                     ThreadIdentityManager.setCaller( caller );
                     
@@ -121,7 +121,7 @@ public class LidSessionFilter
         InfoGridWebApp app = InfoGridWebApp.getSingleton();
         
         theSessionManager = app.getApplicationContext().findContextObjectOrThrow( LidSessionManager.class );
-        theNetMeshBase    = app.getApplicationContext().findContextObjectOrThrow( NetMeshBase.class );
+        theMeshBase       = app.getApplicationContext().findContextObjectOrThrow( MeshBase.class );
     }
 
     /**
@@ -148,7 +148,7 @@ public class LidSessionFilter
     protected LidSessionManager theSessionManager;
     
     /**
-     * The NetMeshBase to use.
+     * The MeshBase to use.
      */
-    protected NetMeshBase theNetMeshBase;
+    protected MeshBase theMeshBase;
 }
