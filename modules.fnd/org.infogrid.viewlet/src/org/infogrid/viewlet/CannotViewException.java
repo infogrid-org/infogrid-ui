@@ -329,9 +329,8 @@ public abstract class CannotViewException
                     "NoSubjectString",
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
-                    theObjectsToView.getSubject(),
-                    theObjectsToView.getSubject().getIdentifier(),
-                    theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+                    theIdentifier,
+                    theIdentifier.toExternalForm() );
         }
         
         /**

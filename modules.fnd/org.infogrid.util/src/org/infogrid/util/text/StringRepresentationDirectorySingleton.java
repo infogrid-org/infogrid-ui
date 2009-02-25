@@ -92,6 +92,9 @@ public class StringRepresentationDirectorySingleton
         plainMap.put(   "string",         StringStringifier.create() );
         htmlMap.put(    "string",         HtmlStringStringifier.create() );
 
+        plainMap.put(   "verbatim",       StringStringifier.create() );
+        htmlMap.put(    "verbatim",       StringStringifier.create() );
+
         plainMap.put(   "stacktrace",     StacktraceStringifier.create() );
         htmlMap.put(    "stacktrace",     HtmlStacktraceStringifier.create() );
 
