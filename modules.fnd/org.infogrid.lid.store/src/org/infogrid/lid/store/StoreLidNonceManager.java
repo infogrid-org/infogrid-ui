@@ -79,7 +79,7 @@ public class StoreLidNonceManager
      *
      * @param request the request
      * @param name the name of the URL parameter
-     * @throws LidInvalidNonceException thrown if the nonce was invalid
+     * @throws LidInvalidNonceException thrown if the nonce was unacceptable
      */
     public void validateNonce(
             SaneRequest request,
@@ -97,8 +97,8 @@ public class StoreLidNonceManager
         }
         
         String found = theStorage.put( nonce, nonce );
-        if( found == null ) {
-            throw new LidInvalidNonceException.NotKnown( nonce );
+        if( found != null ) {
+            throw new LidInvalidNonceException.UsedAlready( nonce );
         }
     }
 

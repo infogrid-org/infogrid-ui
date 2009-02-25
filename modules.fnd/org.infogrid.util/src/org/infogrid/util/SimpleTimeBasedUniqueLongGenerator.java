@@ -5,46 +5,46 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util;
 
 /**
- * Knows how to create unique identifiers, mostly derived from the current time.
- * It makes sure that even if invoked several times within a short amount of time,
- * unique identifiers are being returned.
+ * Uses a very simple, time-based algorithm to create unique longs.
  */
-public class UniqueIdentifierCreator
+public class SimpleTimeBasedUniqueLongGenerator
+    implements
+        UniqueTokenGenerator<Long>
 {
     /**
      * Factory method.
      *
      * @return the created UniqueIdentifierCreator
      */
-    public static UniqueIdentifierCreator create()
+    public static SimpleTimeBasedUniqueLongGenerator create()
     {
-        return new UniqueIdentifierCreator();
+        return new SimpleTimeBasedUniqueLongGenerator();
     }
     
     /**
      * Constructor, for subclasses only.
      */
-    protected UniqueIdentifierCreator()
+    protected SimpleTimeBasedUniqueLongGenerator()
     {
         // noop
     }
 
     /**
-     * Create a unique identifier.
+     * Create a unique token.
      *
-     * @return the unique Identifier
+     * @return the unique token
      */
-    public synchronized long createUniqueIdentifier()
+    public synchronized Long createUniqueToken()
     {
         long currentDate = System.currentTimeMillis();
         if( currentDate > theMostRecent ) {

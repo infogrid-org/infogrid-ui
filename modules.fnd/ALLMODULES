@@ -20,6 +20,7 @@ org.infogrid.kernel.active
 org.infogrid.codegen
 org.infogrid.model.Web
 org.infogrid.model.Common
+org.infogrid.model.Account
 org.infogrid.model.AclBasedSecurity
 org.infogrid.model.Blob
 org.infogrid.model.Test
@@ -60,5 +61,6 @@ org.infogrid.lid.model.traversal
 org.infogrid.lid.model.formatnegotiation
 org.infogrid.lid.store
 org.infogrid.lid.openid.store
+org.infogrid.jee.lid
 org.infogrid.scene
 org.infogrid.util.instrument

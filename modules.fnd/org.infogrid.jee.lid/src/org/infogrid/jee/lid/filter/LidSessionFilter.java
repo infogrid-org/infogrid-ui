@@ -31,8 +31,6 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.security.ThreadIdentityManager;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.util.Identifier;
-import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
@@ -67,30 +65,29 @@ public class LidSessionFilter
 
         String lidString = saneRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
         String session   = saneRequest.getCookieValue( LidCookies.LID_SESSION_COOKIE_NAME );
-        
-        Identifier lid = SimpleStringIdentifier.create( lidString );
 
-        boolean setCaller = false;
+        MeshObjectIdentifier lid       = null;
+        boolean              setCaller = false;
 
         try {
-            LidSession userSession = theSessionManager.get( lid );
-            
-            if( userSession != null && userSession.isStillValid() && userSession.getCookieValue().equals( session )) {
+            try {
+                lid = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( lidString );
 
-                try {
-                    MeshObjectIdentifier callerId = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( lidString );
+                LidSession userSession = theSessionManager.get( lid );
+                if( userSession != null && userSession.isStillValid() && userSession.getCookieValue().equals( session )) {
 
-                    MeshObject caller = theMeshBase.accessLocally( callerId );
+                    request.setAttribute( "lid", lid.toExternalForm() );
+                            // clean version of the identifier
+
+                    MeshObject caller = theMeshBase.accessLocally( lid );
                     
                     ThreadIdentityManager.setCaller( caller );
                     
                     setCaller = true;
-
-                } catch( Throwable t ) {
-                    getLog().error( t );
                 }
-
-            }        
+            } catch( Throwable t ) {
+                getLog().error( t );
+            }
             chain.doFilter( request, response );
             
         } finally {

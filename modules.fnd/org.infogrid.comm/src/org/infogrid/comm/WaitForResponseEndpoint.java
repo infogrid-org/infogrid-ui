@@ -20,8 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.RemoteQueryTimeoutException;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.SimpleTimeBasedUniqueLongGenerator;
 import org.infogrid.util.StringHelper;
-import org.infogrid.util.UniqueIdentifierCreator;
 
 /**
  * An BidirectionalMessageEndpoint that suspents the thread sending a message until a
@@ -300,7 +300,7 @@ public class WaitForResponseEndpoint<T extends CarriesInvocationId>
      */
     protected long createInvocationId()
     {
-        long ret = theDelegate.createUniqueIdentifier();
+        long ret = theDelegate.createUniqueToken();
         return ret;
     }
 
@@ -347,9 +347,9 @@ public class WaitForResponseEndpoint<T extends CarriesInvocationId>
     protected HashMap<Long,Throwable> theExceptions = new HashMap<Long,Throwable>();
 
     /**
-     * The internally used UniqueIdentifierCreator.
+     * The internally used UniqueTokenCreator.
      */
-    protected static UniqueIdentifierCreator theDelegate = UniqueIdentifierCreator.create();
+    protected static SimpleTimeBasedUniqueLongGenerator theDelegate = SimpleTimeBasedUniqueLongGenerator.create();
 
     /**
      * The default timeout.

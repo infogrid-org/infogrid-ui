@@ -9,7 +9,6 @@ org.infogrid.probe
 org.infogrid.probe.feeds
 org.infogrid.probe.store
 org.infogrid.probe.vcard
-org.infogrid.jee.lid
 org.infogrid.jee.probe
 org.infogrid.jee.rest.net
 org.infogrid.jee.viewlet.net

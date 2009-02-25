@@ -261,6 +261,7 @@ public class BufferedServletResponse
     {
         resetBuffer();
 
+        theStatusCode = 302; // Found code
         theHeaders.put( LOCATION_HEADER, location );
     }
     

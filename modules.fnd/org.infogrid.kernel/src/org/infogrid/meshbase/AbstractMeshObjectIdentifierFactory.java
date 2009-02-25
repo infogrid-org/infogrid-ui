@@ -16,7 +16,7 @@ package org.infogrid.meshbase;
 
 import java.net.URISyntaxException;
 import org.infogrid.mesh.MeshObjectIdentifier;
-import org.infogrid.util.UniqueIdentifierCreator;
+import org.infogrid.util.SimpleTimeBasedUniqueLongGenerator;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -42,7 +42,7 @@ public abstract class AbstractMeshObjectIdentifierFactory
      */
     public MeshObjectIdentifier createMeshObjectIdentifier()
     {
-        long unique = theDelegate.createUniqueIdentifier();
+        long unique = theDelegate.createUniqueToken();
 
         StringBuilder id = new StringBuilder();
         id.append( INTERNAL_PREFIX ); // keep this short
@@ -60,9 +60,9 @@ public abstract class AbstractMeshObjectIdentifierFactory
     }
 
     /**
-     * The internally used UniqueIdentifierCreator.
+     * The internally used UniqueTokenCreator.
      */
-    protected static UniqueIdentifierCreator theDelegate = UniqueIdentifierCreator.create();
+    protected static SimpleTimeBasedUniqueLongGenerator theDelegate = SimpleTimeBasedUniqueLongGenerator.create();
     
     /**
      * String that only internal identifiers may start with, not external ones.

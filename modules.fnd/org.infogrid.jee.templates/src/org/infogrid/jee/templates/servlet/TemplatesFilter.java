@@ -93,9 +93,6 @@ public class TemplatesFilter
             }
         }
 
-
-
-
         BufferedServletResponse bufferedResponse = new BufferedServletResponse( realResponse );
         Throwable               lastException    = null;
         try {

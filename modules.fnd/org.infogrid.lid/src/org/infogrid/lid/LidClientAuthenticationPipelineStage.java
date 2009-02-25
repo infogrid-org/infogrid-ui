@@ -14,6 +14,7 @@
 
 package org.infogrid.lid;
 
+import java.net.URISyntaxException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.util.http.SaneRequest;
 
@@ -32,10 +33,12 @@ public interface LidClientAuthenticationPipelineStage
      * @return the LidClientAuthenticationStatus
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
+     * @throws URISyntaxException thrown if the specified client identifier could not be interpreted
      */
     public LidClientAuthenticationStatus determineAuthenticationStatus(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
-            LidAbortProcessingPipelineException;
+            LidAbortProcessingPipelineException,
+            URISyntaxException;
 }

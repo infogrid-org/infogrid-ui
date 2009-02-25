@@ -110,4 +110,25 @@ public abstract class LidInvalidNonceException
             super( invalidNonce );
         }
     }
+
+    /**
+     * The nonce was used already.
+     */
+    public static class UsedAlready
+            extends
+                LidInvalidNonceException
+    {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
+        /**
+         * Constructor.
+         *
+         * @param invalidNonce the invalid nonce
+         */
+        public UsedAlready(
+                String invalidNonce )
+        {
+            super( invalidNonce );
+        }
+    }
 }

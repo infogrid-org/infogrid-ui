@@ -14,6 +14,7 @@
 
 package org.infogrid.lid.openid;
 
+import java.net.URISyntaxException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
 import org.infogrid.lid.LidClientAuthenticationPipelineStage;
@@ -78,12 +79,14 @@ public class DefaultOpenIdLidProcessingPipeline
      * @return the authentication status of the client
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
+     * @throws URISyntaxException thrown if the specified client identifier could not be interpreted
      */
     public LidClientAuthenticationStatus processPipeline(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
-            LidAbortProcessingPipelineException
+            LidAbortProcessingPipelineException,
+            URISyntaxException
     {
         HasIdentifier                 requestedResource = null;
         LidClientAuthenticationStatus clientAuthStatus  = null;
