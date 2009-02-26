@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -49,9 +49,10 @@ public interface LidCookies
     
     /**
      * Default maximum age, in seconds, for the LID session cookie. Note that the LidSessionManager may decide
-     * to expire the cookie far earlier than it is indicated to the client.
+     * to expire the cookie far earlier than it is indicated to the client. If this is negative, the cookie
+     * will be a session cookie.
      */
     public static final int LID_SESSION_COOKIE_DEFAULT_MAX_AGE = theResourceHelper.getResourceIntegerOrDefault( 
             "LidSessionCookieDefaultMaxAge",
-            60*60*24*7 ); // one week
+            -1 ); // session cookie
 }
