@@ -28,8 +28,8 @@ import java.io.IOException;
  * This class can store arbitrary Java objects, by delegating to an underlying,
  * configurable {@link Store} and a {@link StoreEntryMapper}.
  * 
- * @param K the type of key
- * @param V the type of value
+ * @param <K> the type of key
+ * @param <V> the type of value
  */
 public class ObjectStore<K,V>
 {
