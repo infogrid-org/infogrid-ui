@@ -8,7 +8,7 @@ td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level0 > dt {
     font-weight: bold;
 }
 td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dt {
-    display: list-item;
+    display: list-item; 
     list-style: disc inside;
     margin-left: 5px;
 }

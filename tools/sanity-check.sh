@@ -27,7 +27,43 @@ grep ${FLAGS} application.vendor {modules*,apps*,tests*}/*/nbproject/project.pro
 
 echo '** Checking copyright. **'
 for f in `svn status | egrep -v '^D|^\?' | cut -c 8-`; do
-        egrep -H '(copyright|Copyright|&copy|\(C\)).*[0-9]{4}' $f | grep -v "${THISYEAR}" > /dev/null && echo $f
+	egrep -H '(copyright|Copyright|&copy|\(C\)).*[0-9]{4}' $f | grep -v "${THISYEAR}" > /dev/null && echo $f
+done
+
+echo '** Checking for empty directories. **'
+for f in `find modules* apps* tests* tools* -type d -and -not -path '*.svn*' -and -not -name src -print`; do
+	if [ 0 == `ls -1 "$f/" | wc -l` ]; then
+		echo $f
+	fi
+done
+
+echo '** Checking that TLD files copied across projects are the same **'
+for v in `find . -path '*/web/v' -and -not -path '*/build/*'`; do
+	for f in `find ${v} -name '*.tld' -print`; do
+		g=`echo $f | sed "s#^\${v}/##g"`;
+#		/bin/echo -n '---- now looking at: '
+#		ls modules.*/*/src/$g ${f}
+		diff -H -q modules.*/*/src/$g ${f} | sed 's/ and//'
+	done;
+done;
+
+echo '** Checking that Viewlet CSS files copied across projects are the same **'
+for f in apps.net/org.infogrid.meshworld.net ; do
+	for c in \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb.css \
+web/v/org/infogrid/jee/taglib/candy/OverlayTag.css \
+web/v/org/infogrid/jee/taglib/mesh/RefreshTag.css \
+web/v/org/infogrid/jee/taglib/viewlet/ViewletAlternativesTag.css \
+web/v/org/infogrid/jee/viewlet/graphtree/GraphTreeViewlet.css \
+web/v/org/infogrid/jee/viewlet/meshbase/AllMeshObjectsViewlet.css \
+web/v/org/infogrid/jee/viewlet/modelbase/AllMeshTypesViewlet.css \
+web/v/org/infogrid/jee/viewlet/objectset/ObjectSetViewlet.css \
+web/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet.css \
+web/v/org/infogrid/jee/viewlet/wikiobject/WikiObjectDisplayViewlet.css \
+web/v/org/infogrid/jee/viewlet/wikiobject/WikiObjectEditViewlet.css \
+; do
+		diff -H -q apps.fnd/org.infogrid.meshworld/$c $f/$c | sed 's/ and//'
+	done;
 done
 
 for pattern in "$@"; do
