@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -30,30 +30,17 @@ public class InconsistentArgumentsException
     /**
      * Constructor.
      *
-     * @param verb the verb representing the operation that was missing an essential argument
      * @param arg1Name name of the first inconsistent argument
      * @param arg2Name name of the first inconsistent argument
      */
     public InconsistentArgumentsException(
-            HttpShellVerb verb,
             String        arg1Name,
             String        arg2Name )
     {
-        theVerb          = verb;
         theArgument1Name = arg1Name;
         theArgument2Name = arg2Name;
     }
     
-    /**
-     * Obtain the verb representing the operation that was missing an essential argument.
-     *
-     * @return the verb
-     */
-    public HttpShellVerb getHttpShellVerb()
-    {
-        return theVerb;
-    }
-
     /**
      * Obtain the name of the first argument that was inconsistent.
      *
@@ -81,13 +68,8 @@ public class InconsistentArgumentsException
      */    
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theVerb, theArgument1Name, theArgument2Name };
+        return new Object[] { theArgument1Name, theArgument2Name };
     }
-
-    /**
-     * The operation that had inconsistent arguments.
-     */
-    protected HttpShellVerb theVerb;
 
     /**
      * Name of the first argument that was inconsistent.

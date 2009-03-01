@@ -20,6 +20,7 @@
    <tr>
     <th>Identifier</th>
     <th>Types and Attributes</th>
+    <th>Neighbors</th>
     <th>Audit</th>
    </tr>
   </thead>
@@ -27,15 +28,15 @@
    <c:forEach items="${Viewlet.cursorIterator}" var="current" varStatus="currentStatus">
     <u:rotatingTr varStatus="currentStatus" htmlClasses="bright,dark" firstRowHtmlClass="first" lastRowHtmlClass="last">
      <td>
-      <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'mesh.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/trash.png" alt="Delete"/></a></div>
+      <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/trash.png" alt="Delete"/></a></div>
       <mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current" maxLength="30"/></mesh:meshObjectLink>
      </td>
      <td>
-      <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-bless', { 'mesh.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Bless this MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Add type"/></a></div>
+      <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-bless', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Bless this MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Add type"/></a></div>
       <ul class="types">
        <mesh:blessedByIterate meshObjectName="current" blessedByLoopVar="blessedBy">
         <li>
-         <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-unbless', { 'mesh.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />', 'mesh.subjecttype' : '<mesh:meshTypeId meshTypeName="blessedBy" stringRepresentation="Plain" filter="true" />' } )" title="Unbless this MeshObject"><img src="${CONTEXT}/s/images/trash.png" alt="Delete"/></a></div>
+         <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-unbless', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />', shell.subject.unbless' : '<mesh:meshTypeId meshTypeName="blessedBy" stringRepresentation="Plain" filter="true" />' } )" title="Unbless this MeshObject"><img src="${CONTEXT}/s/images/trash.png" alt="Delete"/></a></div>
          <mesh:type meshTypeName="blessedBy"/>
          <ul class="properties">
           <mesh:propertyIterate meshObjectName="current" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue">

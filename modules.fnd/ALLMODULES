@@ -21,10 +21,13 @@ org.infogrid.codegen
 org.infogrid.model.Web
 org.infogrid.model.Common
 org.infogrid.model.Account
+org.infogrid.model.Annotation
 org.infogrid.model.AclBasedSecurity
 org.infogrid.model.Blob
+org.infogrid.model.Bookmark
 org.infogrid.model.Test
 org.infogrid.model.SecurityTest
+org.infogrid.model.Tagging
 org.infogrid.model.Viewlet
 org.infogrid.model.Wiki
 org.infogrid.model.Requirement

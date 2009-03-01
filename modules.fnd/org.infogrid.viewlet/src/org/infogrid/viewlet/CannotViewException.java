@@ -327,8 +327,8 @@ public abstract class CannotViewException
             return rep.formatEntry(
                     getClass(),
                     "NoSubjectString",
-                    theViewlet.getName(),
-                    theViewlet.getUserVisibleName(),
+                    theViewlet != null ? theViewlet.getName() : null,
+                    theViewlet != null ? theViewlet.getUserVisibleName() : null,
                     theIdentifier,
                     theIdentifier.toExternalForm() );
         }

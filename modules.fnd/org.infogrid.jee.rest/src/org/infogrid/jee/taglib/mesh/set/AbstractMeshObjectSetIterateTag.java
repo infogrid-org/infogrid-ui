@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,8 +17,8 @@ package org.infogrid.jee.taglib.mesh.set;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
@@ -28,7 +28,7 @@ import org.infogrid.mesh.set.MeshObjectSet;
  */
 public abstract class AbstractMeshObjectSetIterateTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractRestInfoGridBodyTag
     implements
         InfoGridIterationTag
 {

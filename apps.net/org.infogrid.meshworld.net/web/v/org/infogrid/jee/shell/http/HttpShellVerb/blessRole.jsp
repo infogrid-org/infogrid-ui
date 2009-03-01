@@ -5,19 +5,18 @@
    <tr>
     <td class="label">MeshObject:</td>
     <td>
-     <input class="subject" name="mesh.subject" size="32" readonly="readonly" />
-     <input type="hidden" name="mesh.verb" value="blessRole" />
+     <input class="subject" name="shell.subject" size="32" readonly="readonly" />
     </td>
    </tr>
    <tr>
     <td class="label">RoleType:</td>
     <td>
-     <input class="roleType" name="mesh.roletype" size="32" />
+     <input class="roleType" name="shell.subject.to.object.blessRole" size="32" />
     </td>
    </tr>
    <tr>
     <td class="label">Neighbor:</td>
-    <td><input class="object" name="mesh.object" size="32" /></td>
+    <td><input class="object" name="shell.object" size="32" /></td>
    </tr>
    <tr>
     <td colspan="2">

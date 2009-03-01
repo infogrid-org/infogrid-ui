@@ -5,17 +5,16 @@
    <tr>
     <td class="label">MeshObject:</td>
     <td>
-     <input class="subject" name="mesh.subject" size="32" readonly="readonly" />
-     <input type="hidden" name="mesh.verb" value="setProperty" />
+     <input class="subject" name="shell.subject" size="32" readonly="readonly" />
     </td>
    </tr>
    <tr>
     <td class="label">Property Type:</td>
-    <td><input class="propertytype" name="mesh.propertytype" size="32" /></td>
+    <td><input class="propertytype" name="shell.subject.propertytype" size="32" /></td>
    </tr>
    <tr>
     <td class="label">Property Value:</td>
-    <td><input class="propertyvalue" name="mesh.propertyvalue" size="32" /></td>
+    <td><input class="propertyvalue" name="shell.subject.propertyvalue" size="32" /></td>
    </tr>
    <tr>
     <td colspan="2">

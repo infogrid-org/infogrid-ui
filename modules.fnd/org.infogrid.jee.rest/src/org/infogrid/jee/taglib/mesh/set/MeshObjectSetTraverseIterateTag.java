@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -80,7 +80,7 @@ public class MeshObjectSetTraverseIterateTag
      * @return value of the traversalSpecification property
      * @see #setTraversalSpecification
      */
-    public final TraversalSpecification getTraversalSpecification()
+    public final String getTraversalSpecification()
     {
         return theTraversalSpecification;
     }
@@ -92,7 +92,7 @@ public class MeshObjectSetTraverseIterateTag
      * @see #getTraversalSpecification
      */
     public final void setTraversalSpecification(
-            TraversalSpecification newValue )
+            String newValue )
     {
         theTraversalSpecification = newValue;
     }
@@ -101,16 +101,19 @@ public class MeshObjectSetTraverseIterateTag
      * Provide the MeshObjectSet over which we iterate.
      *
      * @return the set to iterate over
-     * @throws JspException if a JSP exception has occurred
+     * @throws JspException if the bean was not found and the ignore attribute was not set
+     * @throws IgnoreException thrown if the bean could not be found but the ignore attribute was set
      */
     protected MeshObjectSet determineMeshObjectSet()
         throws
             JspException,
             IgnoreException
     {        
-        MeshObject start = (MeshObject) lookupOrThrow( theStartObjectName );
+        MeshObject             start = (MeshObject) lookupOrThrow( theStartObjectName );
+        TraversalSpecification spec  = findRoleTypeOrThrow( theTraversalSpecification );
+                // FIXME: In the future, this should allow more complex traversal specifications
 
-        MeshObjectSet ret = start.traverse( theTraversalSpecification );
+        MeshObjectSet ret = start.traverse( spec );
         return ret;
     }
 
@@ -122,5 +125,5 @@ public class MeshObjectSetTraverseIterateTag
     /**
      * The TraversalSpecification to take.
      */
-    protected TraversalSpecification theTraversalSpecification;
+    protected String theTraversalSpecification;
 }

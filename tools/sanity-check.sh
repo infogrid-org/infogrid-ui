@@ -62,7 +62,42 @@ web/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet.css \
 web/v/org/infogrid/jee/viewlet/wikiobject/WikiObjectDisplayViewlet.css \
 web/v/org/infogrid/jee/viewlet/wikiobject/WikiObjectEditViewlet.css \
 ; do
-		diff -H -q apps.fnd/org.infogrid.meshworld/$c $f/$c | sed 's/ and//'
+		if [ -r "$f/$c" ]; then
+			diff -H -q apps.fnd/org.infogrid.meshworld/$c $f/$c | sed 's/ and//'
+		fi
+	done;
+done
+
+echo '** Checking that HttpShell HTML and the Viewlet JSPs are the same across projects **'
+for f in apps.fnd/org.infogrid.jee.testapp apps.net/org.infogrid.meshworld.net ; do
+	for c in \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/bless.jsp \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/blessRole.jsp \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/create.jsp \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/delete.jsp \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/relate.jsp \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/setProperty.jsp \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/unbless.jsp \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/unblessRole.jsp \
+web/v/org/infogrid/jee/shell/http/HttpShellVerb/unrelate.jsp \
+web/s/templates/default-iframe/text/html/template.jsp \
+web/v/org/infogrid/jee/viewlet/bulk/BulkLoaderViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/graphtree/GraphTreeViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/modelbase/AllMeshTypesViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/objectset/ObjectSetViewlet/application/atom+xml/ObjectSetViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/objectset/ObjectSetViewlet/application/rss+xml/ObjectSetViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/objectset/ObjectSetViewlet/text/json/ObjectSetViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/objectset/ObjectSetViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet/attributes.jsp \
+web/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet/audit.jsp \
+web/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet/neighbors.jsp \
+web/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/wikiobject/WikiObjectDisplayViewlet.jsp \
+web/v/org/infogrid/jee/viewlet/wikiobject/WikiObjectEditViewlet.jsp \
+; do
+                if [ -r "$f/$c" ]; then
+			diff -H -q apps.fnd/org.infogrid.meshworld/$c $f/$c | sed 's/ and//'
+		fi
 	done;
 done
 

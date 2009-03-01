@@ -4,14 +4,14 @@
   <table>
    <tr>
     <td class="label">MeshObject:</td>
-    <td><input class="subject" name="mesh.subject" size="32" readonly="readonly" />
-     <input type="hidden" name="mesh.verb" value="unbless" />
+    <td>
+     <input class="subject" name="shell.subject" size="32" readonly="readonly" />
     </td>
    </tr>
    <tr>
     <td class="label">Type:</td>
     <td>
-     <input class="subjecttype" name="mesh.subjecttype" size="32" />
+     <input class="subjecttype" name="shell.subject.unbless" size="32" />
     </td>
    </tr>
    <tr>

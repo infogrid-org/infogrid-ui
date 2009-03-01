@@ -5,13 +5,15 @@
    <tr>
     <td class="label">MeshObject:</td>
     <td>
-     <input class="subject" name="mesh.subject" size="32" readonly="readonly" />
-     <input type="hidden" name="mesh.verb" value="relate" />
+     <input class="subject" name="shell.subject" size="32" readonly="readonly" />
+     <input type="hidden" name="shell.subject.to.object.perform" value="relate" />
     </td>
    </tr>
    <tr>
     <td class="label">New&nbsp;Neighbor:</td>
-    <td><input class="object" name="mesh.object" size="32" /></td>
+    <td>
+     <input class="object" name="shell.object" size="32" />
+    </td>
    </tr>
    <tr>
     <td colspan="2">

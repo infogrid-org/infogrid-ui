@@ -32,7 +32,11 @@ import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.RoleType;
+import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
+import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
+import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.StringRepresentation;
@@ -276,6 +280,48 @@ public class RestfulJeeFormatter
         return ret;
     }
 
+    /**
+     * Find a RoleType, or return null.
+     *
+     * @param name name of the RoleType
+     * @return the found RoleType, or null
+     */
+    public RoleType findRoleType(
+            String name )
+    {
+        ModelBase mb = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( ModelBase.class );
+
+        MeshTypeIdentifierFactory idFact = mb.getMeshTypeIdentifierFactory();
+        MeshTypeIdentifier        id     = idFact.fromExternalForm( name );
+
+        RoleType ret;
+        try {
+            ret = mb.findRoleTypeByIdentifier( id );
+
+        } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+            ret = null;
+        }
+        return ret;
+    }
+
+    /**
+     * Find a RoleType, or throw an Exception.
+     *
+     * @param name name of the RoleType
+     * @return the found RoleType
+     * @throws JspException thrown if the RoleType could not be found
+     */
+    public RoleType findRoleTypeOrThrow(
+            String name )
+        throws
+            JspException
+    {
+        RoleType ret = findRoleType( name );
+        if( ret == null ) {
+            throw new JspException( "Could not find roleType " + name );
+        }
+        return ret;
+    }
 
     /**
      * Format a PropertyValue.

@@ -5,8 +5,8 @@
    <tr>
     <td class="label">Identifier:</td>
     <td>
-     <input class="subject" name="mesh.subject" size="32"/>
-     <input type="hidden" name="mesh.verb" value="accessLocally" />
+     <input class="subject" name="shell.subject" size="32"/>
+     <input type="hidden" name="shell.subject.access" value="find" />
     </td>
    </tr>
    <tr>
