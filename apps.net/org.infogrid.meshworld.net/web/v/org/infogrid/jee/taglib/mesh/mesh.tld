@@ -113,6 +113,36 @@
     </tag>    
 
     <tag>
+        <name>meshObject</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectTag</tag-class>
+        <attribute>
+            <name>meshObjectName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>stringRepresentation</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>maxLength</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    
+    <tag>
         <name>meshObjectId</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectIdentifierTag</tag-class>
         <attribute>
@@ -141,7 +171,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>meshObjectLink</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectLinkTag</tag-class>
