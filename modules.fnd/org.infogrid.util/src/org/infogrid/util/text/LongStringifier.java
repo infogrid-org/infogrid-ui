@@ -65,13 +65,15 @@ public class LongStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     public String format(
             String soFar,
-            Long   arg )
+            Long   arg,
+            int    maxLength )
     {
-        return super.format( soFar, arg.longValue() );
+        return super.format( soFar, arg.longValue(), maxLength );
     }
     
     /**

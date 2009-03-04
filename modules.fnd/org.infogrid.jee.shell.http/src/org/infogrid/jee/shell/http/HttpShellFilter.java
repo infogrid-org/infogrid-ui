@@ -49,8 +49,8 @@ import org.infogrid.mesh.RoleTypeRequiresEntityTypeException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
+import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
-import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.EntityType;
@@ -222,6 +222,7 @@ public class HttpShellFilter
             Map<String,String[]>       postArguments = lidRequest.getPostArguments();
             HashMap<String,MeshObject> variables     = new HashMap<String,MeshObject>();
 
+            // first look for all arguments of the form <PREFIX>.<VARIABLE>
             for( String arg : postArguments.keySet() ) {
                 if( !arg.startsWith( PREFIX )) {
                     continue; // skip all that aren't for us
@@ -248,7 +249,65 @@ public class HttpShellFilter
                 potentiallySetProperties( varName, accessed, tx, lidRequest );
             }
 
-            // second loop: deal with relationships
+            // then look for all arguments of the form <PREFIX>.<VARIABLE>.<ACCESS_TAG> for which
+            // there is no corresponding <PREFIX>.<VARIABLE>. This implies that a new MeshObject shall be created
+            // with an automatically-generated MeshObjectIdentifier.
+            for( String arg : postArguments.keySet() ) {
+                if( !arg.startsWith( PREFIX )) {
+                    continue; // skip all that aren't for us
+                }
+                if( !arg.endsWith( ACCESS_TAG )) {
+                    continue; // not in this loop
+                }
+                String coreArg = arg.substring( PREFIX.length(), arg.length()-ACCESS_TAG.length() );
+                String varName = coreArg;
+                String varValue = lidRequest.getPostArgument( PREFIX + varName );
+                if( varValue != null ) {
+                    // dealt with this one already
+                    continue;
+                }
+                MeshBase            base       = findMeshBaseFor( varName, lidRequest );
+                HttpShellAccessVerb accessVerb = HttpShellAccessVerb.findAccessFor( varName, lidRequest );
+
+                OnDemandTransaction  tx = txs.obtainFor( base );
+
+                MeshObject accessed = accessVerb.access( null, base, tx, lidRequest );
+                variables.put( varName, accessed );
+
+                // first bless then unbless, then properties
+                potentiallyBless(         varName, accessed, tx, lidRequest );
+                potentiallyUnbless(       varName, accessed, tx, lidRequest );
+                potentiallySetProperties( varName, accessed, tx, lidRequest );
+            }
+
+            // now unbless roles
+            for( String var1Name : variables.keySet() ) {
+                String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
+
+                for( String arg : postArguments.keySet() ) {
+                    if( !arg.startsWith( key )) {
+                        continue; // not relevant here
+                    }
+                    if( arg.endsWith( UNBLESS_ROLE_TAG )) {
+                        String     var2Name = arg.substring( key.length(), arg.length()-UNBLESS_ROLE_TAG.length() );
+                        MeshObject found2   = variables.get( var2Name );
+                        MeshObject found1   = variables.get( var1Name );
+
+                        String [] values = lidRequest.getMultivaluedPostArgument( arg );
+                        if( values != null ) {
+                            OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
+
+                            for( String v : values ) {
+                                RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                Transaction tx2 = tx.obtain();
+                                found1.unblessRelationship( toUnbless, found2 );
+                            }
+                        }
+                    }
+                }
+            }
+
+            // now create and delete relationships
             for( String var1Name : variables.keySet() ) {
                 String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
 
@@ -268,7 +327,19 @@ public class HttpShellFilter
                         if( relVerb != null ) {
                             relVerb.perform( found1, found2, tx, lidRequest );
                         }
-                    } else if( arg.endsWith( BLESS_ROLE_TAG )) {
+                    }
+                }
+            }
+
+            // now bless roles
+            for( String var1Name : variables.keySet() ) {
+                String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
+
+                for( String arg : postArguments.keySet() ) {
+                    if( !arg.startsWith( key )) {
+                        continue; // not relevant here
+                    }
+                    if( arg.endsWith( BLESS_ROLE_TAG )) {
                         String     var2Name = arg.substring( key.length(), arg.length()-BLESS_ROLE_TAG.length() );
                         MeshObject found2   = variables.get( var2Name );
                         MeshObject found1   = variables.get( var1Name );
@@ -278,40 +349,22 @@ public class HttpShellFilter
                             OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
                             for( String v : values ) {
-                                RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
                                 Transaction tx2 = tx.obtain();
-                                found1.blessRelationship( toUnbless, found2 );
+                                found1.blessRelationship( toBless, found2 );
                             }
                         }
-
-                    } else if( arg.endsWith( UNBLESS_ROLE_TAG )) {
-                        String     var2Name = arg.substring( key.length(), arg.length()-UNBLESS_ROLE_TAG.length() );
-                        MeshObject found2   = variables.get( var2Name );
-                        MeshObject found1   = variables.get( var1Name );
-
-                        String [] values = lidRequest.getMultivaluedPostArgument( arg );
-                        if( values != null ) {
-                            OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
-
-                            for( String v : values ) {
-                                RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
-                                Transaction tx2 = tx.obtain();
-                                found1.unblessRelationship( toUnbless, found2 );
-                            }
-                        }
-
                     }
-
                 }
             }
 
         } catch( URISyntaxException ex ) {
             throw new HttpShellException( ex );
 
-        } catch( MeshObjectIdentifierNotUniqueException ex ) {
+        } catch( MeshObjectAccessException ex ) {
             throw new HttpShellException( ex );
-
-        } catch( MeshObjectsNotFoundException ex ) {
+            
+        } catch( MeshObjectIdentifierNotUniqueException ex ) {
             throw new HttpShellException( ex );
 
         } catch( MeshTypeWithIdentifierNotFoundException ex ) {

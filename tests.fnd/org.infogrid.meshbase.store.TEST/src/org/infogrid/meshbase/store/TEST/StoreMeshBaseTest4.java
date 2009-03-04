@@ -131,6 +131,49 @@ public class StoreMeshBaseTest4
         }
         
         //
+
+        log.info( "Checking graph (1)" );
+
+        for( int i=0 ; i<quarter ; ++i ) {
+            MeshObjectIdentifier oneId   = idFact.fromExternalForm( PREFIX + i );
+            MeshObjectIdentifier twoId   = idFact.fromExternalForm( PREFIX + ( i + quarter ));
+            MeshObjectIdentifier threeId = idFact.fromExternalForm( PREFIX + ( i + quarter + quarter ));
+            MeshObjectIdentifier fourId  = idFact.fromExternalForm( PREFIX + ( i + quarter + quarter + quarter ));
+
+            MeshObject one   = mb.accessLocally( oneId );
+            MeshObject two   = mb.accessLocally( twoId );
+            MeshObject three = mb.accessLocally( threeId );
+            MeshObject four  = mb.accessLocally( fourId );
+
+            checkEqualsOutOfSequence(
+                    one.traverseToNeighborMeshObjects().getMeshObjects(),
+                    new MeshObject[] {
+                        four
+                    },
+                    "One has wrong relationships " + oneId );
+            checkEqualsOutOfSequence(
+                    two.traverseToNeighborMeshObjects().getMeshObjects(),
+                    new MeshObject[] {
+                        three,
+                        four
+                    },
+                    "One has wrong relationships " + twoId );
+            checkEqualsOutOfSequence(
+                    three.traverseToNeighborMeshObjects().getMeshObjects(),
+                    new MeshObject[] {
+                        two
+                    },
+                    "One has wrong relationships " + threeId );
+            checkEqualsOutOfSequence(
+                    four.traverseToNeighborMeshObjects().getMeshObjects(),
+                    new MeshObject[] {
+                        one,
+                        two
+                    },
+                    "One has wrong relationships " + fourId );
+        }
+
+        //
         
         log.info( "Collecting garbage and taking memory snapshot 2" );
         
@@ -144,7 +187,7 @@ public class StoreMeshBaseTest4
         
         //
         
-        log.info( "Checking graph" );
+        log.info( "Checking graph (2)" );
         
         for( int i=0 ; i<quarter ; ++i ) {
             MeshObjectIdentifier oneId   = idFact.fromExternalForm( PREFIX + i );

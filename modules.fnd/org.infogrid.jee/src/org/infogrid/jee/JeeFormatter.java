@@ -30,6 +30,7 @@ import org.infogrid.util.FactoryException;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -855,31 +856,6 @@ public class JeeFormatter
             return ret.toString();
         }
     }
-    /**
-     * Make sure a String is not longer than <code>maxLength</code>. This is accomplished
-     * by taking out characters in the middle if needed.
-     *
-     * @param in the input String
-     * @param maxLength the maximally allowed length
-     * @return the String, potentially shortened
-     */
-    public String potentiallyShorten(
-            String in,
-            int    maxLength )
-    {
-        if( in == null || in.length() == 0 ) {
-            return "";
-        }
-
-        final String insert = "...";
-        final int    fromEnd = 5; // how many characters we leave at the end
-        
-        String ret = in;
-        if( maxLength > 0 && ret.length() > maxLength ) {
-            ret = ret.substring( 0, maxLength-fromEnd-insert.length() ) + insert + ret.substring( ret.length() - fromEnd );
-        }
-        return ret;
-    }
 
     /**
      * Add <code>&</code>-separated arguments to this URL. If <code>escapeArguments</code> is
@@ -995,7 +971,7 @@ public class JeeFormatter
         for( Throwable current : reportedProblems ) {
             Throwable toFormat = determineThrowableToFormat( current );
             
-            String temp = rep.formatThrowable( toFormat, context );
+            String temp = rep.formatThrowable( toFormat, context, HasStringRepresentation.UNLIMITED_LENGTH );
             if(    buf.length() > 0
                 && temp.charAt( 0 ) != '\n'
                 && buf.charAt( buf.length()-1 ) != '\n' )
@@ -1022,9 +998,9 @@ public class JeeFormatter
     {
         Throwable ret;
         Throwable cause = candidate.getCause();
-        
-        if( candidate instanceof ServletException && cause != null ) {
-            ret = cause;
+
+        if( candidate instanceof ServletException && cause == null ) {
+            ret = ((ServletException)candidate).getRootCause(); // stupid inconsistent API
         } else {
             ret = candidate;
         }
@@ -1041,16 +1017,8 @@ public class JeeFormatter
     public StringRepresentation determineStringRepresentation(
             String in )
     {
-        String sanitized;
-        
-        if( in == null || in.length() == 0 ) {
-            sanitized = "Html";
-        } else {
-            StringBuilder temp = new StringBuilder( in.length() );
-            temp.append( Character.toUpperCase( in.charAt( 0 )));
-            temp.append( in.substring( 1 ).toLowerCase() );
-            sanitized = temp.toString();
-        }
+        String sanitized = determineStringRepresentationString( in );
+
         StringRepresentation ret = null;
         try {
             ret = theStringRepresentationDirectory.obtainFor( sanitized );
@@ -1061,6 +1029,28 @@ public class JeeFormatter
             ret = theStringRepresentationDirectory.getFallback();
         }
         return ret;
+    }
+
+    /**
+     * Helper method to convert a given String into a String representing a StringRepresentation.
+     *
+     * @param raw the incoming String
+     * @return the sanitized String
+     */
+    public static String determineStringRepresentationString(
+            String raw )
+    {
+        String sanitized;
+
+        if( raw == null || raw.length() == 0 ) {
+            sanitized = "Html";
+        } else {
+            StringBuilder temp = new StringBuilder( raw.length() );
+            temp.append( Character.toUpperCase( raw.charAt( 0 )));
+            temp.append( raw.substring( 1 ).toLowerCase() );
+            sanitized = temp.toString();
+        }
+        return sanitized;
     }
 
     /**

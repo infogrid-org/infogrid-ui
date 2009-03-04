@@ -50,12 +50,15 @@ public class JavaDoubleStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     public String format(
             String soFar,
-            Double arg )
+            Double arg,
+            int    maxLength )
     {
+        // ignore maxLength, it makes no sense here
         return String.valueOf( arg.doubleValue() );
     }
 
@@ -64,17 +67,19 @@ public class JavaDoubleStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
             String soFar,
-            Object arg )
+            Object arg,
+            int    maxLength )
         throws
             ClassCastException
     {
-        return format( soFar, (Double) arg );
+        return format( soFar, (Double) arg, maxLength );
     }
 
     /**

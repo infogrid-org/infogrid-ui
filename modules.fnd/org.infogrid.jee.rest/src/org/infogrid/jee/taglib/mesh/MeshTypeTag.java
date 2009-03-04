@@ -260,7 +260,7 @@ public class MeshTypeTag
                 }
             } else if( found instanceof DataType ) {
                 DataType realFound = (DataType) found;
-                text = realFound.toStringRepresentation( rep, context );
+                text = realFound.toStringRepresentation( rep, context, theMaxLength );
                 // a bit of a funny structure, but the best I can do
             } else {
                 throw new ClassCastException( "Found object named " + theMeshTypeName + " is neither a PropertyValue nor an L10Map: " + found );
@@ -278,14 +278,9 @@ public class MeshTypeTag
         }
         if( text == null ) {
             // a bit of a funny structure, but the best I can do
-            text = formatValue( pageContext, value, theNullString, rep.getName() );
+            text = formatValue( pageContext, value, theNullString, rep.getName(), theMaxLength );
         }
-
-        if( text != null ) {
-
-            text = theFormatter.potentiallyShorten( text, theMaxLength );
-            print( text );
-        }
+        print( text );
         
         return SKIP_BODY;
     }

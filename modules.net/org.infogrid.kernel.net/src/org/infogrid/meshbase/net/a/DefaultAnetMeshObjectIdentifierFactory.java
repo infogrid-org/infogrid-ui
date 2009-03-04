@@ -269,34 +269,42 @@ public class DefaultAnetMeshObjectIdentifierFactory
         throws
             URISyntaxException
     {
-        try {
-            representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, DefaultAnetMeshObjectIdentifier.HOME_DEFAULT_ENTRY, s );
-            return fromExternalForm( "" );
+        String [] entriesToTry1 = {
+                DefaultAnetMeshObjectIdentifier.DEFAULT_MESH_BASE_HOME_ENTRY,
+                DefaultAnetMeshObjectIdentifier.NON_DEFAULT_MESH_BASE_HOME_ENTRY };
 
-        } catch( StringifierException ex ) {
-            // wasn't the home object ...
-        }
-        try {
-            Object [] found = representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, DefaultAnetMeshObjectIdentifier.DEFAULT_ENTRY, s );
+        for( String entry : entriesToTry1 ) {
 
-            DefaultAnetMeshObjectIdentifier ret;
-            switch( found.length ) {
-                case 1:
-                    ret = obtain( theMeshBaseIdentifier, (String) found[0], true );
-                    break;
+            try {
+                representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, entry, s );
+                return fromExternalForm( "" );
 
-                default:
-                    throw new URISyntaxException( s, "Cannot parse identifier" );
+            } catch( StringifierException ex ) {
+                // that wasn't it ...
             }
-
-            return ret;
-
-        } catch( StringifierException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
-
-        } catch( ClassCastException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
         }
+
+        String [] entriesToTry2 = {
+                DefaultAnetMeshObjectIdentifier.DEFAULT_MESH_BASE_ENTRY,
+                DefaultAnetMeshObjectIdentifier.NON_DEFAULT_MESH_BASE_ENTRY };
+
+        for( String entry : entriesToTry2 ) {
+            try {
+                Object [] found = representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, entry, s );
+
+                if( found.length == 1 ) {
+                    DefaultAnetMeshObjectIdentifier ret = obtain( theMeshBaseIdentifier, (String) found[0], true );
+                    return ret;
+                }
+
+            } catch( StringifierException ex ) {
+                // that wasn't it ...
+
+            } catch( ClassCastException ex ) {
+                // that wasn't it ...
+            }
+        }
+        throw new URISyntaxException( s, "Cannot parse identifier" );
     }
 
     /**

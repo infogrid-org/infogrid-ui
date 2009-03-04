@@ -104,6 +104,9 @@ public class InitializationFilter
             SaneRequest lidRequest = SaneServletRequest.create( realRequest );
             request.setAttribute( CONTEXT_PARAMETER, realRequest.getContextPath() );
 
+            if( getLog().isDebugEnabled() ) {
+                getLog().debug( "InitializationFilter: " + lidRequest );
+            }
             StringBuilder fullContext = new StringBuilder();
             fullContext.append( lidRequest.getProtocol() ).append( "://" );
             fullContext.append( lidRequest.getHttpHost() );

@@ -19,6 +19,7 @@ import java.util.Properties;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.AbstractLocalizedRuntimeException;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -460,14 +461,14 @@ public abstract class Log
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userFatal(
-                    realEx.toStringRepresentation( rep, context ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userFatal(
-                    realEx.toStringRepresentation( rep, context ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
                     parentComponent,
                     realEx );
 
@@ -585,14 +586,14 @@ public abstract class Log
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userError(
-                    realEx.toStringRepresentation( rep, context ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userError(
-                    realEx.toStringRepresentation( rep, context ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
                     parentComponent,
                     realEx );
         } else {
@@ -709,14 +710,14 @@ public abstract class Log
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userWarn(
-                    realEx.toStringRepresentation( rep, context ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userWarn(
-                    realEx.toStringRepresentation( rep, context ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
                     parentComponent,
                     realEx );
 

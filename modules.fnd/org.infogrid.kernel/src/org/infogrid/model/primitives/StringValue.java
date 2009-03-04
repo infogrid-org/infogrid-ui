@@ -218,13 +218,15 @@ public final class StringValue
      *
      * @param representation the representation scheme
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the String representation
      */
     public String toStringRepresentation(
             StringRepresentation        representation,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
-        return representation.formatEntry( getClass(), DEFAULT_ENTRY, theValue );
+        return representation.formatEntry( getClass(), DEFAULT_ENTRY, maxLength, theValue );
     }
 
     /**

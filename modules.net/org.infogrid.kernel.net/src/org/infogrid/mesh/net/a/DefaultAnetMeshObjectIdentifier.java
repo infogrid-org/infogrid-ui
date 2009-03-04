@@ -14,10 +14,16 @@
 
 package org.infogrid.mesh.net.a;
 
+import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.a.DefaultAMeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
+import org.infogrid.mesh.text.MeshStringRepresentationContext;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
+import org.infogrid.util.text.HasStringRepresentation;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * Implements NetMeshObjectIdentifier for the Anet implementation.
@@ -127,6 +133,259 @@ public class DefaultAnetMeshObjectIdentifier
         } else {
             return SEPARATOR + theLocalId;
         }
+    }
+
+    /**
+     * Obtain a String representation of this instance that can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @return String representation
+     */
+    @Override
+    public String toStringRepresentation(
+            StringRepresentation        rep,
+            StringRepresentationContext context,
+            int                         maxLength )
+    {
+        MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
+        String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        MeshBase   meshBase    = meshObject != null ? meshObject.getMeshBase() : null;
+
+        boolean isDefaultMeshBase = false;
+        if( meshBase != null && context != null ) {
+            isDefaultMeshBase = meshBase.equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ));
+        }
+        boolean isHomeObject;
+        if( meshBase != null ) {
+            isHomeObject = meshObject == meshBase.getHomeObject();
+        } else {
+            isHomeObject = identifiesHomeObject();
+        }
+
+        String key;
+        if( isDefaultMeshBase ) {
+            if( isHomeObject ) {
+                key = DEFAULT_MESH_BASE_HOME_ENTRY;
+            } else {
+                key = DEFAULT_MESH_BASE_ENTRY;
+            }
+        } else {
+            if( isHomeObject ) {
+                key = NON_DEFAULT_MESH_BASE_HOME_ENTRY;
+            } else {
+                key = NON_DEFAULT_MESH_BASE_ENTRY;
+            }
+        }
+
+        String meshBaseExternalForm = meshBase.getIdentifier().toExternalForm();
+
+        String meshObjectExternalForm;
+        if( getNetMeshBaseIdentifier().equals( meshBase.getIdentifier() )) {
+            meshObjectExternalForm = toLocalExternalForm();
+        } else {
+            meshObjectExternalForm = toExternalForm();
+        }
+
+//        StringBuffer buf = new StringBuffer();
+//        for( int i=0 ; i<meshObjectExternalForm.length() ; ++i ) {
+//            char c = meshObjectExternalForm.charAt( i );
+//            switch( c ) {
+//                case '#':
+//                    buf.append( "%23" );
+//                    break;
+//                case '?':
+//                    buf.append( "%3F" );
+//                    break;
+//                case '&':
+//                    buf.append( "%26" );
+//                    break;
+//                case ';':
+//                    buf.append( "%3B" );
+//                    break;
+//                default:
+//                    buf.append( c );
+//                    break;
+//            }
+//        }
+//        meshObjectExternalForm = buf.toString();
+
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
+                key,
+                maxLength,
+                meshObjectExternalForm,
+                contextPath,
+                meshBaseExternalForm );
+
+        return ret;
+    }
+
+    /**
+     * Obtain the start part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    @Override
+    public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
+        String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        MeshBase   meshBase    = meshObject != null ? meshObject.getMeshBase() : null;
+
+        boolean isDefaultMeshBase = true;
+        if( meshBase != null && context != null ) {
+            isDefaultMeshBase = meshBase.equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ));
+        }
+        boolean isHomeObject;
+        if( meshBase != null ) {
+            isHomeObject = meshObject == meshBase.getHomeObject();
+        } else {
+            isHomeObject = identifiesHomeObject();
+        }
+
+        String key;
+        if( isDefaultMeshBase ) {
+            if( isHomeObject ) {
+                key = DEFAULT_MESH_BASE_HOME_LINK_START_ENTRY;
+            } else {
+                key = DEFAULT_MESH_BASE_LINK_START_ENTRY;
+            }
+        } else {
+            if( isHomeObject ) {
+                key = NON_DEFAULT_MESH_BASE_HOME_LINK_START_ENTRY;
+            } else {
+                key = NON_DEFAULT_MESH_BASE_LINK_START_ENTRY;
+            }
+        }
+        if( target == null ) {
+            target = "_self";
+        }
+
+        String meshObjectExternalForm;
+        String meshBaseExternalForm;
+        if( meshBase != null ) {
+            meshBaseExternalForm = meshBase.getIdentifier().toExternalForm();
+
+            if( getNetMeshBaseIdentifier().equals( meshBase.getIdentifier() )) {
+                meshObjectExternalForm = toLocalExternalForm();
+            } else {
+                meshObjectExternalForm = toExternalForm();
+            }
+
+            StringBuffer buf = new StringBuffer();
+            for( int i=0 ; i<meshObjectExternalForm.length() ; ++i ) {
+                char c = meshObjectExternalForm.charAt( i );
+                switch( c ) {
+                    case '#':
+                        buf.append( "%23" );
+                        break;
+                    case '?':
+                        buf.append( "%3F" );
+                        break;
+                    case '&':
+                        buf.append( "%26" );
+                        break;
+                    case ';':
+                        buf.append( "%3B" );
+                        break;
+                    default:
+                        buf.append( c );
+                        break;
+                }
+            }
+            meshObjectExternalForm = buf.toString();
+
+        } else {
+            meshBaseExternalForm = null;
+            meshObjectExternalForm = toExternalForm();
+        }
+
+
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subclass
+                key,
+                HasStringRepresentation.UNLIMITED_LENGTH,
+                meshObjectExternalForm,
+                contextPath,
+                meshBaseExternalForm,
+                additionalArguments,
+                target );
+
+        return ret;
+    }
+
+    /**
+     * Obtain the end part of a String representation of this MeshBase that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    @Override
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
+        String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
+        MeshBase   meshBase    = meshObject != null ? meshObject.getMeshBase() : null;
+
+        boolean isDefaultMeshBase = false;
+        if( meshBase != null && context != null ) {
+            isDefaultMeshBase = meshBase.equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ));
+        }
+        boolean isHomeObject;
+        if( meshBase != null ) {
+            isHomeObject = meshObject == meshBase.getHomeObject();
+        } else {
+            isHomeObject = identifiesHomeObject();
+        }
+
+        String key;
+        if( isDefaultMeshBase ) {
+            if( isHomeObject ) {
+                key = DEFAULT_MESH_BASE_HOME_LINK_END_ENTRY;
+            } else {
+                key = DEFAULT_MESH_BASE_LINK_END_ENTRY;
+            }
+        } else {
+            if( isHomeObject ) {
+                key = NON_DEFAULT_MESH_BASE_HOME_LINK_END_ENTRY;
+            } else {
+                key = NON_DEFAULT_MESH_BASE_LINK_END_ENTRY;
+            }
+        }
+
+        String meshBaseExternalForm = meshBase.getIdentifier().toExternalForm();
+
+        String meshObjectExternalForm;
+        if( getNetMeshBaseIdentifier().equals( meshBase.getIdentifier() )) {
+            meshObjectExternalForm = toLocalExternalForm();
+        } else {
+            meshObjectExternalForm = toExternalForm();
+        }
+
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subclass
+                key,
+                HasStringRepresentation.UNLIMITED_LENGTH,
+                meshObjectExternalForm,
+                contextPath,
+                meshBaseExternalForm );
+
+        return ret;
     }
 
     /**

@@ -17,6 +17,7 @@ package org.infogrid.util.text;
 import org.infogrid.util.ArrayFacade;
 
 import java.util.Iterator;
+import org.infogrid.util.StringHelper;
 
 /**
  * A Stringifier that processes arrays. Arrays must be passed as
@@ -163,11 +164,13 @@ public class ArrayStringifier<T>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     public String format(
             String         soFar,
-            ArrayFacade<T> arg )
+            ArrayFacade<T> arg,
+            int            maxLength )
     {
         if( arg == null || arg.getArray().length == 0 ) {
             if( theEmptyString != null ) {
@@ -193,7 +196,7 @@ public class ArrayStringifier<T>
             if( sep != null ) {
                 ret.append( sep );
             }
-            String childInput = theDelegate.format( soFar + ret.toString(), data[i] );
+            String childInput = theDelegate.format( soFar + ret.toString(), data[i], maxLength ); // presumably shorter, but we don't know
             if( childInput != null ) {
                 ret.append( childInput );
             }
@@ -202,7 +205,7 @@ public class ArrayStringifier<T>
         if( theEnd != null ) {
             ret.append( theEnd );
         }
-        return ret.toString();
+        return StringHelper.potentiallyShorten( ret.toString(), maxLength );
     }
     
     /**
@@ -210,6 +213,7 @@ public class ArrayStringifier<T>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
@@ -217,14 +221,15 @@ public class ArrayStringifier<T>
     @SuppressWarnings(value={"unchecked"})
     public String attemptFormat(
             String soFar,
-            Object arg )
+            Object arg,
+            int    maxLength )
         throws
             ClassCastException
     {
         if( arg instanceof ArrayFacade ) {
-            return format( soFar, (ArrayFacade<T>) arg );
+            return format( soFar, (ArrayFacade<T>) arg, maxLength );
         } else {
-            return format( soFar, ArrayFacade.<T>create( (T []) arg ));
+            return format( soFar, ArrayFacade.<T>create( (T []) arg ), maxLength);
         }
     }
 

@@ -923,6 +923,35 @@ public abstract class StringHelper
     }
 
     /**
+     * Make sure a String is not longer than <code>maxLength</code>. This is accomplished
+     * by taking out characters in the middle if needed.
+     *
+     * @param in the input String
+     * @param maxLength the maximally allowed length. -1 means unlimited.
+     * @return the String, potentially shortened
+     */
+    public static String potentiallyShorten(
+            String in,
+            int    maxLength )
+    {
+        if( in == null || in.length() == 0 ) {
+            return "";
+        }
+        if( maxLength < 0 ) {
+            return in;
+        }
+
+        final String insert = "...";
+        final int    fromEnd = 5; // how many characters we leave at the end
+
+        String ret = in;
+        if( maxLength > 0 && ret.length() > maxLength ) {
+            ret = ret.substring( 0, maxLength-fromEnd-insert.length() ) + insert + ret.substring( ret.length() - fromEnd );
+        }
+        return ret;
+    }
+
+    /**
      * Our default datokens -- used to determine where to split the string when tokenizing.
      */
     public static String defaultDatokens = ",;";

@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -75,6 +76,7 @@ public enum HttpShellAccessVerb
              * @param tx the Transaction if and when created
              * @param request the request
              * @return the accessed MeshObject
+             * @throws MeshObjectAccessException thrown if accessLocally failed
              * @throws MeshObjectIdentifierNotUniqueException thrown if a MeshObject with this identifier exists already
              * @throws TransactionException thrown if a problem occurred with the Transaction
              * @throws NotPermittedException thrown if the caller did not have sufficient permissions to perform this operation
@@ -85,12 +87,13 @@ public enum HttpShellAccessVerb
                     CreateWhenNeeded<Transaction> tx,
                     SaneRequest                   request )
                 throws
+                    MeshObjectAccessException,
                     MeshObjectIdentifierNotUniqueException,
                     MeshObjectsNotFoundException,
                     TransactionException,
                     NotPermittedException
             {
-                MeshObject found = mb.findMeshObjectByIdentifier( identifier );
+                MeshObject found = mb.accessLocally( identifier );
                 if( found == null ) {
                     throw new MeshObjectsNotFoundException( mb, identifier );
                 }
@@ -124,7 +127,12 @@ public enum HttpShellAccessVerb
                 MeshObject found = mb.findMeshObjectByIdentifier( identifier );
                 if( found == null ) {
                     Transaction tx2 = tx.obtain();
-                    found           = mb.getMeshBaseLifecycleManager().createMeshObject( identifier );
+
+                    if( identifier != null ) {
+                        found = mb.getMeshBaseLifecycleManager().createMeshObject( identifier );
+                    } else {
+                        found = mb.getMeshBaseLifecycleManager().createMeshObject();
+                    }
                 }
                 return found;
             }
@@ -213,6 +221,7 @@ public enum HttpShellAccessVerb
      * @param tx the Transaction if and when created
      * @param request the request
      * @return the accessed MeshObject
+     * @throws MeshObjectAccessException thrown if accessLocally failed
      * @throws MeshObjectIdentifierNotUniqueException thrown if a MeshObject with this identifier exists already
      * @throws MeshObjectsNotFoundException thrown if the MeshObject could not be found
      * @throws TransactionException thrown if a problem occurred with the Transaction
@@ -224,6 +233,7 @@ public enum HttpShellAccessVerb
             CreateWhenNeeded<Transaction> tx,
             SaneRequest                   request )
         throws
+            MeshObjectAccessException,
             MeshObjectIdentifierNotUniqueException,
             MeshObjectsNotFoundException,
             TransactionException,

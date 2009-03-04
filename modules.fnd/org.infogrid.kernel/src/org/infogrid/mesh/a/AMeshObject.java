@@ -14,6 +14,7 @@
 
 package org.infogrid.mesh.a;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.infogrid.mesh.AbstractMeshObject;
@@ -28,9 +29,9 @@ import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.mesh.RoleTypeNotBlessedException;
+import org.infogrid.mesh.TypedMeshObjectFacade;
 import org.infogrid.mesh.externalized.SimpleExternalizedMeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
-import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.WrongMeshBaseException;
 import org.infogrid.meshbase.a.AMeshBase;
@@ -1935,42 +1936,72 @@ public class AMeshObject
     }
 
     /**
+     * Obtain a String that renders this instance suitable for showing to a user.
+     *
+     * @param types the EntityTypes to be consulted, in sequence, until a non-null result is found
+     * @return the user-visible String representing this instance
+     */
+    public String getUserVisibleString(
+            EntityType [] types )
+    {
+        String ret = null;
+        if( types != null && types.length > 0 ) {
+            synchronized( this ) {
+                for( EntityType current : types ) {
+                    WeakReference<TypedMeshObjectFacade> ref    = theMeshTypes.get( current );
+                    TypedMeshObjectFacade                facade = ( ref != null ) ? ref.get() : null;
+
+                    if( facade == null ) {
+                        facade = theMeshBase.getMeshBaseLifecycleManager().createTypedMeshObjectFacade( this, current );
+                        theMeshTypes.put( current, new WeakReference<TypedMeshObjectFacade>( facade ));
+                    }
+
+                    ret = facade.get_UserVisibleString();
+                    if( ret != null ) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        if( ret == null ) {
+            ret = theIdentifier.toExternalForm();
+        }
+        return ret;
+    }
+
+    /**
+     * Obtain a String that renders this instance suitable for showing to a user.
+     *
+     * @return the user-visible String representing this instance
+     */
+    public String getUserVisibleString()
+    {
+        return getUserVisibleString( getTypes() ); // that makes a random sequence, but that's the best we can do
+    }
+
+    /**
      * Obtain a String representation of this instance that can be shown to the user.
-     * 
+     *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
-        boolean isDefaultMeshBase = context != null ? ( getMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
-        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
-        
-        String key;
-        if( isDefaultMeshBase ) {
-            if( isHomeObject() ) {
-                key = DEFAULT_MESH_BASE_HOME_ENTRY;
-            } else {
-                key = DEFAULT_MESH_BASE_ENTRY;
-            }
-        } else {
-            if( isHomeObject() ) {
-                key = NON_DEFAULT_MESH_BASE_HOME_ENTRY;
-            } else {
-                key = NON_DEFAULT_MESH_BASE_ENTRY;
-            }
-        }
-
         String meshObjectExternalForm = theIdentifier.toExternalForm();
         String meshBaseExternalForm   = theMeshBase.getIdentifier().toExternalForm();
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
-                key,
+                DEFAULT_ENTRY,
+                maxLength,
+                getUserVisibleString(),
                 meshObjectExternalForm,
-                contextPath,
                 meshBaseExternalForm );
 
         return ret;
@@ -1992,46 +2023,13 @@ public class AMeshObject
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
-        boolean isDefaultMeshBase = context != null ? ( getMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
-        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
-
-        String key;
-        if( isDefaultMeshBase ) {
-            if( isHomeObject() ) {
-                key = DEFAULT_MESH_BASE_HOME_LINK_START_ENTRY;
-            } else {
-                key = DEFAULT_MESH_BASE_LINK_START_ENTRY;
-            }
-        } else {
-            if( isHomeObject() ) {
-                key = NON_DEFAULT_MESH_BASE_HOME_LINK_START_ENTRY;
-            } else {
-                key = NON_DEFAULT_MESH_BASE_LINK_START_ENTRY;
-            }
-        }
-        if( target == null ) {
-            target = "_self";
-        }
-
-        String meshObjectExternalForm = theIdentifier.toExternalForm();
-        String meshBaseExternalForm = theMeshBase.getIdentifier().toExternalForm();
-        
-        String ret = rep.formatEntry(
-                getClass(), // dispatch to the right subtype
-                key,
-                meshObjectExternalForm,
-                contextPath,
-                meshBaseExternalForm,
-                additionalArguments,
-                target );
-
-        return ret;        
+        return "";
     }
 
     /**
      * Obtain the end part of a String representation of this object that acts
      * as a link/hyperlink and can be shown to the user.
-     * 
+     *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
@@ -2040,35 +2038,7 @@ public class AMeshObject
             StringRepresentation        rep,
             StringRepresentationContext context )
     {
-        boolean isDefaultMeshBase = context != null ? ( getMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
-        String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
-
-        String key;
-        if( isDefaultMeshBase ) {
-            if( isHomeObject() ) {
-                key = DEFAULT_MESH_BASE_HOME_LINK_END_ENTRY;
-            } else {
-                key = DEFAULT_MESH_BASE_LINK_END_ENTRY;
-            }
-        } else {
-            if( isHomeObject() ) {
-                key = NON_DEFAULT_MESH_BASE_HOME_LINK_END_ENTRY;
-            } else {
-                key = NON_DEFAULT_MESH_BASE_LINK_END_ENTRY;
-            }
-        }
-
-        String meshObjectExternalForm = theIdentifier.toExternalForm();
-        String meshBaseExternalForm   = theMeshBase.getIdentifier().toExternalForm();
-
-        String ret = rep.formatEntry(
-                getClass(), // dispatch to the right subtype
-                key,
-                meshObjectExternalForm,
-                contextPath,
-                meshBaseExternalForm );
-
-        return ret;
+        return "";
     }
 
     /**
@@ -2127,62 +2097,7 @@ public class AMeshObject
     protected MeshObjectIdentifier [] theEquivalenceSetPointers;
 
     /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
+     * Default entry in the resource files, prefixed by the StringRepresentation's prefix.
      */
-    public static final String DEFAULT_MESH_BASE_ENTRY = "DefaultMeshBaseString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String DEFAULT_MESH_BASE_HOME_ENTRY = "DefaultMeshBaseHomeString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String DEFAULT_MESH_BASE_LINK_START_ENTRY = "DefaultMeshBaseLinkStartString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String DEFAULT_MESH_BASE_HOME_LINK_START_ENTRY = "DefaultMeshBaseHomeLinkStartString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String DEFAULT_MESH_BASE_LINK_END_ENTRY = "DefaultMeshBaseLinkEndString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String DEFAULT_MESH_BASE_HOME_LINK_END_ENTRY = "DefaultMeshBaseHomeLinkEndString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String NON_DEFAULT_MESH_BASE_ENTRY = "NonDefaultMeshBaseString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String NON_DEFAULT_MESH_BASE_HOME_ENTRY = "NonDefaultMeshBaseHomeString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String NON_DEFAULT_MESH_BASE_LINK_START_ENTRY = "NonDefaultMeshBaseLinkStartString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String NON_DEFAULT_MESH_BASE_HOME_LINK_START_ENTRY = "NonDefaultMeshBaseHomeLinkStartString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String NON_DEFAULT_MESH_BASE_LINK_END_ENTRY = "NonDefaultMeshBaseLinkEndString";
-
-    /**
-     * Entry in the resource files, prefixed by the StringRepresentation's prefix.
-     */
-    public static final String NON_DEFAULT_MESH_BASE_HOME_LINK_END_ENTRY = "NonDefaultMeshBaseHomeLinkEndString";
+    public static final String DEFAULT_ENTRY = "String";
 }

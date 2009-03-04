@@ -47,14 +47,16 @@ public class JavadocHtmlStringStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     @Override
     public String format(
             String soFar,
-            String arg )
+            String arg,
+            int    maxLength )
     {
-        String raw = super.format( soFar, arg );
+        String raw = super.format( soFar, arg, maxLength );
 
         String ret = raw.replaceAll( "\\*/", "&#42;/" );
         return ret;

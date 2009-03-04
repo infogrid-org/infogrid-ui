@@ -16,6 +16,7 @@ package org.infogrid.meshbase;
 
 import org.infogrid.util.Identifier;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -62,17 +63,20 @@ public class MeshBaseIdentifier
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         String externalForm = toExternalForm();
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 DEFAULT_ENTRY,
+                maxLength,
                 externalForm );
         return ret;
     }
@@ -99,6 +103,7 @@ public class MeshBaseIdentifier
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 DEFAULT_LINK_START_ENTRY,
+                HasStringRepresentation.UNLIMITED_LENGTH,
                 contextPath,
                 externalForm,
                 additionalArguments,
@@ -124,6 +129,7 @@ public class MeshBaseIdentifier
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 DEFAULT_LINK_END_ENTRY,
+                HasStringRepresentation.UNLIMITED_LENGTH,
                 contextPath,
                 externalForm );
         return ret;

@@ -81,18 +81,20 @@ public abstract class AbstractDelegatingLocalizedException
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     @Override
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         Throwable cause = getCause();
         if( cause instanceof LocalizedException ) {
-            return ((LocalizedException)cause).toStringRepresentation( rep, context );
+            return ((LocalizedException)cause).toStringRepresentation( rep, context, maxLength );
         } else {
-            return super.toStringRepresentation( rep, context );
+            return super.toStringRepresentation( rep, context, maxLength );
         }
     }
 
@@ -138,7 +140,7 @@ public abstract class AbstractDelegatingLocalizedException
         if( cause instanceof LocalizedException ) {
             return ((LocalizedException)cause).toStringRepresentationLinkEnd( rep, context );
         } else {
-            return super.toStringRepresentation( rep, context );
+            return super.toStringRepresentationLinkEnd( rep, context );
         }
     }
 }

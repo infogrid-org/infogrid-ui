@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.mesh.text.SimpleMeshStringRepresentationContext;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -28,7 +29,6 @@ import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationDirectorySingleton;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.SimpleStringRepresentationContext;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -75,29 +75,42 @@ public class UrlTest1
         
         String contextUrl = "http://example.org/foo";
         
-        HashMap<String,Object> mb1Map = new HashMap<String,Object>();
-        HashMap<String,Object> mb2Map = new HashMap<String,Object>();
+        HashMap<String,Object> obj1_mb1Map = new HashMap<String,Object>();
+        HashMap<String,Object> obj1_mb2Map = new HashMap<String,Object>();
+        HashMap<String,Object> obj2_mb1Map = new HashMap<String,Object>();
+        HashMap<String,Object> obj2_mb2Map = new HashMap<String,Object>();
         
-        mb1Map.put( StringRepresentationContext.WEB_CONTEXT_KEY, contextUrl );
-        mb2Map.put( StringRepresentationContext.WEB_CONTEXT_KEY, contextUrl );
+        obj1_mb1Map.put( StringRepresentationContext.WEB_CONTEXT_KEY, contextUrl );
+        obj1_mb2Map.put( StringRepresentationContext.WEB_CONTEXT_KEY, contextUrl );
+        obj2_mb1Map.put( StringRepresentationContext.WEB_CONTEXT_KEY, contextUrl );
+        obj2_mb2Map.put( StringRepresentationContext.WEB_CONTEXT_KEY, contextUrl );
         
-        mb1Map.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb1 );
-        mb2Map.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb2 );
+        obj1_mb1Map.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb1 );
+        obj1_mb2Map.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb2 );
+        obj2_mb1Map.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb1 );
+        obj2_mb2Map.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb2 );
+
+        obj1_mb1Map.put( MeshStringRepresentationContext.MESHOBJECT_KEY, obj1_mb1 );
+        obj1_mb2Map.put( MeshStringRepresentationContext.MESHOBJECT_KEY, obj1_mb1 ); // this needs to contain obj1 from MB1 in the MB2 map to make for a non-default MeshBase
+        obj2_mb1Map.put( MeshStringRepresentationContext.MESHOBJECT_KEY, obj2_mb1 ); // same here
+        obj2_mb2Map.put( MeshStringRepresentationContext.MESHOBJECT_KEY, obj2_mb1 );
         
-        SimpleStringRepresentationContext mb1Context = SimpleStringRepresentationContext.create( mb1Map );
-        SimpleStringRepresentationContext mb2Context = SimpleStringRepresentationContext.create( mb2Map );
+        SimpleMeshStringRepresentationContext obj1_mb1Context = SimpleMeshStringRepresentationContext.create( obj1_mb1Map );
+        SimpleMeshStringRepresentationContext obj1_mb2Context = SimpleMeshStringRepresentationContext.create( obj1_mb2Map );
+        SimpleMeshStringRepresentationContext obj2_mb1Context = SimpleMeshStringRepresentationContext.create( obj2_mb1Map );
+        SimpleMeshStringRepresentationContext obj2_mb2Context = SimpleMeshStringRepresentationContext.create( obj2_mb2Map );
         
         String target = "foo";
 
-        String obj1_mb1_different_default_target      = obj1_mb1.toStringRepresentationLinkStart( null, target, rep, mb1Context );
-        String obj1_mb1_different_nonDefault_target   = obj1_mb1.toStringRepresentationLinkStart( null, target, rep, mb2Context );
-        String obj1_mb1_different_default_notarget    = obj1_mb1.toStringRepresentationLinkStart( null, null, rep, mb1Context );
-        String obj1_mb1_different_nonDefault_notarget = obj1_mb1.toStringRepresentationLinkStart( null, null, rep, mb2Context );
+        String obj1_mb1_different_default_target      = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, rep, obj1_mb1Context );
+        String obj1_mb1_different_nonDefault_target   = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, rep, obj1_mb2Context );
+        String obj1_mb1_different_default_notarget    = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, null, rep, obj1_mb1Context );
+        String obj1_mb1_different_nonDefault_notarget = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, null, rep, obj1_mb2Context );
         
-        String obj2_mb1_different_default_target      = obj2_mb1.toStringRepresentationLinkStart( null, target, rep, mb1Context );
-        String obj2_mb1_different_nonDefault_target   = obj2_mb1.toStringRepresentationLinkStart( null, target, rep, mb2Context );
-        String obj2_mb1_different_default_notarget    = obj2_mb1.toStringRepresentationLinkStart( null, null, rep, mb1Context );
-        String obj2_mb1_different_nonDefault_notarget = obj2_mb1.toStringRepresentationLinkStart( null, null, rep, mb2Context );
+        String obj2_mb1_different_default_target      = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, rep, obj2_mb1Context );
+        String obj2_mb1_different_nonDefault_target   = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, rep, obj2_mb2Context );
+        String obj2_mb1_different_default_notarget    = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, null, rep, obj2_mb1Context );
+        String obj2_mb1_different_nonDefault_notarget = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, null, rep, obj2_mb2Context );
 
         checkEquals(
                 obj1_mb1_different_default_target,
@@ -107,7 +120,7 @@ public class UrlTest1
                         + "\" target=\""
                         + target
                         + "\">",
-                "obj1_mb1_different_default is wrong" );
+                "obj1_mb1_different_default_target is wrong" );
         checkEquals(
                 obj1_mb1_different_nonDefault_target,
                 "<a href=\""
@@ -119,14 +132,14 @@ public class UrlTest1
                         + "\" target=\""
                         + target
                         + "\">",
-                "obj1_mb1_different_nonDefault is wrong" );
+                "obj1_mb1_different_nonDefault_target is wrong" );
         checkEquals(
                 obj1_mb1_different_default_notarget,
                 "<a href=\""
                         + contextUrl
                         + "/%23xxx"
                         + "\" target=\"_self\">",
-                "obj1_mb1_different_default is wrong" );
+                "obj1_mb1_different_default_notarget is wrong" );
         checkEquals(
                 obj1_mb1_different_nonDefault_notarget,
                 "<a href=\""
@@ -136,7 +149,7 @@ public class UrlTest1
                         + "]"
                         + "%23xxx"
                         + "\" target=\"_self\">",
-                "obj1_mb1_different_nonDefault is wrong" );
+                "obj1_mb1_different_nonDefault_notarget is wrong" );
 
         checkEquals(
                 obj2_mb1_different_default_target,
@@ -147,7 +160,7 @@ public class UrlTest1
                         + "\" target=\""
                         + target
                         + "\">",
-                "obj2_mb1_different_default is wrong" );
+                "obj2_mb1_different_default_target is wrong" );
         checkEquals(
                 obj2_mb1_different_nonDefault_target,
                 "<a href=\""
@@ -159,7 +172,7 @@ public class UrlTest1
                         + "\" target=\""
                         + target
                         + "\">",
-                "obj2_mb1_different_nonDefault is wrong" );
+                "obj2_mb1_different_nonDefault_target is wrong" );
         checkEquals(
                 obj2_mb1_different_default_notarget,
                 "<a href=\""
@@ -167,7 +180,7 @@ public class UrlTest1
                         + "/"
                         + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
                         + "\" target=\"_self\">",
-                "obj2_mb1_different_default is wrong" );
+                "obj2_mb1_different_default_notarget is wrong" );
         checkEquals(
                 obj2_mb1_different_nonDefault_notarget,
                 "<a href=\""
@@ -177,7 +190,7 @@ public class UrlTest1
                         + "]"
                         + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
                         + "\" target=\"_self\">",
-                "obj2_mb1_different_nonDefault is wrong" );
+                "obj2_mb1_different_nonDefault_notarget is wrong" );
     }
 
     /**

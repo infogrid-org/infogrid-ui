@@ -14,7 +14,6 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -386,13 +385,15 @@ public final class IntegerValue
      * 
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
-        return rep.formatEntry( getClass(), DEFAULT_ENTRY, theValue, theUnit );
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY, maxLength, theValue, theUnit );
     }
 
     /**

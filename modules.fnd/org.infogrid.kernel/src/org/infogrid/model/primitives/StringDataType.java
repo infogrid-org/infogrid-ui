@@ -161,12 +161,14 @@ public final class StringDataType
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         return rep.formatEntry(
                 StringValue.class,
                 DEFAULT_ENTRY,
-                PropertyValue.toStringRepresentation( theDefaultValue, rep, context ),
+                maxLength,
+                PropertyValue.toStringRepresentation( theDefaultValue, rep, context, maxLength ), // presumably shorter, but we don't know
                 theSupertype );
     }
 

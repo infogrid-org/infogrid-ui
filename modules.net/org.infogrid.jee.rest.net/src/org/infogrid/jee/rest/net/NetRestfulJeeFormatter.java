@@ -18,8 +18,9 @@ import java.util.HashMap;
 import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.servlet.InitializationFilter;
+import org.infogrid.mesh.text.SimpleMeshStringRepresentationContext;
 import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.util.text.SimpleStringRepresentationContext;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -62,20 +63,22 @@ public class NetRestfulJeeFormatter
      * @param p the Proxy whose identifier is to be formatted
      * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
+     * @param maxLength maximum length of emitted String
      * @return the String to display
      */
     public String formatProxyIdentifierStart(
             PageContext pageContext,
             Proxy       p,
             String      rootPath,
-            String      stringRepresentation )
+            String      stringRepresentation,
+            int         maxLength )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
         context = perhapsOverrideStringRepresentationContext( rootPath, context );
         
-        String ret = p.toStringRepresentation( rep, context );
+        String ret = p.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH );
         return ret;
     }
 
@@ -169,7 +172,7 @@ public class NetRestfulJeeFormatter
             HashMap<String,Object> contextObjects = new HashMap<String,Object>();
             contextObjects.put( StringRepresentationContext.WEB_CONTEXT_KEY, rootPath );
             
-            ret = SimpleStringRepresentationContext.create( contextObjects, candidate );
+            ret = SimpleMeshStringRepresentationContext.create( contextObjects, candidate );
         }
         return ret;
     }

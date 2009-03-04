@@ -115,17 +115,20 @@ public abstract class CannotViewException
          *
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
+         * @param maxLength maximum length of emitted String. -1 means unlimited.
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
-                StringRepresentationContext context )
+                StringRepresentationContext context,
+                int                         maxLength )
         {
             if( theObjectsToView.getViewletTypeName() == null ) {
                 return rep.formatEntry(
                         getClass(),
                         "ViewletClassNotCompatibleWithSubjectString",
+                        maxLength,
                         theViewlet.getName(),
                         theViewlet.getUserVisibleName(),
                         theObjectsToView.getSubject(),
@@ -136,6 +139,7 @@ public abstract class CannotViewException
                 return rep.formatEntry(
                         getClass(),
                         "ViewletClassNotCompatibleWithTypeString",
+                        maxLength,
                         theViewlet.getName(),
                         theViewlet.getUserVisibleName(),
                         theObjectsToView.getSubject(),
@@ -172,16 +176,19 @@ public abstract class CannotViewException
          *
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
+         * @param maxLength maximum length of emitted String. -1 means unlimited.
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
-                StringRepresentationContext context )
+                StringRepresentationContext context,
+                int                         maxLength )
         {
             return rep.formatEntry(
                     getClass(),
                     "ObjectTypeNotAllowedString",
+                    maxLength,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
@@ -217,16 +224,19 @@ public abstract class CannotViewException
          *
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
+         * @param maxLength maximum length of emitted String. -1 means unlimited.
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
-                StringRepresentationContext context )
+                StringRepresentationContext context,
+                int                         maxLength )
         {
             return rep.formatEntry(
                     getClass(),
                     "InvalidViewletString",
+                    maxLength,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
@@ -266,16 +276,19 @@ public abstract class CannotViewException
          *
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
+         * @param maxLength maximum length of emitted String. -1 means unlimited.
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
-                StringRepresentationContext context )
+                StringRepresentationContext context,
+                int                         maxLength )
         {
             return rep.formatEntry(
                     getClass(),
                     "ParameterMissingString",
+                    maxLength,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
@@ -317,16 +330,19 @@ public abstract class CannotViewException
          *
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
+         * @param maxLength maximum length of emitted String. -1 means unlimited.
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
-                StringRepresentationContext context )
+                StringRepresentationContext context,
+                int                         maxLength )
         {
             return rep.formatEntry(
                     getClass(),
                     "NoSubjectString",
+                    maxLength,
                     theViewlet != null ? theViewlet.getName() : null,
                     theViewlet != null ? theViewlet.getUserVisibleName() : null,
                     theIdentifier,
@@ -368,16 +384,19 @@ public abstract class CannotViewException
          *
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
+         * @param maxLength maximum length of emitted String. -1 means unlimited.
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
-                StringRepresentationContext context )
+                StringRepresentationContext context,
+                int                         maxLength )
         {
             return rep.formatEntry(
                     getClass(),
                     "InternalErrorString",
+                    maxLength,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),

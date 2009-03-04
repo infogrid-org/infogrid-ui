@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -25,11 +25,13 @@ public interface HasStringRepresentation
      * 
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context );
+            StringRepresentationContext context,
+            int                         maxLength );
 
     /**
      * Obtain the start part of a String representation of this object that acts
@@ -58,4 +60,9 @@ public interface HasStringRepresentation
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context );
+
+    /**
+     * Constant representing unlimited length.
+     */
+    public static final int UNLIMITED_LENGTH = -1;
 }

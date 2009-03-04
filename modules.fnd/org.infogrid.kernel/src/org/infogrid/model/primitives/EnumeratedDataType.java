@@ -198,7 +198,7 @@ public class EnumeratedDataType
             EnumeratedValue realValue = (EnumeratedValue) value;
 
             for( int i=0 ; i<theDomain.length ; ++i ) {
-                if( value.equals( theDomain[i].value() )) {
+                if( realValue.equals( (Object) theDomain[i].value() )) { // EnumeratedValue compared to String is okay
                     return true;
                 }
             }
@@ -320,7 +320,7 @@ public class EnumeratedDataType
             String key )
     {
         for( int i=0 ; i<theDomain.length ; ++i ) {
-            if( theDomain[i].equals( key )) {
+            if( theDomain[i].equals( (Object) key )) { // compare EnumeratedValue with String is okay
                 return theDomain[i];
             }
         }
@@ -474,16 +474,19 @@ public class EnumeratedDataType
      * 
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         return rep.formatEntry(
                 EnumeratedValue.class,
                 DEFAULT_ENTRY,
-                PropertyValue.toStringRepresentation( theDomain[0], rep, context ),
+                maxLength,
+                PropertyValue.toStringRepresentation( theDomain[0], rep, context, maxLength ),
                 theDomain,
                 theSupertype );
     }

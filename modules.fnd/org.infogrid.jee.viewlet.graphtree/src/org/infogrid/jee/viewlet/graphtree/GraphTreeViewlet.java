@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.viewlet.graphtree;
 
+import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.DefaultMeshObjectSorter;
@@ -46,16 +47,18 @@ public class GraphTreeViewlet
      *
      * @param traversalSpecs the TraversalSpecifications from MeshObjects on one level to the MeshObjects on the next. Indexed by the level of the tree.
      * @param sorters the sorters to be applied on each level. Indexed by the level of the tree.
+     * @param renderer the GraphTreeNodeRenderer to use
      * @param c the application context
      * @return the created Viewlet
      */
     public static GraphTreeViewlet create(
             TraversalSpecification [] traversalSpecs,
             MeshObjectSorter []       sorters,
+            GraphTreeNodeRenderer     renderer,
             Context                   c )
     {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
-        GraphTreeViewlet         ret    = new GraphTreeViewlet( viewed, traversalSpecs, sorters, c );
+        GraphTreeViewlet         ret    = new GraphTreeViewlet( viewed, traversalSpecs, sorters, renderer, c );
 
         viewed.setViewlet( ret );
 
@@ -73,7 +76,23 @@ public class GraphTreeViewlet
             final TraversalSpecification [] traversalSpecs,
             double                          matchQuality )
     {
-        return choice( traversalSpecs, null, matchQuality );
+        return choice( traversalSpecs, null, DefaultGraphTreeNodeRenderer.create(), matchQuality );
+    }
+
+    /**
+     * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
+     *
+     * @param traversalSpecs the TraversalSpecifications from MeshObjects on one level to the MeshObjects on the next. Indexed by the level of the tree.
+     * @param renderer the GraphTreeRenderer to use
+     * @param matchQuality the match quality
+     * @return the ViewletFactoryChoice
+     */
+    public static ViewletFactoryChoice choice(
+            TraversalSpecification [] traversalSpecs,
+            GraphTreeNodeRenderer     renderer,
+            double                    matchQuality )
+    {
+        return choice( traversalSpecs, null, renderer, matchQuality );
     }
 
     /**
@@ -81,12 +100,14 @@ public class GraphTreeViewlet
      *
      * @param traversalSpecs the TraversalSpecifications from MeshObjects on one level to the MeshObjects on the next. Indexed by the level of the tree.
      * @param sorters the sorters to be applied on each level. Indexed by the level of the tree.
+     * @param renderer the GraphTreeRenderer to use
      * @param matchQuality the match quality
      * @return the ViewletFactoryChoice
      */
     public static ViewletFactoryChoice choice(
             final TraversalSpecification [] traversalSpecs,
             MeshObjectSorter []             sorters,
+            final GraphTreeNodeRenderer     renderer,
             double                          matchQuality )
     {
         if( traversalSpecs == null || traversalSpecs.length == 0 ) {
@@ -113,7 +134,7 @@ public class GraphTreeViewlet
                     throws
                         CannotViewException
                 {
-                    return create( traversalSpecs, realSorters, c );
+                    return create( traversalSpecs, realSorters, renderer, c );
                 }
         };
     }
@@ -124,18 +145,21 @@ public class GraphTreeViewlet
      * @param viewed the AbstractViewedMeshObjects implementation to use
      * @param traversalSpecs the TraversalSpecifications from MeshObjects on one level to the MeshObjects on the next. Indexed by the level of the tree.
      * @param sorters the sorters to be applied on each level. Indexed by the level of the tree.
+     * @param renderer the renderer to use
      * @param c the application context
      */
     protected GraphTreeViewlet(
             AbstractViewedMeshObjects viewed,
             TraversalSpecification [] traversalSpecs,
             MeshObjectSorter []       sorters,
+            GraphTreeNodeRenderer     renderer,
             Context                   c )
     {
         super( viewed, c );
 
         theTraversalSpecs = traversalSpecs;
         theSorters        = sorters;
+        theRenderer       = renderer;
     }
 
     /**
@@ -165,6 +189,24 @@ public class GraphTreeViewlet
     }
 
     /**
+     * Determine the PropertyValue to be shown to the user for a given
+     * MeshObject in the GraphTreeViewlet.
+     *
+     * @param node the MeshObject
+     * @param request the incoming request
+     * @param stringRepresentation the StringRepresentation to use
+     * @return the String to be shown
+     */
+    public String determineCurrentLabel(
+            MeshObject         node,
+            HttpServletRequest request,
+            String             stringRepresentation )
+    {
+        String ret = theRenderer.render( node, request, stringRepresentation );
+        return ret;
+    }
+
+    /**
      * The TraversalSpecifications from MeshObjects on one level to the MeshObjects on the next.
      * This is indexed by the level of the tree.
      */
@@ -174,4 +216,9 @@ public class GraphTreeViewlet
      * The sorters to be applied on each level. This is indexed by the level of the tree.
      */
     protected MeshObjectSorter [] theSorters;
+
+    /**
+     * The object that knows how to render a node in the GraphTree.
+     */
+    protected GraphTreeNodeRenderer theRenderer;
 }

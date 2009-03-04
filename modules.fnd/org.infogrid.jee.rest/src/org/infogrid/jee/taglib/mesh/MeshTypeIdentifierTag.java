@@ -172,12 +172,11 @@ public class MeshTypeIdentifierTag
 
         String text;
         if( theIdentifier != null ) {
-            text = ((RestfulJeeFormatter)theFormatter).formatMeshTypeIdentifier( pageContext, theIdentifier, theStringRepresentation );
+            text = ((RestfulJeeFormatter)theFormatter).formatMeshTypeIdentifier( pageContext, theIdentifier, theStringRepresentation, theMaxLength );
         } else {
             text = theNullString;
         }
 
-        text = theFormatter.potentiallyShorten( text, theMaxLength );
         print( text );
 
         return SKIP_BODY;

@@ -8,16 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
 
+import java.util.Iterator;
 import org.infogrid.util.OneElementIterator;
 import org.infogrid.util.ZeroElementCursorIterator;
-
-import java.util.Iterator;
 
 /**
  * Stringifies a single Integer.
@@ -66,13 +65,15 @@ public class IntegerStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     public String format(
             String  soFar,
-            Integer arg )
+            Integer arg,
+            int     maxLength )
     {
-        return super.format( soFar, arg.longValue() );
+        return super.format( soFar, arg.longValue(), maxLength );
     }
     
     /**

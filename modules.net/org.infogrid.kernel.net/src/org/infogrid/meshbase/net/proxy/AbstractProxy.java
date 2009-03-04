@@ -24,6 +24,7 @@ import org.infogrid.util.Factory;
 import org.infogrid.util.FlexibleListenerSet;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -264,11 +265,13 @@ public abstract class AbstractProxy
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         boolean isDefaultMeshBase = context != null ? ( getNetMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
 
@@ -285,6 +288,7 @@ public abstract class AbstractProxy
         String ret = rep.formatEntry(
                 getClass(),
                 key,
+                maxLength,
                 proxyExternalForm,
                 meshBaseExternalForm );
 
@@ -323,6 +327,7 @@ public abstract class AbstractProxy
         String ret = rep.formatEntry(
                 getClass(),
                 key,
+                HasStringRepresentation.UNLIMITED_LENGTH,
                 contextPath,
                 proxyExternalForm,
                 meshBaseExternalForm,
@@ -360,6 +365,7 @@ public abstract class AbstractProxy
         String ret = rep.formatEntry(
                 getClass(),
                 key,
+                HasStringRepresentation.UNLIMITED_LENGTH,
                 contextPath,
                 proxyExternalForm,
                 meshBaseExternalForm );

@@ -18,6 +18,7 @@ import java.util.Iterator;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.IntegerStringifier;
 import org.infogrid.util.text.StringifierParsingChoice;
 
@@ -44,7 +45,7 @@ public class IntegerStringifierTest1
         
         int                data1a = 15243;
         IntegerStringifier str1   = IntegerStringifier.create( );
-        String             res1a  = str1.format( null, data1a );
+        String             res1a  = str1.format( null, data1a, HasStringRepresentation.UNLIMITED_LENGTH );
         
         checkEquals( String.valueOf( data1a ), res1a, "not the same" );
 

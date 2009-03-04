@@ -20,7 +20,6 @@
    <tr>
     <th>Identifier</th>
     <th>Types and Attributes</th>
-    <th>Neighbors</th>
     <th>Audit</th>
    </tr>
   </thead>

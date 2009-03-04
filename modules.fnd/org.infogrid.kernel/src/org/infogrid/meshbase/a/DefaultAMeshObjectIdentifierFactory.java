@@ -75,34 +75,42 @@ public class DefaultAMeshObjectIdentifierFactory
         throws
             URISyntaxException
     {
-        try {
-            representation.parseEntry( DefaultAMeshObjectIdentifier.class, DefaultAMeshObjectIdentifier.HOME_DEFAULT_ENTRY, s );
-            return fromExternalForm( "" );
+        String [] entriesToTry1 = {
+                DefaultAMeshObjectIdentifier.DEFAULT_MESH_BASE_HOME_ENTRY,
+                DefaultAMeshObjectIdentifier.NON_DEFAULT_MESH_BASE_HOME_ENTRY };
+        
+        for( String entry : entriesToTry1 ) {
 
-        } catch( StringifierException ex ) {
-            // that wasn't it ...
-        }
-        try {
-            Object [] found = representation.parseEntry( DefaultAMeshObjectIdentifier.class, DefaultAMeshObjectIdentifier.DEFAULT_ENTRY, s );
+            try {
+                representation.parseEntry( DefaultAMeshObjectIdentifier.class, entry, s );
+                return fromExternalForm( "" );
 
-            DefaultAMeshObjectIdentifier ret;
-            switch( found.length ) {
-                case 1:
-                    ret = fromExternalForm( (String) found[0] );
-                    break;
-
-                default:
-                    throw new URISyntaxException( s, "Cannot parse identifier" );
+            } catch( StringifierException ex ) {
+                // that wasn't it ...
             }
-
-            return ret;
-
-        } catch( StringifierException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
-
-        } catch( ClassCastException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
         }
+
+        String [] entriesToTry2 = {
+                DefaultAMeshObjectIdentifier.DEFAULT_MESH_BASE_ENTRY,
+                DefaultAMeshObjectIdentifier.NON_DEFAULT_MESH_BASE_ENTRY };
+
+        for( String entry : entriesToTry2 ) {
+            try {
+                Object [] found = representation.parseEntry( DefaultAMeshObjectIdentifier.class, entry, s );
+
+                if( found.length == 1 ) {
+                    DefaultAMeshObjectIdentifier ret = fromExternalForm( (String) found[0] );
+                    return ret;
+                }
+
+            } catch( StringifierException ex ) {
+                // that wasn't it ...
+
+            } catch( ClassCastException ex ) {
+                // that wasn't it ...
+            }
+        }
+        throw new URISyntaxException( s, "Cannot parse identifier" );
     }
     
     /**

@@ -24,6 +24,31 @@
             <name>BookmarkCollection</name>
             <username>Bookmark Library</username>
             <userdescription>A collection of book marks.</userdescription>
+
+            <implementsMethod><![CDATA[
+    /**
+     * User-visible String is the first non-null result of considering:
+     * <ol>
+     *  <li>the Bookmark's name</li>
+     *  <li>the Bookmark's bookmarked MeshObject's user-visible name</li>
+     * </ol>
+     *
+     * @return the user-visible String representing this instance
+     */
+    public String get_UserVisibleString()
+    {
+        try {
+            StringValue name = getName();
+            if( name != null ) {
+                return name.value();
+            }
+        } catch( NotPermittedException ex ) {
+            // ignore;
+        }
+        return null;
+    }
+            ]]></implementsMethod>
+
             <propertytype ID="org.infogrid.model.Bookmark#BookmarkCollection/Name">
                 <name>Name</name>
                 <username>Name</username>
@@ -39,6 +64,34 @@
             <name>Bookmark</name>
             <username>Bookmark</username>
             <userdescription>A bookmark</userdescription>
+
+            <implementsMethod><![CDATA[
+    /**
+     * User-visible String is the first non-null result of considering:
+     * <ol>
+     *  <li>the Bookmark's name</li>
+     *  <li>the Bookmark's bookmarked MeshObject's user-visible name</li>
+     * </ol>
+     *
+     * @return the user-visible String representing this instance
+     */
+    public String get_UserVisibleString()
+    {
+        try {
+            StringValue name = getName();
+            if( name != null ) {
+                return name.value();
+            }
+        } catch( NotPermittedException ex ) {
+            // ignore;
+        }
+        MeshObject bookmarked = the_Delegate.traverse( BookmarkSubjectArea.BOOKMARK_BOOKMARKS_MESHOBJECT.getSource()).getSingleMember();
+        if( bookmarked != null ) {
+            return bookmarked.getUserVisibleString();
+        }
+        return null;
+    }
+            ]]></implementsMethod>
             <propertytype ID="org.infogrid.model.Bookmark#Bookmark/Name">
                 <name>Name</name>
                 <username>Name</username>
@@ -48,6 +101,7 @@
                 </datatype>
                 <isoptional/>
             </propertytype>
+
         </entitytype>
 
         <relationshiptype ID="org.infogrid.model.Bookmark#BookmarkCollection_Collects_Bookmark">
@@ -66,7 +120,7 @@
 
         <relationshiptype ID="org.infogrid.model.Bookmark#Bookmark_Bookmarks_MeshObject">
             <name>Bookmark_Bookmarks_MeshObject</name>
-            <username>bookmarks</username>
+            <username>Bookmarks</username>
             <userdescription>Relates the Bookmark to the MeshObject that is being bookmarked.</userdescription>
             <src>
               <e>org.infogrid.model.Bookmark#Bookmark</e>

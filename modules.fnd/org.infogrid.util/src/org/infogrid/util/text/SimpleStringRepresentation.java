@@ -113,16 +113,18 @@ public class SimpleStringRepresentation
 
     /**
      * Format the parameters according to the rules for classOfFormattedObject,
-     * entry entryName and this StringRepresentation
+     * entry entryName and this StringRepresentation.
      * 
      * @param classOfFormattedObject the class of the to-be-formatted object
      * @param entry the entry in the ResourceHelper (but qualified by the prefix of this StringRepresentation)
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param args the arguments for the entry in the ResourceHelper
      * @return the formatted String
      */
     public String formatEntry(
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
+            int                                      maxLength,
             Object...                                args )
     {
         ResourceHelper rh           = ResourceHelper.getInstance( classOfFormattedObject, true );
@@ -132,7 +134,7 @@ public class SimpleStringRepresentation
             try {
                 AnyMessageStringifier stringifier = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
 
-                String ret = stringifier.format( null, ArrayFacade.<Object>create( args ));
+                String ret = stringifier.format( null, ArrayFacade.<Object>create( args ), maxLength );
                 return ret;
 
             } catch( StringifierException ex ) {
@@ -141,9 +143,11 @@ public class SimpleStringRepresentation
             }
         }
         if( theDelegate != null ) {
-            return theDelegate.formatEntry( classOfFormattedObject, entry, args );
+            return theDelegate.formatEntry( classOfFormattedObject, entry, maxLength, args );
         }
-        return rh.getResourceString( theName + entry ); // will emit warning
+        String ret = rh.getResourceString( theName + entry ); // will emit warning
+        ret = StringHelper.potentiallyShorten( ret, maxLength );
+        return ret;
     }
 
     /**
@@ -183,15 +187,17 @@ public class SimpleStringRepresentation
      * 
      * @param t the Throwable
      * @param context the StringRepresentationContext to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String formatThrowable(
             Throwable                   t,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         String ret;
         if( t instanceof HasStringRepresentation ) {
-            ret = formatHasStringRepresentationThrowable( (HasStringRepresentation) t, context );
+            ret = formatHasStringRepresentationThrowable( (HasStringRepresentation) t, context, maxLength );
 
         } else {
             ret = formatNoStringRepresentationThrowable( t, context );
@@ -204,13 +210,15 @@ public class SimpleStringRepresentation
      * 
      * @param t the Throwable
      * @param context the StringRepresentationContext to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String formatHasStringRepresentationThrowable(
             HasStringRepresentation     t,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
-        String ret = t.toStringRepresentation( this, context );
+        String ret = t.toStringRepresentation( this, context, maxLength );
         return ret;
     }
 
@@ -240,7 +248,7 @@ public class SimpleStringRepresentation
             }
 
             Object [] args = { t.getClass(), message, localizedMessage, t };
-            String ret = stringifier.format( null, ArrayFacade.<Object>create( args ));
+            String ret = stringifier.format( null, ArrayFacade.<Object>create( args ), HasStringRepresentation.UNLIMITED_LENGTH );
             return ret;
 
         } catch( StringifierException ex ) {

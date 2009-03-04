@@ -43,12 +43,14 @@ public interface StringRepresentation
      * 
      * @param classOfFormattedObject the class of the to-be-formatted object
      * @param entry the entry in the ResourceHelper (but qualified by the prefix of this StringRepresentation)
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param args the arguments for the entry in the ResourceHelper
      * @return the formatted String
      */
     public String formatEntry(
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
+            int                                      maxLength,
             Object...                                args );
 
     /**
@@ -72,11 +74,13 @@ public interface StringRepresentation
      * 
      * @param t the Throwable
      * @param context the StringRepresentationContext to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String formatThrowable(
             Throwable                   t,
-            StringRepresentationContext context );
+            StringRepresentationContext context,
+            int                         maxLength );
 
     /**
      * Obtain the local StringifierMap. This enables modification of the map.

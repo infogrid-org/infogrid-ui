@@ -693,6 +693,20 @@ public abstract class TypedMeshObjectFacade
     }
 
     /**
+     * Overridable method that enables an EntityType to define how its instances should be
+     * rendered to the user. By default, this returns null.
+     *
+     * It is recommended to invoke MeshObject.getUserVisibleString() instead with a
+     * suitable list of EntityTypes.
+     *
+     * @return the user-visible String representing this instance
+     */
+    public String get_UserVisibleString()
+    {
+        return null;
+    }
+
+    /**
      * The underlying MeshObject. It is named with an underscore, so code-generated
      * code is less likely to interfere with it.
      */

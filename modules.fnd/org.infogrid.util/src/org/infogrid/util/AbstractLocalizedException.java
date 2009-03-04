@@ -14,6 +14,7 @@
 
 package org.infogrid.util;
 
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -83,7 +84,8 @@ public abstract class AbstractLocalizedException
     {
         return toStringRepresentation(
                 StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
-                null );
+                null,
+                HasStringRepresentation.UNLIMITED_LENGTH );
     }
     
     /**
@@ -99,11 +101,13 @@ public abstract class AbstractLocalizedException
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         return constructStringRepresentation(
                 this,
@@ -111,7 +115,8 @@ public abstract class AbstractLocalizedException
                 context,
                 findResourceHelperForLocalizedMessage(),
                 getLocalizationParameters(),
-                findStringRepresentationParameter() );
+                findStringRepresentationParameter(),
+                maxLength );
     }
 
     /**
@@ -169,6 +174,7 @@ public abstract class AbstractLocalizedException
      * @param theHelper the ResourceHelper to use
      * @param params the localization parameters to use
      * @param messageParameter the name of the message parameter to use with the ResourceHelper
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the string
      */
     public static String constructStringRepresentation(
@@ -177,9 +183,10 @@ public abstract class AbstractLocalizedException
             StringRepresentationContext context,
             ResourceHelper              theHelper,
             Object []                   params,
-            String                      messageParameter )
+            String                      messageParameter,
+            int                         maxLength )
     {
-        return rep.formatEntry( ex.getClass(), messageParameter, params );
+        return rep.formatEntry( ex.getClass(), messageParameter, maxLength, params );
     }
 
     /**

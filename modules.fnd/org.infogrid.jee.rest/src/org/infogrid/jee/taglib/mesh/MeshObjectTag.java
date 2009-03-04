@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -15,38 +15,36 @@
 package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.rest.RestfulJeeFormatter;
+import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
-import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.mesh.MeshObject;
 
 /**
- * Tag that renders an instance of <code>PropertyValue</code>, held in the context.
- * Unlike {@link PropertyTag PropertyTag}, this tag does not attempt to obtain a
- * <code>PropertyValue</code> by accessing a <code>MeshObject</code>.
+ * <p>Tag that displays a MeshObject.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class PropertyValueTag
-        extends
-            AbstractRestInfoGridTag
+public class MeshObjectTag
+    extends
+        AbstractInfoGridBodyTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
      * Constructor.
      */
-    public PropertyValueTag()
+    public MeshObjectTag()
     {
         // noop
     }
 
     /**
-     * Initialize all default values. To be invoked by subclasses.
+     * Initialize.
      */
     @Override
     protected void initializeToDefaults()
     {
-        thePropertyValueName    = null;
-        theNullString           = "";
+        theMeshObjectName       = null;
         theStringRepresentation = null;
         theMaxLength            = -1;
 
@@ -54,49 +52,26 @@ public class PropertyValueTag
     }
 
     /**
-     * Obtain value of the propertyValueName property.
+     * Obtain value of the meshObjectName property.
      *
-     * @return value of the propertyValueName property
-     * @see #setPropertyValueName
+     * @return value of the meshObjectName property
+     * @see #setMeshObjectName
      */
-    public final String getPropertyValueName()
+    public String getMeshObjectName()
     {
-        return thePropertyValueName;
+        return theMeshObjectName;
     }
 
     /**
-     * Set value of the propertyValueName property.
+     * Set value of the meshObjectBean property.
      *
-     * @param newValue new value of the propertyValueName property
-     * @see #getPropertyValueName
+     * @param newValue new value of the meshObjectName property
+     * @see #getMeshObjectName
      */
-    public final void setPropertyValueName(
+    public void setMeshObjectName(
             String newValue )
     {
-        thePropertyValueName = newValue;
-    }
-    
-    /**
-     * Obtain value of the nullString property.
-     *
-     * @return value of the nullString property
-     * @see #setNullString
-     */
-    public String getNullString()
-    {
-        return theNullString;
-    }
-
-    /**
-     * Set value of the nullString property.
-     *
-     * @param newValue new value of the nullString property
-     * @see #getNullString
-     */
-    public void setNullString(
-            String newValue )
-    {
-        theNullString = newValue;
+        theMeshObjectName = newValue;
     }
 
     /**
@@ -137,7 +112,6 @@ public class PropertyValueTag
      * Set value of the maxLength property.
      *
      * @param newValue new value of the maxLength property
-     * @see #getNullString
      */
     public void setMaxLength(
             int newValue )
@@ -157,30 +131,47 @@ public class PropertyValueTag
             JspException,
             IgnoreException
     {
-        PropertyValue value = (PropertyValue) lookupOrThrow( thePropertyValueName );
-        
-        String text = formatValue( pageContext, value, theNullString, theStringRepresentation, theMaxLength );
+        MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+
+        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectStart( pageContext, obj, theStringRepresentation, theMaxLength );
 
         print( text );
-        
-        return SKIP_BODY;
+
+        return EVAL_BODY_INCLUDE;
     }
 
     /**
-     * String containing the name of the bean that is the PropertyValue.
+     * Our implementation of doEndTag().
+     *
+     * @return evaluate or skip body
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
      */
-    protected String thePropertyValueName;
+    @Override
+    protected int realDoEndTag()
+        throws
+            JspException,
+            IgnoreException
+    {
+        MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+
+        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectEnd( pageContext, obj, theStringRepresentation );
+
+        print( text );
+
+        return EVAL_PAGE;
+    }
 
     /**
-     * The String that is shown if a value is null.
+     * Name of the bean that holds the MeshObject (mutually exclusive with theIdentifier).
      */
-    protected String theNullString;
+    protected String theMeshObjectName;
 
     /**
      * Name of the String representation.
      */
     protected String theStringRepresentation;
-    
+
     /**
      * The maximum length of an emitted String.
      */

@@ -14,6 +14,8 @@
 
 package org.infogrid.util.text;
 
+import org.infogrid.util.StringHelper;
+
 /**
  * Factors out common functionality for Stringifiers that process numbers.
  */
@@ -35,18 +37,19 @@ public abstract class NumberStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the numerica value, as long
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     protected String format(
             String soFar,
-            long   arg )
+            long   arg,
+            int    maxLength )
     {
+        String ret;
         if( theDigits <= 0 ) {
-            String ret = String.valueOf( arg );
-            return ret;
+            ret = String.valueOf( arg );
 
         } else {
-            String  ret;
             boolean negative;
 
             if( arg >= 0 ) {
@@ -65,8 +68,10 @@ public abstract class NumberStringifier
             }
             prepend.append( ret );
             ret = prepend.toString();
-            return ret;
-        }        
+        }
+        ret = StringHelper.potentiallyShorten( ret, maxLength );
+        return ret;
+
     }
 
     /**
@@ -74,22 +79,24 @@ public abstract class NumberStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
             String soFar,
-            Object arg )
+            Object arg,
+            int    maxLength )
         throws
             ClassCastException
     {
         if( arg instanceof Short ) {
-            return format( soFar, ((Short)arg).longValue() );
+            return format( soFar, ((Short)arg).longValue(), maxLength );
         } else if( arg instanceof Long ) {
-            return format( soFar, ((Long)arg).longValue() );
+            return format( soFar, ((Long)arg).longValue(), maxLength );
         } else {
-            return format( soFar, ((Integer)arg).longValue() );
+            return format( soFar, ((Integer)arg).longValue(), maxLength );
         }
     }
     

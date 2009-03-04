@@ -159,76 +159,6 @@ public abstract class DataType
         return theSupertype;
     }
 
-//
-//    /**
-//     * Consistent way of finding numbers in Strings for the purpose of parsing them.
-//     *
-//     * @param s the String
-//     * @return array of float, representing the distinct numbers in the String, treating all others as white space, or null
-//     */
-//    protected float [] findFloatsIn(
-//            String s )
-//    {
-//        String [] numberStrings = s.split( "[^0-9.-+]+" ); // FIXME: no exponential representation supported
-//        
-//        if( numberStrings.length == 1 && numberStrings[0].length() == 0 ) {
-//            return null;
-//        }
-//        
-//        float [] ret = new float[ numberStrings.length ];
-//        
-//        for( int i=0 ; i<numberStrings.length ; ++i ) {
-//            ret[i] = Float.parseFloat( numberStrings[i] );
-//        }
-//        return ret;
-//    }
-//
-//    /**
-//     * Consistent way of finding numbers in Strings for the purpose of parsing them.
-//     *
-//     * @param s the String
-//     * @return array of double, representing the distinct numbers in the String, treating all others as white space, or null
-//     */
-//    protected double [] findDoublesIn(
-//            String s )
-//    {
-//        String [] numberStrings = s.split( "[^0-9.-+]+" ); // FIXME: no exponential representation supported
-//
-//        if( numberStrings.length == 1 && numberStrings[0].length() == 0 ) {
-//            return null;
-//        }
-//        
-//        double [] ret = new double[ numberStrings.length ];
-//        
-//        for( int i=0 ; i<numberStrings.length ; ++i ) {
-//            ret[i] = Double.parseDouble( numberStrings[i] );
-//        }
-//        return ret;
-//    }
-//
-//    /**
-//     * Consistent way of finding numbers in Strings for the purpose of parsing them.
-//     *
-//     * @param s the String
-//     * @return array of int, representing the distinct numbers in the String, treating all others as white space, or null
-//     */
-//    protected int [] findIntegersIn(
-//            String s )
-//    {
-//        String [] numberStrings = s.split( "[^0-9-+]+" );
-//
-//        if( numberStrings.length == 1 && numberStrings[0].length() == 0 ) {
-//            return null;
-//        }
-//        
-//        int [] ret = new int[ numberStrings.length ];
-//        
-//        for( int i=0 ; i<numberStrings.length ; ++i ) {
-//            ret[i] = Integer.parseInt( numberStrings[i] );
-//        }
-//        return ret;
-//    }
-
     /**
      * Obtain the start part of a String representation of this object that acts
      * as a link/hyperlink and can be shown to the user.
@@ -274,7 +204,7 @@ public abstract class DataType
      */
     public abstract PropertyValue fromStringRepresentation(
             StringRepresentation representation,
-            String                      s )
+            String               s )
         throws
             PropertyValueParsingException;
 

@@ -18,6 +18,7 @@ import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.ArrayFacade;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.ArrayStringifier;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.LongStringifier;
 
 /**
@@ -44,7 +45,7 @@ public class ArrayStringifierTest1
         ArrayStringifier<Long> str = ArrayStringifier.create( LongStringifier.create(), "aaa", "bbb", "ccc" );
         Long [] data = { 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 0L };
         
-        String result = str.format( null, ArrayFacade.create( data ));
+        String result = str.format( null, ArrayFacade.create( data ), HasStringRepresentation.UNLIMITED_LENGTH );
         
         checkEquals( result.length(), str.getStart().length() + str.getEnd().length() + ( data.length-1 ) * str.getMiddle().length() + data.length, "wrong length of result string" );
         checkCondition( result.startsWith( str.getStart() ), "does not start right" );

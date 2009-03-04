@@ -100,17 +100,19 @@ public abstract class PropertyValue
      * @param v the PropertyValue to convert
      * @param representation the representation scheme
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the String representation
      */
     public static String toStringRepresentationOrNull(
             PropertyValue               v,
             StringRepresentation        representation,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         if( v == null ) {
             return null;
         } else {
-            return v.toStringRepresentation( representation, context );
+            return v.toStringRepresentation( representation, context, maxLength );
         }
     }
 
@@ -121,17 +123,19 @@ public abstract class PropertyValue
      * @param v the PropertyValue to convert
      * @param representation the representation scheme
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the String representation
      */
     public final static String toStringRepresentation(
             PropertyValue               v,
             StringRepresentation        representation,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         if( v == null ) {
-            return representation.formatEntry( PropertyValue.class, "Null" );
+            return representation.formatEntry( PropertyValue.class, "Null", maxLength );
         } else {
-            return v.toStringRepresentation( representation, context );
+            return v.toStringRepresentation( representation, context, maxLength );
         }
     }
 

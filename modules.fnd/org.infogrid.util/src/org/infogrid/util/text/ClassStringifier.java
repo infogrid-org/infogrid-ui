@@ -15,6 +15,7 @@
 package org.infogrid.util.text;
 
 import java.util.Iterator;
+import org.infogrid.util.StringHelper;
 
 /**
  * Stringifies an Java Class name.
@@ -46,13 +47,17 @@ public class ClassStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     public String format(
             String soFar,
-            Class  arg )
+            Class  arg,
+            int    maxLength )
     {
         String ret = escape( arg.getName() );
+        ret = StringHelper.potentiallyShorten( ret, maxLength );
+
         return ret;
     }
 
@@ -61,24 +66,26 @@ public class ClassStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
             String soFar,
-            Object arg )
+            Object arg,
+            int    maxLength )
         throws
             ClassCastException
     {
         if( arg == null ) {
-            return format( soFar, null );
+            return format( soFar, null, maxLength );
 
         } else if( arg instanceof Class ) {
-            return format( soFar, (Class) arg );
+            return format( soFar, (Class) arg, maxLength );
 
         } else {
-            return format( soFar, arg.getClass() );
+            return format( soFar, arg.getClass(), maxLength );
         }
     }
 

@@ -8,11 +8,13 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
+
+import org.infogrid.util.StringHelper;
 
 /**
  * Stringifies a URL argument by prepending & or ? correctly.
@@ -44,12 +46,14 @@ public class UrlAppendStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     @Override
     public String format(
             String soFar,
-            String arg )
+            String arg,
+            int    maxLength )
     {
         if( arg == null ) {
             return "";
@@ -62,6 +66,8 @@ public class UrlAppendStringifier
         }
 
         buf.append( escape( arg ));
-        return buf.toString();
+
+        return StringHelper.potentiallyShorten( buf.toString(), maxLength );
+        // not sure this is the best we can do. Use case: show too long URL on screen.
     }
 }

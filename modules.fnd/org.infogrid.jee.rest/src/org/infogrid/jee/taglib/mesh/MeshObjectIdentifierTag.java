@@ -133,8 +133,7 @@ public class MeshObjectIdentifierTag
     {
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
  
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifierStart( pageContext, obj, theStringRepresentation );
-               text = theFormatter.potentiallyShorten( text, theMaxLength );
+        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifierStart( pageContext, obj, theStringRepresentation, theMaxLength );
         
         print( text );
 
@@ -157,7 +156,6 @@ public class MeshObjectIdentifierTag
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
  
         String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifierEnd( pageContext, obj, theStringRepresentation );
-               text = theFormatter.potentiallyShorten( text, theMaxLength );
 
         print( text );
 

@@ -14,7 +14,6 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -54,6 +53,7 @@ public final class TimePeriodValue
      * Factory method.
      *
      * @param millis the number of milliseconds
+     * @return the created TimePeriodValue
      */
     public static TimePeriodValue create(
             long millis )
@@ -211,13 +211,14 @@ public final class TimePeriodValue
     public boolean equals(
             Object otherValue )
     {
-        if( otherValue instanceof TimePeriodValue )
+        if( otherValue instanceof TimePeriodValue ) {
             return (theYear   == ((TimePeriodValue)otherValue).theYear)
                 && (theMonth  == ((TimePeriodValue)otherValue).theMonth)
                 && (theDay    == ((TimePeriodValue)otherValue).theDay)
                 && (theHour   == ((TimePeriodValue)otherValue).theHour)
                 && (theMinute == ((TimePeriodValue)otherValue).theMinute)
                 && (theSecond == ((TimePeriodValue)otherValue).theSecond);
+        }
         return false;
     }
 
@@ -353,15 +354,18 @@ public final class TimePeriodValue
      * 
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
         return rep.formatEntry(
                 getClass(),
                 DEFAULT_ENTRY,
+                maxLength,
                 theYear,
                 theMonth,
                 theDay,

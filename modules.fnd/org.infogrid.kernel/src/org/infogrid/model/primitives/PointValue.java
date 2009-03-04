@@ -211,13 +211,15 @@ public final class PointValue
      * 
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            int                         maxLength )
     {
-        return rep.formatEntry( getClass(), DEFAULT_ENTRY, x, y );
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY, maxLength, x, y );
     }
 
     /**

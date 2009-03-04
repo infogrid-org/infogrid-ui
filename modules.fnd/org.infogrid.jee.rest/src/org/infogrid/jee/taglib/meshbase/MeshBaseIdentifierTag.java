@@ -133,8 +133,7 @@ public class MeshBaseIdentifierTag
     {
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
         
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseIdentifierStart( pageContext, mb, theStringRepresentation );
-               text = theFormatter.potentiallyShorten( text, theMaxLength );
+        String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseIdentifierStart( pageContext, mb, theStringRepresentation, theMaxLength );
         
         print( text );
 
@@ -157,7 +156,6 @@ public class MeshBaseIdentifierTag
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
 
         String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseIdentifierEnd( pageContext, mb, theStringRepresentation );
-               text = theFormatter.potentiallyShorten( text, theMaxLength );
 
         print( text );
 

@@ -179,17 +179,7 @@ of a class could be represented as a (subtype of) ComponentObject.</userdescript
         <sequencenumber>6.0</sequencenumber>
       </propertytype>
     </entitytype>
-<!--
-    <entitytype ID="org.infogrid.model.Common#PersonPlayingRole">
-      <name>PersonPlayingRole</name>
-      <username>Role</username>
-      <userdescription>This is an abstract supertype for a role that a person may be playing within
-      an activity or other DefinitionObject.</userdescription>
-      <supertype>org.infogrid.model.Common#ComponentObject</supertype>
-      <isabstract/>
-      <issignificant/>
-    </entitytype>
- -->
+
     <entitytype ID="org.infogrid.model.Common#DefinitionObject">
       <name>DefinitionObject</name>
       <username>Object</username>

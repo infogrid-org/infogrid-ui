@@ -132,8 +132,7 @@ public class ProxyIdentifierTag
     {
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
         
-        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierStart( pageContext, p, null, theStringRepresentation );
-               text = theFormatter.potentiallyShorten( text, theMaxLength );
+        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierStart( pageContext, p, null, theStringRepresentation, theMaxLength );
         
         print( text );
 
@@ -156,7 +155,6 @@ public class ProxyIdentifierTag
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
         
         String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierEnd( pageContext, p, null, theStringRepresentation );
-               text = theFormatter.potentiallyShorten( text, theMaxLength );
 
         print( text );
 

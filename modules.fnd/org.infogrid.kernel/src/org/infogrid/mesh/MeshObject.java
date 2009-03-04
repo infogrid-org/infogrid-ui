@@ -982,6 +982,31 @@ public interface MeshObject
     public abstract ExternalizedMeshObject asExternalized();
 
     /**
+     * Obtain a String that renders this instance suitable for showing to a user.
+     * Specify the prioritized sequence of EntityTypes that have a chance of defining
+     * that user-visible String. For example, if a MeshObject is blessed with EntityTypes
+     * A, B and D, of which B and D define a user-visible String other than null,
+     * and if this method is invoked with EntityTypes A, C, D, B, this method will
+     * return the result of D's get_UserVisibleString() method.
+     * For programming simplicity, this method may be invoked with EntityTypes that the
+     * current MeshObject is not currently blessed with. If no user-visible String can be
+     * determined from the specified EntityTypes (or if none are specified), this method
+     * will return a generic default, such as the String form of the MeshObjectIdentifier.
+     *
+     * @param types the EntityTypes to be consulted, in sequence, until a non-null result is found
+     * @return the user-visible String representing this instance
+     */
+    public String getUserVisibleString(
+            EntityType [] types );
+
+    /**
+     * Obtain a String that renders this instance suitable for showing to a user.
+     *
+     * @return the user-visible String representing this instance
+     */
+    public String getUserVisibleString();
+
+    /**
      * The name of a pseudo-property that indicates the state of the object, such as
      * "alive" or "dead". This pseudo-property changes when the MeshObject dies.
      */

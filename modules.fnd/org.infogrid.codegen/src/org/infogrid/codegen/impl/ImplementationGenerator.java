@@ -30,6 +30,7 @@ import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.model.traversal.BreadthFirstSupertypeIterator;
 import org.infogrid.util.UniqueIterator;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 
 /**
@@ -243,15 +244,15 @@ public class ImplementationGenerator
         outStream.println( "  * <table>" );
         outStream.println(
                   "  *  <tr><td>Identifier:</td><td><tt>"
-                + theMeshType.getIdentifier().toStringRepresentation( theCommentsRepresentation, null )
+                + theMeshType.getIdentifier().toStringRepresentation( theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</tt></td></tr>" );
         outStream.println(
                   "  *  <tr><td>Name:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( theMeshType.getName(), theCommentsRepresentation, null )
+                + PropertyValue.toStringRepresentation( theMeshType.getName(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</tt></td></tr>" );
         outStream.println(
                   "  *  <tr><td>IsAbstract:</td><td>"
-                + PropertyValue.toStringRepresentation( theMeshType.getIsAbstract(), theCommentsRepresentation, null )
+                + PropertyValue.toStringRepresentation( theMeshType.getIsAbstract(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</td></tr>" );
         generateL10Map(
                 theMeshType.getUserVisibleNameMap(),

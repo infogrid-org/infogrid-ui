@@ -910,7 +910,7 @@ public class SaneServletRequest
         public char charAt(
                 int index )
         {
-            return theValue.charAt( index );
+            return getValue().charAt( index );
         }
 
         /**
@@ -920,7 +920,7 @@ public class SaneServletRequest
          */
         public int length()
         {
-            return theValue.length();
+            return getValue().length();
         }
 
         /**
@@ -934,7 +934,7 @@ public class SaneServletRequest
                 int start,
                 int end )
         {
-            return theValue.subSequence( start, end );
+            return getValue().subSequence( start, end );
         }
 
         /**
@@ -945,7 +945,7 @@ public class SaneServletRequest
         @Override
         public String toString()
         {
-            return theValue;
+            return getValue();
         }
 
         /**

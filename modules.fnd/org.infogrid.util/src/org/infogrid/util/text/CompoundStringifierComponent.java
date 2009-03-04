@@ -31,11 +31,13 @@ public interface CompoundStringifierComponent<T>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the formatted String
      */
     public String format(
             String         soFar,
-            ArrayFacade<T> arg );
+            ArrayFacade<T> arg,
+            int            maxLength );
     
     /**
      * Obtain an iterator that goes with this CompoundStringifierComponent.

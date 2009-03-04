@@ -29,6 +29,7 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 
 /**
@@ -141,22 +142,22 @@ public abstract class AbstractGenerator
                 + thePropertyType.getIdentifier().toExternalForm()
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>Name:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getName(), theCommentsRepresentation, null )
+                + PropertyValue.toStringRepresentation( thePropertyType.getName(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>DataType:</td><td><tt>"
-                + thePropertyType.getDataType().toStringRepresentation( theCommentsRepresentation, null )
+                + thePropertyType.getDataType().toStringRepresentation( theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>DefaultValue:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getDefaultValue(), theCommentsRepresentation, null )
+                + PropertyValue.toStringRepresentation( thePropertyType.getDefaultValue(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>IsOptional:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getIsOptional(), theCommentsRepresentation, null )
+                + PropertyValue.toStringRepresentation( thePropertyType.getIsOptional(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>IsReadOnly:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getIsReadOnly(), theCommentsRepresentation, null )
+                + PropertyValue.toStringRepresentation( thePropertyType.getIsReadOnly(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</tt></td></tr>" );
         w.println( "      *  <tr><td>SequenceNumber:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( thePropertyType.getSequenceNumber(), theCommentsRepresentation, null )
+                + PropertyValue.toStringRepresentation( thePropertyType.getSequenceNumber(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
                 + "</tt></td></tr>" );
         generateL10Map(
                 thePropertyType.getUserVisibleNameMap(),
@@ -321,7 +322,7 @@ public abstract class AbstractGenerator
         }
         w.print( prefix );
         w.print( "<table><tr><td>default locale:</td><td>" );
-        w.print( PropertyValue.toStringRepresentation( theMap.getDefault(), theCommentsRepresentation, null ));
+        w.print( PropertyValue.toStringRepresentation( theMap.getDefault(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH ));
         w.print( "</td></tr>" );
         Iterator<String> theIter = theMap.keyIterator();
         while( theIter.hasNext() ) {
@@ -329,7 +330,7 @@ public abstract class AbstractGenerator
             w.print( "<tr><td>" );
             w.print( key );
             w.print( "</td><td>" );
-            w.print( PropertyValue.toStringRepresentation( theMap.getExact( key ), theCommentsRepresentation, null ));
+            w.print( PropertyValue.toStringRepresentation( theMap.getExact( key ), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH ));
             w.print( "</td></tr>" );
         }
         w.print( "</table>" );
