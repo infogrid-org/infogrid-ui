@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -32,6 +32,7 @@ import org.infogrid.mesh.RoleTypeNotBlessedException;
 import org.infogrid.mesh.TypedMeshObjectFacade;
 import org.infogrid.mesh.externalized.SimpleExternalizedMeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.text.SimpleMeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.WrongMeshBaseException;
 import org.infogrid.meshbase.a.AMeshBase;
@@ -1939,7 +1940,7 @@ public class AMeshObject
      * Obtain a String that renders this instance suitable for showing to a user.
      *
      * @param types the EntityTypes to be consulted, in sequence, until a non-null result is found
-     * @return the user-visible String representing this instance
+     * @return the user-visible String representing this instance, or null if none could be found
      */
     public String getUserVisibleString(
             EntityType [] types )
@@ -1964,9 +1965,6 @@ public class AMeshObject
             }
         }
 
-        if( ret == null ) {
-            ret = theIdentifier.toExternalForm();
-        }
         return ret;
     }
 
@@ -1977,7 +1975,11 @@ public class AMeshObject
      */
     public String getUserVisibleString()
     {
-        return getUserVisibleString( getTypes() ); // that makes a random sequence, but that's the best we can do
+        String ret = getUserVisibleString( getTypes() ); // that makes a random sequence, but that's the best we can do
+        if( ret == null ) {
+            ret = theIdentifier.toExternalForm();
+        }
+        return ret;
     }
 
     /**
@@ -1995,15 +1997,34 @@ public class AMeshObject
     {
         String meshObjectExternalForm = theIdentifier.toExternalForm();
         String meshBaseExternalForm   = theMeshBase.getIdentifier().toExternalForm();
+        String userVisible            = getUserVisibleString( getTypes() );
 
-        String ret = rep.formatEntry(
-                getClass(), // dispatch to the right subtype
-                DEFAULT_ENTRY,
-                maxLength,
-                getUserVisibleString(),
-                meshObjectExternalForm,
-                meshBaseExternalForm );
+        String ret;
 
+        if( userVisible != null ) {
+            ret = rep.formatEntry(
+                    getClass(), // dispatch to the right subtype
+                    DEFAULT_ENTRY,
+                    maxLength,
+                    userVisible,
+                    meshObjectExternalForm,
+                    meshBaseExternalForm );
+
+        } else {
+            HashMap<String,Object> contextObjects = new HashMap<String,Object>();
+            contextObjects.put( SimpleMeshStringRepresentationContext.MESHOBJECT_KEY, this );
+            
+            StringRepresentationContext delegateContext = SimpleMeshStringRepresentationContext.create( contextObjects, context );
+            String identifierRep = theIdentifier.toStringRepresentation( rep, delegateContext, maxLength );
+
+            ret = rep.formatEntry(
+                    getClass(), // dispatch to the right subtype
+                    NO_USER_VISIBLE_STRING_ENTRY,
+                    maxLength,
+                    identifierRep,
+                    meshObjectExternalForm,
+                    meshBaseExternalForm );
+        }
         return ret;
     }
 
@@ -2100,4 +2121,10 @@ public class AMeshObject
      * Default entry in the resource files, prefixed by the StringRepresentation's prefix.
      */
     public static final String DEFAULT_ENTRY = "String";
+
+    /**
+     * Entry in the resource files, prefixed by the StringRepresentation's prefix,
+     * indicating a MeshObject that has no user-visible String.
+     */
+    public static final String NO_USER_VISIBLE_STRING_ENTRY = "NoUserVisibleString";
 }

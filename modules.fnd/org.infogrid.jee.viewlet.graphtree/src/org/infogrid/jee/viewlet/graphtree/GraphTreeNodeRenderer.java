@@ -18,19 +18,34 @@ import javax.servlet.http.HttpServletRequest;
 import org.infogrid.mesh.MeshObject;
 
 /**
- * Knows how to render a node in the GraphTree.
+ * Knows how to determineCurrentLabel a node in the GraphTree.
  */
 public interface GraphTreeNodeRenderer
 {
     /**
-     * Render a node, represented as a MeshObject.
+     * For a given MeshObject, determine which MeshObject to link to. Returning null means
+     * that no link shall be created.
+     *
+     * @param node the MeshObject
+     * @param request the incoming request
+     * @param stringRepresentation the StringRepresentation to use
+     * @return the MeshObject to link to
+     */
+    public MeshObject determineMeshObjectToLinkTo(
+            MeshObject         node,
+            HttpServletRequest request,
+            String             stringRepresentation );
+
+    /**
+     * Determine the label to be shown to the user for a given
+     * MeshObject in the GraphTreeViewlet.
      *
      * @param node the MeshObject
      * @param request the incoming request
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to be shown
      */
-    public String render(
+    public String determineCurrentLabel(
             MeshObject         node,
             HttpServletRequest request,
             String             stringRepresentation );

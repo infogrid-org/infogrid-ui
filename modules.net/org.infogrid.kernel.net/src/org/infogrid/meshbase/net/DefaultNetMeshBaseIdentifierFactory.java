@@ -193,6 +193,10 @@ public class DefaultNetMeshBaseIdentifierFactory
                         prefix = contextString.substring( 0, lastSlash );
                     }
                 }
+                if( !string.contains( "/" )) {
+                    // example: cnn.com without trailing slash
+                    string += "/";
+                }
                 if( prefix != null ) {
                     string = prefix + "/" + string;
                 } else {

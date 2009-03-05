@@ -49,6 +49,7 @@ import org.infogrid.mesh.RoleTypeRequiresEntityTypeException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -67,7 +68,6 @@ import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.MCachingHashMap;
 import org.infogrid.util.MSmartFactory;
-import org.infogrid.util.NameServer;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextObjectNotFoundException;
 import org.infogrid.util.http.SaneRequest;
@@ -79,62 +79,6 @@ import org.infogrid.util.text.StringRepresentationDirectory;
  * <p>Recognizes <code>MeshObject</code> change-related requests as part of the incoming HTTP
  *    request and processes them. The protocol to express those change-related requests has been
  *    constructed to make it easy to issue them from HTML forms using HTTP POST.</p>
- * 
- * <p>The protocol recognizes the following HTTP POST parameters:</p>
- * <table class="infogrid-border">
- *  <thead>
- *   <tr>
- *    <td>Parameter</td>
- *    <td>Description</td>
- *    <td>Required?</td>
- *   </tr>
- *  </thead>
- *  <tbody>
- *   <tr>
- *    <td><code>mesh.subject</code></td>
- *    <td>Identifier (external form of the <code>MeshObject</code>'s Identifier)
- *        for the primary subject of the operation</td>
- *    <td>exactly 1 required (if not given, the <code>HttpShellFilter</code> will do nothing)</td>
- *   </tr>
- *   <tr>
- *    <td><code>mesh.verb</code></td>
- *    <td>Type of operation to be performed, for enumeration see
- *        {@link org.infogrid.jee.shell.http.HttpShellVerb HttpShellVerb}</td>
- *    <td>exactly 1 required (if not given, the <code>HttpShellFilter</code> will do nothing)</td>
- *   </tr>
- *   <tr>
- *    <td><code>mesh.object</code></td>
- *    <td>Identifier (external form of the <code>MeshObject</code>'s Identifier)
- *        for another object involved in the operation</td>
- *    <td>0 or 1 (may be required for some values of <code>mesh.verb</code>)</td>
- *   </tr>
- *   <tr>
- *    <td><code>mesh.propertytype</code></td>
- *    <td>Identifier for a <code>PropertyType</code> (external form of the <code>PropertyType</code>'s
- *        Identifier) on the subject</td>
- *    <td>0..N</td>
- *   </tr>
- *   <tr>
- *    <td><code>mesh.propertyvalue</code></td>
- *    <td>New <code>PropertyValue</code> for the property on the subject (external form of
- *        the <code>PropertyValue</code>) identified by
- *        <code>mesh.subject</code> and <code>mesh.propertytype</code></td>
- *    <td>0..N. Must be given the same number of times as <code>mesh.propertytype</code>.</td>
- *   </tr>
- *   <tr>
- *    <td><code>mesh.subjecttype</code></td>
- *    <td>Identifier (external form of the <code>EntityType</code>'s Identifier)
- *        for a type of the subject</td>
- *    <td>0..N</td>
- *   </tr>
- *   <tr>
- *    <td><code>mesh.roletype</code></td>
- *    <td>Identifier for a type of role (external form of the <code>RoleType</code>'s Identifier)
- *        the subject plays with the object</td>
- *    <td>0..N. Only permitted if <code>mesh.object</code> is given</td>
- *   </tr>
- *  </tbody>
- * </table>
  */
 public class HttpShellFilter
     implements
@@ -659,7 +603,7 @@ public class HttpShellFilter
             InfoGridWebApp app        = InfoGridWebApp.getSingleton();
             Context        appContext = app.getApplicationContext();
 
-            theMeshBaseNameServer        = appContext.findContextObject( NameServer.class );
+            theMeshBaseNameServer        = appContext.findContextObject( MeshBaseNameServer.class );
             theMeshBaseIdentifierFactory = appContext.findContextObject( MeshBaseIdentifierFactory.class );
             theMainMeshBase              = appContext.findContextObjectOrThrow( MeshBase.class );
 
@@ -737,7 +681,7 @@ public class HttpShellFilter
     /**
      * Buffered MeshBase name server.
      */
-    protected NameServer<MeshBaseIdentifier,MeshBase> theMeshBaseNameServer;
+    protected MeshBaseNameServer<MeshBaseIdentifier,MeshBase> theMeshBaseNameServer;
 
     /**
      * Buffered factory for MeshBaseIdentifiers.

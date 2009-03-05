@@ -105,7 +105,7 @@ public class StringRepresentationDirectorySingleton
         // html: same as plain
 
         plainMap.put(   "id",             IdentifierStringifier.create() );
-        // html: same as plain
+        htmlMap.put(    "id",             IdentifierStringifier.create( "<code>", "</code>" ));
 
         plainMap.put(   "idarray",        ArrayStringifier.create( IdentifierStringifier.create(), ", " ));
         // html: same as plain

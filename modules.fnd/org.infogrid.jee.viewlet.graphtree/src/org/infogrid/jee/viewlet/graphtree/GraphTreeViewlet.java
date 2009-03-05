@@ -189,7 +189,25 @@ public class GraphTreeViewlet
     }
 
     /**
-     * Determine the PropertyValue to be shown to the user for a given
+     * For a given MeshObject, determine which MeshObject to link to. Returning null means
+     * that no link shall be created.
+     *
+     * @param node the MeshObject
+     * @param request the incoming request
+     * @param stringRepresentation the StringRepresentation to use
+     * @return the MeshObject to link to
+     */
+    public MeshObject determineMeshObjectToLinkTo(
+            MeshObject         node,
+            HttpServletRequest request,
+            String             stringRepresentation )
+    {
+        MeshObject ret = theRenderer.determineMeshObjectToLinkTo( node, request, stringRepresentation );
+        return ret;
+    }
+
+    /**
+     * Determine the label to be shown to the user for a given
      * MeshObject in the GraphTreeViewlet.
      *
      * @param node the MeshObject
@@ -202,7 +220,7 @@ public class GraphTreeViewlet
             HttpServletRequest request,
             String             stringRepresentation )
     {
-        String ret = theRenderer.render( node, request, stringRepresentation );
+        String ret = theRenderer.determineCurrentLabel( node, request, stringRepresentation );
         return ret;
     }
 
@@ -218,7 +236,7 @@ public class GraphTreeViewlet
     protected MeshObjectSorter [] theSorters;
 
     /**
-     * The object that knows how to render a node in the GraphTree.
+     * The object that knows how to determineCurrentLabel a node in the GraphTree.
      */
     protected GraphTreeNodeRenderer theRenderer;
 }

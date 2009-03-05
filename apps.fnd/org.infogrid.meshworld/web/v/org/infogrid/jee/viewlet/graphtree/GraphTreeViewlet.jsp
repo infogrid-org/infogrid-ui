@@ -5,7 +5,6 @@
  %><%@ page import="org.infogrid.jee.viewlet.JeeViewlet"
  %><%@ page import="org.infogrid.mesh.MeshObject"
  %><%@ page import="org.infogrid.mesh.set.MeshObjectSet"
- %><%@ page import="org.infogrid.mesh.set.OrderedMeshObjectSet"
  %><%@ page import="org.infogrid.util.CursorIterator"
  %><%@ taglib prefix="mesh"  uri="/v/org/infogrid/jee/taglib/mesh/mesh.tld"
  %><%@ taglib prefix="candy" uri="/v/org/infogrid/jee/taglib/candy/candy.tld"
@@ -28,53 +27,53 @@
 GraphTreeViewlet                  v        = (GraphTreeViewlet) request.getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
 Stack<CursorIterator<MeshObject>> theStack = new Stack<CursorIterator<MeshObject>>();
 
-MeshObjectSet toplevelSet = v.subItems( v.getSubject(), 0 );
-if( !toplevelSet.isEmpty() ) {
-    theStack.push( toplevelSet.iterator() );
-}
+theStack.push( v.subItems( v.getSubject(), 0 ).iterator() );
 
-int level = 0;
 while( !theStack.isEmpty() ) {
+    int level = theStack.size();
     CursorIterator<MeshObject> currentIter = theStack.peek();
-
-    boolean goToChildren = false;
-    while( currentIter.hasNext() ) {
+    if( currentIter.hasNext() ) {
         MeshObject current = currentIter.next();
+        MeshObject toLink  = v.determineMeshObjectToLinkTo( current, request, "Html" );
+
         request.setAttribute( "current", current );
-        // now emit node
+        request.setAttribute( "toLink",  toLink );
+        // process current
+
+        if( toLink != null ) {
 %>
-       <dt>
-       <mesh:meshObjectLink meshObjectName="current" addArguments="lid-appcontext=iframe" target="detail">
-        <mesh:meshObjectId meshObjectName="current"/>
+      <dt>
+       <mesh:meshObjectLink meshObjectName="toLink" addArguments="lid-appcontext=iframe" target="detail" >
+        <%=v.determineCurrentLabel( current, request, "Html" ) %>
        </mesh:meshObjectLink>
       </dt>
 <%
-        // end emit node
-        MeshObjectSet children = v.subItems( current, theStack.size() );
+        } else {
+%>
+      <dt>
+        <%=v.determineCurrentLabel( current, request, "Html" ) %>
+      </dt>
+<%
+        }
+        MeshObjectSet children = v.subItems( current, level );
         if( !children.isEmpty() ) {
             theStack.push( children.iterator() );
-            goToChildren = true;
-            break; // we'll return to that one
-        }
-    }
-    if( goToChildren ) {
-        ++level;
-        // now emit "start next level"
+            // process "go down to children"
 %>
       <dd>
-       <dl class="level<%=level%>">
+       <dl class="level<%=level %>">
 <%
-        // end emit "start next level"
+        } else {
+            // no children, "try to go sideways to brother"
+        }
     } else {
-        --level;
         theStack.pop();
+        // process "go up to uncle"
         if( !theStack.isEmpty() ) {
-        // now emit "return to previous level"
 %>
        </dl>
       </dd>
 <%
-        // end emit "return to previous level"
         }
     }
 }

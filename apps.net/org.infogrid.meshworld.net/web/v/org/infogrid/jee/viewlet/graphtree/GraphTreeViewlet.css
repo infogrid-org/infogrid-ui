@@ -6,10 +6,16 @@ td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar {
 }
 td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level0 > dt {
     font-weight: bold;
+    list-style: disc inside;
+}
+td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level1 > dt {
+    list-style: square inside;
+}
+td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level2 > dt {
+    list-style: circle inside;
 }
 td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dt {
-    display: list-item; 
-    list-style: disc inside;
+    display: list-item;
     margin-left: 5px;
 }
 td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dd {

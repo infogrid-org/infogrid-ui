@@ -25,21 +25,41 @@ public class IdentifierStringifier
             Stringifier<Identifier>
 {
     /**
-     * Factory method.
+     * Factory method without prefix or postfix.
      *
      * @return the created IdentifierStringifier
      */
     public static IdentifierStringifier create()
     {
-        return new IdentifierStringifier();
+        return new IdentifierStringifier( null, null );
+    }
+
+    /**
+     * Factory method with prefix or postfix.
+     *
+     * @param prefix the prefix for the identifier, if any
+     * @param postfix the postfix for the identifier, if any
+     * @return the created IdentifierStringifier
+     */
+    public static IdentifierStringifier create(
+            String prefix,
+            String postfix )
+    {
+        return new IdentifierStringifier( prefix, postfix );
     }
 
     /**
      * No-op constructor. Use factory method.
+     *
+     * @param prefix the prefix for the identifier, if any
+     * @param postfix the postfix for the identifier, if any
      */
-    protected IdentifierStringifier()
+    protected IdentifierStringifier(
+            String prefix,
+            String postfix )
     {
-        // no op
+        thePrefix  = prefix;
+        thePostfix = postfix;
     }
 
     /**
@@ -55,8 +75,22 @@ public class IdentifierStringifier
             Identifier arg,
             int        maxLength )
     {
-        String ret = escape( arg.toExternalForm() );
-        return ret;
+        String ext = escape( arg.toExternalForm() );
+
+        if( thePrefix == null && thePostfix == null ) {
+            return ext;
+
+        } else {
+            StringBuilder buf = new StringBuilder();
+            if( thePrefix != null ) {
+                buf.append( thePrefix );
+            }
+            buf.append( ext );
+            if( thePostfix != null ) {
+                buf.append( thePrefix );
+            }
+            return buf.toString();
+        }
     }
 
     /**
@@ -141,4 +175,14 @@ public class IdentifierStringifier
     {
         throw new UnsupportedOperationException();
     }
+
+    /**
+     * The prefix, if any.
+     */
+    protected String thePrefix;
+
+    /**
+     * The postfix, if any.
+     */
+    protected String thePostfix;
 }

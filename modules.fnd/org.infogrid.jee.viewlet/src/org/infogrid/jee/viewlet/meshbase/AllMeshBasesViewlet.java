@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,7 +19,7 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
-import org.infogrid.util.NameServer;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
@@ -102,7 +102,7 @@ public class AllMeshBasesViewlet
         Context c = getContext();
 
         @SuppressWarnings( "unchecked" )
-        NameServer<MeshBaseIdentifier,MeshBase> ns  = c.findContextObjectOrThrow( NameServer.class );
+        MeshBaseNameServer<MeshBaseIdentifier,MeshBase> ns = c.findContextObjectOrThrow( MeshBaseNameServer.class );
         
         Iterator<MeshBase> ret = ns.values().iterator();
         
