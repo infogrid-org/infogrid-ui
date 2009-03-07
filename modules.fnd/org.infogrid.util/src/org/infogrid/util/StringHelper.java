@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -47,6 +47,8 @@ public abstract class StringHelper
         int ret;
         if( one == null ) {
             ret = two == null ? 0 : -1;
+        } else if( two == null ) {
+            ret = 1;
         } else {
             ret = one.compareTo( two );
         }

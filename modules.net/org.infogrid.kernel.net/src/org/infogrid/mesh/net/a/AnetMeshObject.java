@@ -43,7 +43,6 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.mesh.net.LockChangedEvent;
 import org.infogrid.mesh.net.NotHomeReplicaException;
 import org.infogrid.mesh.net.proxy.ReplicaProxyInterface;
-import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -77,8 +76,6 @@ import org.infogrid.util.RemoteQueryTimeoutException;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * <p>Subclasses AMeshObject to add information necessary for NetMeshBases according
@@ -1957,6 +1954,7 @@ public class AnetMeshObject
                     "theTimeExpires",
                     "types",
                     "neighbors",
+                    "neighborRoleTypes",
                     "theMeshBase.getIdentifier()"
                 },
                 new Object[] {
@@ -1967,6 +1965,7 @@ public class AnetMeshObject
                     theTimeExpires,
                     theMeshTypes != null ? theMeshTypes.keySet() : null,
                     theNeighborIdentifiers,
+                    theNeighborRoleTypes,
                     theMeshBase != null ? theMeshBase.getIdentifier().toExternalForm() : null
                 });
     }
