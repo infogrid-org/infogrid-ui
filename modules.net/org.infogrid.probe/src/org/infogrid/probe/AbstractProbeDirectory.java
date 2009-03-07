@@ -8,13 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.probe;
 
 import java.util.Collection;
+import org.infogrid.util.StringHelper;
 
 /**
  * Factors out functionality common to many ProbeDirectory implementations.
@@ -91,12 +92,14 @@ public abstract class AbstractProbeDirectory
      * document types.
      *
      * @param docTypes the potential new XML document types
-     * @param tagTypes the potential new XML root tags
+     * @param namespaces the namespaces of the potential new XML root tags
+     * @param localNames the local names of the potential new XML root tags
      * @throws IllegalArgumentException thrown if an XML document type is handled already
      */
     protected void ensureNoXmlOverlap(
             String [] docTypes,
-            String [] tagTypes )
+            String [] namespaces,
+            String [] localNames )
         throws
             IllegalArgumentException
     {
@@ -112,10 +115,12 @@ public abstract class AbstractProbeDirectory
                 }
             }
             // check the tag types
-            for( int j=current.theTagTypes.length-1 ; j>=0 ; --j ) {
-                for( int k=tagTypes.length-1 ; k>=0 ; --k ) {
-                    if( current.theTagTypes[j].equals( tagTypes[k] )) {
-                        throw new IllegalArgumentException( "XML tag type " + tagTypes[k] + " handled already" );
+            for( int j=current.theToplevelElementNamespaces.length-1 ; j>=0 ; --j ) {
+                for( int k=namespaces.length-1 ; k>=0 ; --k ) {
+                    if(    StringHelper.compareTo( current.theToplevelElementNamespaces[j], namespaces[k] ) == 0
+                        && StringHelper.compareTo( current.theToplevelElementLocalNames[j], localNames[k] ) == 0 )
+                    {
+                        throw new IllegalArgumentException( "XML tag type " + namespaces[k] + "/" + localNames[k] + " handled already" );
                     }
                 }
             }
@@ -133,7 +138,7 @@ public abstract class AbstractProbeDirectory
         throws
             IllegalArgumentException
     {
-        ensureNoXmlOverlap( desc.theDocumentTypes, desc.theTagTypes );
+        ensureNoXmlOverlap( desc.theDocumentTypes, desc.theToplevelElementNamespaces, desc.theToplevelElementLocalNames );
 
         theXmlDomProbes.add( desc );
     }
@@ -215,14 +220,16 @@ public abstract class AbstractProbeDirectory
     /**
      * Find an XML DOM Probe by tag type.
      *
-     * @param tagType the found XML tag type
+     * @param toplevelElementNamespace namespace URI of the top-level tag, if any
+     * @param toplevelElementLocalName local name of the top-level tag
      * @return the descriptor for the Probe that can parse this tag type
      */
     public XmlDomProbeDescriptor getXmlDomProbeDescriptorByTagType(
-            String tagType )
+            String toplevelElementNamespace,
+            String toplevelElementLocalName )
     {
         for( XmlDomProbeDescriptor current : theXmlDomProbes ) {
-            if( current.canProcessTagType( tagType )) {
+            if( current.canProcessTagType( toplevelElementNamespace, toplevelElementLocalName )) {
                 return current;
             }
         }
@@ -248,13 +255,15 @@ public abstract class AbstractProbeDirectory
     /**
      * Find an XML DOM Probe class name by tag type.
      *
-     * @param tagType the found XML tag type
+     * @param toplevelElementNamespace namespace URI of the top-level tag, if any
+     * @param toplevelElementLocalName local name of the top-level tag
      * @return the name of the Probe class that can parse this tag type
      */
     public String getXmlDomProbeClassByTagType(
-            String tagType )
+            String toplevelElementNamespace,
+            String toplevelElementLocalName )
     {
-        XmlDomProbeDescriptor almostRet = getXmlDomProbeDescriptorByTagType( tagType );
+        XmlDomProbeDescriptor almostRet = getXmlDomProbeDescriptorByTagType( toplevelElementNamespace, toplevelElementLocalName );
         if( almostRet != null ) {
             return almostRet.getProbeClassName();
         }

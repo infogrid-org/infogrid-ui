@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -29,6 +29,8 @@ import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Web.WebSubjectArea;
+import org.infogrid.probe.ProbeDirectory;
+import org.infogrid.probe.blob.BlobProbe;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
@@ -62,6 +64,10 @@ public abstract class AbstractYadisTest
 
         // start the server
         theServer.start();
+
+        // Probe directory has Probe for plain text needed in YadisTest6
+
+        theProbeDirectory.addStreamProbe( new ProbeDirectory.StreamProbeDescriptor( "text/plain", BlobProbe.class ));
 
         // MeshBase
         exec = createThreadPool( 1 );

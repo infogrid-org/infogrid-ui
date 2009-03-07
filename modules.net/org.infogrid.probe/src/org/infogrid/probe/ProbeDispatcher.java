@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -868,14 +868,15 @@ public class ProbeDispatcher
             throw new ProbeException.EmptyDataSource( sourceIdentifier );
         }
 
-        DocumentType docType = doc.getDoctype();
-        String       tagType = doc.getDocumentElement().getTagName();
+        DocumentType docType   = doc.getDoctype();
+        String       namespace = doc.getDocumentElement().getNamespaceURI();
+        String       localName = doc.getDocumentElement().getLocalName();
 
         if( log.isDebugEnabled() ) {
             if( docType != null ) {
                 log.debug( this + ": parsed XML input, found document type \"" + docType.getName() + "\"" );
             } else {
-                log.debug( this + ": parsed XML input, found null document type" );
+                log.debug( this + ": parsed XML input, found null document type, namespace " + namespace + ", localName " + localName );
             }
         }
 
@@ -903,8 +904,8 @@ public class ProbeDispatcher
             }
 
         } else {
-            if ( tagType != null ) {
-                ProbeDirectory.XmlDomProbeDescriptor desc = theProbeDirectory.getXmlDomProbeDescriptorByTagType( tagType );
+            if ( localName != null ) {
+                ProbeDirectory.XmlDomProbeDescriptor desc = theProbeDirectory.getXmlDomProbeDescriptorByTagType( namespace, localName );
                 if( desc != null ) {
                     foundClass      = desc.getProbeClass();
                     foundClassName  = desc.getProbeClassName();
@@ -917,7 +918,7 @@ public class ProbeDispatcher
                 
             } else {
                 if( log.isDebugEnabled() ) {
-                  log.info( this + ".handleXml - tagType is null - no probe found" );
+                  log.info( this + ".handleXml - localName is null - no probe found" );
                 }
 
                 throw new ProbeException.CannotDetermineContentType(
@@ -953,7 +954,7 @@ public class ProbeDispatcher
                 foundClass = (Class<? extends Probe>) Class.forName( foundClassName, true, foundClassLoader );
 
             } catch( ClassNotFoundException ex ) {
-                throw new ProbeException.DontHaveXmlStreamProbe( sourceIdentifier, docType != null ? docType.getName() : null, tagType, ex );
+                throw new ProbeException.DontHaveXmlStreamProbe( sourceIdentifier, docType != null ? docType.getName() : null, namespace, localName, ex );
             }
         }
 
@@ -1030,7 +1031,7 @@ public class ProbeDispatcher
             }
 
         } else {
-            throw new ProbeException.DontHaveXmlStreamProbe( sourceIdentifier, docType != null ? docType.getName() : null, tagType, null );
+            throw new ProbeException.DontHaveXmlStreamProbe( sourceIdentifier, docType != null ? docType.getName() : null, namespace, localName, null );
         }
         
         return probe;

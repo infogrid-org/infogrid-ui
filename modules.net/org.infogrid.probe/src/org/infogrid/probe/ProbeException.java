@@ -18,6 +18,7 @@ import java.io.IOException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
 
 /**
   * Subclasses of this Exception indicate that something went wrong when attempting
@@ -83,22 +84,16 @@ public abstract class ProbeException
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer( 128 );
-        Object [] pars = getLocalizationParameters();
-        for( int i = 0 ; i<pars.length ; ++i ) {
-            if( i>0 ) {
-                buf.append( ", " );
-            }
-            buf.append( pars[i] );
-        }
-
-        String almostRet = super.toString() + ", pars: " + buf.toString();
-
-        if( getCause() != null ) {
-            return almostRet + " - caused by: " + getCause().toString();
-        } else {
-            return almostRet;
-        }
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theNetworkIdentifier",
+                    "cause"
+                },
+                new Object[] {
+                    theNetworkIdentifier,
+                    getCause()
+                });
     }
 
     /**
@@ -189,6 +184,28 @@ public abstract class ProbeException
         }
 
         /**
+         * Obtain a printable representation of this object, for debugging.
+         *
+         * @return a printable representation of this object
+         */
+        @Override
+        public String toString()
+        {
+            return StringHelper.objectLogString(
+                    this,
+                    new String[] {
+                        "theNetworkIdentifier",
+                        "mimeType",
+                        "cause"
+                    },
+                    new Object[] {
+                        theNetworkIdentifier,
+                        theMimeType,
+                        getCause()
+                    });
+        }
+
+        /**
          * The MIME type that we didn't support.
          */
         protected String theMimeType;
@@ -208,20 +225,24 @@ public abstract class ProbeException
          * Constructor.
          * 
          * @param id the NetMeshBaseIdentifier that we were trying to access
-         * @param dtd the document type that we don't support. If this is not given, tag is given.
-         * @param tag the top-level tag that we don't support. If this is not given, dtd is given.
+         * @param dtd the document type that we don't support
+         * @param toplevelElementNamespace the top-level element's namespace that we don't support
+         * @param toplevelElementLocalName the top-level element's local name that we don't support
          * @param org the original Throwable that caused this
          */
         public DontHaveXmlStreamProbe(
                 NetMeshBaseIdentifier id,
                 String                dtd,
-                String                tag,
+                String                toplevelElementNamespace,
+                String                toplevelElementLocalName,
                 Throwable             org )
         {
             super( id, org );
 
             theDtd = dtd;
-            theTag = tag;
+            
+            theToplevelElementNamespace = toplevelElementNamespace;
+            theToplevelElementLocalName = toplevelElementLocalName;
         }
 
         /**
@@ -232,7 +253,11 @@ public abstract class ProbeException
         @Override
         public Object [] getLocalizationParameters()
         {
-            return new Object[] { theNetworkIdentifier.getCanonicalForm(), getDtd(), getTag() };
+            return new Object[] {
+                theNetworkIdentifier.getCanonicalForm(),
+                getDtd(),
+                getToplevelElementNamespace(),
+                getToplevelElementLocalName() };
         }
 
         /**
@@ -246,13 +271,49 @@ public abstract class ProbeException
         }
 
         /**
-         * Obtain the top-level tag that we didn't support.
+         * Obtain the top-level tag's namespace that we didn't support.
          *
-         * @return the top-level tag that we didn't support
+         * @return the top-level tag's namespace that we didn't support
          */
-        public String getTag()
+        public String getToplevelElementNamespace()
         {
-            return theTag;
+            return theToplevelElementNamespace;
+        }
+
+        /**
+         * Obtain the top-level tag's local name that we didn't support.
+         *
+         * @return the top-level tag's local name that we didn't support
+         */
+        public String getToplevelElementLocalName()
+        {
+            return theToplevelElementLocalName;
+        }
+
+        /**
+         * Obtain a printable representation of this object, for debugging.
+         *
+         * @return a printable representation of this object
+         */
+        @Override
+        public String toString()
+        {
+            return StringHelper.objectLogString(
+                    this,
+                    new String[] {
+                        "theNetworkIdentifier",
+                        "theDtd",
+                        "theToplevelElementNamespace",
+                        "theToplevelElementLocalName",
+                        "cause"
+                    },
+                    new Object[] {
+                        theNetworkIdentifier,
+                        theDtd,
+                        theToplevelElementNamespace,
+                        theToplevelElementLocalName,
+                        getCause()
+                    });
         }
 
         /**
@@ -261,9 +322,14 @@ public abstract class ProbeException
         protected String theDtd;
 
         /**
-         * The top-level tag that we didn't support.
+         * The top-level tag's namespace that we didn't support.
          */
-        protected String theTag;
+        protected String theToplevelElementNamespace;
+
+        /**
+         * The top-level tag's local name that we didn't support.
+         */
+        protected String theToplevelElementLocalName;
     }
 
     /**
@@ -624,6 +690,28 @@ public abstract class ProbeException
         }
 
         /**
+         * Obtain a printable representation of this object, for debugging.
+         *
+         * @return a printable representation of this object
+         */
+        @Override
+        public String toString()
+        {
+            return StringHelper.objectLogString(
+                    this,
+                    new String[] {
+                        "theNetworkIdentifier",
+                        "theStatusCode",
+                        "cause"
+                    },
+                    new Object[] {
+                        theNetworkIdentifier,
+                        theStatusCode,
+                        getCause()
+                    });
+        }
+
+        /**
          * The HTTP status code that we got back.
          */
         protected String theStatusCode;
@@ -683,6 +771,28 @@ public abstract class ProbeException
         public String getExplanation()
         {
             return theExplanation;
+        }
+
+        /**
+         * Obtain a printable representation of this object, for debugging.
+         *
+         * @return a printable representation of this object
+         */
+        @Override
+        public String toString()
+        {
+            return StringHelper.objectLogString(
+                    this,
+                    new String[] {
+                        "theNetworkIdentifier",
+                        "theExplanation",
+                        "cause"
+                    },
+                    new Object[] {
+                        theNetworkIdentifier,
+                        theExplanation,
+                        getCause()
+                    });
         }
 
         /**

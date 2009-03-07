@@ -9,13 +9,13 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
 <?xml-stylesheet href="someplace" type="text/css"?>
 
-<feed version="0.3" xmlns="http://purl.org/atom/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
  <title type="text/plain">This title is plain text</title>
  <tagline type="text/plain">This tagline is plain text</tagline>
  <link rel="alternate" type="text/html" href="http://alternate-feed.no.where.example.com" />

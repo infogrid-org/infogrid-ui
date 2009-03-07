@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -137,7 +137,7 @@ public class AtomTest1
         testFile1   = args[0];
         testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
-        theProbeDirectory.addXmlDomProbe( new ProbeDirectory.XmlDomProbeDescriptor( null, "feed", AtomProbe.class ));
+        theProbeDirectory.addXmlDomProbe( new ProbeDirectory.XmlDomProbeDescriptor( null, "http://www.w3.org/2005/Atom", "feed", AtomProbe.class ));
         
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -20,7 +20,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.probe.xml.XmlProbe;
 import org.infogrid.probe.xml.XmlDOMProbe;
-import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StringHelper;
 
 /**
@@ -47,13 +46,15 @@ public interface ProbeDirectory
             String documentType );
 
     /**
-     * Find an XML DOM Probe by tag type.
+     * Find an XML DOM Probe by the type of top-level tag.
      *
-     * @param tagType the found XML tag type
+     * @param toplevelElementNamespace namespace URI of the top-level tag, if any
+     * @param toplevelElementLocalName local name of the top-level tag
      * @return the descriptor for the Probe that can parse this tag type
      */
     public XmlDomProbeDescriptor getXmlDomProbeDescriptorByTagType(
-            String tagType );
+            String toplevelElementNamespace,
+            String toplevelElementLocalName );
 
     /**
      * Find an XML DOM Probe class name by document type.
@@ -67,11 +68,13 @@ public interface ProbeDirectory
     /**
      * Find an XML DOM Probe class name by tag type.
      *
-     * @param tagType the found XML tag type
+     * @param toplevelElementNamespace namespace URI of the top-level tag, if any
+     * @param toplevelElementLocalName local name of the top-level tag
      * @return the name of the Probe class that can parse this tag type
      */
     public String getXmlDomProbeClassByTagType(
-            String tagType );
+            String toplevelElementNamespace,
+            String toplevelElementLocalName );
     
     /**
      * Find an API Probe class name by URL.
@@ -233,14 +236,16 @@ public interface ProbeDirectory
          * Constructor.
          *
          * @param documentTypes the XML document types that this Probe can access
-         * @param tagTypes the potential new XML root tags
+         * @param toplevelElementNamespaces the namespace components of the top-level element that this Probe can access. Same sequence as toplevelElementLocalNames.
+         * @param toplevelElementLocalNames the local name components of the top-level element that this Probe can access. Same sequence as toplevelElementNamespaces.
          * @param className name of the Probe class
          * @param clazz the actual Probe class (optional)
          * @param parameters the parameters for the Probe, if any
          */
         public XmlProbeDescriptor(
                 String []                 documentTypes,
-                String []                 tagTypes,
+                String []                 toplevelElementNamespaces,
+                String []                 toplevelElementLocalNames,
                 String                    className,
                 Class<? extends XmlProbe> clazz,
                 Map<String,Object>        parameters )
@@ -248,7 +253,12 @@ public interface ProbeDirectory
             super( className, clazz, parameters );
 
             theDocumentTypes = documentTypes;
-            theTagTypes = tagTypes;
+
+            if( toplevelElementNamespaces.length != toplevelElementLocalNames.length ) {
+                throw new IllegalArgumentException( "toplevelElementNamespaces and toplevelElementLocalNames must be of the same length" );
+            }
+            theToplevelElementNamespaces = toplevelElementNamespaces;
+            theToplevelElementLocalNames = toplevelElementLocalNames;
         }
 
         /**
@@ -262,13 +272,23 @@ public interface ProbeDirectory
         }
 
         /**
-         * Obtain the supported XML tag types.
+         * Obtain the namespace components of the top-level element that this Probe can access.
          *
-         * @return supported XML tag types
+         * @return the namespace components, same sequence as getToplevelElementLocalNames
          */
-        public String [] getTagTypes()
+        public String [] getToplevelElementNamespaces()
         {
-            return theTagTypes;
+            return theToplevelElementNamespaces;
+        }
+
+        /**
+         * Obtain the local name components of the top-level element that this Probe can access.
+         *
+         * @return the local name components, same sequence as getToplevelElementNamespaces
+         */
+        public String [] getToplevelElementLocalNames()
+        {
+            return theToplevelElementLocalNames;
         }
 
         /**
@@ -291,16 +311,22 @@ public interface ProbeDirectory
         /**
          * Determine whether this probe can process this XML tag type.
          *
-         * @param tagType the XML document type that we evaluate
+         * @param toplevelElementNamespace namespace URI of the top-level tag, if any
+         * @param toplevelElementLocalName local name of the top-level tag
          * @return if true, this Probe can process this XML tag type
          */
         public boolean canProcessTagType(
-                String tagType )
+                String toplevelElementNamespace,
+                String toplevelElementLocalName )
         {
-            for( int i=0 ; i<theTagTypes.length ; ++i ) {
-                if( tagType.equals( theTagTypes[i] )) {
-                    return true;
+            for( int i=0 ; i<theToplevelElementLocalNames.length ; ++i ) {
+                if( StringHelper.compareTo( toplevelElementLocalName, theToplevelElementLocalNames[i] ) != 0 ) {
+                    continue;
                 }
+                if( StringHelper.compareTo( toplevelElementNamespace, theToplevelElementNamespaces[i] ) != 0 ) {
+                    continue;
+                }
+                return true;
             }
             return false;
         }
@@ -313,16 +339,20 @@ public interface ProbeDirectory
         @Override
         public String toString()
         {
-            StringBuffer buf = new StringBuffer( 100 );
-            buf.append( super.toString() );
-            buf.append( "{ docType: " );
-            buf.append( ArrayHelper.arrayToString( theDocumentTypes ));
-            buf.append( "{ tagType: " );
-            buf.append( ArrayHelper.arrayToString( theTagTypes ));
-            buf.append( ", className: " );
-            buf.append( theClassName );
-            buf.append( " }" );
-            return buf.toString();
+            return StringHelper.objectLogString(
+                    this,
+                    new String[] {
+                        "theDocumentTypes",
+                        "theToplevelElementNamespaces",
+                        "theToplevelElementLocalNames",
+                        "theClassName"
+                    },
+                    new Object[] {
+                        theDocumentTypes,
+                        theToplevelElementNamespaces,
+                        theToplevelElementLocalNames,
+                        theClassName
+                    } );
         }
 
         /**
@@ -331,9 +361,14 @@ public interface ProbeDirectory
         protected String [] theDocumentTypes;
 
         /**
-         * The XML tag types that we can access.
+         * The XML tag namespaces that we can access. Same squence as theToplevelElementLocalNames.
          */
-        protected String [] theTagTypes;
+        protected String [] theToplevelElementNamespaces;
+
+        /**
+         * The XML local tag names that we can access. Same sequence of theToplevelElementNamespaces.
+         */
+        protected String [] theToplevelElementLocalNames;
     }
 
     /**
@@ -349,81 +384,100 @@ public interface ProbeDirectory
          * Convenience constructor.
          *
          * @param documentType the XML document type that this Probe can access
-         * @param tagType the XML tag type that this Probe can access
+         * @param toplevelElementNamespace the namespace component of the top-level element that this Probe can access. Same sequence as toplevelElementLocalName.
+         * @param toplevelElementLocalName the local name component of the top-level element that this Probe can access. Same sequence as toplevelElementNamespace.
          * @param className name of the Probe class
          */
         public XmlDomProbeDescriptor(
                 String                       documentType,
-                String                       tagType,
+                String                       toplevelElementNamespace,
+                String                       toplevelElementLocalName,
                 String                       className )
         {
-            this( new String[] { documentType }, new String[] { tagType }, className, null, null );
+            this(   new String[] { documentType },
+                    new String[] { toplevelElementNamespace },
+                    new String[] { toplevelElementLocalName },
+                    className,
+                    null,
+                    null );
         }
 
         /**
          * Convenience constructor.
          *
          * @param documentTypes the XML document types that this Probe can access
-         * @param tagTypes the XML tag types that this Probe can access
+         * @param toplevelElementNamespaces the namespace components of the top-level element that this Probe can access. Same sequence as toplevelElementLocalNames.
+         * @param toplevelElementLocalNames the local name components of the top-level element that this Probe can access. Same sequence as toplevelElementNamespaces.
          * @param className name of the Probe class
          */
         public XmlDomProbeDescriptor(
                 String []                    documentTypes,
-                String []                    tagTypes,
+                String []                    toplevelElementNamespaces,
+                String []                    toplevelElementLocalNames,
                 String                       className )
         {
-            this( documentTypes, tagTypes, className, null, null );
+            this( documentTypes, toplevelElementNamespaces, toplevelElementLocalNames, className, null, null );
         }
 
         /**
          * Convenience constructor.
          *
          * @param documentType the XML document type that this Probe can access
-         * @param tagType the XML tag type that this Probe can access
+         * @param toplevelElementNamespace the namespace component of the top-level element that this Probe can access. Same sequence as toplevelElementLocalName.
+         * @param toplevelElementLocalName the local name component of the top-level element that this Probe can access. Same sequence as toplevelElementNamespace.
          * @param clazz the actual Probe class
          */
         public XmlDomProbeDescriptor(
                 String                       documentType,
-                String                       tagType,
+                String                       toplevelElementNamespace,
+                String                       toplevelElementLocalName,
                 Class<? extends XmlDOMProbe> clazz )
         {
-            this( new String[] { documentType }, new String[] { tagType }, clazz.getName(), clazz, null );
+            this(   new String[] { documentType },
+                    new String[] { toplevelElementNamespace },
+                    new String[] { toplevelElementLocalName },
+                    clazz.getName(),
+                    clazz,
+                    null );
         }
 
         /**
          * Convenience constructor.
          *
          * @param documentTypes the XML document types that this Probe can access
-         * @param tagTypes the XML tag types that this Probe can access
+         * @param toplevelElementNamespaces the namespace components of the top-level element that this Probe can access. Same sequence as toplevelElementLocalNames.
+         * @param toplevelElementLocalNames the local name components of the top-level element that this Probe can access. Same sequence as toplevelElementNamespaces.
          * @param clazz the actual Probe class
          */
         public XmlDomProbeDescriptor(
                 String []                    documentTypes,
-                String []                    tagTypes,
+                String []                    toplevelElementNamespaces,
+                String []                    toplevelElementLocalNames,
                 Class<? extends XmlDOMProbe> clazz )
         {
-            this( documentTypes, tagTypes, clazz.getName(), clazz, null );
+            this( documentTypes, toplevelElementNamespaces, toplevelElementLocalNames, clazz.getName(), clazz, null );
         }
 
         /**
          * Constructor.
          *
          * @param documentTypes the XML document types that this Probe can access
-         * @param tagTypes the XML tag types that this Probe can access
+         * @param toplevelElementNamespaces the namespace components of the top-level element that this Probe can access. Same sequence as toplevelElementLocalNames.
+         * @param toplevelElementLocalNames the local name components of the top-level element that this Probe can access. Same sequence as toplevelElementNamespaces.
          * @param className name of the Probe class
-         * @param clazz the actual Probe class (if given)
+         * @param clazz the actual Probe class (optional)
          * @param parameters the parameters for the Probe, if any
          */
         public XmlDomProbeDescriptor(
                 String []                    documentTypes,
-                String []                    tagTypes,
+                String []                    toplevelElementNamespaces,
+                String []                    toplevelElementLocalNames,
                 String                       className,
                 Class<? extends XmlDOMProbe> clazz,
                 Map<String,Object>           parameters )
         {
-            super( documentTypes, tagTypes, className, clazz, parameters );
+            super( documentTypes, toplevelElementNamespaces, toplevelElementLocalNames, className, clazz, parameters );
         }
-
     }
 
     /**
@@ -546,13 +600,13 @@ public interface ProbeDirectory
             return StringHelper.objectLogString(
                     this,
                     new String[] {
-                        "mime",
-                        "className"
+                        "theMimeTypes",
+                        "theClassName"
                     },
                     new Object[] {
                         theMimeTypes,
                         theClassName
-                    });
+                    } );
         }
 
         /**
@@ -678,14 +732,16 @@ public interface ProbeDirectory
         @Override
         public String toString()
         {
-            StringBuffer buf = new StringBuffer( 100 );
-            buf.append( super.toString() );
-            buf.append( "{ protocols: " );
-            buf.append( ArrayHelper.arrayToString( theProtocols ) );
-            buf.append( ", className: " );
-            buf.append( theClassName );
-            buf.append( " }" );
-            return buf.toString();
+            return StringHelper.objectLogString(
+                    this,
+                    new String[] {
+                        "theProtocols",
+                        "theClassName"
+                    },
+                    new Object[] {
+                        theProtocols,
+                        theClassName
+                    } );
         }
 
         /**

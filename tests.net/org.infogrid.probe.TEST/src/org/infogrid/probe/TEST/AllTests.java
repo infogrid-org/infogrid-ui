@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -35,111 +35,121 @@ public class AllTests
     {
         TestSpec [] tests = {
 
-                new TestSpec(
-                        ProbeTest1.class,
-                        AbstractTest.fileSystemFileName( ProbeTest1.class, "ProbeTest1.xml" )),
-
-                new TestSpec(
-                        ProbeTest2.class,
-                        AbstractTest.tempInputFileName( ProbeTest2.class, "test2-active.xml" ),
-                        AbstractTest.fileSystemFileName( ProbeTest2.class, "ProbeTest2_1.xml" ),
-                        AbstractTest.fileSystemFileName( ProbeTest2.class, "ProbeTest2_2.xml" )),
-
-                new TestSpec(
-                        ProbeTest3.class,
-                        AbstractTest.tempInputFileName( ProbeTest3.class, "test3-active.xml" ),
-                        AbstractTest.fileSystemFileName( ProbeTest3.class, "ProbeTest2_1.xml" ),
-                        AbstractTest.fileSystemFileName( ProbeTest3.class, "ProbeTest2_2.xml" )),
-
-                new TestSpec(
-                        ProbeTest4.class,
-                        AbstractTest.fileSystemFileName( ProbeTest4.class, "ProbeTest4.xml" )),
-
-                new TestSpec(
-                        ProbeTest5.class ),
-
-//                new TestSpec( // FAILS (minor). Requires memory debugger to make progress. See also ProbeTest6
-//                        ProbeTest6.class,
-//                        AbstractTest.fileSystemFileName( ProbeTest6.class, "ProbeTest6.xml" )),
-//
-                new TestSpec(
-                        ProbeTest7.class ),
-
-// FIXME: ProbeTest8 seems to work, but spits out way too many warnings (but only when run in this test suite,
-// not when run standalone). It may be related to failure to clean up Proxies to expired Shadows, and perhaps
-// ProbeTest6. This needs more investigation but does not appear to be critical.
 //                new TestSpec(
-//                        ProbeTest8.class ),
-
-                new TestSpec(
-                        YadisTest1.class.getName() + " (delay 0)", YadisTest1.class, "0" ),
-                new TestSpec(
-                        YadisTest1.class.getName() + " (delay 4000)", YadisTest1.class, "4000" ),
-
-                new TestSpec(
-                        YadisTest2.class.getName() + " (delay 0)", YadisTest2.class, "0" ),
-                new TestSpec(
-                        YadisTest2.class.getName() + " (delay 4000)", YadisTest2.class, "4000" ),
-
-                new TestSpec(
-                        YadisTest3.class.getName() + " (delay 0)", YadisTest3.class, "0" ),
-                new TestSpec(
-                        YadisTest3.class.getName() + " (delay 4000)", YadisTest3.class, "4000" ),
-
-                new TestSpec(
-                        YadisTest4.class.getName() + " (delay 0)", YadisTest4.class, "0" ),
-                new TestSpec(
-                        YadisTest4.class.getName() + " (delay 4000)", YadisTest4.class, "4000" ),
-
-                new TestSpec(
-                        YadisTest5.class.getName() + " (delay 0)", YadisTest5.class,
-                        AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
-                        "0" ),
-                new TestSpec(
-                        YadisTest5.class.getName() + " (delay 4000)", YadisTest5.class,
-                        AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
-                        "4000"),
-
-                new TestSpec( // property updates
-                            WritableProbeTest1.class ),
-
-                new TestSpec( // blessing
-                            WritableProbeTest2.class ),
-
-                new TestSpec( // unblessing
-                            WritableProbeTest3.class ),
-
-                new TestSpec( // deletion
-                            WritableProbeTest4.class ),
-
-
-// FIXME: The remaining WritableProbeTests have not been written yet.
-//                new TestSpec( // relationship delete
-//                        WritableProbeTest5.class,
-//                        noArgs ),
-//                new TestSpec( // bless relationship
-//                        WritableProbeTest6.class,
-//                        noArgs ),
-//                new TestSpec( // unbless relationship
-//                        WritableProbeTest7.class,
-//                        noArgs ),
-//                new TestSpec( // create relationship between objects instantiated by probe but unrelated
-//                        WritableProbeTest8.class,
-//                        noArgs ),
-//                new TestSpec( // create object -- BROKEN: need new API call to "createAndPush" to avoid triggering the non-local NetMeshObjectIdentifier exception
-//                       .class,
-//                        noArgs ),
-//                new TestSpec( // create and relate object
-//                        WritableProbeTest10.class,
-//                        noArgs ),
-
-
-                new TestSpec(
-                        ShadowTest1.class,
-                        AbstractTest.fileSystemFileName( ShadowTest1.class, "ProbeTest1.xml" )),
-
-                new TestSpec(
-                        ShadowTest2.class ),
+//                        ProbeTest1.class,
+//                        AbstractTest.fileSystemFileName( ProbeTest1.class, "ProbeTest1.xml" )),
+//
+//                new TestSpec(
+//                        ProbeTest2.class,
+//                        AbstractTest.tempInputFileName( ProbeTest2.class, "test2-active.xml" ),
+//                        AbstractTest.fileSystemFileName( ProbeTest2.class, "ProbeTest2_1.xml" ),
+//                        AbstractTest.fileSystemFileName( ProbeTest2.class, "ProbeTest2_2.xml" )),
+//
+//                new TestSpec(
+//                        ProbeTest3.class,
+//                        AbstractTest.tempInputFileName( ProbeTest3.class, "test3-active.xml" ),
+//                        AbstractTest.fileSystemFileName( ProbeTest3.class, "ProbeTest2_1.xml" ),
+//                        AbstractTest.fileSystemFileName( ProbeTest3.class, "ProbeTest2_2.xml" )),
+//
+//                new TestSpec(
+//                        ProbeTest4.class,
+//                        AbstractTest.fileSystemFileName( ProbeTest4.class, "ProbeTest4.xml" )),
+//
+//                new TestSpec(
+//                        ProbeTest5.class ),
+//
+////                new TestSpec( // FAILS (minor). Requires memory debugger to make progress. See also ProbeTest6
+////                        ProbeTest6.class,
+////                        AbstractTest.fileSystemFileName( ProbeTest6.class, "ProbeTest6.xml" )),
+////
+//                new TestSpec(
+//                        ProbeTest7.class ),
+//
+//// FIXME: ProbeTest8 seems to work, but spits out way too many warnings (but only when run in this test suite,
+//// not when run standalone). It may be related to failure to clean up Proxies to expired Shadows, and perhaps
+//// ProbeTest6. This needs more investigation but does not appear to be critical.
+////                new TestSpec(
+////                        ProbeTest8.class ),
+//
+//                new TestSpec(
+//                        YadisTest1.class.getName() + " (delay 0)", YadisTest1.class, "0" ),
+//                new TestSpec(
+//                        YadisTest1.class.getName() + " (delay 4000)", YadisTest1.class, "4000" ),
+//
+//                new TestSpec(
+//                        YadisTest2.class.getName() + " (delay 0)", YadisTest2.class, "0" ),
+//                new TestSpec(
+//                        YadisTest2.class.getName() + " (delay 4000)", YadisTest2.class, "4000" ),
+//
+//                new TestSpec(
+//                        YadisTest3.class.getName() + " (delay 0)", YadisTest3.class, "0" ),
+//                new TestSpec(
+//                        YadisTest3.class.getName() + " (delay 4000)", YadisTest3.class, "4000" ),
+//
+//                new TestSpec(
+//                        YadisTest4.class.getName() + " (delay 0)", YadisTest4.class, "0" ),
+//                new TestSpec(
+//                        YadisTest4.class.getName() + " (delay 4000)", YadisTest4.class, "4000" ),
+//
+//                new TestSpec(
+//                        YadisTest5.class.getName() + " (delay 0)", YadisTest5.class,
+//                        AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
+//                        "0" ),
+//                new TestSpec(
+//                        YadisTest5.class.getName() + " (delay 4000)", YadisTest5.class,
+//                        AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
+//                        "4000"),
+//
+//                new TestSpec(
+//                        YadisTest6.class.getName() + " (delay 0)", YadisTest6.class,
+//                        AbstractTest.fileSystemFileName( YadisTest6.class, "YadisTest6.xml" ),
+//                        "0" ),
+//
+//                new TestSpec(
+//                        YadisTest6.class.getName() + " (delay 4000)", YadisTest6.class,
+//                        AbstractTest.fileSystemFileName( YadisTest6.class, "YadisTest6.xml" ),
+//                        "4000" ),
+//
+//                new TestSpec( // property updates
+//                            WritableProbeTest1.class ),
+//
+//                new TestSpec( // blessing
+//                            WritableProbeTest2.class ),
+//
+//                new TestSpec( // unblessing
+//                            WritableProbeTest3.class ),
+//
+//                new TestSpec( // deletion
+//                            WritableProbeTest4.class ),
+//
+//
+//// FIXME: The remaining WritableProbeTests have not been written yet.
+////                new TestSpec( // relationship delete
+////                        WritableProbeTest5.class,
+////                        noArgs ),
+////                new TestSpec( // bless relationship
+////                        WritableProbeTest6.class,
+////                        noArgs ),
+////                new TestSpec( // unbless relationship
+////                        WritableProbeTest7.class,
+////                        noArgs ),
+////                new TestSpec( // create relationship between objects instantiated by probe but unrelated
+////                        WritableProbeTest8.class,
+////                        noArgs ),
+////                new TestSpec( // create object -- BROKEN: need new API call to "createAndPush" to avoid triggering the non-local NetMeshObjectIdentifier exception
+////                       .class,
+////                        noArgs ),
+////                new TestSpec( // create and relate object
+////                        WritableProbeTest10.class,
+////                        noArgs ),
+//
+//
+//                new TestSpec(
+//                        ShadowTest1.class,
+//                        AbstractTest.fileSystemFileName( ShadowTest1.class, "ProbeTest1.xml" )),
+//
+//                new TestSpec(
+//                        ShadowTest2.class ),
 
                 new TestSpec(
                         ShadowTest3.class,
