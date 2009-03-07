@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -78,7 +78,7 @@
                 = context.findContextObjectOrThrow( org.infogrid.lid.LidNonceManager.class );
 
         org.infogrid.mesh.set.OrderedMeshObjectSet endpoints
-                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpoints( the_Delegate );
+                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpointWebResources( the_Delegate );
         if( endpoints.isEmpty() ) {
             return null;
         }
@@ -143,7 +143,7 @@
                 = context.findContextObjectOrThrow( org.infogrid.lid.LidNonceManager.class );
 
         org.infogrid.mesh.set.OrderedMeshObjectSet endpoints
-                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpoints( the_Delegate );
+                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpointWebResources( the_Delegate );
         if( endpoints.isEmpty() ) {
             return null;
         }
@@ -208,7 +208,7 @@
                 = context.findContextObjectOrThrow( org.infogrid.lid.LidNonceManager.class );
 
         org.infogrid.mesh.set.OrderedMeshObjectSet endpoints
-                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpoints( the_Delegate );
+                = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpointWebResources( the_Delegate );
         if( endpoints.isEmpty() ) {
             return null;
         }

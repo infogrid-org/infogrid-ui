@@ -43,27 +43,39 @@ public abstract class YadisUtil
     }
 
     /**
-     * Given a client, return the set of associated services of a particular type, in order of priority.
+     * Given a web resource, return the set of associated services, in order of priority.
      *
-     * @param client the client
-     * @param type the tyupe of services to look for
+     * @param resource the web resource
      * @return the set of services, in order of priority
      */
     public static OrderedMeshObjectSet determineServicesFor(
-            MeshObject client,
+            MeshObject resource )
+    {
+        return determineServicesFor( resource, null );
+    }
+
+    /**
+     * Given a web resource, return the set of associated services of a particular type, in order of priority.
+     *
+     * @param resource the web resource
+     * @param type the type of services to look for
+     * @return the set of services, in order of priority
+     */
+    public static OrderedMeshObjectSet determineServicesFor(
+            MeshObject resource,
             EntityType type )
     {
-        MeshObjectSetFactory factory = client.getMeshBase().getMeshObjectSetFactory();
+        MeshObjectSetFactory factory = resource.getMeshBase().getMeshObjectSetFactory();
 
         MeshObjectSelector servicesSelector = ( type != null ) ? ByTypeMeshObjectSelector.create( type ) : null;
 
-    // Client may either be blessed with XrdsCollection itself, or reference one
-        MeshObjectSet directAuthServices = client.traverse( YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getSource() );
+    // Resource may either be blessed with XrdsCollection itself, or reference one
+        MeshObjectSet directAuthServices = resource.traverse( YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getSource() );
         if( servicesSelector != null ) {
             directAuthServices = factory.createImmutableMeshObjectSet( directAuthServices, servicesSelector );
         }
 
-        MeshObjectSet indirectAuthServices = client.traverse( YadisSubjectArea.WEBRESOURCE_HASXRDSLINKTO_WEBRESOURCE.getSource() );
+        MeshObjectSet indirectAuthServices = resource.traverse( YadisSubjectArea.WEBRESOURCE_HASXRDSLINKTO_WEBRESOURCE.getSource() );
         indirectAuthServices = indirectAuthServices.traverse( YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getSource() );
         if( servicesSelector != null ) {
             indirectAuthServices = factory.createImmutableMeshObjectSet( indirectAuthServices, servicesSelector );
@@ -72,7 +84,7 @@ public abstract class YadisUtil
         MeshObjectSet allAuthServices = factory.createImmutableMeshObjectSetUnification( directAuthServices, indirectAuthServices );
         allAuthServices = factory.createImmutableMeshObjectSet( allAuthServices, theHasEndpointSelector );
 
-        OrderedMeshObjectSet ret = factory.createOrderedImmutableMeshObjectSet( allAuthServices, theByPrioritySorter );
+        OrderedMeshObjectSet ret = factory.createOrderedImmutableMeshObjectSet( allAuthServices, theXrdsServiceByPrioritySorter );
 
         return ret;
     }
@@ -89,7 +101,23 @@ public abstract class YadisUtil
         MeshObjectSetFactory factory = service.getMeshBase().getMeshObjectSetFactory();
 
         MeshObjectSet        endpoints        = service.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource() );
-        OrderedMeshObjectSet orderedEndpoints = factory.createOrderedImmutableMeshObjectSet( endpoints, theByPrioritySorter );
+        OrderedMeshObjectSet orderedEndpoints = factory.createOrderedImmutableMeshObjectSet( endpoints, theEndpointByPrioritySorter );
+
+        return orderedEndpoints;
+    }
+
+    /**
+     * Determine the web resources that act as endpoints for a given service, in order of
+     * the endpoints' priorities.
+     *
+     * @param service the YadisService
+     * @return the set of web resource endpoints, in order
+     */
+    public static OrderedMeshObjectSet determineOrderedEndpointWebResources(
+            MeshObject service )
+    {
+        MeshObjectSetFactory factory = service.getMeshBase().getMeshObjectSetFactory();
+        OrderedMeshObjectSet orderedEndpoints = determineOrderedEndpoints( service );
 
         ArrayList<MeshObject> almost = new ArrayList<MeshObject>( orderedEndpoints.size() );
 
@@ -106,10 +134,16 @@ public abstract class YadisUtil
     }
 
     /**
-     * Sorts by priority.
+     * Sorts by XRDS service priority.
      */
-    public static final MeshObjectSorter theByPrioritySorter
+    public static final MeshObjectSorter theXrdsServiceByPrioritySorter
             = ByPropertyValueSorter.create( YadisSubjectArea.XRDSSERVICE_PRIORITY );
+
+    /**
+     * Sorts by endpoint priority.
+     */
+    public static final MeshObjectSorter theEndpointByPrioritySorter
+            = ByPropertyValueSorter.create( YadisSubjectArea.ENDPOINT_PRIORITY );
 
     /**
      * The selector for authentication services that have at least one endpoint.

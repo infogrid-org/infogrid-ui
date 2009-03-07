@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -75,7 +75,7 @@ public class MeshOpenId2CredentialType
 
         OrderedMeshObjectSet services = YadisUtil.determineServicesFor( realSubject, AuthSubjectArea.AUTHENTICATION2_0SERVICE );
         for( MeshObject service : services ) {
-            OrderedMeshObjectSet endpoints = YadisUtil.determineOrderedEndpoints( service );
+            OrderedMeshObjectSet endpoints = YadisUtil.determineOrderedEndpointWebResources( service );
             for( MeshObject ep : endpoints ) {
                 String toAdd = ep.getIdentifier().toExternalForm();
                 almost.add( toAdd );
