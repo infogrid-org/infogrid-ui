@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -587,7 +587,7 @@ public class SafeFormTag
                     value = service.generateNewToken();
                 }
                 if( value != null ) {
-                    pageContext.setAttribute( FORM_TOKEN_NAME, value );
+                    pageContext.getRequest().setAttribute( FORM_TOKEN_NAME, value );
                 }
             }
             if( value != null ) {

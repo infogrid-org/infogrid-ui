@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -325,10 +325,10 @@ public class MeshObjectPropertyIterateTag
                 }
 
                 if( thePropertyTypeLoopVar != null ) {
-                    pageContext.setAttribute( thePropertyTypeLoopVar, currentType );
+                    pageContext.getRequest().setAttribute( thePropertyTypeLoopVar, currentType );
                 }
                 if( thePropertyValueLoopVar != null ) {
-                    pageContext.setAttribute( thePropertyValueLoopVar, currentValue );
+                    pageContext.getRequest().setAttribute( thePropertyValueLoopVar, currentValue );
                 }
 
                 return EVAL_BODY_AGAIN;

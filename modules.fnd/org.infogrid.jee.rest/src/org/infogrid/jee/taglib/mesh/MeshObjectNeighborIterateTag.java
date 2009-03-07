@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -156,7 +156,7 @@ public class MeshObjectNeighborIterateTag
             MeshObject current = theIterator.next();
 
             if( theNeighborLoopVar != null ) {
-                pageContext.setAttribute( theNeighborLoopVar, current );
+                pageContext.getRequest().setAttribute( theNeighborLoopVar, current );
             }
 
             return EVAL_BODY_AGAIN;

@@ -102,9 +102,9 @@ public abstract class AbstractMeshObjectSetIterateTag
         }
         if( theMeshObjectLoopVar != null ) {
             if( current != null ) {
-                pageContext.setAttribute( theMeshObjectLoopVar, current );
+                pageContext.getRequest().setAttribute( theMeshObjectLoopVar, current );
             } else {
-                pageContext.removeAttribute( theMeshObjectLoopVar );
+                pageContext.getRequest().removeAttribute( theMeshObjectLoopVar );
             }
         }
         
