@@ -176,9 +176,8 @@ public class CommandLineWrapperLidGpg
 
                 if( result>0 ) {
                     String stringOutput = output.toString();
-                    if( log.isInfoEnabled() ) {
-                        log.info( "Bad electronic signature on signed '" + signedText + "', output is '" + stringOutput + "'"  );
-                    }
+                    log.warn( "Bad electronic signature on signed '" + signedText + "', output is '" + stringOutput + "'"  );
+
                     return false;
                 }
                 boolean ret;
@@ -299,8 +298,12 @@ public class CommandLineWrapperLidGpg
             File homeDir = new File( theGpgHomeDir );
 
             File contained [] = homeDir.listFiles();
-            for( File current : contained ) {
-                current.delete();
+            if( contained != null ) {
+                // If this is null, something else might be wrong (e.g. homeDir does not exist),
+                // but the cleanup method is not the place where to test that
+                for( File current : contained ) {
+                    current.delete();
+                }
             }
         }
     }

@@ -15,6 +15,7 @@
 package org.infogrid.lid;
 
 import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.ResourceHelper;
 
 /**
  * Thrown if a LID nonce is invalid. Inner classes are concrete and capture the specifics.
@@ -36,6 +37,50 @@ public abstract class LidInvalidNonceException
         theInvalidNonce = invalidNonce;
     }
 
+    /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the ResourceHelper to use
+     */
+    @Override
+    protected ResourceHelper findResourceHelperForLocalizedMessage()
+    {
+        return findResourceHelperForLocalizedMessageViaEnclosingClass();
+    }
+
+    /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the key
+     */
+    @Override
+    protected String findStringRepresentationParameter()
+    {
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_KEY );
+    }
+
+    /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the key
+     */
+    @Override
+    protected String findStringRepresentationLinkStartParameter()
+    {
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_LINK_START_KEY );
+    }
+
+    /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the key
+     */
+    @Override
+    protected String findStringRepresentationLinkEndParameter()
+    {
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_LINK_END_KEY );
+    }
+    
     /**
      * Obtain resource parameters for the internationalization.
      *

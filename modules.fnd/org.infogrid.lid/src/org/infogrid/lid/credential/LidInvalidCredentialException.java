@@ -37,6 +37,8 @@ public class LidInvalidCredentialException
             Identifier        identifier,
             LidCredentialType type )
     {
+        super( null, null );
+        
         theIdentifier = identifier;
     }
     
@@ -52,7 +54,7 @@ public class LidInvalidCredentialException
             LidCredentialType type,
             Throwable         cause )
     {
-        super( cause );
+        super( null, cause );
 
         theIdentifier = identifier;
         theType       = type;
