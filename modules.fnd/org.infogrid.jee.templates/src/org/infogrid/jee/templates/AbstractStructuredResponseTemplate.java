@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,6 +19,7 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.CarriesHttpStatusCodeException;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
@@ -239,6 +240,30 @@ public abstract class AbstractStructuredResponseTemplate
         if( yadisHeader != null ) {
             delegate.setHeader( "X-XRDS-Location", yadisHeader );
         }
+    }
+
+    /**
+     * Convert to String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String[] {
+                    "theRequest",
+                    "theStructured",
+                    "theRequestedTemplate",
+                    "theUserRequestedTemplate"
+                },
+                new Object[] {
+                    theRequest,
+                    theStructured,
+                    theRequestedTemplate,
+                    theUserRequestedTemplate
+                });
     }
 
     /**

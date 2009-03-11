@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.logging.Log;
 
@@ -586,6 +587,40 @@ public class StructuredResponse
             }
         }
         return true;
+    }
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return StringHelper.objectLogString(
+                this,
+                new String [] {
+                    "theRequestedTemplateName",
+                    "theCurrentProblems",
+                    "theMimeType",
+                    "theCookies",
+                    "theLocation",
+                    "theHttpResponseCode",
+                    "theLocale",
+                    "theCharacterEncoding",
+                    "theYadisHeader"
+                },
+                new Object [] {
+                    theRequestedTemplateName,
+                    theCurrentProblems,
+                    theMimeType,
+                    theCookies,
+                    theLocation,
+                    theHttpResponseCode,
+                    theLocale,
+                    theCharacterEncoding,
+                    theYadisHeader
+                });
     }
 
     /**

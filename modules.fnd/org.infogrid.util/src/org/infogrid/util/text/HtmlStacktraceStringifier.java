@@ -8,11 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
+
+import org.infogrid.util.StringHelper;
 
 /**
  * Stringifies the stack trace of a Throwable in HTML text.
@@ -105,7 +107,7 @@ public class HtmlStacktraceStringifier
         throws
             StringifierParseException
     {
-        String unescaped = HtmlStringStringifier.htmlToString( rawString );
+        String unescaped = StringHelper.htmlToString( rawString );
         
         Throwable ret = super.unformat( unescaped );
         
