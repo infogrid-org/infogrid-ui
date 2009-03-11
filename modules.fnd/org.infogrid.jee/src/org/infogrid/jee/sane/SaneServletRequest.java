@@ -835,7 +835,8 @@ public class SaneServletRequest
         public String getName()
         {
             if( theName == null ) {
-                theName = HTTP.decodeUrlArgument( theDelegate.getName() );
+                String delegateName = theDelegate.getName();
+                theName = HTTP.decodeUrlArgument( delegateName );
             }
             return theName;
         }
@@ -848,7 +849,8 @@ public class SaneServletRequest
         public String getValue()
         {
             if( theValue == null ) {
-                theValue = HTTP.decodeUrlArgument( theDelegate.getValue() );
+                String delegateValue = theDelegate.getValue();
+                theValue = HTTP.decodeUrlArgument( delegateValue );
             }
             return theValue;
         }
@@ -860,7 +862,8 @@ public class SaneServletRequest
          */
         public String getDomain()
         {
-            return theDelegate.getDomain();
+            String ret = theDelegate.getDomain();
+            return ret;
         }
 
         /**
@@ -870,7 +873,8 @@ public class SaneServletRequest
          */
         public String getPath()
         {
-            return theDelegate.getPath();
+            String ret = theDelegate.getPath();
+            return ret;
         }
 
         /**
