@@ -90,8 +90,15 @@ public abstract class Init
                     thisModule.getModuleAdvertisement(),
                     "Log4j configuration file " + configFile + " could not be loaded using ClassLoader " + whereParametersSpecified.getClassLoader() );
         }
-        Log4jLog.configure( logProperties );
-        // which logger is being used is defined in the module dependency declaration through parameters
+        try {
+            Log4jLog.configure( logProperties );
+            // which logger is being used is defined in the module dependency declaration through parameters
+        } catch( Throwable ex ) {
+            // This can happen, for example, when a file could not be written
+            throw new ModuleConfigurationException(
+                    thisModule.getModuleAdvertisement(),
+                    "Log4j configuration failed", ex );
+        }
     }
 
     /**

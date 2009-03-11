@@ -302,7 +302,7 @@ public abstract class AbstractLocalizedException
         String ret;
         int    dollar = className.indexOf( '$' );
         if( dollar >= 0 ) {
-            ret = className.substring( dollar+1 ) + "-" + key;
+            ret = key + "-" + className.substring( dollar+1 );
         } else {
             ret = key;
         }
