@@ -14,6 +14,7 @@
 
 package org.infogrid.util;
 
+import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
@@ -23,6 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -236,7 +240,7 @@ public abstract class StringHelper
             Object obj,
             int    flags )
     {
-        return objectLogString( obj, new FlagsLogSelector( flags ));
+        return objectLogString( obj, new FlagsLogSelector( flags ), DEFAULT_LOG_DEPTH, new HashSet<Object>() );
     }
 
     /**
@@ -245,20 +249,27 @@ public abstract class StringHelper
      *
      * @param obj the actual Object
      * @param selector the LogSelector to use to indicate what to log and what not
+     * @param logDepth the depth to which to log
+     * @param alreadyLogged the set of objects already logged
      * @return String representation of the object
      */
     public static String objectLogString(
             Object      obj,
-            LogSelector selector )
+            LogSelector selector,
+            int         logDepth,
+            Set<Object> alreadyLogged )
     {
         if( obj == null )  {
-            return nullLogString( selector );
+            return nullLogString();
 
         } else if( obj instanceof Object[] ) {
-            return arrayLogString( (Object []) obj, selector );
+            return arrayLogString( (Object []) obj, selector, logDepth, alreadyLogged );
 
         } else if( obj instanceof Collection ) {
-            return collectionLogString( (Collection) obj, selector );
+            return collectionLogString( (Collection) obj, selector, logDepth, alreadyLogged );
+
+        } else if( obj instanceof Map ) {
+            return mapLogString( (Map) obj, selector, logDepth, alreadyLogged );
 
         } else if( obj instanceof byte[] ) {
             return byteArrayLogString( (byte []) obj, selector );
@@ -296,11 +307,8 @@ public abstract class StringHelper
         } else if( obj instanceof CharSequence ) {
             return stringLogString( (CharSequence) obj, selector );
 
-        } else if( obj instanceof Object[] ) {
-            return arrayLogString( (Object []) obj, selector );
-
-        } else if( obj instanceof Collection ) {
-            return collectionLogString( (Collection) obj, selector );
+        } else if( obj instanceof Reference ) {
+            return referenceLogString( (Reference) obj, selector, logDepth, alreadyLogged );
 
         } else {
             Field [] fields = obj.getClass().getFields();
@@ -327,9 +335,16 @@ public abstract class StringHelper
                 String [] names2  = ArrayHelper.copyIntoNewArray( names, String.class );
                 Object [] values2 = ArrayHelper.copyIntoNewArray( values, Object.class );
 
-                return objectLogString( obj, names2, values2, selector );
+                return objectLogString( obj, names2, values2, selector, logDepth, alreadyLogged );
             } else {
-                return obj.toString();
+                if( logDepth > 0 && !alreadyLogged.contains( obj )) {
+                    return obj.toString();
+                } else {
+                    alreadyLogged.add( obj );
+                    StringBuilder buf = createBufferWithObjectId( obj );
+                    buf.append( "{ ... }" );
+                    return buf.toString();
+                }
             }
         }
     }
@@ -344,9 +359,9 @@ public abstract class StringHelper
      * @return String representation of the object
      */
     public static String objectLogString(
-            Object    obj,
-            String [] fieldNames,
-            Object [] fieldValues )
+            Object      obj,
+            String []   fieldNames,
+            Object []   fieldValues )
     {
         return objectLogString( obj, fieldNames, fieldValues, FlagsLogSelector.SHOW_DEFAULT );
     }
@@ -367,7 +382,7 @@ public abstract class StringHelper
             Object [] fieldValues,
             int       flags )
     {
-        return objectLogString( obj, fieldNames, fieldValues, new FlagsLogSelector( flags ));
+        return objectLogString( obj, fieldNames, fieldValues, new FlagsLogSelector( flags ), DEFAULT_LOG_DEPTH, new HashSet<Object>() );
     }
 
     /**
@@ -378,43 +393,53 @@ public abstract class StringHelper
      * @param fieldNames the field names that we want to log
      * @param fieldValues the corresponding values that we want to log
      * @param selector the LogSelector to use to indicate what to log and what not
+     * @param logDepth the depth to which to log
+     * @param alreadyLogged the set of objects already logged
      * @return String representation of the object
      */
     public static String objectLogString(
             Object      obj,
             String []   fieldNames,
             Object []   fieldValues,
-            LogSelector selector )
+            LogSelector selector,
+            int         logDepth,
+            Set<Object> alreadyLogged )
     {
         StringBuilder buf = createBufferWithObjectId( obj );
-        buf.append( "{\n" );
-        int min = Math.min(
-                fieldNames  != null ? fieldNames.length  : 0,
-                fieldValues != null ? fieldValues.length : 0 );
+        if( logDepth > 0 && !alreadyLogged.contains(  obj )) {
+            alreadyLogged.add( obj );
 
-        for( int i=0 ; i<min ; ++i ) {
-            Object value = fieldValues[i];
+            buf.append( "{\n" );
+            int min = Math.min(
+                    fieldNames  != null ? fieldNames.length  : 0,
+                    fieldValues != null ? fieldValues.length : 0 );
 
-            if( selector.shouldBeLogged( value )) {
+            for( int i=0 ; i<min ; ++i ) {
+                Object value = fieldValues[i];
 
-                StringBuilder buf2 = new StringBuilder();
-                buf2.append( fieldNames[i] );
-                buf2.append( ": ");
-                buf2.append( objectLogString( value, selector ));
-                buf.append( indent( buf2.toString() ));
+                if( selector.shouldBeLogged( value )) {
 
-                if( i<min-1 ) {
-                    buf.append( ',' );
+                    StringBuilder buf2 = new StringBuilder();
+                    buf2.append( fieldNames[i] );
+                    buf2.append( ": ");
+                    buf2.append( objectLogString( value, selector, logDepth-1, alreadyLogged ));
+                    buf.append( indent( buf2.toString() ));
+
+                    if( i<min-1 ) {
+                        buf.append( ',' );
+                    }
+                    buf.append( '\n' );
                 }
-                buf.append( '\n' );
             }
+            if(    ( fieldNames  != null && fieldNames.length  != min )
+                || ( fieldValues != null && fieldValues.length != min ))
+            {
+                log.error( "non-matching field names and values in toString method" );
+            }
+            buf.append( "}" );
+        } else {
+            buf.append( "{ ... }" );
         }
-        if(    ( fieldNames  != null && fieldNames.length  != min )
-            || ( fieldValues != null && fieldValues.length != min ))
-        {
-            log.error( "non-matching field names and values in toString method" );
-        }
-        buf.append( "}" );
 
         return buf.toString();
     }
@@ -423,11 +448,9 @@ public abstract class StringHelper
      * Helper method to make it easy to convert the null value
      * into a format that is useful for logging.
      *
-     * @param selector the LogSelector to use to indicate what to log and what not
      * @return String representation of the object
      */
-    public static String nullLogString(
-            LogSelector selector )
+    public static String nullLogString()
     {
         return "null";
     }
@@ -445,7 +468,7 @@ public abstract class StringHelper
             LogSelector selector )
     {
         if( value == null ) {
-            return nullLogString( selector );
+            return nullLogString();
 
         } else {
             StringBuilder buf = new StringBuilder();
@@ -484,20 +507,32 @@ public abstract class StringHelper
      *
      * @param value the value to log
      * @param selector the LogSelector to use to indicate what to log and what not
+     * @param logDepth the depth to which to log
+     * @param alreadyLogged the set of objects already logged
      * @return String representation of the object
      */
     public static String arrayLogString(
             Object []   value,
-            LogSelector selector )
+            LogSelector selector,
+            int         logDepth,
+            Set<Object> alreadyLogged )
     {
         StringBuilder buf = new StringBuilder();
 
         buf.append( value.getClass().getComponentType().getName() );
-        if( value.length > 0 ) {
+        if( value.length == 0 ) {
+            buf.append( "[0] = {}" );
+
+        } else if( logDepth <= 0 || alreadyLogged.contains( value )) {
+            buf.append( '[' ).append( value.length ).append( "] = { ... }" );
+
+        } else {
+            alreadyLogged.add( value );
+
             buf.append( '[' ).append( value.length ).append( "] = {\n" );
             int max = Math.min( 8, value.length );
             for( int j=0 ; j<max ; ++j ) {
-                String delegate = objectLogString( value[j], selector );
+                String delegate = objectLogString( value[j], selector, logDepth, alreadyLogged );
                 StringBuilder delegate2 = indent( delegate );
                 buf.append( delegate2 );
                 if( j < max-1 ) {
@@ -510,8 +545,6 @@ public abstract class StringHelper
             }
             buf.append( "}" );
 
-        } else {
-            buf.append( "[0] = {}" );
         }
         return buf.toString();
     }
@@ -522,20 +555,33 @@ public abstract class StringHelper
      *
      * @param value the value to log
      * @param selector the LogSelector to use to indicate what to log and what not
+     * @param logDepth the depth to which to log
+     * @param alreadyLogged the set of objects already logged
      * @return String representation of the object
      */
     public static String collectionLogString(
             Collection  value,
-            LogSelector selector )
+            LogSelector selector,
+            int         logDepth,
+            Set<Object> alreadyLogged )
     {
         StringBuilder buf = new StringBuilder();
         buf.append( value.getClass().getName() );
-        if( value.size() > 0 ) {
+
+        if( value.size() == 0 ) {
+            buf.append( "[0] = {}" );
+
+        } else if( logDepth <= 0 || alreadyLogged.contains( value )) {
+            buf.append( '[' ).append( value.size() ).append( "] = { ... }" );
+
+        } else {
+            alreadyLogged.add( value );
+
             buf.append( '[' ).append( value.size() ).append( "] = {\n" );
             int max = Math.min( 8, value.size() );
             int j   = 0;
             for( Object current : value ) {
-                String delegate = objectLogString( current, selector );
+                String delegate = objectLogString( current, selector, logDepth-1, alreadyLogged );
                 StringBuilder delegate2 = indent( delegate );
                 buf.append( delegate2 ).append( "\n" );
                 if( ++j >= max ) {
@@ -546,9 +592,59 @@ public abstract class StringHelper
                 buf.append( "        ...\n" );
             }
             buf.append( "}" );
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Helper method to make it easy to convert a Map object
+     * into a format that is useful for logging.
+     *
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @param logDepth the depth to which to log
+     * @param alreadyLogged the set of objects already logged
+     * @return String representation of the object
+     */
+    public static String mapLogString(
+            Map         value,
+            LogSelector selector,
+            int         logDepth,
+            Set<Object> alreadyLogged )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( value.getClass().getName() );
+
+        if( value.size() == 0 ) {
+            buf.append( "[0] = {}" );
+
+        } else if( logDepth <= 0 || alreadyLogged.contains( value )) {
+            buf.append( '[' ).append( value.size() ).append( "] = { ... }" );
 
         } else {
-            buf.append( "[0] = {}" );
+            alreadyLogged.add( value );
+
+            buf.append( '[' ).append( value.size() ).append( "] = {\n" );
+            int max = Math.min( 8, value.size() );
+            int j   = 0;
+            for( Object from : value.keySet() ) {
+                Object to = value.get( from );
+
+                String fromDelegate = objectLogString( from, selector, logDepth-1, alreadyLogged );
+                String toDelegate   = objectLogString( to,   selector, logDepth-1, alreadyLogged );
+                StringBuilder delegate2 = indent( fromDelegate );
+                delegate2.append( " : " );
+                delegate2.append( toDelegate );
+                buf.append( delegate2 ).append( "\n" );
+                if( ++j >= max ) {
+                    break;
+                }
+            }
+            if( max != value.size() ) {
+                buf.append( "        ...\n" );
+            }
+
+            buf.append( "}" );
         }
         return buf.toString();
     }
@@ -846,6 +942,33 @@ public abstract class StringHelper
     }
 
     /**
+     * Helper method to make it easy to convert a Reference object
+     * into a format that is useful for logging.
+     * 
+     * @param value the value to log
+     * @param selector the LogSelector to use to indicate what to log and what not
+     * @param logDepth the depth to which to log
+     * @param alreadyLogged the set of objects already logged
+     * @return String representation of the object
+     */
+    public static String referenceLogString(
+            Reference   value,
+            LogSelector selector,
+            int         logDepth,
+            Set<Object> alreadyLogged )
+    {
+        Object obj = value.get();
+
+        StringBuilder buf = createBufferWithObjectId( value );
+        if( obj == null ) {
+            buf.append( "{ null }" );
+        } else {
+            buf.append( objectLogString( obj, selector, logDepth-1, alreadyLogged ));
+        }
+        return buf.toString();
+    }
+
+    /**
      * Create a StringBuilder with object identifier.
      *
      * @param obj the Object
@@ -1091,12 +1214,12 @@ public abstract class StringHelper
     /**
      * Our default datokens -- used to determine where to split the string when tokenizing.
      */
-    public static String DEFAULT_TOKENS = theResourceHelper.getResourceStringOrDefault( "DefaultTokens", ",;" );
+    public static final String DEFAULT_TOKENS = theResourceHelper.getResourceStringOrDefault( "DefaultTokens", ",;" );
 
     /**
      * Our default quotes -- used to ignore datokens when tokenizing.
      */
-    public static String DEFAULT_QUOTES = theResourceHelper.getResourceStringOrDefault( "DefaultQuotes", "\"\'" );
+    public static final String DEFAULT_QUOTES = theResourceHelper.getResourceStringOrDefault( "DefaultQuotes", "\"\'" );
 
     /**
      * The date format to use for Date fields in objectLogString
@@ -1105,6 +1228,11 @@ public abstract class StringHelper
             theResourceHelper.getResourceStringOrDefault(
                     "ObjectLogStringDateFormat",
                     "yyyy-MM-dd HH:mm:ss.S" ));
+
+    /**
+     * Default logging depth.
+     */
+    public static final int DEFAULT_LOG_DEPTH = 5;
 
     /**
      * Interface that allows a client to specify which objects to log.
