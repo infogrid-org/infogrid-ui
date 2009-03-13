@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,7 +22,8 @@ import org.infogrid.util.ArrayListCursorIterator;
 import org.infogrid.util.CompositeCursorIterator;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.FilteringCursorIterator;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -30,7 +31,8 @@ import org.infogrid.util.logging.Log;
   */
 public class SimpleContext
         implements
-            Context
+            Context,
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance(SimpleContext.class); // our own, private logger
 
@@ -271,15 +273,14 @@ public class SimpleContext
     }
 
     /**
-     * Return this object in string form. For debugging.
+     * Dump this object.
      *
-     * @return this object in string format
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "hierName",
                     // "parentContext",

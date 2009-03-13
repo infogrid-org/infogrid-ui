@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -119,19 +119,9 @@ public class NetSerializerTest2
                         } catch( Throwable ex ) {
                             ++errorCount;
                             if( encoded == null ) {
-                                reportError( "ERROR: element " + i + " of type " + original.getClass() + " threw exception of "
-                                        + ex.getClass() + " during "
-                                        + "encoding of "
-                                        + original,
-                                        ex );
+                                reportError( "element " + i + " threw exception of during encoding", original, ex );
                             } else {
-                                reportError( "ERROR: element " + i + " of type " + original.getClass() + " threw exception of "
-                                        + ex.getClass() + " during "
-                                        + "decoding of "
-                                        + original
-                                        + " from "
-                                        + encoded,
-                                        ex );
+                                reportError( "element " + i + " threw exception of during decoding", original, encoded, ex );
                             }
                             checkEquals( original, decoded, "what we received" );
                         }                        

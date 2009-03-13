@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -130,36 +130,13 @@ public abstract class AbstractActiveTraversalPathSetTest
         for( TraversalPath currentPath : set.getTraversalPaths() ) {
             TraversalPath currentPath2 = currentPath;
             if( currentPath2.getFirstMeshObject().getIsDead() ) {
-                reportError( "MeshObject is dead: " + currentPath2.getFirstMeshObject() );
+                reportError( "MeshObject is dead", currentPath2.getFirstMeshObject() );
             }
             currentPath2 = currentPath2.getNextSegment();
         }
         
-        if( set.size() != values.length ) {
-            StringBuffer buf = new StringBuffer();
-            if( msg != null ) {
-                buf.append( msg );
-            }
-            buf.append( ", found " );
-            String sep = "{ ";
-            for( TraversalPath currentPath : set.getTraversalPaths() ) {
-                buf.append( sep );
-                TraversalPath currentPath2 = currentPath;
-                String sep2 = "{ ";
-                while( currentPath2 != null ) {
-                    buf.append( sep2 );
-                    MeshObject currentObject = currentPath2.getFirstMeshObject();
-                    PropertyValue currentValue = currentObject.getPropertyValue( propertyType );
-                    buf.append( currentValue );
-                    currentPath2 = currentPath2.getNextSegment();
-                    sep2 = ", ";
-                }
-                sep = "}, ";
-            }
-            buf.append( " } vs. " );
-            buf.append( ArrayHelper.arrayToString( values ) );
-            
-            reportError( buf.toString() );
+        if( set.size() != values.length ) {            
+            reportError( msg, set, values );
             return false;
         }
         return true;

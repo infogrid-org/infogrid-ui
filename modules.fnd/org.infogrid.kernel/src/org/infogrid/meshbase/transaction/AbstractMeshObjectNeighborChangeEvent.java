@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,11 +22,11 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.event.AbstractExternalizablePropertyChangeEvent;
 import org.infogrid.util.event.PropertyUnresolvedException;
 import org.infogrid.util.event.SourceUnresolvedException;
 import org.infogrid.util.event.ValueUnresolvedException;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -253,15 +253,15 @@ public abstract class AbstractMeshObjectNeighborChangeEvent
     }
 
     /**
-     * Return in string form, for debugging.
+     * Dump this object.
      *
-     * @return this instance in string form
+     * @param d the Dumper to dump to
      */
     @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "getSourceIdentifier()",
                     "getPropertyIdentifier()",

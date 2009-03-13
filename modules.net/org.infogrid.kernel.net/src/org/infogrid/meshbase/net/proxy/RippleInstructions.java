@@ -8,19 +8,22 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net.proxy;
 
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Instructions to rippleCreate or rippleResynchronize a NetMeshObject.
  */
 public class RippleInstructions
+        implements
+            CanBeDumped
 {
     /**
      * Factory method.
@@ -124,15 +127,14 @@ public class RippleInstructions
     }
     
     /**
-     * Convert to String representation, for debugging.
-     * 
-     * @return String respresentation
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theExternalizedNetMeshObject",
                     "theProxies",

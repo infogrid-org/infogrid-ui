@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -202,7 +202,7 @@ public abstract class AbstractPingPongRpcTest
                 SendingMessageEndpoint<PingPongRpcTestMessage> endpoint,
                 PingPongRpcTestMessage                         msg )
         {
-            reportError( "Message sending failed: " + msg );
+            reportError( "Message sending failed", msg );
         }
 
         /**
@@ -218,7 +218,7 @@ public abstract class AbstractPingPongRpcTest
                 Throwable                               t )
         {
             if( !done ) {
-                reportError( "Receiving endpoint is dead: " + msg );
+                reportError( "Receiving endpoint is dead", msg );
             }
         }
 

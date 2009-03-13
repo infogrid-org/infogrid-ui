@@ -8,13 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * A simple implementation of StringifierParsingChoice that holds its own values.
@@ -24,6 +25,8 @@ import org.infogrid.util.StringHelper;
 public class StringifierValueParsingChoice<T>
         extends
             StringifierParsingChoice<T>
+        implements
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -55,15 +58,15 @@ public class StringifierValueParsingChoice<T>
     }
 
     /**
-     * Convert to String, for debugging.
+     * Dump this object.
      *
-     * @return String
+     * @param d the Dumper to dump to
      */
     @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theStartIndex",
                     "theEndIndex",

@@ -46,6 +46,8 @@ import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -483,6 +485,8 @@ public class VCardProbe
      * This class contains the content of one unfolded RFC 2425 line as a structure.
      */
     static class OneLine
+            implements
+                CanBeDumped
     {
         /**
          * Constructor with the components.
@@ -566,15 +570,14 @@ public class VCardProbe
         }
 
         /**
-         * Convert to string, for debugging.
+         * Dump this object.
          *
-         * @return a printable string representing this object
+         * @param d the Dumper to dump to
          */
-        @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String [] {
                         "group",
                         "name",
@@ -614,6 +617,8 @@ public class VCardProbe
      * This is basically an ArrayList with some convenience methods.
      */
     static class LineBuffer
+            implements
+                CanBeDumped
     {
         /**
          * Add a new line to the line buffer.
@@ -752,21 +757,20 @@ public class VCardProbe
         }
 
         /**
-         * Convert to string, for debugging.
+         * Dump this object.
          *
-         * @return a printable version of this object
+         * @param d the Dumper to dump to
          */
-        @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            StringBuffer buf = new StringBuffer( 40*store.size() );
-            for( int i=0 ; i<store.size() ; ++i ) {
-                buf.append( i );
-                buf.append( ": " );
-                buf.append( store.get( i ) );
-                buf.append( "\n" );
-            }
-            return buf.toString();
+            d.dump( this,
+                    new String[] {
+                        "store"
+                    },
+                    new Object[] {
+                        store
+                    } );
         }
 
         /**

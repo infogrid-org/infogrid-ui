@@ -8,22 +8,24 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.store;
 
-import org.infogrid.util.StringHelper;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * <p>A <code>StoreValue</code> encapsulates into one Oject the data and meta-data written to
  * and read from a Store for a given key.</p>
  */
 public class StoreValue
+        implements
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -155,15 +157,14 @@ public class StoreValue
     }
 
     /**
-     * Convert to String, for debugging.
+     * Dump this object.
      *
-     * @return the String
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theKey",
                     "theEncodingId",

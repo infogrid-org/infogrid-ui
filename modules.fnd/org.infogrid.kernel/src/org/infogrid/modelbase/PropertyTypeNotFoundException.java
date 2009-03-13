@@ -15,10 +15,10 @@
 package org.infogrid.modelbase;
 
 import org.infogrid.model.primitives.AttributableMeshType;
-import org.infogrid.model.primitives.SubjectArea;
-
 import org.infogrid.model.primitives.MeshTypeIdentifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.model.primitives.SubjectArea;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * This Exception indicates that a PropertyType could not be found.
@@ -26,6 +26,8 @@ import org.infogrid.util.StringHelper;
 public class PropertyTypeNotFoundException
         extends
             MeshTypeNotFoundException
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -80,15 +82,14 @@ public class PropertyTypeNotFoundException
     }
 
     /**
-     * Convert object into string representation, mostly for debugging.
+     * Dump this object.
      *
-     * @return string representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String [] {
                     "AttributableMeshType",
                     "PropertyType"

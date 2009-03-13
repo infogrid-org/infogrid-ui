@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,7 +17,8 @@ package org.infogrid.meshbase.net.proxy;
 import java.util.ArrayList;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * <p>Captures a set of instructions to cancel leases of specified NetMeshObjects that were
@@ -26,6 +27,8 @@ import org.infogrid.util.StringHelper;
  * object must be used for canceling leases of NetMeshObjects from another Proxy.</p>
  */
 public class CancelInstructions
+        implements
+            CanBeDumped
 {
     /**
      * Factory method.
@@ -83,15 +86,14 @@ public class CancelInstructions
     }
     
     /**
-     * Obtain as String representation, for debugging.
-     * 
-     * @return String representation
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theProxy",
                     "theNetMeshObjects"

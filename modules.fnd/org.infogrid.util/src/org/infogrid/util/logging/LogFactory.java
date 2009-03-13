@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -27,8 +27,11 @@ public abstract class LogFactory
      * @param channelName the name of the channel
      * @return the created Log object
      */
-    public abstract Log create(
-            String channelName );
+    public Log create(
+            String channelName )
+    {
+        return create( channelName, DEFAULT_DUMPER_FACTORY );
+    }
 
     /**
      * Create a new Log object.
@@ -39,8 +42,33 @@ public abstract class LogFactory
     public Log create(
             Class channelClass )
     {
-        return create( channelClass.getName() );
+        return create( channelClass.getName(), DEFAULT_DUMPER_FACTORY );
     }
+
+    /**
+     * Obtain a Logger and specify a dumper factory instead of the default.
+     *
+     * @param clazz the Class for which we are looking for a Log object
+     * @param dumperFactory the factory for dumpers
+     * @return the Log object
+     */
+    public Log create(
+            Class                                    clazz,
+            DumperFactory<? extends BufferingDumper> dumperFactory )
+    {
+        return create( clazz.getName(), dumperFactory );
+    }
+
+    /**
+     * Obtain a Logger and specify a dumper factory instead of the default.
+     *
+     * @param name name of the Log object that we are looking for
+     * @param dumperFactory the factory for dumpers
+     * @return the Log object
+     */
+    public abstract Log create(
+            String                                   name,
+            DumperFactory<? extends BufferingDumper> dumperFactory );
 
     /**
      * <p>Show a message to the user interface. This requires an implementation
@@ -61,4 +89,9 @@ public abstract class LogFactory
             Object parentComponent,
             String message,
             String title );
+
+    /**
+     * The default DumperFactory.
+     */
+    protected static DumperFactory<ToStringDumper> DEFAULT_DUMPER_FACTORY = ToStringDumperFactory.create();
 }

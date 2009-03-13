@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -75,7 +75,7 @@ public class SqlStoreTest4
                 }
             }
             if( found == null ) {
-                reportError( "Could not find record with key " + current.getKey() );
+                reportError( "Could not find record with key", current.getKey() );
             }
         }
         checkEquals( count, firstSet.length, "wrong length of set" );

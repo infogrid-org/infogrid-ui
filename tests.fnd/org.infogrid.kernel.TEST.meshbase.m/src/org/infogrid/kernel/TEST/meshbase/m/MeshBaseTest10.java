@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -111,7 +111,7 @@ public class MeshBaseTest10
                     // should throw an exception
                     try {
                         home.setPropertyValue( testProperties[j], currentValue );
-                        reportError( "attempting to set " + testProperties[i].getIdentifier().toExternalForm() + " to value unexpectedly succeeded: " + currentValue );
+                        reportError( "attempting to set unexpectedly succeeded", testProperties[i].getIdentifier(), currentValue );
                     } catch( IllegalPropertyValueException ex ) {
                         // do nothing
                         log.debug( "Good, that did not work" );

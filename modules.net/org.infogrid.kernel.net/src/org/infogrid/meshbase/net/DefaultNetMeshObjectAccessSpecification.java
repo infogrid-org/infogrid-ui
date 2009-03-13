@@ -8,21 +8,23 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net;
 
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Default implementation of NetMeshObjectAccessSpecification.
  */
 public class DefaultNetMeshObjectAccessSpecification
         implements
-            NetMeshObjectAccessSpecification
+            NetMeshObjectAccessSpecification,
+            CanBeDumped
 {
     private final static long serialVersionUID = 1L; // helps with serialization
 
@@ -219,15 +221,14 @@ public class DefaultNetMeshObjectAccessSpecification
     }
 
     /**
-     * Convert to String, for debugging.
+     * Dump this object.
      *
-     * @return string representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theAccessPath",
                     "theNonDefaultRemoteIdentifier"

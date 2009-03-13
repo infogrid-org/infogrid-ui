@@ -24,7 +24,6 @@ import org.infogrid.comm.SendingMessageEndpoint;
 import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
 import org.infogrid.comm.pingpong.m.MPingPongMessageEndpoint;
 import org.infogrid.testharness.AbstractTest;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -232,7 +231,7 @@ public class PingPongTest3
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " enqueued message " + msg + ", to be sent is now: " + StringHelper.objectLogString( endpoint.messagesToBeSent() ));
+            log.debug( this + " enqueued message " + msg + ", to be sent is now: ", endpoint.messagesToBeSent() );
         }
     
         /**
@@ -245,7 +244,7 @@ public class PingPongTest3
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            reportError( "Message sending failed: " + msg );
+            reportError( "Message sending failed", msg );
         }
 
         /**
@@ -261,7 +260,7 @@ public class PingPongTest3
                 Throwable               t )
         {
             if( !done ) {
-                reportError( "Receiving endpoint is dead: " + msg );
+                reportError( "Receiving endpoint is dead", msg );
             }
         }
 

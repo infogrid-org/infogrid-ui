@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -88,7 +88,7 @@ public class StoreBackedSwappingHashMapTest2
                 }
             }
             if( found < 0 ) {
-                reportError( "Could not find key " + key + " in the original key list" );
+                reportError( "Could not find key in the original key list", key );
             } else {
                 checkEquals( found, value.intValue(), "Wrong value found at index " + found );
             }

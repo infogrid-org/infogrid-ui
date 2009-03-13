@@ -73,8 +73,8 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.RemoteQueryTimeoutException;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.ZeroElementCursorIterator;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -1937,15 +1937,15 @@ public class AnetMeshObject
     }
 
     /**
-     * Convert into a String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
     @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theIdentifier",
                     "theTimeCreated",

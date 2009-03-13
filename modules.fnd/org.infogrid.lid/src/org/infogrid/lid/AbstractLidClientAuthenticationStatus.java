@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,7 +19,8 @@ import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.Identifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Factors out common functionality of LidClientAuthenticationStatus
@@ -27,7 +28,8 @@ import org.infogrid.util.StringHelper;
  */
 public abstract class AbstractLidClientAuthenticationStatus
         implements
-            LidClientAuthenticationStatus
+            LidClientAuthenticationStatus,
+            CanBeDumped
 {
     /**
      * Constructor for subclasses only.
@@ -358,15 +360,14 @@ public abstract class AbstractLidClientAuthenticationStatus
     }
 
     /**
-     * Obtain in String form, for debugging.
+     * Dump this object.
      *
-     * @return String form
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theClientIdentifier",
                     "theClientPersona",

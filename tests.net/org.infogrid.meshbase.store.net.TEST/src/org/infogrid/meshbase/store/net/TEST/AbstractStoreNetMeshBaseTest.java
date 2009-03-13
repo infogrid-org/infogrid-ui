@@ -177,17 +177,17 @@ public abstract class AbstractStoreNetMeshBaseTest
 
         if( proxies == null || proxies.length == 0 ) {
             if( !( proxiesTowards == null || proxiesTowards.length == 0 )) {
-                reportError( msg + ": object has no proxies, should have " + proxiesTowards.length + ": " + obj.getIdentifier().toExternalForm() );
+                reportError( msg + ": object has no proxies, should have", proxiesTowards, obj.getIdentifier() );
                 return false;
             } else {
                 return true; // no proxies is correct
             }
         } else if( proxiesTowards == null || proxiesTowards.length == 0 ) {
-            reportError( msg + ": object has " + proxies.length + " proxies, should have none: " + obj.getIdentifier().toExternalForm() );
+            reportError( msg + ": object has proxies, should have none", proxiesTowards, obj.getIdentifier() );
             return false;
         }
         if( proxies.length != proxiesTowards.length ) {
-            reportError( msg + ": object has wrong number of proxies. Should have " + proxiesTowards.length + ", does have " + proxies.length );
+            reportError( msg + ": object has wrong number of proxies. Should have ", proxiesTowards, proxies );
             ret = false;
         }
         
@@ -203,12 +203,12 @@ public abstract class AbstractStoreNetMeshBaseTest
 
         if( proxyTowardLock == null ) {
             if( obj.getProxyTowardsLockReplica() != null ) {
-                reportError( msg + ": has proxyTowardsLock but should not: " + obj.getIdentifier().toExternalForm() );
+                reportError( msg + ": has proxyTowardsLock but should not", obj.getIdentifier() );
                 ret = false;
             }
 
         } else if( obj.getProxyTowardsLockReplica() == null ) {
-            reportError( msg + ": does not have proxyTowardsLock but should: " + obj.getIdentifier().toExternalForm() );
+            reportError( msg + ": does not have proxyTowardsLock but should", obj.getIdentifier() );
             ret = false;
 
         } else {
@@ -216,12 +216,12 @@ public abstract class AbstractStoreNetMeshBaseTest
         }
         if( proxyTowardHome == null ) {
             if( obj.getProxyTowardsHomeReplica() != null ) {
-                reportError( msg + ": has proxyTowardHome but should not: " + obj.getIdentifier().toExternalForm() );
+                reportError( msg + ": has proxyTowardHome but should not", obj.getIdentifier() );
                 ret = false;
             }
 
         } else if( obj.getProxyTowardsHomeReplica() == null ) {
-            reportError( msg + ": does not have proxyTowardHome but should: " + obj.getIdentifier().toExternalForm() );
+            reportError( msg + ": does not have proxyTowardHome but should", obj.getIdentifier() );
             ret = false;
 
         } else {

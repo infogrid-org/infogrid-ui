@@ -8,20 +8,20 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.store.util;
 
+import java.util.NoSuchElementException;
 import org.infogrid.store.IterableStoreCursor;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.util.AbstractCursorIterator;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
-
-import java.util.NoSuchElementException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Iterates over the values in a StoreBackedSwappingHashMap.
@@ -32,6 +32,8 @@ import org.infogrid.util.StringHelper;
 public class StoreBackedSwappingHashMapValuesIterator<K,V>
         extends
             AbstractCursorIterator<V>
+        implements
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -328,15 +330,14 @@ public class StoreBackedSwappingHashMapValuesIterator<K,V>
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theKeysIterator"
                 },

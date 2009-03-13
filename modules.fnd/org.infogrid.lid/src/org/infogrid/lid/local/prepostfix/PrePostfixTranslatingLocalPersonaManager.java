@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,8 @@ import org.infogrid.lid.local.LidLocalPersonaManager;
 import org.infogrid.lid.local.TranslatingLidLocalPersonaManager;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.SimpleStringIdentifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Maps local usernames into identity URLs by prefixing or postfixing
@@ -27,6 +28,8 @@ import org.infogrid.util.StringHelper;
 public class PrePostfixTranslatingLocalPersonaManager
         extends
             TranslatingLidLocalPersonaManager
+        implements
+            CanBeDumped
 {
     /**
      * Factory method.
@@ -148,15 +151,14 @@ public class PrePostfixTranslatingLocalPersonaManager
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "thePrefix",
                     "thePostfix",

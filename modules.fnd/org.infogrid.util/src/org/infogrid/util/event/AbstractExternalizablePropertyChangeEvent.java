@@ -8,15 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.event;
 
-import org.infogrid.util.StringHelper;
-
 import java.beans.PropertyChangeEvent;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * A general-purpose implementation of {@link ExternalizablePropertyChangeEvent}.
@@ -34,7 +34,8 @@ public abstract class AbstractExternalizablePropertyChangeEvent<S,SID,P,PID,V,VI
         extends
             PropertyChangeEvent
         implements
-            ExternalizablePropertyChangeEvent<S,SID,P,PID,V,VID>
+            ExternalizablePropertyChangeEvent<S,SID,P,PID,V,VID>,
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -269,15 +270,14 @@ public abstract class AbstractExternalizablePropertyChangeEvent<S,SID,P,PID,V,VI
     }
 
     /**
-     * Return in string form, for debugging.
+     * Dump this object.
      *
-     * @return this instance in string form
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "getSourceIdentifier()",
                     "theProperty",

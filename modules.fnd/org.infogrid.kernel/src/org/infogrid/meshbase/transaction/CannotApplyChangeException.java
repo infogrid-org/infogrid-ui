@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,7 +17,8 @@ package org.infogrid.meshbase.transaction;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * This Exception is thrown if a Change could not be applied. Inner classes provide
@@ -26,6 +27,8 @@ import org.infogrid.util.StringHelper;
 public abstract class CannotApplyChangeException
         extends
             Exception
+        implements
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -44,15 +47,14 @@ public abstract class CannotApplyChangeException
     }
 
     /**
-     * Convert to String format, for debugging.
-     * 
-     * @return String format
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "meshBaseIdentifier"
                 },
@@ -121,15 +123,15 @@ public abstract class CannotApplyChangeException
         }
 
         /**
-         * Convert to String format, for debugging.
-         * 
-         * @return String format
+         * Dump this object.
+         *
+         * @param d the Dumper to dump to
          */
         @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "meshBaseIdentifier",
                         "objectIdentifier"

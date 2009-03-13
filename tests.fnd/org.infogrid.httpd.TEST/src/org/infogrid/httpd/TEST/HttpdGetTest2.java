@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -138,7 +138,7 @@ public class HttpdGetTest2
                         reportError( "Null response" );
                     }
                 } catch( Exception ex ) {
-                    reportError( "Thread " + theThreadIndex + " threw exception", ex );
+                    reportError( "Thread threw exception", theThreadIndex, ex );
                 }
             }
             log.info( "Thread " + theThreadIndex + " is done." );

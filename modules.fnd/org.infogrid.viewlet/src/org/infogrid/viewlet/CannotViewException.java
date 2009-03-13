@@ -16,7 +16,8 @@ package org.infogrid.viewlet;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.util.AbstractLocalizedException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -27,6 +28,8 @@ import org.infogrid.util.text.StringRepresentationContext;
 public abstract class CannotViewException
         extends
             AbstractLocalizedException
+        implements
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -59,15 +62,14 @@ public abstract class CannotViewException
     }
 
     /**
-     * For debugging.
+     * Dump this object.
      *
-     * @return String representation of this object.
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "viewlet",
                     "objectsToView"

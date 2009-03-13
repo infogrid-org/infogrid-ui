@@ -8,16 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.httpd.TEST;
 
-import org.infogrid.util.http.HTTP;
-
 import java.util.HashMap;
 import java.util.Iterator;
+import org.infogrid.util.http.HTTP;
 
 /**
  * Tests multithreaded HTTP POSTs.
@@ -159,7 +158,7 @@ public class HttpdPostTest2
                         reportError( "Null response" );
                     }
                 } catch( Exception ex ) {
-                    reportError( "Thread " + theThreadIndex + " threw exception", ex );
+                    reportError( "Thread threw exception", theThreadIndex, ex );
                 }
             }
         }

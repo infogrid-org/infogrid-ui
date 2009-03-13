@@ -14,8 +14,9 @@
 
 package org.infogrid.meshbase.net;
 
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -25,7 +26,8 @@ import org.infogrid.util.text.StringRepresentationContext;
  */
 public class DefaultNetMeshBaseAccessSpecification
         implements
-            NetMeshBaseAccessSpecification
+            NetMeshBaseAccessSpecification,
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -236,15 +238,14 @@ public class DefaultNetMeshBaseAccessSpecification
     }
 
     /**
-     * Convert to String form, for debugging.
+     * Dump this object.
      *
-     * @return String form
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                         "netMeshBase",
                         "scope",

@@ -8,14 +8,15 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.TEST;
 
 import org.infogrid.testharness.AbstractTest;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -130,6 +131,8 @@ Class c = t2.theIntegerArrayArray.getClass();
      * Test class.
      */
     public static class TestClass
+            implements
+                CanBeDumped
     {
         public int         theInteger;
         public char        theChar;
@@ -146,11 +149,15 @@ Class c = t2.theIntegerArrayArray.getClass();
         public TestClass   theDelegate;
         public TestClass   theNullDelegate;
 
-        @Override
-        public String toString()
+        /**
+         * Dump this object.
+         *
+         * @param d the Dumper to dump to
+         */
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
 //                            "theInteger",
 //                            "theChar",

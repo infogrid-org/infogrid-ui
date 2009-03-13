@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,7 +19,8 @@ import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
   * This Exception is thrown if we try to bless a MeshObject with an EntityType or RelationshipType
@@ -28,6 +29,8 @@ import org.infogrid.util.StringHelper;
 public class IsAbstractException
         extends
             IllegalOperationTypeException
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -106,15 +109,14 @@ public class IsAbstractException
     }
 
     /**
-      * Obtain String representation, for debugging.
-      *
-      * @return String representation
-      */
-    @Override
-    public String toString()
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "resolvingMeshBase",
                     "meshObject",

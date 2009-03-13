@@ -8,15 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.event;
 
-import org.infogrid.util.StringHelper;
-
 import java.util.EventObject;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * A general-purpose {@link ExternalizableEvent} implementation. It inherits from
@@ -31,7 +31,8 @@ public abstract class AbstractExternalizableEvent<S,SID,V,VID>
         extends
             EventObject
         implements
-            ExternalizableEvent<S,SID,V,VID>
+            ExternalizableEvent<S,SID,V,VID>,
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -158,15 +159,14 @@ public abstract class AbstractExternalizableEvent<S,SID,V,VID>
     }
 
     /**
-     * Return in string form, for debugging.
+     * Dump this object.
      *
-     * @return this instance in string form
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theSource",
                     "theSourceIdentifier",

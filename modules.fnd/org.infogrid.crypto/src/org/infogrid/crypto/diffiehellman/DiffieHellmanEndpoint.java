@@ -8,22 +8,24 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.crypto.diffiehellman;
 
-import org.infogrid.util.StringHelper;
-
 import java.math.BigInteger;
-import java.util.Random;
 import java.security.SecureRandom;
+import java.util.Random;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Represents a Diffie-Hellman endpoint.
  */
 public class DiffieHellmanEndpoint
+        implements
+            CanBeDumped
 {
     /**
      * Factory method. Automatically generate new keys.
@@ -197,15 +199,14 @@ public class DiffieHellmanEndpoint
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                         "theP",
                         "theG",

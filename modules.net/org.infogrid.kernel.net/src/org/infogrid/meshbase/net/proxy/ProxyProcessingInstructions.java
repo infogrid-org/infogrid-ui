@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -32,17 +32,17 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
-import org.infogrid.util.logging.Log;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Instructions to a Proxy for processing of an incoming XprisoMessage or internal
  * event, as determined by the ProxyPolicy.
  */
 public class ProxyProcessingInstructions
+        implements
+            CanBeDumped
 {
-    private static final Log log = Log.getLogInstance( ProxyProcessingInstructions.class ); // our own, private logger
-
     /**
      * Factory method.
      * 
@@ -847,15 +847,14 @@ public class ProxyProcessingInstructions
     }
 
     /**
-     * Convert to String representation, for debugging.
-     * 
-     * @return String respresentation
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theStartCommunicating",
                     "theCeaseCommunications",

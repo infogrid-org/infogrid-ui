@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -25,9 +25,10 @@ import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Default implementation of RestfulRequest.
@@ -35,6 +36,8 @@ import org.infogrid.util.http.SaneRequest;
 public class DefaultRestfulRequest
         extends
             AbstractRestfulRequest
+        implements
+            CanBeDumped
 {
     /**
      * Factory method.
@@ -139,15 +142,14 @@ public class DefaultRestfulRequest
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theRequestedMeshBaseIdentifier",
                     "theRequestedMeshObjectIdentifier",

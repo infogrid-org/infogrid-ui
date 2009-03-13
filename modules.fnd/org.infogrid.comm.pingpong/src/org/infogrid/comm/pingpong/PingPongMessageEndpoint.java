@@ -24,7 +24,8 @@ import org.infogrid.comm.MessageEndpoint;
 import org.infogrid.comm.MessageEndpointIsDeadException;
 import org.infogrid.comm.MessageEndpointListener;
 import org.infogrid.comm.MessageSendException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -41,7 +42,8 @@ public abstract class PingPongMessageEndpoint<T>
         extends
             AbstractSendingMessageEndpoint<T>
         implements
-            BidirectionalMessageEndpoint<T>
+            BidirectionalMessageEndpoint<T>,
+            CanBeDumped
 {
     private static final Log logHigh = Log.getLogInstance( PingPongMessageEndpoint.class ); // our own, private logger for high-level events
     private static final Log logLow  = Log.getLogInstance( PingPongMessageEndpoint.class.getName() + "-lowlevel" ); // our own, private logger for low-level events
@@ -405,15 +407,14 @@ public abstract class PingPongMessageEndpoint<T>
     }
 
     /**
-     * Convert to String form, for debugging.
+     * Dump this object.
      *
-     * @return String form
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theName",
                     "theLastReceivedToken",

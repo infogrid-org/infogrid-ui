@@ -8,18 +8,23 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
 
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
+
 /**
  * One alternative how to parse a String using a Stringifier.
  * 
- * @param T the type of the Objects to be stringified
+ * @param <T> the type of the Objects to be stringified
  */
 public abstract class StringifierParsingChoice<T>
+        implements
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -64,6 +69,25 @@ public abstract class StringifierParsingChoice<T>
      */
     public abstract T unformat();
     
+    /**
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
+    {
+        d.dump( this,
+                new String[] {
+                    "theStartIndex",
+                    "theEndIndex"
+                },
+                new Object[] {
+                    theStartIndex,
+                    theEndIndex
+                });
+    }
+
     /**
      * The index of the first character (inclusive) of this choice.
      */

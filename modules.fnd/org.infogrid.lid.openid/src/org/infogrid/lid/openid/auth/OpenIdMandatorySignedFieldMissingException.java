@@ -16,7 +16,8 @@ package org.infogrid.lid.openid.auth;
 
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.util.Identifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Thrown if a mandatory field in a V2 signature was not signed.
@@ -24,6 +25,8 @@ import org.infogrid.util.StringHelper;
 public class OpenIdMandatorySignedFieldMissingException
         extends
             LidInvalidCredentialException
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -56,15 +59,14 @@ public class OpenIdMandatorySignedFieldMissingException
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                         "theIdentifier",
                         "theType",

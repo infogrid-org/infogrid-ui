@@ -8,14 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase;
 
 import org.infogrid.util.Identifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -25,7 +26,8 @@ import org.infogrid.util.text.StringRepresentationContext;
  */
 public class MeshBaseIdentifier
         implements
-            Identifier
+            Identifier,
+            CanBeDumped
 {
     /**
      * Constructor.
@@ -169,15 +171,14 @@ public class MeshBaseIdentifier
     }
     
     /**
-     * Obtain as String representation, for debugging only.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "canonical"
                 },

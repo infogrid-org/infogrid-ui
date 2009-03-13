@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -26,7 +26,8 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.IsDeadException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * The abstract superclass of all type-safe facades for MeshObjects that are typically
@@ -36,7 +37,8 @@ import org.infogrid.util.StringHelper;
  */
 public abstract class TypedMeshObjectFacade
         implements
-            HasIdentifier
+            HasIdentifier,
+            CanBeDumped
 {
     /**
      * Constructor, for subclasses only. This is invoked by InfoGrid as a result
@@ -666,12 +668,12 @@ public abstract class TypedMeshObjectFacade
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
         PropertyType [] props = the_Delegate.getAllPropertyTypes();
 
@@ -686,8 +688,7 @@ public abstract class TypedMeshObjectFacade
                 values[i] = "!! Cannot access: " + t.getMessage();
             }
         }
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 names,
                 values );
     }

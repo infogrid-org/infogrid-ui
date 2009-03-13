@@ -8,17 +8,11 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.httpd;
-
-import org.infogrid.httpd.util.NameValueList;
-import org.infogrid.util.Base64;
-import org.infogrid.util.StreamUtils;
-import org.infogrid.util.http.HTTP;
-import org.infogrid.util.logging.Log;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -29,12 +23,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.infogrid.util.StringHelper;
+import org.infogrid.httpd.util.NameValueList;
+import org.infogrid.util.Base64;
+import org.infogrid.util.StreamUtils;
+import org.infogrid.util.http.HTTP;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
+import org.infogrid.util.logging.Log;
 
 /**
   * This represents an incoming HTTP Request.
   */
 public class HttpRequest
+        implements
+            CanBeDumped
 {
     private static Log log = Log.getLogInstance( HttpRequest.class ); // our own, private logger
 
@@ -705,15 +707,14 @@ public class HttpRequest
     }
 
     /**
-      * Convert to String, for debugging only.
-      *
-      * @return String form of this object
-      */
-    @Override
-    public String toString()
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String [] {
                     "method",
                     "relativeBaseUri",

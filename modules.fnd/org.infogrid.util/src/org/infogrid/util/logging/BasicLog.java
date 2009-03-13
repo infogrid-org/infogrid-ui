@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -26,12 +26,14 @@ public class BasicLog
     /**
      * Constructor.
      *
-     * @param name the name of the Log
+     * @param name the name of the Log object
+     * @param dumperFactory the DumperFactory to use, if any
      */
     public BasicLog(
-            String name )
+            String                                       name,
+            DumperFactory<? extends BufferingDumper> dumperFactory )
     {
-        super( name );
+        super( name, dumperFactory );
     }
 
     /**
@@ -281,15 +283,17 @@ public class BasicLog
             LogFactory
     {
         /**
-         * Create a new Log object.
+         * Obtain a Logger.
          *
-         * @param channelName the name of the channel
-         * @return the created Log object
+         * @param name name of the Log object that we are looking for
+         * @param dumperFactory the factory for dumpers
+         * @return the Log object
          */
         public Log create(
-                String channelName )
+                String                                   name,
+                DumperFactory<? extends BufferingDumper> dumperFactory )
         {
-            return new BasicLog( channelName );
+            return new BasicLog( name, dumperFactory );
         }
 
         /**

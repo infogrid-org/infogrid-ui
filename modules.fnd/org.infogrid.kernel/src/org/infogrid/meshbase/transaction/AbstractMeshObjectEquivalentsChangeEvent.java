@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,9 +19,9 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBase;
 
 import org.infogrid.util.event.AbstractExternalizablePropertyChangeEvent;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.event.SourceUnresolvedException;
 import org.infogrid.util.event.ValueUnresolvedException;
+import org.infogrid.util.logging.Dumper;
 
 /**
   * <p>This event indicates that a MeshObject's set of equivalent MeshObjects have changed.</p>
@@ -170,15 +170,15 @@ public abstract class AbstractMeshObjectEquivalentsChangeEvent
     }
 
     /**
-     * Return in string form, for debugging.
+     * Dump this object.
      *
-     * @return this instance in string form
+     * @param d the Dumper to dump to
      */
     @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "getSourceIdentifier()",
                     "getDeltaValueIdentifier()",

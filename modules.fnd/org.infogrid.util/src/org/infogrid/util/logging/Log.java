@@ -18,6 +18,7 @@ import java.text.MessageFormat;
 import java.util.Properties;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.AbstractLocalizedRuntimeException;
+import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
@@ -96,7 +97,7 @@ public abstract class Log
     }
 
     /**
-     * We override this, so we can return the right type (Log instead of its supertype Category).
+     * Obtain a Logger.
      *
      * @param clazz the Class for which we are looking for a Log object
      * @return the Log object
@@ -108,7 +109,7 @@ public abstract class Log
     }
 
     /**
-     * Obtain the Log object by this name
+     * Obtain a Logger.
      *
      * @param name name of the Log object that we are looking for
      * @return the Log object
@@ -120,14 +121,45 @@ public abstract class Log
     }
 
     /**
-      * Private constructor, use getLogInstance to get hold of an instance.
-      *
-      * @param name the name of the Log object
-      */
-    protected Log(
-            String name )
+     * Obtain a Logger and specify a dumper factory instead of the default.
+     *
+     * @param clazz the Class for which we are looking for a Log object
+     * @param dumperFactory the factory for dumpers
+     * @return the Log object
+     */
+    public static Log getLogInstance(
+            Class                                    clazz,
+            DumperFactory<? extends BufferingDumper> dumperFactory )
     {
-        theName = name;
+        return theFactory.create( clazz, dumperFactory );
+    }
+
+    /**
+     * Obtain a Logger.
+     *
+     * @param name name of the Log object that we are looking for
+     * @param dumperFactory the factory for dumpers
+     * @return the Log object
+     */
+    public static Log getLogInstance(
+            String                                   name,
+            DumperFactory<? extends BufferingDumper> dumperFactory )
+    {
+        return theFactory.create( name, dumperFactory );
+    }
+
+    /**
+     * Private constructor, use getLogInstance to get hold of an instance.
+     *
+     * @param name the name of the Log object
+     * @param dumperFactory the DumperFactory to use, if any
+     */
+    protected Log(
+            String                                   name,
+            DumperFactory<? extends BufferingDumper> dumperFactory )
+    {
+        theName          = name;
+        theDumperFactory = dumperFactory;
     }
 
     /**
@@ -181,6 +213,86 @@ public abstract class Log
             Throwable t );
 
     /**
+     * The method to log a fatal error. This may be overridden by subclasses.
+     *
+     * @param msg    the message to log
+     * @param toDump an Object to dump, if any
+     * @param t      the Throwable to log. This may be null.
+     */
+    protected void logFatal(
+            String    msg,
+            Object    toDump,
+            Throwable t )
+    {
+        String newMessage = createCompoundMessage( msg, toDump );
+        logFatal( newMessage, t );
+    }
+
+    /**
+     * The method to log an error. This may be overridden by subclasses.
+     *
+     * @param msg    the message to log
+     * @param toDump an Object to dump, if any
+     * @param t      the Throwable to log. This may be null.
+     */
+    protected void logError(
+            String    msg,
+            Object    toDump,
+            Throwable t )
+    {
+        String newMessage = createCompoundMessage( msg, toDump );
+        logError( newMessage, t );
+    }
+
+    /**
+     * The method to log a warning. This may be overridden by subclasses.
+     *
+     * @param msg    the message to log
+     * @param toDump an Object to dump, if any
+     * @param t      the Throwable to log. This may be null.
+     */
+    protected void logWarn(
+            String    msg,
+            Object    toDump,
+            Throwable t )
+    {
+        String newMessage = createCompoundMessage( msg, toDump );
+        logWarn( newMessage, t );
+    }
+
+    /**
+     * The method to log an informational message. This may be overridden by subclasses.
+     *
+     * @param msg    the message to log
+     * @param toDump an Object to dump, if any
+     * @param t      the Throwable to log. This may be null.
+     */
+    protected void logInfo(
+            String    msg,
+            Object    toDump,
+            Throwable t )
+    {
+        String newMessage = createCompoundMessage( msg, toDump );
+        logInfo( newMessage, t );
+    }
+
+    /**
+     * The method to log a debug message. This may be overridden by subclasses.
+     *
+     * @param msg    the message to log
+     * @param toDump an Object to dump, if any
+     * @param t      the Throwable to log. This may be null.
+     */
+    protected void logDebug(
+            String    msg,
+            Object    toDump,
+            Throwable t )
+    {
+        String newMessage = createCompoundMessage( msg, toDump );
+        logDebug( newMessage, t );
+    }
+
+    /**
      * Determine whether logging to the info channel is enabled.
      *
      * @return true if the info channel is enabled
@@ -206,7 +318,7 @@ public abstract class Log
             String  msg )
     {
         if( !assertion ) {
-            logError( msg, null );
+            logError( msg, null, null );
         }
     }
 
@@ -224,7 +336,7 @@ public abstract class Log
             Throwable t )
     {
         if( !assertion ) {
-            logError( msg, t );
+            logError( msg, null, t );
         }
     }
 
@@ -240,7 +352,7 @@ public abstract class Log
             String msg )
     {
         if( assertion == null ) {
-            logError( msg, null );
+            logError( msg, null, null );
         }
     }
 
@@ -258,7 +370,7 @@ public abstract class Log
             Throwable t )
     {
         if( assertion == null ) {
-            logError( msg, t );
+            logError( msg, null, t );
         }
     }
 
@@ -271,10 +383,24 @@ public abstract class Log
     public final void fatal(
             Object message )
     {
+        fatal( message, null );
+    }
+
+    /**
+     * This logs a fatal error. The behavior of this method is slightly different depending
+     * on the actual Class of the message.
+     *
+     * @param message the error Object
+     * @param toDump  the Object to dump, if any
+     */
+    public final void fatal(
+            Object    message,
+            Object    toDump )
+    {
         if( message instanceof Throwable ) {
-            fatal( message, (Throwable) message );
+            fatal( message, toDump, (Throwable) message );
         } else {
-            fatal( message, null );
+            fatal( message, toDump, null );
         }
     }
 
@@ -283,18 +409,20 @@ public abstract class Log
      * on the actual Class of the message.
      *
      * @param message the error Object
+     * @param toDump  an Object to dump, if any
      * @param t       the Throwable to log
      */
     public final void fatal(
             Object    message,
+            Object    toDump,
             Throwable t )
     {
         if( t != null ) {
-            logFatal( String.valueOf( message ), t );
+            logFatal( String.valueOf( message ), toDump, t );
         } else if( logStacktraceOnError ) {
-            logFatal( String.valueOf( message ), new Exception( "Logging marker" ) );
+            logFatal( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
         } else {
-            logFatal( String.valueOf( message ), null );
+            logFatal( String.valueOf( message ), toDump, null );
         }
     }
 
@@ -307,10 +435,24 @@ public abstract class Log
     public final void error(
             Object message )
     {
+        error( message, null );
+    }
+
+    /**
+     * This logs an error. The behavior of this method is slightly different depending
+     * on the actual Class of the message.
+     *
+     * @param message the error Object
+     * @param toDump  an Object to dump, if any
+     */
+    public final void error(
+            Object    message,
+            Object    toDump )
+    {
         if( message instanceof Throwable ) {
-            error( "Throwable", (Throwable) message );
+            error( "Throwable", toDump, (Throwable) message );
         } else {
-            error( message, null );
+            error( message, toDump, null );
         }
     }
 
@@ -319,18 +461,20 @@ public abstract class Log
      * on the actual Class of the message.
      *
      * @param message the error Object
+     * @param toDump  an Object to dump, if any
      * @param t       the Throwable to log
      */
     public final void error(
             Object    message,
+            Object    toDump,
             Throwable t )
     {
         if( t != null ) {
-            logError( String.valueOf( message ), t );
+            logError( String.valueOf( message ), toDump, t );
         } else if( logStacktraceOnError ) {
-            logError( String.valueOf( message ), new Exception( "Logging marker" ) );
+            logError( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
         } else {
-            logError( String.valueOf( message ), null );
+            logError( String.valueOf( message ), toDump, null );
         }
     }
 
@@ -343,10 +487,24 @@ public abstract class Log
     public final void warn(
             Object message )
     {
+        warn( message, null );
+    }
+
+    /**
+     * This logs a warning. The behavior of this method is slightly different depending
+     * on the actual Class of the message.
+     *
+     * @param message the error Object
+     * @param toDump  an Object to dump, if any
+     */
+    public final void warn(
+            Object    message,
+            Object    toDump )
+    {
         if( message instanceof Throwable ) {
-            warn( message, (Throwable) message );
+            warn( message, toDump, (Throwable) message );
         } else {
-            warn( message, null );
+            warn( message, toDump, null );
         }
     }
 
@@ -354,19 +512,73 @@ public abstract class Log
      * This logs a warning. The behavior of this method is slightly different depending
      * on the actual Class of the message.
      *
-     * @param message the warning Object
+     * @param message the error Object
+     * @param toDump  an Object to dump, if any
      * @param t       the Throwable to log
      */
     public final void warn(
             Object    message,
+            Object    toDump,
             Throwable t )
     {
         if( t != null ) {
-            logWarn( String.valueOf( message ), t );
+            logWarn( String.valueOf( message ), toDump, t );
         } else if( logStacktraceOnWarn ) {
-            logWarn( String.valueOf( message ), new Exception( "Logging marker" ) );
+            logWarn( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
         } else {
-            logWarn( String.valueOf( message ), null );
+            logWarn( String.valueOf( message ), toDump, null );
+        }
+    }
+
+    /**
+     * This logs an info message. The behavior of this method is slightly different depending
+     * on the actual Class of the message.
+     *
+     * @param message the info Object
+     */
+    public final void info(
+            Object message )
+    {
+        info( message, null );
+    }
+
+    /**
+     * This logs an info message. The behavior of this method is slightly different depending
+     * on the actual Class of the message.
+     *
+     * @param message the error Object
+     * @param toDump  an Object to dump, if any
+     */
+    public final void info(
+            Object    message,
+            Object    toDump )
+    {
+        if( message instanceof Throwable ) {
+            info( message, toDump, (Throwable) message );
+        } else {
+            info( message, toDump, null );
+        }
+    }
+
+    /**
+     * This logs an info message. The behavior of this method is slightly different depending
+     * on the actual Class of the message.
+     *
+     * @param message the error Object
+     * @param toDump  an Object to dump, if any
+     * @param t       the Throwable to log
+     */
+    public final void info(
+            Object    message,
+            Object    toDump,
+            Throwable t )
+    {
+        if( t != null ) {
+            logInfo( String.valueOf( message ), toDump, t );
+        } else if( logStacktraceOnInfo ) {
+            logInfo( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
+        } else {
+            logInfo( String.valueOf( message ), toDump, null );
         }
     }
 
@@ -379,10 +591,24 @@ public abstract class Log
     public final void debug(
             Object message )
     {
+        debug( message, null );
+    }
+
+    /**
+     * This logs a debug message. The behavior of this method is slightly different depending
+     * on the actual Class of the message.
+     *
+     * @param message the error Object
+     * @param toDump  an Object to dump, if any
+     */
+    public final void debug(
+            Object    message,
+            Object    toDump )
+    {
         if( message instanceof Throwable ) {
-            debug( message, (Throwable) message );
+            debug( message, toDump, (Throwable) message );
         } else {
-            debug( message, null );
+            debug( message, toDump, null );
         }
     }
 
@@ -391,54 +617,20 @@ public abstract class Log
      * on the actual Class of the message.
      *
      * @param message the debug Object
+     * @param toDump  an Object to dump, if any
      * @param t       the Throwable to log
      */
     public final void debug(
             Object    message,
+            Object    toDump,
             Throwable t )
     {
         if( t != null ) {
-            logDebug( String.valueOf( message ), t );
+            logDebug( String.valueOf( message ), toDump, t );
         } else if( logStacktraceOnDebug ) {
-            logDebug( String.valueOf( message ), new Exception( "Logging marker" ) );
+            logDebug( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
         } else { 
-            logDebug( String.valueOf( message ), null );
-        }
-    }
-
-    /**
-     * This logs an info message. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the info Object
-     */
-    public final void info(
-            Object message )
-    {
-        if( message instanceof Throwable ) {
-            info( message, (Throwable) message );
-        } else {
-            info( message, null );
-        }
-    }
-
-    /**
-     * This logs an info message. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the error Object
-     * @param t       the Throwable to log
-     */
-    public final void info(
-            Object    message,
-            Throwable t )
-    {
-        if( t != null ) {
-            logInfo( String.valueOf( message ), t );
-        } else if( logStacktraceOnInfo ) {
-            logInfo( String.valueOf( message ), new Exception( "Logging marker" ) );
-        } else {
-            logInfo( String.valueOf( message ), null );
+            logDebug( String.valueOf( message ), toDump, null );
         }
     }
 
@@ -557,7 +749,7 @@ public abstract class Log
             }
         }
 
-        logFatal( formattedMessage, t );
+        logFatal( formattedMessage, null, t );
 
         showMessage(
                 parentComponent,
@@ -681,7 +873,7 @@ public abstract class Log
             }
         }
 
-        logError( formattedMessage, t );
+        logError( formattedMessage, null, t );
 
         showMessage(
                 parentComponent,
@@ -806,7 +998,7 @@ public abstract class Log
             }
         }
 
-        logWarn( formattedMessage, t );
+        logWarn( formattedMessage, null, t );
 
         showMessage(
                 parentComponent,
@@ -835,9 +1027,47 @@ public abstract class Log
     }
 
     /**
+     * Create a compound message from a message, and an Object to dump.
+     * This may be overridden by subclasses.
+     *
+     * @param msg    the message to log
+     * @param toDump an Object to dump, if any
+     * @return the compound message
+     */
+    protected String createCompoundMessage(
+            String msg,
+            Object toDump )
+    {
+        if( toDump == null ) {
+            return msg;
+        }
+        if( theDumperFactory == null ) {
+            return msg;
+        }
+        try {
+            BufferingDumper dumper = theDumperFactory.obtainFor( this );
+            if( dumper == null ) {
+                return msg;
+            }
+            dumper.dump( toDump );
+            String append = dumper.getBuffer();
+            return msg + " - " + append;
+
+        } catch( FactoryException ex ) {
+            error( ex );
+            return msg + " - cannot create Dumper";
+        }
+    }
+
+    /**
      * The name of this logger.
      */
     protected String theName;
+
+    /**
+     * The factory for creating Dumper objects to use for dumping objects, if any.
+     */
+    protected DumperFactory<? extends BufferingDumper> theDumperFactory;
 
     /**
      * The factory for new Log objects.

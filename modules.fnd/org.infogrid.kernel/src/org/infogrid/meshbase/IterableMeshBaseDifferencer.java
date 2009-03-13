@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -51,7 +51,8 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -64,6 +65,8 @@ import org.infogrid.util.logging.Log;
   * one), so that's what we do.</p>
   */
 public class IterableMeshBaseDifferencer
+        implements
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( IterableMeshBaseDifferencer.class ); // our own, private logger
 
@@ -864,15 +867,14 @@ public class IterableMeshBaseDifferencer
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theBaselineBase"
                 },

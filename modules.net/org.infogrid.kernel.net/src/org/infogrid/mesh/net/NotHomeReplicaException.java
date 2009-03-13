@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,7 +19,8 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * This Exception indicates that an attempt was made to move the home replica
@@ -29,6 +30,8 @@ import org.infogrid.util.StringHelper;
 public class NotHomeReplicaException
         extends
             AbstractMeshException
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -97,15 +100,14 @@ public class NotHomeReplicaException
     }
 
     /**
-     * Return this object in string form, for debugging.
+     * Dump this object.
      *
-     * @return string form of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theMeshObject",
                     "theMeshObjectIdentifier"

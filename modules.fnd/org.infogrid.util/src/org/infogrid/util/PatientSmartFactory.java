@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,8 @@ package org.infogrid.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -35,7 +37,9 @@ import org.infogrid.util.logging.Log;
  */
 public class PatientSmartFactory<K,V,A>
         extends
-            MSmartFactory<K, V, A>
+            MSmartFactory<K,V,A>
+        implements
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( PatientSmartFactory.class ); // our own, private logger
 
@@ -132,15 +136,15 @@ public class PatientSmartFactory<K,V,A>
     }
     
     /**
-     * Convert to String format, for debugging.
+     * Dump this object.
      *
-     * @return String format
+     * @param d the Dumper to dump to
      */
     @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theDelegateFactory",
                     "theKeyValueMap",

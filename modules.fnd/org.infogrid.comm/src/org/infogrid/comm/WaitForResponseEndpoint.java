@@ -21,7 +21,8 @@ import org.infogrid.util.logging.Log;
 import org.infogrid.util.RemoteQueryTimeoutException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.SimpleTimeBasedUniqueLongGenerator;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * An BidirectionalMessageEndpoint that suspents the thread sending a message until a
@@ -32,7 +33,8 @@ import org.infogrid.util.StringHelper;
  */
 public class WaitForResponseEndpoint<T extends CarriesInvocationId>
         implements
-            MessageEndpointListener<T>
+            MessageEndpointListener<T>,
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( WaitForResponseEndpoint.class ); // our own, private logger
     
@@ -305,15 +307,14 @@ public class WaitForResponseEndpoint<T extends CarriesInvocationId>
     }
 
     /**
-     * Convert to String, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theOngoingInvocations",
                     "theResults",

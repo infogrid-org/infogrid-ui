@@ -8,13 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.instrument;
 
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -24,6 +25,8 @@ import org.infogrid.util.logging.Log;
  * is fairly small, so it can be incorporated in production code if needed.
  */
 public class Breakpoint
+        implements
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( Breakpoint.class ); // our own, private logger
 
@@ -111,15 +114,14 @@ public class Breakpoint
     }
 
     /**
-     * Convert to String, for debugging.
-     * 
-     * @return String representation
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "name"
                 },

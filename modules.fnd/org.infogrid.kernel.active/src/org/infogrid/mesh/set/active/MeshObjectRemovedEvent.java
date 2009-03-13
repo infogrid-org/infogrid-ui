@@ -8,14 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.mesh.set.active;
 
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.Dumper;
 
 /**
   * This indicates that a MeshObject was removed from an ActiveMeshObjectSet.
@@ -74,15 +74,15 @@ public class MeshObjectRemovedEvent
     }
 
     /**
-     * Obtain string form, for debugging.
+     * Dump this object.
      *
-     * @return this object in string form
+     * @param d the Dumper to dump to
      */
     @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "indexOfRemoved"
                 },

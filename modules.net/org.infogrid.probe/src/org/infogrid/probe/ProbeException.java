@@ -18,7 +18,8 @@ import java.io.IOException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
   * Subclasses of this Exception indicate that something went wrong when attempting
@@ -27,6 +28,8 @@ import org.infogrid.util.StringHelper;
 public abstract class ProbeException
         extends
             AbstractLocalizedException
+        implements
+            CanBeDumped
 {
     /**
      * Constructor, for subclasses only.
@@ -77,15 +80,14 @@ public abstract class ProbeException
     }
 
     /**
-     * Obtain a printable representation of this object, for debugging.
+     * Dump this object.
      *
-     * @return a printable representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theNetworkIdentifier",
                     "cause"
@@ -184,15 +186,15 @@ public abstract class ProbeException
         }
 
         /**
-         * Obtain a printable representation of this object, for debugging.
+         * Dump this object.
          *
-         * @return a printable representation of this object
+         * @param d the Dumper to dump to
          */
         @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theNetworkIdentifier",
                         "mimeType",
@@ -291,15 +293,15 @@ public abstract class ProbeException
         }
 
         /**
-         * Obtain a printable representation of this object, for debugging.
+         * Dump this object.
          *
-         * @return a printable representation of this object
+         * @param d the Dumper to dump to
          */
         @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theNetworkIdentifier",
                         "theDtd",
@@ -690,15 +692,15 @@ public abstract class ProbeException
         }
 
         /**
-         * Obtain a printable representation of this object, for debugging.
+         * Dump this object.
          *
-         * @return a printable representation of this object
+         * @param d the Dumper to dump to
          */
         @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theNetworkIdentifier",
                         "theStatusCode",
@@ -774,15 +776,15 @@ public abstract class ProbeException
         }
 
         /**
-         * Obtain a printable representation of this object, for debugging.
+         * Dump this object.
          *
-         * @return a printable representation of this object
+         * @param d the Dumper to dump to
          */
         @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theNetworkIdentifier",
                         "theExplanation",

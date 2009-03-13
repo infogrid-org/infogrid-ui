@@ -194,11 +194,7 @@ public abstract class AbstractYadisTest
                 // good
             } else {
                 // not good
-                reportError(
-                        "Service "
-                        + service.getIdentifier().toExternalForm()
-                        + " is neither MinimumLid nor OpenID Auth, is: "
-                        + ArrayHelper.join( service.getTypes() ));
+                reportError( "Service is neither MinimumLid nor OpenID Auth", service );
             }
             
             MeshObjectSet endpoints = service.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource() );

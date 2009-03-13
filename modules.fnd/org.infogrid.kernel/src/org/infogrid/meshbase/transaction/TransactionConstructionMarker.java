@@ -8,11 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.transaction;
+
+import org.infogrid.util.logging.Dumper;
 
 /**
  * <p>We abuse the Exception class slightly to have a convenient method of
@@ -35,17 +37,22 @@ public class TransactionConstructionMarker
     }
     
     /**
-     * Convert to String, for debugging purpose.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        StringBuilder ret = new StringBuilder();
-        ret.append( "Transaction constructor marker created at " );
-        ret.append( now );
-        return ret.toString();
+        d.dump( this,
+                new String[] {
+                    "now",
+                    "stacktrace"
+                },
+                new Object[] {
+                    now,
+                    getStackTrace()
+                } );
     }
 
     /**

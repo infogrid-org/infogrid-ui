@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -39,10 +39,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.infogrid.module.ModuleClassLoader;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.FactoryException;
 import org.infogrid.util.NamedThreadFactory;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.BufferingDumper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
+import org.infogrid.util.logging.DumperFactory;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.logging.ToStringDumperFactory;
 
 /**
  * An abstract superclass for tests. It provides a bunch of generic test
@@ -517,7 +522,7 @@ public abstract class AbstractTest
             String msg )
     {
         if( one != null ) {
-            reportError( msg, StringHelper.objectLogString( one ));
+            reportError( msg, one );
             return false;
         }
 
@@ -855,49 +860,56 @@ public abstract class AbstractTest
      * Report error.
      *
      * @param msg message to print
-     * @param explanation an explanation for this error
+     * @param args optional arguments
      * @return true if check passed
      */
     public final boolean reportError(
-            String msg,
-            String explanation )
+            String     msg,
+            Object ... args )
     {
-        if( msg != null ) {
-            getLog().error( msg + ": " + explanation );
-        }
-        ++errorCount;
-        return false;
+        return reportError( msg, DEFAULT_DUMPER_FACTORY, args );
     }
 
     /**
      * Report error.
      *
      * @param msg message to print
-     * @param t the Throwable indicating the error
+     * @param df the DumperFactory to use
+     * @param args optional arguments
      * @return true if check passed
      */
     public final boolean reportError(
-            String    msg,
-            Throwable t )
+            String                                   msg,
+            DumperFactory<? extends BufferingDumper> df,
+            Object ...                               args )
     {
         if( msg != null ) {
-            getLog().error( msg, t );
-        }
-        ++errorCount;
-        return false;
-    }
-
-    /**
-     * Report error.
-     *
-     * @param msg message to print
-     * @return true if check passed
-     */
-    public final boolean reportError(
-            String msg )
-    {
-        if( msg != null ) {
-            getLog().error( msg );
+            StringBuilder buf = new StringBuilder();
+            buf.append( msg );
+            
+            String    sep = " : ";
+            Throwable t   = null;
+            
+            for( int i=0 ; i<args.length ; ++i ) {
+                if( i<args.length-1 || !( args[i] instanceof Throwable )) {
+                    try {
+                        BufferingDumper d = df.obtainFor( args[i] );
+                        d.dump( args[i] );
+                        buf.append( sep );
+                        buf.append( d.getBuffer() );
+                        sep = ", ";
+                    } catch( FactoryException ex ) {
+                        log.error( ex );
+                    }
+                } else {
+                    t = (Throwable) args[i];
+                }
+            }
+            if( t != null ) {
+                getLog().error( buf.toString(), t );
+            } else {
+                getLog().error( buf.toString() );
+            }
         }
         ++errorCount;
         return false;
@@ -1338,11 +1350,19 @@ public abstract class AbstractTest
     protected static int errorCount = 0;
 
     /**
+     * The default DumperFactory to use.
+     */
+    public static final DumperFactory<? extends BufferingDumper> DEFAULT_DUMPER_FACTORY
+            = ToStringDumperFactory.create();
+
+    /**
      * Our local subclass of ScheduledThreadPoolExecutor.
      */
     static class MyScheduledThreadPoolExecutor
             extends
                 ScheduledThreadPoolExecutor
+            implements
+                CanBeDumped
     {
         /**
          * Constructor.
@@ -1362,15 +1382,14 @@ public abstract class AbstractTest
         }
 
         /**
-         * Convert to String representation, for debugging only.
+         * Dump this object.
          *
-         * @return String representation
+         * @param d the Dumper to dump to
          */
-        @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "name"
                     },

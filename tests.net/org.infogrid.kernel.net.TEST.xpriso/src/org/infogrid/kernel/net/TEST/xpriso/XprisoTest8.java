@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -231,7 +231,7 @@ public class XprisoTest8
             obj2_mb2.setWillGiveUpLock( true );
 
         } catch( Exception ex ) {
-            reportError( "cannot set giveUpLock( TRUE ) in mb2" );
+            reportError( "cannot set giveUpLock( TRUE ) in mb2", ex );
         } finally {
             if( tx_2 != null ) {
                 tx_2.commitTransaction();

@@ -8,14 +8,12 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.kernel.active.TEST.objectset;
 
-import java.beans.PropertyChangeListener;
-import java.util.Iterator;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.active.TraversalActiveMeshObjectSet;
@@ -308,17 +306,7 @@ public class ActiveMeshObjectSetTest2
             return true;
         }
 
-        StringBuffer buf = new StringBuffer();
-        Iterator<PropertyChangeListener> iter = obj.propertyChangeListenersIterator();
-        while( iter.hasNext() ) {
-            PropertyChangeListener current = iter.next();
-            if( buf.length() > 0 ) {
-                buf.append( "\n" );
-            }
-            buf.append( current );
-        }
-
-        reportError( msg, buf.toString() );
+        reportError( msg, obj.propertyChangeListenersIterator() );
         return false;
     }
 

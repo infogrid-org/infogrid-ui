@@ -210,7 +210,7 @@ public class PingPongTest2
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            reportError( "Message sending failed: " + msg );
+            reportError( "Message sending failed", msg );
         }
 
         /**
@@ -226,7 +226,7 @@ public class PingPongTest2
                 Throwable               t )
         {
             if( !done ) {
-                reportError( "Receiving endpoint is dead: " + msg );
+                reportError( "Receiving endpoint is dead", msg );
             }
         }
 

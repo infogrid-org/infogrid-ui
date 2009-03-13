@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,17 +18,19 @@ import java.util.ArrayList;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Default factory for LidCredentialTypes contained in a particular SaneRequest.
  */
 public class DefaultLidCredentialTypesFactory
-    extends
-        AbstractFactory<SaneRequest,LidCredentialType[],Void>
-    implements
-        LidCredentialTypesFactory
+        extends
+            AbstractFactory<SaneRequest,LidCredentialType[],Void>
+        implements
+            LidCredentialTypesFactory,
+            CanBeDumped
 {
     /**
      * Factory method.
@@ -80,15 +82,14 @@ public class DefaultLidCredentialTypesFactory
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theAvailableCredentialTypes"
                 },

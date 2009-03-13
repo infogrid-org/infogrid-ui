@@ -18,10 +18,10 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.MeshTypeUtils;
-
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Thrown if an operation requires a relationship to
@@ -30,6 +30,8 @@ import org.infogrid.util.StringHelper;
 public class RoleTypeNotBlessedException
         extends
             NotBlessedException
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -101,15 +103,14 @@ public class RoleTypeNotBlessedException
     }
 
     /**
-      * Obtain String representation, for debugging.
-      *
-      * @return String representation
-      */
-    @Override
-    public String toString()
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[]{
                     "meshObject",
                     "meshObjectIdentifier",

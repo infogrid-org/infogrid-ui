@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -41,7 +41,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -864,6 +865,8 @@ public abstract class HTTP
      * Encapsulates the response from an HTTP request.
      */
     public static class Response
+            implements
+                CanBeDumped
     {
         /**
          * Constructor.
@@ -1189,17 +1192,16 @@ public abstract class HTTP
                 return null;
             }
         }
-                
+
         /**
-         * Obtain in String form, for debugging.
+         * Dump this object.
          *
-         * @return String representation
+         * @param d the Dumper to dump to
          */
-        @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theResponseCode",
                         "theLastModified",

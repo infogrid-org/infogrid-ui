@@ -18,7 +18,8 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.PartialResultException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Thrown if something went wrong when trying to access a MeshObject. The underlying
@@ -28,7 +29,8 @@ public class MeshObjectAccessException
         extends
             AbstractLocalizedException
         implements
-            PartialResultException<MeshObject[]>
+            PartialResultException<MeshObject[]>,
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -87,15 +89,14 @@ public class MeshObjectAccessException
     }
     
     /**
-     * Convert to string form, for debugging.
+     * Dump this object.
      *
-     * @return string form of this object, for debugging
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String [] {
                     "mb",
                     "cause"

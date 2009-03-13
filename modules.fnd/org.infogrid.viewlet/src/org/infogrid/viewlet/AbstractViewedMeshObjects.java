@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,14 +18,16 @@ import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.model.traversal.TraversalSpecification;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Factors out common functionality of ViewedMeshObjects implementations.
  */
 public abstract class AbstractViewedMeshObjects
         implements
-            ViewedMeshObjects
+            ViewedMeshObjects,
+            CanBeDumped
 {
     /**
      * Constructor. Initializes to empty content. After the constructor has
@@ -152,15 +154,14 @@ public abstract class AbstractViewedMeshObjects
     }
     
     /**
-     * Convert to String, for debugging.
+     * Dump this object.
      *
-     * @return String representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String [] {
                     "subject",
                     "viewlet",

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,7 +17,8 @@ package org.infogrid.mesh;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshObjectAccessException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * This Exception is thrown if two MeshObject are supposed to become equivalent, but
@@ -26,6 +27,8 @@ import org.infogrid.util.StringHelper;
 public class EquivalentAlreadyException
         extends
             IllegalOperationTypeException
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -102,15 +105,14 @@ public class EquivalentAlreadyException
     }
 
     /**
-     * Return this object in string form, for debugging.
+     * Dump this object.
      *
-     * @return string form of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theMeshObject",
                     "theMeshObjectIdentifier",

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -83,12 +83,12 @@ public class ModelBaseTest2
                     PropertyType jPt = allPts[j];
 
                     if( iPt.getIdentifier().equals( jPt.getIdentifier() )) {
-                        reportError( "found the same PropertyType twice: " + iPt + " vs. " + jPt );
+                        reportError( "found the same PropertyType twice", iPt, jPt );
                     }
                     PropertyType ancestorJPt = jPt.getOverrideAncestor();
 
                     if( ancestorIPt.getIdentifier().equals( ancestorJPt.getIdentifier() )) {
-                        reportError( "two PropertyType have same ancestor: " + iPt + " vs. " + jPt + ", ancestor: " + ancestorIPt );
+                        reportError( "two PropertyTypes have same ancestor", iPt, jPt, ancestorIPt );
                     }
                 }
             }

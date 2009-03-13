@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -145,7 +145,7 @@ public abstract class AbstractTomcatTest
             }
             
         } catch( IOException ex ) {
-            reportError( msg + ": threw ", ex );
+            reportError( msg + ": threw", ex );
             ret = false;
         }
         return ret;
@@ -185,17 +185,7 @@ public abstract class AbstractTomcatTest
         boolean ret = true;
         Set<SaneCookie> cookies = r.getCookies();
         if( cookies.size() != cookiesRegexes.length ) {
-            StringBuilder buf = new StringBuilder();
-            buf.append( msg ).append( ": wrong number of cookies found: " ).append( cookies.size() ).append( " vs. " ).append( cookiesRegexes.length );
-            buf.append( "\n    found:" );
-            for( SaneCookie current : cookies ) {
-                buf.append( "\n        " ).append( current.getName() ).append( " => " ).append( current.getValue() );
-            }
-            buf.append( "\n    expected:" );
-            for( String[] current : cookiesRegexes ) {
-                buf.append( "\n        " ).append( current[0] ).append( " => " ).append( current[1] );
-            }
-            ret &= reportError( buf.toString() );
+            ret &= reportError( msg + ": wrong number of cookies found", cookies, cookiesRegexes );
         }
         for( String [] current : cookiesRegexes ) {
             String name      = current[0];
@@ -203,7 +193,7 @@ public abstract class AbstractTomcatTest
 
             SaneCookie cook = r.getCookie( name );
             if( cook == null ) {
-                ret &= reportError( msg + ": cookie " + name + " not found" );
+                ret &= reportError( msg + ": cookie not found", name );
             } else {
                 ret &= checkRegex( cookRegex, flags, cook.getValue(), msg + ": cookie " + name + " has wrong value" );
             }

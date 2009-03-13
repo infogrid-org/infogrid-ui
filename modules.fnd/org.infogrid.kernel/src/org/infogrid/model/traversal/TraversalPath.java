@@ -8,29 +8,29 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.model.traversal;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.WrongMeshBaseException;
 import org.infogrid.meshbase.transaction.MeshObjectPropertyChangeEvent;
 import org.infogrid.meshbase.transaction.MeshObjectRoleAddedEvent;
 import org.infogrid.meshbase.transaction.MeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
-import org.infogrid.util.FlexiblePropertyChangeListenerSet;
-import org.infogrid.util.logging.Log;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import org.infogrid.mesh.MeshObjectIdentifier;
-import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.FlexiblePropertyChangeListenerSet;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
+import org.infogrid.util.logging.Log;
 
 /**
  * <p>Represents a path of traversal from an (implied) start MeshObject,
@@ -53,7 +53,8 @@ import org.infogrid.util.StringHelper;
  */
 public class TraversalPath
         implements
-            PropertyChangeListener
+            PropertyChangeListener,
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( TraversalPath.class ); // our own, private logger
 
@@ -636,15 +637,14 @@ public class TraversalPath
     }
 
     /**
-     * Convert to String, for debugging.
+     * Dump this object.
      *
-     * @return String representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "debugName",
                     "traversedSpec",

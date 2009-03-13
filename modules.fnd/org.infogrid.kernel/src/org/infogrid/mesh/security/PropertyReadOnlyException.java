@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,7 +23,8 @@ import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.MeshTypeUtils;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * This Exception indicates that a property is read-only and could not be modified.
@@ -33,6 +34,8 @@ import org.infogrid.util.StringHelper;
 public class PropertyReadOnlyException
         extends
             NotPermittedException
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -107,15 +110,14 @@ public class PropertyReadOnlyException
     }
 
     /**
-      * Obtain String representation, for debugging.
-      *
-      * @return String representation
-      */
-    @Override
-    public String toString()
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "resolvingMeshBase",
                     "meshObject",

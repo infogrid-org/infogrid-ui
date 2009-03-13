@@ -21,7 +21,8 @@ import org.infogrid.model.primitives.MeshTypeUtils;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
   * This Exception is thrown when a PropertyValue with an incorrect DataType is
@@ -31,6 +32,8 @@ import org.infogrid.util.StringHelper;
 public class IllegalPropertyValueException
         extends
             IllegalOperationTypeException
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -105,15 +108,14 @@ public class IllegalPropertyValueException
     }
 
     /**
-      * Obtain String representation, for debugging.
-      *
-      * @return String representation
-      */
-    @Override
-    public String toString()
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "resolvingMeshBase",
                     "meshObject",

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -28,7 +28,8 @@ import org.infogrid.store.StoreValue;
 import org.infogrid.store.util.SimpleStoreValueMapper;
 import org.infogrid.store.util.StoreValueMapper;
 import org.infogrid.util.CursorIterator;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.tree.TreeFacade;
 import org.infogrid.util.tree.TreeFacadeCursorIterator;
@@ -39,6 +40,8 @@ import org.infogrid.util.tree.TreeFacadeCursorIterator;
 public class HadoopStore
         extends
             AbstractIterableStore
+        implements
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( HadoopStore.class ); // our own, private logger
 
@@ -443,15 +446,14 @@ public class HadoopStore
     }
 
     /**
-     * Convert to String, for debugging.
+     * Dump this object.
      *
-     * @return String form
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "fileSystem",
                     "subDir",

@@ -19,6 +19,8 @@ import org.infogrid.util.ArrayFacade;
 import org.infogrid.util.DelegatingMap;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -26,7 +28,8 @@ import org.infogrid.util.logging.Log;
  */
 public class SimpleStringRepresentation
         implements
-            StringRepresentation
+            StringRepresentation,
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( SimpleStringRepresentation.class ); // our own, private logger
 
@@ -293,15 +296,14 @@ public class SimpleStringRepresentation
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theName",
                     "theDelegate"

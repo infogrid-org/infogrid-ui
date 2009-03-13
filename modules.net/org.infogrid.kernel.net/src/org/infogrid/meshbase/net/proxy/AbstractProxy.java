@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,7 +22,8 @@ import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
 import org.infogrid.meshbase.net.externalized.SimpleExternalizedProxy;
 import org.infogrid.util.Factory;
 import org.infogrid.util.FlexibleListenerSet;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
@@ -32,8 +33,9 @@ import org.infogrid.util.text.StringRepresentationContext;
  * Factors out common functionality of Proxy implementations.
  */
 public abstract class AbstractProxy
-    implements
-        Proxy
+        implements
+            Proxy,
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( AbstractProxy.class ); // our own, private logger
 
@@ -241,15 +243,14 @@ public abstract class AbstractProxy
     }
 
     /**
-     * Convert to String, for debugging.
+     * Dump this object.
      *
-     * @return String form
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theMeshBase.getNetworkIdentifier()",
                     "getPartnerMeshBaseIdentifier()"

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -102,7 +102,7 @@ public class ShadowTest2
         try {
             MeshObject home3 = base.accessLocally( TEST3_URL );
 
-            reportError( "This should have thrown an exception", "returned object is " + home3 );
+            reportError( "This should have thrown an exception", home3 );
 
         } catch( NetMeshObjectAccessException ex ) {
             log.debug( "Has correctly thrown an exception", ex );
@@ -112,7 +112,7 @@ public class ShadowTest2
                 cause = cause.getCause();
             }
             if( !( cause instanceof ProbeException.EmptyDataSource )) {
-                reportError( "wrong type of exception thrown, was: " + cause, ex );
+                reportError( "wrong type of exception thrown", cause, ex );
             }
         }
         checkEquals( IteratorElementCounter.countIteratorElements( base.proxies() ), 2, "wrong number of proxies" );

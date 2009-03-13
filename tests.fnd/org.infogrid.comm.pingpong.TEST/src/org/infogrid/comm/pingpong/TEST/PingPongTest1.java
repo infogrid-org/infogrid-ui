@@ -252,7 +252,7 @@ public class PingPongTest1
                 Throwable               t )
         {
             if( !done ) {
-                reportError( "Receiving endpoint is dead: " + msg );
+                reportError( "Receiving endpoint is dead", msg );
             }
         }
 

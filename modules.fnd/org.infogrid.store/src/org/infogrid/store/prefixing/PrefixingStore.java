@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -20,7 +20,8 @@ import org.infogrid.store.Store;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
 import org.infogrid.store.StoreValue;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * This {@link Store} delegates to another <code>Store</code>, but prefixes all keys with
@@ -30,6 +31,8 @@ import org.infogrid.util.StringHelper;
 public class PrefixingStore
         extends
             AbstractStore
+        implements
+            CanBeDumped
 {
     /**
      * Factory method.
@@ -491,20 +494,21 @@ public class PrefixingStore
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                theDelegate,
+        d.dump( this,
                 new String[] {
-                    "prefixAndSeparator"
+                    "prefixAndSeparator",
+                    "delegate"
                 },
                 new Object[] {
-                    thePrefixAndSeparator
+                    thePrefixAndSeparator,
+                    theDelegate
                 });
     }
 

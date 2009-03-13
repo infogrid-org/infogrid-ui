@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -70,7 +70,7 @@ public abstract class AbstractCursorIteratorTest
 
         try {
             Object found = iter.peekNext();
-            reportError( "Found element after end: " + found );
+            reportError( "Found element after end", found );
         } catch( NoSuchElementException t ) {
             log.debug( "Correctly received exception" );
         }
@@ -96,7 +96,7 @@ public abstract class AbstractCursorIteratorTest
         
         try {
             Object found = iter.peekPrevious();
-            reportError( "Found element before beginning: " + found );
+            reportError( "Found element before beginning", found );
         } catch( NoSuchElementException t ) {
             log.debug( "Correctly received exception" );
         }

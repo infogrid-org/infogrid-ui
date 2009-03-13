@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * <p>Captures a set of instructions to resynchronize leases of specified NetMeshObjects
@@ -28,11 +29,14 @@ import org.infogrid.util.StringHelper;
  *    object must be used for canceling leases of NetMeshObjects from another Proxy.</p>
  */
 public class ResynchronizeInstructions
+        implements
+            CanBeDumped
 {
     /**
      * Factory method.
      * 
      * @param proxyIdentifier the NetMeshBaseIdentifier of the Proxy's partner NetMeshBase
+     * @return the created ResynchronizeInstructions
      */
     public static ResynchronizeInstructions create(
             NetMeshBaseIdentifier proxyIdentifier )
@@ -84,15 +88,14 @@ public class ResynchronizeInstructions
     }
     
     /**
-     * Convert to String representation, for debugging only.
-     * 
-     * @return String representation
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theProxyIdentifier",
                     "theNetMeshObjectIdentifiers"

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.Vector;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
   * Provides helper functions that deal with arrays. It cannot be instantiated.
@@ -1649,6 +1651,8 @@ public abstract class ArrayHelper
      * @param <T> the underlying type for the values
      */
     public static class Difference<T>
+            implements
+                CanBeDumped
     {
         /**
          * Constructor.
@@ -1685,15 +1689,14 @@ public abstract class ArrayHelper
         }
 
         /**
-         * Obtain String representation, for debugging.
+         * Dump this object.
          *
-         * @return String representation
+         * @param d the Dumper to dump to
          */
-        @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theAdditions",
                         "theRemovals"

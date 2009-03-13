@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 import org.infogrid.probe.xml.XmlProbe;
 import org.infogrid.probe.xml.XmlDOMProbe;
 import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Represents a directory of Probes. This enables the Probe framework to find the
@@ -144,6 +146,7 @@ public interface ProbeDirectory
      */
     public abstract static class ProbeDescriptor
         implements
+            CanBeDumped,
             Serializable
     {
         /**
@@ -332,15 +335,14 @@ public interface ProbeDirectory
         }
 
         /**
-         * For debugging.
+         * Dump this object.
          *
-         * @return this class in a string representation
+         * @param d the Dumper to dump to
          */
-        @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theDocumentTypes",
                         "theToplevelElementNamespaces",
@@ -590,15 +592,14 @@ public interface ProbeDirectory
         }
 
         /**
-         * For debugging.
+         * Dump this object.
          *
-         * @return a string representation of this class
+         * @param d the Dumper to dump to
          */
-        @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theMimeTypes",
                         "theClassName"
@@ -725,15 +726,14 @@ public interface ProbeDirectory
         }
 
         /**
-         * For debugging.
+         * Dump this object.
          *
-         * @return a string representation of this class
+         * @param d the Dumper to dump to
          */
-        @Override
-        public String toString()
+        public void dump(
+                Dumper d )
         {
-            return StringHelper.objectLogString(
-                    this,
+            d.dump( this,
                     new String[] {
                         "theProtocols",
                         "theClassName"
@@ -863,6 +863,25 @@ public interface ProbeDirectory
         }
 
         /**
+         * Dump this object.
+         *
+         * @param d the Dumper to dump to
+         */
+        public void dump(
+                Dumper d )
+        {
+            d.dump( this,
+                    new String[] {
+                        "theUrl",
+                        "theClassName"
+                    },
+                    new Object[] {
+                        theUrl,
+                        theClassName
+                    } );
+        }
+
+        /**
          * The url for which we define a specific Probe.
          */
         protected String theUrl;
@@ -949,6 +968,25 @@ public interface ProbeDirectory
             } else {
                 return false;
             }
+        }
+
+        /**
+         * Dump this object.
+         *
+         * @param d the Dumper to dump to
+         */
+        public void dump(
+                Dumper d )
+        {
+            d.dump( this,
+                    new String[] {
+                        "theUrlPattern",
+                        "theClassName"
+                    },
+                    new Object[] {
+                        theUrlPattern,
+                        theClassName
+                    } );
         }
 
         /**

@@ -17,7 +17,8 @@ package org.infogrid.viewlet;
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -29,7 +30,8 @@ public class NoViewletFoundException
         extends
             FactoryException
         implements
-            HasStringRepresentation
+            HasStringRepresentation,
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -68,15 +70,14 @@ public class NoViewletFoundException
     }
 
     /**
-     * For debugging.
+     * Dump this object.
      *
-     * @return String representation of this object.
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "objectsToView",
                     "moduleRegistry"

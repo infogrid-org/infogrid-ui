@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,6 +17,8 @@ package org.infogrid.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -32,6 +34,8 @@ import org.infogrid.util.logging.Log;
  * @param <R> the type of return value
  */
 public class ReturnSynchronizer<K,R>
+        implements
+            CanBeDumped
 {
     private static Log log = Log.getLogInstance( ReturnSynchronizer.class ); // our own, private logger
 
@@ -274,15 +278,14 @@ public class ReturnSynchronizer<K,R>
     }
 
     /**
-     * Convert to string, for debugging only.
+     * Dump this object.
      *
-     * @return string representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public synchronized String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "name",
                     "threadToMonitorTable",

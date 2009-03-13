@@ -19,9 +19,9 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * A ResponseTemplate that processes a JSP page with placeholders, in which the named
@@ -119,15 +119,15 @@ public class JspStructuredResponseTemplate
     }
     
     /**
-     * Convert to String form, for debugging.
+     * Dump this object.
      *
-     * @return String form
+     * @param d the Dumper to dump to
      */
     @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theRequest",
                     "theStructured",

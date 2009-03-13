@@ -8,24 +8,26 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.viewlet;
 
-import org.infogrid.mesh.MeshObject;
-import org.infogrid.model.traversal.TraversalSpecification;
-import org.infogrid.util.StringHelper;
-
 import java.util.Map;
+import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Instances of this class are being used to tell a Viewlet which MeshObjects it is supposed
  * to view, in which context, with which parameters etc.
  */
 public class MeshObjectsToView
+        implements
+            CanBeDumped
 {
     /**
      * Factory method. Used when only the subject shall be specified
@@ -178,15 +180,14 @@ public class MeshObjectsToView
     }
 
     /**
-     * For debugging.
+     * Dump this object.
      *
-     * @return debugging string
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "subject",
                     "subjectIdentifier",

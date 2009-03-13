@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -73,7 +73,7 @@ public class MeshBaseSecurityTest4
             try {
                 thirdParty.blessRelationship( right.getSource(), ownerProtectionDomain );
                 
-                reportError( "Attacker could add third party to owner's ProtectionDomain using RelationshipType " + right.getIdentifier() );
+                reportError( "Attacker could add third party to owner's ProtectionDomain using RelationshipType ", right.getIdentifier() );
             } catch( NotPermittedException ex ) {
                 // noop
             }
@@ -93,7 +93,7 @@ public class MeshBaseSecurityTest4
                 thirdParty.blessRelationship( right.getSource(), ownerProtectionDomain );
                 
             } catch( NotPermittedException ex ) {
-                reportError( "Owner could not add third party to owner's ProtectionDomain using RelationshipType " + right.getIdentifier() );
+                reportError( "Owner could not add third party to owner's ProtectionDomain using RelationshipType ", right.getIdentifier() );
             }
         }
         theAccessManager.unsetCaller();

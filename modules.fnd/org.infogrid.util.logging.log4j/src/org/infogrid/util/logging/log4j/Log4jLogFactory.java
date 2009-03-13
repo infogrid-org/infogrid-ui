@@ -8,12 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.logging.log4j;
 
+import org.infogrid.util.logging.BufferingDumper;
+import org.infogrid.util.logging.DumperFactory;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.logging.LogFactory;
 
@@ -25,15 +27,17 @@ public class Log4jLogFactory
             LogFactory
 {
     /**
-     * Create a new Log object.
+     * Obtain a Logger and specify a dumper factory instead of the default.
      *
-     * @param channelName the name of the channel
-     * @return the created Log object
+     * @param name name of the Log object that we are looking for
+     * @param dumperFactory the factory for dumpers
+     * @return the Log object
      */
     public Log create(
-            String channelName )
+            String                                   name,
+            DumperFactory<? extends BufferingDumper> dumperFactory )
     {
-        return new Log4jLog( channelName );
+        return new Log4jLog( name, dumperFactory );
     }
 
     /**

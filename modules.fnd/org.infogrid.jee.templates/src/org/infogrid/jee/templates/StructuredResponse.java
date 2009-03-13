@@ -24,8 +24,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.SaneRequestUtils;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -33,7 +34,8 @@ import org.infogrid.util.logging.Log;
  */
 public class StructuredResponse
         implements
-            HasHeaderPreferences
+            HasHeaderPreferences,
+            CanBeDumped
 {
     /**
      * Factory method.
@@ -590,15 +592,14 @@ public class StructuredResponse
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String [] {
                     "theRequestedTemplateName",
                     "theCurrentProblems",

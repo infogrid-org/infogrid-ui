@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -20,7 +20,8 @@ import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -30,7 +31,8 @@ public class ParserFriendlyExternalizedNetMeshObject
         extends
             ParserFriendlyExternalizedMeshObject
         implements
-            ExternalizedNetMeshObject
+            ExternalizedNetMeshObject,
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( ParserFriendlyExternalizedNetMeshObject.class ); // our own, private logger
 
@@ -289,15 +291,14 @@ public class ParserFriendlyExternalizedNetMeshObject
     }
 
     /**
-     * Convert to String representation, for debugging.
+     * Dump this object.
      *
-     * @return String representation
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theIdentifier",
                     "theMeshTypes",

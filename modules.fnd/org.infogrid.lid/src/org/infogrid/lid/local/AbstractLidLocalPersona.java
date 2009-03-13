@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,8 @@ package org.infogrid.lid.local;
 
 import java.util.Map;
 import org.infogrid.util.Identifier;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Collects features of LidLocalPersona that are common to many implementations.
@@ -25,7 +26,8 @@ public abstract class AbstractLidLocalPersona
         extends
             AbstractLidPersona
         implements
-            LidLocalPersona
+            LidLocalPersona,
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -53,15 +55,14 @@ public abstract class AbstractLidLocalPersona
     }
 
     /**
-     * Translate to String form, for debugging.
-     * 
-     * @return String form
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "identifier",
                     "attributes"

@@ -221,7 +221,7 @@ public class PingPongTest4
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            reportError( "Message sending failed: " + msg );
+            reportError( "Message sending failed", msg );
         }
 
         /**

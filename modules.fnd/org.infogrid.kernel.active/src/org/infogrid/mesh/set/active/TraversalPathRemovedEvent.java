@@ -8,15 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.mesh.set.active;
 
 import org.infogrid.model.traversal.TraversalPath;
-
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.Dumper;
 
 /**
   * This event indicates that a TraversalPath instance was removed to a TraversalPathSet.
@@ -72,15 +71,15 @@ public class TraversalPathRemovedEvent
     }
 
     /**
-     * Obtain string representation, for debugging.
+     * Dump this object.
      *
-     * @return a string representation of this instance
+     * @param d the Dumper to dump to
      */
     @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "removedIndex"
                 },

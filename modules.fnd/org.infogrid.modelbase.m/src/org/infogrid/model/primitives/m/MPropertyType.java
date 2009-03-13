@@ -8,15 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.model.primitives.m;
 
+import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
-
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.DataType;
@@ -25,15 +25,12 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyTypeGuard;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.PropertyValueParsingException;
-
 import org.infogrid.modelbase.InheritanceConflictException;
-
 import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
-
-import java.util.ArrayList;
 
 /**
   * Implementation of a value-holding property of an AttributableMeshObjectType.
@@ -43,7 +40,8 @@ public class MPropertyType
         extends
             MPropertyTypeOrGroup
         implements
-            PropertyType
+            PropertyType,
+            CanBeDumped
 {
     private static final Log  log              = Log.getLogInstance( MPropertyType.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
@@ -313,10 +311,11 @@ public class MPropertyType
     }
 
     /**
-      * Obtain transitive closure of PropertyTypeGuards.
-      *
-      * @return an ArrayList containing a transitive closure of PropertyTypeGuards
-      */
+     * Obtain transitive closure of PropertyTypeGuards.
+     *
+     * @return an ArrayList containing a transitive closure of PropertyTypeGuards
+     * @throws InheritanceConflictException thrown if a conflict is detected
+     */
     protected final ArrayList<PropertyTypeGuard> internalGetAllPropertyTypeGuards()
             throws
                 InheritanceConflictException
@@ -422,15 +421,14 @@ public class MPropertyType
     }
     
     /**
-     * Convert to String form, for debugging.
+     * Dump this object.
      *
-     * @return String form of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theIdentifier",
 //                    "theName",

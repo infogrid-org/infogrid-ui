@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1999-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,13 +18,11 @@ import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.IllegalPropertyValueException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
-
 import org.infogrid.meshbase.transaction.TransactionException;
-
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
-
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -34,6 +32,8 @@ import org.infogrid.util.logging.Log;
 public final class DerefPropertyType
         extends
             DerefPropertyTypeOrGroup
+        implements
+            CanBeDumped
 {
     private static final Log log = Log.getLogInstance( DerefPropertyType.class); // our own, private logger
 
@@ -166,15 +166,14 @@ public final class DerefPropertyType
     }
 
     /**
-     * Convert to string, for debugging only.
+     * Dump this object.
      *
-     * @return string representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theMeshObject",
                     "thePropertyType"

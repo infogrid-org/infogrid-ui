@@ -15,7 +15,8 @@
 package org.infogrid.model.primitives;
 
 import java.io.ObjectStreamException;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringifierException;
@@ -25,7 +26,10 @@ import org.infogrid.util.text.StringifierException;
   * a domain.
   */
 public class EnumeratedDataType
-        extends DataType
+        extends
+            DataType
+        implements
+            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -434,15 +438,14 @@ public class EnumeratedDataType
     }
 
     /**
-     * Construct a string representation of this object, for debugging.
+     * Dump this object.
      *
-     * @return string representation of this object
+     * @param d the Dumper to dump to
      */
-    @Override
-    public String toString()
+    public void dump(
+            Dumper d )
     {
-        return StringHelper.objectLogString(
-                this,
+        d.dump( this,
                 new String[] {
                     "theDomain"
                 },
