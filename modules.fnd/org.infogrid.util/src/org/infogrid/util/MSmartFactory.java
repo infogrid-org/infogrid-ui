@@ -138,8 +138,8 @@ public class MSmartFactory<K,V,A>
     public V get(
             K key )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".get( " + key + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "get", key );
         }
         synchronized( theKeyValueMap ) {
             return theKeyValueMap.get( key );
@@ -176,8 +176,8 @@ public class MSmartFactory<K,V,A>
         throws
             FactoryException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".obtainFor( " + key + ", " + argument + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "obtainFor", key, argument );
         }
 
         V ret;
@@ -221,8 +221,8 @@ public class MSmartFactory<K,V,A>
             ObjectExistsAlreadyFactoryException,
             FactoryException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".obtainNewFor( " + key + ", " + argument + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "obtainNewFor", key, argument );
         }
 
         V ret;
@@ -282,8 +282,8 @@ public class MSmartFactory<K,V,A>
             K key,
             V value )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".put( " + key + ", " + value + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "put", key, value );
         }
 
         V ret;
@@ -361,8 +361,8 @@ public class MSmartFactory<K,V,A>
             K                 key,
             Invocable<V,Void> cleanupCode )
     {    
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".remove( " + key + ", " + cleanupCode + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "remove", key, cleanupCode );
         }
 
         V ret;

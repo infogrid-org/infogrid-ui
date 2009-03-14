@@ -447,8 +447,8 @@ public final class ResourceHelper
     protected String internalGetResourceString(
             String resourceName )
     {
-        if( log != null && log.isDebugEnabled() ) {
-            log.debug( this + ".internalGetResourceString( \"" + resourceName + "\" )" );
+        if( log != null && log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "internalGetResourceString", resourceName );
         }
         String  ret   = null;
         boolean found = false;

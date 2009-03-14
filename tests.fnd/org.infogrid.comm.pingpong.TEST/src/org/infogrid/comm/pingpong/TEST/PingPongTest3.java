@@ -218,7 +218,7 @@ public class PingPongTest3
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " sent message " + msg );
+            log.traceMethodCallEntry( this, "messageSent", msg );
         }
 
         /**
@@ -231,7 +231,7 @@ public class PingPongTest3
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " enqueued message " + msg + ", to be sent is now: ", endpoint.messagesToBeSent() );
+            log.traceMethodCallEntry( this, "messageEnqueued", msg );
         }
     
         /**

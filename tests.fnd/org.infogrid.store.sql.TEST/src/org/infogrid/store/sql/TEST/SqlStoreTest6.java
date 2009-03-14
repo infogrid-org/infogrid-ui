@@ -88,7 +88,7 @@ public class SqlStoreTest6
 //        
 //        count = 0;
 //        for( StoreValue current : theSqlStore ) {
-//            log.debug( "Found " + count + ": " + current.getKey() );
+//            log.traceMethodCallEntry( "Found " + count + ": " + current.getKey() );
 //            ++count;
 //            TestData found = null;
 //            for( TestData data : firstSet ) {

@@ -161,12 +161,12 @@ public class SceneRoleDebugListener
     }
 
     /**
-     * The Scene that we help debug.
+     * The Scene that we help traceMethodCallEntry.
      */
     protected Scene theScene;
 
     /**
-     * The SceneTemplateRole that we help debug.
+     * The SceneTemplateRole that we help traceMethodCallEntry.
      */
     protected SceneTemplateRole theRole;
 

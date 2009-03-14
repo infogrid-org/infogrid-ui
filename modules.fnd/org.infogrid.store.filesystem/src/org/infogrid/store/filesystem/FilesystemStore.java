@@ -92,8 +92,8 @@ public class FilesystemStore
         theKeyMapper        = keyMapper;
         theStoreValueMapper = storeValueMapper;
         
-        if( log.isDebugEnabled() ) {
-            log.debug( "Created " + this );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "constructor" );
         }
     }
 
@@ -373,8 +373,8 @@ public class FilesystemStore
         throws
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".deleteAll()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "deleteAll" );
         }
 
         TreeFacade<File>     facade = FileTreeFacade.create( getTopDirectory() );

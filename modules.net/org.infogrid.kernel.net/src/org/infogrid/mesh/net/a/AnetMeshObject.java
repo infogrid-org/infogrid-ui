@@ -279,8 +279,8 @@ public class AnetMeshObject
         throws
             RemoteQueryTimeoutException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".tryToObtainLock()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "tryToObtainLock" );
         }
 
         Proxy p;
@@ -340,8 +340,8 @@ public class AnetMeshObject
             DoNotHaveLockException,
             RemoteQueryTimeoutException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".tryToPushLock( " + outgoingProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "tryToPushLock", outgoingProxy );
         }
 
         boolean isNewProxy = false;
@@ -498,8 +498,8 @@ public class AnetMeshObject
         throws
             RemoteQueryTimeoutException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".tryToObtainHomeReplica()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "tryToObtainHomeReplica" );
         }
 
         Proxy p;
@@ -559,8 +559,8 @@ public class AnetMeshObject
             NotHomeReplicaException,
             RemoteQueryTimeoutException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".tryToPushHomeReplica( " + outgoingProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "tryToPushHomeReplica", outgoingProxy );
         }
 
         boolean isNewProxy = false;
@@ -909,8 +909,8 @@ public class AnetMeshObject
     public boolean proxyOnlySurrenderLock(
             Proxy theProxy )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".surrenderLock( " + theProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "surrenderLock", theProxy );
         }
 
         synchronized( theIdentifier ) {
@@ -959,8 +959,8 @@ public class AnetMeshObject
     public void proxyOnlyPushLock(
             Proxy theProxy )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".pushLock( " + theProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "pushLock", theProxy );
         }
 
         synchronized( theIdentifier ) {
@@ -990,8 +990,8 @@ public class AnetMeshObject
     public boolean proxyOnlySurrenderHomeReplica(
             Proxy theProxy )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".surrenderHomeReplica( " + theProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "surrenderHomeReplica", theProxy );
         }
 
         synchronized( theIdentifier ) {
@@ -1040,8 +1040,8 @@ public class AnetMeshObject
     public void proxyOnlyPushHomeReplica(
             Proxy theProxy )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".pushHomeReplica( " + theProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "pushHomeReplica", theProxy );
         }
 
         synchronized( theIdentifier ) {
@@ -1075,8 +1075,8 @@ public class AnetMeshObject
         throws
             IllegalArgumentException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".registerReplicationTowards( " + theProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "registerReplicationTowards", theProxy );
         }
 
         synchronized( theIdentifier ) {
@@ -1109,8 +1109,8 @@ public class AnetMeshObject
     public void proxyOnlyUnregisterReplicationTowards(
             Proxy theProxy )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".unregisterReplicationTowards( " + theProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "unregisterReplicationTowards", theProxy );
         }
 
         synchronized( theIdentifier ) {
@@ -1480,8 +1480,8 @@ public class AnetMeshObject
     public void proxyInternalMakeReplicaFrom(
             Proxy theProxy )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".makeReplicaFrom( " + theProxy + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "makeReplicaFrom", theProxy );
         }
 
         synchronized( theIdentifier ) {

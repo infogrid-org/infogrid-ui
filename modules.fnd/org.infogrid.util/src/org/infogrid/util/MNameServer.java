@@ -119,8 +119,8 @@ public class MNameServer<K,V>
             V value )
     {
         // Default implementation
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".reverseGet( " + value + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "reverseGet", value );
         }
         ArrayList<K> ret = new ArrayList<K>();
 
@@ -158,8 +158,8 @@ public class MNameServer<K,V>
             K key,
             V value )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".put( " + key + ", " + value + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "put", key, value );
         }
         synchronized( this ) {
             return theLocalMappings.put( key, value );
@@ -311,7 +311,7 @@ public class MNameServer<K,V>
     /**
      * The set of local mappings.
      */
-    protected HashMap<K,V> theLocalMappings = new HashMap<K,V>();
+    protected final HashMap<K,V> theLocalMappings = new HashMap<K,V>();
     
     /**
      * The list of delegate NameServers, in sequence.

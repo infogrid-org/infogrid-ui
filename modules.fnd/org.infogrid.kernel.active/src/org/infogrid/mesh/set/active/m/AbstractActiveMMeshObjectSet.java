@@ -249,8 +249,8 @@ public abstract class AbstractActiveMMeshObjectSet
     public final synchronized void addDirectActiveMeshObjectSetListener(
             ActiveMeshObjectSetListener newListener )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".addDirectActiveMeshObjectSetListener( " + newListener + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "addDirectActiveMeshObjectSetListener", newListener );
         }
 
         theSetListeners.addDirect( newListener );
@@ -267,8 +267,8 @@ public abstract class AbstractActiveMMeshObjectSet
     public final synchronized void addSoftActiveMeshObjectSetListener(
             ActiveMeshObjectSetListener newListener )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".addSoftActiveMeshObjectSetListener( " + newListener + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "addSoftActiveMeshObjectSetListener", newListener );
         }
 
         theSetListeners.addSoft( newListener );
@@ -284,8 +284,8 @@ public abstract class AbstractActiveMMeshObjectSet
     public final synchronized void addWeakActiveMeshObjectSetListener(
             ActiveMeshObjectSetListener newListener )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".addWeakActiveMeshObjectSetListener( " + newListener + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "addWeakActiveMeshObjectSetListener", newListener );
         }
 
         theSetListeners.addWeak( newListener );
@@ -302,8 +302,8 @@ public abstract class AbstractActiveMMeshObjectSet
     public final synchronized void removeActiveMeshObjectSetListener(
             ActiveMeshObjectSetListener oldListener)
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".removeActiveMeshObjectSetListener( " + oldListener + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "removeActiveMeshObjectSetListener", oldListener );
         }
 
         theSetListeners.remove( oldListener );

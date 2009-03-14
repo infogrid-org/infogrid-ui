@@ -19,9 +19,7 @@ import org.infogrid.mesh.set.active.ActiveTraversalPathSetListener;
 import org.infogrid.mesh.set.active.TraversalPathAddedEvent;
 import org.infogrid.mesh.set.active.TraversalPathRemovedEvent;
 import org.infogrid.mesh.set.active.OrderedTraversalPathSetReorderedEvent;
-
 import org.infogrid.model.traversal.TraversalPath;
-
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
 
@@ -64,8 +62,8 @@ public class MirrorActiveMTraversalPathSet
      */
     protected void breakpointHook()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".breakpointHook()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "breakpointHook" );
         }
     }
 

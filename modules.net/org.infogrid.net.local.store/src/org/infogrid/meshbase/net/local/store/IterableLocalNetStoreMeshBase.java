@@ -680,7 +680,7 @@ public class IterableLocalNetStoreMeshBase
 //        ret.initializeHomeObject();
 //       
 //        if( log.isDebugEnabled() ) {
-//            log.debug( "created " + ret );
+//            log.traceMethodCallEntry( "created " + ret );
 //        }
 //        return ret;
 //    }

@@ -35,7 +35,31 @@ public class ToStringDumperFactory<K>
      */
     public static <K> ToStringDumperFactory<K> create()
     {
-        return new ToStringDumperFactory<K>();
+        return new ToStringDumperFactory<K>( ToStringDumper.DEFAULT_MAXLEVEL );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param maxLevel the number of object levels to dump
+     * @return the created ToStringDumperFactory
+     * @param <K> the key for the factory
+     */
+    public static <K> ToStringDumperFactory<K> create(
+            int maxLevel )
+    {
+        return new ToStringDumperFactory<K>( maxLevel );
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param maxLevel the number of object levels to dump
+     */
+    protected ToStringDumperFactory(
+            int maxLevel )
+    {
+        theMaxLevel = maxLevel;
     }
 
     /**
@@ -49,6 +73,11 @@ public class ToStringDumperFactory<K>
             Object key,
             Void   argument )
     {
-        return ToStringDumper.create();
+        return ToStringDumper.create( theMaxLevel );
     }
+
+    /**
+     * The maximum number of object levels to dump.
+     */
+    protected int theMaxLevel;
 }

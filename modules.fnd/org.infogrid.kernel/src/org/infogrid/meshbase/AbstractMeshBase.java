@@ -450,8 +450,8 @@ public abstract class AbstractMeshBase
          throws
              IsDeadException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".die()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "die" );
         }
         if( theCurrentTransaction != null ) {
             throw new IllegalStateException( "Transaction currently active: " + theCurrentTransaction );
@@ -594,8 +594,8 @@ public abstract class AbstractMeshBase
         throws
             TransactionAsapTimeoutException
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".createTransactionAsap()" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "createTransactionAsap" );
         }
 
         Transaction existingTransaction = null;
@@ -637,8 +637,8 @@ public abstract class AbstractMeshBase
         throws
             TransactionActiveAlreadyException
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".createTransactionNow()" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "createTransactionNow" );
         }
 
         Transaction ret;
@@ -669,8 +669,8 @@ public abstract class AbstractMeshBase
         throws
             TransactionAsapTimeoutException
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".createTransactionAsapIfNeeded()" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "createTransactionAsapIfNeeded" );
         }
 
         Transaction existingTransaction = null;
@@ -723,8 +723,8 @@ public abstract class AbstractMeshBase
         throws
             TransactionActiveAlreadyException
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".createTransactionNowIfNeeded()" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "createTransactionNowIfNeeded" );
         }
         
         Transaction ret;
@@ -1198,8 +1198,8 @@ public abstract class AbstractMeshBase
       */
     public final void transactionCommitted()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".transactionCommitted() with " + theCurrentTransaction.getChangeSet() );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "transactionCommitted" );
         }
 
         Transaction oldTransaction;

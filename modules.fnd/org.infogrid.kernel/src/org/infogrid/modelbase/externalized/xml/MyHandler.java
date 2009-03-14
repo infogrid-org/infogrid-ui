@@ -155,8 +155,8 @@ public class MyHandler
         throws
             SAXException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".startElement( " + namespaceURI + ", " + localName + ", " + qName + " ...)" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "startElement", namespaceURI, localName, qName );
         }
         
         theCharacters = null;
@@ -449,8 +449,8 @@ public class MyHandler
         throws
             SAXException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".endElement( " + namespaceURI + ", " + localName + ", " + qName + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "endElement", namespaceURI, localName, qName );
         }
         try {
             int token = XmlModelTokens.getTokenFromKeyword( namespaceURI, qName );

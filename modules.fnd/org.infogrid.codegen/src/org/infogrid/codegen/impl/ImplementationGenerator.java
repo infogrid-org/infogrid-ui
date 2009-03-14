@@ -420,8 +420,8 @@ public class ImplementationGenerator
             outStream.println();
             outStream.println( "    {" );
 
-            outStream.println( "        if( log.isDebugEnabled() ) {" );
-            outStream.println( "            log.debug( this + \".set" + propertyTypeName + "( \" + newValue + \" )\" );" );
+            outStream.println( "        if( log.isTraceCallEnabled() ) {" );
+            outStream.println( "            log.traceMethodCallEntry( this, \"set" + propertyTypeName + "\", newValue );" );
             outStream.println( "        }" );
             outStream.println();
 

@@ -235,7 +235,7 @@ public class ProbeTest7
     @Override
     public void cleanup()
     {
-        log.debug( this + ".cleanup()" );
+        log.traceMethodCallEntry( this, "cleanup" );
         
         if( theMeshBase != null ) {
             theMeshBase.die();

@@ -8,13 +8,11 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util;
-
-import org.infogrid.util.logging.Log;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -26,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.infogrid.util.logging.Log;
 
 /**
  * This class is basically the opposite of the JDK's <code>java.util.WeakHashMap</code>. While
@@ -153,8 +152,8 @@ public abstract class SwappingHashMap<K,V>
     protected V loadValueFromStorage(
             Object key )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".loadValueFromStorage( " + key + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "loadValueFromStorage", key );
         }
         return null; // on this level
     }
@@ -273,8 +272,8 @@ public abstract class SwappingHashMap<K,V>
             K key,
             V newValue )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".saveValueToStorage( " + key + ", " + newValue + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "saveValueToStorage", key, newValue );
         }
         // no op on this level
     }
@@ -316,8 +315,8 @@ public abstract class SwappingHashMap<K,V>
     protected void removeValueFromStorage(
             Object key )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".removeValueFromStorage( " + key + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "removeValueFromStorage", key );
         }
         // no op on this level.
     }
@@ -370,8 +369,8 @@ public abstract class SwappingHashMap<K,V>
     protected void clearStorage()
     {
         // no op on this level
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".clearStorage()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "clearStorage" );
         }
     }
 

@@ -163,8 +163,8 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
         the_Delegate.setPropertyValue( LASTPROBERUN, TimeStampValue.now() );
         the_Delegate.setPropertyValue( NEXTPROBERUN, null ); // never again
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".performedSuccessfulRunNoChange() changing ProbeRunCounter to " + counter + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "performedSuccessfulRunNoChange" );
         }
     }
          ]]></implementsMethod>
@@ -191,8 +191,8 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
         the_Delegate.setPropertyValue( LASTPROBERUN, TimeStampValue.now() );
         the_Delegate.setPropertyValue( NEXTPROBERUN, null ); // never again
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".performedSuccessfulRunWithChange( changing ProbeRunCounter to " + counter + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "performedSuccessfulRunWithChange" );
         }
      }
          ]]></implementsMethod>
@@ -221,8 +221,8 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
         the_Delegate.setPropertyValue( LASTPROBERUN, TimeStampValue.now() );
         the_Delegate.setPropertyValue( NEXTPROBERUN, null ); // never again
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".performedUnsuccessfulRun( changing ProbeRunCounter to " + counter + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "performedUnsuccessfulRun" );
         }
     }
          ]]></implementsMethod>
@@ -268,8 +268,8 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
         long theDelay = ((IntegerValue) the_Delegate.getPropertyValue( DELAY )).value();
         the_Delegate.setPropertyValue( NEXTPROBERUN, TimeStampValue.nowWithOffset( theDelay ));
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".performedSuccessfulRunNoChange( changing ProbeRunCounter to " + counter + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "performedSuccessfulRunNoChange" );
         }
     }
          ]]></implementsMethod>
@@ -299,8 +299,8 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
         long theDelay = ((IntegerValue) the_Delegate.getPropertyValue( DELAY )).value();
         the_Delegate.setPropertyValue( NEXTPROBERUN, TimeStampValue.nowWithOffset( theDelay ));
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".performedSuccessfulRunWithChange( changing ProbeRunCounter to " + counter + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "performedSuccessfulRunWithChange" );
         }
     }
          ]]></implementsMethod>
@@ -332,8 +332,8 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
         long theDelay = ((IntegerValue) the_Delegate.getPropertyValue( DELAY )).value();
         the_Delegate.setPropertyValue( NEXTPROBERUN, TimeStampValue.nowWithOffset( theDelay ));
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".performedUnsuccessfulRun( changing ProbeRunCounter to " + counter + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "performedUnsuccessfulRun" );
         }
     }
          ]]></implementsMethod>
@@ -402,8 +402,8 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
         the_Delegate.setPropertyValue( LASTPROBERUN, TimeStampValue.now() );
         the_Delegate.setPropertyValue( NEXTPROBERUN, TimeStampValue.nowWithOffset( newDelay ));
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".performedSuccessfulRunNoChange( changing ProbeRunCounter to " + counter + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "performedSuccessfulRunNoChange" );
         }
     }
          ]]></implementsMethod>
@@ -433,8 +433,8 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
         the_Delegate.setPropertyValue( LASTPROBERUN, TimeStampValue.now() );
         the_Delegate.setPropertyValue( NEXTPROBERUN, TimeStampValue.nowWithOffset( ((IntegerValue)theFallbackDelay).value() ));
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".performedSuccessfulRunWithChange( changing ProbeRunCounter to " + counter + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "performedSuccessfulRunWithChange" );
         }
     }
          ]]></implementsMethod>

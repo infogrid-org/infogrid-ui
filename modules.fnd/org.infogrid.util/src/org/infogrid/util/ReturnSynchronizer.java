@@ -65,8 +65,8 @@ public class ReturnSynchronizer<K,R>
      */
     public synchronized Object getSyncObject()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".getSyncObject()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "getSyncObject" );
         }
         Thread threadToWait = Thread.currentThread();
 
@@ -87,8 +87,8 @@ public class ReturnSynchronizer<K,R>
     public synchronized Object addOpenQuery(
             K keyForQuery )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".addOpenQuery( " + keyForQuery + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "addOpenQuery", keyForQuery );
         }
         Thread threadToWait = Thread.currentThread();
 
@@ -124,8 +124,8 @@ public class ReturnSynchronizer<K,R>
             K keyForQuery,
             R result )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".queryHasCompleted( " + keyForQuery + ", " + result + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "queryHasCompleted", keyForQuery, result );
         }
         CS [] monitors;
 
@@ -174,8 +174,8 @@ public class ReturnSynchronizer<K,R>
         throws
             QueryIncompleteException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".takeResultFor( " + keyForQuery + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "takeResultFor", keyForQuery );
         }
         Thread t = Thread.currentThread();
 
@@ -250,8 +250,8 @@ public class ReturnSynchronizer<K,R>
         throws
             InterruptedException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".join( " + timeout + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "join", timeout );
         }
 
         Thread t = Thread.currentThread();

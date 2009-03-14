@@ -192,8 +192,8 @@ public class WaitForResponseEndpoint<T extends CarriesInvocationId>
     {
         long responseId = msg.getResponseId();
         
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".messageReceived( " + msg + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "messageReceived", msg );
         }
 
         Object syncObject;

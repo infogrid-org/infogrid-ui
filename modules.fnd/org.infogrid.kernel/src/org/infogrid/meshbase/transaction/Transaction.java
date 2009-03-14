@@ -48,8 +48,8 @@ public abstract class Transaction
 
         status = Status.TRANSACTION_STARTED;
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "created " + this );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "constructor" );
         }
     }
 
@@ -59,8 +59,8 @@ public abstract class Transaction
       */
     public synchronized void commitTransaction()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".commitTransaction()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "commitTransaction" );
         }
 
         try {

@@ -326,8 +326,8 @@ public abstract class TraversalActiveMMeshObjectSet
 
             setInitialContent( initialContent );
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "created " + this );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "constructor" );
             }
         }
 
@@ -340,8 +340,8 @@ public abstract class TraversalActiveMMeshObjectSet
         public void propertyChange(
                 PropertyChangeEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".propertyChange( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "propertyChange", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -485,8 +485,8 @@ public abstract class TraversalActiveMMeshObjectSet
 
             setInitialContent( initialContent );
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "created " + this );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "constructor" );
             }
         }
 
@@ -509,8 +509,8 @@ public abstract class TraversalActiveMMeshObjectSet
         public void propertyChange(
                 PropertyChangeEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".propertyChange( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "propertyChange", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -545,8 +545,8 @@ public abstract class TraversalActiveMMeshObjectSet
         public void meshObjectAdded(
                 MeshObjectAddedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".meshObjectAdded( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "meshObjectAdded", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -568,8 +568,8 @@ public abstract class TraversalActiveMMeshObjectSet
         public void meshObjectRemoved(
                 MeshObjectRemovedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".meshObjectRemoved( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "meshObjectRemoved", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -895,8 +895,8 @@ public abstract class TraversalActiveMMeshObjectSet
 
             setInitialContent( initialContent, initialContentCounters );
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "created " + this );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "constructor" );
             }
         }
 
@@ -918,8 +918,8 @@ public abstract class TraversalActiveMMeshObjectSet
         public void meshObjectAdded(
                 MeshObjectAddedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".meshObjectAdded( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "meshObjectAdded", event );
             }
             
             if( haveReceivedEventBefore( event )) {
@@ -937,8 +937,8 @@ public abstract class TraversalActiveMMeshObjectSet
         public void meshObjectRemoved(
                 MeshObjectRemovedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".meshObjectRemoved( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "meshObjectRemoved", event );
             }
 
             if( haveReceivedEventBefore( event )) {

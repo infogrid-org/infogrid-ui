@@ -263,7 +263,7 @@ public class MPingPongMessageEndpoint<T>
             throw new IllegalStateException( this + " is dead" );
         }
         if( log.isDebugEnabled() ) {
-            log.debug( this + ".enqueueMessageForSend( " + msg + " )" );
+            log.traceMethodCallEntry( this, "enqueueMessageForSend", msg );
         }
 
         synchronized( theMessagesToBeSent ) {

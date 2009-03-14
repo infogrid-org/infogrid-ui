@@ -33,7 +33,7 @@ import org.infogrid.util.text.StringRepresentationContext;
   *       into your class,<br>
   *       where "<code>&lt;myClass&gt;</code>" is your class </li>
   *  <li> use the logger, eg "<code>log.warn("this is a warning"); <BR>
-  *       log.debug( "Finished parsing file: " + file.getName() );</code>"</li>
+  *       log.traceMethodCallEntry( "Finished parsing file: " + file.getName() );</code>"</li>
   * </ol>
   * <p>Unlike in previous versions, this class now defaults to basic logging-to-System.err
   * instead of logging to log4j.</p>
@@ -78,6 +78,13 @@ public abstract class Log
             logStacktraceOnDebug = true;
         } else {
             logStacktraceOnDebug = false;
+        }
+
+        val = newProperties.getProperty( "StacktraceOnTraceCall" ); // default is no
+        if( val != null && ( val.startsWith( "y" ) || val.startsWith( "Y" ) || val.startsWith( "T" ) || val.startsWith( "t" )) ) {
+            logStacktraceOnTraceCall = true;
+        } else {
+            logStacktraceOnTraceCall = false;
         }
     }
 
@@ -213,84 +220,14 @@ public abstract class Log
             Throwable t );
 
     /**
-     * The method to log a fatal error. This may be overridden by subclasses.
+     * The method to log a traceCall message. This must be implemented by subclasses.
      *
-     * @param msg    the message to log
-     * @param toDump an Object to dump, if any
-     * @param t      the Throwable to log. This may be null.
+     * @param msg the message to log
+     * @param t   the Throwable to log. This may be null.
      */
-    protected void logFatal(
+    protected abstract void logTraceCall(
             String    msg,
-            Object    toDump,
-            Throwable t )
-    {
-        String newMessage = createCompoundMessage( msg, toDump );
-        logFatal( newMessage, t );
-    }
-
-    /**
-     * The method to log an error. This may be overridden by subclasses.
-     *
-     * @param msg    the message to log
-     * @param toDump an Object to dump, if any
-     * @param t      the Throwable to log. This may be null.
-     */
-    protected void logError(
-            String    msg,
-            Object    toDump,
-            Throwable t )
-    {
-        String newMessage = createCompoundMessage( msg, toDump );
-        logError( newMessage, t );
-    }
-
-    /**
-     * The method to log a warning. This may be overridden by subclasses.
-     *
-     * @param msg    the message to log
-     * @param toDump an Object to dump, if any
-     * @param t      the Throwable to log. This may be null.
-     */
-    protected void logWarn(
-            String    msg,
-            Object    toDump,
-            Throwable t )
-    {
-        String newMessage = createCompoundMessage( msg, toDump );
-        logWarn( newMessage, t );
-    }
-
-    /**
-     * The method to log an informational message. This may be overridden by subclasses.
-     *
-     * @param msg    the message to log
-     * @param toDump an Object to dump, if any
-     * @param t      the Throwable to log. This may be null.
-     */
-    protected void logInfo(
-            String    msg,
-            Object    toDump,
-            Throwable t )
-    {
-        String newMessage = createCompoundMessage( msg, toDump );
-        logInfo( newMessage, t );
-    }
-
-    /**
-     * The method to log a debug message. This may be overridden by subclasses.
-     *
-     * @param msg    the message to log
-     * @param toDump an Object to dump, if any
-     * @param t      the Throwable to log. This may be null.
-     */
-    protected void logDebug(
-            String    msg,
-            Object    toDump,
-            Throwable t )
-    {
-        String newMessage = createCompoundMessage( msg, toDump );
-        logDebug( newMessage, t );
-    }
+            Throwable t );
 
     /**
      * Determine whether logging to the info channel is enabled.
@@ -307,332 +244,210 @@ public abstract class Log
     public abstract boolean isDebugEnabled();
 
     /**
-     * If <code>assertion</code> parameter is <code>false</code>, then
-     * logs <code>msg</code> as an error.
+     * Determine whether logging to the trace channel is enabled.
      *
-     * @param assertion the assertion that is made
-     * @param msg       the message to log if <code>assertion</code> is false
+     * @return true if the trace channel is enabled
+     */
+    public abstract boolean isTraceCallEnabled();
+
+    /**
+     * If the <code>obj</code> parameter is <code>null</code>, or
+     * if the <code>obj</code> is a boolean that is false, then
+     * logs <code>args</code> as an error.
+     *
+     * @param obj the obj to check for
+     * @param args the argument list
      */
     public final void assertLog(
-            boolean assertion,
-            String  msg )
+            Object    obj,
+            Object... args )
     {
-        if( !assertion ) {
-            logError( msg, null, null );
+        if( obj == null ) {
+            error( "Assertion failed: object null", args );
+        } else if( obj instanceof Boolean && !((Boolean)obj).booleanValue() ) {
+            error( "Assertion failed: flag is false", args );
         }
     }
 
     /**
-     * If <code>assertion</code> parameter is <code>false</code>, then
-     * logs <code>msg</code> as an error.
+     * This logs a fatal error.
      *
-     * @param assertion the assertion that is made
-     * @param msg       the message to log if <code>assertion</code> is false
-     * @param t         the Throwable to log if <code>assertion</code> is false
-     */
-    public final void assertLog(
-            boolean   assertion,
-            String    msg,
-            Throwable t )
-    {
-        if( !assertion ) {
-            logError( msg, null, t );
-        }
-    }
-
-    /**
-     * If <code>assertion</code> parameter is <code>null</code>, then
-     * logs <code>msg</code> as an error.
-     *
-     * @param assertion the assertion that is made
-     * @param msg       the message to log if <code>assertion</code> is null
-     */
-    public final void assertLog(
-            Object assertion,
-            String msg )
-    {
-        if( assertion == null ) {
-            logError( msg, null, null );
-        }
-    }
-
-    /**
-     * If <code>assertion</code> parameter is <code>null</code>, then
-     * logs <code>msg</code> as an error.
-     *
-     * @param assertion the assertion that we make
-     * @param msg       the message to log if <code>assertion</code> is null
-     * @param t         the Throwable to log if <code>assertion</code> is false
-     */
-    public final void assertLog(
-            Object    assertion,
-            String    msg,
-            Throwable t )
-    {
-        if( assertion == null ) {
-            logError( msg, null, t );
-        }
-    }
-
-    /**
-     * This logs a fatal error. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the error Object
+     * @param args the argument list
      */
     public final void fatal(
-            Object message )
+            Object... args )
     {
-        fatal( message, null );
+        String    message = determineMessage(   true, args );
+        Throwable t       = determineThrowable( true, args );
+
+        logFatal( message, t );
     }
 
     /**
-     * This logs a fatal error. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
+     * This logs an error.
      *
-     * @param message the error Object
-     * @param toDump  the Object to dump, if any
-     */
-    public final void fatal(
-            Object    message,
-            Object    toDump )
-    {
-        if( message instanceof Throwable ) {
-            fatal( message, toDump, (Throwable) message );
-        } else {
-            fatal( message, toDump, null );
-        }
-    }
-
-    /**
-     * This logs a fatal error. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the error Object
-     * @param toDump  an Object to dump, if any
-     * @param t       the Throwable to log
-     */
-    public final void fatal(
-            Object    message,
-            Object    toDump,
-            Throwable t )
-    {
-        if( t != null ) {
-            logFatal( String.valueOf( message ), toDump, t );
-        } else if( logStacktraceOnError ) {
-            logFatal( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
-        } else {
-            logFatal( String.valueOf( message ), toDump, null );
-        }
-    }
-
-    /**
-     * This logs an error. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the error Object
+     * @param args the argument list
      */
     public final void error(
-            Object message )
+            Object... args )
     {
-        error( message, null );
+        String    message = determineMessage(   logStacktraceOnError, args );
+        Throwable t       = determineThrowable( logStacktraceOnError, args );
+
+        logError( message, t );
     }
 
     /**
-     * This logs an error. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
+     * This logs a warning.
      *
-     * @param message the error Object
-     * @param toDump  an Object to dump, if any
-     */
-    public final void error(
-            Object    message,
-            Object    toDump )
-    {
-        if( message instanceof Throwable ) {
-            error( "Throwable", toDump, (Throwable) message );
-        } else {
-            error( message, toDump, null );
-        }
-    }
-
-    /**
-     * This logs an error. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the error Object
-     * @param toDump  an Object to dump, if any
-     * @param t       the Throwable to log
-     */
-    public final void error(
-            Object    message,
-            Object    toDump,
-            Throwable t )
-    {
-        if( t != null ) {
-            logError( String.valueOf( message ), toDump, t );
-        } else if( logStacktraceOnError ) {
-            logError( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
-        } else {
-            logError( String.valueOf( message ), toDump, null );
-        }
-    }
-
-    /**
-     * This logs a warning. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the warning Object
+     * @param args the argument list
      */
     public final void warn(
-            Object message )
+            Object... args )
     {
-        warn( message, null );
+        String    message = determineMessage(   logStacktraceOnWarn, args );
+        Throwable t       = determineThrowable( logStacktraceOnWarn, args );
+
+        logWarn( message, t );
     }
 
     /**
-     * This logs a warning. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
+     * This logs an info message.
      *
-     * @param message the error Object
-     * @param toDump  an Object to dump, if any
-     */
-    public final void warn(
-            Object    message,
-            Object    toDump )
-    {
-        if( message instanceof Throwable ) {
-            warn( message, toDump, (Throwable) message );
-        } else {
-            warn( message, toDump, null );
-        }
-    }
-
-    /**
-     * This logs a warning. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the error Object
-     * @param toDump  an Object to dump, if any
-     * @param t       the Throwable to log
-     */
-    public final void warn(
-            Object    message,
-            Object    toDump,
-            Throwable t )
-    {
-        if( t != null ) {
-            logWarn( String.valueOf( message ), toDump, t );
-        } else if( logStacktraceOnWarn ) {
-            logWarn( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
-        } else {
-            logWarn( String.valueOf( message ), toDump, null );
-        }
-    }
-
-    /**
-     * This logs an info message. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the info Object
+     * @param args the argument list
      */
     public final void info(
-            Object message )
+            Object... args )
     {
-        info( message, null );
+        String    message = determineMessage(   logStacktraceOnInfo, args );
+        Throwable t       = determineThrowable( logStacktraceOnInfo, args );
+
+        logWarn( message, t );
     }
 
     /**
-     * This logs an info message. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
+     * This logs a debug message.
      *
-     * @param message the error Object
-     * @param toDump  an Object to dump, if any
-     */
-    public final void info(
-            Object    message,
-            Object    toDump )
-    {
-        if( message instanceof Throwable ) {
-            info( message, toDump, (Throwable) message );
-        } else {
-            info( message, toDump, null );
-        }
-    }
-
-    /**
-     * This logs an info message. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the error Object
-     * @param toDump  an Object to dump, if any
-     * @param t       the Throwable to log
-     */
-    public final void info(
-            Object    message,
-            Object    toDump,
-            Throwable t )
-    {
-        if( t != null ) {
-            logInfo( String.valueOf( message ), toDump, t );
-        } else if( logStacktraceOnInfo ) {
-            logInfo( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
-        } else {
-            logInfo( String.valueOf( message ), toDump, null );
-        }
-    }
-
-    /**
-     * This logs a debug message. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the info Object
+     * @param args the argument list
      */
     public final void debug(
-            Object message )
+            Object... args )
     {
-        debug( message, null );
+        String    message = determineMessage(   logStacktraceOnDebug, args );
+        Throwable t       = determineThrowable( logStacktraceOnDebug, args );
+
+        logDebug( message, t );
     }
 
     /**
-     * This logs a debug message. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
+     * Logs a trace message that represents a method invocation.
      *
-     * @param message the error Object
-     * @param toDump  an Object to dump, if any
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param args the arguments to the method call
      */
-    public final void debug(
-            Object    message,
-            Object    toDump )
+    public final void traceMethodCallEntry(
+            Object     subject,
+            String     method,
+            Object ... args )
     {
-        if( message instanceof Throwable ) {
-            debug( message, toDump, (Throwable) message );
+        String    message = determineMessage(   logStacktraceOnTraceCall, args );
+        Throwable t       = determineThrowable( logStacktraceOnTraceCall, args );
+
+        logTraceCall( subject + method + " entered: " + message, t );
+    }
+
+    /**
+     * Logs a trace message that represents a static method invocation.
+     *
+     * @param subject the Class on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param args the arguments to the method call
+     */
+    public final void traceMethodCallEntry(
+            Class      subject,
+            String     method,
+            Object ... args )
+    {
+        String    message = determineMessage(   logStacktraceOnTraceCall, args );
+        Throwable t       = determineThrowable( logStacktraceOnTraceCall, args );
+
+        logTraceCall( subject + method + " entered: " + message, t );
+    }
+
+    /**
+     * Logs a trace message that represents a constructor invocation.
+     *
+     * @param subject the instance that was created by the constructor
+     * @param args the arguments to the method call
+     */
+    public final void traceConstructor(
+            Object     subject,
+            Object ... args )
+    {
+        String    message = determineMessage(   logStacktraceOnTraceCall, args );
+        Throwable t       = determineThrowable( logStacktraceOnTraceCall, args );
+
+        logTraceCall( subject + " constructed: " + message, t );
+    }
+
+    /**
+     * Given an argument list, determine the message.
+     * 
+     * @param logStacktrace log the tracktrace even if no Throwable is given in the argument list
+     * @param args the argument list
+     * @return the message, if any
+     */
+    protected String determineMessage(
+            boolean   logStacktrace,
+            Object... args )
+    {
+        try {
+            BufferingDumper dumper = theDumperFactory.obtainFor( this );
+            if( dumper == null ) {
+                return "Cannot find Dumper";
+            }
+            if( args != null && args.length > 0 ) {
+                for( Object arg : args ) {
+                    dumper.dump( arg );
+                }
+            } else {
+                return "No argument to call";
+            }
+            return dumper.getBuffer();
+
+        } catch( FactoryException ex ) {
+            error( ex );
+            return "Cannot create Dumper";
+        }
+    }
+
+    /**
+     * Given an argument list, determine the Throwable to log.
+     *
+     * @param logStacktrace log the tracktrace even if no Throwable is given in the argument list
+     * @param args the argument list
+     * @return the Throwable, if any
+     */
+    protected Throwable determineThrowable(
+            boolean   logStacktrace,
+            Object... args )
+    {
+        Object lastArgument;
+        if( args != null && args.length > 0 ) {
+            lastArgument= args[ args.length-1 ];
         } else {
-            debug( message, toDump, null );
+            lastArgument = null;
         }
+        if( lastArgument instanceof Throwable ) {
+            return (Throwable) lastArgument;
+        }
+        if( logStacktrace ) {
+            return new Exception( "Logging marker" );
+        }
+        return null;
     }
 
-    /**
-     * This logs a debug message. The behavior of this method is slightly different depending
-     * on the actual Class of the message.
-     *
-     * @param message the debug Object
-     * @param toDump  an Object to dump, if any
-     * @param t       the Throwable to log
-     */
-    public final void debug(
-            Object    message,
-            Object    toDump,
-            Throwable t )
-    {
-        if( t != null ) {
-            logDebug( String.valueOf( message ), toDump, t );
-        } else if( logStacktraceOnDebug ) {
-            logDebug( String.valueOf( message ), toDump, new Exception( "Logging marker" ) );
-        } else { 
-            logDebug( String.valueOf( message ), toDump, null );
-        }
-    }
 
     /**
      * This logs a localized fatal user error. This may also pop up a dialog. As this
@@ -749,7 +564,7 @@ public abstract class Log
             }
         }
 
-        logFatal( formattedMessage, null, t );
+        logFatal( formattedMessage, t );
 
         showMessage(
                 parentComponent,
@@ -873,7 +688,7 @@ public abstract class Log
             }
         }
 
-        logError( formattedMessage, null, t );
+        logError( formattedMessage, t );
 
         showMessage(
                 parentComponent,
@@ -998,7 +813,7 @@ public abstract class Log
             }
         }
 
-        logWarn( formattedMessage, null, t );
+        logWarn( formattedMessage, t );
 
         showMessage(
                 parentComponent,
@@ -1024,39 +839,6 @@ public abstract class Log
             String title )
     {
         theFactory.showMessage( this, parentComponent, message, title );
-    }
-
-    /**
-     * Create a compound message from a message, and an Object to dump.
-     * This may be overridden by subclasses.
-     *
-     * @param msg    the message to log
-     * @param toDump an Object to dump, if any
-     * @return the compound message
-     */
-    protected String createCompoundMessage(
-            String msg,
-            Object toDump )
-    {
-        if( toDump == null ) {
-            return msg;
-        }
-        if( theDumperFactory == null ) {
-            return msg;
-        }
-        try {
-            BufferingDumper dumper = theDumperFactory.obtainFor( this );
-            if( dumper == null ) {
-                return msg;
-            }
-            dumper.dump( toDump );
-            String append = dumper.getBuffer();
-            return msg + " - " + append;
-
-        } catch( FactoryException ex ) {
-            error( ex );
-            return msg + " - cannot create Dumper";
-        }
     }
 
     /**
@@ -1098,4 +880,9 @@ public abstract class Log
      * This specifies whether a stack trace shall be logged with every debug.
      */
     private static boolean logStacktraceOnDebug = false;
+
+    /**
+     * This specifies whether a stack trace shall be logged with every traceCall.
+     */
+    private static boolean logStacktraceOnTraceCall = false;
 }

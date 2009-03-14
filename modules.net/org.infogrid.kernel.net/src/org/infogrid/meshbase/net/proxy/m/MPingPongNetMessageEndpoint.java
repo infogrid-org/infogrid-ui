@@ -85,8 +85,8 @@ public class MPingPongNetMessageEndpoint
                 null,
                 new ArrayList<XprisoMessage>() );
     
-        if( log.isDebugEnabled() ) {
-            log.debug( "Created " + ret, new RuntimeException( "marker" ));
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( MPingPongNetMessageEndpoint.class, "create" );
         }
         return ret;
     }
@@ -143,8 +143,8 @@ public class MPingPongNetMessageEndpoint
                 messagesSentLast,
                 messagesToBeSent );
     
-        if( log.isDebugEnabled() ) {
-            log.debug( "Created " + ret, new RuntimeException( "marker" ));
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( MPingPongNetMessageEndpoint.class, "create" );
         }
         return ret;
     }

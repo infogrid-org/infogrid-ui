@@ -40,8 +40,8 @@ public abstract class AbstractAccessManager
      */
     public final MeshObject getCaller()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".getCaller()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "getCaller(" );
         }
         synchronized( theCallersOnThreads ) {
             MeshObject ret = theCallersOnThreads.get( Thread.currentThread() );
@@ -56,8 +56,8 @@ public abstract class AbstractAccessManager
      */
     public final boolean isSu()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".isSu()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "isSu" );
         }
         Integer level;
         synchronized( theSuThreads ) {
@@ -88,8 +88,8 @@ public abstract class AbstractAccessManager
         throws
             IdentityChangeException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".setCaller( " + caller + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "setCaller", caller );
         }
         synchronized( theCallersOnThreads ) {
             MeshObject ret = theCallersOnThreads.put( Thread.currentThread(), caller );
@@ -112,8 +112,8 @@ public abstract class AbstractAccessManager
         throws
             IdentityChangeException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".callerDoneOnThread()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "callerDoneOnThread" );
         }
         synchronized( theCallersOnThreads ) {
             MeshObject ret = theCallersOnThreads.remove( Thread.currentThread() );
@@ -133,8 +133,8 @@ public abstract class AbstractAccessManager
         throws
             IdentityChangeException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".sudo()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "sudo" );
         }
         Thread t = Thread.currentThread();
 
@@ -155,8 +155,8 @@ public abstract class AbstractAccessManager
      */
     public void sudone()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".sudone()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "sudone" );
         }
         Thread t = Thread.currentThread();
 

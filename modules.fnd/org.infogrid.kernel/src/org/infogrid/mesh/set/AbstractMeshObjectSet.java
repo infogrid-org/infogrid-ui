@@ -417,8 +417,8 @@ public abstract class AbstractMeshObjectSet
             TraversalSpecification theTraversalSpecification,
             boolean                considerEquivalents )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".traverse( " + theTraversalSpecification + ", " + considerEquivalents + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "traverse", theTraversalSpecification, considerEquivalents );
         }
 
         MeshObjectSet us = theFactory.createImmutableMeshObjectSet( getMeshObjects() );
@@ -623,7 +623,7 @@ public abstract class AbstractMeshObjectSet
     }
 
     /**
-     * The debug name, if any.
+     * The traceMethodCallEntry name, if any.
      */
     protected String theDebugName;
 

@@ -177,8 +177,8 @@ public abstract class StoreBackedSwappingHashMap<K,V>
             K          key,
             StoreValue storeValue )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".get( " + key + ", " + storeValue + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "get", key, storeValue );
         }
         cleanup();
         Reference<V> found = theDelegate.get( key );
@@ -209,8 +209,8 @@ public abstract class StoreBackedSwappingHashMap<K,V>
     protected void removeValueFromStorage(
             Object key )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".removeValueFromStorage( " + key + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "removeValueFromStorage", key );
         }
 
         String stringKey = theMapper.keyToString( (K) key );
@@ -272,8 +272,8 @@ public abstract class StoreBackedSwappingHashMap<K,V>
     protected V loadValueFromStorage(
             Object key )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".loadValueFromStorage( " + key + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "loadValueFromStorage", key );
         }
 
         K      realKey   = (K) key;
@@ -310,8 +310,8 @@ public abstract class StoreBackedSwappingHashMap<K,V>
             K key,
             V newValue )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".saveValueToStorage( " + key + ", " + newValue + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "saveValueToStorage", key, newValue );
         }
 
         try {

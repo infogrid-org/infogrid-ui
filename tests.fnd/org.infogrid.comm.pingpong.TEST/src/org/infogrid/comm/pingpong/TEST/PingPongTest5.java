@@ -170,7 +170,7 @@ public class PingPongTest5
                 ReceivingMessageEndpoint<String> endpoint,
                 String                           msg )
         {
-            log.debug( this + " received message " + msg );
+            log.traceMethodCallEntry( this, "messageReceived", msg );
             lastMessageReceived = msg;
             theEndpoint.enqueueMessageForSend( thePrefix + " " + msg );
             ++thePrefix;
@@ -186,7 +186,7 @@ public class PingPongTest5
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " sent message " + msg );
+            log.traceMethodCallEntry( this, "messageSent", msg );
         }
 
         /**
@@ -199,7 +199,7 @@ public class PingPongTest5
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " enqueued message " + msg );
+            log.traceMethodCallEntry( this, "messageEnqueued", msg );
         }
     
         /**

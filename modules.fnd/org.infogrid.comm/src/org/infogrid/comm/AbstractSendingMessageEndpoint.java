@@ -70,8 +70,8 @@ public abstract class AbstractSendingMessageEndpoint<T>
     public void enqueueMessageForSend(
             T msg )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".enqueueMessageForSend( " + msg + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "enqueueMessageForSend", msg );
         }
         
         synchronized( theMessagesToBeSent ) {
@@ -133,12 +133,11 @@ public abstract class AbstractSendingMessageEndpoint<T>
             TimedTask task,
             long      base )
     {
-        long actual = calculateRandomizedFuture( base );
-
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".schedule( " + task + ", " + base + " ) in " + actual + " msec" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "schedule", task, base );
         }
 
+        long actual = calculateRandomizedFuture( base );
         try {
             ScheduledFuture<?> theFuture = theExecutorService.schedule( task, actual, TimeUnit.MILLISECONDS );
             task.setFuture( theFuture );

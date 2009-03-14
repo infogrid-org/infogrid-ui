@@ -195,7 +195,7 @@ public class XprisoTest10
             NetMeshObject current = (NetMeshObject) iter.next();
 
             // if( log.isDebugEnabled() )
-            //     log.debug( "looking at " + current );
+            //     log.traceMethodCallEntry( "looking at " + current );
 
             NetMeshObject replicaCurrent = mb2.findMeshObjectByIdentifier( current.getIdentifier() );
             if( replicaCurrent == null ) {

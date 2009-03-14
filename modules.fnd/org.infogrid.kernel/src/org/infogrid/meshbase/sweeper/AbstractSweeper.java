@@ -100,8 +100,8 @@ public abstract class AbstractSweeper
     protected void deleteMeshObject(
             MeshObject toDelete )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".deleteMeshObject( " + toDelete.getIdentifier().toExternalForm() );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "deleteMeshObject", toDelete.getIdentifier() );
         }
 
         MeshBase      base   = toDelete.getMeshBase();

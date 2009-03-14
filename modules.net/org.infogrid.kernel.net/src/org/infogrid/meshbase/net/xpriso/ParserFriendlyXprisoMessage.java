@@ -59,8 +59,8 @@ public class ParserFriendlyXprisoMessage
     {
         ParserFriendlyXprisoMessage ret = new ParserFriendlyXprisoMessage( sender, receiver );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "created " + ret, new Exception( "marker" ));
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( ret, "constructor" );
         }
         return ret;
     }

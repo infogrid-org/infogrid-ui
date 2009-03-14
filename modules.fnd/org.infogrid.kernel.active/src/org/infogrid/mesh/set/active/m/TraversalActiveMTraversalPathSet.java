@@ -306,8 +306,8 @@ public abstract class TraversalActiveMTraversalPathSet
 
             startOfTraversal.addWeakPropertyChangeListener( this );
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "created " + this );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "constructor" );
             }
         }
 
@@ -320,8 +320,8 @@ public abstract class TraversalActiveMTraversalPathSet
         public void propertyChange(
                 PropertyChangeEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".propertyChange( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "propertyChange", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -484,8 +484,8 @@ public abstract class TraversalActiveMTraversalPathSet
             }
             setInitialContent( content );
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "created " + this );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "constructor" );
             }
         }
 
@@ -507,8 +507,8 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathAdded(
                 TraversalPathAddedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".traversalSetAdded( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "traversalSetAdded", event );
             }
             
             if( haveReceivedEventBefore( event )) {
@@ -534,8 +534,8 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathRemoved(
                 TraversalPathRemovedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".traversalPathRemoved( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "traversalPathRemoved", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -651,8 +651,8 @@ public abstract class TraversalActiveMTraversalPathSet
             }
             setInitialContent( content );
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "created " + this );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "constructor" );
             }
         }
 
@@ -675,8 +675,8 @@ public abstract class TraversalActiveMTraversalPathSet
         public void propertyChange(
                 PropertyChangeEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".propertyChange( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "propertyChange", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -777,8 +777,8 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathAdded(
                 TraversalPathAddedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".traversalSetAdded( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "traversalSetAdded", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -807,8 +807,8 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathRemoved(
                 TraversalPathRemovedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".traversalPathRemoved( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "traversalPathRemoved", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -940,8 +940,8 @@ public abstract class TraversalActiveMTraversalPathSet
 
             setInitialContent( content );
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "created " + this );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "constructor" );
             }
         }
 
@@ -963,8 +963,8 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathAdded(
                 TraversalPathAddedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".traversalSetAdded( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "traversalSetAdded", event );
             }
 
             if( haveReceivedEventBefore( event )) {
@@ -987,8 +987,8 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathRemoved(
                 TraversalPathRemovedEvent event )
         {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".traversalPathRemoved( " + event + " )" );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "traversalPathRemoved", event );
             }
 
             if( haveReceivedEventBefore( event )) {

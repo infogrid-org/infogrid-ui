@@ -164,7 +164,7 @@ public abstract class AbstractActiveMeshObjectSetTest
     }
 
     /**
-     * Dump the content of a MeshObjectSet to log.debug().
+     * Dump the content of a MeshObjectSet to log.traceMethodCallEntry().
      *
      * @param set the MeshObjectSet whose content we want to dump
      * @param prefix a string to prepend
@@ -184,7 +184,7 @@ public abstract class AbstractActiveMeshObjectSetTest
     }
 
     /**
-     * Dump the content of a MeshObjectSet to log.debug().
+     * Dump the content of a MeshObjectSet to log.traceMethodCallEntry().
      *
      * @param set the MeshObjectSet whose content we want to dump
      * @param prefix a string to prepend

@@ -307,8 +307,8 @@ public abstract class AbstractCommunicatingProxy
     public void transactionCommitted(
             Transaction theTransaction )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".transactionCommitted( " + theTransaction + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "transactionCommitted", theTransaction );
         }
 
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForTransactionCommitted( theTransaction, this );
@@ -325,8 +325,8 @@ public abstract class AbstractCommunicatingProxy
             ReceivingMessageEndpoint<XprisoMessage> endpoint,
             XprisoMessage                           incoming )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".messageReceived( " + incoming + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "messageReceived", incoming );
         }
 
         try {
@@ -787,8 +787,8 @@ public abstract class AbstractCommunicatingProxy
         // just logging right now (FIXME?)
 
         if( t instanceof MessageEndpointIsDeadException ) {
-            if( log.isDebugEnabled() ) {
-                log.debug( this + ".disablingError( " + endpoint + ", " + msg + " )", t );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "disablingError", endpoint, msg, t );
             }
         } else {
             log.error( this + ".disablingError( " + endpoint + ", " + msg + " )", t );

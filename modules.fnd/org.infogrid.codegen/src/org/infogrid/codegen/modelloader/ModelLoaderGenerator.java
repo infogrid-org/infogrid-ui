@@ -297,8 +297,8 @@ public class ModelLoaderGenerator
             IOException
     {
         outStream.println( "        org.infogrid.util.logging.Log log = org.infogrid.util.logging.Log.getLogInstance( getClass() );" );
-        outStream.println( "        if( log.isDebugEnabled() ) {" );
-        outStream.println( "            log.debug( this + \".loadModel(...)\" );" );
+        outStream.println( "        if( log.isTraceCallEnabled() ) {" );
+        outStream.println( "            log.traceMethodCallEntry( this, \"loadModel\" );" );
         outStream.println( "        }" );
         outStream.println();
     }

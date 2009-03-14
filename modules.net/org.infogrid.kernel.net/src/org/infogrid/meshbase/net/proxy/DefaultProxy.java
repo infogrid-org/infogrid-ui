@@ -46,8 +46,8 @@ public class DefaultProxy
     {
         DefaultProxy ret = new DefaultProxy( ep, mb, policy, partnerIdentifier );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "Created " + ret, new RuntimeException( "marker" ));
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( DefaultProxy.class, "create" );
         }
         return ret;
     }
@@ -77,8 +77,8 @@ public class DefaultProxy
     {
         DefaultProxy ret = new DefaultProxy( ep, mb, policy, partnerIdentifier, timeCreated, timeUpdated, timeRead, timeExpires );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "Restored " + ret, new RuntimeException( "marker" ));
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( DefaultProxy.class, "create" );
         }
         return ret;
     }

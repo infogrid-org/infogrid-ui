@@ -223,8 +223,8 @@ public class TransitiveClosureTraversalActiveMMeshObjectSet
     public void propertyChange(
             PropertyChangeEvent event )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".propertyChange( " + event + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "propertyChange", event );
         }
         
         if( haveReceivedEventBefore( event )) {
@@ -249,8 +249,8 @@ public class TransitiveClosureTraversalActiveMMeshObjectSet
     public synchronized void meshObjectAdded(
             MeshObjectAddedEvent event )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".meshObjectAdded( " + event + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "meshObjectAdded", event );
         }
 
         if( haveReceivedEventBefore( event )) {
@@ -288,8 +288,8 @@ public class TransitiveClosureTraversalActiveMMeshObjectSet
     public synchronized void meshObjectRemoved(
             MeshObjectRemovedEvent event )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".meshObjectRemoved( " + event + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "meshObjectRemoved", event );
         }
 
         if( haveReceivedEventBefore( event )) {

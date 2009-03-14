@@ -142,8 +142,8 @@ public class MStore
             StoreKeyExistsAlreadyException,
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".put( " + toStore + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "put", toStore );
         }
         try {
             StoreValue already = theDelegate.get( toStore.getKey() );
@@ -211,8 +211,8 @@ public class MStore
             StoreKeyDoesNotExistException,
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".update( " + toUpdate + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "update", toUpdate );
         }
         try {
             StoreValue already = theDelegate.get( toUpdate.getKey() );
@@ -276,8 +276,8 @@ public class MStore
         throws
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".putOrUpdate( " + toStoreOrUpdate + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "putOrUpdate", toStoreOrUpdate );
         }
 
         StoreValue already = theDelegate.put( toStoreOrUpdate.getKey(), toStoreOrUpdate );
@@ -342,8 +342,8 @@ public class MStore
     {
         checkKey( key );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".delete( " + key + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "delete", key );
         }
 
         StoreValue already = theDelegate.remove( key );
@@ -366,8 +366,8 @@ public class MStore
         throws
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".deleteAll()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "deleteAll" );
         }
         fireDeleteAllPerformed( "" );
 
@@ -387,8 +387,8 @@ public class MStore
     {
         checkKey( startsWith );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".deleteAll( " + startsWith + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "deleteAll", startsWith );
         }
         for( String key : theDelegate.keySet() ) {
             if( key.startsWith( startsWith )) {

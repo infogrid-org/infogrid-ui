@@ -191,7 +191,7 @@ public class TraversalPath
     }
 
     /**
-     * Set the debug name. This is to be used for debugging only.
+     * Set the traceMethodCallEntry name. This is to be used for debugging only.
      *
      * @param newValue the new value
      */
@@ -202,7 +202,7 @@ public class TraversalPath
     }
 
     /**
-     * Obtain the debug name. This is to be used for debugging only.
+     * Obtain the traceMethodCallEntry name. This is to be used for debugging only.
      *
      * @return the name
      */

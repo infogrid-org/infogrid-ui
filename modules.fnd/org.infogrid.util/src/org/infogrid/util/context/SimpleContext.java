@@ -76,8 +76,8 @@ public class SimpleContext
         this.theName          = name;
         this.theParentContext = parent;
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "created " + this );
+        if( log.isTraceCallEnabled() ) {
+            log.traceConstructor( this );
         }
     }
 

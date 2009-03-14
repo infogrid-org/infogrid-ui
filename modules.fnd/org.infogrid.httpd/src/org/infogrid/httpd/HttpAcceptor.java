@@ -14,7 +14,6 @@
 
 package org.infogrid.httpd;
 
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;

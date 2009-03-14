@@ -61,8 +61,8 @@ public class SimpleXprisoMessage
     {
         SimpleXprisoMessage ret = new SimpleXprisoMessage( sender, receiver );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "created " + ret, new Exception( "marker" ));
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( SimpleXprisoMessage.class, "create" );
         }
         return ret;
     }

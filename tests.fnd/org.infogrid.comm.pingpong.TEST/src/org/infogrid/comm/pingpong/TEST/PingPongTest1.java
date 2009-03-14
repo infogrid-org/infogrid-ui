@@ -168,7 +168,7 @@ public class PingPongTest1
                 ReceivingMessageEndpoint<String> endpoint,
                 String                           msg )
         {
-            log.debug( this + " received message " + msg );
+            log.traceMethodCallEntry( this, "messageReceived", endpoint, msg );
         }
 
         /**
@@ -181,7 +181,7 @@ public class PingPongTest1
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " sent message " + msg );
+            log.traceMethodCallEntry( this, "messageSent", endpoint, msg );
         }
 
         /**
@@ -194,7 +194,7 @@ public class PingPongTest1
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " enqueued message " + msg );
+            log.traceMethodCallEntry( this, "messageEnqueued", endpoint, msg );
         }
     
        /**
@@ -207,7 +207,7 @@ public class PingPongTest1
                 SendingMessageEndpoint<String> endpoint,
                 String                         msg )
         {
-            log.debug( this + " failed to send message " + msg );
+            log.traceMethodCallEntry( this, "messageSendingFailed", endpoint, msg );
         }
 
         /**

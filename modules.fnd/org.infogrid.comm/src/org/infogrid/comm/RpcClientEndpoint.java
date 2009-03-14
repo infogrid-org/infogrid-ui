@@ -80,8 +80,8 @@ public abstract class RpcClientEndpoint<A,R,T extends CarriesInvocationId>
             RemoteQueryTimeoutException,
             InvocationTargetException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".invoke( " + arg + ", " + timeout + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "invoke", arg, timeout );
         }
         T outgoing = marshal( arg );
 

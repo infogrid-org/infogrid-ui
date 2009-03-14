@@ -256,8 +256,8 @@ public class JetS3tStore
             StoreKeyExistsAlreadyException,
             IOException
     {
-        if( log.isInfoEnabled() ) {
-            log.info( this + ".put( " + toStore + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "put", toStore );
         }
         try {
             String key   = toStore.getKey();
@@ -305,8 +305,8 @@ public class JetS3tStore
             StoreKeyDoesNotExistException,
             IOException
     {
-        if( log.isInfoEnabled() ) {
-            log.info( this + ".update( " + toUpdate + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "update", toUpdate );
         }
 
         try {
@@ -353,9 +353,8 @@ public class JetS3tStore
         throws
             IOException
     {
-
-        if( log.isInfoEnabled() ) {
-            log.info( this + ".putOrUpdate( " + toStoreOrUpdate + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "putOrUpdate", toStoreOrUpdate );
         }
         boolean ret = false; // good default?
         try {
@@ -405,8 +404,8 @@ public class JetS3tStore
             StoreKeyDoesNotExistException,
             IOException
     {
-        if( log.isInfoEnabled() ) {
-            log.info( this + ".get( " + key + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "get", key );
         }
 
         StoreValue ret = null;
@@ -452,8 +451,8 @@ public class JetS3tStore
             StoreKeyDoesNotExistException,
             IOException
     {
-        if( log.isInfoEnabled() ) {
-            log.info( this + ".delete( " + key + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "delete", key );
         }
         try {
             String s3Key = theKeyMapper.keyToS3Key( key );
@@ -485,8 +484,8 @@ public class JetS3tStore
         throws
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".deleteAll()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "deleteAll()" );
         }
 
         String s3StartsWith = theKeyMapper.keyToS3Key( startsWith );

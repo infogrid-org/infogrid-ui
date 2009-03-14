@@ -87,8 +87,8 @@ public class PostgresqlStore
         theFindKeyAtEndPreparedStatement          = new SqlStorePreparedStatement( this, FIND_KEY_AT_END_SQL,         tableName );
         theDetermineDistancePreparedStatement     = new SqlStorePreparedStatement( this, DETERMINE_DISTANCE_SQL,      tableName );
         
-        if( log.isDebugEnabled() ) {
-            log.debug( "Created " + this );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "constructor" );
         }
     }
 
@@ -99,8 +99,8 @@ public class PostgresqlStore
      */
     protected boolean hasTables()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".hasTables()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "hasTables" );
         }
 
         try {
@@ -132,8 +132,8 @@ public class PostgresqlStore
      */
     protected void dropTables()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".dropTables()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "dropTables" );
         }
 
         try {
@@ -166,8 +166,8 @@ public class PostgresqlStore
             throws
                 IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".createTables()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "createTables" );
         }
 
         try {
@@ -714,8 +714,8 @@ public class PostgresqlStore
         throws
             SqlStoreIOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".deleteAll()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "deleteAll" );
         }
         checkKey( startsWith );
 

@@ -89,7 +89,7 @@ public class Breakpoint
     protected void logEnter()
     {
         if( log.isDebugEnabled() ) {
-            log.debug( this + " has been entered" );
+            log.traceMethodCallEntry( this, "logEnter" );
         }
     }
 
@@ -99,7 +99,7 @@ public class Breakpoint
     protected void logWait()
     {
         if( log.isDebugEnabled() ) {
-            log.debug( this + ": in wait state" );
+            log.traceMethodCallEntry( this, "logWait" );
         }
     }
 
@@ -109,7 +109,7 @@ public class Breakpoint
     protected void logExit()
     {
         if( log.isDebugEnabled() ) {
-            log.debug( this + " has been exited" );
+            log.traceMethodCallEntry( this, "logExit" );
         }
     }
 

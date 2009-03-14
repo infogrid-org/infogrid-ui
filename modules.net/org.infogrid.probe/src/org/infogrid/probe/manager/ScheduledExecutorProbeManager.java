@@ -89,8 +89,8 @@ public abstract class ScheduledExecutorProbeManager
     public synchronized void start(
             ScheduledExecutorService exec )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".start( " + exec + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "start", exec );
         }
         if( theExecutorService != null ) {
             throw new IllegalStateException( "Already started" );
@@ -119,8 +119,8 @@ public abstract class ScheduledExecutorProbeManager
      */
     public synchronized void stop()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".stop()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "stop" );
         }
         if( theExecutorService == null ) {
             throw new IllegalStateException( "Already stopped" );
@@ -245,8 +245,8 @@ public abstract class ScheduledExecutorProbeManager
     public synchronized void die(
             boolean isPermanent )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".die()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "die" );
         }
         for( ShadowMeshBase shadow : theKeyValueMap.values() ) {
             // attempt to be as successful as possible
@@ -304,8 +304,8 @@ public abstract class ScheduledExecutorProbeManager
             theShadowIdentifier = shadowIdentifier;
             theWillBeCalledAt   = new Date( System.currentTimeMillis() + nextTime );
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "Created " + this );
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallEntry( this, "constructor" );
             }
         }
 

@@ -841,8 +841,8 @@ public class ProbeDispatcher
             TransactionException,
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".handleXml( " + oldBase + ", " + newBase + ", " + inStream + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "handleXml", oldBase, newBase, inStream );
         }
 
         NetMeshBaseIdentifier sourceIdentifier = theShadowMeshBase.getIdentifier();
@@ -1062,8 +1062,8 @@ public class ProbeDispatcher
             TransactionException,
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".handleNonXml( " + contentType + ", " + inStream + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "handleNonXml", oldBase, newBase, coherence, contentType, inStream );
         }
 
         NonXmlStreamProbe      probe            = null;
@@ -1220,8 +1220,8 @@ public class ProbeDispatcher
             TransactionException,
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".handleNativeFormat( " + doc + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "handleNativeFormat", newBase, coherence, doc );
         }
 
         NetMeshBaseIdentifier sourceIdentifier = theShadowMeshBase.getIdentifier();
@@ -1832,8 +1832,8 @@ public class ProbeDispatcher
      */
     protected void fireUpdateStarted()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".fireUpdateStarted()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "fireUpdateStarted" );
         }
 
         theShadowListeners.fireEvent( new ShadowMeshBaseEvent( theShadowMeshBase ), 0 );
@@ -1844,8 +1844,8 @@ public class ProbeDispatcher
      */
     protected void fireUpdateSkipped()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".fireUpdateSkipped()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "fireUpdateSkipped" );
         }
 
         theShadowListeners.fireEvent( new ShadowMeshBaseEvent( theShadowMeshBase ), 1 );
@@ -1856,8 +1856,8 @@ public class ProbeDispatcher
      */
     protected void fireUpdateFinishedSuccessfully()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".fireUpdateFinishedSuccessfully()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "fireUpdateFinishedSuccessfully" );
         }
 
         theShadowListeners.fireEvent( new ShadowMeshBaseEvent( theShadowMeshBase ), 2 );        
@@ -1871,8 +1871,8 @@ public class ProbeDispatcher
     public void fireUpdateFinishedUnsuccessfully(
              Throwable problem )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".fireUpdateFinishedUnsuccessfully( " + problem + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "fireUpdateFinishedUnsuccessfully", problem );
         }
 
         theShadowListeners.fireEvent( new ShadowMeshBaseEvent( theShadowMeshBase ), 3 );        

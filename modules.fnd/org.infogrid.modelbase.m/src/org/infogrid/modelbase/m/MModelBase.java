@@ -130,8 +130,8 @@ public class MModelBase
 
         theLifecycleManager = new MMeshTypeLifecycleManager( this );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "created " + this );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "constructor" );
         }
     }
 
@@ -244,8 +244,8 @@ public class MModelBase
         throws
             SubjectAreaNotFoundException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".findSubjectArea( " + subjectAreaName + ", " + subjectAreaVersionNumber + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "findSubjectArea", subjectAreaName, subjectAreaVersionNumber );
         }
 
         SubjectArea ret = theCluster.findSubjectArea( subjectAreaName, subjectAreaVersionNumber );
@@ -283,8 +283,8 @@ public class MModelBase
         throws
             EntityTypeNotFoundException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".findEntityType( " + theSubjectArea + ", " + theEntityTypeName + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "findEntityType", theSubjectArea, theEntityTypeName );
         }
         if( theSubjectArea == null ) {
             throw new IllegalArgumentException( "SubjectArea cannot be null" );
@@ -315,8 +315,8 @@ public class MModelBase
         throws
             MeshTypeNotFoundException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".findEntityType( " + subjectAreaName + ", " + subjectAreaVersionNumber + ", " + theEntityTypeName + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "findEntityType", subjectAreaName, subjectAreaVersionNumber, theEntityTypeName );
         }
         SubjectArea theSa = findSubjectArea( subjectAreaName, subjectAreaVersionNumber );
         return findEntityType( theSa, theEntityTypeName );
@@ -336,8 +336,8 @@ public class MModelBase
         throws
             RelationshipTypeNotFoundException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".findRelationshipType( " + theSubjectArea + ", " + theRelationshipTypeName + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "findRelationshipType", theSubjectArea, theRelationshipTypeName );
         }
         if( theSubjectArea == null ) {
             throw new IllegalArgumentException( "SubjectArea cannot be null" );
@@ -369,8 +369,8 @@ public class MModelBase
         throws
             MeshTypeNotFoundException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".findRelationshipType( " + subjectAreaName + ", " + subjectAreaVersionNumber + ", " + theRelationshipTypeName + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "findRelationshipType", subjectAreaName, subjectAreaVersionNumber, theRelationshipTypeName );
         }
         SubjectArea theSa = findSubjectArea( subjectAreaName, subjectAreaVersionNumber );
         return findRelationshipType( theSa, theRelationshipTypeName );
@@ -390,8 +390,8 @@ public class MModelBase
         throws
             PropertyTypeNotFoundException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".findPropertyType( " + theAttributableMeshType + ", " + thePropertyTypeName + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "findPropertyType", theAttributableMeshType, thePropertyTypeName );
         }
         if( theAttributableMeshType == null ) {
             throw new IllegalArgumentException( "AttributableMeshType cannot be null" );
@@ -477,8 +477,8 @@ public class MModelBase
         throws
             MeshTypeWithIdentifierNotFoundException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".findMeshTypeByIdentifierInternal( " + identifier + ", " + doResolve + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "findMeshTypeByIdentifierInternal", identifier, doResolve );
         }
         if( identifier == null ) {
             throw new NullPointerException( "Null Identifier given" );

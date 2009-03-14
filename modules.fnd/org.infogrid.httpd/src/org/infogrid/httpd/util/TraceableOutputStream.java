@@ -30,10 +30,10 @@ public class TraceableOutputStream
     private static final Log log = Log.getLogInstance( TraceableOutputStream.class ); // our own, private logger
 
     /**
-      * Constructor with a delegate and a debug stream.
+      * Constructor with a delegate and a traceMethodCallEntry stream.
       *
       * @param delegate the delegate OutputStream
-      * @param debug if non-null, we write everything we read to this stream as well
+      * @param traceMethodCallEntry if non-null, we write everything we read to this stream as well
       */
     public TraceableOutputStream(
             OutputStream delegate,
@@ -44,7 +44,7 @@ public class TraceableOutputStream
     }
 
     /**
-      * Constructor with a delegate but no debug stream.
+      * Constructor with a delegate but no traceMethodCallEntry stream.
       *
       * @param delegate the delegate OutputStream
       */

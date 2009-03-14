@@ -176,7 +176,7 @@ public abstract class AbstractPingPongRpcTest
                 SendingMessageEndpoint<PingPongRpcTestMessage> endpoint,
                 PingPongRpcTestMessage                         msg )
         {
-            getLog().debug( this + " sent message " + msg );
+            getLog().traceMethodCallEntry( this, "messageSent", endpoint, msg );
         }
 
         /**
@@ -189,7 +189,7 @@ public abstract class AbstractPingPongRpcTest
                 SendingMessageEndpoint<PingPongRpcTestMessage> endpoint,
                 PingPongRpcTestMessage                         msg )
         {
-            getLog().debug( this + " enqueued message " + msg );
+            getLog().traceMethodCallEntry( this, "messageEnqueued", endpoint, msg );
         }
     
         /**
@@ -202,7 +202,7 @@ public abstract class AbstractPingPongRpcTest
                 SendingMessageEndpoint<PingPongRpcTestMessage> endpoint,
                 PingPongRpcTestMessage                         msg )
         {
-            reportError( "Message sending failed", msg );
+            getLog().traceMethodCallEntry( this, "messageSendingFailed", endpoint, msg );
         }
 
         /**

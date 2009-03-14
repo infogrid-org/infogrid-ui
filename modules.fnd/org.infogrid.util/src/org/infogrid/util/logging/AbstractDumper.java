@@ -36,7 +36,39 @@ public abstract class AbstractDumper
         implements
             Dumper
 {
-    private static final Log log = Log.getLogInstance( AbstractDumper.class ); // our own, private logger
+    private static Log log; // log initialized as late as possible
+
+    /**
+     * Constructor, for subclasses only.
+     *
+     * @param maxLevel the number of object levels to dump
+     */
+    protected AbstractDumper(
+            int maxLevel )
+    {
+        theLevel    = 0;
+        theMaxLevel = maxLevel;
+    }
+
+    /**
+     * Obtain the maximum number of object levels to dump.
+     *
+     * @return the maximum number
+     */
+    public int getMaxLevel()
+    {
+        return theMaxLevel;
+    }
+
+    /**
+     * Obtain the current object level.
+     * 
+     * @return the current object level
+     */
+    public int getLevel()
+    {
+        return theLevel;
+    }
 
     /**
      * Dump an object. This method is just the dispatcher and does not do any dumping itself.
@@ -117,6 +149,8 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else if( obj instanceof CanBeDumped ) {
+            registerAsDumped( obj );
+
             CanBeDumped realObj = (CanBeDumped) obj;
             realObj.dump( this );
 
@@ -137,8 +171,8 @@ public abstract class AbstractDumper
                     values.add( value );
 
                 } catch( Throwable t ) {
-                    if( log.isDebugEnabled() ) {
-                        log.debug( t );
+                    if( getLog().isDebugEnabled() ) {
+                        getLog().debug( t );
                     }
                 }
             }
@@ -170,6 +204,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             dumpObjectId( obj );
 
             emit( "{\n" );
@@ -204,7 +239,7 @@ public abstract class AbstractDumper
             if(    ( fieldNames  != null && fieldNames.length  != min )
                 || ( fieldValues != null && fieldValues.length != min ))
             {
-                log.error( "non-matching field names and values in toString method" );
+                getLog().error( "non-matching field names and values in toString method" );
             }
             emit( "}" );
         }
@@ -230,6 +265,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             if( obj.length == 0 ) {
                 emit( "[0] = {}" );
             } else {
@@ -267,6 +303,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             if( obj.size() == 0 ) {
                 emit( "[0] = {}" );
             } else {
@@ -304,6 +341,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( obj.getClass().getName() );
 
             if( obj.size() == 0 ) {
@@ -347,6 +385,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( "boolean[" );
             emit( String.valueOf( obj.length ));
             emit( "] = { " );
@@ -377,6 +416,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( "byte[" );
             emit( String.valueOf( obj.length ));
             emit( "] = " );
@@ -404,6 +444,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( "short[" );
             emit( String.valueOf( obj.length ));
             emit( "] = { " );
@@ -435,6 +476,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( "int[" );
             emit( String.valueOf( obj.length ));
             emit( "] = { " );
@@ -465,6 +507,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( "long[" );
             emit( String.valueOf( obj.length ));
             emit( "] = { " );
@@ -496,6 +539,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( "float[" );
             emit( String.valueOf( obj.length ));
             emit( "] = { " );
@@ -526,6 +570,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( "double[");
             emit( String.valueOf( obj.length ));
             emit( "] = { " );
@@ -556,6 +601,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            registerAsDumped( obj );
             emit( "char[" );
             emit( String.valueOf( obj.length ));
             emit( "] = { " );
@@ -588,6 +634,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            // don't register as dumped -- it's short enough to do it again
             if( obj.booleanValue() ) {
                 emit( "true" );
             } else {
@@ -608,6 +655,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            // don't register as dumped -- it's short enough to do it again
             emit( '\'' );
             emit( obj.charValue() );
             emit( '\'' );
@@ -626,6 +674,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            // don't register as dumped -- it's short enough to do it again
             String ret = theDateFormat.format( obj );
             emit( ret );
         }
@@ -643,6 +692,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            // don't register as dumped -- it's short enough to do it again
             emit( obj.getClass().getName() );
             emit( ": " );
             emit( obj.toString() );
@@ -661,6 +711,7 @@ public abstract class AbstractDumper
             dumpNull();
 
         } else {
+            // don't register as dumped -- it's short enough to do it again
             emit( obj.getClass().getName() );
             emit( ": \"" );
             emit( obj );
@@ -692,6 +743,7 @@ public abstract class AbstractDumper
         if( obj == null ) {
             dumpNull();
         } else {
+            // don't register as dumped -- it's short enough to do it again
             String to = obj.toString();
             emit( to );
         }
@@ -736,10 +788,10 @@ public abstract class AbstractDumper
             Object child )
     {
         try {
-            ++level;
+            ++theLevel;
             dump( child );
         } finally {
-            --level;
+            --theLevel;
         }
     }
 
@@ -786,9 +838,24 @@ public abstract class AbstractDumper
             Object obj );
 
     /**
+     * Obtain the logger to use.
+     *
+     * @return the Log
+     */
+    protected Log getLog()
+    {
+         return Log.getLogInstance( getClass() ); // our own, private logger
+    }
+
+    /**
+     * The maximum level of dumping.
+     */
+    protected int theMaxLevel;
+
+    /**
      * The level of dumping at which the Dumper is currently operating.
      */
-    protected int level = 0;
+    protected int theLevel = 0;
 
     /**
      * Our ResourceHelper.

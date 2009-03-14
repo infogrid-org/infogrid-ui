@@ -160,8 +160,8 @@ public abstract class AbstractMeshObject
         throws
             NotPermittedException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".setTimeExpires( " + newValue + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "setTimeExpires", newValue );
         }
         checkPermittedSetTimeExpires( newValue );
         

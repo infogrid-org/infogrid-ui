@@ -150,9 +150,9 @@ public class ProbeTest3
 
         if( log.isDebugEnabled() ) {
 
-            // log.debug( listenerA.toString() );
-            // log.debug( listenerB.toString() );
-            // log.debug( listenerC.toString() );
+            // log.traceMethodCallEntry( listenerA.toString() );
+            // log.traceMethodCallEntry( listenerB.toString() );
+            // log.traceMethodCallEntry( listenerC.toString() );
         }
     }
 

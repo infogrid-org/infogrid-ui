@@ -120,7 +120,7 @@ public abstract class PingPongMessageEndpoint<T>
             TimedTask task )
     {
         if( logLow.isDebugEnabled() ) {
-            logLow.debug( this + ".doAction( " + task + " ): queue has length " + theMessagesToBeSent.size() );
+            logLow.traceMethodCallEntry( this, "doAction", task );
         }        
 
         // determine whether this is a regular response, a resend, or a recover. Resend and regular
@@ -289,14 +289,8 @@ public abstract class PingPongMessageEndpoint<T>
         boolean fireEvents = false;
 
         try {
-            if( content != null && ! content.isEmpty() ) {
-                if( logHigh.isInfoEnabled() ) {
-                    logHigh.info( this + ".incomingMessage( " + token + ", " + content + " )" );
-                }
-            } else {
-                if( logHigh.isDebugEnabled() ) {
-                    logHigh.debug( this + ".incomingMessage( " + token + ", " + content + " )" );
-                }
+            if( logHigh.isTraceCallEnabled() ) {
+                logHigh.traceMethodCallEntry( this, "incomingMessage", token, content );
             }
 
             // ignore if we received this one already

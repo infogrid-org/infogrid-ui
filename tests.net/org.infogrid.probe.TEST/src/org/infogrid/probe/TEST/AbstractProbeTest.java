@@ -95,7 +95,7 @@ public abstract class AbstractProbeTest
     }
 
     /**
-     * Dump the content of a MeshBase to the debug channel of a Log.
+     * Dump the content of a MeshBase to the traceMethodCallEntry channel of a Log.
      *
      * @param mb the MeshBase whose content we want to dump
      * @param prefix a string to prepend
@@ -144,7 +144,7 @@ public abstract class AbstractProbeTest
     }
 
     /**
-     * Dump a ChangeSet to the debug channel of a Log.
+     * Dump a ChangeSet to the traceMethodCallEntry channel of a Log.
      * 
      * @param changes the ChangeSet to dump
      * @param mylog the Log

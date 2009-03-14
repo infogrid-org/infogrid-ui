@@ -16,6 +16,7 @@ package org.infogrid.util.logging;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
 
 /**
@@ -34,15 +35,30 @@ public class ToStringDumper
      */
     public static ToStringDumper create()
     {
-        return new ToStringDumper();
+        return new ToStringDumper( DEFAULT_MAXLEVEL );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param maxLevel the number of object levels to dump
+     * @return the created ToStringDumper
+     */
+    public static ToStringDumper create(
+            int maxLevel )
+    {
+        return new ToStringDumper( maxLevel );
     }
 
     /**
      * Constructor.
+     *
+     * @param maxLevel the number of object levels to dump
      */
-    protected ToStringDumper()
+    protected ToStringDumper(
+            int maxLevel )
     {
-        // nothing
+        super( maxLevel );
     }
 
     /**
@@ -72,7 +88,7 @@ public class ToStringDumper
     protected void emit(
             CharSequence toEmit )
     {
-        CharSequence indented = StringHelper.indent( toEmit, INDENT, 0, level );
+        CharSequence indented = StringHelper.indent( toEmit, INDENT, 0, theLevel );
         theBuffer.append( indented );
     }
 
@@ -87,7 +103,7 @@ public class ToStringDumper
         theBuffer.append( toEmit );
 
         if( toEmit == '\n' ) {
-            for( int i=0 ; i<level ; ++i ) {
+            for( int i=0 ; i<theLevel ; ++i ) {
                 theBuffer.append( INDENT );
             }
         }
@@ -104,6 +120,9 @@ public class ToStringDumper
     {
         if( obj == null ) {
             return true;
+
+        } else if( theLevel >= theMaxLevel ) {
+            return false;
 
         } else if( theAlreadyDumped.contains( obj )) {
             return false;
@@ -149,7 +168,17 @@ public class ToStringDumper
     protected Set<Object> theAlreadyDumped = new HashSet<Object>();
 
     /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( ToStringDumper.class );
+
+    /**
      * The character String by which child objects are indented.
      */
-    public static final String INDENT = "    ";
+    public static final String INDENT = theResourceHelper.getResourceStringOrDefault( "Indent", "    " );
+
+    /**
+     * The default maxLevel.
+     */
+    public static final int DEFAULT_MAXLEVEL = theResourceHelper.getResourceIntegerOrDefault( "DefaultMaxLevel", 4 );
 }

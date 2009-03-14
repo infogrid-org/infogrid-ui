@@ -122,8 +122,8 @@ public class IterableMeshBaseDifferencer
             IterableMeshBase comparisonBase,
             boolean          checkDates )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".determineChangeSet()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "determineChangeSet" );
         }
 
         long      now                    = System.currentTimeMillis();

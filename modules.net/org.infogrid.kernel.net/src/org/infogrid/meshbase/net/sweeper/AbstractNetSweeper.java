@@ -69,8 +69,8 @@ public abstract class AbstractNetSweeper
     protected void purgeMeshObject(
             NetMeshObject toPurge )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".purgeMeshObject( " + toPurge.getIdentifier().toExternalForm() );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, ".purgeMeshObject", toPurge.getIdentifier() );
         }
 
         NetMeshBase base = toPurge.getMeshBase();

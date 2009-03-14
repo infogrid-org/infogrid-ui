@@ -169,6 +169,21 @@ public class Log4jLog
     }
 
     /**
+     * The method to log a traceCall message. This must be implemented by subclasses.
+     *
+     * @param msg the message to log
+     * @param t   the Throwable to log. This may be null.
+     */
+    protected void logTraceCall(
+            String    msg,
+            Throwable t )
+    {
+        ensureDelegate();
+
+        theDelegate.trace( msg, t );
+    }
+
+    /**
      * Determine whether logging to the info channel is enabled.
      *
      * @return true if the info channel is enabled
@@ -190,6 +205,18 @@ public class Log4jLog
         ensureDelegate();
 
         return theDelegate.isDebugEnabled();
+    }
+
+    /**
+     * Determine whether logging to the trace channel is enabled.
+     *
+     * @return true if the trace channel is enabled
+     */
+    public boolean isTraceCallEnabled()
+    {
+        ensureDelegate();
+
+        return theDelegate.isTraceEnabled();
     }
 
     /**

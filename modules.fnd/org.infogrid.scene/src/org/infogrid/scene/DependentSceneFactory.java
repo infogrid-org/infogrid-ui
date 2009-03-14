@@ -144,8 +144,8 @@ public abstract class DependentSceneFactory
      */
     protected void breakpointHook()
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".breakpointHook()" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "breakpointHook" );
         }
     }
 

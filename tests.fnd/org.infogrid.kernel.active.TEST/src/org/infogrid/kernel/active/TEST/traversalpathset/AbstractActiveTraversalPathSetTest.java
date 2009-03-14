@@ -143,7 +143,7 @@ public abstract class AbstractActiveTraversalPathSetTest
     }
 
     /**
-     * Dump the content of a TraversalPathSet to log.debug().
+     * Dump the content of a TraversalPathSet to log.traceMethodCallEntry().
      *
      * @param set the TraversalPathSet whose content we want to dump
      * @param prefix a string to prepend

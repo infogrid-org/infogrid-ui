@@ -99,8 +99,8 @@ public class XmlModelExporter
         throws
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".exportToXML( " + modelBase + ", " + theStream + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "exportToXML", modelBase, theStream );
         }
 
         SubjectArea [] theSubjectAreas = ArrayHelper.copyIntoNewArray( modelBase.subjectAreaIterator(), SubjectArea.class );
@@ -137,8 +137,8 @@ public class XmlModelExporter
         throws
             IOException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".exportToXML( " + theSubjectAreas + ", " + theStream + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "exportToXML", theSubjectAreas, theStream );
         }
 
         Writer theWriter = new OutputStreamWriter( theStream, encoding );

@@ -40,8 +40,8 @@ public class TestStoreListener
             Store      store,
             StoreValue value )
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".putPerformed( " + store + ", " + value + " )", new RuntimeException("marker") );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "putPerformed", store, value, new RuntimeException("marker") );
         }
     }
 
@@ -57,8 +57,8 @@ public class TestStoreListener
             Store      store,
             StoreValue value )
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".updatePerformed( " + store + ", " + value + " )" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "updatePerformed", store, value );
         }
     }
 
@@ -72,8 +72,8 @@ public class TestStoreListener
             Store      store,
             StoreValue value )
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".getPerformed( " + store + ", " + value + " )" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "getPerformed", store, value );
         }
     }
 
@@ -87,8 +87,8 @@ public class TestStoreListener
             Store  store,
             String key )
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".getFailed( " + store + ", " + key + " )" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "getFailed", store, key );
         }
     }
 
@@ -102,8 +102,8 @@ public class TestStoreListener
             Store  store,
             String key )
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".deletePerformed( " + store + ", " + key + " )" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "deletePerformed", store, key );
         }
     }
 
@@ -117,8 +117,8 @@ public class TestStoreListener
             Store  store,
             String prefix )
     {
-        if( log.isDebugEnabled()) {
-            log.debug( this + ".deleteAllPerformed( " + store + ", " + prefix + " )" );
+        if( log.isTraceCallEnabled()) {
+            log.traceMethodCallEntry( this, "deleteAllPerformed", store, prefix );
         }
     }
 }

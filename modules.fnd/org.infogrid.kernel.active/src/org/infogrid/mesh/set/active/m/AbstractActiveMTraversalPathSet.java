@@ -230,8 +230,8 @@ public abstract class AbstractActiveMTraversalPathSet
     public void addDirectActiveTraversalPathSetListener(
             ActiveTraversalPathSetListener newListener )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".addDirectActiveTraversalPathSetListener( " + newListener + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "addDirectActiveTraversalPathSetListener", newListener );
         }
         theSetListeners.addDirect( newListener );
     }
@@ -247,8 +247,8 @@ public abstract class AbstractActiveMTraversalPathSet
     public void addSoftActiveTraversalPathSetListener(
             ActiveTraversalPathSetListener newListener )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".addSoftActiveTraversalPathSetListener( " + newListener + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "addSoftActiveTraversalPathSetListener", newListener );
         }
         theSetListeners.addSoft( newListener );
     }
@@ -264,8 +264,8 @@ public abstract class AbstractActiveMTraversalPathSet
     public void addWeakActiveTraversalPathSetListener(
             ActiveTraversalPathSetListener newListener )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".addWeakActiveTraversalPathSetListener( " + newListener + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "addWeakActiveTraversalPathSetListener", newListener );
         }
         theSetListeners.addWeak( newListener );
     }
@@ -281,8 +281,8 @@ public abstract class AbstractActiveMTraversalPathSet
     public void removeActiveTraversalPathSetListener(
             ActiveTraversalPathSetListener oldListener)
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".removeActiveTraversalPathSetListener( " + oldListener + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "removeActiveTraversalPathSetListener", oldListener );
         }
         theSetListeners.remove( oldListener );
     }

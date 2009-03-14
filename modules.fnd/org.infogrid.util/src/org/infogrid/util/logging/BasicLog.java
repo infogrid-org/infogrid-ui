@@ -97,7 +97,7 @@ public class BasicLog
     }
 
     /**
-     * The method to log a debug message.
+     * The method to log a traceMethodCallEntry message.
      *
      * @param msg the message to log
      * @param t   the Throwable to log. This may be null.
@@ -108,6 +108,21 @@ public class BasicLog
     {
         if( isDebugEnabled() ) {
             print( "DEBUG: ", msg, t );
+        }
+    }
+
+    /**
+     * The method to log a traceCall message. This must be implemented by subclasses.
+     *
+     * @param msg the message to log
+     * @param t   the Throwable to log. This may be null.
+     */
+    protected void logTraceCall(
+            String    msg,
+            Throwable t )
+    {
+        if( isTraceCallEnabled() ) {
+            print( "TRACE: ", msg, t );
         }
     }
 
@@ -152,13 +167,23 @@ public class BasicLog
     }
 
     /**
-     * Determine whether logging to the debug channel is enabled.
+     * Determine whether logging to the traceMethodCallEntry channel is enabled.
      *
-     * @return true if the debug channel is enabled
+     * @return true if the traceMethodCallEntry channel is enabled
      */
     public boolean isDebugEnabled()
     {
         return theIsDebugEnabled;
+    }
+
+    /**
+     * Determine whether logging to the trace channel is enabled.
+     *
+     * @return true if the trace channel is enabled
+     */
+    public boolean isTraceCallEnabled()
+    {
+        return theIsTraceCallEnabled;
     }
 
     /**
@@ -235,7 +260,7 @@ public class BasicLog
     }
 
     /**
-     * Set the enabled status of the debug channel.
+     * Set the enabled status of the traceMethodCallEntry channel.
      *
      * @param newValue the new value
      */
@@ -269,6 +294,11 @@ public class BasicLog
      * Is the debug channel enabled?
      */
     protected static boolean theIsDebugEnabled = false;
+
+    /**
+     * Is the traceMethodCallEntry channel enabled?
+     */
+    protected static boolean theIsTraceCallEnabled = false;
 
     /**
      * The PrintStream to which we log.

@@ -74,8 +74,8 @@ public class PatientSmartFactory<K,V,A>
         throws
             FactoryException
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( this + ".obtainFor( " + key + ", " + argument + " )" );
+        if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "obtainFor", key, argument );
         }
 
         V ret;
