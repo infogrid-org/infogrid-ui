@@ -36,8 +36,6 @@ public abstract class AbstractDumper
         implements
             Dumper
 {
-    private static Log log; // log initialized as late as possible
-
     /**
      * Constructor, for subclasses only.
      *
@@ -205,7 +203,7 @@ public abstract class AbstractDumper
 
         } else {
             registerAsDumped( obj );
-            dumpObjectId( obj );
+            emitObjectId( obj );
 
             emit( "{" );
             int min = Math.min(
@@ -232,7 +230,8 @@ public abstract class AbstractDumper
                         emit( '\n' );
                         emit( fieldNames[i] );
                         emit( ": ");
-                        dump( objectId( value ));
+                        emitObjectId( value );
+                        emit( "..." );
 
                         if( i<min-1 ) {
                             emit( ',' );
@@ -272,6 +271,7 @@ public abstract class AbstractDumper
 
         } else {
             registerAsDumped( obj );
+            emitObjectId( obj );
             if( obj.length == 0 ) {
                 emit( "[0] = {}" );
             } else {
@@ -316,6 +316,7 @@ public abstract class AbstractDumper
 
         } else {
             registerAsDumped( obj );
+            emitObjectId( obj );
             if( obj.size() == 0 ) {
                 emit( "[0] = {}" );
             } else {
@@ -361,7 +362,7 @@ public abstract class AbstractDumper
 
         } else {
             registerAsDumped( obj );
-            emit( obj.getClass().getName() );
+            emitObjectId( obj );
 
             if( obj.size() == 0 ) {
                 emit( "[0] = {}" );
@@ -779,7 +780,7 @@ public abstract class AbstractDumper
      *
      * @param obj the Object
      */
-    public void dumpObjectId(
+    public void emitObjectId(
             Object obj )
     {
         emit( obj.getClass().getName() );

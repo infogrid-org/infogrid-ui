@@ -207,5 +207,5 @@ public class ToStringDumper
     /**
      * The default maxLevel.
      */
-    public static final int DEFAULT_MAXLEVEL = theResourceHelper.getResourceIntegerOrDefault( "DefaultMaxLevel", 4 );
+    public static final int DEFAULT_MAXLEVEL = theResourceHelper.getResourceIntegerOrDefault( "DefaultMaxLevel", 6 );
 }
