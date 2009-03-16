@@ -58,8 +58,6 @@ public class MPingPongMessageEndpoint<T>
         long   deltaRecover            = theResourceHelper.getResourceLongOrDefault(   "DeltaRecover",            5000L );
         double randomVariation         = theResourceHelper.getResourceDoubleOrDefault( "RandomVariation",          0.02 ); // 2%
 
-        List<T> messagesToBeSent = new ArrayList<T>();
-
         // it is advantageous if the recover time is larger than 4 times the respond time: that way, a
         // second RPC call can be successfully completed before returning to the parent RPC caller.
         
@@ -70,14 +68,10 @@ public class MPingPongMessageEndpoint<T>
                 deltaResend,
                 deltaRecover,
                 randomVariation,
-                exec,
-                -1,
-                -1,
-                null,
-                messagesToBeSent );
+                exec );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "created " + ret );
+        if( log.isTraceCallEnabled() ) {
+            log.traceConstructor( ret );
         }
         return ret;
     }
@@ -105,8 +99,6 @@ public class MPingPongMessageEndpoint<T>
             double                   randomVariation,
             ScheduledExecutorService exec )
     {
-        List<T> messagesToBeSent = new ArrayList<T>();
-
         MPingPongMessageEndpoint<T> ret = new MPingPongMessageEndpoint<T>(
                 name,
                 deltaRespondNoMessage,
@@ -114,14 +106,10 @@ public class MPingPongMessageEndpoint<T>
                 deltaResend,
                 deltaRecover,
                 randomVariation,
-                exec,
-                -1,
-                -1,
-                null,
-                messagesToBeSent );
+                exec );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "created " + ret );
+        if( log.isTraceCallEnabled() ) {
+            log.traceConstructor( ret );
         }
         return ret;
     }
@@ -170,10 +158,44 @@ public class MPingPongMessageEndpoint<T>
                 messagesSentLast,
                 messagesToBeSent );
 
-        if( log.isDebugEnabled() ) {
-            log.debug( "created " + ret );
+        if( log.isTraceCallEnabled() ) {
+            log.traceConstructor( ret );
         }
         return ret;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param name the name of the PingPongMessageEndpoint (for debugging only)
+     * @param deltaRespondNoMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if no message is in the queue
+     * @param deltaRespondWithMessage the number of milliseconds until this PingPongMessageEndpoint returns the token if a message is in the queue
+     * @param deltaResend  the number of milliseconds until this PingPongMessageEndpoint resends the token if sending the token failed
+     * @param deltaRecover the number of milliseconds until this PingPongMessageEndpoint decides that the token
+     *                     was not received by the partner PingPongMessageEndpoint, and resends
+     * @param randomVariation the random component to add to the various times
+     * @param exec the ScheduledExecutorService to schedule timed tasks
+     */
+    protected MPingPongMessageEndpoint(
+            String                   name,
+            long                     deltaRespondNoMessage,
+            long                     deltaRespondWithMessage,
+            long                     deltaResend,
+            long                     deltaRecover,
+            double                   randomVariation,
+            ScheduledExecutorService exec )
+    {
+        this(   name,
+                deltaRespondNoMessage,
+                deltaRespondWithMessage,
+                deltaResend,
+                deltaRecover,
+                randomVariation,
+                exec,
+                -1,
+                -1,
+                null,
+                new ArrayList<T>() );
     }
 
     /**
@@ -262,7 +284,7 @@ public class MPingPongMessageEndpoint<T>
         if( isGracefullyDead ) {
             throw new IllegalStateException( this + " is dead" );
         }
-        if( log.isDebugEnabled() ) {
+        if( log.isTraceCallEnabled() ) {
             log.traceMethodCallEntry( this, "enqueueMessageForSend", msg );
         }
 
@@ -306,6 +328,12 @@ public class MPingPongMessageEndpoint<T>
         throws
             MessageSendException
     {
+        if( content != null && !content.isEmpty() && log.isInfoEnabled() ) {
+            log.info( this, "sendMessage", token, content );
+        } else if( log.isTraceCallEnabled() ) {
+            log.traceMethodCallEntry( this, "sendMessage", token, content );
+        }
+
         MPingPongMessageEndpoint<T> partner = thePartner;
         if( partner != null ) {
             partner.incomingMessage( token, content );
@@ -386,6 +414,7 @@ public class MPingPongMessageEndpoint<T>
      *
      * @param d the Dumper to dump to
      */
+    @Override
     public void dump(
             Dumper d )
     {

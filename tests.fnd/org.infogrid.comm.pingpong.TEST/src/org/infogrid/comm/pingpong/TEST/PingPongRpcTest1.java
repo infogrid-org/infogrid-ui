@@ -14,8 +14,6 @@
 
 package org.infogrid.comm.pingpong.TEST;
 
-import org.infogrid.comm.ReceivingMessageEndpoint;
-import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
 import org.infogrid.comm.pingpong.m.MPingPongMessageEndpoint;
 import org.infogrid.util.logging.Log;
 
@@ -35,10 +33,10 @@ public class PingPongRpcTest1
             throws
                 Throwable
     {
-        MPingPongMessageEndpoint<PingPongRpcTestMessage> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 1000L, 500L, 10000L, 0.f, exec );
-        MPingPongMessageEndpoint<PingPongRpcTestMessage> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 1000L, 500L, 10000L, 0.f, exec );
+        MPingPongMessageEndpoint<TestMessage> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 1000L, 500L, 10000L, 0.f, exec );
+        MPingPongMessageEndpoint<TestMessage> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 1000L, 500L, 10000L, 0.f, exec );
         
-        MyListener l2 = new MyListener( ep2 );
+        MultiplyingResponder l2 = new MultiplyingResponder( ep2, this );
         ep2.addDirectMessageEndpointListener( l2 );
 
         PingPongRpcClientEndpoint client = new PingPongRpcClientEndpoint( ep1 );
@@ -118,58 +116,4 @@ public class PingPongRpcTest1
 
     // Our Logger
     private static Log log = Log.getLogInstance( PingPongRpcTest1.class );
-
-    /**
-     * A listener that automatically responds.
-     */
-    class MyListener
-            extends
-                AbstractPingPongRpcListener
-    {
-        /**
-         * Constructor.
-         * 
-         * @param end the endpoint where this listener listens
-         */
-        public MyListener(
-                PingPongMessageEndpoint<PingPongRpcTestMessage> end )
-        {
-            super( end );
-        }
-
-        /**
-         * Called when an incoming message has arrived.
-         *
-         * @param endpoint the PingPongMessageEndpoint that sent this event
-         * @param msg the received message
-         */
-        public void messageReceived(
-                ReceivingMessageEndpoint<PingPongRpcTestMessage> endpoint,
-                PingPongRpcTestMessage                           msg )
-        {
-            long ret = msg.getPayload();
-            
-            log.debug( "Received message, calculating return for " + ret );
-
-            ret = ret * ret;
-            
-            PingPongRpcTestMessage returnMessage = new PingPongRpcTestMessage( ret );
-            returnMessage.setResponseId( msg.getRequestId() );
-            
-            theEndpoint.enqueueMessageForSend( returnMessage );
-        }
-
-        /**
-         * Called when the token has been received.
-         *
-         * @param endpoint the PingPongMessageEndpoint that sent this event
-         * @param token the received token
-         */
-        public void tokenReceived(
-                PingPongMessageEndpoint<PingPongRpcTestMessage> endpoint,
-                long                                            token )
-        {
-            // ignore
-        }    
-    }
 }

@@ -254,7 +254,7 @@ public abstract class PingPongMessageEndpoint<T>
 
         } catch( Throwable t ) {
             // catch-all
-            logHigh.error( "Unexpected exception", t );
+            logHigh.error( t );
         }
     }
 
@@ -289,6 +289,9 @@ public abstract class PingPongMessageEndpoint<T>
         boolean fireEvents = false;
 
         try {
+            if( content != null && !content.isEmpty() && logHigh.isInfoEnabled() ) {
+                logHigh.info( this, "incomingMessage", token, content );
+            }
             if( logHigh.isTraceCallEnabled() ) {
                 logHigh.traceMethodCallEntry( this, "incomingMessage", token, content );
             }

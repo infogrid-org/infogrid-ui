@@ -207,41 +207,47 @@ public abstract class AbstractDumper
             registerAsDumped( obj );
             dumpObjectId( obj );
 
-            emit( "{\n" );
+            emit( "{" );
             int min = Math.min(
                     fieldNames  != null ? fieldNames.length  : 0,
                     fieldValues != null ? fieldValues.length : 0 );
 
-            for( int i=0 ; i<min ; ++i ) {
-                Object value = fieldValues[i];
+            try {
+                ++theLevel;
 
-                if( shouldBeDumpedFull( value )) {
-                    emit( fieldNames[i] );
-                    emit( ": ");
-                    dumpChild( value );
+                for( int i=0 ; i<min ; ++i ) {
+                    Object value = fieldValues[i];
 
-                    if( i<min-1 ) {
-                        emit( ',' );
+                    if( shouldBeDumpedFull( value )) {
+                        emit( '\n' );
+                        emit( fieldNames[i] );
+                        emit( ": ");
+                        dump( value );
+
+                        if( i<min-1 ) {
+                            emit( ',' );
+                        }
+
+                    } else if( shouldBeDumpedShort( value )) {
+                        emit( '\n' );
+                        emit( fieldNames[i] );
+                        emit( ": ");
+                        dump( objectId( value ));
+
+                        if( i<min-1 ) {
+                            emit( ',' );
+                        }
                     }
-                    emit( '\n' );
-
-                } else if( shouldBeDumpedShort( value )) {
-                    emit( fieldNames[i] );
-                    emit( ": ");
-                    dumpChild( objectId( value ));
-
-                    if( i<min-1 ) {
-                        emit( ',' );
-                    }
-                    emit( '\n' );
                 }
+            } finally {
+                --theLevel;
             }
             if(    ( fieldNames  != null && fieldNames.length  != min )
                 || ( fieldValues != null && fieldValues.length != min ))
             {
                 getLog().error( "non-matching field names and values in toString method" );
             }
-            emit( "}" );
+            emit( "\n}" );
         }
     }
 
@@ -271,22 +277,28 @@ public abstract class AbstractDumper
             } else {
                 emit( '[' );
                 emit( String.valueOf( obj.length ));
-                emit( "] = {\n" );
+                emit( "] = {" );
 
-                int max = Math.min( 8, obj.length );
+                try {
+                    ++theLevel;
 
-                for( int j=0 ; j<max ; ++j ) {
-                    dump( obj[j] );
+                    int max = Math.min( 8, obj.length );
 
-                    if( j < max-1 ) {
-                        emit( "," );
+                    for( int j=0 ; j<max ; ++j ) {
+                        emit( '\n' );
+                        dump( obj[j] );
+
+                        if( j < max-1 ) {
+                            emit( "," );
+                        }
                     }
-                    emit( "\n" );
+                    if( max != obj.length ) {
+                        emit( "\n..." );
+                    }
+                } finally {
+                    --theLevel;
                 }
-                if( max != obj.length ) {
-                    emit( "        ...\n" );
-                }
-                emit( "}" );
+                emit( "\n}" );
             }
         }
     }
@@ -309,22 +321,29 @@ public abstract class AbstractDumper
             } else {
                 emit( '[' );
                 emit( String.valueOf( obj.size() ));
-                emit( "] = {\n" );
+                emit( "] = {" );
 
-                int max = Math.min( 8, obj.size() );
-                int j   = 0;
+                try {
+                    ++theLevel;
 
-                for( Object current : obj ) {
-                    dumpChild( current );
-                    emit( "\n" );
+                    int max = Math.min( 8, obj.size() );
+                    int j   = 0;
 
-                    if( ++j >= max ) {
-                        break;
+                    for( Object current : obj ) {
+                        emit( '\n' );
+                        dump( current );
+
+                        if( ++j >= max ) {
+                            break;
+                        }
                     }
+                    if( max != obj.size() ) {
+                        emit( "\n..." );
+                    }
+                } finally {
+                    --theLevel;
                 }
-                if( max != obj.size() ) {
-                    emit( "        ...\n" );
-                }
+                emit( "\n}" );
             }
         }
     }
@@ -349,26 +368,32 @@ public abstract class AbstractDumper
             } else {
                 emit( '[' );
                 emit( String.valueOf( obj.size() ));
-                emit( "] = {\n" );
+                emit( "] = {" );
 
-                int max = Math.min( 8, obj.size() );
-                int j   = 0;
-                for( Object from : obj.keySet() ) {
-                    Object to = obj.get( from );
+                try {
+                    ++theLevel;
 
-                    dumpChild( from );
-                    emit( " : " );
-                    dumpChild( to );
-                    emit( "\n" );
-                    if( ++j >= max ) {
-                        break;
+                    int max = Math.min( 8, obj.size() );
+                    int j   = 0;
+                    for( Object from : obj.keySet() ) {
+                        emit( '\n' );
+
+                        Object to = obj.get( from );
+                        dump( from );
+                        emit( " : " );
+                        dump( to );
+
+                        if( ++j >= max ) {
+                            break;
+                        }
                     }
+                    if( max != obj.size() ) {
+                        emit( "\n..." );
+                    }
+                } finally {
+                    --theLevel;
                 }
-                if( max != obj.size() ) {
-                    emit( "        ...\n" );
-                }
-
-                emit( "}" );
+                emit( "\n}" );
             }
         }
     }
@@ -777,22 +802,6 @@ public abstract class AbstractDumper
         buf.append( Integer.toHexString( obj.hashCode() ));
 
         return buf.toString();
-    }
-
-    /**
-     * Internal helper that allows a container object to cause the dumping of a child.
-     *
-     * @param child the child Object
-     */
-    protected void dumpChild(
-            Object child )
-    {
-        try {
-            ++theLevel;
-            dump( child );
-        } finally {
-            --theLevel;
-        }
     }
 
     /**

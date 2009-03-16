@@ -322,7 +322,7 @@ public abstract class Log
         String    message = determineMessage(   logStacktraceOnInfo, args );
         Throwable t       = determineThrowable( logStacktraceOnInfo, args );
 
-        logWarn( message, t );
+        logInfo( message, t );
     }
 
     /**
@@ -354,7 +354,16 @@ public abstract class Log
         String    message = determineMessage(   logStacktraceOnTraceCall, args );
         Throwable t       = determineThrowable( logStacktraceOnTraceCall, args );
 
-        logTraceCall( subject + method + " entered: " + message, t );
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Entered " );
+        buf.append( subject );
+        buf.append( " ." );
+        buf.append( method );
+        if( message != null ) {
+            buf.append( ":" );
+            buf.append( message );
+        }
+        logTraceCall( buf.toString(), t );
     }
 
     /**
@@ -372,7 +381,16 @@ public abstract class Log
         String    message = determineMessage(   logStacktraceOnTraceCall, args );
         Throwable t       = determineThrowable( logStacktraceOnTraceCall, args );
 
-        logTraceCall( subject + method + " entered: " + message, t );
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Entered " );
+        buf.append( subject );
+        buf.append( " ." );
+        buf.append( method );
+        if( message != null ) {
+            buf.append( ":" );
+            buf.append( message );
+        }
+        logTraceCall( buf.toString(), t );
     }
 
     /**
@@ -388,7 +406,14 @@ public abstract class Log
         String    message = determineMessage(   logStacktraceOnTraceCall, args );
         Throwable t       = determineThrowable( logStacktraceOnTraceCall, args );
 
-        logTraceCall( subject + " constructed: " + message, t );
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Constructed " );
+        buf.append( subject );
+        if( message != null ) {
+            buf.append( ":" );
+            buf.append( message );
+        }
+        logTraceCall( buf.toString(), t );
     }
 
     /**
@@ -407,14 +432,13 @@ public abstract class Log
             if( dumper == null ) {
                 return "Cannot find Dumper";
             }
-            if( args != null && args.length > 0 ) {
-                for( Object arg : args ) {
-                    dumper.dump( arg );
-                }
+            if( args.length == 1 && args[0] instanceof String ) {
+                return (String) args[0]; // special case of a simple informational message
             } else {
-                return "No argument to call";
+                dumper.dump( args );
+                return dumper.getBuffer();
             }
-            return dumper.getBuffer();
+
 
         } catch( FactoryException ex ) {
             error( ex );

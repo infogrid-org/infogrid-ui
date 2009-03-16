@@ -40,11 +40,29 @@ public class ReturnSynchronizer<K,R>
     private static Log log = Log.getLogInstance( ReturnSynchronizer.class ); // our own, private logger
 
     /**
-     * Constructor.
+     * Factory method.
+     *
+     * @return the created ReturnSynchronizer
+     * @param <K> the type of key
+     * @param <R> the type of return value
      */
-    public ReturnSynchronizer()
+    public static <K,R> ReturnSynchronizer<K,R> create()
     {
-       // no op
+        return new ReturnSynchronizer<K,R>( null );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param name a name for this object
+     * @return the created ReturnSynchronizer
+     * @param <K> the type of key
+     * @param <R> the type of return value
+     */
+    public static <K,R> ReturnSynchronizer<K,R> create(
+            Object name )
+    {
+        return new ReturnSynchronizer<K,R>( null );
     }
 
     /**
@@ -115,12 +133,13 @@ public class ReturnSynchronizer<K,R>
      * <p>A callback that indicates that a certain query has completed,
      * and has produced a certain result (which may be null).</p>.
      *
-     * <p>If this is invoked for a non-existing query, nothing happens.</p>
+     * <p>If this is invoked for a non-existing query, nothing happens other than a different return value.</p>
      *
      * @param keyForQuery the key identifying the query
      * @param result the result obtained for this query
+     * @return true if the query is known and open, false otherwise
      */
-    public void queryHasCompleted(
+    public boolean queryHasCompleted(
             K keyForQuery,
             R result )
     {
@@ -132,7 +151,7 @@ public class ReturnSynchronizer<K,R>
         synchronized( this ) {
             ArrayList<Thread> threadsForThisQuery = queryToThreadsTable.get( keyForQuery );
             if( threadsForThisQuery == null ) {
-                return;
+                return false;
             }
 
             // we have to first find the monitors to decrement, the release the
@@ -158,6 +177,7 @@ public class ReturnSynchronizer<K,R>
                 monitors[i].dec();
             }
         }
+        return true;
     }
 
     /**
@@ -278,6 +298,41 @@ public class ReturnSynchronizer<K,R>
     }
 
     /**
+     * If this is invoked, a disabling fatal error has occurred. All waiting threads are released.
+     *
+     * @param ex the Throwable indicating the disabling error
+     */
+    public void disablingError(
+            Throwable ex )
+    {
+        if( log.isDebugEnabled() ) {
+            log.debug( this + ".disablingError( " + ex + " )" );
+        }
+        CS [] monitors;
+
+        synchronized( this ) {
+            for( ArrayList<Thread> threadsForThisQuery : queryToThreadsTable.values() ) {
+
+                monitors = new CS[ threadsForThisQuery.size() ];
+
+                Iterator<Thread> theIter = threadsForThisQuery.iterator();
+                for( int i=0 ; theIter.hasNext() ; ++i ) {
+                    Thread t = theIter.next();
+
+                    monitors[i] = threadToMonitorTable.get( t );
+                }
+
+                // this may be null if our thread has left already
+                for( int i=0 ; i<monitors.length ; ++i ) {
+                    if( monitors[i] != null ) {
+                        monitors[i].abandon();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Dump this object.
      *
      * @param d the Dumper to dump to
@@ -374,6 +429,14 @@ public class ReturnSynchronizer<K,R>
             if( counter == 0 ) {
                 this.notifyAll();
             }
+        }
+
+        /**
+         * Abandon the monitor.
+         */
+        public synchronized void abandon()
+        {
+            this.notifyAll();
         }
 
         /**

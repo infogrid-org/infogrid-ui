@@ -41,6 +41,9 @@ public class AllTests
 
                 new TestSpec( PingPongRpcTest1.class ),
                 new TestSpec( PingPongRpcTest2.class ),
+
+                new TestSpec( PingPongReturnSynchronizerTest1.class ),
+                new TestSpec( PingPongReturnSynchronizerTest2.class ),
         };
 
         runTests( tests );

@@ -38,10 +38,10 @@ public class PingPongRpcTest2
             throws
                 Throwable
     {
-        MPingPongMessageEndpoint<PingPongRpcTestMessage> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 1000L, 500L, 10000L, 0.f, exec );
-        MPingPongMessageEndpoint<PingPongRpcTestMessage> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 1000L, 500L, 10000L, 0.f, exec );
+        MPingPongMessageEndpoint<TestMessage> ep1 = MPingPongMessageEndpoint.create( "ep1", 1000L, 1000L, 500L, 10000L, 0.f, exec );
+        MPingPongMessageEndpoint<TestMessage> ep2 = MPingPongMessageEndpoint.create( "ep2", 1000L, 1000L, 500L, 10000L, 0.f, exec );
         
-        MyListener l2 = new MyListener( ep2 );
+        DelayingMultiplyingResponder l2 = new DelayingMultiplyingResponder( ep2, this );
         ep2.addDirectMessageEndpointListener( l2 );
 
         PingPongRpcClientEndpoint client = new PingPongRpcClientEndpoint( ep1 );
@@ -121,100 +121,4 @@ public class PingPongRpcTest2
 
     // Our Logger
     private static Log log = Log.getLogInstance( PingPongRpcTest2.class );
-
-    /**
-     * Listener that responds only on the second message.
-     */
-    class MyListener
-            extends
-                AbstractPingPongRpcListener
-    {
-        /**
-         * Constructor.
-         * 
-         * @param end the endpoint to which this listener listenes
-         */
-        public MyListener(
-                BidirectionalMessageEndpoint<PingPongRpcTestMessage> end )
-        {
-            super( end );
-        }
-
-        /**
-         * Called when an incoming message has arrived.
-         *
-         * @param endpoint the PingPongMessageEndpoint that sent this event
-         * @param msg the received message
-         */
-        public void messageReceived(
-                ReceivingMessageEndpoint<PingPongRpcTestMessage> endpoint,
-                final PingPongRpcTestMessage                     msg )
-        {
-            if( theOldMessage != null ) {
-                long ret = theOldMessage.getPayload();
-
-                log.debug( "Received message, calculating return for old message " + ret );
-
-                ret = ret * ret;
-
-                PingPongRpcTestMessage returnMessage = new PingPongRpcTestMessage( ret );
-                returnMessage.setResponseId( theOldMessage.getRequestId() );
-
-                theEndpoint.enqueueMessageForSend( returnMessage );
-
-                theOldMessage = null;
-
-            } else {
-                log.debug( "Received message, responding with unrelated message" );
-                
-                PingPongRpcTestMessage returnMessage = new PingPongRpcTestMessage( 4 ) {
-                        @Override
-                        public String toString()
-                        {
-                            return super.toString() + ", UNRELATED: sent when payload " + msg.getPayload() + " came in";
-                        }
-                };
-                if( msg.getPayload() >= 2 ) {
-                    returnMessage.setResponseId( msg.getPayload() -2 );
-                    // send an unrelated, old response id
-                }
-
-                theEndpoint.enqueueMessageForSend( returnMessage );
-            }
-
-            theOldMessage = msg;
-        }
-        
-        /**
-         * Called when the token has been received.
-         *
-         * @param endpoint the PingPongMessageEndpoint that sent this event
-         * @param token the received token
-         */
-        public void tokenReceived(
-                PingPongMessageEndpoint<PingPongRpcTestMessage> endpoint,
-                long                                            token )
-        {
-            if( theOldMessage != null ) {
-                long ret = theOldMessage.getPayload();
-
-                log.debug( "Received token, calculating return for old message " + ret );
-
-                ret = ret * ret;
-
-                PingPongRpcTestMessage returnMessage = new PingPongRpcTestMessage( ret );
-                returnMessage.setResponseId( theOldMessage.getRequestId() );
-
-                theEndpoint.enqueueMessageForSend( returnMessage );
-
-                theOldMessage = null;
-            }
-        }    
-
-        /**
-         * Store for the last incoming message, so we can respond to it later.
-         */
-        protected PingPongRpcTestMessage theOldMessage = null;
-    }
 }
-

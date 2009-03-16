@@ -14,6 +14,7 @@
 
 package org.infogrid.util.logging;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.infogrid.util.ResourceHelper;
@@ -127,6 +128,9 @@ public class ToStringDumper
         } else if( theAlreadyDumped.contains( obj )) {
             return false;
 
+        } else if( isEmptyCollection( obj )) {
+            return false;
+
         } else {
             return true;
         }
@@ -141,7 +145,30 @@ public class ToStringDumper
     protected boolean shouldBeDumpedShort(
             Object obj )
     {
+        if( isEmptyCollection( obj )) {
+            return false;
+        }
         return true;
+    }
+
+    /**
+     * Determine whether the passed object is an empty collection and thus should not be dumped.
+     *
+     * @param obj the Object to be tested
+     * @return true if this is an empty collection
+     */
+    protected boolean isEmptyCollection(
+            Object obj )
+    {
+        if( obj instanceof Collection ) {
+            Collection realObj = (Collection) obj;
+            return realObj.isEmpty();
+        }
+        if( obj instanceof Object [] ) {
+            Object [] realObj = (Object []) obj;
+            return realObj.length == 0;
+        }
+        return false;
     }
 
     /**

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -42,7 +42,7 @@ public class ReturnSynchronizerTest1
 
             log.info( "Running test " + t.theName );
 
-            ReturnSynchronizer<Object,Object> theSync = new ReturnSynchronizer<Object,Object>();
+            ReturnSynchronizer<Object,Object> theSync = ReturnSynchronizer.create();
 
             Object theMonitor = theSync.getSyncObject();
 
