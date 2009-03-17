@@ -110,7 +110,6 @@ public class XprisoTest5
 
         checkProxies( obj_mb1, new NetMeshBase[] { mb2 }, null, mb2,  "obj_mb1 has wrong proxies" );
         checkProxies( obj_mb2, new NetMeshBase[] { mb1 }, mb1,  null, "obj_mb2 has wrong proxies" );
-        
     }
 
     /**
@@ -121,7 +120,7 @@ public class XprisoTest5
     public static void main(
             String [] args )
     {
-        XprisoTest4 test = null;
+        XprisoTest5 test = null;
         try {
             if( args.length < 0 ) { // well, not quite possible but to stay with the general outline
                 System.err.println( "Synopsis: <no arguments>" );
@@ -129,7 +128,7 @@ public class XprisoTest5
                 System.exit( 1 );
             }
 
-            test = new XprisoTest4( args );
+            test = new XprisoTest5( args );
             test.run();
 
         } catch( Throwable ex ) {

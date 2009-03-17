@@ -26,7 +26,7 @@ import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
 import org.infogrid.util.logging.Log;
 
 /**
- * Simplest-possible Xpriso Test
+ * Simplest-possible Xpriso Test.
  */
 public class XprisoTest1
         extends

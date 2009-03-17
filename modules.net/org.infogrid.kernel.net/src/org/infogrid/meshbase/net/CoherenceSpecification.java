@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import org.infogrid.util.ResourceHelper;
 
 /**
- * Captures the requirements for coherence between replicas. This is an abstract
+ * Captures the requirements for coherence between NetMeshBases. This is an abstract
  * class; concrete subclasses are defined as inner classes.
  */
 public abstract class CoherenceSpecification

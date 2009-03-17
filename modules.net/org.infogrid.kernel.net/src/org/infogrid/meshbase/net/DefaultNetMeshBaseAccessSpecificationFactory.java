@@ -62,24 +62,6 @@ public class DefaultNetMeshBaseAccessSpecificationFactory
     {
         return new DefaultNetMeshBaseAccessSpecification(
                 identifier,
-                NetMeshBaseAccessSpecification.DEFAULT_SCOPE,
-                NetMeshBaseAccessSpecification.DEFAULT_COHERENCE );
-    }
-
-    /**
-     * Factory method.
-     *
-     * @param identifier identifies the NetMeshBase to access
-     * @param scope the ScopeSpecification for the access
-     * @return the created NetMeshBaseAccessSpecification
-     */
-    public DefaultNetMeshBaseAccessSpecification obtain(
-            NetMeshBaseIdentifier  identifier,
-            ScopeSpecification     scope )
-    {
-        return new DefaultNetMeshBaseAccessSpecification(
-                identifier,
-                scope,
                 NetMeshBaseAccessSpecification.DEFAULT_COHERENCE );
     }
 
@@ -96,29 +78,9 @@ public class DefaultNetMeshBaseAccessSpecificationFactory
     {
         return new DefaultNetMeshBaseAccessSpecification(
                 identifier,
-                NetMeshBaseAccessSpecification.DEFAULT_SCOPE,
                 coherence );        
     }
 
-    /**
-     * Factory method.
-     *
-     * @param identifier identifies the NetMeshBase to access
-     * @param scope the ScopeSpecification for the access
-     * @param coherence the CoherenceSpecification for the access
-     * @return the created NetMeshBaseAccessSpecification
-     */
-    public DefaultNetMeshBaseAccessSpecification obtain(
-            NetMeshBaseIdentifier  identifier,
-            ScopeSpecification     scope,
-            CoherenceSpecification coherence )
-    {
-        return new DefaultNetMeshBaseAccessSpecification(
-                identifier,
-                scope,
-                coherence );
-    }
-    
     /**
      * Recreate a NetMeshBaseAccessSpecification from an external form.
      *
@@ -136,12 +98,10 @@ public class DefaultNetMeshBaseAccessSpecificationFactory
             NetMeshBaseIdentifier netMeshBase = theMeshBaseIdentifierFactory.fromExternalForm( raw );
             return new DefaultNetMeshBaseAccessSpecification(
                     netMeshBase,
-                    NetMeshBaseAccessSpecification.DEFAULT_SCOPE,
                     NetMeshBaseAccessSpecification.DEFAULT_COHERENCE );
         }
         // we need to comb through the URL
         String [] pairs           = raw.substring( q+1 ).split( "&" );
-        String    scopeString     = null;
         String    coherenceString = null;
 
         StringBuilder remainder = new StringBuilder( raw.length() );
@@ -150,10 +110,7 @@ public class DefaultNetMeshBaseAccessSpecificationFactory
         char sep = '?';
 
         for( int i=0 ; i<pairs.length ; ++i ) {
-            if( scopeString == null && pairs[i].startsWith( NetMeshBaseAccessSpecification.SCOPE_KEYWORD + "=" )) {
-                scopeString = pairs[i].substring( NetMeshBaseAccessSpecification.SCOPE_KEYWORD.length() + 1 );
-                scopeString = HTTP.decodeUrlArgument( scopeString );
-            } else if( coherenceString == null && pairs[i].startsWith( NetMeshBaseAccessSpecification.COHERENCE_KEYWORD + "=" )) {
+            if( coherenceString == null && pairs[i].startsWith( NetMeshBaseAccessSpecification.COHERENCE_KEYWORD + "=" )) {
                 coherenceString = pairs[i].substring( NetMeshBaseAccessSpecification.COHERENCE_KEYWORD.length() + 1 );
                 coherenceString = HTTP.decodeUrlArgument( coherenceString );
             } else {
@@ -164,7 +121,6 @@ public class DefaultNetMeshBaseAccessSpecificationFactory
         }
         return new DefaultNetMeshBaseAccessSpecification(
                 theMeshBaseIdentifierFactory.fromExternalForm( remainder.toString() ),
-                scopeString != null ? ScopeSpecification.fromExternalForm( scopeString ) : NetMeshBaseAccessSpecification.DEFAULT_SCOPE ,
                 coherenceString != null ? CoherenceSpecification.fromExternalForm( coherenceString ) : NetMeshBaseAccessSpecification.DEFAULT_COHERENCE );
     }
 

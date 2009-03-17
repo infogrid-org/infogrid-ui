@@ -199,11 +199,40 @@ public interface NetMeshObjectAccessSpecificationFactory
             NetMeshBaseAccessSpecification [] elements,
             NetMeshObjectIdentifier           remoteIdentifier );
 
+
+    /**
+     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
+     * requesting the home object at the NetMeshBaseIdentifier,
+     * specifying a non-default ScopeSpecification.
+     *
+     * @param elements the NetMeshBaseAccessSpecifications, in sequence
+     * @param scope the ScopeSpecification
+     * @return created NetMeshObjectAccessSpecification
+     */
+    public NetMeshObjectAccessSpecification obtain(
+            NetMeshBaseAccessSpecification [] elements,
+            ScopeSpecification                scope );
+
+    /**
+     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
+     * requesting a non-default NetMeshObject,
+     * specifying a non-default ScopeSpecification.
+     *
+     * @param elements the NetMeshBaseAccessSpecifications, in sequence
+     * @param remoteIdentifier Identifier of the remote non-default NetMeshObject
+     * @param scope the ScopeSpecification
+     * @return created NetMeshObjectAccessSpecification
+     */
+    public NetMeshObjectAccessSpecification obtain(
+            NetMeshBaseAccessSpecification [] elements,
+            NetMeshObjectIdentifier           remoteIdentifier,
+            ScopeSpecification                scope );
+
     /**
      * Factory method to obtain a multi-element NetMeshObjectAccessSpecification
      * from a series of NetMeshBaseIdentifiers.
      * 
-     * @param elements the NetMeshBaseIdentifier, in sequence
+     * @param elements the NetMeshBaseIdentifiers, in sequence
      * @return created NetMeshObjectAccessSpecification
      */
     public NetMeshObjectAccessSpecification obtain(
@@ -221,7 +250,35 @@ public interface NetMeshObjectAccessSpecificationFactory
     public NetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier [] elements,
             NetMeshObjectIdentifier  remoteIdentifier );
-    
+
+    /**
+     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
+     * requesting the home object at the NetMeshBaseIdentifier,
+     * specifying a non-default ScopeSpecification.
+     *
+     * @param elements the NetMeshBaseIdentifiers, in sequence
+     * @param scope the ScopeSpecification
+     * @return created NetMeshObjectAccessSpecification
+     */
+    public NetMeshObjectAccessSpecification obtain(
+            NetMeshBaseIdentifier [] elements,
+            ScopeSpecification       scope );
+
+    /**
+     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
+     * requesting a non-default NetMeshObject,
+     * specifying a non-default ScopeSpecification.
+     *
+     * @param elements the NetMeshBaseIdentifiers, in sequence
+     * @param remoteIdentifier Identifier of the remote non-default NetMeshObject
+     * @param scope the ScopeSpecification
+     * @return created NetMeshObjectAccessSpecification
+     */
+    public NetMeshObjectAccessSpecification obtain(
+            NetMeshBaseIdentifier [] elements,
+            NetMeshObjectIdentifier  remoteIdentifier,
+            ScopeSpecification       scope );
+
     /**
      * Convenience factory method to obtain a single-element NetMeshObjectAccessSpecification
      * by converting a URI into a NetMeshBaseIdentifier, requesting its home MeshObject.

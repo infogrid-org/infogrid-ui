@@ -37,20 +37,19 @@ public interface NetMeshObjectAccessSpecification
     public NetMeshBaseAccessSpecification [] getAccessPath();
 
     /**
-     * Obtain the Identifier of the NetMeshObject that we are looking for in the remote NetMeshBase,
-     * if different from the default.
-     *
-     * @return the Identifier of the NetMeshObject that we are looking for, if different from the default
-     */
-    public NetMeshObjectIdentifier getNoneDefaultNetMeshObjectIdentifier(); // FIXME what a weird name?
-
-    /**
      * Obtain the Identifier of the NetMeshObject that we are looking for in the remote NetMeshBase.
      * Calculate it if it is the default.theNetMeshObjectAccessSpecification
      *
      * @return the Identifier of the NetMeshObject that we are looking for
      */
     public NetMeshObjectIdentifier getNetMeshObjectIdentifier();
+
+    /**
+     * Obtain the ScopeSpecification, if any.
+     *
+     * @return the ScopeSpecification
+     */
+    public ScopeSpecification getScopeSpecification();
 
     /**
      * Obtain an externalized version of this NetMeshObjectAccessSpecification.
@@ -63,4 +62,14 @@ public interface NetMeshObjectAccessSpecification
      * To save memory, this constant is allocated here and used wherever appropriate.
      */
     public static final NetMeshObjectAccessSpecification [] EMPTY_ARRAY = {};
+
+    /**
+     * The default scope for the object graph that we want.
+     */
+    public static final ScopeSpecification DEFAULT_SCOPE = null;
+
+    /**
+     * URL parameter keyword indicating the scope parameter.
+     */
+    public static final String SCOPE_KEYWORD = "lid-scope";
 }
