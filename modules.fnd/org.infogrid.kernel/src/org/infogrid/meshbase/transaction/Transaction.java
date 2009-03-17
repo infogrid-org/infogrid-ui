@@ -54,6 +54,16 @@ public abstract class Transaction
     }
 
     /**
+     * Obtain the MeshBase to which this Transaction belongs.
+     *
+     * @return the MeshBase
+     */
+    public MeshBase getMeshBase()
+    {
+        return theTransactable;
+    }
+
+    /**
       * Commit a started Transaction. At this time, committing is the only way of
       * ending an opened Transaction; rollback is not supported (see documentation).
       */

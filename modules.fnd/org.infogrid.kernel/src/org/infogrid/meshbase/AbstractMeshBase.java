@@ -792,17 +792,20 @@ public abstract class AbstractMeshBase
      * immediately. Evaluate any thrown TransactionActionException, and retry if requested.
      *
      * @param act the TransactionAction
-     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @return a TransactionAction-specific return value
      * @throws TransactionException a TransactionException has occurred
+     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @param <T> the type of return value
      */
-    public boolean executeNow(
-            TransactionAction act )
+    public <T> T executeNow(
+            TransactionAction<T> act )
         throws
-            TransactionException
+            TransactionException,
+            TransactionActionException.Error
     {
         Transaction tx = createTransactionNowIfNeeded();
 
-        boolean ret = executeTransactionAction( tx, act );
+        T ret = executeTransactionAction( tx, act );
         return ret;
     }
 
@@ -811,17 +814,20 @@ public abstract class AbstractMeshBase
      * as soon as possible. Evaluate any thrown TransactionActionException, and retry if requested.
      *
      * @param act the TransactionAction
-     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @return a TransactionAction-specific return value
      * @throws TransactionException a TransactionException has occurred
+     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @param <T> the type of return value
      */
-    public boolean executeAsap(
-            TransactionAction act )
+    public <T> T executeAsap(
+            TransactionAction<T> act )
         throws
-            TransactionException
+            TransactionException,
+            TransactionActionException.Error
     {
         Transaction tx = createTransactionAsapIfNeeded();
 
-        boolean ret = executeTransactionAction( tx, act );
+        T ret = executeTransactionAction( tx, act );
         return ret;
     }
 
@@ -830,29 +836,40 @@ public abstract class AbstractMeshBase
      *
      * @param tx the Transaction
      * @param act the TransactionAction
-     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @return a TransactionAction-specific return value
      * @throws TransactionException thrown if the TransactionAction's implementation contained a programming error
+     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @param <T> the type of return value
      */
-    protected boolean executeTransactionAction(
-            Transaction       tx,
-            TransactionAction act )
+    protected <T> T executeTransactionAction(
+            Transaction          tx,
+            TransactionAction<T> act )
         throws
-            TransactionException
+            TransactionException,
+            TransactionActionException.Error
     {
+        T ret = null;
         while( true ) {
             try {
-                act.execute( tx );
+                ret = act.execute( tx );
 
                 tx.commitTransaction();
                 tx = null;
 
-                return true;
+                return ret;
 
             } catch( TransactionActionException.Rollback ex ) {
-                return false;
+                return null;
 
             } catch( TransactionActionException.Retry ex ) {
                 // do nothing, stay in the loop
+
+            } catch( TransactionActionException.Error ex ) {
+                throw ex;
+
+            } catch( TransactionActionException ex ) {
+                log.error( "This should not be possible", ex );
+                throw new RuntimeException( ex );
 
             } finally {
                 if( tx != null ) {

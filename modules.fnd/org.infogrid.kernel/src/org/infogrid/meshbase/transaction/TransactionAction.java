@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,22 +16,23 @@ package org.infogrid.meshbase.transaction;
 
 /**
  * An action that is performed within Transaction boundaries.
+ *
+ * @param <T> the return type of the action
  */
-public interface TransactionAction
+public interface TransactionAction<T>
 {
     /**
      * Execute the action. This will be invoked within valid Transaction
      * boundaries.
      *
-     * @param tx the Transaction within which the code is invoked.
-     * @throws TransactionActionException.Rollback thrown if the Transaction needs to be rolled back
-     * @throws TransactionActionException.Retry thrown if the Transaction needs to be rolled back and retried
+     * @param tx the Transaction within which the code is invoked
+     * @return a return object, if any
+     * @throws TransactionActionException a problem occurred during execution of the TransactionAction
      * @throws TransactionException should never be thrown
      */
-    public abstract void execute(
+    public abstract T execute(
             Transaction tx )
         throws
-            TransactionActionException.Rollback,
-            TransactionActionException.Retry,
+            TransactionActionException,
             TransactionException;
 }

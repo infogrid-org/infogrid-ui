@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -33,6 +33,7 @@ import org.infogrid.util.LiveDeadObject;
 import org.infogrid.util.QuitListener;
 import org.infogrid.util.context.ObjectInContext;
 import org.infogrid.meshbase.transaction.TransactionAction;
+import org.infogrid.meshbase.transaction.TransactionActionException;
 import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.HasIdentifierFinder;
 import org.infogrid.util.IsDeadException;
@@ -328,26 +329,32 @@ public interface MeshBase
      * immediately. Evaluate any thrown TransactionActionException, and retry if requested.
      *
      * @param act the TransactionAction
-     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @return a TransactionAction-specific return value
      * @throws TransactionException a TransactionException has occurred
+     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @param <T> the type of return value
      */
-    public abstract boolean executeNow(
-            TransactionAction act )
+    public abstract <T> T executeNow(
+            TransactionAction<T> act )
         throws
-            TransactionException;
+            TransactionException,
+            TransactionActionException.Error;
 
     /**
      * Perform this TransactionAction within an automatically generated Transaction
      * as soon as possible. Evaluate any thrown TransactionActionException, and retry if requested.
      *
      * @param act the TransactionAction
-     * @return true if the TransactionAction was executed successfully (which may include retries), false otherwise
+     * @return a TransactionAction-specific return value
      * @throws TransactionException a TransactionException has occurred
+     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @param <T> the type of return value
      */
-    public abstract boolean executeAsap(
-            TransactionAction act )
+    public abstract <T> T executeAsap(
+            TransactionAction<T> act )
         throws
-            TransactionException;
+            TransactionException,
+            TransactionActionException.Error;
 
     /**
      * Clear the in-memory cache, if this MeshBase has one. This method only makes any sense

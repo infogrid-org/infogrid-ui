@@ -24,6 +24,27 @@ public abstract class TransactionActionException
         AbstractLocalizedException
 {
     /**
+     * Constructor, for subclasses defined in this file only.
+     */
+    private TransactionActionException()
+    {
+        super();
+    }
+
+    /**
+     * Constructor, for subclasses defined in this file only.
+     *
+     * @param message the message, if any
+     * @param cause the cause, if any
+     */
+    private TransactionActionException(
+            String    message,
+            Throwable cause )
+    {
+        super( message, cause );
+    }
+
+    /**
      * Obtain resource parameters for the internationalization.
      *
      * @return the resource parameters
@@ -68,6 +89,28 @@ public abstract class TransactionActionException
          */
         public Retry()
         {
+        }
+    }
+
+    /**
+     * Indicates that a different problem occurred that could not be remedied from
+     * within the TransactionAction.
+     */
+    public static class Error
+            extends
+                TransactionActionException
+    {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
+        /**
+         * Constructor.
+         *
+         * @param cause the cause
+         */
+        public Error(
+                Throwable cause )
+        {
+            super( null, cause );
         }
     }
 }
