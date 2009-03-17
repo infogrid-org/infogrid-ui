@@ -122,9 +122,4 @@ public abstract class AbstractWaitingEndpoint<T extends CarriesInvocationId>
      * The internally used UniqueTokenCreator.
      */
     protected static SimpleTimeBasedUniqueLongGenerator theDelegate = SimpleTimeBasedUniqueLongGenerator.create();
-
-    /**
-     * The default timeout.
-     */
-    protected static long defaultTimeout = ResourceHelper.getInstance( AbstractWaitingEndpoint.class ).getResourceLongOrDefault( "DefaultTimeout", 5000L  );
 }

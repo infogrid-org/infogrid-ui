@@ -1265,17 +1265,20 @@ public class ProbeDispatcher
                 ret = new CoherenceSpecification.AdaptivePeriodic(
                         fallbackDelay,
                         maxDelay,
-                        adaptiveFactor );
+                        adaptiveFactor,
+                        false ); // always false as true is only relevant when attempting to access a data source for the first time via the Probe framework
 
             } else if( ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION == subtype ) {
 
-                ret = CoherenceSpecification.ONE_TIME_ONLY;
+                ret = CoherenceSpecification.ONE_TIME_ONLY_FAST;
 
             } else if( ProbeSubjectArea.PERIODICPROBEUPDATESPECIFICATION == subtype ) {
 
                 long period = ((IntegerValue)obj.getPropertyValue( ProbeSubjectArea.PERIODICPROBEUPDATESPECIFICATION_DELAY )).value();
 
-                ret = new CoherenceSpecification.Periodic( period );
+                ret = new CoherenceSpecification.Periodic(
+                        period,
+                        false ); // always false as true is only relevant when attempting to access a data source for the first time via the Probe framework
 
             } else {
 

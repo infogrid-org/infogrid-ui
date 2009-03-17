@@ -240,6 +240,17 @@ public class DefaultNetMeshObjectAccessSpecification
     }
 
     /**
+     * Convert to String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return toExternalForm();
+    }
+
+    /**
      * The factory that created this object.
      */
     protected NetMeshObjectAccessSpecificationFactory theFactory;

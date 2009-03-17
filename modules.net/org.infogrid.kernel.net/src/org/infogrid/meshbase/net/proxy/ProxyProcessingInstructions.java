@@ -757,6 +757,111 @@ public class ProxyProcessingInstructions
     }
 
     /**
+     * Set the time we wait to obtain locks.
+     *
+     * @param newValue the wait, in milliseconds
+     */
+    public void setExpectedObtainLocksWait(
+            long newValue )
+    {
+        theExpectedObtainLocksWait = newValue;
+    }
+
+    /**
+     * Obtain the time to wait to obtain locks.
+     *
+     * @return the time, in milliseconds
+     */
+    public long getExpectedObtainLocksWait()
+    {
+        return theExpectedObtainLocksWait;
+    }
+
+    /**
+     * Set the time we wait to push update rights.
+     *
+     * @param newValue the wait, in milliseconds
+     */
+    public void setExpectedPushLocksWait(
+            long newValue )
+    {
+        theExpectedPushLocksWait = newValue;
+    }
+
+    /**
+     * Obtain the time to wait to push update rights.
+     *
+     * @return the time, in milliseconds
+     */
+    public long getExpectedPushLocksWait()
+    {
+        return theExpectedPushLocksWait;
+    }
+
+    /**
+     * Set the time we wait to obtain home replica rights.
+     *
+     * @param newValue the wait, in milliseconds
+     */
+    public void setExpectedObtainHomeReplicasWait(
+            long newValue )
+    {
+        theExpectedObtainHomeReplicasWait = newValue;
+    }
+
+    /**
+     * Obtain the time to wait to obtain home replica rights.
+     *
+     * @return the time, in milliseconds
+     */
+    public long getExpectedObtainHomeReplicasWait()
+    {
+        return theExpectedObtainHomeReplicasWait;
+    }
+
+    /**
+     * Set the time we wait to push home replica rights.
+     *
+     * @param newValue the wait, in milliseconds
+     */
+    public void setExpectedPushHomeReplicasWait(
+            long newValue )
+    {
+        theExpectedPushHomeReplicasWait = newValue;
+    }
+
+    /**
+     * Obtain the time to wait to push home replica rights
+     *
+     * @return the time, in milliseconds
+     */
+    public long getExpectedPushHomeReplicasWait()
+    {
+        return theExpectedPushHomeReplicasWait;
+    }
+
+    /**
+     * Set the time we wait to resynchronize replicas.
+     *
+     * @param newValue the wait, in milliseconds
+     */
+    public void setExpectedResynchronizeWait(
+            long newValue )
+    {
+        theExpectedResynchronizeWait = newValue;
+    }
+
+    /**
+     * Obtain the time to wait to resynchronize replicas.
+     *
+     * @return the time, in milliseconds
+     */
+    public long getExpectedResynchronizeWait()
+    {
+        return theExpectedResynchronizeWait;
+    }
+
+    /**
      * Set the DeletedEvents that shall be rippled.
      * 
      * @param deletions the DeletedEvents
@@ -1065,4 +1170,9 @@ public class ProxyProcessingInstructions
     protected NetMeshObjectDeletedEvent [] theDeletions = {};
     
     protected long theExpectectedObtainReplicasWait = 2000L; // default. FIXME?
+    protected long theExpectedObtainLocksWait = 2000L; // default. FIXME?
+    protected long theExpectedPushLocksWait = 2000L; // default. FIXME?
+    protected long theExpectedObtainHomeReplicasWait = 2000L; // default. FIXME?
+    protected long theExpectedPushHomeReplicasWait = 2000L; // default. FIXME?
+    protected long theExpectedResynchronizeWait = 2000L; // default. FIXME?
 }

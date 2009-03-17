@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
@@ -154,7 +155,7 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
         if( sync == null ) {
             return false;
         }
-        boolean almost = sync.areAllQueriesCompleteForThisThread();
+        boolean almost = sync.isQueryComplete( responseId );
         return !almost;
     }
 
@@ -230,4 +231,9 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
      */
     protected Map<Long,Reference<ReturnSynchronizer<Long,T>>> theSynchronizers
             = new HashMap<Long,Reference<ReturnSynchronizer<Long,T>>>();
+
+    /**
+     * The default timeout.
+     */
+    protected static long defaultTimeout = ResourceHelper.getInstance( ReturnSynchronizerEndpoint.class ).getResourceLongOrDefault( "DefaultTimeout", 5000L  );
 }

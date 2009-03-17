@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,8 +19,8 @@ import org.infogrid.comm.BidirectionalMessageEndpoint;
 import org.infogrid.comm.MessageEndpoint;
 import org.infogrid.comm.MessageEndpointIsDeadException;
 import org.infogrid.comm.ReceivingMessageEndpoint;
+import org.infogrid.comm.ReturnSynchronizerEndpoint;
 import org.infogrid.comm.SendingMessageEndpoint;
-import org.infogrid.comm.WaitForResponseEndpoint;
 import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
 import org.infogrid.comm.pingpong.PingPongMessageEndpointListener;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
@@ -52,7 +52,7 @@ import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.CreateWhenNeededException;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.IsDeadException;
-import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.SmartFactory;
 import org.infogrid.util.logging.Log;
 
@@ -98,9 +98,9 @@ public abstract class AbstractCommunicatingProxy
 
         // Don't use the factory. We dispatch the incoming messages ourselves, so we can make
         // sure we process them in order.
-        theWaitForLockResponseEndpoint    = new MyWaitForLockResponseEndpoint( theEndpoint );
-        theWaitForHomeResponseEndpoint    = new MyWaitForHomeReplicaResponseEndpoint( theEndpoint );
-        theWaitForReplicaResponseEndpoint = new MyWaitForReplicaResponseEndpoint( theEndpoint );
+        theWaitForLockResponseEndpoint    = new MyLockReturnSynchronizerEndpoint( theEndpoint );
+        theWaitForHomeResponseEndpoint    = new MyHomeReplicaReturnSynchronizerEndpoint( theEndpoint );
+        theWaitForReplicaResponseEndpoint = new MyReplicaReturnSynchronizerEndpoint( theEndpoint );
     }
 
     /**
@@ -128,102 +128,109 @@ public abstract class AbstractCommunicatingProxy
 
     /**
      * Ask this Proxy to obtain from its partner NetMeshBase replicas with the enclosed
-     * specification. Do not acquire the lock; that would be a separate operation. 
-     * 
+     * specification. Do not acquire the lock; that would be a separate operation.
+     *
      * @param paths the NetMeshObjectAccessSpecifications specifying which replicas should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public final long obtainReplicas(
-            NetMeshObjectAccessSpecification [] paths,
-            long                                duration )
+    public long obtainReplicas(
+            NetMeshObjectAccessSpecification []    paths,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer )
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForObtainReplicas( paths, duration, this );
-        performInstructions( instructions );
+        performInstructions( instructions, synchronizer );
 
         return instructions.getExpectedObtainReplicasWait();
     }
     
     /**
      * Ask this Proxy to obtain the lock for one or more replicas from the
-     * partner NetMeshBase. Unlike many of the other calls, this call is
-     * synchronous over the network and either succeeds, fails, or times out.
+     * partner NetMeshBase.
      *
      * @param localReplicas the local replicas for which the lock should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @throws RemoteQueryTimeoutException thrown if this call times out
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public final void tryToObtainLocks(
-            NetMeshObject [] localReplicas,
-            long             duration )
-        throws
-            RemoteQueryTimeoutException
+    public long tryToObtainLocks(
+            NetMeshObject []                       localReplicas,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer )
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForTryToObtainLocks( localReplicas, duration, this );
-        performInstructions( instructions );
+        performInstructions( instructions, synchronizer );
+
+        return instructions.getExpectedObtainLocksWait();
     }
     
     /**
      * Ask this Proxy to push the locks for one or more replicas to the partner
-     * NetMeshBase. Unlike many of the other calls, this call is
-     * synchronous over the network and either succeeds, fails, or times out.
-     * 
+     * NetMeshBase.
+     *
      * @param localReplicas the local replicas for which the lock should be pushed
      * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @throws RemoteQueryTimeoutException thrown if this call times out
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public void tryToPushLocks(
-            NetMeshObject [] localReplicas,
-            boolean []       isNewProxy,
-            long             duration )
-        throws
-            RemoteQueryTimeoutException
+    public long tryToPushLocks(
+            NetMeshObject []                       localReplicas,
+            boolean []                             isNewProxy,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer )
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForTryToPushLocks( localReplicas, isNewProxy, duration, this );
-        performInstructions( instructions );
+        performInstructions( instructions, synchronizer );
+
+        return instructions.getExpectedPushLocksWait();
     }
 
     /**
      * Ask this Proxy to obtain the home replica status for one or more replicas from the
-     * partner NetMeshBase. Unlike many of the other calls, this call is
-     * synchronous over the network and either succeeds, fails, or times out.
+     * partner NetMeshBase.
      *
      * @param localReplicas the local replicas for which the home replica status should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @throws RemoteQueryTimeoutException thrown if this call times out
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public void tryToObtainHomeReplicas(
-            NetMeshObject [] localReplicas,
-            long             duration )
-        throws
-            RemoteQueryTimeoutException
+    public long tryToObtainHomeReplicas(
+            NetMeshObject []                       localReplicas,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer )
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForTryToObtainHomeReplicas( localReplicas, duration, this );
-        performInstructions( instructions );
+        performInstructions( instructions, synchronizer );
+
+        return instructions.getExpectedObtainHomeReplicasWait();
     }
 
     /**
      * Ask this Proxy to push the home replica status for one or more replicas to the partner
      * NetMeshBase. Unlike many of the other calls, this call is
      * synchronous over the network and either succeeds, fails, or times out.
-     * 
+     *
      * @param localReplicas the local replicas for which the home replica status should be pushed
      * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @throws RemoteQueryTimeoutException thrown if this call times out
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public void tryToPushHomeReplicas(
-            NetMeshObject [] localReplicas,
-            boolean []       isNewProxy,
-            long             duration )
-        throws
-            RemoteQueryTimeoutException
+    public long tryToPushHomeReplicas(
+            NetMeshObject []                       localReplicas,
+            boolean []                             isNewProxy,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer )
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForTryToPushHomeReplicas( localReplicas, isNewProxy, duration, this );
-        performInstructions( instructions );
+        performInstructions( instructions, synchronizer );
+
+        return instructions.getExpectedPushHomeReplicasWait();
     }
 
     /**
@@ -236,7 +243,7 @@ public abstract class AbstractCommunicatingProxy
             NetMeshObject [] localReplicas )
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForForceObtainLocks( localReplicas, this );
-        performInstructions( instructions );
+        performInstructions( instructions, null );
     }
 
     /**
@@ -246,12 +253,19 @@ public abstract class AbstractCommunicatingProxy
      * most naturally made.
      *
      * @param identifiers the identifiers of the NetMeshObjects
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public void tryResynchronizeReplicas(
-            NetMeshObjectIdentifier [] identifiers )
+    public long tryResynchronizeReplicas(
+            NetMeshObjectIdentifier []             identifiers,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer )
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForTryResynchronizeReplicas( identifiers, this );
-        performInstructions( instructions );
+        performInstructions( instructions, synchronizer );
+
+        return instructions.getExpectedResynchronizeWait();
     }
 
     /**
@@ -263,7 +277,7 @@ public abstract class AbstractCommunicatingProxy
             NetMeshObject [] localReplicas )
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForCancelReplicas( localReplicas, this );
-        performInstructions( instructions );
+        performInstructions( instructions, null );
     }
 
     /**
@@ -275,7 +289,7 @@ public abstract class AbstractCommunicatingProxy
     public void initiateCeaseCommunications()
     {
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForCeaseCommunications( this );
-        performInstructions( instructions );
+        performInstructions( instructions, null );
     }
 
     /**
@@ -312,7 +326,7 @@ public abstract class AbstractCommunicatingProxy
         }
 
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForTransactionCommitted( theTransaction, this );
-        performInstructions( instructions );
+        performInstructions( instructions, null );
     }
 
     /**
@@ -372,7 +386,7 @@ public abstract class AbstractCommunicatingProxy
         }
 
         ProxyProcessingInstructions instructions = theProxyPolicy.calculateForIncomingMessage( endpoint, incoming, callIsWaiting, this );
-        performInstructions( instructions );
+        performInstructions( instructions, null );
     }
 
     /**
@@ -380,12 +394,14 @@ public abstract class AbstractCommunicatingProxy
      * may be null, in which case nothing is done.
      * 
      * @param instructions the ProxyProcessingInstructions
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
      */
     protected void performInstructions(
-            ProxyProcessingInstructions instructions )
+            ProxyProcessingInstructions            instructions,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer )
     {
         if( log.isInfoEnabled() ) {
-            log.info( this + ".performInstructions( " + instructions + " )" );
+            log.info( this + ".performInstructions( " + instructions + ", " + synchronizer + " )" );
         }
         long now = System.currentTimeMillis();
 
@@ -407,7 +423,7 @@ public abstract class AbstractCommunicatingProxy
         
         for( NetMeshObject current : instructions.getRegisterReplicationsIfNotAlready()) {
             try {
-                current.proxyOnlyRegisterReplicationTowards( this  );
+                current.proxyOnlyRegisterReplicationTowards( this );
             } catch( IllegalArgumentException ex ) {
                 // we have it already
                 if( log.isDebugEnabled() ) {
@@ -619,72 +635,90 @@ public abstract class AbstractCommunicatingProxy
             current.proxyOnlyUnregisterReplicationTowards( this );
             meshObjectModifiedDuringMessageProcessing( current );
         }
-        
-        for( ResynchronizeInstructions current : instructions.getResynchronizeInstructions() ) {
-            NetMeshObjectIdentifier [] toResync    = current.getNetMeshObjectIdentifiers();
+
+        ReturnSynchronizer<Long,XprisoMessage> localSynchronizer;
+        if( synchronizer != null ) {
+            localSynchronizer = synchronizer;
+        } else {
+            localSynchronizer = ReturnSynchronizer.create(
+                    theMeshBase.getIdentifier().toExternalForm()
+                    + ", Proxy "
+                    + super.getPartnerMeshBaseIdentifier().toExternalForm());
+        }
+        synchronized( localSynchronizer ) {
+            for( ResynchronizeInstructions current : instructions.getResynchronizeInstructions() ) {
+                NetMeshObjectIdentifier [] toResync = current.getNetMeshObjectIdentifiers();
+
+                try {
+                    Proxy resyncProxy = theMeshBase.obtainProxyFor( current.getProxyIdentifier(), null );
+                    resyncProxy.tryResynchronizeReplicas( toResync, -1L, localSynchronizer ); // -1 FIXME?
+
+                } catch( FactoryException ex ) {
+                    theProxyListeners.fireEvent( new InitiateResynchronizeFailedEvent(
+                            this,
+                            current.getProxyIdentifier(),
+                            current.getNetMeshObjectIdentifiers(),
+                            ex.getCause() ));
+                }
+            }
+            for( CancelInstructions current : instructions.getCancelInstructions() ) {
+                NetMeshObject [] toCancel = current.getNetMeshObjects();
+                current.getProxy().cancelReplicas( toCancel );
+            }
+
+        // send messages
+
+            if( instructions.getStartCommunicating() ) {
+                theEndpoint.startCommunicating(); // this is no-op on subsequent calls
+            }
+
+            XprisoMessage outgoing = instructions.getSendViaWaitForReplicaResponseEndpoint();
+            if( outgoing != null ) {
+                try {
+                    theWaitForReplicaResponseEndpoint.call( outgoing, instructions.getWaitForReplicaResponseEndpointTimeout(), localSynchronizer );
+
+                } catch( Throwable t ) {
+                    theProxyListeners.fireEvent( new SendViaWaitForReplicaResponseEndpointFailedEvent( this, outgoing, t ));
+                }
+            }
+
+            outgoing = instructions.getSendViaWaitForHomeResponseEndpoint();
+            if( outgoing != null ) {
+                try {
+                    theWaitForHomeResponseEndpoint.call( outgoing, instructions.getWaitForHomeResponseEndpointTimeout(), localSynchronizer );
+
+                } catch( Throwable t ) {
+                    theProxyListeners.fireEvent( new SendViaWaitForHomeResponseEndpointFailedEvent( this, outgoing, t ));
+                }
+            }
+
+            outgoing = instructions.getSendViaWaitForLockResponseEndpoint();
+            if( outgoing != null ) {
+                XprisoMessage incoming2; // this is only here to make debugging easier
+                try {
+                    theWaitForLockResponseEndpoint.call( outgoing, instructions.getWaitForLockResponseEndpointTimeout(), localSynchronizer );
+
+                } catch( Throwable t ) {
+                    theProxyListeners.fireEvent( new SendViaWaitForLockResponseEndpointFailedEvent( this, outgoing, t ));
+                }
+            }
+
+            outgoing = instructions.getSendViaEndpoint();
+            if( outgoing != null ) {
+                theEndpoint.sendMessageAsap( outgoing );
+            }
+            if( incoming != null ) {
+                theWaitForReplicaResponseEndpoint.messageReceived( instructions.getIncomingXprisoMessageEndpoint(), incoming );
+            }
             
-            try {
-                Proxy resyncProxy = theMeshBase.obtainProxyFor( current.getProxyIdentifier(), null );
-                resyncProxy.tryResynchronizeReplicas( toResync );
+            if( synchronizer == null ) {
+                try {
+                    localSynchronizer.join();
 
-            } catch( FactoryException ex ) {
-                theProxyListeners.fireEvent( new InitiateResynchronizeFailedEvent(
-                        this,
-                        current.getProxyIdentifier(),
-                        current.getNetMeshObjectIdentifiers(),
-                        ex.getCause() ));
+                } catch( InterruptedException ex ) {
+                    log.error( ex );
+                }
             }
-        }
-        for( CancelInstructions current : instructions.getCancelInstructions() ) {
-            NetMeshObject [] toCancel = current.getNetMeshObjects();
-            current.getProxy().cancelReplicas( toCancel );
-        }
-        
-    // send messages
-        
-        if( instructions.getStartCommunicating() ) {
-            theEndpoint.startCommunicating(); // this is no-op on subsequent calls
-        }
-
-        XprisoMessage outgoing = instructions.getSendViaWaitForReplicaResponseEndpoint();
-        if( outgoing != null ) {
-            XprisoMessage incoming2; // this is only here to make debugging easier
-            try {
-                incoming2 = theWaitForReplicaResponseEndpoint.call( outgoing, instructions.getWaitForReplicaResponseEndpointTimeout() );
-
-            } catch( Throwable t ) {
-                theProxyListeners.fireEvent( new SendViaWaitForReplicaResponseEndpointFailedEvent( this, outgoing, t ));
-            }
-        }
-
-        outgoing = instructions.getSendViaWaitForHomeResponseEndpoint();
-        if( outgoing != null ) {
-            XprisoMessage incoming2; // this is only here to make debugging easier
-            try {
-                incoming2 = theWaitForHomeResponseEndpoint.call( outgoing, instructions.getWaitForHomeResponseEndpointTimeout() );
-
-            } catch( Throwable t ) {
-                theProxyListeners.fireEvent( new SendViaWaitForHomeResponseEndpointFailedEvent( this, outgoing, t ));
-            }
-        }
-        
-        outgoing = instructions.getSendViaWaitForLockResponseEndpoint();
-        if( outgoing != null ) {
-            XprisoMessage incoming2; // this is only here to make debugging easier
-            try {
-                incoming2 = theWaitForLockResponseEndpoint.call( outgoing, instructions.getWaitForLockResponseEndpointTimeout() );
-
-            } catch( Throwable t ) {
-                theProxyListeners.fireEvent( new SendViaWaitForLockResponseEndpointFailedEvent( this, outgoing, t ));
-            }
-        }
-        
-        outgoing = instructions.getSendViaEndpoint();
-        if( outgoing != null ) {
-            theEndpoint.sendMessageAsap( outgoing );
-        }
-        if( incoming != null ) {
-            theWaitForReplicaResponseEndpoint.messageReceived( instructions.getIncomingXprisoMessageEndpoint(), incoming );
         }
         
         theTimeRead = now;
@@ -806,74 +840,83 @@ public abstract class AbstractCommunicatingProxy
     protected ProxyMessageEndpoint theEndpoint;
 
     /**
-     * The WaitForResponseEndpoint that makes waiting for responses to lock requests much easier.
+     * The ReturnSynchronizerEndpoint that makes waiting for responses to lock requests much easier.
      */
-    protected WaitForResponseEndpoint<XprisoMessage> theWaitForLockResponseEndpoint;
+    protected ReturnSynchronizerEndpoint<XprisoMessage> theWaitForLockResponseEndpoint;
 
     /**
-     * The WaitForResponseEndpoint that makes waiting for responses to homeReplica requests much easier.
+     * The ReturnSynchronizerEndpoint that makes waiting for responses to homeReplica requests much easier.
      */
-    protected WaitForResponseEndpoint<XprisoMessage> theWaitForHomeResponseEndpoint;
+    protected ReturnSynchronizerEndpoint<XprisoMessage> theWaitForHomeResponseEndpoint;
 
     /**
-     * The WaitForResponseEndpoint that makes waiting for responses to replica requests much easier.
+     * The ReturnSynchronizerEndpoint that makes waiting for responses to replica requests much easier.
      */
-    protected WaitForResponseEndpoint<XprisoMessage> theWaitForReplicaResponseEndpoint;
+    protected ReturnSynchronizerEndpoint<XprisoMessage> theWaitForReplicaResponseEndpoint;
 
     /**
-     * Subclass WaitForResponseEndpoint for easier debugging, and to avoid automatic event subscription.
+     * Subclass ReturnSynchronizerEndpoint for easier debugging, and to avoid automatic event subscription.
      */
-    static class MyWaitForLockResponseEndpoint
+    static class MyLockReturnSynchronizerEndpoint
             extends
-                WaitForResponseEndpoint<XprisoMessage>
+                ReturnSynchronizerEndpoint<XprisoMessage>
     {
         /**
          *  Constructor.
          * 
          * @param ep the BidirectionalMessageEndpoint to use
          */
-        public MyWaitForLockResponseEndpoint(
+        public MyLockReturnSynchronizerEndpoint(
                 BidirectionalMessageEndpoint<XprisoMessage> ep )
         {
             super( ep );
+            // do not do this:
+            //     ep.addWeakMessageEndpointListener( this );
+            // we process this in the Proxy itself
         }
     } 
 
     /**
-     * Subclass WaitForResponseEndpoint for easier debugging, and to avoid automatic event subscription.
+     * Subclass ReturnSynchronizerEndpoint for easier debugging, and to avoid automatic event subscription.
      */
-    static class MyWaitForHomeReplicaResponseEndpoint
+    static class MyHomeReplicaReturnSynchronizerEndpoint
             extends
-                WaitForResponseEndpoint<XprisoMessage>
+                ReturnSynchronizerEndpoint<XprisoMessage>
     {
         /**
          *  Constructor.
          * 
          * @param ep the BidirectionalMessageEndpoint to use
          */
-        public MyWaitForHomeReplicaResponseEndpoint(
+        public MyHomeReplicaReturnSynchronizerEndpoint(
                 BidirectionalMessageEndpoint<XprisoMessage> ep )
         {
             super( ep );
+            // do not do this:
+            //     ep.addWeakMessageEndpointListener( this );
+            // we process this in the Proxy itself
         }
     } 
 
     /**
-     * Subclass WaitForResponseEndpoint for easier debugging, and to avoid automatic event subscription.
+     * Subclass ReturnSynchronizerEndpoint for easier debugging, and to avoid automatic event subscription.
      */
-    static class MyWaitForReplicaResponseEndpoint
+    static class MyReplicaReturnSynchronizerEndpoint
             extends
-                WaitForResponseEndpoint<XprisoMessage>
+                ReturnSynchronizerEndpoint<XprisoMessage>
     {
         /**
          *  Constructor.
          * 
          * @param ep the BidirectionalMessageEndpoint to use
          */
-        public MyWaitForReplicaResponseEndpoint(
+        public MyReplicaReturnSynchronizerEndpoint(
                 BidirectionalMessageEndpoint<XprisoMessage> ep )
         {
             super( ep );
+            // do not do this:
+            //     ep.addWeakMessageEndpointListener( this );
+            // we process this in the Proxy itself
         }
     }
 }

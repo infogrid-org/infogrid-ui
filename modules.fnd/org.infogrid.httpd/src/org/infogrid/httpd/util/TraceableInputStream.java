@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -34,7 +34,7 @@ public class TraceableInputStream
       * Constructor with a delegate and a traceMethodCallEntry channel.
       *
       * @param delegate the delegate InputStream
-      * @param traceMethodCallEntry if non-null, we write everything we read to this stream as well
+      * @param debug if non-null, we write everything we read to this stream as well
       */
     public TraceableInputStream(
             InputStream  delegate,

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -95,6 +95,7 @@ public class AStagingMeshBaseLifecycleManager
      * @param timeExpiress the time the ForwardReferences will expire
      * @param giveUpHomeReplicas if true, the ForwardReferences are willing to give up home replica status
      * @param giveUpLocks if true, the ForwardReferences are willing to give up update rights
+     * @param timeoutInMillis the timeout parameter for this call, in milli-seconds. -1 means "use default".
      * @return the created ForwardReferences
      * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
      * @throws MeshObjectIdentifierNotUniqueException thrown if a ForwardReference to the same location has been created already
@@ -108,7 +109,8 @@ public class AStagingMeshBaseLifecycleManager
             long []                             timeReads,
             long []                             timeExpiress,
             boolean []                          giveUpHomeReplicas,
-            boolean []                          giveUpLocks )
+            boolean []                          giveUpLocks,
+            long                                timeoutInMillis )
         throws
             TransactionException,
             MeshObjectIdentifierNotUniqueException

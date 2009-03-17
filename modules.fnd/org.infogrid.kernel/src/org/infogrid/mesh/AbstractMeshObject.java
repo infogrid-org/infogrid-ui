@@ -2316,6 +2316,17 @@ public abstract class AbstractMeshObject
     }
 
     /**
+     * Convert to String, for debugging.
+     *
+     * @return String format
+     */
+    @Override
+    public String toString()
+    {
+        return super.toString() + "{ id: " + theIdentifier.toExternalForm() + " }";
+    }
+
+    /**
       * The MeshBase in which this MeshObject lives. If this is null, the MeshObject
       * is dead.
       */

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,9 +21,11 @@ import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
+import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.FactoryCreatedObject;
 import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.text.HasStringRepresentation;
 
 /**
@@ -108,59 +110,58 @@ public interface Proxy
      * 
      * @param paths the NetMeshObjectAccessSpecifications specifying which replicas should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public abstract long obtainReplicas(
-            NetMeshObjectAccessSpecification [] paths,
-            long                                duration );
+            NetMeshObjectAccessSpecification []    paths,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer );
 
     /**
      * Ask this Proxy to obtain the lock for one or more replicas from the
-     * partner NetMeshBase. Unlike many of the other calls, this call is
-     * synchronous over the network and either succeeds, fails, or times out.
+     * partner NetMeshBase.
      *
      * @param localReplicas the local replicas for which the lock should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @throws RemoteQueryTimeoutException thrown if this call times out
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public abstract void tryToObtainLocks(
-            NetMeshObject [] localReplicas,
-            long             duration )
-        throws
-            RemoteQueryTimeoutException;
+    public abstract long tryToObtainLocks(
+            NetMeshObject []                       localReplicas,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer );
 
     /**
      * Ask this Proxy to push the locks for one or more replicas to the partner
-     * NetMeshBase. Unlike many of the other calls, this call is
-     * synchronous over the network and either succeeds, fails, or times out.
+     * NetMeshBase.
      * 
      * @param localReplicas the local replicas for which the lock should be pushed
      * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @throws RemoteQueryTimeoutException thrown if this call times out
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public abstract void tryToPushLocks(
-            NetMeshObject [] localReplicas,
-            boolean []       isNewProxy,
-            long             duration )
-        throws
-            RemoteQueryTimeoutException;
+    public abstract long tryToPushLocks(
+            NetMeshObject []                       localReplicas,
+            boolean []                             isNewProxy,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer );
 
     /**
      * Ask this Proxy to obtain the home replica status for one or more replicas from the
-     * partner NetMeshBase. Unlike many of the other calls, this call is
-     * synchronous over the network and either succeeds, fails, or times out.
+     * partner NetMeshBase.
      *
      * @param localReplicas the local replicas for which the home replica status should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @throws RemoteQueryTimeoutException thrown if this call times out
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public abstract void tryToObtainHomeReplicas(
-            NetMeshObject [] localReplicas,
-            long             duration )
-        throws
-            RemoteQueryTimeoutException;
+    public abstract long tryToObtainHomeReplicas(
+            NetMeshObject []                       localReplicas,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer );
 
     /**
      * Ask this Proxy to push the home replica status for one or more replicas to the partner
@@ -171,14 +172,14 @@ public interface Proxy
      * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @throws RemoteQueryTimeoutException thrown if this call times out
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public void tryToPushHomeReplicas(
-            NetMeshObject [] localReplicas,
-            boolean []       isNewProxy,
-            long             duration )
-        throws
-            RemoteQueryTimeoutException;
+    public abstract long tryToPushHomeReplicas(
+            NetMeshObject []                       localReplicas,
+            boolean []                             isNewProxy,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer );
 
     /**
      * Send notification to the partner NetMeshBase that this MeshBase has forcibly taken the
@@ -196,9 +197,14 @@ public interface Proxy
      * most naturally made.
      *
      * @param identifiers the identifiers of the NetMeshObjects
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @param synchronizer the ReturnSynchronizer to notify when the operation has completed
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public abstract void tryResynchronizeReplicas(
-            NetMeshObjectIdentifier [] identifiers );
+    public abstract long tryResynchronizeReplicas(
+            NetMeshObjectIdentifier []             identifiers,
+            long                                   duration,
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer );
 
     /**
      * Ask this Proxy to cancel the leases for the given replicas from its partner NetMeshBase.

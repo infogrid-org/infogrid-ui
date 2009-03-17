@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -38,6 +38,9 @@ public abstract class CoherenceSpecification
         if( ONE_TIME_ONLY_TAG.equals( ext )) {
             return ONE_TIME_ONLY;
         }
+        if( ONE_TIME_ONLY_FAST_TAG.equals( ext )) {
+            return ONE_TIME_ONLY_FAST;
+        }
 
         ret = Periodic.fromExternalForm( ext );
         if( ret != null ) {
@@ -49,7 +52,7 @@ public abstract class CoherenceSpecification
             return ret;
         }
 
-        return null;
+        throw new IllegalArgumentException( "Cannot parse CoherenceSpecification " + ext );
     }
 
     /**
@@ -61,6 +64,17 @@ public abstract class CoherenceSpecification
     public static CoherenceSpecification getDefault()
     {
         return theDefaultCoherenceSpecification;
+    }
+
+    /**
+     * Constructor, for subclasses only.
+     *
+     * @param waitForOngoingResynchronization if true, a response should wait until all resynchronization attempts have completed
+     */
+    protected CoherenceSpecification(
+            boolean waitForOngoingResynchronization )
+    {
+        theWaitForOngoingResynchronization = waitForOngoingResynchronization;
     }
 
     /**
@@ -82,10 +96,16 @@ public abstract class CoherenceSpecification
     }
 
     /**
-     * This (degenerate) CoherenceSpecification indicates that coherence is only expected
-     * once, at the beginning, and no further updates are necessary.
+     * If true, a response should wait until all resynchronization attempts have completed.
      */
-    public static final CoherenceSpecification ONE_TIME_ONLY = new CoherenceSpecification() {
+    protected boolean theWaitForOngoingResynchronization;
+
+    /**
+     * This (slightly degenerate) CoherenceSpecification indicates that coherence is only expected
+     * once, at the beginning, and no further updates are necessary. However, it waits until all
+     * resynchronization attempts have completed.
+     */
+    public static final CoherenceSpecification ONE_TIME_ONLY = new CoherenceSpecification( true ) {
             /**
              * Obtain the external form of this CoherenceSpecification.
              *
@@ -98,9 +118,31 @@ public abstract class CoherenceSpecification
     };
 
     /**
+     * This (slightly degenerate) CoherenceSpecification indicates that coherence is only expected
+     * once, at the beginning, and no further updates are necessary. However, it does not wait until all
+     * resynchronization attempts have completed.
+     */
+    public static final CoherenceSpecification ONE_TIME_ONLY_FAST = new CoherenceSpecification( false ) {
+            /**
+             * Obtain the external form of this CoherenceSpecification.
+             *
+             * @return the external form
+             */
+            public String toExternalForm()
+            {
+                return ONE_TIME_ONLY_FAST_TAG;
+            }
+    };
+
+    /**
      * The name of the externalization tag for the ONE_TIME_ONLY instance.
      */
     public static final String ONE_TIME_ONLY_TAG = CoherenceSpecification.class.getName() + ".ONE_TIME_ONLY";
+
+    /**
+     * The name of the externalization tag for the ONE_TIME_ONLY_FAST instance.
+     */
+    public static final String ONE_TIME_ONLY_FAST_TAG = CoherenceSpecification.class.getName() + ".ONE_TIME_ONLY_FAST";
 
     /**
      * Our ResourceHelper.
@@ -111,9 +153,10 @@ public abstract class CoherenceSpecification
      * The default CoherenceSpecification.
      */
     protected static final CoherenceSpecification theDefaultCoherenceSpecification = new AdaptivePeriodic(
-            theResourceHelper.getResourceLongOrDefault(   "DefaultAdaptiveFallbackDelay", 60L * 60L * 1000L ), // 1 hour
-            theResourceHelper.getResourceLongOrDefault(   "DefaultAdaptiveMaxDelay",      7L * 24L * 60L * 60L * 1000L ), // 1 week
-            theResourceHelper.getResourceDoubleOrDefault( "DefaultAdaptiveFactor", 1.1 ));
+            theResourceHelper.getResourceLongOrDefault(    "DefaultAdaptiveFallbackDelay",           60L * 60L * 1000L ), // 1 hour
+            theResourceHelper.getResourceLongOrDefault(    "DefaultAdaptiveMaxDelay",                7L * 24L * 60L * 60L * 1000L ), // 1 week
+            theResourceHelper.getResourceDoubleOrDefault(  "DefaultAdaptiveFactor",                  1.1 ),
+            theResourceHelper.getResourceBooleanOrDefault( "DefaultWaitForOngoingResynchronization", true ));
 
     /**
      * A CoherenceSpecification that asks for periodic updates.
@@ -130,6 +173,21 @@ public abstract class CoherenceSpecification
         public Periodic(
                 long period )
         {
+            this( period, true );
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param period the requested maximum time period between updates, in milliseconds
+         * @param waitForOngoingResynchronization if true, a response should wait until all resynchronization attempts have completed
+         */
+        public Periodic(
+                long    period,
+                boolean waitForOngoingResynchronization )
+        {
+            super( waitForOngoingResynchronization );
+
             thePeriod = period;
         }
         
@@ -142,12 +200,17 @@ public abstract class CoherenceSpecification
         public static CoherenceSpecification fromExternalForm(
                 String ext )
         {
+            CoherenceSpecification ret;
+
             Matcher m = thePattern.matcher( ext );
             if( m.matches() ) {
-                String period = m.group( 1 );
-                return new Periodic( Long.parseLong( period ));
+                String period  = m.group( 1 );
+                String waitFor = m.group( 2 );
+                ret = new Periodic( Long.parseLong( period ), Boolean.parseBoolean( waitFor ));
+            } else {
+                ret = null;
             }
-            return null;
+            return ret;
         }
 
         /**
@@ -161,6 +224,8 @@ public abstract class CoherenceSpecification
             ret.append( getClass().getName() );
             ret.append( "{" );
             ret.append( thePeriod );
+            ret.append( "," );
+            ret.append( theWaitForOngoingResynchronization );
             ret.append( "}" );
             return ret.toString();
         }
@@ -212,7 +277,7 @@ public abstract class CoherenceSpecification
          */
         protected static final Pattern thePattern = Pattern.compile(
                 Periodic.class.getName().replace( ".", "\\." ).replace( "$", "\\$" )
-                + "\\{(\\d+)\\}" );
+                + "\\{(\\d+),([^\\}]*)\\}" );
     }
 
     /**
@@ -230,10 +295,29 @@ public abstract class CoherenceSpecification
          * @param adaptiveFactor the multiplier by which the current delay is increased if no change has been detected
          */
         public AdaptivePeriodic(
-                long   fallbackDelay,
-                long   maxDelay,
-                double adaptiveFactor )
+                long    fallbackDelay,
+                long    maxDelay,
+                double  adaptiveFactor )
         {
+            this( fallbackDelay, maxDelay, adaptiveFactor, true );
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param fallbackDelay the time period, in milliseconds, for the next run after a change has been detected
+         * @param maxDelay      the maximum time period between runs
+         * @param adaptiveFactor the multiplier by which the current delay is increased if no change has been detected
+         * @param waitForOngoingResynchronization if true, a response should wait until all resynchronization attempts have completed
+         */
+        public AdaptivePeriodic(
+                long    fallbackDelay,
+                long    maxDelay,
+                double  adaptiveFactor,
+                boolean waitForOngoingResynchronization )
+        {
+            super( waitForOngoingResynchronization );
+
             theFallbackDelay  = fallbackDelay;
             theMaxDelay       = maxDelay;
             theAdaptiveFactor = adaptiveFactor;
@@ -248,14 +332,24 @@ public abstract class CoherenceSpecification
         public static CoherenceSpecification fromExternalForm(
                 String ext )
         {
+            CoherenceSpecification ret;
+
             Matcher m = thePattern.matcher( ext );
             if( m.matches() ) {
                 String fallback = m.group( 1 );
                 String max      = m.group( 2 );
                 String factor   = m.group( 3 );
-                return new AdaptivePeriodic( Long.parseLong( fallback ), Long.parseLong( max ), Double.parseDouble( factor ) );
+                String waitFor  = m.group( 4 );
+
+                ret = new AdaptivePeriodic(
+                        Long.parseLong( fallback ),
+                        Long.parseLong( max ),
+                        Double.parseDouble( factor ),
+                        Boolean.parseBoolean( waitFor ));
+            } else {
+                ret = null;
             }
-            return null;
+            return ret;
         }
 
         /**
@@ -273,6 +367,8 @@ public abstract class CoherenceSpecification
             ret.append( theMaxDelay );
             ret.append( "," );
             ret.append( theAdaptiveFactor );
+            ret.append( "," );
+            ret.append( theWaitForOngoingResynchronization );
             ret.append( "}" );
             return ret.toString();
         }
@@ -360,10 +456,10 @@ public abstract class CoherenceSpecification
         protected double theAdaptiveFactor;
         
         /**
-         * Our Regex pattern to parse an externalized CoherenceSpecification.YoungerThan.
+         * Our Regex pattern to parse an externalized CoherenceSpecification.AdaptivePeriodic.
          */
         protected static final Pattern thePattern = Pattern.compile(
                 AdaptivePeriodic.class.getName().replace( ".", "\\." ).replace( "$", "\\$" )
-                + "\\{(\\d+),(\\d+),(\\d*\\.\\d*)\\}" );
+                + "\\{(\\d+),(\\d+),(\\d*\\.\\d*),([^\\}]*)\\}" );
     }
 }

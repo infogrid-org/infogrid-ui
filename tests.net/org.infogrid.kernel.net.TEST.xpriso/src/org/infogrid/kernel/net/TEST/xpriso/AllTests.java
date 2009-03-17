@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -37,6 +37,7 @@ public class AllTests
                 new TestSpec( XprisoTest1.class ),
                 new TestSpec( XprisoTest1a.class ),
                 new TestSpec( XprisoTest1b.class ),
+                new TestSpec( XprisoTest1c.class ),
                 new TestSpec( XprisoTest2a.class ),
                 new TestSpec( XprisoTest2b.class ),
                 new TestSpec( XprisoTest3.class ),

@@ -14,11 +14,7 @@
 
 package org.infogrid.comm.pingpong.TEST;
 
-import org.infogrid.comm.BidirectionalMessageEndpoint;
-import org.infogrid.comm.ReceivingMessageEndpoint;
-import org.infogrid.comm.pingpong.PingPongMessageEndpoint;
 import org.infogrid.comm.pingpong.m.MPingPongMessageEndpoint;
-
 import org.infogrid.util.logging.Log;
 
 /**
@@ -54,7 +50,7 @@ public class PingPongRpcTest2
         for( long i=2 ; i<10 ; ++i ) {
 
             log.debug( "About to invoke RPC for " + i );
-            long ret = client.invoke( i );
+            long ret = client.invoke( i, 6000L ); // make this a bit longer
 
             checkEquals( ret, i*i, "wrong result for i=" + i );
         }

@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -62,7 +62,7 @@ public class ShadowTest9
 
         log.info( "Accessing Probe first time" );
 
-        MeshObject home = base.accessLocally( TEST_URL, new CoherenceSpecification.Periodic( period ));
+        MeshObject home = base.accessLocally( TEST_URL, new CoherenceSpecification.Periodic( period, true ));
 
         checkObject( home, "a1 not there" );
 

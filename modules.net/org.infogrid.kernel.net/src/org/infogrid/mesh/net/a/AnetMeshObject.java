@@ -60,6 +60,7 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
+import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -73,6 +74,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
@@ -290,7 +292,17 @@ public class AnetMeshObject
             }
             p = theProxies[ theProxyTowardsLockIndex ];
         }
-        p.tryToObtainLocks( new NetMeshObject[] { this }, duration );
+
+        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        synchronized( synchronizer.getSyncObject() ) {
+            long actualDuration = p.tryToObtainLocks( new NetMeshObject[] { this }, duration, synchronizer );
+
+            try {
+                synchronizer.join( actualDuration );
+            } catch( InterruptedException ex ) {
+                log.error( ex );
+            }
+        }
         
         if( theProxyTowardsLockIndex == HERE_CONSTANT ) {
             AnetMeshBase realBase = (AnetMeshBase) theMeshBase;                
@@ -373,8 +385,17 @@ public class AnetMeshObject
                 realBase.flushMeshObject( this );
             }
         }
-        
-        outgoingProxy.tryToPushLocks( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration );
+
+        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        synchronized( synchronizer.getSyncObject() ) {
+            long actualDuration = outgoingProxy.tryToPushLocks( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration, synchronizer );
+
+            try {
+                synchronizer.join( actualDuration );
+            } catch( InterruptedException ex ) {
+                log.error( ex );
+            }
+        }
         
         if( theProxyTowardsLockIndex != HERE_CONSTANT ) {
             fireLockLostEvent();
@@ -509,7 +530,17 @@ public class AnetMeshObject
             }
             p = theProxies[ theHomeProxyIndex ];
         }
-        p.tryToObtainHomeReplicas( new NetMeshObject[] { this }, duration );
+
+        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        synchronized( synchronizer.getSyncObject() ) {
+            long actualDuration = p.tryToObtainHomeReplicas( new NetMeshObject[] { this }, duration, synchronizer );
+
+            try {
+                synchronizer.join( actualDuration );
+            } catch( InterruptedException ex ) {
+                log.error( ex );
+            }
+        }
         
         if( theHomeProxyIndex == HERE_CONSTANT ) {
             AnetMeshBase realBase = (AnetMeshBase) theMeshBase;                
@@ -591,9 +622,20 @@ public class AnetMeshObject
                 realBase.flushMeshObject( this );
             }
         }
-        
-        outgoingProxy.tryToPushHomeReplicas( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration );
-        
+
+        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        synchronized( synchronizer.getSyncObject() ) {
+            long delta = outgoingProxy.tryToPushHomeReplicas( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration, synchronizer );
+
+            if( duration >=0L ) {
+                delta = duration;
+            }
+            try {
+                synchronizer.join( delta );
+            } catch( InterruptedException ex ) {
+                log.error( ex );
+            }
+        }
         if( theHomeProxyIndex != HERE_CONSTANT ) {
             fireHomeReplicaLostEvent();
 

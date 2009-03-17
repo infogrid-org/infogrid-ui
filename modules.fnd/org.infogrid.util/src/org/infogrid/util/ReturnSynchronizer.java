@@ -62,7 +62,7 @@ public class ReturnSynchronizer<K,R>
     public static <K,R> ReturnSynchronizer<K,R> create(
             Object name )
     {
-        return new ReturnSynchronizer<K,R>( null );
+        return new ReturnSynchronizer<K,R>( name );
     }
 
     /**
@@ -240,7 +240,24 @@ public class ReturnSynchronizer<K,R>
     {
         Thread t = Thread.currentThread();
 
-        return threadToMonitorTable.get( t ) == null;
+        CS found = threadToMonitorTable.get( t );
+        return found == null;
+    }
+
+    /**
+     * Determine whether all queries are complete, regardless of Thread.
+     *
+     * @return true if all queries are complete
+     */
+    public synchronized boolean areAllQueriesComplete()
+    {
+        for( Thread t : threadToMonitorTable.keySet() ) {
+            CS found = threadToMonitorTable.get( t );
+            if( found != null ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -273,28 +290,33 @@ public class ReturnSynchronizer<K,R>
         if( log.isTraceCallEnabled() ) {
             log.traceMethodCallEntry( this, "join", timeout );
         }
+        try {
+            Thread t = Thread.currentThread();
+            CS monitor;
 
-        Thread t = Thread.currentThread();
-        CS monitor;
+            synchronized( this ) {
+                monitor = threadToMonitorTable.get( t );
 
-        synchronized( this ) {
-            monitor = threadToMonitorTable.get( t );
+                if( monitor == null ) {
+                    return true; // no more open arguments for this tread (maybe there never were)
+                }
+            }
 
-            if( monitor == null ) {
-                return true; // no more open arguments for this tread (maybe there never were)
+            boolean ret;
+            if( timeout >= 0L ) {
+                ret = monitor.join( timeout );
+            } else {
+                ret = false;
+            }
+
+            threadToMonitorTable.remove( t );
+
+            return ret;
+        } finally {
+            if( log.isTraceCallEnabled() ) {
+                log.traceMethodCallExit( this, "join" );
             }
         }
-
-        boolean ret;
-        if( timeout >= 0L ) {
-            ret = monitor.join( timeout );
-        } else {
-            ret = false;
-        }
-        
-        threadToMonitorTable.remove( t );
-
-        return ret;
     }
 
     /**
@@ -355,6 +377,28 @@ public class ReturnSynchronizer<K,R>
                 });
     }
 
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return super.toString() + "{ theName: " + theName + "}";
+    }
+
+    /**
+     * Track object deallocation.
+     */
+    @Override
+    public void finalize()
+    {
+        if( log.isTraceCallEnabled() ) {
+            log.traceFinalization( this );
+        }
+    }
     /**
      * The name of this instance (if any). For debugging only.
      */

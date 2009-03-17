@@ -33,7 +33,7 @@ public class AllTests
     public static void main(
             String [] args )
     {
-        TestSpec [] tests = {
+        TestSpec [] probeTests = {
 
                 new TestSpec(
                         ProbeTest1.class,
@@ -70,46 +70,54 @@ public class AllTests
 // ProbeTest6. This needs more investigation but does not appear to be critical.
 //                new TestSpec(
 //                        ProbeTest8.class ),
+        };
 
+
+        TestSpec [] yadisTests = {
+
+                // 2000 is less than half the default timeout time of org.infogrid.meshbase.net.proxy.AbstractProxyPolicy!DefaultRpcWaitDuration,
+                // otherwise the HTTP request of discovery times out
                 new TestSpec(
                         YadisTest1.class.getName() + " (delay 0)", YadisTest1.class, "0" ),
                 new TestSpec(
-                        YadisTest1.class.getName() + " (delay 4000)", YadisTest1.class, "4000" ),
+                        YadisTest1.class.getName() + " (delay 2000)", YadisTest1.class, "2000" ),
 
                 new TestSpec(
                         YadisTest2.class.getName() + " (delay 0)", YadisTest2.class, "0" ),
                 new TestSpec(
-                        YadisTest2.class.getName() + " (delay 4000)", YadisTest2.class, "4000" ),
+                        YadisTest2.class.getName() + " (delay 2000)", YadisTest2.class, "2000" ),
 
                 new TestSpec(
                         YadisTest3.class.getName() + " (delay 0)", YadisTest3.class, "0" ),
                 new TestSpec(
-                        YadisTest3.class.getName() + " (delay 4000)", YadisTest3.class, "4000" ),
+                        YadisTest3.class.getName() + " (delay 2000)", YadisTest3.class, "2000" ),
 
                 new TestSpec(
                         YadisTest4.class.getName() + " (delay 0)", YadisTest4.class, "0" ),
                 new TestSpec(
-                        YadisTest4.class.getName() + " (delay 4000)", YadisTest4.class, "4000" ),
+                        YadisTest4.class.getName() + " (delay 2000)", YadisTest4.class, "2000" ),
 
                 new TestSpec(
                         YadisTest5.class.getName() + " (delay 0)", YadisTest5.class,
                         AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
                         "0" ),
                 new TestSpec(
-                        YadisTest5.class.getName() + " (delay 4000)", YadisTest5.class,
+                        YadisTest5.class.getName() + " (delay 2000)", YadisTest5.class,
                         AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
-                        "4000"),
+                        "2000"),
 
-                new TestSpec(
+              new TestSpec(
                         YadisTest6.class.getName() + " (delay 0)", YadisTest6.class,
                         AbstractTest.fileSystemFileName( YadisTest6.class, "YadisTest6.xml" ),
                         "0" ),
 
                 new TestSpec(
-                        YadisTest6.class.getName() + " (delay 4000)", YadisTest6.class,
+                        YadisTest6.class.getName() + " (delay 2000)", YadisTest6.class,
                         AbstractTest.fileSystemFileName( YadisTest6.class, "YadisTest6.xml" ),
-                        "4000" ),
+                        "2000" ),
+        };
 
+        TestSpec [] writableProbeTests = {
                 new TestSpec( // property updates
                             WritableProbeTest1.class ),
 
@@ -142,8 +150,9 @@ public class AllTests
 //                new TestSpec( // create and relate object
 //                        WritableProbeTest10.class,
 //                        noArgs ),
+        };
 
-
+        TestSpec [] shadowTests = {
                 new TestSpec(
                         ShadowTest1.class,
                         AbstractTest.fileSystemFileName( ShadowTest1.class, "ProbeTest1.xml" )),
@@ -177,6 +186,12 @@ public class AllTests
                         ProbeUpdateCalculatorTest1.class ),
 
                 new TestSpec(
+                        ProbeMatchTest1.class ),
+        };
+
+        TestSpec [] forwardReferenceTests = {
+
+                new TestSpec(
                         ForwardReferenceTest1.class,
                         AbstractTest.fileSystemFileName( ForwardReferenceTest1.class, "ForwardReferenceTest1_1.xml" )),
                                 // ForwardReferenceRest1_2.xml included by reference from ForwardReferenceRest1.xml
@@ -201,12 +216,13 @@ public class AllTests
 
                 new TestSpec(
                         ForwardReferenceTest8.class ),
+       };
 
-                new TestSpec(
-                        ProbeMatchTest1.class ),
-        };
-
-        runTests( tests );
+        runTests( probeTests );
+        runTests( yadisTests );
+        runTests( writableProbeTests );
+        runTests( shadowTests );
+        runTests( forwardReferenceTests );
     }
 }
 

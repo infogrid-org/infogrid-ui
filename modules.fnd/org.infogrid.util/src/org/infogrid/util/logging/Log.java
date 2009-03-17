@@ -394,6 +394,42 @@ public abstract class Log
     }
 
     /**
+     * Logs a trace message that represents a return from a method.
+     *
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     */
+    public final void traceMethodCallExit(
+            Object     subject,
+            String     method )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Exited " );
+        buf.append( subject );
+        buf.append( " ." );
+        buf.append( method );
+        logTraceCall( buf.toString(), null );
+    }
+
+    /**
+     * Logs a trace message that represents a return from a static method.
+     *
+     * @param subject the Class on which the method was invoked
+     * @param method the name of the method being invoked
+     */
+    public final void traceMethodCallExit(
+            Class      subject,
+            String     method )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Exited " );
+        buf.append( subject );
+        buf.append( " ." );
+        buf.append( method );
+        logTraceCall( buf.toString(), null );
+    }
+
+    /**
      * Logs a trace message that represents a constructor invocation.
      *
      * @param subject the instance that was created by the constructor
@@ -417,6 +453,20 @@ public abstract class Log
     }
 
     /**
+     * Logs a trace message that indicates object finalization.
+     *
+     * @param subject the instance being finalized
+     */
+    public final void traceFinalization(
+            Object subject )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Finalized " );
+        buf.append( subject );
+        logTraceCall( buf.toString(), null );
+    }
+
+    /**
      * Given an argument list, determine the message.
      * 
      * @param logStacktrace log the tracktrace even if no Throwable is given in the argument list
@@ -434,6 +484,8 @@ public abstract class Log
             }
             if( args.length == 1 && args[0] instanceof String ) {
                 return (String) args[0]; // special case of a simple informational message
+            } else if( args.length == 2 && ( args[0] instanceof String ) && ( args[1] instanceof Object[] ) && ((Object[])args[1]).length == 0 ) {
+                return (String) args[0]; // special case of a method invocation with no arguments
             } else {
                 dumper.dump( args );
                 return dumper.getBuffer();

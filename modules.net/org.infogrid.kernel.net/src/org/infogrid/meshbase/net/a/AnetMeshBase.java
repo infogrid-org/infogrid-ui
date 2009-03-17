@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -36,6 +36,7 @@ import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
 import org.infogrid.meshbase.net.security.NetAccessManager;
+import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.ArrayHelper;
@@ -103,6 +104,8 @@ public abstract class AnetMeshBase
         theMeshBaseIdentifierFactory               = meshBaseIdentifierFactory;
         theNetMeshObjectAccessSpecificationFactory = netMeshObjectAccessSpecificationFactory;
         theProxyManager                            = proxyManager;
+
+        theReturnSynchronizer = ReturnSynchronizer.create( identifier.toExternalForm() );
     }
 
     /**
@@ -353,6 +356,32 @@ public abstract class AnetMeshBase
         return accessLocally( path, -1L );
     }
     
+    /**
+     * <p>Obtain a local replica of the home NetMeshObject held by a possibly remote NetMeshBase
+     * identified by its NetMeshBaseIdentifier.
+     * Request a non-default CoherenceSpecification.
+     * This call does not obtain update rights for the obtained replica.</p>
+     *
+     * @param remoteLocation the NetMeshBaseIdentifier for the location from where to obtain
+     *        a replica of the remote MeshObject
+     * @param coherence the CoherenceSpecification requested by the caller
+     * @param timeoutInMillis the timeout parameter for this call, in milli-seconds. -1 means "use default".
+     * @return the locally replicated NetMeshObject, or null if not found
+     * @throws NetMeshObjectAccessException thrown if something went wrong attempting to access the NetMeshObject
+     * @throws NotPermittedException thrown if the caller is not authorized to perform this operation
+     */
+    public NetMeshObject accessLocally(
+            NetMeshBaseIdentifier  remoteLocation,
+            CoherenceSpecification coherence,
+            long                   timeoutInMillis )
+        throws
+            NetMeshObjectAccessException,
+            NotPermittedException
+    {
+        NetMeshObjectAccessSpecification path = theNetMeshObjectAccessSpecificationFactory.obtain( remoteLocation, coherence );
+        return accessLocally( path, timeoutInMillis );
+    }
+
     /**
      * <p>Obtain a local replica of a named NetMeshObject held by a possibly remote NetMeshBase
      * identified by its NetMeshBaseIdentifier.
@@ -640,13 +669,13 @@ public abstract class AnetMeshBase
         // find the sync object. The proxies will declare the appropriate open queries
         // and everything will work out fine because we are working on the the same
         // instance of the synchronizer
-        Object monitor = theReturnSynchronizer.getSyncObject();
+        Object sync = theReturnSynchronizer.getSyncObject();
 
         // now break down the still remaining objects into chunks, one chunk per
         // different proxy, and get them until we have everything.
         boolean ok;
         long    realTimeout = 0L; //
-        synchronized( monitor ) {
+        synchronized( sync ) {
 
             int pivotIndex = 0;
             while( stillToGet > 0 ) {
@@ -698,8 +727,8 @@ public abstract class AnetMeshBase
                 try {
                     theProxy = obtainProxyFor( pivotName, pivotCalc ); // this triggers the Shadow creation in the right subclasses
                     if( theProxy != null ) {
-                        long requestedTimeout = theProxy.obtainReplicas( nextObjectPaths, timeoutInMillis ); // FIXME? Should we use a different timeout here?
-                        realTimeout = Math.max(  realTimeout, requestedTimeout );
+                        long requestedTimeout = theProxy.obtainReplicas( nextObjectPaths, timeoutInMillis, theReturnSynchronizer ); // FIXME? Should we use a different timeout here?
+                        realTimeout = Math.max( realTimeout, requestedTimeout );
                     }
 
                 } catch( FactoryException ex ) {
@@ -715,7 +744,7 @@ public abstract class AnetMeshBase
             try {
                 ok = theReturnSynchronizer.join( realTimeout );
 
-                if( !ok && thrownExceptions.size() == 0 ) {
+                if( !ok && thrownExceptions.isEmpty() ) {
                     log.warn( this + ".accessLocally() timed out trying to reach " + ArrayHelper.arrayToString( pathsToObjects ) + ", timeout: " + realTimeout );
                 }
 
@@ -1143,7 +1172,7 @@ public abstract class AnetMeshBase
     /**
      * This object helps us with synchronizing results we are getting asynchronously.
      */
-    protected ReturnSynchronizer theReturnSynchronizer = new ReturnSynchronizer( this );
+    protected ReturnSynchronizer<Long,XprisoMessage> theReturnSynchronizer;
     
     /**
      * We delegate to this ProxyManager to manage our Proxies.

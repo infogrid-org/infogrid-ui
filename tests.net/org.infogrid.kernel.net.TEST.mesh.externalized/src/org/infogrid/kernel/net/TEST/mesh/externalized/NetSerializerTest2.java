@@ -77,8 +77,11 @@ public class NetSerializerTest2
         CoherenceSpecification [] testCoherences = new CoherenceSpecification[] {
                 null,
                 CoherenceSpecification.ONE_TIME_ONLY,
-                new CoherenceSpecification.Periodic( 12345L ),
-                new CoherenceSpecification.AdaptivePeriodic( 123L, 456L, 78.9 )
+                CoherenceSpecification.ONE_TIME_ONLY_FAST,
+                new CoherenceSpecification.Periodic( 12345L, true ),
+                new CoherenceSpecification.Periodic( 123456L, false ),
+                new CoherenceSpecification.AdaptivePeriodic( 123L, 456L, 78.9, true ),
+                new CoherenceSpecification.AdaptivePeriodic( 1L, 2L, 3.4, false ),
         };
         
         for( int i=1 ; i< ( 1<< testData.length ) ; ++i ) {

@@ -259,6 +259,17 @@ public class DefaultNetMeshBaseAccessSpecification
     }
 
     /**
+     * Convert to String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return toExternalForm();
+    }
+
+    /**
      * The Identifier of the NetMeshBase.
      */
     protected NetMeshBaseIdentifier theNetMeshBaseIdentifier;

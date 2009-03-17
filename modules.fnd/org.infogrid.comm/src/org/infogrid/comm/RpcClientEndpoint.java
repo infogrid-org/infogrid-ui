@@ -16,6 +16,7 @@ package org.infogrid.comm;
 
 import java.lang.reflect.InvocationTargetException;
 import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 
 /**

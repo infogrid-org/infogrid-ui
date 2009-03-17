@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -49,8 +49,8 @@ import org.infogrid.meshbase.transaction.Change;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CreateWhenNeeded;
-import org.infogrid.util.RemoteQueryTimeoutException;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -720,13 +720,23 @@ public abstract class AbstractProxyPolicy
                     list.add( homes[i] );
                 }
             }
+
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+            synchronized( synchronizer.getSyncObject() ) {
+                long waitFor = 0;
+                for( Proxy p : toGet.keySet() ) {
+                    ArrayList<NetMeshObject> list = toGet.get( p );
+                    long delta = p.tryToObtainHomeReplicas( ArrayHelper.copyIntoNewArray( list, NetMeshObject.class ), theDefaultRpcWaitDuration, synchronizer );
+                    waitFor = Math.max( waitFor, delta );
+                }
+                try {
+                    synchronizer.join( waitFor );
+                } catch( InterruptedException ex ) {
+                    log.error( ex );
+                }
+            }
             for( Proxy p : toGet.keySet() ) {
                 ArrayList<NetMeshObject> list = toGet.get( p );
-                try {
-                    p.tryToObtainHomeReplicas( ArrayHelper.copyIntoNewArray( list, NetMeshObject.class ), theDefaultRpcWaitDuration );
-                } catch( RemoteQueryTimeoutException ex ) {
-                    log.warn( ex );
-                }
                 for( NetMeshObject current : list ) {
                     if( current.isHomeReplica() ) {
                         toSurrender.add( current );
@@ -780,13 +790,23 @@ public abstract class AbstractProxyPolicy
                     list.add( locks[i] );
                 }
             }
+
+            ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+            synchronized( synchronizer.getSyncObject() ) {
+                long waitFor = 0;
+                for( Proxy p : toGet.keySet() ) {
+                    ArrayList<NetMeshObject> list = toGet.get( p );
+                    long delta = p.tryToObtainLocks( ArrayHelper.copyIntoNewArray( list, NetMeshObject.class ), theDefaultRpcWaitDuration, synchronizer );
+                    waitFor = Math.max( waitFor, delta );
+                }
+                try {
+                    synchronizer.join( waitFor );
+                } catch( InterruptedException ex ) {
+                    log.error( ex );
+                }
+            }
             for( Proxy p : toGet.keySet() ) {
                 ArrayList<NetMeshObject> list = toGet.get( p );
-                try {
-                    p.tryToObtainLocks( ArrayHelper.copyIntoNewArray( list, NetMeshObject.class ), theDefaultRpcWaitDuration );
-                } catch( RemoteQueryTimeoutException ex ) {
-                    log.warn( ex );
-                }
                 for( NetMeshObject current : list ) {
                     if( current.hasLock() ) {
                         toSurrender.add( current );

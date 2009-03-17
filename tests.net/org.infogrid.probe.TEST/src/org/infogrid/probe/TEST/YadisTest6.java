@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -53,11 +53,12 @@ public class YadisTest6
 
         NetMeshObject shadowHome = theMeshBase.accessLocally( netId, CoherenceSpecification.ONE_TIME_ONLY );
 
-        shadowHome.traverseToNeighborMeshObjects();
-
         //
 
+        MeshObjectSet neighbors = shadowHome.traverseToNeighborMeshObjects();
+
         Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L ); // let ForwardReference resolution do its magic
+
 
         log.info( "Checking for correct results" );
 

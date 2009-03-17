@@ -454,7 +454,8 @@ public final class ResourceHelper
         boolean found = false;
         if( theApplicationResourceBundle != null ) {
             try {
-                ret = theApplicationResourceBundle.getString( createApplicationLevelResourceName( resourceName ));
+                String appLevelResourceName = createApplicationLevelResourceName( resourceName );
+                ret = theApplicationResourceBundle.getString( appLevelResourceName );
                 
                 found = true;
             } catch( Exception ex ) {

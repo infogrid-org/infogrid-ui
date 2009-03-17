@@ -19,6 +19,7 @@ import java.util.List;
 import java.lang.reflect.InvocationTargetException;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 
@@ -263,4 +264,9 @@ public class WaitForResponseEndpoint<T extends CarriesInvocationId>
      * The Exceptions that resulted.
      */
     protected HashMap<Long,Throwable> theExceptions = new HashMap<Long,Throwable>();
+
+    /**
+     * The default timeout.
+     */
+    protected static long defaultTimeout = ResourceHelper.getInstance( WaitForResponseEndpoint.class ).getResourceLongOrDefault( "DefaultTimeout", 5000L  );
 }

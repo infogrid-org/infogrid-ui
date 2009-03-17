@@ -375,6 +375,24 @@ public abstract class AbstractProxy
     }
 
     /**
+     * Convert to String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( super.toString());
+        buf.append( "{ mine: " );
+        buf.append( theMeshBase.getIdentifier().toExternalForm());
+        buf.append( " -> partner: " );
+        buf.append( thePartnerIdentifier.toExternalForm());
+        buf.append( " }" );
+        return buf.toString();
+    }
+
+    /**
      * The MeshBase we belong to.
      */
     protected NetMeshBase theMeshBase;
