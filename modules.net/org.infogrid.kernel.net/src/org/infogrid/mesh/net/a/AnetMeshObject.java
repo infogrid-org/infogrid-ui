@@ -60,7 +60,7 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
-import org.infogrid.meshbase.net.xpriso.XprisoMessage;
+import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -74,7 +74,6 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.RemoteQueryTimeoutException;
-import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
@@ -293,7 +292,7 @@ public class AnetMeshObject
             p = theProxies[ theProxyTowardsLockIndex ];
         }
 
-        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
         synchronized( synchronizer.getSyncObject() ) {
             long actualDuration = p.tryToObtainLocks( new NetMeshObject[] { this }, duration, synchronizer );
 
@@ -386,7 +385,7 @@ public class AnetMeshObject
             }
         }
 
-        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
         synchronized( synchronizer.getSyncObject() ) {
             long actualDuration = outgoingProxy.tryToPushLocks( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration, synchronizer );
 
@@ -427,7 +426,17 @@ public class AnetMeshObject
             p = theProxies[ theProxyTowardsLockIndex ];
             theProxyTowardsLockIndex = HERE_CONSTANT;
         }
-        p.forceObtainLocks( new NetMeshObject[] { this } );
+        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
+        synchronized( synchronizer.getSyncObject() ) {
+            p.forceObtainLocks( new NetMeshObject[] { this }, synchronizer );
+
+            try {
+                synchronizer.join();
+            } catch( InterruptedException ex ) {
+                log.error( ex );
+            }
+        }
+
 
         AnetMeshBase realBase = (AnetMeshBase) theMeshBase;                
         realBase.flushMeshObject( this );
@@ -531,7 +540,7 @@ public class AnetMeshObject
             p = theProxies[ theHomeProxyIndex ];
         }
 
-        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
         synchronized( synchronizer.getSyncObject() ) {
             long actualDuration = p.tryToObtainHomeReplicas( new NetMeshObject[] { this }, duration, synchronizer );
 
@@ -623,7 +632,7 @@ public class AnetMeshObject
             }
         }
 
-        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
         synchronized( synchronizer.getSyncObject() ) {
             long delta = outgoingProxy.tryToPushHomeReplicas( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration, synchronizer );
 

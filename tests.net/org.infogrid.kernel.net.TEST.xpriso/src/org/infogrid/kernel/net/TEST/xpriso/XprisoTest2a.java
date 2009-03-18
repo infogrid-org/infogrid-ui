@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,10 @@ package org.infogrid.kernel.net.TEST.xpriso;
 
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.net.NetMeshBaseAccessSpecification;
+import org.infogrid.meshbase.net.NetMeshBaseAccessSpecificationFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
@@ -75,13 +78,16 @@ public class XprisoTest2a
 
         log.info( "Accessing obj2 at mb3 via mb2 from mb1" );
 
+        NetMeshBaseAccessSpecificationFactory mbAccessFact = mb3.getNetMeshObjectAccessSpecificationFactory().getNetMeshBaseAccessSpecificationFactory();
+
         NetMeshObject obj2_mb3 = mb3.accessLocally(
                 mb3.getNetMeshObjectAccessSpecificationFactory().obtain(
-                        new NetMeshBaseIdentifier[] {
-                                mb2.getIdentifier(),
-                                mb1.getIdentifier(),
+                        new NetMeshBaseAccessSpecification[] {
+                                mbAccessFact.obtain( mb2.getIdentifier(), CoherenceSpecification.ONE_TIME_ONLY ),
+                                mbAccessFact.obtain( mb1.getIdentifier(), CoherenceSpecification.ONE_TIME_ONLY )
                         },
-                        obj2_mb1.getIdentifier() ));
+                        obj2_mb1.getIdentifier()),
+                1000000L ); // long time so we have time to debug
         checkObject( obj2_mb3, "mb3 fails to access obj2." );
 
         Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L );

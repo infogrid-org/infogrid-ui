@@ -49,6 +49,7 @@ import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -1578,9 +1579,18 @@ public class ProbeDispatcher
                 realCurrent.proxyOnlyPushLock( towardsLock );
             }
         }
-        for( Proxy p : buckets.keySet() ) {
-            NetMeshObject [] localReplicas = ArrayHelper.copyIntoNewArray( buckets.get( p ), NetMeshObject.class );
-            p.forceObtainLocks( localReplicas );
+
+        XprisoSynchronizer synchronizer = base.getReturnSynchronizer();
+        synchronized( synchronizer.getSyncObject() ) {
+            for( Proxy p : buckets.keySet() ) {
+                NetMeshObject [] localReplicas = ArrayHelper.copyIntoNewArray( buckets.get( p ), NetMeshObject.class );
+                p.forceObtainLocks( localReplicas, synchronizer );
+            }
+            try {
+                synchronizer.join();
+            } catch( InterruptedException ex ) {
+                log.error( ex );
+            }
         }
     }
 

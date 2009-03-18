@@ -53,7 +53,7 @@ public class AllTests
                 new TestSpec( XprisoTest9.class ),
                 new TestSpec( XprisoTest10.class ),
                 // new TestSpec( XprisoTest11.class ), // FAILS (minor). Requires memory debugger to make progress. See also ProbeTest6
-                new TestSpec( XprisoTest12.class ), // broken
+                new TestSpec( XprisoTest12.class ),
                 new TestSpec( XprisoTest13.class ),
                 new TestSpec( XprisoTest14.class ),
                 new TestSpec( XprisoTest15.class ),

@@ -36,7 +36,7 @@ import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
 import org.infogrid.meshbase.net.security.NetAccessManager;
-import org.infogrid.meshbase.net.xpriso.XprisoMessage;
+import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.ArrayHelper;
@@ -46,7 +46,6 @@ import org.infogrid.util.FactoryException;
 import org.infogrid.util.NameServer;
 import org.infogrid.util.RemoteQueryTimeoutException;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
@@ -104,8 +103,7 @@ public abstract class AnetMeshBase
         theMeshBaseIdentifierFactory               = meshBaseIdentifierFactory;
         theNetMeshObjectAccessSpecificationFactory = netMeshObjectAccessSpecificationFactory;
         theProxyManager                            = proxyManager;
-
-        theReturnSynchronizer = ReturnSynchronizer.create( identifier.toExternalForm() );
+        theReturnSynchronizer                      = XprisoSynchronizer.create( this );
     }
 
     /**
@@ -1040,6 +1038,17 @@ public abstract class AnetMeshBase
     }
 
     /**
+     * Obtain the underlying XprisoSynchronizer for Xpriso communication.
+     * Not to be called by the application programmer.
+     *
+     * @return the underlying XprisoSynchronizer
+     */
+    public final XprisoSynchronizer getReturnSynchronizer()
+    {
+        return theReturnSynchronizer;
+    }
+
+    /**
       * Clean up.
       * 
       * @param isPermanent if true, this MeshBase will go away permanmently; if false, it may come alive again some time later
@@ -1172,7 +1181,7 @@ public abstract class AnetMeshBase
     /**
      * This object helps us with synchronizing results we are getting asynchronously.
      */
-    protected ReturnSynchronizer<Long,XprisoMessage> theReturnSynchronizer;
+    protected XprisoSynchronizer theReturnSynchronizer;
     
     /**
      * We delegate to this ProxyManager to manage our Proxies.

@@ -8,24 +8,21 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net;
 
-import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.mesh.MeshObjectIdentifier;
-
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-
 import org.infogrid.meshbase.MeshBase;
-
 import org.infogrid.meshbase.MeshObjectsNotFoundException;
+import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.security.NetAccessManager;
-
+import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.NameServer;
@@ -124,7 +121,7 @@ public interface NetMeshBase
      * @return the found ForwardReference, or null if not found
      * @see #findMeshObjectByIdentifierOrThrow
      */
-    public NetMeshObject findForwardReference(
+    public abstract NetMeshObject findForwardReference(
             NetMeshBaseIdentifier meshObjectLocation );
 
     /**
@@ -137,7 +134,7 @@ public interface NetMeshBase
      * @return the found ForwardReference, or null if not found
      * @see #findMeshObjectByIdentifierOrThrow
      */
-    public NetMeshObject findForwardReference(
+    public abstract NetMeshObject findForwardReference(
             NetMeshBaseIdentifier   meshObjectLocation,
             NetMeshObjectIdentifier identifier );
 
@@ -150,7 +147,7 @@ public interface NetMeshBase
      * @return the found ForwardReference, or null if not found
      * @see #findMeshObjectByIdentifierOrThrow
      */
-    public NetMeshObject findForwardReference(
+    public abstract NetMeshObject findForwardReference(
             NetMeshObjectAccessSpecification pathToObject );
 
     /**
@@ -481,7 +478,7 @@ public interface NetMeshBase
      * 
      * @return the NameServer mapping NetMeshBaseIdentifiers to Proxies.
      */
-    public NameServer<NetMeshBaseIdentifier,Proxy> getAsProxyNameServer();
+    public abstract NameServer<NetMeshBaseIdentifier,Proxy> getAsProxyNameServer();
 
     /**
      * Determine the Proxy, if any, that originated the current Thread.
@@ -504,6 +501,14 @@ public interface NetMeshBase
      * about themselves.
      */
     public abstract void unregisterIncomingProxy();
+
+    /**
+     * Obtain the underlying XprisoSynchronizer for Xpriso communication.
+     * Not to be called by the application programmer.
+     *
+     * @return the underlying XprisoSynchronizer
+     */
+    public abstract XprisoSynchronizer getReturnSynchronizer();
 
     /**
      * The name of the bound property we use to express "the timeout for accessLocally has changed".

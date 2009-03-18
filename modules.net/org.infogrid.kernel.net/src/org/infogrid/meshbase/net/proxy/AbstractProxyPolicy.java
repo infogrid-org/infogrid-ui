@@ -45,12 +45,12 @@ import org.infogrid.meshbase.net.transaction.Utils;
 import org.infogrid.meshbase.net.xpriso.ParserFriendlyXprisoMessage;
 import org.infogrid.meshbase.net.xpriso.SimpleXprisoMessage;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
+import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.meshbase.transaction.Change;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -721,7 +721,7 @@ public abstract class AbstractProxyPolicy
                 }
             }
 
-            ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+            XprisoSynchronizer synchronizer = theMeshBase.getReturnSynchronizer();
             synchronized( synchronizer.getSyncObject() ) {
                 long waitFor = 0;
                 for( Proxy p : toGet.keySet() ) {
@@ -791,7 +791,7 @@ public abstract class AbstractProxyPolicy
                 }
             }
 
-            ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+            XprisoSynchronizer synchronizer = theMeshBase.getReturnSynchronizer();
             synchronized( synchronizer.getSyncObject() ) {
                 long waitFor = 0;
                 for( Proxy p : toGet.keySet() ) {

@@ -53,7 +53,7 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
 import org.infogrid.meshbase.net.transaction.ReplicaCreatedEvent;
 import org.infogrid.meshbase.net.transaction.ReplicaPurgedEvent;
-import org.infogrid.meshbase.net.xpriso.XprisoMessage;
+import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.EntityType;
@@ -66,7 +66,6 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.RemoteQueryTimeoutException;
-import org.infogrid.util.ReturnSynchronizer;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -2247,7 +2246,7 @@ public class AnetMeshBaseLifecycleManager
 
         // now resynchronize
 
-        ReturnSynchronizer<Long,XprisoMessage> synchronizer = ReturnSynchronizer.create();
+        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
         synchronized( synchronizer.getSyncObject() ) {
             long waitFor = 0L;
             for( Proxy p : proxiesForIdentifiers.keySet() ) {
