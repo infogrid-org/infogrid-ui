@@ -152,7 +152,7 @@ public abstract class SwappingHashMap<K,V>
     protected V loadValueFromStorage(
             Object key )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "loadValueFromStorage", key );
         }
         return null; // on this level
@@ -272,7 +272,7 @@ public abstract class SwappingHashMap<K,V>
             K key,
             V newValue )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "saveValueToStorage", key, newValue );
         }
         // no op on this level
@@ -315,7 +315,7 @@ public abstract class SwappingHashMap<K,V>
     protected void removeValueFromStorage(
             Object key )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "removeValueFromStorage", key );
         }
         // no op on this level.
@@ -369,7 +369,7 @@ public abstract class SwappingHashMap<K,V>
     protected void clearStorage()
     {
         // no op on this level
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "clearStorage" );
         }
     }

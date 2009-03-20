@@ -85,7 +85,7 @@ public class MPingPongNetMessageEndpoint
                 null,
                 new ArrayList<XprisoMessage>() );
     
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( MPingPongNetMessageEndpoint.class, "create" );
         }
         return ret;
@@ -143,7 +143,7 @@ public class MPingPongNetMessageEndpoint
                 messagesSentLast,
                 messagesToBeSent );
     
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( MPingPongNetMessageEndpoint.class, "create" );
         }
         return ret;

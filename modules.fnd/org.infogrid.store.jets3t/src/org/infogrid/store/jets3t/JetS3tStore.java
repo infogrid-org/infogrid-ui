@@ -256,7 +256,7 @@ public class JetS3tStore
             StoreKeyExistsAlreadyException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "put", toStore );
         }
         try {
@@ -305,7 +305,7 @@ public class JetS3tStore
             StoreKeyDoesNotExistException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "update", toUpdate );
         }
 
@@ -353,7 +353,7 @@ public class JetS3tStore
         throws
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "putOrUpdate", toStoreOrUpdate );
         }
         boolean ret = false; // good default?
@@ -404,7 +404,7 @@ public class JetS3tStore
             StoreKeyDoesNotExistException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "get", key );
         }
 
@@ -451,7 +451,7 @@ public class JetS3tStore
             StoreKeyDoesNotExistException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "delete", key );
         }
         try {
@@ -484,7 +484,7 @@ public class JetS3tStore
         throws
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "deleteAll()" );
         }
 

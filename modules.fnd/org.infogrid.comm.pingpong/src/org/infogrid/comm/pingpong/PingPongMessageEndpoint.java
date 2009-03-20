@@ -292,7 +292,7 @@ public abstract class PingPongMessageEndpoint<T>
             if( content != null && !content.isEmpty() && logHigh.isInfoEnabled() ) {
                 logHigh.info( this, "incomingMessage", token, content );
             }
-            if( logHigh.isTraceCallEnabled() ) {
+            if( logHigh.isTraceEnabled() ) {
                 logHigh.traceMethodCallEntry( this, "incomingMessage", token, content );
             }
 

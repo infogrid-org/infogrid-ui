@@ -40,7 +40,7 @@ public class TestStoreListener
             Store      store,
             StoreValue value )
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "putPerformed", store, value, new RuntimeException("marker") );
         }
     }
@@ -57,7 +57,7 @@ public class TestStoreListener
             Store      store,
             StoreValue value )
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "updatePerformed", store, value );
         }
     }
@@ -72,7 +72,7 @@ public class TestStoreListener
             Store      store,
             StoreValue value )
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "getPerformed", store, value );
         }
     }
@@ -87,7 +87,7 @@ public class TestStoreListener
             Store  store,
             String key )
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "getFailed", store, key );
         }
     }
@@ -102,7 +102,7 @@ public class TestStoreListener
             Store  store,
             String key )
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "deletePerformed", store, key );
         }
     }
@@ -117,7 +117,7 @@ public class TestStoreListener
             Store  store,
             String prefix )
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "deleteAllPerformed", store, prefix );
         }
     }

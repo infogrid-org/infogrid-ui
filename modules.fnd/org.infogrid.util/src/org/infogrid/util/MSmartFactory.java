@@ -138,7 +138,7 @@ public class MSmartFactory<K,V,A>
     public V get(
             K key )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "get", key );
         }
         synchronized( theKeyValueMap ) {
@@ -176,7 +176,7 @@ public class MSmartFactory<K,V,A>
         throws
             FactoryException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "obtainFor", key, argument );
         }
 
@@ -221,7 +221,7 @@ public class MSmartFactory<K,V,A>
             ObjectExistsAlreadyFactoryException,
             FactoryException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "obtainNewFor", key, argument );
         }
 
@@ -282,7 +282,7 @@ public class MSmartFactory<K,V,A>
             K key,
             V value )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "put", key, value );
         }
 
@@ -361,7 +361,7 @@ public class MSmartFactory<K,V,A>
             K                 key,
             Invocable<V,Void> cleanupCode )
     {    
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "remove", key, cleanupCode );
         }
 

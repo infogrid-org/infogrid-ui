@@ -155,7 +155,7 @@ public class MyHandler
         throws
             SAXException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "startElement", namespaceURI, localName, qName );
         }
         
@@ -449,7 +449,7 @@ public class MyHandler
         throws
             SAXException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "endElement", namespaceURI, localName, qName );
         }
         try {

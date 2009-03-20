@@ -230,7 +230,7 @@ public abstract class AbstractActiveMTraversalPathSet
     public void addDirectActiveTraversalPathSetListener(
             ActiveTraversalPathSetListener newListener )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "addDirectActiveTraversalPathSetListener", newListener );
         }
         theSetListeners.addDirect( newListener );
@@ -247,7 +247,7 @@ public abstract class AbstractActiveMTraversalPathSet
     public void addSoftActiveTraversalPathSetListener(
             ActiveTraversalPathSetListener newListener )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "addSoftActiveTraversalPathSetListener", newListener );
         }
         theSetListeners.addSoft( newListener );
@@ -264,7 +264,7 @@ public abstract class AbstractActiveMTraversalPathSet
     public void addWeakActiveTraversalPathSetListener(
             ActiveTraversalPathSetListener newListener )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "addWeakActiveTraversalPathSetListener", newListener );
         }
         theSetListeners.addWeak( newListener );
@@ -281,7 +281,7 @@ public abstract class AbstractActiveMTraversalPathSet
     public void removeActiveTraversalPathSetListener(
             ActiveTraversalPathSetListener oldListener)
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "removeActiveTraversalPathSetListener", oldListener );
         }
         theSetListeners.remove( oldListener );

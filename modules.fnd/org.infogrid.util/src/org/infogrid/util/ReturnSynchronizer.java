@@ -83,7 +83,7 @@ public class ReturnSynchronizer<K,R>
      */
     public synchronized Object getSyncObject()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "getSyncObject" );
         }
         Thread threadToWait = Thread.currentThread();
@@ -105,7 +105,7 @@ public class ReturnSynchronizer<K,R>
     public synchronized Object addOpenQuery(
             K keyForQuery )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "addOpenQuery", keyForQuery );
         }
         Thread threadToWait = Thread.currentThread();
@@ -143,7 +143,7 @@ public class ReturnSynchronizer<K,R>
             K keyForQuery,
             R result )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "queryHasCompleted", keyForQuery, result );
         }
         CS [] monitors;
@@ -194,7 +194,7 @@ public class ReturnSynchronizer<K,R>
         throws
             QueryIncompleteException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "takeResultFor", keyForQuery );
         }
         Thread t = Thread.currentThread();
@@ -287,7 +287,7 @@ public class ReturnSynchronizer<K,R>
         throws
             InterruptedException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "join", timeout );
         }
         try {
@@ -313,7 +313,7 @@ public class ReturnSynchronizer<K,R>
 
             return ret;
         } finally {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallExit( this, "join" );
             }
         }
@@ -395,7 +395,7 @@ public class ReturnSynchronizer<K,R>
     @Override
     public void finalize()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceFinalization( this );
         }
     }

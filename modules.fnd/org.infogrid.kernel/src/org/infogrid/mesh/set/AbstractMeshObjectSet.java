@@ -417,7 +417,7 @@ public abstract class AbstractMeshObjectSet
             TraversalSpecification theTraversalSpecification,
             boolean                considerEquivalents )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "traverse", theTraversalSpecification, considerEquivalents );
         }
 

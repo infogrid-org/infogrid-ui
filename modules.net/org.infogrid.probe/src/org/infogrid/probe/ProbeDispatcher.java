@@ -842,7 +842,7 @@ public class ProbeDispatcher
             TransactionException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "handleXml", oldBase, newBase, inStream );
         }
 
@@ -1063,7 +1063,7 @@ public class ProbeDispatcher
             TransactionException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "handleNonXml", oldBase, newBase, coherence, contentType, inStream );
         }
 
@@ -1221,7 +1221,7 @@ public class ProbeDispatcher
             TransactionException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "handleNativeFormat", newBase, coherence, doc );
         }
 
@@ -1845,7 +1845,7 @@ public class ProbeDispatcher
      */
     protected void fireUpdateStarted()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "fireUpdateStarted" );
         }
 
@@ -1857,7 +1857,7 @@ public class ProbeDispatcher
      */
     protected void fireUpdateSkipped()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "fireUpdateSkipped" );
         }
 
@@ -1869,7 +1869,7 @@ public class ProbeDispatcher
      */
     protected void fireUpdateFinishedSuccessfully()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "fireUpdateFinishedSuccessfully" );
         }
 
@@ -1884,7 +1884,7 @@ public class ProbeDispatcher
     public void fireUpdateFinishedUnsuccessfully(
              Throwable problem )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "fireUpdateFinishedUnsuccessfully", problem );
         }
 

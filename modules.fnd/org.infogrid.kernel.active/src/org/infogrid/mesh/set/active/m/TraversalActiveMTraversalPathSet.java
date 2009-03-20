@@ -306,7 +306,7 @@ public abstract class TraversalActiveMTraversalPathSet
 
             startOfTraversal.addWeakPropertyChangeListener( this );
 
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "constructor" );
             }
         }
@@ -320,7 +320,7 @@ public abstract class TraversalActiveMTraversalPathSet
         public void propertyChange(
                 PropertyChangeEvent event )
         {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "propertyChange", event );
             }
 
@@ -484,7 +484,7 @@ public abstract class TraversalActiveMTraversalPathSet
             }
             setInitialContent( content );
 
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "constructor" );
             }
         }
@@ -507,7 +507,7 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathAdded(
                 TraversalPathAddedEvent event )
         {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "traversalSetAdded", event );
             }
             
@@ -534,7 +534,7 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathRemoved(
                 TraversalPathRemovedEvent event )
         {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "traversalPathRemoved", event );
             }
 
@@ -651,7 +651,7 @@ public abstract class TraversalActiveMTraversalPathSet
             }
             setInitialContent( content );
 
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "constructor" );
             }
         }
@@ -675,7 +675,7 @@ public abstract class TraversalActiveMTraversalPathSet
         public void propertyChange(
                 PropertyChangeEvent event )
         {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "propertyChange", event );
             }
 
@@ -777,7 +777,7 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathAdded(
                 TraversalPathAddedEvent event )
         {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "traversalSetAdded", event );
             }
 
@@ -807,7 +807,7 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathRemoved(
                 TraversalPathRemovedEvent event )
         {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "traversalPathRemoved", event );
             }
 
@@ -940,7 +940,7 @@ public abstract class TraversalActiveMTraversalPathSet
 
             setInitialContent( content );
 
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "constructor" );
             }
         }
@@ -963,7 +963,7 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathAdded(
                 TraversalPathAddedEvent event )
         {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "traversalSetAdded", event );
             }
 
@@ -987,7 +987,7 @@ public abstract class TraversalActiveMTraversalPathSet
         public void traversalPathRemoved(
                 TraversalPathRemovedEvent event )
         {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "traversalPathRemoved", event );
             }
 

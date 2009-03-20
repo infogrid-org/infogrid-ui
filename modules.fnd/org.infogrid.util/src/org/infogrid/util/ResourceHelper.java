@@ -447,7 +447,7 @@ public final class ResourceHelper
     protected String internalGetResourceString(
             String resourceName )
     {
-        if( log != null && log.isTraceCallEnabled() ) {
+        if( log != null && log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "internalGetResourceString", resourceName );
         }
         String  ret   = null;

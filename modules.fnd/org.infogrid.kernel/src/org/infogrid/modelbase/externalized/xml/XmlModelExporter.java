@@ -99,7 +99,7 @@ public class XmlModelExporter
         throws
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "exportToXML", modelBase, theStream );
         }
 
@@ -137,7 +137,7 @@ public class XmlModelExporter
         throws
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "exportToXML", theSubjectAreas, theStream );
         }
 

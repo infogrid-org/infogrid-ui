@@ -40,7 +40,7 @@ public abstract class AbstractAccessManager
      */
     public final MeshObject getCaller()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "getCaller(" );
         }
         synchronized( theCallersOnThreads ) {
@@ -56,7 +56,7 @@ public abstract class AbstractAccessManager
      */
     public final boolean isSu()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "isSu" );
         }
         Integer level;
@@ -88,7 +88,7 @@ public abstract class AbstractAccessManager
         throws
             IdentityChangeException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "setCaller", caller );
         }
         synchronized( theCallersOnThreads ) {
@@ -112,7 +112,7 @@ public abstract class AbstractAccessManager
         throws
             IdentityChangeException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "callerDoneOnThread" );
         }
         synchronized( theCallersOnThreads ) {
@@ -133,7 +133,7 @@ public abstract class AbstractAccessManager
         throws
             IdentityChangeException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "sudo" );
         }
         Thread t = Thread.currentThread();
@@ -155,7 +155,7 @@ public abstract class AbstractAccessManager
      */
     public void sudone()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "sudone" );
         }
         Thread t = Thread.currentThread();

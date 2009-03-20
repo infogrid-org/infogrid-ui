@@ -249,7 +249,7 @@ public abstract class AbstractActiveMMeshObjectSet
     public final synchronized void addDirectActiveMeshObjectSetListener(
             ActiveMeshObjectSetListener newListener )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "addDirectActiveMeshObjectSetListener", newListener );
         }
 
@@ -267,7 +267,7 @@ public abstract class AbstractActiveMMeshObjectSet
     public final synchronized void addSoftActiveMeshObjectSetListener(
             ActiveMeshObjectSetListener newListener )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "addSoftActiveMeshObjectSetListener", newListener );
         }
 
@@ -284,7 +284,7 @@ public abstract class AbstractActiveMMeshObjectSet
     public final synchronized void addWeakActiveMeshObjectSetListener(
             ActiveMeshObjectSetListener newListener )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "addWeakActiveMeshObjectSetListener", newListener );
         }
 
@@ -302,7 +302,7 @@ public abstract class AbstractActiveMMeshObjectSet
     public final synchronized void removeActiveMeshObjectSetListener(
             ActiveMeshObjectSetListener oldListener)
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "removeActiveMeshObjectSetListener", oldListener );
         }
 

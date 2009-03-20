@@ -142,7 +142,7 @@ public class MStore
             StoreKeyExistsAlreadyException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "put", toStore );
         }
         try {
@@ -211,7 +211,7 @@ public class MStore
             StoreKeyDoesNotExistException,
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "update", toUpdate );
         }
         try {
@@ -276,7 +276,7 @@ public class MStore
         throws
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "putOrUpdate", toStoreOrUpdate );
         }
 
@@ -342,7 +342,7 @@ public class MStore
     {
         checkKey( key );
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "delete", key );
         }
 
@@ -366,7 +366,7 @@ public class MStore
         throws
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "deleteAll" );
         }
         fireDeleteAllPerformed( "" );
@@ -387,7 +387,7 @@ public class MStore
     {
         checkKey( startsWith );
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "deleteAll", startsWith );
         }
         for( String key : theDelegate.keySet() ) {

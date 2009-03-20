@@ -267,7 +267,7 @@ public class MMeshTypeStore
         throws
             ModuleException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "findMeshTypeByIdentifier", identifier );
         }
         MeshType ret = allMeshTypes.get( identifier );

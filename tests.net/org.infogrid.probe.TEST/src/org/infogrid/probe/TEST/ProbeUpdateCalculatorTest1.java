@@ -307,7 +307,7 @@ public class ProbeUpdateCalculatorTest1
                 URISyntaxException
         {
             long now = System.currentTimeMillis();
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "readFromApi" );
             }
             theInvokedAt.add( now );
@@ -343,7 +343,7 @@ public class ProbeUpdateCalculatorTest1
                 URISyntaxException
         {
             long now = System.currentTimeMillis();
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "readFromApi" );
             }
 

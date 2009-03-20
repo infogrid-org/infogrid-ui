@@ -44,7 +44,7 @@ public class SwappingHashMapTestListener
     public void mapElementAdded(
             CachingMapEvent.Added event )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "mapElementAdded", event );
         }
         theAddedEvents.add( event );
@@ -58,7 +58,7 @@ public class SwappingHashMapTestListener
     public void mapElementRemoved(
             CachingMapEvent.Removed event )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "mapElementRemoved", event );
         }
         theRemovedEvents.add( event );
@@ -72,7 +72,7 @@ public class SwappingHashMapTestListener
     public void mapElementExpired(
             CachingMapEvent.Expired event )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "mapElementExpired", event );
         }
         theExpiredEvents.add( event );

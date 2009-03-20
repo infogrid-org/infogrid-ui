@@ -44,7 +44,7 @@ public class SmartFactoryTestListener
     public void smartFactoryElementAdded(
             SmartFactoryEvent.Added event )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "smartFactoryElementAdded", event );
         }
         theAddedEvents.add( event );
@@ -58,7 +58,7 @@ public class SmartFactoryTestListener
     public void smartFactoryElementRemoved(
             SmartFactoryEvent.Removed event )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "smartFactoryElementRemoved", event );
         }
         theRemovedEvents.add( event );

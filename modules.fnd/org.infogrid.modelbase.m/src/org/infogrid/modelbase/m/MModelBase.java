@@ -130,7 +130,7 @@ public class MModelBase
 
         theLifecycleManager = new MMeshTypeLifecycleManager( this );
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "constructor" );
         }
     }
@@ -244,7 +244,7 @@ public class MModelBase
         throws
             SubjectAreaNotFoundException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "findSubjectArea", subjectAreaName, subjectAreaVersionNumber );
         }
 
@@ -283,7 +283,7 @@ public class MModelBase
         throws
             EntityTypeNotFoundException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "findEntityType", theSubjectArea, theEntityTypeName );
         }
         if( theSubjectArea == null ) {
@@ -315,7 +315,7 @@ public class MModelBase
         throws
             MeshTypeNotFoundException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "findEntityType", subjectAreaName, subjectAreaVersionNumber, theEntityTypeName );
         }
         SubjectArea theSa = findSubjectArea( subjectAreaName, subjectAreaVersionNumber );
@@ -336,7 +336,7 @@ public class MModelBase
         throws
             RelationshipTypeNotFoundException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "findRelationshipType", theSubjectArea, theRelationshipTypeName );
         }
         if( theSubjectArea == null ) {
@@ -369,7 +369,7 @@ public class MModelBase
         throws
             MeshTypeNotFoundException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "findRelationshipType", subjectAreaName, subjectAreaVersionNumber, theRelationshipTypeName );
         }
         SubjectArea theSa = findSubjectArea( subjectAreaName, subjectAreaVersionNumber );
@@ -390,7 +390,7 @@ public class MModelBase
         throws
             PropertyTypeNotFoundException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "findPropertyType", theAttributableMeshType, thePropertyTypeName );
         }
         if( theAttributableMeshType == null ) {
@@ -477,7 +477,7 @@ public class MModelBase
         throws
             MeshTypeWithIdentifierNotFoundException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "findMeshTypeByIdentifierInternal", identifier, doResolve );
         }
         if( identifier == null ) {

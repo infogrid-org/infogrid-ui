@@ -62,7 +62,7 @@ public class MirrorActiveMTraversalPathSet
      */
     protected void breakpointHook()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "breakpointHook" );
         }
     }

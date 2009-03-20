@@ -69,7 +69,7 @@ public abstract class AbstractNetSweeper
     protected void purgeMeshObject(
             NetMeshObject toPurge )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, ".purgeMeshObject", toPurge.getIdentifier() );
         }
 

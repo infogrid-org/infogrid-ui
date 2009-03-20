@@ -76,7 +76,7 @@ public class SimpleContext
         this.theName          = name;
         this.theParentContext = parent;
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceConstructor( this );
         }
     }

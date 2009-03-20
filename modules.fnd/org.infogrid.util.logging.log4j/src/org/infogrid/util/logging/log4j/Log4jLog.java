@@ -174,7 +174,7 @@ public class Log4jLog
      * @param msg the message to log
      * @param t   the Throwable to log. This may be null.
      */
-    protected void logTraceCall(
+    protected void logTrace(
             String    msg,
             Throwable t )
     {
@@ -212,7 +212,7 @@ public class Log4jLog
      *
      * @return true if the trace channel is enabled
      */
-    public boolean isTraceCallEnabled()
+    public boolean isTraceEnabled()
     {
         ensureDelegate();
 

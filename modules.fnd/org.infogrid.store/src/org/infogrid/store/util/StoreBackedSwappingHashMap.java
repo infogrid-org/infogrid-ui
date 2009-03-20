@@ -177,7 +177,7 @@ public abstract class StoreBackedSwappingHashMap<K,V>
             K          key,
             StoreValue storeValue )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "get", key, storeValue );
         }
         cleanup();
@@ -209,7 +209,7 @@ public abstract class StoreBackedSwappingHashMap<K,V>
     protected void removeValueFromStorage(
             Object key )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "removeValueFromStorage", key );
         }
 
@@ -272,7 +272,7 @@ public abstract class StoreBackedSwappingHashMap<K,V>
     protected V loadValueFromStorage(
             Object key )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "loadValueFromStorage", key );
         }
 
@@ -310,7 +310,7 @@ public abstract class StoreBackedSwappingHashMap<K,V>
             K key,
             V newValue )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "saveValueToStorage", key, newValue );
         }
 

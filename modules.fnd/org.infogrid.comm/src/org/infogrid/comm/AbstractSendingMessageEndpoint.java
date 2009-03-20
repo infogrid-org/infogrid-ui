@@ -70,7 +70,7 @@ public abstract class AbstractSendingMessageEndpoint<T>
     public void enqueueMessageForSend(
             T msg )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "enqueueMessageForSend", msg );
         }
         
@@ -133,7 +133,7 @@ public abstract class AbstractSendingMessageEndpoint<T>
             TimedTask task,
             long      base )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "schedule", task, base );
         }
 

@@ -124,7 +124,7 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
 
         message.setRequestId( invocationId );
 
-        if( log.isTraceCallEnabled() ) { // better here because here we have the invocation id set
+        if( log.isTraceEnabled() ) { // better here because here we have the invocation id set
             log.traceMethodCallEntry( this, "invoke", message, timeout );
         }
 
@@ -171,7 +171,7 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
     {
         long responseId = msg.getResponseId();
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "messageReceived", msg );
         }
 

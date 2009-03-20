@@ -92,7 +92,7 @@ public class FilesystemStore
         theKeyMapper        = keyMapper;
         theStoreValueMapper = storeValueMapper;
         
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "constructor" );
         }
     }
@@ -373,7 +373,7 @@ public class FilesystemStore
         throws
             IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "deleteAll" );
         }
 

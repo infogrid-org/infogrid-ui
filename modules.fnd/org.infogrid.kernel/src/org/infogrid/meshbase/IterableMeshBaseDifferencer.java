@@ -122,7 +122,7 @@ public class IterableMeshBaseDifferencer
             IterableMeshBase comparisonBase,
             boolean          checkDates )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "determineChangeSet" );
         }
 

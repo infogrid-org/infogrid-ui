@@ -450,7 +450,7 @@ public abstract class AbstractMeshBase
          throws
              IsDeadException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "die" );
         }
         if( theCurrentTransaction != null ) {
@@ -594,7 +594,7 @@ public abstract class AbstractMeshBase
         throws
             TransactionAsapTimeoutException
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "createTransactionAsap" );
         }
 
@@ -637,7 +637,7 @@ public abstract class AbstractMeshBase
         throws
             TransactionActiveAlreadyException
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "createTransactionNow" );
         }
 
@@ -669,7 +669,7 @@ public abstract class AbstractMeshBase
         throws
             TransactionAsapTimeoutException
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "createTransactionAsapIfNeeded" );
         }
 
@@ -723,7 +723,7 @@ public abstract class AbstractMeshBase
         throws
             TransactionActiveAlreadyException
     {
-        if( log.isTraceCallEnabled()) {
+        if( log.isTraceEnabled()) {
             log.traceMethodCallEntry( this, "createTransactionNowIfNeeded" );
         }
         
@@ -1215,7 +1215,7 @@ public abstract class AbstractMeshBase
       */
     public final void transactionCommitted()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "transactionCommitted" );
         }
 

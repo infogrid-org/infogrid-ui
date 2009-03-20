@@ -88,7 +88,7 @@ public class MysqlStore
         theFindKeyAtEndPreparedStatement          = new SqlStorePreparedStatement( this, FIND_KEY_AT_END_SQL,         tableName );
         theDetermineDistancePreparedStatement     = new SqlStorePreparedStatement( this, DETERMINE_DISTANCE_SQL,      tableName );
         
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "constructor" );
         }
     }
@@ -100,7 +100,7 @@ public class MysqlStore
      */
     protected boolean hasTables()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "hasTables" );
         }
 
@@ -133,7 +133,7 @@ public class MysqlStore
      */
     protected void dropTables()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "dropTables" );
         }
 
@@ -167,7 +167,7 @@ public class MysqlStore
             throws
                 IOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "createTables" );
         }
 
@@ -674,7 +674,7 @@ public class MysqlStore
         throws
             SqlStoreIOException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "deleteAll" );
         }
         checkKey( startsWith );

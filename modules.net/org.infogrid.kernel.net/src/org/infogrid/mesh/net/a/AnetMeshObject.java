@@ -280,7 +280,7 @@ public class AnetMeshObject
         throws
             RemoteQueryTimeoutException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "tryToObtainLock" );
         }
 
@@ -351,7 +351,7 @@ public class AnetMeshObject
             DoNotHaveLockException,
             RemoteQueryTimeoutException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "tryToPushLock", outgoingProxy );
         }
 
@@ -528,7 +528,7 @@ public class AnetMeshObject
         throws
             RemoteQueryTimeoutException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "tryToObtainHomeReplica" );
         }
 
@@ -599,7 +599,7 @@ public class AnetMeshObject
             NotHomeReplicaException,
             RemoteQueryTimeoutException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "tryToPushHomeReplica", outgoingProxy );
         }
 
@@ -960,7 +960,7 @@ public class AnetMeshObject
     public boolean proxyOnlySurrenderLock(
             Proxy theProxy )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "surrenderLock", theProxy );
         }
 
@@ -1010,7 +1010,7 @@ public class AnetMeshObject
     public void proxyOnlyPushLock(
             Proxy theProxy )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "pushLock", theProxy );
         }
 
@@ -1041,7 +1041,7 @@ public class AnetMeshObject
     public boolean proxyOnlySurrenderHomeReplica(
             Proxy theProxy )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "surrenderHomeReplica", theProxy );
         }
 
@@ -1091,7 +1091,7 @@ public class AnetMeshObject
     public void proxyOnlyPushHomeReplica(
             Proxy theProxy )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "pushHomeReplica", theProxy );
         }
 
@@ -1126,7 +1126,7 @@ public class AnetMeshObject
         throws
             IllegalArgumentException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "registerReplicationTowards", theProxy );
         }
 
@@ -1160,7 +1160,7 @@ public class AnetMeshObject
     public void proxyOnlyUnregisterReplicationTowards(
             Proxy theProxy )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "unregisterReplicationTowards", theProxy );
         }
 
@@ -1531,7 +1531,7 @@ public class AnetMeshObject
     public void proxyInternalMakeReplicaFrom(
             Proxy theProxy )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "makeReplicaFrom", theProxy );
         }
 

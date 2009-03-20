@@ -100,7 +100,7 @@ public abstract class AbstractSweeper
     protected void deleteMeshObject(
             MeshObject toDelete )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "deleteMeshObject", toDelete.getIdentifier() );
         }
 

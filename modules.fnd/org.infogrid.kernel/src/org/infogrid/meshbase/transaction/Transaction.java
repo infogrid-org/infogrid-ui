@@ -48,7 +48,7 @@ public abstract class Transaction
 
         status = Status.TRANSACTION_STARTED;
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "constructor" );
         }
     }
@@ -69,7 +69,7 @@ public abstract class Transaction
       */
     public synchronized void commitTransaction()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "commitTransaction" );
         }
 

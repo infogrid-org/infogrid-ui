@@ -102,7 +102,7 @@ public class MeshObjectBreadthFirstIterator
 
         goNext();
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "constructor" );
         }
     }
@@ -114,7 +114,7 @@ public class MeshObjectBreadthFirstIterator
      */
     public boolean hasNext()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "hasNext()" );
         }
 

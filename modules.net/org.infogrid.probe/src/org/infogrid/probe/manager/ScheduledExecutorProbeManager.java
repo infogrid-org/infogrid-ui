@@ -89,7 +89,7 @@ public abstract class ScheduledExecutorProbeManager
     public synchronized void start(
             ScheduledExecutorService exec )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "start", exec );
         }
         if( theExecutorService != null ) {
@@ -119,7 +119,7 @@ public abstract class ScheduledExecutorProbeManager
      */
     public synchronized void stop()
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "stop" );
         }
         if( theExecutorService == null ) {
@@ -248,7 +248,7 @@ public abstract class ScheduledExecutorProbeManager
     public synchronized void die(
             boolean isPermanent )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "die" );
         }
         for( ShadowMeshBase shadow : theKeyValueMap.values() ) {
@@ -307,7 +307,7 @@ public abstract class ScheduledExecutorProbeManager
             theShadowIdentifier = shadowIdentifier;
             theWillBeCalledAt   = new Date( System.currentTimeMillis() + nextTime );
 
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "constructor" );
             }
         }

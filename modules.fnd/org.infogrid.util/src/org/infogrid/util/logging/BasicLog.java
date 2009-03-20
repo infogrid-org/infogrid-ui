@@ -117,11 +117,11 @@ public class BasicLog
      * @param msg the message to log
      * @param t   the Throwable to log. This may be null.
      */
-    protected void logTraceCall(
+    protected void logTrace(
             String    msg,
             Throwable t )
     {
-        if( isTraceCallEnabled() ) {
+        if( isTraceEnabled() ) {
             print( "TRACE: ", msg, t );
         }
     }
@@ -181,9 +181,9 @@ public class BasicLog
      *
      * @return true if the trace channel is enabled
      */
-    public boolean isTraceCallEnabled()
+    public boolean isTraceEnabled()
     {
-        return theIsTraceCallEnabled;
+        return theIsTraceEnabled;
     }
 
     /**
@@ -298,7 +298,7 @@ public class BasicLog
     /**
      * Is the traceMethodCallEntry channel enabled?
      */
-    protected static boolean theIsTraceCallEnabled = false;
+    protected static boolean theIsTraceEnabled = false;
 
     /**
      * The PrintStream to which we log.

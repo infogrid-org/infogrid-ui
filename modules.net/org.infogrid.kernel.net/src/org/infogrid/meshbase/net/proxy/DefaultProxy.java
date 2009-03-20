@@ -46,7 +46,7 @@ public class DefaultProxy
     {
         DefaultProxy ret = new DefaultProxy( ep, mb, policy, partnerIdentifier );
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( DefaultProxy.class, "create" );
         }
         return ret;
@@ -77,7 +77,7 @@ public class DefaultProxy
     {
         DefaultProxy ret = new DefaultProxy( ep, mb, policy, partnerIdentifier, timeCreated, timeUpdated, timeRead, timeExpires );
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( DefaultProxy.class, "create" );
         }
         return ret;

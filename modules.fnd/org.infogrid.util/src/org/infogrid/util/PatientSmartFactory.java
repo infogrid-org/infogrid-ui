@@ -74,7 +74,7 @@ public class PatientSmartFactory<K,V,A>
         throws
             FactoryException
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "obtainFor", key, argument );
         }
 

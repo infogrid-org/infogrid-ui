@@ -119,7 +119,7 @@ public class MNameServer<K,V>
             V value )
     {
         // Default implementation
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "reverseGet", value );
         }
         ArrayList<K> ret = new ArrayList<K>();
@@ -158,7 +158,7 @@ public class MNameServer<K,V>
             K key,
             V value )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "put", key, value );
         }
         synchronized( this ) {

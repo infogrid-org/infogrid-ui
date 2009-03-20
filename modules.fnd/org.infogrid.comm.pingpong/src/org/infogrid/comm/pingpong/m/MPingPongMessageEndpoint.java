@@ -70,7 +70,7 @@ public class MPingPongMessageEndpoint<T>
                 randomVariation,
                 exec );
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceConstructor( ret );
         }
         return ret;
@@ -108,7 +108,7 @@ public class MPingPongMessageEndpoint<T>
                 randomVariation,
                 exec );
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceConstructor( ret );
         }
         return ret;
@@ -158,7 +158,7 @@ public class MPingPongMessageEndpoint<T>
                 messagesSentLast,
                 messagesToBeSent );
 
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceConstructor( ret );
         }
         return ret;
@@ -284,7 +284,7 @@ public class MPingPongMessageEndpoint<T>
         if( isGracefullyDead ) {
             throw new IllegalStateException( this + " is dead" );
         }
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "enqueueMessageForSend", msg );
         }
 
@@ -330,7 +330,7 @@ public class MPingPongMessageEndpoint<T>
     {
         if( content != null && !content.isEmpty() && log.isInfoEnabled() ) {
             log.info( this, "sendMessage", token, content );
-        } else if( log.isTraceCallEnabled() ) {
+        } else if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "sendMessage", token, content );
         }
 

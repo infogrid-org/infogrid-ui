@@ -323,7 +323,7 @@ public abstract class AbstractCommunicatingProxy
     public void transactionCommitted(
             Transaction theTransaction )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "transactionCommitted", theTransaction );
         }
 
@@ -351,7 +351,7 @@ public abstract class AbstractCommunicatingProxy
             ReceivingMessageEndpoint<XprisoMessage> endpoint,
             XprisoMessage                           incoming )
     {
-        if( log.isTraceCallEnabled() ) {
+        if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "messageReceived", incoming );
         }
 
@@ -824,7 +824,7 @@ public abstract class AbstractCommunicatingProxy
         // just logging right now (FIXME?)
 
         if( t instanceof MessageEndpointIsDeadException ) {
-            if( log.isTraceCallEnabled() ) {
+            if( log.isTraceEnabled() ) {
                 log.traceMethodCallEntry( this, "disablingError", endpoint, msg, t );
             }
         } else {

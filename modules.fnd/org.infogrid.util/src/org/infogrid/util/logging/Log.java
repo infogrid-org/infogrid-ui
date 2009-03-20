@@ -225,7 +225,7 @@ public abstract class Log
      * @param msg the message to log
      * @param t   the Throwable to log. This may be null.
      */
-    protected abstract void logTraceCall(
+    protected abstract void logTrace(
             String    msg,
             Throwable t );
 
@@ -248,7 +248,7 @@ public abstract class Log
      *
      * @return true if the trace channel is enabled
      */
-    public abstract boolean isTraceCallEnabled();
+    public abstract boolean isTraceEnabled();
 
     /**
      * If the <code>obj</code> parameter is <code>null</code>, or
@@ -340,6 +340,134 @@ public abstract class Log
     }
 
     /**
+     * Logs an info message that represents a method invocation.
+     *
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param args the arguments to the method call
+     */
+    public final void infoMethodCallEntry(
+            Object     subject,
+            String     method,
+            Object ... args )
+    {
+        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
+        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
+
+        logInfo( message, t );
+    }
+
+    /**
+     * Logs an info message that represents a static method invocation.
+     *
+     * @param subject the Class on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param args the arguments to the method call
+     */
+    public final void infoMethodCallEntry(
+            Class      subject,
+            String     method,
+            Object ... args )
+    {
+        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
+        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
+
+        logInfo( message, t );
+    }
+
+    /**
+     * Logs an info message that represents a return from a method.
+     *
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     */
+    public final void infoMethodCallExit(
+            Object     subject,
+            String     method )
+    {
+        String message = determineMethodCallExitMessage( subject, method );
+        logInfo( message, null );
+    }
+
+    /**
+     * Logs an info message that represents a return from a static method.
+     *
+     * @param subject the Class on which the method was invoked
+     * @param method the name of the method being invoked
+     */
+    public final void infoMethodCallExit(
+            Class      subject,
+            String     method )
+    {
+        String message = determineMethodCallExitMessage( subject, method );
+        logInfo( message, null );
+    }
+
+    /**
+     * Logs a debug message that represents a method invocation.
+     *
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param args the arguments to the method call
+     */
+    public final void debugMethodCallEntry(
+            Object     subject,
+            String     method,
+            Object ... args )
+    {
+        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
+        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
+
+        logDebug( message, t );
+    }
+
+    /**
+     * Logs a debug message that represents a static method invocation.
+     *
+     * @param subject the Class on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param args the arguments to the method call
+     */
+    public final void debugMethodCallEntry(
+            Class      subject,
+            String     method,
+            Object ... args )
+    {
+        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
+        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
+
+        logDebug( message, t );
+    }
+
+    /**
+     * Logs a debug message that represents a return from a method.
+     *
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     */
+    public final void debugMethodCallExit(
+            Object     subject,
+            String     method )
+    {
+        String message = determineMethodCallExitMessage( subject, method );
+        logDebug( message, null );
+    }
+
+    /**
+     * Logs a debug message that represents a return from a static method.
+     *
+     * @param subject the Class on which the method was invoked
+     * @param method the name of the method being invoked
+     */
+    public final void debugMethodCallExit(
+            Class      subject,
+            String     method )
+    {
+        String message = determineMethodCallExitMessage( subject, method );
+        logDebug( message, null );
+    }
+
+    /**
      * Logs a trace message that represents a method invocation.
      *
      * @param subject the object on which the method was invoked
@@ -351,19 +479,10 @@ public abstract class Log
             String     method,
             Object ... args )
     {
-        String    message = determineMessage(   logStacktraceOnTraceCall, args );
-        Throwable t       = determineThrowable( logStacktraceOnTraceCall, args );
+        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
+        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
 
-        StringBuilder buf = new StringBuilder();
-        buf.append( "Entered " );
-        buf.append( subject );
-        buf.append( " ." );
-        buf.append( method );
-        if( message != null ) {
-            buf.append( ":" );
-            buf.append( message );
-        }
-        logTraceCall( buf.toString(), t );
+        logTrace( message, t );
     }
 
     /**
@@ -378,19 +497,10 @@ public abstract class Log
             String     method,
             Object ... args )
     {
-        String    message = determineMessage(   logStacktraceOnTraceCall, args );
-        Throwable t       = determineThrowable( logStacktraceOnTraceCall, args );
+        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
+        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
 
-        StringBuilder buf = new StringBuilder();
-        buf.append( "Entered " );
-        buf.append( subject );
-        buf.append( " ." );
-        buf.append( method );
-        if( message != null ) {
-            buf.append( ":" );
-            buf.append( message );
-        }
-        logTraceCall( buf.toString(), t );
+        logTrace( message, t );
     }
 
     /**
@@ -403,12 +513,8 @@ public abstract class Log
             Object     subject,
             String     method )
     {
-        StringBuilder buf = new StringBuilder();
-        buf.append( "Exited " );
-        buf.append( subject );
-        buf.append( " ." );
-        buf.append( method );
-        logTraceCall( buf.toString(), null );
+        String message = determineMethodCallExitMessage( subject, method );
+        logTrace( message, null );
     }
 
     /**
@@ -421,12 +527,8 @@ public abstract class Log
             Class      subject,
             String     method )
     {
-        StringBuilder buf = new StringBuilder();
-        buf.append( "Exited " );
-        buf.append( subject );
-        buf.append( " ." );
-        buf.append( method );
-        logTraceCall( buf.toString(), null );
+        String message = determineMethodCallExitMessage( subject, method );
+        logTrace( message, null );
     }
 
     /**
@@ -449,7 +551,7 @@ public abstract class Log
             buf.append( ":" );
             buf.append( message );
         }
-        logTraceCall( buf.toString(), t );
+        logTrace( buf.toString(), t );
     }
 
     /**
@@ -463,7 +565,7 @@ public abstract class Log
         StringBuilder buf = new StringBuilder();
         buf.append( "Finalized " );
         buf.append( subject );
-        logTraceCall( buf.toString(), null );
+        logTrace( buf.toString(), null );
     }
 
     /**
@@ -491,11 +593,59 @@ public abstract class Log
                 return dumper.getBuffer();
             }
 
-
         } catch( FactoryException ex ) {
             error( ex );
             return "Cannot create Dumper";
         }
+    }
+
+    /**
+     * Given information about a call entry, determine the message.
+     *
+     * @param logStacktrace log the tracktrace even if no Throwable is given in the argument list
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param args the arguments to the method call
+     * @return the message
+     */
+    protected String determineMethodCallEntryMessage(
+            boolean   logStacktrace,
+            Object    subject,
+            String    method,
+            Object... args )
+    {
+        String normalMessage = determineMessage( logStacktrace, args );
+
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Entered " );
+        buf.append( subject );
+        buf.append( " ." );
+        buf.append( method );
+        if( normalMessage != null ) {
+            buf.append( ":" );
+            buf.append( normalMessage );
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Given information about a call return, determine the message.
+     *
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     * @return the message
+     */
+    protected String determineMethodCallExitMessage(
+            Object    subject,
+            String    method )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Exited " );
+        buf.append( subject );
+        buf.append( " ." );
+        buf.append( method );
+
+        return buf.toString();
     }
 
     /**
