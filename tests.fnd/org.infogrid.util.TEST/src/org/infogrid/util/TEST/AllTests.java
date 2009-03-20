@@ -56,7 +56,7 @@ public class AllTests
                 new TestSpec( MessageStringifierTest1.class ),
                 new TestSpec( MessageStringifierTest2.class ),
                 new TestSpec( ArrayStringifierTest1.class ),
-                
+
                 new TestSpec( UrlEncodingTest1.class ),
         };
 

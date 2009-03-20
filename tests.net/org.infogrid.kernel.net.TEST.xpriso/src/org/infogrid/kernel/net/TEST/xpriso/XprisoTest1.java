@@ -64,8 +64,6 @@ public class XprisoTest1
 
         log.info( "checking on first replication" );
         checkObject( obj1_mb2, "accessLocally() did not work" );
-        checkTypesReplication(      obj1_mb1, obj1_mb2, "accessLocally() types replication didn't work" );
-        checkPropertiesReplication( obj1_mb1, obj1_mb2, "accessLocally() properties replication didn't work" );
 
         checkProxies( obj1_mb1, new NetMeshBase[] { mb2 }, null, null, "obj1_mb1 has wrong proxies" );
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj1_mb2 has wrong proxies" );

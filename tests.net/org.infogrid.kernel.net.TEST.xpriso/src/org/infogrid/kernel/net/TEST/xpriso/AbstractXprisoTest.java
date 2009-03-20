@@ -188,7 +188,7 @@ public abstract class AbstractXprisoTest
             return false;
         }
         if( proxies.length != proxiesTowards.length ) {
-            reportError( msg + ": object has wrong number of proxies.", proxiesTowards, proxies );
+            reportError( msg + ": object has wrong number of proxies.", proxiesTowards.length, proxies.length );
             ret = false;
         }
         

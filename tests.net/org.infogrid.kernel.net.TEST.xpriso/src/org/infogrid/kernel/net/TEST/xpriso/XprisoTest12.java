@@ -79,11 +79,17 @@ public class XprisoTest12
                         CoherenceSpecification.ONE_TIME_ONLY_FAST ));
         checkObject( obj1_mb3, "C not found" );
 
-        // fast section
+        //
+
+        log.info( "Immediate check section" );
+
         checkProxies( obj1_mb1, new NetMeshBase[] { mb2 },      null, null,  "obj1_mb1 has wrong proxies" );
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1, mb3 },  mb1,  mb1,  "obj1_mb2 has wrong proxies" );
         checkProxies( obj1_mb3, new NetMeshBase[] { mb2 },       mb2,  mb2,  "obj1_mb3 has wrong proxies" );
 
+        //
+
+        log.info( "Now wait and check again later" );
 
         Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L ); // make sure background resync works
 

@@ -78,6 +78,16 @@ public abstract class CoherenceSpecification
     }
 
     /**
+     * Determine whether a response should wait until all resynchronization attempts have completed.
+     *
+     * @return true if the response should wait
+     */
+    public boolean getWaitForOngoingResynchronization()
+    {
+        return theWaitForOngoingResynchronization;
+    }
+
+    /**
      * Obtain the external form of this CoherenceSpecification.
      *
      * @return the external form
