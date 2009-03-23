@@ -18,6 +18,7 @@ import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseNameServer;
+import org.infogrid.meshbase.net.xpriso.logging.XprisoMessageLogger;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
 import org.infogrid.util.SmartFactory;
@@ -52,4 +53,19 @@ public interface ProbeManager
      */
     public void die(
             boolean isPermanent );
+
+    /**
+     * Set a XprisoMessageLogger for all incoming and outgoing XprisoMessages.
+     *
+     * @param newValue the new value
+     */
+    public void setXprisoMessageLogger(
+                XprisoMessageLogger newValue );
+
+    /**
+     * Obtain the currently active XprisoMessageLogger, if any.
+     *
+     * @return the currently active XprisoMessageLogger, if any
+     */
+    public XprisoMessageLogger getXprisoMessageLogger();
 }

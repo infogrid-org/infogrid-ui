@@ -65,7 +65,7 @@ public class ForwardReferenceTest3
     {
         log.info( "accessing outer probe" );
         
-        MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY );
+        MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY_FAST );
 
         checkObject( abc, "abc not found" );
         checkEquals( IteratorElementCounter.countIteratorElements( base.proxies()), 1, "wrong number of proxies in main NetMeshBase" );

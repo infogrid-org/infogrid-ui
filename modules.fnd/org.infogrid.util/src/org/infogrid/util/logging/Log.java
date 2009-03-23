@@ -18,6 +18,7 @@ import java.text.MessageFormat;
 import java.util.Properties;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.AbstractLocalizedRuntimeException;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.HasStringRepresentation;
@@ -135,8 +136,8 @@ public abstract class Log
      * @return the Log object
      */
     public static Log getLogInstance(
-            Class                                    clazz,
-            DumperFactory<? extends BufferingDumper> dumperFactory )
+            Class                  clazz,
+            BufferingDumperFactory dumperFactory )
     {
         return theFactory.create( clazz, dumperFactory );
     }
@@ -149,8 +150,8 @@ public abstract class Log
      * @return the Log object
      */
     public static Log getLogInstance(
-            String                                   name,
-            DumperFactory<? extends BufferingDumper> dumperFactory )
+            String                 name,
+            BufferingDumperFactory dumperFactory )
     {
         return theFactory.create( name, dumperFactory );
     }
@@ -162,8 +163,8 @@ public abstract class Log
      * @param dumperFactory the DumperFactory to use, if any
      */
     protected Log(
-            String                                   name,
-            DumperFactory<? extends BufferingDumper> dumperFactory )
+            String                 name,
+            BufferingDumperFactory dumperFactory )
     {
         theName          = name;
         theDumperFactory = dumperFactory;
@@ -575,21 +576,51 @@ public abstract class Log
      * @param args the argument list
      * @return the message, if any
      */
+    @SuppressWarnings("unchecked")
     protected String determineMessage(
             boolean   logStacktrace,
             Object... args )
     {
         try {
-            BufferingDumper dumper = theDumperFactory.obtainFor( this );
+            if( args == null ) {
+                return "<null message>";
+            }
+            if( args.length == 0 ) {
+                return "<empty message>";
+            }
+
+            int startIndex = 0;
+            BufferingDumperFactory factory;
+            if( args[ startIndex ] instanceof BufferingDumperFactory ) {
+                factory = (BufferingDumperFactory) args[ startIndex ];
+                ++startIndex;
+            } else {
+                factory = theDumperFactory;
+            }
+
+            BufferingDumper dumper = factory.obtainFor( this );
             if( dumper == null ) {
                 return "Cannot find Dumper";
             }
-            if( args.length == 1 && args[0] instanceof String ) {
-                return (String) args[0]; // special case of a simple informational message
-            } else if( args.length == 2 && ( args[0] instanceof String ) && ( args[1] instanceof Object[] ) && ((Object[])args[1]).length == 0 ) {
-                return (String) args[0]; // special case of a method invocation with no arguments
+
+            if( args.length == 1 + startIndex && args[startIndex] instanceof String ) {
+                return (String) args[startIndex]; // special case of a simple informational message
+
+            } else if( args.length == 2 + startIndex && ( args[startIndex] instanceof String ) && ( args[startIndex+1] instanceof Object[] ) && ((Object[])args[startIndex+1]).length == 0 ) {
+                return (String) args[startIndex]; // special case of a method invocation with no arguments
+
             } else {
-                dumper.dump( args );
+                Object [] toDump;
+                if( startIndex == 0 ) {
+                    toDump = args;
+                } else {
+                    toDump = ArrayHelper.copyIntoNewArray( args, startIndex, args.length, Object.class );
+                }
+                if( toDump.length != 1 ) {
+                    dumper.dump( toDump );
+                } else {
+                    dumper.dump( toDump[0] );
+                }
                 return dumper.getBuffer();
             }
 
@@ -1075,7 +1106,7 @@ public abstract class Log
     /**
      * The factory for creating Dumper objects to use for dumping objects, if any.
      */
-    protected DumperFactory<? extends BufferingDumper> theDumperFactory;
+    protected BufferingDumperFactory theDumperFactory;
 
     /**
      * The factory for new Log objects.

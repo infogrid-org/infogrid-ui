@@ -90,33 +90,53 @@ public class XprisoTest2a
                 1000000L ); // long time so we have time to debug
         checkObject( obj2_mb3, "mb3 fails to access obj2." );
 
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L );
+        // do not wait, accessLocally is supposed to have this done for us
+
+        log.info( "Checking in mb1 and mb3" );
 
         checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
         checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
         checkEquals( obj2_mb3.getAllRelationshipProxies().length, 1, "wrong relationship proxies in obj2_mb3" );
         checkEquals( obj2_mb3.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb2.getIdentifier(), "wrong relationship proxies in obj2_mb3" );
 
-        //
-
-        log.info( "Finding obj2_mb2" );
-        
-        NetMeshObject obj2_mb2 = mb2.findMeshObjectByIdentifier( obj2_mb1.getIdentifier() );
-
-        //
-
-        log.info( "Checking proxies" );
-        
         checkProxies( obj2_mb1, new NetMeshBase[] { mb2, mb3 }, null, null, "obj2_mb1 has wrong proxies" );
-        checkProxies( obj2_mb2, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj2_mb2 has wrong proxies" );
         checkProxies( obj2_mb3, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj2_mb3 has wrong proxies" );
 
         checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
         checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
-        checkEquals( obj2_mb2.getAllRelationshipProxies().length, 1, "wrong relationship proxies in obj2_mb2" );
-        checkEquals( obj2_mb2.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb1.getIdentifier(), "wrong relationship proxies in obj2_mb2" );
         checkEquals( obj2_mb3.getAllRelationshipProxies().length, 1, "wrong relationship proxies in obj2_mb3" );
         checkEquals( obj2_mb3.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb2.getIdentifier(), "wrong relationship proxies in obj2_mb3" );
+
+        //
+
+        log.info( "Sleeping a bit to allow the cancel lease message to reach mb2." );
+
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        NetMeshObject obj2_mb2 = mb2.findMeshObjectByIdentifier( obj2_mb1.getIdentifier() );
+
+        //
+
+        log.info( "Checking proxies in mb2" );
+        
+        checkProxies( obj2_mb2, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj2_mb2 has wrong proxies" );
+
+        checkEquals( obj2_mb2.getAllRelationshipProxies().length, 1, "wrong relationship proxies in obj2_mb2" );
+        checkEquals( obj2_mb2.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb1.getIdentifier(), "wrong relationship proxies in obj2_mb2" );
+
+        //
+
+        log.info( "Sleeping a tiny bit to aid in error reporting" );
+
+        sleepFor( 1000L );
+
+        //
+
+        log.info( "Checking that all messages were delivered" );
+
+        if( !theXprisoMessageLogger.allQueuesEmpty()) {
+            reportError( "Message logger detects undelivered messages", theXprisoMessageLogger );
+        }
     }
 
     /**
@@ -178,6 +198,12 @@ public class XprisoTest2a
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb2.getIdentifier(), mb2 );
         theNameServer.put( mb3.getIdentifier(), mb3 );
+
+        if( log.isDebugEnabled() ) {
+            mb1.setXprisoMessageLogger( theXprisoMessageLogger );
+            mb2.setXprisoMessageLogger( theXprisoMessageLogger );
+            mb3.setXprisoMessageLogger( theXprisoMessageLogger );
+        }
     }
 
     /**

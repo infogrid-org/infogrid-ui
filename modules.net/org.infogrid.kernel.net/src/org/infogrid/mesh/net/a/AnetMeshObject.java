@@ -60,7 +60,7 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeAddedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
-import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
+import org.infogrid.meshbase.net.a.AccessLocallySynchronizer;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -74,6 +74,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.IsDeadException;
 import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.ReturnSynchronizerException;
 import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
@@ -292,15 +293,20 @@ public class AnetMeshObject
             p = theProxies[ theProxyTowardsLockIndex ];
         }
 
-        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
-        synchronized( synchronizer.getSyncObject() ) {
-            long actualDuration = p.tryToObtainLocks( new NetMeshObject[] { this }, duration, synchronizer );
+        AccessLocallySynchronizer synchronizer = ((NetMeshBase)theMeshBase).getAccessLocallySynchronizer();
+        try {
+            synchronizer.beginTransaction();
 
-            try {
-                synchronizer.join( actualDuration );
-            } catch( InterruptedException ex ) {
-                log.error( ex );
-            }
+            long actualDuration = p.tryToObtainLocks( new NetMeshObject[] { this }, duration );
+
+            synchronizer.join( actualDuration );
+
+            synchronizer.endTransaction();
+
+        } catch( ReturnSynchronizerException ex ) {
+            log.error( ex );
+        } catch( InterruptedException ex ) {
+            log.error( ex );
         }
         
         if( theProxyTowardsLockIndex == HERE_CONSTANT ) {
@@ -385,15 +391,18 @@ public class AnetMeshObject
             }
         }
 
-        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
-        synchronized( synchronizer.getSyncObject() ) {
-            long actualDuration = outgoingProxy.tryToPushLocks( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration, synchronizer );
+        AccessLocallySynchronizer synchronizer = ((NetMeshBase)theMeshBase).getAccessLocallySynchronizer();
 
-            try {
-                synchronizer.join( actualDuration );
-            } catch( InterruptedException ex ) {
-                log.error( ex );
-            }
+        try {
+            long actualDuration = outgoingProxy.tryToPushLocks( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration );
+
+            synchronizer.join( actualDuration );
+
+        } catch( ReturnSynchronizerException ex ) {
+            log.error( ex );
+
+        } catch( InterruptedException ex ) {
+            log.error( ex );
         }
         
         if( theProxyTowardsLockIndex != HERE_CONSTANT ) {
@@ -426,17 +435,19 @@ public class AnetMeshObject
             p = theProxies[ theProxyTowardsLockIndex ];
             theProxyTowardsLockIndex = HERE_CONSTANT;
         }
-        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
-        synchronized( synchronizer.getSyncObject() ) {
-            p.forceObtainLocks( new NetMeshObject[] { this }, synchronizer );
+        AccessLocallySynchronizer synchronizer = ((NetMeshBase)theMeshBase).getAccessLocallySynchronizer();
 
-            try {
-                synchronizer.join();
-            } catch( InterruptedException ex ) {
-                log.error( ex );
-            }
+        try {
+            p.forceObtainLocks( new NetMeshObject[] { this }, -1L ); // FIXME default?
+
+            synchronizer.join();
+
+        } catch( ReturnSynchronizerException ex ) {
+            log.error( ex );
+
+        } catch( InterruptedException ex ) {
+            log.error( ex );
         }
-
 
         AnetMeshBase realBase = (AnetMeshBase) theMeshBase;                
         realBase.flushMeshObject( this );
@@ -540,15 +551,18 @@ public class AnetMeshObject
             p = theProxies[ theHomeProxyIndex ];
         }
 
-        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
-        synchronized( synchronizer.getSyncObject() ) {
-            long actualDuration = p.tryToObtainHomeReplicas( new NetMeshObject[] { this }, duration, synchronizer );
+        AccessLocallySynchronizer synchronizer = ((NetMeshBase)theMeshBase).getAccessLocallySynchronizer();
 
-            try {
-                synchronizer.join( actualDuration );
-            } catch( InterruptedException ex ) {
-                log.error( ex );
-            }
+        try {
+            long actualDuration = p.tryToObtainHomeReplicas( new NetMeshObject[] { this }, duration );
+
+            synchronizer.join( actualDuration );
+
+        } catch( ReturnSynchronizerException ex ) {
+            log.error( ex );
+
+        } catch( InterruptedException ex ) {
+            log.error( ex );
         }
         
         if( theHomeProxyIndex == HERE_CONSTANT ) {
@@ -632,19 +646,23 @@ public class AnetMeshObject
             }
         }
 
-        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
-        synchronized( synchronizer.getSyncObject() ) {
-            long delta = outgoingProxy.tryToPushHomeReplicas( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration, synchronizer );
+        AccessLocallySynchronizer synchronizer = ((NetMeshBase)theMeshBase).getAccessLocallySynchronizer();
+
+        try {
+            long delta = outgoingProxy.tryToPushHomeReplicas( new NetMeshObject[] { this }, new boolean[] { isNewProxy }, duration );
 
             if( duration >=0L ) {
                 delta = duration;
             }
-            try {
-                synchronizer.join( delta );
-            } catch( InterruptedException ex ) {
-                log.error( ex );
-            }
+            synchronizer.join( delta );
+
+        } catch( ReturnSynchronizerException ex ) {
+            log.error( ex );
+
+        } catch( InterruptedException ex ) {
+            log.error( ex );
         }
+
         if( theHomeProxyIndex != HERE_CONSTANT ) {
             fireHomeReplicaLostEvent();
 

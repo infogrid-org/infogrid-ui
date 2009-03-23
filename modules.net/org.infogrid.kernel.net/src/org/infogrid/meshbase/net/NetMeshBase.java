@@ -22,7 +22,8 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.security.NetAccessManager;
-import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
+import org.infogrid.meshbase.net.a.AccessLocallySynchronizer;
+import org.infogrid.meshbase.net.xpriso.logging.XprisoMessageLogger;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.NameServer;
@@ -503,12 +504,28 @@ public interface NetMeshBase
     public abstract void unregisterIncomingProxy();
 
     /**
-     * Obtain the underlying XprisoSynchronizer for Xpriso communication.
+     * Obtain the underlying AccessLocallySynchronizer for synchronizing the return of parallel
+     * accessLocally invocation.
      * Not to be called by the application programmer.
      *
-     * @return the underlying XprisoSynchronizer
+     * @return the underlying AccessLocallySynchronizer
      */
-    public abstract XprisoSynchronizer getReturnSynchronizer();
+    public abstract AccessLocallySynchronizer getAccessLocallySynchronizer();
+
+    /**
+     * Set a XprisoMessageLogger for all incoming and outgoing XprisoMessages.
+     *
+     * @param newValue the new value
+     */
+    public abstract void setXprisoMessageLogger(
+                XprisoMessageLogger newValue );
+
+    /**
+     * Obtain the currently active XprisoMessageLogger, if any.
+     *
+     * @return the currently active XprisoMessageLogger, if any
+     */
+    public abstract XprisoMessageLogger getXprisoMessageLogger();
 
     /**
      * The name of the bound property we use to express "the timeout for accessLocally has changed".

@@ -41,11 +41,12 @@ public class PingPongReturnSynchronizerTest2
         int MAX = 100;
 
         ReturnSynchronizer<Long,TestMessage> synchronizer = ReturnSynchronizer.create();
-        Object handle = null;
         TestMessage [] msgToSend = new TestMessage[ MAX ];
         @SuppressWarnings("unchecked")
         ReturnSynchronizerEndpoint<TestMessage> [] clients = new ReturnSynchronizerEndpoint[ MAX ];
 
+        synchronizer.beginTransaction();
+        
         for( int i=2 ; i<MAX ; ++i ) {
             MPingPongMessageEndpoint<TestMessage> ep1 = new MPingPongMessageEndpoint<TestMessage>( "ep1-" + i, 1000L, 1000L, 500L, 10000L, 0.f, exec ) {
                     /**
@@ -131,32 +132,30 @@ public class PingPongReturnSynchronizerTest2
             MultiplyingResponder l2 = new MultiplyingResponder( ep2, this );
             ep2.addDirectMessageEndpointListener( l2 );
 
-            clients[i] = ReturnSynchronizerEndpoint.create( ep1 );
+            clients[i] = ReturnSynchronizerEndpoint.create( synchronizer, ep1 );
 
             ep1.setPartnerAndInitiateCommunications( ep2 );
 
             msgToSend[i] = new TestMessage( i );
 
-            Object handle2 = clients[i].call( msgToSend[i], synchronizer );
-            if( handle != null && handle != handle2 ) {
-                reportError( "Different handle", handle, handle2 );
-            }
-            handle = handle2;
+            clients[i].call( msgToSend[i] );
         }
 
         log.debug( "joining" );
-        synchronized( handle ) {
-            synchronizer.join();
-        }
+        synchronizer.join();
 
+        //
+        
         log.debug( "checking results" );
         for( int i=2 ; i<MAX ; ++i ) {
-            TestMessage msgReceived = synchronizer.takeResultFor( msgToSend[i].getRequestId() );
+            TestMessage msgReceived = synchronizer.getResultFor( msgToSend[i].getRequestId() );
 
             long result = msgReceived.getPayload();
 
             checkEquals( result, i*i, "wrong result for i=" + i );
         }
+
+        synchronizer.endTransaction();
     }
 
     /**

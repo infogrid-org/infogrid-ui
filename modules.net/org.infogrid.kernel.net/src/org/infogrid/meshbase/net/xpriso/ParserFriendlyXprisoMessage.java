@@ -673,7 +673,7 @@ public class ParserFriendlyXprisoMessage
         }
         return true;
     }
-    
+
     /**
      * Dump this object.
      *

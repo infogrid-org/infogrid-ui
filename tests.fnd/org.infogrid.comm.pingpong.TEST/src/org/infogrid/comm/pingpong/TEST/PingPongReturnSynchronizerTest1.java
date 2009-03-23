@@ -75,29 +75,32 @@ public class PingPongReturnSynchronizerTest1
         MultiplyingResponder l2 = new MultiplyingResponder( ep2, this );
         ep2.addDirectMessageEndpointListener( l2 );
 
-        ReturnSynchronizerEndpoint<TestMessage> client = ReturnSynchronizerEndpoint.create( ep1 );
+        ReturnSynchronizer<Long,TestMessage>    synchronizer = ReturnSynchronizer.create();
+        ReturnSynchronizerEndpoint<TestMessage> client       = ReturnSynchronizerEndpoint.create( synchronizer, ep1 );
 
         log.info( "Starting to ping-pong" );
         log.debug( "Note that the events seem to be a bit out of order as we only print the event after it was successfully sent (and received)" );
 
         ep1.setPartnerAndInitiateCommunications( ep2 );
 
-        ReturnSynchronizer<Long,TestMessage> synchronizer = ReturnSynchronizer.create();
 
         for( long i=2 ; i<10 ; ++i ) {
             TestMessage msgToSend = new TestMessage( i );
 
-            log.debug( "About to invoke RPC for " + i );
-            Object handle = client.call( msgToSend, synchronizer );
+            synchronizer.beginTransaction();
 
-            synchronized( handle ) {
-                synchronizer.join();
-            }
-            TestMessage msgReceived = synchronizer.takeResultFor( msgToSend.getRequestId() );
+            log.debug( "About to invoke RPC for " + i );
+            client.call( msgToSend );
+
+            synchronizer.join();
+
+            TestMessage msgReceived = synchronizer.getResultFor( msgToSend.getRequestId() );
 
             long result = msgReceived.getPayload();
 
             checkEquals( result, i*i, "wrong result for i=" + i );
+
+            synchronizer.endTransaction();
         }
     }
 

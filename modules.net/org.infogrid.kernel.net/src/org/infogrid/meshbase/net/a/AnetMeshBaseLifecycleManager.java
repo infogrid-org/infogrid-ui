@@ -53,7 +53,6 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
 import org.infogrid.meshbase.net.transaction.ReplicaCreatedEvent;
 import org.infogrid.meshbase.net.transaction.ReplicaPurgedEvent;
-import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.EntityType;
@@ -66,6 +65,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.RemoteQueryTimeoutException;
+import org.infogrid.util.ReturnSynchronizerException;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -2215,7 +2215,7 @@ public class AnetMeshBaseLifecycleManager
                     identifiers[i],
                     timeCreateds != null ? timeCreateds[i] : -1L,
                     timeUpdateds != null ? timeUpdateds[i] : -1L,
-                    timeReads    != null ? timeReads[i] : -1L,
+                    timeReads    != null ? timeReads[i]    : -1L,
                     timeExpiress != null ? timeExpiress[i] : -1L,
                     giveUpHomeReplicas != null ? giveUpHomeReplicas[i] : realBase.getDefaultWillGiveUpHomeReplica(),
                     giveUpLocks        != null ? giveUpLocks[i]        : realBase.getDefaultWillGiveUpLock(),
@@ -2246,23 +2246,30 @@ public class AnetMeshBaseLifecycleManager
 
         // now resynchronize
 
-        XprisoSynchronizer synchronizer = ((NetMeshBase)theMeshBase).getReturnSynchronizer();
-        synchronized( synchronizer.getSyncObject() ) {
+        AccessLocallySynchronizer synchronizer = ((NetMeshBase)theMeshBase).getAccessLocallySynchronizer();
+
+        try {
+            synchronizer.beginTransaction();
+
             long waitFor = 0L;
             for( Proxy p : proxiesForIdentifiers.keySet() ) {
-                NetMeshObjectIdentifier [] ids = ArrayHelper.copyIntoNewArray( proxiesForIdentifiers.get(  p ), NetMeshObjectIdentifier.class );
+                NetMeshObjectIdentifier [] ids = ArrayHelper.copyIntoNewArray( proxiesForIdentifiers.get( p ), NetMeshObjectIdentifier.class );
 
-                long delta = p.tryResynchronizeReplicas( ids, timeoutInMillis, synchronizer );
+                long delta = p.tryResynchronizeReplicas( ids, timeoutInMillis, null ); // FIXME? Should we be able to specify a CoherenceSpec here?
                 waitFor = Math.max(  waitFor, delta );
             }
             if( timeoutInMillis >= 0 ) {
                 waitFor = timeoutInMillis;
             }
-            try {
-                synchronizer.join( waitFor );
-            } catch( InterruptedException ex ) {
-                log.error( ex );
-            }
+            synchronizer.join( waitFor );
+
+            synchronizer.endTransaction();
+
+        } catch( ReturnSynchronizerException ex ) {
+            log.error( ex );
+
+        } catch( InterruptedException ex ) {
+            log.error( ex );
         }
 
         return ret;

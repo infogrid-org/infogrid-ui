@@ -30,8 +30,8 @@ public class BasicLog
      * @param dumperFactory the DumperFactory to use, if any
      */
     public BasicLog(
-            String                                       name,
-            DumperFactory<? extends BufferingDumper> dumperFactory )
+            String                 name,
+            BufferingDumperFactory dumperFactory )
     {
         super( name, dumperFactory );
     }
@@ -320,8 +320,8 @@ public class BasicLog
          * @return the Log object
          */
         public Log create(
-                String                                   name,
-                DumperFactory<? extends BufferingDumper> dumperFactory )
+                String                 name,
+                BufferingDumperFactory dumperFactory )
         {
             return new BasicLog( name, dumperFactory );
         }

@@ -12,36 +12,44 @@
 // All rights reserved.
 //
 
-package org.infogrid.meshbase.net.xpriso;
+package org.infogrid.meshbase.net.a;
 
 import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.util.ReturnSynchronizer;
+import org.infogrid.util.logging.Log;
 
 /**
- * Subtypes ReturnSynchronizer for the purposes of synchronizing accessLocally and Xpriso calls.
+ * Subtypes ReturnSynchronizer for the purposes of synchronizing accessLocally calls.
  */
-public class XprisoSynchronizer
+public class AccessLocallySynchronizer
     extends
         ReturnSynchronizer<Long,XprisoMessage>
 {
+    private static final Log log = Log.getLogInstance( AccessLocallySynchronizer.class ); // our own, private logger
+
     /**
      * Factory method.
      *
-     * @param mb the NetMeshBase on whose behalf of this XprisoSynchronizer works
-     * @return the created XprisoSynchronizer
+     * @param mb the NetMeshBase on whose behalf of this AccessLocallySynchronizer works
+     * @return the created AccessLocallySynchronizer
      */
-    public static XprisoSynchronizer create(
+    public static AccessLocallySynchronizer create(
             NetMeshBase mb )
     {
-        return new XprisoSynchronizer( mb );
+        AccessLocallySynchronizer ret = new AccessLocallySynchronizer( mb );
+        if( log.isTraceEnabled() ) {
+            log.traceConstructor( ret );
+        }
+        return ret;
     }
 
     /**
      * Constructor.
      *
-     * @param mb the NetMeshBase on whose behalf of this XprisoSynchronizer works
+     * @param mb the NetMeshBase on whose behalf of this AccessLocallySynchronizer works
      */
-    public XprisoSynchronizer(
+    public AccessLocallySynchronizer(
             NetMeshBase mb )
     {
         super( mb.getIdentifier().toExternalForm() );

@@ -43,9 +43,9 @@ import org.infogrid.util.FactoryException;
 import org.infogrid.util.NamedThreadFactory;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.BufferingDumper;
+import org.infogrid.util.logging.BufferingDumperFactory;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
-import org.infogrid.util.logging.DumperFactory;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.logging.ToStringDumperFactory;
 
@@ -879,9 +879,9 @@ public abstract class AbstractTest
      * @return true if check passed
      */
     public final boolean reportError(
-            String                                   msg,
-            DumperFactory<? extends BufferingDumper> df,
-            Object ...                               args )
+            String                 msg,
+            BufferingDumperFactory df,
+            Object ...             args )
     {
         if( msg != null ) {
             StringBuilder buf = new StringBuilder();
@@ -1352,7 +1352,7 @@ public abstract class AbstractTest
     /**
      * The default DumperFactory to use.
      */
-    public static final DumperFactory<? extends BufferingDumper> DEFAULT_DUMPER_FACTORY
+    public static final ToStringDumperFactory DEFAULT_DUMPER_FACTORY
             = ToStringDumperFactory.create();
 
     /**

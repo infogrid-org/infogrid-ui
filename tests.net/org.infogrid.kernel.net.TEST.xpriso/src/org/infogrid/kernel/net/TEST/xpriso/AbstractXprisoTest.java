@@ -26,6 +26,7 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.m.NetMMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.meshbase.net.xpriso.logging.LogXprisoMessageLogger;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
@@ -33,9 +34,9 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
-import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
+import org.infogrid.util.logging.Log;
 
 /**
  * Factors out common functionality for the tests in this package.
@@ -55,6 +56,8 @@ public abstract class AbstractXprisoTest
         super( localFileName( testClass, "/ResourceHelper" ));
 
         theNameServer = NetMMeshBaseNameServer.create();
+
+        theXprisoMessageLogger = LogXprisoMessageLogger.create( Log.getLogInstance( getClass() ));
     }
 
     /**
@@ -303,7 +306,6 @@ public abstract class AbstractXprisoTest
             }
 
             if( !checkEqualsOutOfSequence( relationshipProxiesIdentifiers, proxiesTowardsIdentifiers, null )) {
-                StringBuilder buf = new StringBuilder();
                 reportError( msg + ": not the same content", relationshipProxiesIdentifiers, proxiesTowardsIdentifiers );
             }
         }
@@ -339,4 +341,9 @@ public abstract class AbstractXprisoTest
      * Milliseconds.
      */
     protected static final long PINGPONG_ROUNDTRIP_DURATION = 100L;
+
+    /**
+     * The XprisoMessageLogger to use.
+     */
+    protected LogXprisoMessageLogger theXprisoMessageLogger;
 }

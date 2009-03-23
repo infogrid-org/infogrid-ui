@@ -22,7 +22,6 @@ import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.proxy.AbstractProxy;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpoint;
 import org.infogrid.meshbase.net.proxy.ProxyPolicy;
-import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.RemoteQueryTimeoutException;
 
@@ -103,13 +102,11 @@ public class PlaceholderShadowProxy
      *
      * @param paths the NetMeshObjectAccessSpecifications specifying which replicas should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public long obtainReplicas(
             NetMeshObjectAccessSpecification [] paths,
-            long                                duration,
-            XprisoSynchronizer                  synchronizer )
+            long                                duration )
     {
         throw new UnsupportedOperationException( "should never be called" );
     }
@@ -120,13 +117,11 @@ public class PlaceholderShadowProxy
      *
      * @param localReplicas the local replicas for which the lock should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public long tryToObtainLocks(
-            NetMeshObject []   localReplicas,
-            long               duration,
-            XprisoSynchronizer synchronizer )
+            NetMeshObject [] localReplicas,
+            long             duration )
     {
         throw new UnsupportedOperationException( "should never be called" );
     }
@@ -139,14 +134,12 @@ public class PlaceholderShadowProxy
      * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public long tryToPushLocks(
-            NetMeshObject []   localReplicas,
-            boolean []         isNewProxy,
-            long               duration,
-            XprisoSynchronizer synchronizer )
+            NetMeshObject [] localReplicas,
+            boolean []       isNewProxy,
+            long             duration )
     {
         throw new UnsupportedOperationException( "should never be called" );
     }
@@ -157,13 +150,11 @@ public class PlaceholderShadowProxy
      *
      * @param localReplicas the local replicas for which the home replica status should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public long tryToObtainHomeReplicas(
-            NetMeshObject []   localReplicas,
-            long               duration,
-            XprisoSynchronizer synchronizer )
+            NetMeshObject [] localReplicas,
+            long             duration )
     {
         throw new UnsupportedOperationException( "should never be called" );
     }
@@ -177,28 +168,29 @@ public class PlaceholderShadowProxy
      * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public long tryToPushHomeReplicas(
-            NetMeshObject []   localReplicas,
-            boolean []         isNewProxy,
-            long               duration,
-            XprisoSynchronizer synchronizer )
+            NetMeshObject [] localReplicas,
+            boolean []       isNewProxy,
+            long             duration )
     {
         throw new UnsupportedOperationException( "should never be called" );
     }
 
     /**
-     * Send notification to the partner NetMeshBase that this MeshBase has forcibly taken the
-     * lock back for the given NetMeshObjects.
+     * <p>Send notification to the partner NetMeshBase that this MeshBase has forcibly taken the
+     * lock back for the given NetMeshObjects.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      *
      * @param localReplicas the local replicas for which the lock has been forced back
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public void forceObtainLocks(
-            NetMeshObject []   localReplicas,
-            XprisoSynchronizer synchronizer )
+    public long forceObtainLocks(
+            NetMeshObject [] localReplicas,
+            long             duration )
     {
         throw new UnsupportedOperationException( "should never be called" );
     }
@@ -211,24 +203,31 @@ public class PlaceholderShadowProxy
      *
      * @param identifiers the identifiers of the NetMeshObjects
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
+     * @param accessLocallySynchronizerQueryKey if given, add all to-be-opened queries within this operation to the existing transaction
+     *         with this query key. If not given, add all to-be-opened queries within this operation to this thread's transaction. This
+     *         enables resynchronization to be performed on another thread while an accessLocally operation is still waiting
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public long tryResynchronizeReplicas(
             NetMeshObjectIdentifier [] identifiers,
             long                       duration,
-            XprisoSynchronizer         synchronizer )
+            Long                       accessLocallySynchronizerQueryKey )
     {
         throw new UnsupportedOperationException( "should never be called" );
     }
 
     /**
-     * Ask this Proxy to cancel the leases for the given replicas from its partner NetMeshBase.
+     * <p>Ask this Proxy to cancel the leases for the given replicas from its partner NetMeshBase.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      *
      * @param localReplicas the local replicas for which the lease should be canceled
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public void cancelReplicas(
-            NetMeshObject [] localReplicas )
+    public long cancelReplicas(
+            NetMeshObject [] localReplicas,
+            long             duration )
     {
         throw new UnsupportedOperationException( "should never be called" );
     }

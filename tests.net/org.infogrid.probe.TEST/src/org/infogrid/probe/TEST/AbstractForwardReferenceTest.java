@@ -17,6 +17,7 @@ package org.infogrid.probe.TEST;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
+import org.infogrid.meshbase.net.xpriso.logging.LogXprisoMessageLogger;
 import org.infogrid.probe.m.MProbeDirectory;
 
 /**
@@ -41,6 +42,11 @@ public abstract class AbstractForwardReferenceTest
 
         here = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
         base = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
+
+        if( getLog().isDebugEnabled() ) {
+            theXprisoMessageLogger = LogXprisoMessageLogger.create( getLog() );
+            base.setXprisoMessageLogger( theXprisoMessageLogger );
+        }
     }
 
     /**
@@ -71,4 +77,9 @@ public abstract class AbstractForwardReferenceTest
      * The main NetMeshBase.
      */
     protected LocalNetMMeshBase base;
+
+    /**
+     * The XprisoMessageLogger to use.
+     */
+    protected LogXprisoMessageLogger theXprisoMessageLogger;
 }

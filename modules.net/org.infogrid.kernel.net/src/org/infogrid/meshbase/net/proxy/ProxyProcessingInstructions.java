@@ -108,142 +108,74 @@ public class ProxyProcessingInstructions
 //
 
     /**
-     * Set the XprisoMessage to be sent via the WaitForReplicaResponseEndpoint.
+     * Set the XprisoMessage to be sent via the WaitEndpoint.
      * 
      * @param outgoing the outgoing XprisoMessage
      */
-    public void setSendViaWaitForReplicaResponseEndpoint(
+    public void setSendViaWaitEndpoint(
             XprisoMessage outgoing )
     {
-        if( theSendViaWaitForReplicaResponseEndpoint != null ) {
-            throw new IllegalStateException( "Invoked a second time" );
-        }
-        theSendViaWaitForReplicaResponseEndpoint = outgoing;
+        setSendViaWaitEndpoint( outgoing, null );
     }
-    
-    /**
-     * Obtain the XprisoMessage to be sent via the WaitForReplicaResponseEndpoint.
-     * 
-     * @return the outgoing XprisoMessage, if any
-     */
-    public XprisoMessage getSendViaWaitForReplicaResponseEndpoint()
-    {
-        return theSendViaWaitForReplicaResponseEndpoint;
-    }
-    
-    /**
-     * Set the timeout for the WaitForReplicaResponseEndpoint in this operation.
-     * 
-     * @param newValue the timeout, in milliseconds
-     */
-    public void setWaitForReplicaResponseEndpointTimeout(
-            long newValue )
-    {
-        theWaitForReplicaResponseEndpointTimeout = newValue;
-    }
-    
-    /**
-     * Obtain the timeout for the WaitForReplicaResponseEndpoint in this operation.
-     * 
-     * @return the timeout, in milliseconds
-     */
-    public long getWaitForReplicaResponseEndpointTimeout()
-    {
-        return theWaitForReplicaResponseEndpointTimeout;
-    }
-    
-//
 
     /**
-     * Set the XprisoMessage to be sent via the WaitForLockResponseEndpoint.
-     * 
+     * Set the XprisoMessage to be sent via the WaitEndpoint.
+     *
      * @param outgoing the outgoing XprisoMessage
+     * @param accessLocallySynchronizerQueryKey if given, identifies the ongoing AccessLocallySynchronizer transaction
+     *        to which the synchronous message exchange operation shall be added
      */
-    public void setSendViaWaitForLockResponseEndpoint(
-            XprisoMessage outgoing )
+    public void setSendViaWaitEndpoint(
+            XprisoMessage outgoing,
+            Long          accessLocallySynchronizerQueryKey )
     {
-        if( theSendViaWaitForLockResponseEndpoint != null ) {
+        if( theSendViaWaitEndpoint != null ) {
             throw new IllegalStateException( "Invoked a second time" );
         }
-        theSendViaWaitForLockResponseEndpoint = outgoing;
+        theSendViaWaitEndpoint         = outgoing;
+        theSendViaWaitEndpointQueryKey = accessLocallySynchronizerQueryKey;
     }
     
     /**
-     * Obtain the XprisoMessage to be sent via the WaitForLockResponseEndpoint.
+     * Obtain the XprisoMessage to be sent via the WaitEndpoint.
      * 
      * @return the outgoing XprisoMessage, if any
      */
-    public XprisoMessage getSendViaWaitForLockResponseEndpoint()
+    public XprisoMessage getSendViaWaitEndpoint()
     {
-        return theSendViaWaitForLockResponseEndpoint;
+        return theSendViaWaitEndpoint;
     }
-    
-    /**
-     * Set the timeout for the WaitForLockResponseEndpoint in this operation.
-     * 
-     * @param newValue the timeout, in milliseconds
-     */
-    public void setWaitForLockResponseEndpointTimeout(
-            long newValue )
-    {
-        theWaitForLockResponseEndpointTimeout = newValue;
-    }
-    
-    /**
-     * Obtain the timeout for the WaitForLockResponseEndpoint in this operation.
-     * 
-     * @return the timeout, in milliseconds
-     */
-    public long getWaitForLockResponseEndpointTimeout()
-    {
-        return theWaitForLockResponseEndpointTimeout;
-    }
-    
-//
 
     /**
-     * Set the XprisoMessage to be sent via the WaitForHomeResponseEndpoint.
-     * 
-     * @param outgoing the outgoing XprisoMessage
+     * Obtain the query key identifying an ongoing AccessLocallySynchronizer transaction to which the
+     * synchronous message exchange operation via the WaitEndpoint shall be added.
+     *
+     * @return the query key, if any
      */
-    public void setSendViaWaitForHomeResponseEndpoint(
-            XprisoMessage outgoing )
+    public Long getSendViaWaitEndpointQueryKey()
     {
-        if( theSendViaWaitForHomeResponseEndpoint != null ) {
-            throw new IllegalStateException( "Invoked a second time" );
-        }
-        theSendViaWaitForHomeResponseEndpoint = outgoing;
+        return theSendViaWaitEndpointQueryKey;
     }
-    
+
     /**
-     * Obtain the XprisoMessage to be sent via the WaitForHomeResponseEndpoint.
-     * 
-     * @return the outgoing XprisoMessage, if any
-     */
-    public XprisoMessage getSendViaWaitForHomeResponseEndpoint()
-    {
-        return theSendViaWaitForHomeResponseEndpoint;
-    }
-    
-    /**
-     * Set the timeout for the WaitForHomeResponseEndpoint in this operation.
+     * Set the timeout for the WaitEndpoint in this operation.
      * 
      * @param newValue the timeout, in milliseconds
      */
-    public void setWaitForHomeResponseEndpointTimeout(
+    public void setWaitEndpointTimeout(
             long newValue )
     {
-        theWaitForHomeResponseEndpointTimeout = newValue;
+        theWaitEndpointTimeout = newValue;
     }
     
     /**
-     * Obtain the timeout for the WaitForHomeResponseEndpoint in this operation.
+     * Obtain the timeout for the WaitEndpoint in this operation.
      * 
      * @return the timeout, in milliseconds
      */
-    public long getWaitForHomeResponseEndpointTimeout()
+    public long getWaitEndpointTimeout()
     {
-        return theWaitForHomeResponseEndpointTimeout;
+        return theWaitEndpointTimeout;
     }
     
 //
@@ -841,6 +773,27 @@ public class ProxyProcessingInstructions
     }
 
     /**
+     * Set the time we wait to force-obtain locks.
+     *
+     * @param newValue the wait, in milliseconds
+     */
+    public void setExpectedForceObtainLocksWait(
+            long newValue )
+    {
+        theExpectedForceObtainLocksWait = newValue;
+    }
+
+    /**
+     * Obtain the time to wait to force-obtain locks.
+     *
+     * @return the time, in milliseconds
+     */
+    public long getExpectedForceObtainLocksWait()
+    {
+        return theExpectedForceObtainLocksWait;
+    }
+
+    /**
      * Set the time we wait to resynchronize replicas.
      *
      * @param newValue the wait, in milliseconds
@@ -859,6 +812,27 @@ public class ProxyProcessingInstructions
     public long getExpectedResynchronizeWait()
     {
         return theExpectedResynchronizeWait;
+    }
+
+    /**
+     * Set the time we wait to cancel replicas.
+     *
+     * @param newValue the wait, in milliseconds
+     */
+    public void setExpectedCancelReplicasWait(
+            long newValue )
+    {
+        theExpectedCancelReplicasWait = newValue;
+    }
+
+    /**
+     * Obtain the time to wait to cancel replicas.
+     *
+     * @return the time, in milliseconds
+     */
+    public long getExpectedCancelReplicasWait()
+    {
+        return theExpectedCancelReplicasWait;
     }
 
     /**
@@ -898,13 +872,7 @@ public class ProxyProcessingInstructions
         if( theRequestedFirstTimePaths != null && theRequestedFirstTimePaths.length > 0 ) {
             return false;
         }
-        if( theSendViaWaitForReplicaResponseEndpoint != null ) {
-            return false;
-        }
-        if( theSendViaWaitForLockResponseEndpoint != null ) {
-            return false;
-        }
-        if( theSendViaWaitForHomeResponseEndpoint != null ) {
+        if( theSendViaWaitEndpoint != null ) {
             return false;
         }
         if( theSendViaEndpoint != null ) {
@@ -963,10 +931,8 @@ public class ProxyProcessingInstructions
                 new String[] {
                     "theStartCommunicating",
                     "theCeaseCommunications",
-                    // "theRequestedFirstTimePaths",
-                    "theSendViaWaitForReplicaResponseEndpoint",
-                    "theSendViaWaitForLockResponseEndpoint",
-                    "theSendViaWaitForHomeResponseEndpoint",
+                    "theRequestedFirstTimePaths",
+                    "theSendViaWaitEndpoint",
                     "theSendViaEndpoint",
                     "theRegisterReplications",
                     "theRippleCreates",
@@ -989,10 +955,8 @@ public class ProxyProcessingInstructions
                 new Object[] {
                     theStartCommunicating,
                     theCeaseCommunications,
-                    // theRequestedFirstTimePaths,
-                    theSendViaWaitForReplicaResponseEndpoint,
-                    theSendViaWaitForLockResponseEndpoint,
-                    theSendViaWaitForHomeResponseEndpoint,
+                    theRequestedFirstTimePaths,
+                    theSendViaWaitEndpoint,
                     theSendViaEndpoint,
                     theRegisterReplicationsIfNotAlready,
                     theRippleCreates,
@@ -1042,21 +1006,15 @@ public class ProxyProcessingInstructions
 
     /**
      * The XprisoMessage, if any, that needs to be emitted through the
-     * WaitForReplicasResponseEndpoint as a result of processing these instructions.
+     * WaitEndpoint as a result of processing these instructions.
      */
-    protected XprisoMessage theSendViaWaitForReplicaResponseEndpoint = null;
+    protected XprisoMessage theSendViaWaitEndpoint = null;
 
-    /**
-     * The XprisoMessage, if any, that needs to be emitted through the
-     * WaitForLockResponseEndpoint as a result of processing these instructions.
+   /**
+     * The query key identifying an ongoing AccessLocallySynchronizer transaction to which the
+     * synchronous message exchange operation via the WaitEndpoint shall be added, if any.
      */
-    protected XprisoMessage theSendViaWaitForLockResponseEndpoint = null;
-
-    /**
-     * The XprisoMessage, if any, that needs to be emitted through the
-     * WaitForHomeResponseEndpoint as a result of processing these instructions.
-     */
-    protected XprisoMessage theSendViaWaitForHomeResponseEndpoint = null;
+    protected Long theSendViaWaitEndpointQueryKey;
 
     /**
      * The XprisoMessage, if any, that needs to be emitted through the
@@ -1065,20 +1023,10 @@ public class ProxyProcessingInstructions
     protected XprisoMessage theSendViaEndpoint = null;
 
     /**
-     * The timeout, in milliseconds, to use for the WaitForReplicaResponse endpoint.
+     * The timeout, in milliseconds, to use for the WaitEndpoint endpoint.
      */
-    protected long theWaitForReplicaResponseEndpointTimeout;
+    protected long theWaitEndpointTimeout;
     
-    /**
-     * The timeout, in milliseconds, to use for the WaitForLockResponse endpoint.
-     */
-    protected long theWaitForLockResponseEndpointTimeout;
-    
-    /**
-     * The timeout, in milliseconds, to use for the WaitForHomeResponse endpoint.
-     */
-    protected long theWaitForHomeResponseEndpointTimeout;
-
     /**
      * NetMeshObjects that need to register an additional replication relationship.
      */
@@ -1174,5 +1122,7 @@ public class ProxyProcessingInstructions
     protected long theExpectedPushLocksWait = 2000L; // default. FIXME?
     protected long theExpectedObtainHomeReplicasWait = 2000L; // default. FIXME?
     protected long theExpectedPushHomeReplicasWait = 2000L; // default. FIXME?
+    protected long theExpectedForceObtainLocksWait = 2000L; // default.FIXME?
     protected long theExpectedResynchronizeWait = 2000L; // default. FIXME?
+    protected long theExpectedCancelReplicasWait = 2000L; // default.FIXME?
 }

@@ -238,6 +238,7 @@ public abstract class ScheduledExecutorProbeManager
                     TimeUnit.MILLISECONDS );
             theFutures.put( key, newFuture );
         }
+        super.createdHook( key, value, argument );
     }
 
     /**

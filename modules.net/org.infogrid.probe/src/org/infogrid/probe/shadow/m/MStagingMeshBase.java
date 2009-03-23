@@ -78,6 +78,7 @@ public class MStagingMeshBase
                 proxyManager,
                 shadow );
 
+        proxyFactory.setNetMeshBase( ret );
         // do not initialize home object here: Shadows behave differently
         
         if( log.isDebugEnabled() ) {

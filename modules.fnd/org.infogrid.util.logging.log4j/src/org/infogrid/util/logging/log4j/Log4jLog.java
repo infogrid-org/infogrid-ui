@@ -23,7 +23,7 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.WriterAppender;
 import org.infogrid.util.logging.BufferingDumper;
-import org.infogrid.util.logging.DumperFactory;
+import org.infogrid.util.logging.BufferingDumperFactory;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -87,8 +87,8 @@ public class Log4jLog
      * @param dumperFactory the DumperFactory to use, if any
      */
     protected Log4jLog(
-            String                                   name,
-            DumperFactory<? extends BufferingDumper> dumperFactory )
+            String                 name,
+            BufferingDumperFactory dumperFactory )
     {
         super( name, dumperFactory );
     }

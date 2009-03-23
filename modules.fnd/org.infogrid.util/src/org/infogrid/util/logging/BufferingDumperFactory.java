@@ -17,24 +17,22 @@ package org.infogrid.util.logging;
 import org.infogrid.util.FactoryException;
 
 /**
- * A factory for Dumpers.
+ * A factory for BufferingDumpers.
  */
-public interface DumperFactory
+public interface BufferingDumperFactory
+        extends
+            DumperFactory
 {
     /**
-     * Factory method.
+     * Factory method. This is equivalent to specifying a null argument.
      *
      * @param key the key information required for object creation, if any
      * @return the created object
      * @throws FactoryException catch-all Exception, consider its cause
      */
-    public abstract Dumper obtainFor(
+    public abstract BufferingDumper obtainFor(
             Object key )
         throws
             FactoryException;
-
-    /**
-     * The default DumperFactory.
-     */
-    public static final DumperFactory DEFAULT_FACTORY = ToStringDumperFactory.create();
 }
+

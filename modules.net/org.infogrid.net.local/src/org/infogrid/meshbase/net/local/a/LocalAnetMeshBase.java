@@ -30,6 +30,7 @@ import org.infogrid.meshbase.net.a.AnetMeshBase;
 import org.infogrid.meshbase.net.a.AnetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.local.LocalNetMeshBase;
 import org.infogrid.meshbase.net.security.NetAccessManager;
+import org.infogrid.meshbase.net.xpriso.logging.XprisoMessageLogger;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.probe.manager.ProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
@@ -188,6 +189,20 @@ public abstract class LocalAnetMeshBase
         theProbeManager = null;
 
         super.internalDie( isPermanent );
+    }
+
+    /**
+     * Set a XprisoMessageLogger for all incoming and outgoing XprisoMessages.
+     *
+     * @param newValue the new value
+     */
+    @Override
+    public void setXprisoMessageLogger(
+                XprisoMessageLogger newValue )
+    {
+        super.setXprisoMessageLogger( newValue );
+
+        theProbeManager.setXprisoMessageLogger( newValue );
     }
 
     /**

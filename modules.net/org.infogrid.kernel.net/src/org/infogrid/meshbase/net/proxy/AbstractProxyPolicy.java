@@ -45,12 +45,13 @@ import org.infogrid.meshbase.net.transaction.Utils;
 import org.infogrid.meshbase.net.xpriso.ParserFriendlyXprisoMessage;
 import org.infogrid.meshbase.net.xpriso.SimpleXprisoMessage;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
-import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
+import org.infogrid.meshbase.net.a.AccessLocallySynchronizer;
 import org.infogrid.meshbase.transaction.Change;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.ReturnSynchronizerException;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -145,7 +146,6 @@ public abstract class AbstractProxyPolicy
     {
         ProxyProcessingInstructions ret = createInstructions();
 
-        ret.setStartCommunicating( true );
         ret.setRequestedFirstTimePaths( paths );
         ret.setExpectectedObtainReplicasWait( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
 
@@ -155,7 +155,9 @@ public abstract class AbstractProxyPolicy
 
         outgoing.setRequestedFirstTimeObjects( paths );
 
-        ret.setSendViaWaitForReplicaResponseEndpoint( outgoing );
+        ret.setStartCommunicating( true );
+        ret.setSendViaWaitEndpoint( outgoing );
+        ret.setWaitEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
         
         return ret;
     }
@@ -181,7 +183,6 @@ public abstract class AbstractProxyPolicy
 
         ProxyProcessingInstructions ret = createInstructions();
 
-        ret.setStartCommunicating( true );
         // ret.setRequestedLockObjects( identifiers );
 
         SimpleXprisoMessage outgoing = SimpleXprisoMessage.create(
@@ -190,8 +191,9 @@ public abstract class AbstractProxyPolicy
 
         outgoing.setRequestedLockObjects( identifiers );
 
-        ret.setSendViaWaitForLockResponseEndpoint( outgoing );
-        ret.setWaitForLockResponseEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
+        ret.setStartCommunicating( true );
+        ret.setSendViaWaitEndpoint( outgoing );
+        ret.setWaitEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
         
         return ret;
     }
@@ -238,8 +240,8 @@ public abstract class AbstractProxyPolicy
         }
         if( perhapsOutgoing.hasBeenCreated() ) {
             ret.setStartCommunicating( true );
-            ret.setSendViaWaitForLockResponseEndpoint( perhapsOutgoing.obtain() );
-            ret.setWaitForLockResponseEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
+            ret.setSendViaWaitEndpoint( perhapsOutgoing.obtain() );
+            ret.setWaitEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
         }
 
         return ret;
@@ -266,7 +268,6 @@ public abstract class AbstractProxyPolicy
         
         ProxyProcessingInstructions ret = createInstructions();
         
-        ret.setStartCommunicating( true );
         // ret.setRequestedHomeReplicas( identifiers );
 
         SimpleXprisoMessage outgoing = SimpleXprisoMessage.create(
@@ -275,8 +276,9 @@ public abstract class AbstractProxyPolicy
 
         outgoing.setRequestedHomeReplicas( identifiers );
 
-        ret.setSendViaWaitForReplicaResponseEndpoint( outgoing );
-        ret.setWaitForReplicaResponseEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
+        ret.setStartCommunicating( true );
+        ret.setSendViaWaitEndpoint( outgoing );
+        ret.setWaitEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
         
         return ret;
     }
@@ -324,9 +326,8 @@ public abstract class AbstractProxyPolicy
 
         if( perhapsOutgoing.hasBeenCreated() ) {
             ret.setStartCommunicating( true );
-
-            ret.setSendViaWaitForHomeResponseEndpoint( perhapsOutgoing.obtain() );
-            ret.setWaitForHomeResponseEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
+            ret.setSendViaEndpoint( perhapsOutgoing.obtain() );
+            ret.setWaitEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
         }
         return ret;
     }
@@ -334,13 +335,15 @@ public abstract class AbstractProxyPolicy
     /**
      * Determine the ProxyProcessingInstructions for forcefully re-acquiring one or more
      * locks via this Proxy.
-     * 
+     *
      * @param localReplicas the local replicas for which the locks are forcefully re-acquired
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
      * @return the calculated ProxyProcessingInstructions, or null
      */
     public ProxyProcessingInstructions calculateForForceObtainLocks(
             NetMeshObject [] localReplicas,
+            long             duration,
             Proxy            proxy )
     {
         NetMeshObjectIdentifier [] identifiers = new NetMeshObjectIdentifier[ localReplicas.length ];
@@ -350,7 +353,6 @@ public abstract class AbstractProxyPolicy
         
         ProxyProcessingInstructions ret = createInstructions();
         
-        ret.setStartCommunicating( true );
         // ret.setReclaimedLockObjects( identifiers );
 
         SimpleXprisoMessage outgoing = SimpleXprisoMessage.create(
@@ -359,7 +361,9 @@ public abstract class AbstractProxyPolicy
 
         outgoing.setReclaimedLockObjects( identifiers );
 
+        ret.setStartCommunicating( true );
         ret.setSendViaEndpoint( outgoing );
+        // we send this without waiting for receipt. So we ignore the passed duration parameter.
         
         return ret;
     }
@@ -370,11 +374,15 @@ public abstract class AbstractProxyPolicy
      * 
      * @param identifiers the identifiers of the local replicas which should be resynchronized
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
+     * @param accessLocallySynchronizerQueryKey if given, add all to-be-opened queries within this operation to the existing transaction
+     *         with this query key. If not given, add all to-be-opened queries within this operation to this thread's transaction. This
+     *         enables resynchronization to be performed on another thread while an accessLocally operation is still waiting
      * @return the calculated ProxyProcessingInstructions, or null
      */
     public ProxyProcessingInstructions calculateForTryResynchronizeReplicas(
             NetMeshObjectIdentifier [] identifiers,
-            Proxy                      proxy )
+            Proxy                      proxy,
+            Long                       accessLocallySynchronizerQueryKey )
     {
         ProxyProcessingInstructions ret = createInstructions();
         
@@ -387,7 +395,11 @@ public abstract class AbstractProxyPolicy
 
         outgoing.setRequestedResynchronizeReplicas( identifiers );
 
-        ret.setSendViaEndpoint( outgoing );
+        if( accessLocallySynchronizerQueryKey != null ) {
+            ret.setSendViaWaitEndpoint( outgoing, accessLocallySynchronizerQueryKey );
+        } else {
+            ret.setSendViaEndpoint( outgoing );
+        }
         
         return ret;
     }
@@ -397,11 +409,13 @@ public abstract class AbstractProxyPolicy
      * NetMeshObject leases via this Proxy.
      * 
      * @param localReplicas the local replicas for which the the lease should be canceled
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
      * @return the calculated ProxyProcessingInstructions, or null
      */
     public ProxyProcessingInstructions calculateForCancelReplicas(
             NetMeshObject [] localReplicas,
+            long             duration,
             Proxy            proxy )
     {
         NetMeshObjectIdentifier [] identifiers = new NetMeshObjectIdentifier[ localReplicas.length ];
@@ -411,7 +425,6 @@ public abstract class AbstractProxyPolicy
 
         ProxyProcessingInstructions ret = createInstructions();
         
-        ret.setStartCommunicating( true );
         // ret.setReclaimedLockObjects( identifiers );
 
         SimpleXprisoMessage outgoing = SimpleXprisoMessage.create(
@@ -420,6 +433,7 @@ public abstract class AbstractProxyPolicy
 
         outgoing.setRequestedCanceledObjects( identifiers );
 
+        ret.setStartCommunicating( true );
         ret.setSendViaEndpoint( outgoing );
         
         return ret;        
@@ -439,7 +453,6 @@ public abstract class AbstractProxyPolicy
     {
         ProxyProcessingInstructions ret = createInstructions();
         
-        ret.setStartCommunicating( true );
         // ret.setReclaimedLockObjects( identifiers );
 
         CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing = new CreateWhenNeeded<ParserFriendlyXprisoMessage>() {
@@ -539,7 +552,7 @@ public abstract class AbstractProxyPolicy
         }
         
         if( perhapsOutgoing.hasBeenCreated() && !perhapsOutgoing.obtain().isEmpty() ) {
-            ret.setStartCommunicating(  true );
+            ret.setStartCommunicating( true );
             ret.setSendViaEndpoint( perhapsOutgoing.obtain() );
         }
         if( !ret.isEmpty() ) {
@@ -607,7 +620,7 @@ public abstract class AbstractProxyPolicy
 
         // send message
         if( perhapsOutgoing.hasBeenCreated() && !perhapsOutgoing.obtain().isEmpty() ) {
-
+            ret.setStartCommunicating( true );
             ret.setSendViaEndpoint( perhapsOutgoing.obtain() );
         }
 
@@ -721,20 +734,29 @@ public abstract class AbstractProxyPolicy
                 }
             }
 
-            XprisoSynchronizer synchronizer = theMeshBase.getReturnSynchronizer();
-            synchronized( synchronizer.getSyncObject() ) {
+            AccessLocallySynchronizer synchronizer = theMeshBase.getAccessLocallySynchronizer();
+
+            try {
+                synchronizer.beginTransaction();
+
                 long waitFor = 0;
                 for( Proxy p : toGet.keySet() ) {
                     ArrayList<NetMeshObject> list = toGet.get( p );
-                    long delta = p.tryToObtainHomeReplicas( ArrayHelper.copyIntoNewArray( list, NetMeshObject.class ), theDefaultRpcWaitDuration, synchronizer );
+                    long delta = p.tryToObtainHomeReplicas( ArrayHelper.copyIntoNewArray( list, NetMeshObject.class ), theDefaultRpcWaitDuration );
                     waitFor = Math.max( waitFor, delta );
                 }
-                try {
-                    synchronizer.join( waitFor );
-                } catch( InterruptedException ex ) {
-                    log.error( ex );
-                }
+                synchronizer.join( waitFor );
+
+                synchronizer.endTransaction();
+
+            } catch( ReturnSynchronizerException ex ) {
+                log.error( ex );
+
+            } catch( InterruptedException ex ) {
+                log.error( ex );
             }
+
+
             for( Proxy p : toGet.keySet() ) {
                 ArrayList<NetMeshObject> list = toGet.get( p );
                 for( NetMeshObject current : list ) {
@@ -791,20 +813,28 @@ public abstract class AbstractProxyPolicy
                 }
             }
 
-            XprisoSynchronizer synchronizer = theMeshBase.getReturnSynchronizer();
-            synchronized( synchronizer.getSyncObject() ) {
+            AccessLocallySynchronizer synchronizer = theMeshBase.getAccessLocallySynchronizer();
+
+            try {
+                synchronizer.beginTransaction();
+
                 long waitFor = 0;
                 for( Proxy p : toGet.keySet() ) {
                     ArrayList<NetMeshObject> list = toGet.get( p );
-                    long delta = p.tryToObtainLocks( ArrayHelper.copyIntoNewArray( list, NetMeshObject.class ), theDefaultRpcWaitDuration, synchronizer );
+                    long delta = p.tryToObtainLocks( ArrayHelper.copyIntoNewArray( list, NetMeshObject.class ), theDefaultRpcWaitDuration );
                     waitFor = Math.max( waitFor, delta );
                 }
-                try {
-                    synchronizer.join( waitFor );
-                } catch( InterruptedException ex ) {
-                    log.error( ex );
-                }
+                synchronizer.join( waitFor );
+
+                synchronizer.endTransaction();
+
+            } catch( ReturnSynchronizerException ex ) {
+                log.error( ex );
+
+            } catch( InterruptedException ex ) {
+                log.error( ex );
             }
+            
             for( Proxy p : toGet.keySet() ) {
                 ArrayList<NetMeshObject> list = toGet.get( p );
                 for( NetMeshObject current : list ) {
@@ -902,7 +932,7 @@ public abstract class AbstractProxyPolicy
 
                 NetMeshObject found = theMeshBase.findMeshObjectByIdentifier( externalized.getIdentifier() );
 
-                boolean externalizedHasHomeProxy
+                boolean externalizedHasHomeProxy // if true, this means "externalized is the home replica"
                         = externalized.getProxyTowardsHomeNetworkIdentifier() != null;
                 boolean externalizedHasDifferentHomeProxy
                         =  externalizedHasHomeProxy && !incomingProxy.getPartnerMeshBaseIdentifier().equals( externalized.getProxyTowardsHomeNetworkIdentifier() );
@@ -910,9 +940,9 @@ public abstract class AbstractProxyPolicy
                 // This is a bit tricky. We distinguish three main dimensions:
                 // 1. conveyed MeshObject does or does not already exist locally, and if so, whether its home proxy points in a different direction:
                 //        code (3 alternatives):
-                //            found == null
-                //            found != null && found.getProxyTowardsHomeReplica() == proxy
-                //            found != null && found.getProxyTowardsHomeReplica() != proxy
+                //            found == null                                                 -- we've never heard of this object before
+                //            found != null && found.getProxyTowardsHomeReplica() == proxy  -- we get a message from the home replica
+                //            found != null && found.getProxyTowardsHomeReplica() != proxy  -- a message from somebody less authoritative
                 // 2. the conveyed MeshObject carries Proxy information that points to a
                 //    different home object than that sent this conveyed MeshObject
                 //        code (2 alternatives): differentHomeProxy
@@ -1013,26 +1043,18 @@ public abstract class AbstractProxyPolicy
                     } else { // !differentHomeProxy
                         if( isResponseToOngoingQuery ) {
                             // 3.2.1 -- we have it, but asked for it, message comes from the home, and we thought we have the right home
-
                             // this is the response from the home object to resync requests
-                            // FIXME: This section is currently not reached. See comment in 3.2.2
-                            
-                            // do nothing, we don't care. Note: resync requests are not RPC-style, so responses to
-                            // resync requests always have isResponseToOngoingQuery==false
-//                            cancelOfferedLease = true;
-                            cancelOfferedLease = externalizedHasNoRelationshipsNotFoundLocally( found, externalized );
+
+                            // cancelCurrentLease    = true;
+                            cancelCurrentLease    = currentProxyHasNoRelationshipsNotFoundExternally( found, externalized );
+                            doRippleResynchronize = true;
+//                            cancelOfferedLease = externalizedHasNoRelationshipsNotFoundLocally( found, externalized );
                             
                         } else { // !isResponseToOngoingQuery
                             // 3.2.2 -- we have it, didn't ask for it, message comes from the home, and we thought we have the right home
                             
-                            // this is the response from the home object to resync requests
-
-                            // FIXME: why should we believe that one? We should only do the previous case (3.2.1) but
-                            // currently, responses to resync requests are not RPC-style calls, so we isResponseToOngoingQuery
-                            // is false. Can we make them RPC-style synchronous calls to carry the requestID & responseID?
-
-//                            cancelCurrentLease    = true;
-                            cancelCurrentLease = currentProxyHasNoRelationshipsNotFoundExternally( found, externalized );
+                            // cancelCurrentLease    = true;
+                            cancelCurrentLease    = currentProxyHasNoRelationshipsNotFoundExternally( found, externalized );
                             doRippleResynchronize = true;
                         }
                     }

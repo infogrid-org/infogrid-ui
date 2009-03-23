@@ -62,7 +62,9 @@ public class XprisoTest12
                 mb2.getNetMeshObjectAccessSpecificationFactory().obtain(
                         mb1.getIdentifier(),
                         obj1_mb1.getIdentifier(),
-                        CoherenceSpecification.ONE_TIME_ONLY_FAST ));
+                        CoherenceSpecification.ONE_TIME_ONLY_FAST ),
+                        600000L ); // give us enough time for debugging
+        
         checkObject( obj1_mb2, "obj1_mb2 not found" );
 
         checkProxies( obj1_mb1, new NetMeshBase[] { mb2 }, null, null,  "obj1_mb1 has wrong proxies" );
@@ -91,7 +93,7 @@ public class XprisoTest12
 
         log.info( "Now wait and check again later" );
 
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L ); // make sure background resync works
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L ); // make sure background resync works -- we used a "fast" CoherenceSpecification
 
         // slow section
         checkProxies( obj1_mb1, new NetMeshBase[] { mb2, mb3 }, null, null,  "obj1_mb1 has wrong proxies" );
@@ -158,6 +160,12 @@ public class XprisoTest12
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb2.getIdentifier(), mb2 );
         theNameServer.put( mb3.getIdentifier(), mb3 );
+
+        if( log.isDebugEnabled() ) {
+            mb1.setXprisoMessageLogger( theXprisoMessageLogger );
+            mb2.setXprisoMessageLogger( theXprisoMessageLogger );
+            mb3.setXprisoMessageLogger( theXprisoMessageLogger );
+        }
     }
 
     /**

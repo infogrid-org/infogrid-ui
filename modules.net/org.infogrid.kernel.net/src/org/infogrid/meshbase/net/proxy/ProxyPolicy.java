@@ -118,35 +118,43 @@ public interface ProxyPolicy
      * locks via this Proxy.
      * 
      * @param localReplicas the local replicas for which the locks are forcefully re-acquired
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
      * @return the calculated ProxyProcessingInstructions, or null
      */
     public ProxyProcessingInstructions calculateForForceObtainLocks(
             NetMeshObject [] localReplicas,
+            long             duration,
             Proxy            proxy );
     
     /**
      * Determine the ProxyProcessingInstructions for attempting to resynchronize one or more
      * NetMeshObjects via this Proxy.
-     * 
+     *
      * @param identifiers the identifiers of the local replicas which should be resynchronized
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
+     * @param accessLocallySynchronizerQueryKey if given, add all to-be-opened queries within this operation to the existing transaction
+     *         with this query key. If not given, add all to-be-opened queries within this operation to this thread's transaction. This
+     *         enables resynchronization to be performed on another thread while an accessLocally operation is still waiting
      * @return the calculated ProxyProcessingInstructions, or null
      */
     public ProxyProcessingInstructions calculateForTryResynchronizeReplicas(
             NetMeshObjectIdentifier [] identifiers,
-            Proxy                      proxy );
+            Proxy                      proxy,
+            Long                       accessLocallySynchronizerQueryKey );
 
     /**
      * Determine the ProxyProcessingInstructions for canceling one or more 
      * NetMeshObject leases via this Proxy.
      * 
      * @param localReplicas the local replicas for which the the lease should be canceled
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
      * @return the calculated ProxyProcessingInstructions, or null
      */
     public ProxyProcessingInstructions calculateForCancelReplicas(
             NetMeshObject [] localReplicas,
+            long             duration,
             Proxy            proxy );
 
     /**

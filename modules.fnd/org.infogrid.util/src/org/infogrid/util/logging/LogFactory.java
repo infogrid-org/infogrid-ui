@@ -53,8 +53,8 @@ public abstract class LogFactory
      * @return the Log object
      */
     public Log create(
-            Class                                    clazz,
-            DumperFactory<? extends BufferingDumper> dumperFactory )
+            Class                  clazz,
+            BufferingDumperFactory dumperFactory )
     {
         return create( clazz.getName(), dumperFactory );
     }
@@ -67,8 +67,8 @@ public abstract class LogFactory
      * @return the Log object
      */
     public abstract Log create(
-            String                                   name,
-            DumperFactory<? extends BufferingDumper> dumperFactory );
+            String                 name,
+            BufferingDumperFactory dumperFactory );
 
     /**
      * <p>Show a message to the user interface. This requires an implementation
@@ -93,5 +93,5 @@ public abstract class LogFactory
     /**
      * The default DumperFactory.
      */
-    protected static DumperFactory<ToStringDumper> DEFAULT_DUMPER_FACTORY = ToStringDumperFactory.create();
+    protected static BufferingDumperFactory DEFAULT_DUMPER_FACTORY = ToStringDumperFactory.create();
 }

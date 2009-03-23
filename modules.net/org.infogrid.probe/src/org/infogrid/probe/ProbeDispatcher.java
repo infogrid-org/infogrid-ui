@@ -49,7 +49,7 @@ import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
+import org.infogrid.meshbase.net.a.AccessLocallySynchronizer;
 import org.infogrid.meshbase.transaction.ChangeSet;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -82,6 +82,7 @@ import org.infogrid.probe.xml.XmlProbeException;
 import org.infogrid.probe.yadis.YadisServiceFactory;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FlexibleListenerSet;
+import org.infogrid.util.ReturnSynchronizerException;
 import org.infogrid.util.StreamUtils;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
@@ -1259,33 +1260,37 @@ public class ProbeDispatcher
 
             } else if( ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION == subtype ) {
 
-                long   fallbackDelay  = ((IntegerValue)obj.getPropertyValue( ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION_FALLBACKDELAY  )).value();
-                long   maxDelay       = ((IntegerValue)obj.getPropertyValue( ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION_MAXDELAY       )).value();
-                double adaptiveFactor = ((FloatValue)  obj.getPropertyValue( ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION_ADAPTIVEFACTOR )).value();
+                long    fallbackDelay  = ((IntegerValue)obj.getPropertyValue( ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION_FALLBACKDELAY  )).value();
+                long    maxDelay       = ((IntegerValue)obj.getPropertyValue( ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION_MAXDELAY       )).value();
+                double  adaptiveFactor = ((FloatValue)  obj.getPropertyValue( ProbeSubjectArea.ADAPTIVEPERIODICPROBEUPDATESPECIFICATION_ADAPTIVEFACTOR )).value();
+                boolean waitFor        = ((BooleanValue)obj.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_WAITFORONGOINGRESYNCHRONIZATION )).value();
 
                 ret = new CoherenceSpecification.AdaptivePeriodic(
                         fallbackDelay,
                         maxDelay,
                         adaptiveFactor,
-                        false ); // always false as true is only relevant when attempting to access a data source for the first time via the Probe framework
+                        waitFor ); // always false as true is only relevant when attempting to access a data source for the first time via the Probe framework
 
             } else if( ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION == subtype ) {
-
-                ret = CoherenceSpecification.ONE_TIME_ONLY_FAST;
+                if( ((BooleanValue)obj.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_WAITFORONGOINGRESYNCHRONIZATION )).value() ) {
+                    ret = CoherenceSpecification.ONE_TIME_ONLY;
+                } else {
+                    ret = CoherenceSpecification.ONE_TIME_ONLY_FAST;
+                }
 
             } else if( ProbeSubjectArea.PERIODICPROBEUPDATESPECIFICATION == subtype ) {
 
-                long period = ((IntegerValue)obj.getPropertyValue( ProbeSubjectArea.PERIODICPROBEUPDATESPECIFICATION_DELAY )).value();
+                long    period  = ((IntegerValue)obj.getPropertyValue( ProbeSubjectArea.PERIODICPROBEUPDATESPECIFICATION_DELAY )).value();
+                boolean waitFor = ((BooleanValue)obj.getPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_WAITFORONGOINGRESYNCHRONIZATION )).value();
 
                 ret = new CoherenceSpecification.Periodic(
                         period,
-                        false ); // always false as true is only relevant when attempting to access a data source for the first time via the Probe framework
+                        waitFor );
 
             } else {
 
                 log.error( "ProbeUpdateSpecification subtype not supported: " + subtype.getIdentifier().toExternalForm() );
                 ret = null;
-
             }
 
         } catch( IllegalStateException ex ) { // from the single blessed subtype
@@ -1318,7 +1323,9 @@ public class ProbeDispatcher
             TransactionException
     {
         try {
-            if( coherence == CoherenceSpecification.ONE_TIME_ONLY ) {
+            if(    coherence == CoherenceSpecification.ONE_TIME_ONLY
+                || coherence == CoherenceSpecification.ONE_TIME_ONLY_FAST )
+            {
 
                 obj.bless( ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION );
 
@@ -1342,6 +1349,8 @@ public class ProbeDispatcher
 
                 log.error( "CoherenceSpecification subtype not supported: " + coherence );
             }
+
+            obj.setPropertyValue( ProbeSubjectArea.PROBEUPDATESPECIFICATION_WAITFORONGOINGRESYNCHRONIZATION, BooleanValue.create( coherence.getWaitForOngoingResynchronization() ));
 
         } catch( IsAbstractException ex ) {
             log.error( ex );
@@ -1580,17 +1589,23 @@ public class ProbeDispatcher
             }
         }
 
-        XprisoSynchronizer synchronizer = base.getReturnSynchronizer();
-        synchronized( synchronizer.getSyncObject() ) {
+        AccessLocallySynchronizer synchronizer = base.getAccessLocallySynchronizer();
+
+        try {
+            synchronizer.beginTransaction();
+
             for( Proxy p : buckets.keySet() ) {
                 NetMeshObject [] localReplicas = ArrayHelper.copyIntoNewArray( buckets.get( p ), NetMeshObject.class );
-                p.forceObtainLocks( localReplicas, synchronizer );
+                p.forceObtainLocks( localReplicas, -1L );
             }
-            try {
-                synchronizer.join();
-            } catch( InterruptedException ex ) {
-                log.error( ex );
-            }
+            synchronizer.join();
+            synchronizer.endTransaction();
+
+        } catch( ReturnSynchronizerException ex ) {
+            log.error( ex );
+
+        } catch( InterruptedException ex ) {
+            log.error( ex );
         }
     }
 

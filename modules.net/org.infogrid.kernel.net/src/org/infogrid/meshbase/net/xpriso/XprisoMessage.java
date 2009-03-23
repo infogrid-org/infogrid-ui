@@ -8,17 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net.xpriso;
 
 import org.infogrid.comm.CarriesInvocationId;
-
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
-
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
@@ -233,4 +231,13 @@ public interface XprisoMessage
      * @return true if it is empty
      */
     public boolean isEmpty();
+
+    /**
+     * Check that the XprisoMessage is internally correct.
+     *
+     * @throws IllegalStateException thrown if the XprisoMessage is not internally correct
+     */
+    public void check()
+            throws
+                IllegalStateException;
 }

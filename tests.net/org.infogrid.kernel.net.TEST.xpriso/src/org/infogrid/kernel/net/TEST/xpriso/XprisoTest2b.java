@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -84,7 +84,7 @@ public class XprisoTest2b
                         obj2_mb1.getIdentifier() ));
         checkObject( obj2_mb3, "mb3 fails to access obj2." );
 
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L ); // leave this here -- it's good for this test
 
         checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
         checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
@@ -111,6 +111,14 @@ public class XprisoTest2b
         checkEquals( obj2_mb2.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb1.getIdentifier(), "wrong relationship proxies in obj2_mb2" );
         checkEquals( obj2_mb3.getAllRelationshipProxies().length, 1, "wrong relationship proxies in obj2_mb3" );
         checkEquals( obj2_mb3.getAllRelationshipProxies()[0].getPartnerMeshBaseIdentifier(), mb2.getIdentifier(), "wrong relationship proxies in obj2_mb3" );
+
+        //
+
+        log.info( "Checking that all messages were delivered" );
+
+        if( !theXprisoMessageLogger.allQueuesEmpty()) {
+            reportError( "Message logger detects undelivered messages", theXprisoMessageLogger );
+        }
     }
 
     /**
@@ -172,6 +180,12 @@ public class XprisoTest2b
         theNameServer.put( mb1.getIdentifier(), mb1 );
         theNameServer.put( mb2.getIdentifier(), mb2 );
         theNameServer.put( mb3.getIdentifier(), mb3 );
+
+        if( log.isDebugEnabled() ) {
+            mb1.setXprisoMessageLogger( theXprisoMessageLogger );
+            mb2.setXprisoMessageLogger( theXprisoMessageLogger );
+            mb3.setXprisoMessageLogger( theXprisoMessageLogger );
+        }
     }
 
     /**

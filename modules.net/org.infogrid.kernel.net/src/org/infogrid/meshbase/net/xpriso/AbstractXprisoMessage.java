@@ -200,6 +200,47 @@ public abstract class AbstractXprisoMessage
     }
 
     /**
+     * Check that the XprisoMessage is internally correct.
+     *
+     * @throws IllegalStateException thrown if the XprisoMessage is not internally correct
+     */
+    public void check()
+            throws
+                IllegalStateException
+    {
+        StringBuilder buf = new StringBuilder();
+        String        sep = "";
+        String        CR  = "\n";
+
+        if( theSenderIdentifier == null ) {
+            buf.append( sep );
+            buf.append( "SenderIdentifier is null" );
+            sep = CR;
+        }
+        if( theReceiverIdentifier == null ) {
+            buf.append( sep );
+            buf.append( "ReceiverIdentifier is null" );
+            sep = CR;
+        }
+        if( theRequestId < 0 ) {
+            buf.append( sep );
+            buf.append( "RequestId is out of range: " );
+            buf.append( theRequestId );
+            sep = CR;
+        }
+        if( theResponseId < 0 ) {
+            // FIXME I think
+            buf.append( sep );
+            buf.append( "ResponseId is out of range: " );
+            buf.append( theResponseId );
+            sep = CR;
+        }
+        if( buf.length() > 0 ) {
+            throw new IllegalStateException( buf.toString() );
+        }
+    }
+
+    /**
      * Helper method to compare two objects.
      *
      * @param one the first Object
@@ -280,9 +321,9 @@ public abstract class AbstractXprisoMessage
      * If true, this indicates that communications should cease after this message.
      */
     protected boolean theCeaseCommunications = false;
-    
-    /**
-     * Represents "not set" for the request or response id.
-     */
-    public static final int NO_ID = -1;
+//
+//    /**
+//     * Represents "not set" for the request or response id.
+//     */
+//    public static final int NO_ID = -1;
 }

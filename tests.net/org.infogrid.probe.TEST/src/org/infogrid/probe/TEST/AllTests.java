@@ -209,7 +209,7 @@ public class AllTests
                         ForwardReferenceTest5.class ),
 
                 new TestSpec(
-                        ForwardReferenceTest6.class ),
+                        ForwardReferenceTest6.class ), // BROKEN
 
                 new TestSpec(
                         ForwardReferenceTest7.class ),

@@ -12,35 +12,38 @@
 // All rights reserved.
 //
 
-package org.infogrid.util.logging;
+package org.infogrid.meshbase.net.xpriso.logging;
+
+import org.infogrid.util.logging.ToStringDumper;
+import org.infogrid.util.logging.ToStringDumperFactory;
 
 /**
- * A factory for ToStringDumpers.
+ * Factory for XprisoMessageDumpers.
  */
-public class ToStringDumperFactory
-    implements
-        BufferingDumperFactory
+public class XprisoMessageDumperFactory
+        extends
+            ToStringDumperFactory
 {
     /**
      * Factory method.
      *
-     * @return the created ToStringDumperFactory
+     * @return the created XprisoMessageDumperFactory
      */
-    public static ToStringDumperFactory create()
+    public static XprisoMessageDumperFactory create()
     {
-        return new ToStringDumperFactory( ToStringDumper.DEFAULT_MAXLEVEL );
+        return new XprisoMessageDumperFactory( ToStringDumper.DEFAULT_MAXLEVEL );
     }
 
     /**
      * Factory method.
      *
      * @param maxLevel the number of object levels to dump
-     * @return the created ToStringDumperFactory
+     * @return the created XprisoMessageDumperFactory
      */
-    public static ToStringDumperFactory create(
+    public static XprisoMessageDumperFactory create(
             int maxLevel )
     {
-        return new ToStringDumperFactory( maxLevel );
+        return new XprisoMessageDumperFactory( maxLevel );
     }
 
     /**
@@ -48,10 +51,10 @@ public class ToStringDumperFactory
      *
      * @param maxLevel the number of object levels to dump
      */
-    protected ToStringDumperFactory(
+    protected XprisoMessageDumperFactory(
             int maxLevel )
     {
-        theMaxLevel = maxLevel;
+        super( maxLevel );
     }
 
     /**
@@ -60,14 +63,10 @@ public class ToStringDumperFactory
      * @param key the key information required for object creation, if any
      * @return the created object
      */
-    public ToStringDumper obtainFor(
+    @Override
+    public XprisoMessageDumper obtainFor(
             Object key )
     {
-        return ToStringDumper.create( theMaxLevel );
+        return XprisoMessageDumper.create( theMaxLevel );
     }
-
-    /**
-     * The maximum number of object levels to dump.
-     */
-    protected int theMaxLevel;
 }

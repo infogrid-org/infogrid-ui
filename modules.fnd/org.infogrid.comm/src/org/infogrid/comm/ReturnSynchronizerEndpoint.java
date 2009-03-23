@@ -14,16 +14,10 @@
 
 package org.infogrid.comm;
 
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.ReturnSynchronizer;
+import org.infogrid.util.ReturnSynchronizerException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
@@ -46,14 +40,16 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
     /**
      * Factory method.
      *
+     * @param synchronizer the ReturnSynchronizer to delegate to
      * @param messageEndpoint the BidirectionalMessageEndpoint to use as communications endpoint
      * @return the created ReturnSynchronizerEndpoint
      * @param <T> the message type
      */
     public static <T extends CarriesInvocationId> ReturnSynchronizerEndpoint<T> create(
+            ReturnSynchronizer<Long,T>      synchronizer,
             BidirectionalMessageEndpoint<T> messageEndpoint )
     {
-        ReturnSynchronizerEndpoint<T> ret = new ReturnSynchronizerEndpoint<T>( messageEndpoint );
+        ReturnSynchronizerEndpoint<T> ret = new ReturnSynchronizerEndpoint<T>( synchronizer, messageEndpoint );
         messageEndpoint.addWeakMessageEndpointListener( ret );
 
         return ret;
@@ -62,63 +58,57 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
     /**
      * Constructor.
      *
+     * @param synchronizer the ReturnSynchronizer to delegate to
      * @param messageEndpoint the BidirectionalMessageEndpoint to use as communications endpoint
      */
     protected ReturnSynchronizerEndpoint(
+            ReturnSynchronizer<Long,T>      synchronizer,
             BidirectionalMessageEndpoint<T> messageEndpoint )
     {
         super( messageEndpoint );
+
+        theSynchronizer = synchronizer;
     }
 
     /**
-     * Obtain the ReturnSynchronizers currently known
+     * Obtain the ReturnSynchronizer
      *
-     * @return the ReturnSynchronizers
+     * @return the ReturnSynchronizer
      */
-    public final synchronized Collection<ReturnSynchronizer<Long,T>> getReturnSynchronizers()
+    public final ReturnSynchronizer<Long,T> getReturnSynchronizer()
     {
-        ArrayList<ReturnSynchronizer<Long,T>> ret = new ArrayList<ReturnSynchronizer<Long,T>>( theSynchronizers.size() );
-        for( Reference<ReturnSynchronizer<Long,T>> ref : theSynchronizers.values() ) {
-            ReturnSynchronizer<Long,T> current = ref.get();
-            if( current != null ) {
-                ret.add( current );
-            }
-        }
-        return ret;
+        return theSynchronizer;
     }
 
     /**
-     * Invoke the remote procedure call.
+     * Invoke the front leg of the remote procedure call.
      *
      * @param message the message that represents the argument to the call
-     * @param synchronizer the ReturnSynchronizer to notify when a response has been received
-     * @return the synchronization object so it becomes possible to retrieve the correct result later
-     * @throws InvocationTargetException thrown if the invocation produced an Exception
+     * @throws ReturnSynchronizerException.NoTransactionOpen thrown if a ReturnSynchronizer transaction had not been opened previously
      */
-    public Object call(
-            T                          message,
-            ReturnSynchronizer<Long,T> synchronizer )
+    public void call(
+            T message )
         throws
-            InvocationTargetException
+            ReturnSynchronizerException.NoTransactionOpen
     {
-        return call( message, defaultTimeout, synchronizer );
+        call( message, null, defaultTimeout );
     }
 
     /**
-     * Invoke the remote procedure call.
+     * Invoke the front leg of the remote procedure call.
      *
      * @param message the message that represents the argument to the call
+     * @param existingKeyForQuery non-null if this call is made to fulfill an existing query only
+     *        partially performed so far. This is the key for that existig query.
      * @param timeout the timeout, in milliseconds, until the call times out
-     * @param synchronizer the ReturnSynchronizer to notify when a response has been received
-     * @return the synchronization object so it becomes possible to retrieve the correct result later
-     * @throws InvocationTargetException thrown if the invocation produced an Exception
+     * @throws ReturnSynchronizerException.NoTransactionOpen thrown if a ReturnSynchronizer transaction had not been opened previously
      */
-    public Object call(
-            T                          message,
-            long                       timeout,
-            ReturnSynchronizer<Long,T> synchronizer )
+    public void call(
+            T    message,
+            Long existingKeyForQuery,
+            long timeout )
         throws
-            InvocationTargetException
+            ReturnSynchronizerException.NoTransactionOpen
     {
         long invocationId = createInvocationId();
 
@@ -128,14 +118,17 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
             log.traceMethodCallEntry( this, "invoke", message, timeout );
         }
 
-        Reference<ReturnSynchronizer<Long,T>> ref = new WeakReference<ReturnSynchronizer<Long,T>>( synchronizer );
-        synchronized( this ) {
-            theSynchronizers.put( invocationId, ref );
-        }
-        Object ret = synchronizer.addOpenQuery( invocationId );
-        theMessageEndpoint.sendMessageAsap( message );
+        try {
+            if( existingKeyForQuery != null ) {
+                theSynchronizer.addFurtherOpenQueryToOpenQuery( existingKeyForQuery, invocationId );
+            } else {
+                theSynchronizer.addOpenQuery( invocationId );
+            }
+            theMessageEndpoint.sendMessageAsap( message );
 
-        return ret;
+        } catch( ReturnSynchronizerException.DuplicateKey ex ) {
+            log.error( ex );
+        }
     }
 
     /**
@@ -147,16 +140,8 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
     public boolean isCallWaitingFor(
             long responseId )
     {
-        Reference<ReturnSynchronizer<Long,T>> ref;
-        synchronized( this ) {
-            ref = theSynchronizers.get( responseId );
-        }
-        ReturnSynchronizer<Long,T> sync = ref != null ? ref.get() : null;
-        if( sync == null ) {
-            return false;
-        }
-        boolean almost = sync.isQueryComplete( responseId );
-        return !almost;
+        boolean ret = theSynchronizer.hasOpenQuery( responseId );
+        return ret;
     }
 
     /**
@@ -175,14 +160,12 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
             log.traceMethodCallEntry( this, "messageReceived", msg );
         }
 
-        Reference<ReturnSynchronizer<Long,T>> ref;
-        synchronized( this ) {
-            ref = theSynchronizers.get( responseId );
-        }
-        ReturnSynchronizer<Long,T> sync = ref != null ? ref.get() : null;
-
-        if( sync == null || !sync.queryHasCompleted( responseId, msg )) {
-            otherMessageReceived( endpoint, msg );
+        try {
+            if( theSynchronizer.depositQueryResult( responseId, msg )) {
+                otherMessageReceived( endpoint, msg );
+            }
+        } catch( ReturnSynchronizerException.DuplicateResult ex ) {
+            log.error( ex );
         }
     }
 
@@ -198,12 +181,7 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
             List<T>            msg,
             Throwable          t )
     {
-        for( Reference<ReturnSynchronizer<Long,T>> ref : theSynchronizers.values() ) {
-            ReturnSynchronizer<Long,T> current = ref.get();
-            if( current != null ) {
-                current.disablingError( t );
-            }
-        }
+        theSynchronizer.disablingError( t );
     }
 
     /**
@@ -216,21 +194,19 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
     {
         d.dump( this,
                 new String[] {
-                    "theSynchronizers",
+                    "theSynchronizer",
                     "theMessageEndpoint"
                 },
                 new Object[] {
-                    theSynchronizers,
+                    theSynchronizer,
                     theMessageEndpoint
                 });
     }
 
     /**
-     * The ReturnSynchronizers to notify when a response has been received. This maps from
-     * invocationId to ReturnSynchronizer.
+     * The ReturnSynchronizer to notify when a response has been received.
      */
-    protected Map<Long,Reference<ReturnSynchronizer<Long,T>>> theSynchronizers
-            = new HashMap<Long,Reference<ReturnSynchronizer<Long,T>>>();
+    protected ReturnSynchronizer<Long,T> theSynchronizer;
 
     /**
      * The default timeout.

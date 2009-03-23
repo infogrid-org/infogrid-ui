@@ -63,7 +63,7 @@ public class ForwardReferenceTest7
         MeshObject already = base.accessLocally(
                 INNER_URL,
                 base.getMeshObjectIdentifierFactory().fromExternalForm( INNER_URL, INNER_NON_HOME_LOCAL_IDENTIFIER ),
-                CoherenceSpecification.ONE_TIME_ONLY );
+                CoherenceSpecification.ONE_TIME_ONLY_FAST );
 
         checkObject( already, "already not found" );
         checkEquals( IteratorElementCounter.countIteratorElements( base.proxies()), 1, "wrong number of proxies in main NetMeshBase" );

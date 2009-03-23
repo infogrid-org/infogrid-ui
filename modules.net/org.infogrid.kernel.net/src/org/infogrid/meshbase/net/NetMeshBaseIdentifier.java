@@ -48,6 +48,7 @@ public class NetMeshBaseIdentifier
         super( canonicalForm );
 
         theUri       = uri;
+        theUriString = theUri.toString(); // do this here, much better for debugging
         theIsRestful = isRestful;
     }
 
@@ -91,9 +92,6 @@ public class NetMeshBaseIdentifier
      */
     public String getUriString()
     {
-        if( theUriString == null ) {
-            theUriString = theUri.toString();
-        }
         return theUriString;
     }
 

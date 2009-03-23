@@ -41,7 +41,7 @@ public class ForwardReferenceTest1
     {
         log.info( "accessing test file 1" );
         
-        MeshObject abc = base.accessLocally( testFile1Id, CoherenceSpecification.ONE_TIME_ONLY );
+        MeshObject abc = base.accessLocally( testFile1Id, CoherenceSpecification.ONE_TIME_ONLY_FAST );
 
         checkObject( abc, "abc not found" );
         checkEquals( IteratorElementCounter.countIteratorElements( base.proxies()), 1, "wrong number of proxies in main NetMeshBase" );

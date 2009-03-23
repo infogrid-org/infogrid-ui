@@ -16,6 +16,7 @@ package org.infogrid.util.TEST;
 
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.ReturnSynchronizer;
+import org.infogrid.util.ReturnSynchronizerException;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -36,47 +37,46 @@ public class ReturnSynchronizerTest1
     {
         log.info( "Starting" );
 
+        ReturnSynchronizer<Object,Object> theSync = ReturnSynchronizer.create();
+
         for( int i=0 ; i<theTests.length ; ++i )
         {
             OneTest t = theTests[i];
 
             log.info( "Running test " + t.theName );
 
-            ReturnSynchronizer<Object,Object> theSync = ReturnSynchronizer.create();
+            theSync.beginTransaction();
 
-            Object theMonitor = theSync.getSyncObject();
-
-            synchronized( theMonitor ) {
-                for( int j=0 ; j<t.theDelayTimes.length ; ++j ) {
-                    theSync.addOpenQuery( t.theKeys[j] );
-                    new ResultProducer( theSync, t.theDelayTimes[j], t.theKeys[j], t.theResults[j] );
-                }
-
-                log.info( "waiting for results: " + t.theDelayTimes.length );
-
-                theSync.join();
+            for( int j=0 ; j<t.theDelayTimes.length ; ++j ) {
+                theSync.addOpenQuery( t.theKeys[j] );
+                new ResultProducer( theSync, t.theDelayTimes[j], t.theKeys[j], t.theResults[j] );
             }
+
+            log.info( "waiting for results: " + t.theDelayTimes.length );
+
+            theSync.join();
 
             for( int j=0 ; j<t.theDelayTimes.length ; ++j )
             {
-                Object r = theSync.takeResultFor( t.theKeys[j] );
+                Object r = theSync.getResultFor( t.theKeys[j] );
                 if( r != t.theResults[j] ) {
                     reportError( "not the same result" );
                 }
-
-                Exception caughtException = null;
-                try {
-                    r = theSync.takeResultFor( t.theKeys[j] );
-
-                } catch( IllegalStateException ex ) {
-                    caughtException = ex;
-                }
-                if( caughtException == null ) {
-                    reportError( "Exception not thrown" );
-                }
             }
 
-            log.info( "done with ReturnSynchronizer " + theSync );
+            Exception caughtException = null;
+            try {
+                Object r = theSync.getResultFor( new Object() ); // sure not to have this one
+
+            } catch( ReturnSynchronizerException.IllegalKey ex ) {
+                caughtException = ex;
+            }
+            if( caughtException == null ) {
+                reportError( "Exception not thrown" );
+            }
+
+            theSync.endTransaction();
+            checkCondition( theSync.areAllQueriesComplete(), "Not all queries complete" );
         }
     }
 
@@ -244,7 +244,7 @@ public class ReturnSynchronizerTest1
             try {
                 Thread.sleep( delayTime );
 
-                theReturnSynchronizer.queryHasCompleted( keyForQuery, result );
+                theReturnSynchronizer.depositQueryResult( keyForQuery, result );
 
                 log.debug( "produced results" );
 

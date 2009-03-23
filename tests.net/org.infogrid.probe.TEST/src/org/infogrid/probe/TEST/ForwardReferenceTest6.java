@@ -60,7 +60,7 @@ public class ForwardReferenceTest6
     {
         log.info( "accessing outer probe" );
 
-        MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY );
+        MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY_FAST );
 
         checkObject( abc, "abc not found" );
 

@@ -19,6 +19,7 @@ import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.meshbase.net.m.NetMMeshBaseNameServer;
+import org.infogrid.meshbase.net.xpriso.logging.XprisoMessageLogger;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBaseFactory;
 import org.infogrid.util.CachingMap;
@@ -82,6 +83,46 @@ public abstract class AbstractProbeManager
     }
 
     /**
+     * This overridable method allows our subclasses to invoke particular functionality
+     * every time this SmartFactory created a new value by invoking the delegate Factory.
+     * It is not invoked for those returned values that are merely retrieved from
+     * the storage in the smart factory.
+     *
+     * @param key the key of the newly created value
+     * @param value the newly created value
+     * @param argument the argument into the creation of the newly created value
+     */
+    @Override
+    protected void createdHook(
+            NetMeshBaseIdentifier  key,
+            ShadowMeshBase         value,
+            CoherenceSpecification argument )
+    {
+        value.setXprisoMessageLogger( theXprisoMessageLogger );
+    }
+
+    /**
+     * Set a XprisoMessageLogger for all incoming and outgoing XprisoMessages.
+     *
+     * @param newValue the new value
+     */
+    public void setXprisoMessageLogger(
+            XprisoMessageLogger newValue )
+    {
+        theXprisoMessageLogger = newValue;
+    }
+
+    /**
+     * Obtain the currently active XprisoMessageLogger, if any.
+     *
+     * @return the currently active XprisoMessageLogger, if any
+     */
+    public XprisoMessageLogger getXprisoMessageLogger()
+    {
+        return theXprisoMessageLogger;
+    }
+
+    /**
      * The main NetMeshBase.
      */
     protected NetMeshBase theMainNetMeshBase;
@@ -90,4 +131,9 @@ public abstract class AbstractProbeManager
      * The NameServer, allocated as needed.
      */
     protected NetMMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theNameServer;
+
+    /**
+     * The Xpriso Message Logger to use for all ShadowMeshBases, if any.
+     */
+    protected XprisoMessageLogger theXprisoMessageLogger;
 }

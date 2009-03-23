@@ -268,6 +268,29 @@ public class AMeshObject
     }
 
     /**
+     * Obtain the MeshObjectIdentifier of the neighbors of this MeshObject. This is sometimes a
+     * more efficient operation than to traverse to the neighbors and determine the
+     * MeshObjectIdentifiers from there.
+     *
+     * @return the MeshObjectIdentifier of the neighbors, if any
+     */
+    @Override
+    public MeshObjectIdentifier[] getNeighborMeshObjectIdentifiers()
+    {
+        checkAlive();
+
+        // That avoids a synchronized
+        MeshObjectIdentifier [] neighborIdentifiers = theNeighborIdentifiers;
+        if( neighborIdentifiers == null ) {
+            return null;
+        }
+        MeshObjectIdentifier[] ret = createMeshObjectIdentifierArray( neighborIdentifiers.length );
+        System.arraycopy( neighborIdentifiers, 0, ret, 0, neighborIdentifiers.length );
+
+        return ret;
+    }
+
+    /**
      * Relate this MeshObject to another MeshObject. This does not bless the relationship.
      *
      * @param newNeighbor the MeshObject to relate to

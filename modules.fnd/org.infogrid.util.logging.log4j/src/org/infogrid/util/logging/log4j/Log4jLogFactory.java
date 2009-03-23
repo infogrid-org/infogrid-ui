@@ -14,8 +14,7 @@
 
 package org.infogrid.util.logging.log4j;
 
-import org.infogrid.util.logging.BufferingDumper;
-import org.infogrid.util.logging.DumperFactory;
+import org.infogrid.util.logging.BufferingDumperFactory;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.logging.LogFactory;
 
@@ -34,8 +33,8 @@ public class Log4jLogFactory
      * @return the Log object
      */
     public Log create(
-            String                                   name,
-            DumperFactory<? extends BufferingDumper> dumperFactory )
+            String                 name,
+            BufferingDumperFactory dumperFactory )
     {
         return new Log4jLog( name, dumperFactory );
     }

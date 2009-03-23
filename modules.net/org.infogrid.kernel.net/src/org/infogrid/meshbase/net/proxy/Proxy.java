@@ -21,7 +21,6 @@ import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
-import org.infogrid.meshbase.net.xpriso.XprisoSynchronizer;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.util.FactoryCreatedObject;
 import org.infogrid.util.RemoteQueryTimeoutException;
@@ -102,94 +101,94 @@ public interface Proxy
     public abstract long getTimeExpires();
 
     /**
-     * Ask this Proxy to obtain from its partner NetMeshBase replicas with the enclosed
-     * specification. Do not acquire the lock; that would be a separate operation.
-     * This call must return immediately; the caller must wait instead. (This is necessary
-     * to be able to perform accessLocally() via several Proxies in parallel.)
+     * <p>Ask this Proxy to obtain from its partner NetMeshBase replicas with the enclosed
+     * specification. Do not acquire the lock; that would be a separate operation.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      * 
      * @param paths the NetMeshObjectAccessSpecifications specifying which replicas should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public abstract long obtainReplicas(
-            NetMeshObjectAccessSpecification []    paths,
-            long                                   duration,
-            XprisoSynchronizer                     synchronizer );
+            NetMeshObjectAccessSpecification [] paths,
+            long                                duration );
 
     /**
-     * Ask this Proxy to obtain the lock for one or more replicas from the
-     * partner NetMeshBase.
+     * <p>Ask this Proxy to obtain the lock for one or more replicas from the
+     * partner NetMeshBase.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      *
      * @param localReplicas the local replicas for which the lock should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public abstract long tryToObtainLocks(
-            NetMeshObject []                       localReplicas,
-            long                                   duration,
-            XprisoSynchronizer                     synchronizer );
+            NetMeshObject [] localReplicas,
+            long             duration );
 
     /**
-     * Ask this Proxy to push the locks for one or more replicas to the partner
-     * NetMeshBase.
+     * <p>Ask this Proxy to push the locks for one or more replicas to the partner
+     * NetMeshBase.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      * 
      * @param localReplicas the local replicas for which the lock should be pushed
      * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public abstract long tryToPushLocks(
-            NetMeshObject []                       localReplicas,
-            boolean []                             isNewProxy,
-            long                                   duration,
-            XprisoSynchronizer                     synchronizer );
+            NetMeshObject [] localReplicas,
+            boolean []       isNewProxy,
+            long             duration );
 
     /**
-     * Ask this Proxy to obtain the home replica status for one or more replicas from the
-     * partner NetMeshBase.
+     * <p>Ask this Proxy to obtain the home replica status for one or more replicas from the
+     * partner NetMeshBase.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      *
      * @param localReplicas the local replicas for which the home replica status should be obtained
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public abstract long tryToObtainHomeReplicas(
-            NetMeshObject []                       localReplicas,
-            long                                   duration,
-            XprisoSynchronizer                     synchronizer );
+            NetMeshObject [] localReplicas,
+            long             duration );
 
     /**
-     * Ask this Proxy to push the home replica status for one or more replicas to the partner
-     * NetMeshBase. Unlike many of the other calls, this call is
-     * synchronous over the network and either succeeds, fails, or times out.
+     * <p>Ask this Proxy to push the home replica status for one or more replicas to the partner
+     * NetMeshBase.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      * 
      * @param localReplicas the local replicas for which the home replica status should be pushed
      * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public abstract long tryToPushHomeReplicas(
-            NetMeshObject []                       localReplicas,
-            boolean []                             isNewProxy,
-            long                                   duration,
-            XprisoSynchronizer                     synchronizer );
+            NetMeshObject [] localReplicas,
+            boolean []       isNewProxy,
+            long             duration );
 
     /**
-     * Send notification to the partner NetMeshBase that this MeshBase has forcibly taken the
-     * lock back for the given NetMeshObjects.
+     * <p>Send notification to the partner NetMeshBase that this MeshBase has forcibly taken the
+     * lock back for the given NetMeshObjects.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      *
      * @param localReplicas the local replicas for which the lock has been forced back
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public abstract void forceObtainLocks(
-            NetMeshObject []   localReplicas,
-            XprisoSynchronizer synchronizer );
+    public abstract long forceObtainLocks(
+            NetMeshObject [] localReplicas,
+            long             duration );
 
     /**
      * Tell the partner NetMeshBase that one or more local replicas would like to be
@@ -199,21 +198,28 @@ public interface Proxy
      *
      * @param identifiers the identifiers of the NetMeshObjects
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
-     * @param synchronizer the synchronizer to use. It is the caller's responsibility to execute a join() some time after this call.
+     * @param accessLocallySynchronizerQueryKey if given, add all to-be-opened queries within this operation to the existing transaction
+     *         with this query key. If not given, add all to-be-opened queries within this operation to this thread's transaction. This
+     *         enables resynchronization to be performed on another thread while an accessLocally operation is still waiting
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
     public abstract long tryResynchronizeReplicas(
-            NetMeshObjectIdentifier []             identifiers,
-            long                                   duration,
-            XprisoSynchronizer                     synchronizer );
+            NetMeshObjectIdentifier [] identifiers,
+            long                       duration,
+            Long                       accessLocallySynchronizerQueryKey );
 
     /**
-     * Ask this Proxy to cancel the leases for the given replicas from its partner NetMeshBase.
+     * <p>Ask this Proxy to cancel the leases for the given replicas from its partner NetMeshBase.</p>
+     * <p>This call returns immediately. Incoming responses are registered with the NetMeshBase's
+     * AccessLocallySynchronizer.</p>
      * 
      * @param localReplicas the local replicas for which the lease should be canceled
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
      */
-    public abstract void cancelReplicas(
-            NetMeshObject [] localReplicas );
+    public abstract long cancelReplicas(
+            NetMeshObject [] localReplicas,
+            long             duration );
 
     /**
      * Invoked by the NetMeshBase that this Proxy belongs to,
@@ -296,5 +302,4 @@ public interface Proxy
      */
     public abstract void removeProxyListener(
             ProxyListener oldListener );
-
 }

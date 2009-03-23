@@ -133,6 +133,16 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
                 </datatype>
                 <isoptional/>
             </propertytype>
+
+            <propertytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification/WaitForOngoingResynchronization">
+                <name>WaitForOngoingResynchronization</name>
+                <username>Wait for ongoing resynchronization</username>
+                <userdescription>If this is true, delay calling threads until triggered resynchronization requests have completed.</userdescription>
+                <datatype>
+                    <BooleanDataType/>
+                </datatype>
+                <defaultvalue>true</defaultvalue>
+            </propertytype>
         </entitytype>
 
         <entitytype ID="org.infogrid.model.Probe#OneTimeOnlyProbeUpdateSpecification">
