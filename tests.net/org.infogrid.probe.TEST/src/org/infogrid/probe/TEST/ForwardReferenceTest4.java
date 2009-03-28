@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -38,7 +38,6 @@ import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
-import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
 
@@ -61,10 +60,11 @@ public class ForwardReferenceTest4
     {
         log.info( "accessing outer probe" );
         
-        MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY_FAST );
+        MeshObject abc = base.accessLocally( OUTER_URL, theCoherence );
 
         checkObject( abc, "abc not found" );
         checkEquals( IteratorElementCounter.countIteratorElements( base.proxies()), 1, "wrong number of proxies in main NetMeshBase" );
+        // if wait, this is the proxy to the old Shadow, if !wait, the proxy to the new Shadow
 
         //
         
@@ -72,14 +72,16 @@ public class ForwardReferenceTest4
         
         NetMeshObject fwdReference = (NetMeshObject) abc.traverseToNeighborMeshObjects().getSingleMember();
         checkObject(    fwdReference, "fwdReference not found" );
-        checkCondition( fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Not blessed by right type" );
-        checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.B, false ), "Blessed by wrong type" );
-        checkEquals(    fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
+        if( theWait ) {
+            checkCondition( fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Not blessed by right type" );
+            checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.B, false ), "Blessed by wrong type" );
+            checkEquals(    fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
 
-        // wait some
-        
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
-        
+            // wait some
+
+            Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
+        }
+
         checkEquals( fwdReference.getPropertyValue( TestSubjectArea.B_U ), "resolved", "ForwardReference was not successfully resolved: " + fwdReference.getIdentifier().toExternalForm() );
 
         checkEquals(    fwdReference.getAllProxies().length, 1, "Wrong number of proxies on forward reference" );
@@ -98,8 +100,8 @@ public class ForwardReferenceTest4
     {
         ForwardReferenceTest4 test = null;
         try {
-            if( args.length > 0 ) {
-                System.err.println( "Synopsis: <no args>" );
+            if( args.length != 1 ) {
+                System.err.println( "Synopsis: \"fast\"|\"slow\"" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -133,7 +135,7 @@ public class ForwardReferenceTest4
         throws
             Exception
     {
-        super( ForwardReferenceTest4.class );
+        super( ForwardReferenceTest4.class, args[0] );
 
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 OUTER_URL.toExternalForm(),

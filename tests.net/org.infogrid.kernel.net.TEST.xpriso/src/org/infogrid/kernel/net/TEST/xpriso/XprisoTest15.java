@@ -24,6 +24,7 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.m.NetMMeshBase;
 import org.infogrid.meshbase.net.proxy.m.MPingPongNetMessageEndpointFactory;
+import org.infogrid.meshbase.net.xpriso.logging.LogXprisoMessageLogger;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionAction;
 import org.infogrid.meshbase.transaction.TransactionActionException;
@@ -99,7 +100,7 @@ public class XprisoTest15
             checkProxies( found[i], new NetMeshBase[] { otherMbs[i] }, otherMbs[i], otherMbs[i], "obj with index " + i + " has wrong proxies" );
         }
 
-        checkInRange( delta, 0, 3999L, "Not completed in expected time range" );
+        checkInRange( delta, 0, PINGPONG_ROUNDTRIP_DURATION*3, "Not completed in expected time range" );
     }
 
     /**
@@ -149,17 +150,26 @@ public class XprisoTest15
     {
         super( XprisoTest15.class );
 
-        MPingPongNetMessageEndpointFactory endpointFactory = MPingPongNetMessageEndpointFactory.create( 1000L, 1000L, 500L, 10000L, 0.f, exec );
+        MPingPongNetMessageEndpointFactory endpointFactory = MPingPongNetMessageEndpointFactory.create( 1000L, PINGPONG_ROUNDTRIP_DURATION/2, 500L, 10000L, 0.f, exec );
         endpointFactory.setNameServer( theNameServer );
 
         mb1 = NetMMeshBase.create( net1, theModelBase, null, endpointFactory, rootContext );
+        
         theNameServer.put( mb1.getIdentifier(), mb1 );
+
+        if( log.isInfoEnabled() ) {
+            mb1.setXprisoMessageLogger( LogXprisoMessageLogger.create( log ));
+        }
         
         for( int i=0 ; i<otherMbs.length ; ++i ) {
             NetMeshBaseIdentifier currentId = theMeshBaseIdentifierFactory.fromExternalForm( "test://" + i + ".local" );
             otherMbs[i] = NetMMeshBase.create( currentId, theModelBase, null, endpointFactory, rootContext );
 
             theNameServer.put( otherMbs[i].getIdentifier(), otherMbs[i] );
+
+            if( log.isInfoEnabled() ) {
+                otherMbs[i].setXprisoMessageLogger( mb1.getXprisoMessageLogger() );
+            }
         }
     }
 

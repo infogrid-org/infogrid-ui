@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -76,8 +76,6 @@ public class XprisoTest7
         checkProxies( obj1_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj2_mb1, null, null, null, "obj2_mb1 has proxies" );
 
-        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
-
         //
 
         log.info( "Accessing obj1 at mb2 from mb1" );
@@ -92,8 +90,6 @@ public class XprisoTest7
         checkProxies( obj1_mb1, new NetMeshBase[] { mb2 }, null, null, "obj1_mb1 has wrong proxies" );
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj1_mb2 has wrong proxies" );
         checkProxies( obj2_mb1, null,                      null, null, "obj2_mb1 has proxies" );
-
-        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -110,8 +106,6 @@ public class XprisoTest7
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj1_mb2 has wrong proxies" );
         checkProxies( obj1_mb3, new NetMeshBase[] { mb1 },      mb1,  mb1,  "obj1_mb3 has wrong proxies" );
         checkProxies( obj2_mb1, null,                           null, null, "obj2_mb1 has proxies" );
-
-        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 
@@ -136,8 +130,6 @@ public class XprisoTest7
         checkProxies( obj2_mb1, new NetMeshBase[] { mb2 },      null, null, "obj2_mb1 has wrong proxies" );
         checkProxies( obj2_mb2, new NetMeshBase[] { mb1, mb3 }, mb1,  mb1,  "obj2_mb2 has wrong proxies" );
         checkProxies( obj2_mb3, new NetMeshBase[] { mb2 },      mb2,  mb2,  "obj2_mb3 has wrong proxies" );
-
-        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 

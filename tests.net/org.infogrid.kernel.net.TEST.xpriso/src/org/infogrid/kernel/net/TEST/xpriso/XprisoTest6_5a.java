@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -72,8 +72,6 @@ public class XprisoTest6_5a
         checkProxies( obj1_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj2_mb1, null, null, null, "obj2_mb1 has proxies" );
 
-        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
-
         //
 
         log.info( "Accessing objects from mb2" );
@@ -99,8 +97,6 @@ public class XprisoTest6_5a
         checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
         checkNotObject( obj1_mb2.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb2" );
         checkNotObject( obj2_mb2.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb2" );
-
-        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
         //
 

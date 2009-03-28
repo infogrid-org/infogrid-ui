@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -65,10 +65,11 @@ public class ForwardReferenceTest3
     {
         log.info( "accessing outer probe" );
         
-        MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY_FAST );
+        MeshObject abc = base.accessLocally( OUTER_URL, theCoherence );
 
         checkObject( abc, "abc not found" );
         checkEquals( IteratorElementCounter.countIteratorElements( base.proxies()), 1, "wrong number of proxies in main NetMeshBase" );
+                // unlike the other ForwardReferenceTests, if 'wait=true' this will only produce one Proxy because the ForwardReference is unresolvable
 
         //
         
@@ -87,21 +88,23 @@ public class ForwardReferenceTest3
         
         NetMeshObject fwdReference = (NetMeshObject) abc.traverseToNeighborMeshObjects().getSingleMember();
         checkObject( fwdReference, "fwdReference not found" );
-        checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Not blessed by right type" );
-        checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.B, false ), "Blessed by wrong type" );
-        checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
+        if( theWait ) {
+            checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Not blessed by right type" );
+            checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.B, false ), "Blessed by wrong type" );
+            checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
 
-        
-        // wait some
-        
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
+
+            // wait some
+
+            Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
+        }
         
         checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "ForwardReference was unexpectedly resolved: " + fwdReference.getIdentifier().toExternalForm() );
 
         checkEquals(    fwdReference.getAllProxies().length, 1, "Wrong number of proxies on forward reference" );
         checkCondition( fwdReference.getAllProxies()[0].getPartnerMeshBaseIdentifier().equals( OUTER_URL ), "Wrong proxy on forward reference" );
         checkCondition( fwdReference.isBlessedBy( TestSubjectArea.A,  false ), "Not blessed by old type" );
-        
+
         checkEquals( listener.events.size(), 1, "found wrong number of events" );
         checkCondition( listener.events.get( 0 ) instanceof InitiateResynchronizeFailedEvent, "wrong type of event found" );
     }
@@ -116,8 +119,8 @@ public class ForwardReferenceTest3
     {
         ForwardReferenceTest3 test = null;
         try {
-            if( args.length > 0 ) {
-                System.err.println( "Synopsis: <no args>" );
+            if( args.length != 1 ) {
+                System.err.println( "Synopsis: \"fast\"|\"slow\"" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -151,7 +154,7 @@ public class ForwardReferenceTest3
         throws
             Exception
     {
-        super( ForwardReferenceTest3.class );
+        super( ForwardReferenceTest3.class, args[0] );
 
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 OUTER_URL.toExternalForm(),
@@ -173,7 +176,6 @@ public class ForwardReferenceTest3
         NetMeshBaseIdentifier temp = null;
         try {
             temp = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://some.example.com/outer" );
-            // temp = NetMeshBaseIdentifier.create( "=foo" );
 
         } catch( URISyntaxException ex ) {
             log.error( ex );

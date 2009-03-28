@@ -59,8 +59,8 @@ public class NetSerializerTest2
         
         NetMeshBaseIdentifier [] testData = new NetMeshBaseIdentifier [] {
                 theMeshBaseIdentifierFactory.fromExternalForm( "http://www.r-objects.com/" ),
-                // NetMeshBaseIdentifier.obtain( "=testing" ),  // FIXME XRI's don't currently work
-                // NetMeshBaseIdentifier.obtain( "@testing@abc" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "=testing" ),
+                theMeshBaseIdentifierFactory.fromExternalForm( "@testing@abc" ),
         };
         NetMeshObjectIdentifier [] testIdentifiers = new NetMeshObjectIdentifier[] {
                 null,
@@ -105,7 +105,12 @@ public class NetSerializerTest2
                             meshBaseAccess[j] = mb.getNetMeshObjectAccessSpecificationFactory().getNetMeshBaseAccessSpecificationFactory().obtain( test[j], coherence );
                         }
                         
-                        NetMeshObjectAccessSpecification original = mb.getNetMeshObjectAccessSpecificationFactory().obtain( meshBaseAccess, scope );
+                        NetMeshObjectAccessSpecification original;
+                        if( identifier != null ) {
+                            original = mb.getNetMeshObjectAccessSpecificationFactory().obtain( meshBaseAccess, identifier, scope );
+                        } else {
+                            original = mb.getNetMeshObjectAccessSpecificationFactory().obtain( meshBaseAccess, scope );
+                        }
                         NetMeshObjectAccessSpecification decoded  = null;
                         String      encoded  = null;
 

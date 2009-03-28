@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -121,8 +121,14 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
         } else {
             pathElements = new NetMeshBaseAccessSpecification[0];
         }
-        
-        NetMeshObjectIdentifier object = theMeshObjectIdentifierFactory.fromExternalForm( objectString );
+
+        NetMeshObjectIdentifier object;
+        if( objectString != null ) {
+            String realObjectString = objectString.replaceAll( "%23", "#" );
+            object = theMeshObjectIdentifierFactory.fromExternalForm( realObjectString );
+        } else {
+            object = null;
+        }
         
         // we need to comb through the URL
 

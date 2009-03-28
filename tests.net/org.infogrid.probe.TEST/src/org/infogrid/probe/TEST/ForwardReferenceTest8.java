@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -59,10 +59,11 @@ public class ForwardReferenceTest8
     {
         log.info( "Accessing outer Probe" );
 
-        MeshObject outerHome = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY_FAST );
+        MeshObject outerHome = base.accessLocally( OUTER_URL, theCoherence );
 
         checkObject( outerHome, "abc not found" );
         checkEquals( IteratorElementCounter.countIteratorElements( base.proxies()), 1, "wrong number of proxies in main NetMeshBase" );
+        // if wait, this is the proxy to the old Shadow, if !wait, the proxy to the new Shadow
 
         //
 
@@ -70,21 +71,25 @@ public class ForwardReferenceTest8
 
         NetMeshObject fwdReference = (NetMeshObject) outerHome.traverse( TestSubjectArea.AR1A.getSource() ).getSingleMember();
         checkObject( fwdReference, "fwdReference not found" );
-        checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Not blessed by right type" );
-        checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.B, false ), "Blessed by wrong type" );
-        checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
-
-        log.info( "Finding nonHome created in outer Probe" );
 
         NetMeshObject outerNonHome = (NetMeshObject) outerHome.traverse(  TestSubjectArea.AR1A.getDestination() ).getSingleMember();
         checkObject( outerNonHome, "outer nonHome not found" );
-        checkNotEquals( outerNonHome.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
 
-        //
+        if( theWait ) {
+            checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.A, false ), "Not blessed by right type" );
+            checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.B, false ), "Blessed by wrong type" );
+            checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
 
-        log.info( "Wait some for ForwardReference to resolve" );
+            log.info( "Finding nonHome created in outer Probe" );
 
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
+            checkNotEquals( outerNonHome.getPropertyValue( TestSubjectArea.A_X ), "forwardreference", "wrong property value" );
+
+            //
+
+            log.info( "Wait some for ForwardReference to resolve" );
+
+            Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
+        }
 
         checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "resolved", "ForwardReference was not successfully resolved: " + fwdReference.getIdentifier().toExternalForm() );
 
@@ -113,8 +118,8 @@ public class ForwardReferenceTest8
     {
         ForwardReferenceTest7 test = null;
         try {
-            if( args.length > 0 ) {
-                System.err.println( "Synopsis: <no args>" );
+            if( args.length != 1 ) {
+                System.err.println( "Synopsis: \"fast\"|\"slow\"" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -148,7 +153,7 @@ public class ForwardReferenceTest8
         throws
             Exception
     {
-        super( ForwardReferenceTest8.class );
+        super( ForwardReferenceTest8.class, args[0] );
 
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 OUTER_URL.toExternalForm(),

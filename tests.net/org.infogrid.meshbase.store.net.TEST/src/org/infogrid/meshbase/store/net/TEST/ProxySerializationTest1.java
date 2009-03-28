@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -305,21 +305,6 @@ public class ProxySerializationTest1
      * ModelBase.
      */
     protected static final ModelBase theModelBase = MModelBase.create();
-    
-//    /**
-//     * The test NetMeshBaseIdentifier.
-//     */
-//    private static NetMeshBaseIdentifier theMeshBaseIdentifier;
-//    static {
-//        NetMeshBaseIdentifier temp = null;
-//        try {
-//            temp = theMeshBaseIdentifierFactory.fromExternalForm( "http://example.com/" );
-//        } catch( Throwable t ) {
-//            log.error( t );
-//        }
-//        theMeshBaseIdentifier = temp;
-//    }
-//
     
     /**
      * Factory for NetMeshBaseIdentifiers.

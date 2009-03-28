@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -128,6 +128,10 @@ public class XprisoTest4
         tx2.commitTransaction();
         
         checkEquals( obj_mb2.getPropertyValue( TestSubjectArea.A_X ), values[2], "failed to set value" );
+
+        //
+
+        log.info( "Sleeping a bit, then checking property value has propagated" );
 
         Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
         

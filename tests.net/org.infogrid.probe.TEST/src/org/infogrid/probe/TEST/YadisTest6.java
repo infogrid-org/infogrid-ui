@@ -55,11 +55,6 @@ public class YadisTest6
 
         //
 
-        MeshObjectSet neighbors = shadowHome.traverseToNeighborMeshObjects();
-
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L ); // let ForwardReference resolution do its magic
-
-
         log.info( "Checking for correct results" );
 
         MeshObjectSet services = YadisUtil.determineServicesFor( shadowHome );

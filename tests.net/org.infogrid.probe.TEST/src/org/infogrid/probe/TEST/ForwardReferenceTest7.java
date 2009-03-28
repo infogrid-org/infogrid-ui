@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -63,10 +63,11 @@ public class ForwardReferenceTest7
         MeshObject already = base.accessLocally(
                 INNER_URL,
                 base.getMeshObjectIdentifierFactory().fromExternalForm( INNER_URL, INNER_NON_HOME_LOCAL_IDENTIFIER ),
-                CoherenceSpecification.ONE_TIME_ONLY_FAST );
+                theCoherence );
 
         checkObject( already, "already not found" );
         checkEquals( IteratorElementCounter.countIteratorElements( base.proxies()), 1, "wrong number of proxies in main NetMeshBase" );
+        // if wait, this is the proxy to the old Shadow, if !wait, the proxy to the new Shadow
 
         //
         
@@ -83,20 +84,21 @@ public class ForwardReferenceTest7
 
         NetMeshObject fwdReference = (NetMeshObject) abc.traverseToNeighborMeshObjects().getSingleMember();
         checkObject( fwdReference, "fwdReference not found" );
-        checkIdentity( already, fwdReference, "Not the same instance" );
+        if( theWait ) {
+            checkIdentity( already, fwdReference, "Not the same instance" );
 
-        checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "resolved", "ForwardReference was not successfully resolved: " + fwdReference.getIdentifier().toExternalForm() );
+            checkEquals( fwdReference.getPropertyValue( TestSubjectArea.A_X ), "resolved", "ForwardReference was not successfully resolved: " + fwdReference.getIdentifier().toExternalForm() );
 
-        checkEquals(    fwdReference.getAllProxies().length, 1, "Wrong number of proxies on forward reference" );
-        checkCondition( fwdReference.getAllProxies()[0].getPartnerMeshBaseIdentifier().equals( INNER_URL ), "Wrong proxy on forward reference" );
-        checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.A,  false ), "Blessed still by old type" );
-        checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.AA, false ), "Not blessed by the right type (AA)" );
-        checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.B,  false ), "Not blessed by the right type (B)" );
+            checkEquals(    fwdReference.getAllProxies().length, 1, "Wrong number of proxies on forward reference" );
+            checkCondition( fwdReference.getAllProxies()[0].getPartnerMeshBaseIdentifier().equals( INNER_URL ), "Wrong proxy on forward reference" );
+            checkCondition( !fwdReference.isBlessedBy( TestSubjectArea.A,  false ), "Blessed still by old type" );
+            checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.AA, false ), "Not blessed by the right type (AA)" );
+            checkCondition(  fwdReference.isBlessedBy( TestSubjectArea.B,  false ), "Not blessed by the right type (B)" );
 
-        // wait some
+            // wait some
 
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
-
+            Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L );
+        }
         NetMeshObject fwdReference2 = (NetMeshObject) abc.traverseToNeighborMeshObjects().getSingleMember();
         checkObject( fwdReference2, "fwdReference2 not found" );
         checkIdentity( already, fwdReference2, "Not the same instance" );
@@ -120,8 +122,8 @@ public class ForwardReferenceTest7
     {
         ForwardReferenceTest7 test = null;
         try {
-            if( args.length > 0 ) {
-                System.err.println( "Synopsis: <no args>" );
+            if( args.length != 1 ) {
+                System.err.println( "Synopsis: \"fast\"|\"slow\"" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -155,7 +157,7 @@ public class ForwardReferenceTest7
         throws
             Exception
     {
-        super( ForwardReferenceTest7.class );
+        super( ForwardReferenceTest7.class, args[0] );
 
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 OUTER_URL.toExternalForm(),

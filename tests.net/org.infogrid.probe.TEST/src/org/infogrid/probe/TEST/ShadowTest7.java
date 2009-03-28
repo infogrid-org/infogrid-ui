@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -112,7 +112,6 @@ public class ShadowTest7
         checkEquals( shadow.size(), 1, "Wrong number of objects in Shadow" );
         checkEquals( local.traverseToNeighborMeshObjects().size(), 0, "unexpected neighbor of local found" );
         checkCondition( a1.getIsDead(), "a1 still alive" );
-        
     }
 
     /**

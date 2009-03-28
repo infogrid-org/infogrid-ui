@@ -294,5 +294,5 @@ public class DefaultNetMeshObjectAccessSpecification
     /**
      * The escaped hash sign.
      */
-    private static final String ESCAPED_HASH = "&#35;";
+    private static final String ESCAPED_HASH = "%23"; // URL escape, not HTML escape. "&#35;";
 }

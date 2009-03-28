@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -73,7 +73,7 @@ public class ProbeTest3
         log.info( "diff'ing meshBaseA and meshBaseB -- should be the exact same, we read the same file" );
 
         IterableNetMeshBaseDifferencer diff_A_B       = new IterableNetMeshBaseDifferencer( meshBaseA );
-        ChangeSet                   firstChangeSet = diff_A_B.determineChangeSet( meshBaseB );
+        ChangeSet                      firstChangeSet = diff_A_B.determineChangeSet( meshBaseB );
 
             checkEquals( firstChangeSet.size(), 1, "not the same content" );
             checkCondition( firstChangeSet.getChange( 0 ) instanceof NetMeshObjectPropertyChangeEvent, "wrong change type" );
@@ -111,7 +111,7 @@ public class ProbeTest3
         log.info( "diff'ing meshBaseB and meshBaseC -- now they should be the same again" );
 
         IterableNetMeshBaseDifferencer diff_B_C        = new IterableNetMeshBaseDifferencer( meshBaseB );
-        ChangeSet                   secondChangeSet = diff_B_C.determineChangeSet( meshBaseB );
+        ChangeSet                      secondChangeSet = diff_B_C.determineChangeSet( meshBaseB );
 
             checkEquals( secondChangeSet.size(), 0, "not the same content: " + secondChangeSet );
             if( secondChangeSet.size() > 0 ) {
@@ -132,8 +132,8 @@ public class ProbeTest3
 
         log.info( "diff'ing meshBaseA and meshBaseC" );
 
-        IterableNetMeshBaseDifferencer diff_A_C = new IterableNetMeshBaseDifferencer( meshBaseA );
-        ChangeSet thirdChangeSet = diff_A_C.determineChangeSet( meshBaseC );
+        IterableNetMeshBaseDifferencer diff_A_C       = new IterableNetMeshBaseDifferencer( meshBaseA );
+        ChangeSet                      thirdChangeSet = diff_A_C.determineChangeSet( meshBaseC );
 
             checkEquals( thirdChangeSet.size(), 2, "not the same content" );
             // ProbeUpdateCounter
@@ -147,13 +147,6 @@ public class ProbeTest3
         checkEquals( listenerA.size(), 0, "wrong number of events in listenerA" );
         checkEquals( listenerB.size(), 2, "wrong number of events in listenerB" );
         checkEquals( listenerC.size(), 2, "wrong number of events in listenerC" );
-
-        if( log.isDebugEnabled() ) {
-
-            // log.traceMethodCallEntry( listenerA.toString() );
-            // log.traceMethodCallEntry( listenerB.toString() );
-            // log.traceMethodCallEntry( listenerC.toString() );
-        }
     }
 
     /**

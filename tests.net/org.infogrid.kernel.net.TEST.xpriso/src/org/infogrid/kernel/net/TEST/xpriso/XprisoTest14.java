@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -27,6 +27,8 @@ import org.infogrid.util.logging.Log;
 
 /**
  * Tests moving the homeReplica around.
+ *
+ * FIXME: This seems a misdescription. Or perhaps the test does not test what it is supposed to?
  */
 public class XprisoTest14
     extends
@@ -54,7 +56,6 @@ public class XprisoTest14
 
         tx1.commitTransaction();
 
-  // checkCondition( obj_mb1.)
         checkCondition( obj_mb1.getAllProxies() == null, "obj_mb1 has proxies" );
 
         //

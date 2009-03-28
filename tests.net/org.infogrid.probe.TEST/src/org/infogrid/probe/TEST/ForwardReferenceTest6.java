@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -58,9 +58,14 @@ public class ForwardReferenceTest6
         throws
             Exception
     {
+        outerProbeRunCounter = 0;
+        innerProbeRunCounter = 0;
+
+        //
+
         log.info( "accessing outer probe" );
 
-        MeshObject abc = base.accessLocally( OUTER_URL, CoherenceSpecification.ONE_TIME_ONLY_FAST );
+        MeshObject abc = base.accessLocally( OUTER_URL, theCoherence );
 
         checkObject( abc, "abc not found" );
 
@@ -73,14 +78,16 @@ public class ForwardReferenceTest6
         NetMeshObject fwdReference = (NetMeshObject) abc.traverseToNeighborMeshObjects().getSingleMember();
         checkObject( fwdReference, "fwdReference not found" );
 
-        MeshObjectSet fwdReferenceNeighbors = fwdReference.traverseToNeighborMeshObjects();
-        checkEquals( fwdReferenceNeighbors.size(), neighborNumber, "Wrong number of neighbors of ForwardReference prior to resolution" );
+        if( theWait ) {
+            MeshObjectSet fwdReferenceNeighbors = fwdReference.traverseToNeighborMeshObjects();
+            checkEquals( fwdReferenceNeighbors.size(), neighborNumber, "Wrong number of neighbors of ForwardReference prior to resolution" );
 
-        //
+            //
 
-        log.info( "Waiting for ForwardReference resolution" );
+            log.info( "Waiting for ForwardReference resolution" );
 
-        sleepFor( PINGPONG_ROUNDTRIP_DURATION * 3L );
+            sleepFor( PINGPONG_ROUNDTRIP_DURATION * 3L );
+        }
 
         MeshObjectSet fwdReferenceNeighbors2 = fwdReference.traverseToNeighborMeshObjects();
         checkEquals( fwdReferenceNeighbors2.size(), neighborNumber, "Wrong number of neighbors of ForwardReference after resolution" );
@@ -138,8 +145,8 @@ public class ForwardReferenceTest6
     {
         ForwardReferenceTest6 test = null;
         try {
-            if( args.length > 0 ) {
-                System.err.println( "Synopsis: <no args>" );
+            if( args.length != 1 ) {
+                System.err.println( "Synopsis: \"fast\"|\"slow\"" );
                 System.err.println( "aborting ..." );
                 System.exit( 1 );
             }
@@ -173,7 +180,7 @@ public class ForwardReferenceTest6
         throws
             Exception
     {
-        super( ForwardReferenceTest6.class );
+        super( ForwardReferenceTest6.class, args[0] );
 
         theProbeDirectory.addExactUrlMatch( new ProbeDirectory.ExactMatchDescriptor(
                 OUTER_URL.toExternalForm(),

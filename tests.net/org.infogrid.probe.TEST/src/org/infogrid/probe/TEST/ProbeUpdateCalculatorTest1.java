@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -36,7 +36,6 @@ import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.FloatValue;
-import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.module.ModuleException;
 import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeDirectory;

@@ -8,13 +8,14 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.probe.TEST;
 
 import java.util.concurrent.ScheduledExecutorService;
+import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.local.m.LocalNetMMeshBase;
 import org.infogrid.meshbase.net.xpriso.logging.LogXprisoMessageLogger;
@@ -31,10 +32,12 @@ public abstract class AbstractForwardReferenceTest
      * Constructor.
      *
      * @param testClass the Class to be tested
+     * @param fastOrSlow command-line argument indicating whether to run this test with a fast or slow CoherenceSpecification
      * @throws Exception all sorts of things may go wrong in a test
      */
     protected AbstractForwardReferenceTest(
-            Class testClass )
+            Class  testClass,
+            String fastOrSlow )
         throws
             Exception
     {
@@ -46,6 +49,14 @@ public abstract class AbstractForwardReferenceTest
         if( getLog().isDebugEnabled() ) {
             theXprisoMessageLogger = LogXprisoMessageLogger.create( getLog() );
             base.setXprisoMessageLogger( theXprisoMessageLogger );
+        }
+
+        if( "slow".equals( fastOrSlow )) {
+            theCoherence = CoherenceSpecification.ONE_TIME_ONLY;
+            theWait      = false;
+        } else {
+            theCoherence = CoherenceSpecification.ONE_TIME_ONLY_FAST;
+            theWait      = true;
         }
     }
 
@@ -82,4 +93,14 @@ public abstract class AbstractForwardReferenceTest
      * The XprisoMessageLogger to use.
      */
     protected LogXprisoMessageLogger theXprisoMessageLogger;
+
+    /**
+     * The CoherenceSpecification to use.
+     */
+    protected CoherenceSpecification theCoherence;
+
+    /**
+     * Whether to make the calling thread wait for a while, or not.
+     */
+    protected boolean theWait;
 }

@@ -84,7 +84,8 @@ public class XprisoTest2b
                         obj2_mb1.getIdentifier() ));
         checkObject( obj2_mb3, "mb3 fails to access obj2." );
 
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L ); // leave this here -- it's good for this test
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 4L ); // leave this here -- it's good for this test because
+                                                          // something might happen in time, even if it is not supposed to
 
         checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
         checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );

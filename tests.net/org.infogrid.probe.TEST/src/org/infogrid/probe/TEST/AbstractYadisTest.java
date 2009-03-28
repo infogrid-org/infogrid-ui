@@ -147,8 +147,6 @@ public abstract class AbstractYadisTest
 
         checkEquals( xrdsCollection.size(), 1, "Wrong set of link destinations" );
 
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION * 3L ); // let ForwardReference resolution do its magic
-
         checkEqualsOutOfSequence(
                 xrdsCollection.get( 0 ).getTypes(),
                 new MeshType[] {

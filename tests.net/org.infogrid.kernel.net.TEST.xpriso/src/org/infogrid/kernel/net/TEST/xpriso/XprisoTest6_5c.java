@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -73,8 +73,6 @@ public class XprisoTest6_5c
         checkProxies( obj1_mb1, null, null, null, "obj1_mb1 has proxies" );
         checkProxies( obj2_mb1, null, null, null, "obj2_mb1 has proxies" );
 
-        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
-
         //
 
         log.info( "Accessing obj1 from mb2" );
@@ -90,8 +88,6 @@ public class XprisoTest6_5c
         checkProxies( obj1_mb2, new NetMeshBase[] { mb1 }, mb1,  mb1,  "obj1_mb2 has wrong proxies" );
         checkProxies( obj2_mb1, new NetMeshBase[] {},      null, null, "obj2_mb1 has wrong proxies" );
 
-        // Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
-
         checkNotObject( obj1_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb1" );
         checkNotObject( obj2_mb1.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj2_mb1" );
         checkNotObject( obj1_mb2.getAllRelationshipProxies(), "unexpectedly found relationship proxies in obj1_mb2" );
@@ -105,7 +101,7 @@ public class XprisoTest6_5c
 
         tx2.commitTransaction();
 
-        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
+        Thread.sleep( PINGPONG_ROUNDTRIP_DURATION ); // need to wait here as the operation is not synchronous
 
         //
         
@@ -160,7 +156,6 @@ public class XprisoTest6_5c
         checkEquals( related1_mb1.size(),   1, "obj1 in mb1 has wrong number of relationships" );
         checkEquals( neighbors2_mb1.size(), 1, "obj2 in mb1 has wrong number of neighbors" );
         checkEquals( related2_mb1.size(),   1, "obj2 in mb1 has wrong number of relationships" );
-
     }
 
     /**
