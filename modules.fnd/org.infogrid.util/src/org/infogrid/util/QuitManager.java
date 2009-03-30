@@ -8,18 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util;
 
 import org.infogrid.util.logging.Log;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import java.lang.ref.WeakReference;
 
 /**
   * <p>This manager acts as a synchronizer to enable a defined "quit".
@@ -35,9 +30,19 @@ public class QuitManager
     private static final Log log = Log.getLogInstance( QuitManager.class); // our own, private logger
 
     /**
-      * Constructor.
-      */
-    public QuitManager()
+     * Factory method.
+     *
+     * @return the created QuitManager
+     */
+    public static QuitManager create()
+    {
+        return new QuitManager();
+    }
+
+    /**
+     * Constructor, for subclasses only. Use factory method.
+     */
+    protected QuitManager()
     {
     }
 
@@ -71,8 +76,8 @@ public class QuitManager
             haveInitiatedQuit = true;
         }
 
-        firePrepareForQuit();
-        fireDie();
+        theQuitListeners.fireEvent( null, EventType.PREPARE_FOR_QUIT );
+        theQuitListeners.fireEvent( null, EventType.DIE );
 
         synchronized( this ) {
             this.notifyAll();
@@ -80,97 +85,59 @@ public class QuitManager
     }
 
     /**
-      * Add a listener.
-      *
-      * @param newListener the new listener
-      * @see #removeQuitListener
-      */
-    public void addQuitListener(
+     * Add a new listener using a WeakReference.
+     *
+     * @param newListener the listener to be added to this set
+     * @see #addSoftQuitListener
+     * @see #addDirectQuitListener
+     * @see #removeQuitListener
+     */
+    public void addWeakQuitListener(
             QuitListener newListener )
     {
-        synchronized( theQuitListeners ) {
-            theQuitListeners.add( new WeakReference<QuitListener>( newListener ));
-        }
+        theQuitListeners.addWeak( newListener );
     }
 
     /**
-      * Remove a listener.
-      *
-      * @param oldListener the to-be-removed listener
-      * @see #addQuitListener
-      */
+     * Add a new listener using a SoftReference.
+     *
+     * @param newListener the listener to be added to this set
+     * @see #addWeakQuitListener
+     * @see #addDirectQuitListener
+     * @see #removeQuitListener
+     */
+    public void addSoftQuitListener(
+            QuitListener newListener )
+    {
+        theQuitListeners.addSoft( newListener );
+    }
+    
+    /**
+     * Add a new listener directly, i.e. without using References.
+     *
+     * @param newListener the new listener
+     * @see #addWeakQuitListener
+     * @see #addSoftQuitListener
+     * @see #removeQuitListener
+     */
+    public void addDirectQuitListener(
+            QuitListener newListener )
+    {
+        theQuitListeners.addDirect( newListener );
+    }
+
+    /**
+     * Remove a listener.
+     *
+     * @param oldListener the to-be-removed listener
+     * @see #addWeakQuitListener
+     * @see #addSoftQuitListener
+     * @see #addDirectQuitListener
+     */
     public void removeQuitListener(
             QuitListener oldListener )
     {
-        synchronized( theQuitListeners ) {
-            theQuitListeners.remove( oldListener );
-        }
-    }
-
-    /**
-      * Fire the prepareForQuit message.
-      */
-    protected void firePrepareForQuit()
-    {
-        // we have to clone this because the listeners unsubscribe themselves
-        Iterator<WeakReference<QuitListener>> theIter;
-        
-        synchronized( this ) {
-            if( theQuitListeners == null || theQuitListeners.isEmpty() ) {
-                return;
-            }
-            theIter = ( new ArrayList<WeakReference<QuitListener>>( theQuitListeners )).iterator();
-        }
-        while( theIter.hasNext() ) {
-            WeakReference<QuitListener> currentRef = theIter.next();
-            QuitListener                current    = currentRef.get();
-
-            if( current == null ) {
-                continue;
-            }
-
-            try {
-                current.prepareForQuit();
-            } catch( IsDeadException ex ) {
-                log.info( "QuitListener is dead already: " + current, ex );
-                // a chain reaction may cause us to invoke the same thing once too often1
-            } catch( Throwable all ) {
-                log.error( "Exception thrown by QuitListener", all );
-            }
-        }
-    }
-
-    /**
-      * Fire the die message.
-      */
-    protected void fireDie()
-    {
-        // we have to clone this because the listeners unsubscribe themselves
-        Iterator<WeakReference<QuitListener>> theIter;
-        
-        synchronized( this ) {
-            if( theQuitListeners == null || theQuitListeners.isEmpty() ) {
-                return;
-            }
-            theIter = ( new ArrayList<WeakReference<QuitListener>>( theQuitListeners )).iterator();
-        }
-        while( theIter.hasNext() ) {
-            WeakReference<QuitListener> currentRef = theIter.next();
-            QuitListener                current    = currentRef.get();
-
-            if( current == null ) {
-                continue;
-            }
-
-            try {
-                current.die();
-            } catch( IsDeadException ex ) {
-                log.info( "QuitListener is dead already: " + current, ex );
-                // a chain reaction may cause us to invoke the same thing once too often1
-            } catch( Throwable all ) {
-                log.error( "Exception thrown by QuitListener", all );
-            }
-        }
+        theQuitListeners.remove( oldListener );
     }
 
     /**
@@ -179,7 +146,56 @@ public class QuitManager
     private boolean haveInitiatedQuit = false;
 
     /**
+     * The types of events that can be sent.
+     */
+    protected static enum EventType {
+        PREPARE_FOR_QUIT {
+            public void fireEventToListener(
+                    QuitListener listener )
+            {
+                listener.prepareForQuit();
+            }
+        },
+        DIE {
+            public void fireEventToListener(
+                    QuitListener listener )
+            {
+                try {
+                    listener.die();
+                } catch( IsDeadException ex ) {
+                    // ignore
+                }
+            }
+        };
+
+        /**
+         * Fire the event.
+         *
+         * @param listener the listener to send the event to
+         */
+        public abstract void fireEventToListener(
+                QuitListener listener );
+    }
+
+    /**
       * The current set of quit listeners.
       */
-    protected ArrayList<WeakReference<QuitListener>> theQuitListeners = new ArrayList<WeakReference<QuitListener>>();
+    protected FlexibleListenerSet<QuitListener,Void,EventType> theQuitListeners
+            = new FlexibleListenerSet<QuitListener,Void,EventType>( true ) {
+                    /**
+                     * Fire the event to one contained object.
+                     *
+                     * @param listener the receiver of this event
+                     * @param event the sent event
+                     * @param parameter dispatch parameter
+                     */
+                    protected void fireEventToListener(
+                            QuitListener listener,
+                            Void         event,
+                            EventType    parameter )
+                    {
+                        parameter.fireEventToListener( listener );
+                    }
+
+    };
 }

@@ -129,7 +129,7 @@ public abstract class AbstractMeshBase
 
         QuitManager qm = getContext().findContextObject( QuitManager.class );
         if( qm != null ) {
-            qm.addQuitListener( this );
+            qm.addWeakQuitListener( this );
         }
     }
 

@@ -22,7 +22,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.WriterAppender;
-import org.infogrid.util.logging.BufferingDumper;
 import org.infogrid.util.logging.BufferingDumperFactory;
 import org.infogrid.util.logging.Log;
 

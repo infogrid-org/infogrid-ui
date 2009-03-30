@@ -27,6 +27,7 @@ import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.ModuleRequirement;
 import org.infogrid.module.SoftwareInstallation;
 import org.infogrid.module.servlet.ServletBootLoader;
+import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
@@ -174,6 +175,8 @@ public class DefaultInitializationFilter
         // Context
         SimpleContext rootContext = SimpleContext.createRoot( rootModule + " root context" );
         rootContext.addContextObject( theThisModule.getModuleRegistry() );
+
+        rootContext.addContextObject( QuitManager.create() );
 
         try {
             initializeContextObjects( rootContext );

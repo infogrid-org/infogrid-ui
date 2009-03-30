@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -44,6 +44,8 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.store.IterableStore;
+import org.infogrid.util.AbstractQuitListener;
+import org.infogrid.util.QuitManager;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
@@ -80,6 +82,8 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         
         InfoGridWebApp app        = InfoGridWebApp.getSingleton();
         Context        appContext = app.getApplicationContext();
+        QuitManager    qm         = appContext.findContextObject( QuitManager.class );
+
         try {
             initializeDataSources();
 
@@ -110,7 +114,16 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             ProbeDirectory probeDirectory = createAndPopulateProbeDirectory(
                     meshBaseIdentifierFactory );
 
-            ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
+            final ScheduledExecutorService exec = Executors.newScheduledThreadPool( 2 );
+            if( qm != null ) {
+                qm.addDirectQuitListener( new AbstractQuitListener() {
+                    @Override
+                    public void die()
+                    {
+                        exec.shutdown();
+                    }
+                });
+            }
 
             // MeshBase
             IterableLocalNetStoreMeshBase meshBase = IterableLocalNetStoreMeshBase.create(
@@ -130,6 +143,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
                     appContext );
             populateMeshBase( meshBase );
             appContext.addContextObject( meshBase );
+            // MeshBase adds itself to QuitManager
 
             MeshBaseNameServer nameServer = meshBase.getLocalNameServer();
             appContext.addContextObject( nameServer );

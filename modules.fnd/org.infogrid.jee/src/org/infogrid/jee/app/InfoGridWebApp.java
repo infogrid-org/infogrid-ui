@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,6 +23,7 @@ import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import org.infogrid.util.QuitManager;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextDirectory;
 import org.infogrid.util.context.SimpleContextDirectory;
@@ -309,6 +310,21 @@ public abstract class InfoGridWebApp
  
         StringRepresentationContext ret = SimpleStringRepresentationContext.create( contextObjects );
         return ret;
+    }
+
+    /**
+     * We are not needed any more.
+     */
+    public void die()
+    {
+        if( theApplicationContext == null ) {
+            return;
+        }
+        QuitManager qm = theApplicationContext.findContextObject( QuitManager.class );
+        if( qm == null ) {
+            return;
+        }
+        qm.initiateQuit();
     }
 
     /**

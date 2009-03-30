@@ -60,7 +60,6 @@ public class DefaultNetRestfulInitializationFilter
         rootContext.addContextObject( srepdir );
 
         // Formatter
-        
         NetRestfulJeeFormatter formatter = NetRestfulJeeFormatter.create( srepdir );
         rootContext.addContextObject( formatter );
 

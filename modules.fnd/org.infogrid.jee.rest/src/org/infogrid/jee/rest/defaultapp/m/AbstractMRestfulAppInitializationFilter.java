@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -95,6 +95,7 @@ public abstract class AbstractMRestfulAppInitializationFilter
         MMeshBase meshBase = MMeshBase.create( mbId, modelBase, accessMgr, appContext );
         populateMeshBase( meshBase );
         appContext.addContextObject( meshBase );
+        // MeshBase adds itself to QuitManager
 
         // Name Server
         MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
