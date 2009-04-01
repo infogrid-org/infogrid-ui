@@ -194,7 +194,7 @@ public class XprisoTest15
     /**
      * The number of NetMeshBases to replicate from.
      */
-    public static final int MAX = 2;
+    public static final int MAX = 20;
 
     /**
      * The first NetMeshBaseIdentifier.
