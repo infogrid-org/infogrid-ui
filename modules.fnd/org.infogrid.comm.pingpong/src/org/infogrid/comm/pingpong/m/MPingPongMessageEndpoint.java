@@ -311,6 +311,7 @@ public class MPingPongMessageEndpoint<T>
     {
         TimedTask t = thePartner.theFutureTask;
         if( t instanceof RespondTask ) {
+            t.cancel();
             thePartner.schedule( t, theDeltaRespondWithMessage );
         }
     }

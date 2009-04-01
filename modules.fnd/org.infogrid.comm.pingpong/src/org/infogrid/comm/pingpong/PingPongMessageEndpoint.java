@@ -147,7 +147,7 @@ public abstract class PingPongMessageEndpoint<T>
                 // resend
                 tokenToSend = theLastSentToken;
             } else {
-                logLow.error( "No idea how we got here: " + this );
+                logLow.error( "No idea how we got here", this );
                 return;
             }
 
