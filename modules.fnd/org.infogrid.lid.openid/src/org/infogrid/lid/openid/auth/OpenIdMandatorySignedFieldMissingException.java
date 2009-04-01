@@ -16,7 +16,6 @@ package org.infogrid.lid.openid.auth;
 
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.util.Identifier;
-import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 
 /**
@@ -25,8 +24,6 @@ import org.infogrid.util.logging.Dumper;
 public class OpenIdMandatorySignedFieldMissingException
         extends
             LidInvalidCredentialException
-        implements
-            CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -63,6 +60,7 @@ public class OpenIdMandatorySignedFieldMissingException
      *
      * @param d the Dumper to dump to
      */
+    @Override
     public void dump(
             Dumper d )
     {

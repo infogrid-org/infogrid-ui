@@ -92,7 +92,8 @@ public abstract class AbstractLocalizedFactoryException
         return toStringRepresentation(
                 StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
                 null,
-                HasStringRepresentation.UNLIMITED_LENGTH );
+                HasStringRepresentation.UNLIMITED_LENGTH,
+                true );
     }
 
     /**
@@ -104,17 +105,18 @@ public abstract class AbstractLocalizedFactoryException
 
     /**
      * Obtain a String representation of this instance that can be shown to the user.
-     * This is only a default implementation; subclasses will want to override.
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         return AbstractLocalizedException.constructStringRepresentation(
                 this,
@@ -123,7 +125,8 @@ public abstract class AbstractLocalizedFactoryException
                 findResourceHelperForLocalizedMessage(),
                 getLocalizationParameters(),
                 findStringRepresentationParameter(),
-                maxLength );
+                maxLength,
+                colloquial );
     }
 
     /**

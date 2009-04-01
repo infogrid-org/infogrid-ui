@@ -116,11 +116,11 @@ public class InterfaceGenerator
                 + "</tt></td></tr>" );
         outStream.println(
                   "  *  <tr><td>Name:</td><td><tt>"
-                + PropertyValue.toStringRepresentation( theMeshType.getName(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
+                + PropertyValue.toStringRepresentation( theMeshType.getName(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH, false )
                 + "</tt></td></tr>" );
         outStream.println(
                   "  *  <tr><td>IsAbstract:</td><td>"
-                + PropertyValue.toStringRepresentation( theMeshType.getIsAbstract(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH )
+                + PropertyValue.toStringRepresentation( theMeshType.getIsAbstract(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH, false )
                 + "</td></tr>" );
         generateL10Map(
                 theMeshType.getUserVisibleNameMap(),
@@ -383,7 +383,7 @@ public class InterfaceGenerator
             
             if( type.getUserVisibleDescription() != null ) {
                 outStream.println( "    /**" );
-                outStream.println( "      * " + PropertyValue.toStringRepresentation( type.getUserVisibleDescription(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH ));
+                outStream.println( "      * " + PropertyValue.toStringRepresentation( type.getUserVisibleDescription(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH, false ));
                 outStream.println( "      */" );
             }
 
@@ -403,7 +403,7 @@ public class InterfaceGenerator
                     outStream.println();
                     if( propType.getUserVisibleDescription() != null ) {
                         outStream.println( "    /**" );
-                        outStream.println( "      * " + PropertyValue.toStringRepresentation( propType.getUserVisibleDescription(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH ));
+                        outStream.println( "      * " + PropertyValue.toStringRepresentation( propType.getUserVisibleDescription(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH, false ));
                         outStream.println( "      */" );
                     }
                     outStream.println( "    public static final PropertyType " + upperName + "_" + upperPropName + " = " + packageName + getInterfaceSubPackageName() + "." + name + "." + propName.toUpperCase() + ";" );
@@ -448,7 +448,7 @@ public class InterfaceGenerator
         w.println( " </head>" );
         w.println( " <body>" );
         
-        w.println( PropertyValue.toStringRepresentation( theSubjectArea.getUserVisibleDescription(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH ));
+        w.println( PropertyValue.toStringRepresentation( theSubjectArea.getUserVisibleDescription(), theCommentsRepresentation, null, HasStringRepresentation.UNLIMITED_LENGTH, false ));
 
         w.println( " </body>" );
         w.println( "</html>" );

@@ -78,7 +78,7 @@ public class NetRestfulJeeFormatter
 
         context = perhapsOverrideStringRepresentationContext( rootPath, context );
         
-        String ret = p.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH );
+        String ret = p.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, false );
         return ret;
     }
 

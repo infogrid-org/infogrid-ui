@@ -49,12 +49,14 @@ public class HasIdentifierStringifier
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      */
     public String format(
             String        soFar,
             HasIdentifier arg,
-            int           maxLength )
+            int           maxLength,
+            boolean       colloquial )
     {
         String ret = escape( arg.getIdentifier().toExternalForm() );
         ret = StringHelper.potentiallyShorten( ret, maxLength );
@@ -67,18 +69,21 @@ public class HasIdentifierStringifier
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
+    @SuppressWarnings(value={"unchecked"})
     public String attemptFormat(
-            String soFar,
-            Object arg,
-            int    maxLength )
+            String  soFar,
+            Object  arg,
+            int     maxLength,
+            boolean colloquial )
         throws
             ClassCastException
     {
-        return format( soFar, (HasIdentifier) arg, maxLength );
+        return format( soFar, (HasIdentifier) arg, maxLength, colloquial );
     }
 
     /**

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -45,7 +45,7 @@ public class LongStringifierTest1
         
         long            data1a = 15243L;
         LongStringifier str1   = LongStringifier.create( );
-        String          res1a  = str1.format( null, data1a, HasStringRepresentation.UNLIMITED_LENGTH );
+        String          res1a  = str1.format( null, data1a, HasStringRepresentation.UNLIMITED_LENGTH, false );
         
         checkEquals( String.valueOf( data1a ), res1a, "not the same" );
 

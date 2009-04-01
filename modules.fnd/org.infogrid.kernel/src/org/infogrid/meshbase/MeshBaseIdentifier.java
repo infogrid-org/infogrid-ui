@@ -18,6 +18,7 @@ import org.infogrid.util.Identifier;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.HasStringRepresentation;
+import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -61,24 +62,27 @@ public class MeshBaseIdentifier
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
+     * Obtain a String representation of this instance that can be shown to the user.
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @return the String representation
+     * @param colloquial if applicable, output in colloquial form
+     * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
-        String externalForm = toExternalForm();
+        String externalForm = IdentifierStringifier.colloquialUrl( toExternalForm(), colloquial );
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 DEFAULT_ENTRY,
                 maxLength,
+                colloquial,
                 externalForm );
         return ret;
     }
@@ -106,6 +110,7 @@ public class MeshBaseIdentifier
                 getClass(), // dispatch to the right subtype
                 DEFAULT_LINK_START_ENTRY,
                 HasStringRepresentation.UNLIMITED_LENGTH,
+                false,
                 contextPath,
                 externalForm,
                 additionalArguments,
@@ -132,6 +137,7 @@ public class MeshBaseIdentifier
                 getClass(), // dispatch to the right subtype
                 DEFAULT_LINK_END_ENTRY,
                 HasStringRepresentation.UNLIMITED_LENGTH,
+                false,
                 contextPath,
                 externalForm );
         return ret;

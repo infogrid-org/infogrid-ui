@@ -43,6 +43,12 @@ public interface StringRepresentationDirectory
     public static final String TEXT_HTML_NAME = "Html";
 
     /**
+     * Name of the StringRepresentation, contained in this StringRepresentationDirectory, that contains
+     * the formatting for URLs.
+     */
+    public static final String TEXT_URL_NAME = "Url";
+
+    /**
      * Name of the StringRepresentation, which may be contained in this StringRepresentationDirectory,
      * that contains the default Java formatting.
      */

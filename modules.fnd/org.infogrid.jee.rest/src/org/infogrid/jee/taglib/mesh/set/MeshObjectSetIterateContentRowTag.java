@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -48,14 +48,24 @@ public class MeshObjectSetIterateContentRowTag
         throws
             JspException
     {
-        Tag parentTag = getParent();
-        if( parentTag == null || !( parentTag instanceof AbstractMeshObjectSetIterateTag )) {
+        Tag parentTag      = getParent();
+        Tag grandParentTag = parentTag != null ? parentTag.getParent() : null;
+
+        if( parentTag == null ) {
             throw new JspException( "MeshObjectSetIterateContentRow tag must be directly contained in an AbstractMeshObjectSetIterateTag tag" );
         }
+        if(    !( parentTag      instanceof AbstractMeshObjectSetIterateTag )
+            && !( grandParentTag instanceof AbstractMeshObjectSetIterateTag ))
+        {
+            throw new JspException( "MeshObjectSetIterateContentRow tag must be directly contained in an AbstractMeshObjectSetIterateTag tag, or a MeshObjectSetIterateContentTag" );
+        }
 
-        AbstractMeshObjectSetIterateTag realParentTag = (AbstractMeshObjectSetIterateTag) parentTag;
+        theRealParentTag =
+                (parentTag instanceof AbstractMeshObjectSetIterateTag)
+                        ? (AbstractMeshObjectSetIterateTag) parentTag
+                        : (AbstractMeshObjectSetIterateTag) grandParentTag;
 
-        if( realParentTag.processesEmptySet() ) {
+        if( theRealParentTag.processesEmptySet() ) {
             return SKIP_BODY;
         }
         return EVAL_BODY_INCLUDE;
@@ -72,11 +82,14 @@ public class MeshObjectSetIterateContentRowTag
         throws
             JspException
     {
-        AbstractMeshObjectSetIterateTag realParentTag = (AbstractMeshObjectSetIterateTag) getParent();
-
-        if( realParentTag.processesEmptySet() ) {
+        if( theRealParentTag.processesEmptySet() ) {
             return EVAL_PAGE;
         }
         return EVAL_PAGE;
     }
+
+    /**
+     * The real parent tag.
+     */
+    protected AbstractMeshObjectSetIterateTag theRealParentTag;
 }

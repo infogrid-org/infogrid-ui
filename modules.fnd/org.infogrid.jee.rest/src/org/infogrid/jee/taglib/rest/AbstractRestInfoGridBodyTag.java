@@ -46,6 +46,7 @@ public abstract class AbstractRestInfoGridBodyTag
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the String to display
      */
     protected final String formatValue(
@@ -53,14 +54,18 @@ public abstract class AbstractRestInfoGridBodyTag
             PropertyValue value,
             String        nullString,
             String        stringRepresentation,
-            int           maxLength )
+            int           maxLength,
+            boolean       colloquial )
     {
-        return ((RestfulJeeFormatter)theFormatter).formatPropertyValue(
+        String ret = ((RestfulJeeFormatter)theFormatter).formatPropertyValue(
                 pageContext,
                 value,
                 nullString,
                 stringRepresentation,
-                maxLength );
+                maxLength,
+                colloquial );
+
+        return ret;
     }
 
     /**

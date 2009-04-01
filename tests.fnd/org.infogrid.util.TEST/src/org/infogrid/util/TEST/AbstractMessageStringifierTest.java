@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -68,7 +68,7 @@ public abstract class AbstractMessageStringifierTest
 
         ArrayFacade<Object> temp = new ArrayFacade<Object>( current.theData );
 
-        String result1a = str1.format( null, temp, HasStringRepresentation.UNLIMITED_LENGTH );
+        String result1a = str1.format( null, temp, HasStringRepresentation.UNLIMITED_LENGTH, false );
         
         current.checkResult( this, result1a, "wrong formatting result" );
 

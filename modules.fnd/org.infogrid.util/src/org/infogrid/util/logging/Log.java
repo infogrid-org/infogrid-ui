@@ -725,14 +725,14 @@ public abstract class Log
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userFatal(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userFatal(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
                     parentComponent,
                     realEx );
 
@@ -850,14 +850,14 @@ public abstract class Log
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userError(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userError(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
                     parentComponent,
                     realEx );
         } else {
@@ -974,14 +974,14 @@ public abstract class Log
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userWarn(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userWarn(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH ),
+                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
                     parentComponent,
                     realEx );
 

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,6 +22,7 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
 import org.infogrid.util.text.HasStringRepresentation;
+import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -141,13 +142,15 @@ public class DefaultAnetMeshObjectIdentifier
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     @Override
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
         String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
@@ -188,33 +191,14 @@ public class DefaultAnetMeshObjectIdentifier
             meshObjectExternalForm = toExternalForm();
         }
 
-//        StringBuffer buf = new StringBuffer();
-//        for( int i=0 ; i<meshObjectExternalForm.length() ; ++i ) {
-//            char c = meshObjectExternalForm.charAt( i );
-//            switch( c ) {
-//                case '#':
-//                    buf.append( "%23" );
-//                    break;
-//                case '?':
-//                    buf.append( "%3F" );
-//                    break;
-//                case '&':
-//                    buf.append( "%26" );
-//                    break;
-//                case ';':
-//                    buf.append( "%3B" );
-//                    break;
-//                default:
-//                    buf.append( c );
-//                    break;
-//            }
-//        }
-//        meshObjectExternalForm = buf.toString();
+        meshBaseExternalForm   = IdentifierStringifier.colloquialUrl( meshBaseExternalForm,   colloquial );
+        meshObjectExternalForm = IdentifierStringifier.colloquialUrl( meshObjectExternalForm, colloquial );
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 key,
                 maxLength,
+                colloquial,
                 meshObjectExternalForm,
                 contextPath,
                 meshBaseExternalForm );
@@ -316,6 +300,7 @@ public class DefaultAnetMeshObjectIdentifier
                 getClass(), // dispatch to the right subclass
                 key,
                 HasStringRepresentation.UNLIMITED_LENGTH,
+                false,
                 meshObjectExternalForm,
                 contextPath,
                 meshBaseExternalForm,
@@ -381,6 +366,7 @@ public class DefaultAnetMeshObjectIdentifier
                 getClass(), // dispatch to the right subclass
                 key,
                 HasStringRepresentation.UNLIMITED_LENGTH,
+                false,
                 meshObjectExternalForm,
                 contextPath,
                 meshBaseExternalForm );

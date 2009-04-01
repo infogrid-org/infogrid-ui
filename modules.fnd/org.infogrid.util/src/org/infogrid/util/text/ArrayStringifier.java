@@ -165,12 +165,14 @@ public class ArrayStringifier<T>
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      */
     public String format(
             String         soFar,
             ArrayFacade<T> arg,
-            int            maxLength )
+            int            maxLength,
+            boolean        colloquial )
     {
         if( arg == null || arg.getArray().length == 0 ) {
             if( theEmptyString != null ) {
@@ -196,7 +198,7 @@ public class ArrayStringifier<T>
             if( sep != null ) {
                 ret.append( sep );
             }
-            String childInput = theDelegate.format( soFar + ret.toString(), data[i], maxLength ); // presumably shorter, but we don't know
+            String childInput = theDelegate.format( soFar + ret.toString(), data[i], maxLength, colloquial ); // presumably shorter, but we don't know
             if( childInput != null ) {
                 ret.append( childInput );
             }
@@ -209,27 +211,29 @@ public class ArrayStringifier<T>
     }
     
     /**
-     * Format an Object using this Stringifier.
+     * Format an Object using this Stringifier. This may be null.
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     @SuppressWarnings(value={"unchecked"})
     public String attemptFormat(
-            String soFar,
-            Object arg,
-            int    maxLength )
+            String  soFar,
+            Object  arg,
+            int     maxLength,
+            boolean colloquial )
         throws
             ClassCastException
     {
         if( arg instanceof ArrayFacade ) {
-            return format( soFar, (ArrayFacade<T>) arg, maxLength );
+            return format( soFar, (ArrayFacade<T>) arg, maxLength, colloquial );
         } else {
-            return format( soFar, ArrayFacade.<T>create( (T []) arg ), maxLength);
+            return format( soFar, ArrayFacade.<T>create( (T []) arg ), maxLength, colloquial );
         }
     }
 

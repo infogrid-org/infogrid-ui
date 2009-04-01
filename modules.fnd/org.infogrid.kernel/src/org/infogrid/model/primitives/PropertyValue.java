@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -101,18 +101,20 @@ public abstract class PropertyValue
      * @param representation the representation scheme
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the String representation
      */
     public static String toStringRepresentationOrNull(
             PropertyValue               v,
             StringRepresentation        representation,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         if( v == null ) {
             return null;
         } else {
-            return v.toStringRepresentation( representation, context, maxLength );
+            return v.toStringRepresentation( representation, context, maxLength, colloquial );
         }
     }
 
@@ -124,18 +126,20 @@ public abstract class PropertyValue
      * @param representation the representation scheme
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the String representation
      */
     public final static String toStringRepresentation(
             PropertyValue               v,
             StringRepresentation        representation,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         if( v == null ) {
-            return representation.formatEntry( PropertyValue.class, "Null", maxLength );
+            return representation.formatEntry( PropertyValue.class, "Null", maxLength, colloquial );
         } else {
-            return v.toStringRepresentation( representation, context, maxLength );
+            return v.toStringRepresentation( representation, context, maxLength, colloquial );
         }
     }
 

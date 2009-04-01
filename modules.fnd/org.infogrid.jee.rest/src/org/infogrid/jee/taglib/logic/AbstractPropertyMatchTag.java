@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -94,7 +94,7 @@ public abstract class AbstractPropertyMatchTag
         StringRepresentation        rep     = theFormatter.determineStringRepresentation( StringRepresentationDirectory.TEXT_PLAIN_NAME );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String foundAsString = PropertyValue.toStringRepresentation( found, rep, context, HasStringRepresentation.UNLIMITED_LENGTH );
+        String foundAsString = PropertyValue.toStringRepresentation( found, rep, context, HasStringRepresentation.UNLIMITED_LENGTH, false );
         
         Pattern p = Pattern.compile( theExpression );
         Matcher m = p.matcher( foundAsString );

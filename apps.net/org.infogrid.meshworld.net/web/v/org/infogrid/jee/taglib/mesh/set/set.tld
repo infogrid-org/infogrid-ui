@@ -64,6 +64,11 @@
     </tag>
     
     <tag>
+        <name>iteratecontent</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateContentTag</tag-class>
+    </tag>
+
+    <tag>
         <name>iteratenocontent</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateNoContentTag</tag-class>
     </tag>

@@ -76,51 +76,67 @@ public class StringRepresentationDirectorySingleton
     {
         Map<String,Stringifier<? extends Object>> plainMap   = new HashMap<String,Stringifier<? extends Object>>();
         Map<String,Stringifier<? extends Object>> htmlMap    = new HashMap<String,Stringifier<? extends Object>>();
+        Map<String,Stringifier<? extends Object>> urlMap     = new HashMap<String,Stringifier<? extends Object>>();
 
         plainMap.put(   "int",            LongStringifier.create() );
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "int2",           LongStringifier.create( 2 ) );
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "int4",           LongStringifier.create( 4 ) );
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "double",         DoubleStringifier.create() );
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "string",         StringStringifier.create() );
         htmlMap.put(    "string",         HtmlStringStringifier.create() );
+        // url:  same as plain
 
         plainMap.put(   "verbatim",       StringStringifier.create() );
         htmlMap.put(    "verbatim",       StringStringifier.create() );
+        // url:  same as plain
 
         plainMap.put(   "stacktrace",     StacktraceStringifier.create() );
         htmlMap.put(    "stacktrace",     HtmlStacktraceStringifier.create() );
+        // url:  same as plain
 
         plainMap.put(   "urlappend",      UrlAppendStringifier.create() );
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "urlarg",         UrlArgStringifier.create() );
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "id",             IdentifierStringifier.create() );
         htmlMap.put(    "id",             IdentifierStringifier.create( "<code>", "</code>" ));
+        // url:  same as plain
 
         plainMap.put(   "idarray",        ArrayStringifier.create( IdentifierStringifier.create(), ", " ));
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "hasid",          HasIdentifierStringifier.create() );
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "hasidarray",     ArrayStringifier.create( HasIdentifierStringifier.create(), ", " ));
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "class",          ClassStringifier.create() );
         // html: same as plain
+        // url:  same as plain
 
         plainMap.put(   "list",           ListStringifier.create( ", " ));
         htmlMap.put(    "list",           ListStringifier.create( "<ul><li>", "</li>\n<li>", "</li></ul>", "<ul class=\"empty\"></ul>" ));
+        // url:  same as plain
 
         MCachingHashMap<String,StringRepresentation> storage = MCachingHashMap.create();
 
@@ -131,11 +147,16 @@ public class StringRepresentationDirectorySingleton
                 StringRepresentationDirectory.TEXT_HTML_NAME,
                 htmlMap,
                 plain );
+        SimpleStringRepresentation url = SimpleStringRepresentation.create(
+                StringRepresentationDirectory.TEXT_URL_NAME,
+                urlMap,
+                plain );
 
         theSingleton = new StringRepresentationDirectorySingleton( storage, plain );
 
         theSingleton.put(   plain.getName(), plain );
         theSingleton.put(    html.getName(), html  );
+        theSingleton.put(     url.getName(), url   );
 
         return theSingleton;
     }

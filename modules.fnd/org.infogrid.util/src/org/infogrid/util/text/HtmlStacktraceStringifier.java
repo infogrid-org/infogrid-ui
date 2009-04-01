@@ -74,20 +74,22 @@ public class HtmlStacktraceStringifier
     }
 
     /**
-     * Format an Object using this Stringifier. This may be null.
+     * Format an Object using this Stringifier.
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      */
     @Override
     public String format(
             String    soFar,
             Throwable arg,
-            int       maxLength )
+            int       maxLength,
+            boolean   colloquial )
     {
-        String raw = super.format( soFar, arg, maxLength );
+        String raw = super.format( soFar, arg, maxLength, colloquial );
         
         String ret = raw; // HtmlStringStringifier.stringToHtml( raw );
         

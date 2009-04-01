@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -78,16 +78,19 @@ public class StacktraceStringifier
     }
 
     /**
-     * Format an Object using this Stringifier. This may be null.
+     * Format an Object using this Stringifier.
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      */
     public String format(
             String    soFar,
             Throwable arg,
-            int       maxLength )
+            int       maxLength,
+            boolean   colloquial )
     {
         StackTraceElement [] elements = arg.getStackTrace();
 
@@ -117,18 +120,20 @@ public class StacktraceStringifier
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
-            String soFar,
-            Object arg,
-            int    maxLength )
+            String  soFar,
+            Object  arg,
+            int     maxLength,
+            boolean colloquial )
         throws
             ClassCastException
     {
-        return format( soFar, (Throwable) arg, maxLength );
+        return format( soFar, (Throwable) arg, maxLength, colloquial );
     }
 
     /**

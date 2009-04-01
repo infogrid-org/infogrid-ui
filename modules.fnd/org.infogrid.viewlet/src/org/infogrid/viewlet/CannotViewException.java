@@ -18,6 +18,7 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
+import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -118,35 +119,39 @@ public abstract class CannotViewException
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
          * @param maxLength maximum length of emitted String. -1 means unlimited.
+         * @param colloquial if applicable, output in colloquial form
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
                 StringRepresentationContext context,
-                int                         maxLength )
+                int                         maxLength,
+                boolean                     colloquial )
         {
             if( theObjectsToView.getViewletTypeName() == null ) {
                 return rep.formatEntry(
                         getClass(),
                         "ViewletClassNotCompatibleWithSubjectString",
                         maxLength,
+                        colloquial,
                         theViewlet.getName(),
                         theViewlet.getUserVisibleName(),
                         theObjectsToView.getSubject(),
                         theObjectsToView.getSubject().getIdentifier(),
-                        theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+                        IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
 
             } else {
                 return rep.formatEntry(
                         getClass(),
                         "ViewletClassNotCompatibleWithTypeString",
                         maxLength,
+                        colloquial,
                         theViewlet.getName(),
                         theViewlet.getUserVisibleName(),
                         theObjectsToView.getSubject(),
                         theObjectsToView.getSubject().getIdentifier(),
-                        theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+                        IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
             }
         }
     }
@@ -179,23 +184,26 @@ public abstract class CannotViewException
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
          * @param maxLength maximum length of emitted String. -1 means unlimited.
+         * @param colloquial if applicable, output in colloquial form
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
                 StringRepresentationContext context,
-                int                         maxLength )
+                int                         maxLength,
+                boolean                     colloquial )
         {
             return rep.formatEntry(
                     getClass(),
                     "ObjectTypeNotAllowedString",
                     maxLength,
+                    colloquial,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
                     theObjectsToView.getSubject().getIdentifier(),
-                    theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+                    IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
         }
     }
 
@@ -227,23 +235,26 @@ public abstract class CannotViewException
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
          * @param maxLength maximum length of emitted String. -1 means unlimited.
+         * @param colloquial if applicable, output in colloquial form
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
                 StringRepresentationContext context,
-                int                         maxLength )
+                int                         maxLength,
+                boolean                     colloquial )
         {
             return rep.formatEntry(
                     getClass(),
                     "InvalidViewletString",
                     maxLength,
+                    colloquial,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
                     theObjectsToView.getSubject().getIdentifier(),
-                    theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+                    IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
         }
     }
     
@@ -279,23 +290,26 @@ public abstract class CannotViewException
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
          * @param maxLength maximum length of emitted String. -1 means unlimited.
+         * @param colloquial if applicable, output in colloquial form
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
                 StringRepresentationContext context,
-                int                         maxLength )
+                int                         maxLength,
+                boolean                     colloquial )
         {
             return rep.formatEntry(
                     getClass(),
                     "ParameterMissingString",
                     maxLength,
+                    colloquial,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
                     theObjectsToView.getSubject().getIdentifier(),
-                    theObjectsToView.getSubject().getIdentifier().toExternalForm(),
+                    IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ),
                     theName );
         }
         
@@ -333,22 +347,25 @@ public abstract class CannotViewException
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
          * @param maxLength maximum length of emitted String. -1 means unlimited.
+         * @param colloquial if applicable, output in colloquial form
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
                 StringRepresentationContext context,
-                int                         maxLength )
+                int                         maxLength,
+                boolean                     colloquial )
         {
             return rep.formatEntry(
                     getClass(),
                     "NoSubjectString",
                     maxLength,
+                    colloquial,
                     theViewlet != null ? theViewlet.getName() : null,
                     theViewlet != null ? theViewlet.getUserVisibleName() : null,
                     theIdentifier,
-                    theIdentifier.toExternalForm() );
+                    IdentifierStringifier.colloquialUrl( theIdentifier.toExternalForm(), colloquial ));
         }
         
         /**
@@ -387,23 +404,26 @@ public abstract class CannotViewException
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
          * @param maxLength maximum length of emitted String. -1 means unlimited.
+         * @param colloquial if applicable, output in colloquial form
          * @return String representation
          */
         @Override
         public String toStringRepresentation(
                 StringRepresentation        rep,
                 StringRepresentationContext context,
-                int                         maxLength )
+                int                         maxLength,
+                boolean                     colloquial )
         {
             return rep.formatEntry(
                     getClass(),
                     "InternalErrorString",
                     maxLength,
+                    colloquial,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
                     theObjectsToView.getSubject().getIdentifier(),
-                    theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+                    IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
         }
     }
 }

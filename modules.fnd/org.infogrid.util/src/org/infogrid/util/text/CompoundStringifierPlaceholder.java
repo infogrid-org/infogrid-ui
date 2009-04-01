@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -42,23 +42,24 @@ class CompoundStringifierPlaceholder<T>
     }
 
     /**
-     * Format zero or one Object in the ArrayFacade.
+     * Format an Object using this Stringifier.
      *
      * @param soFar the String so far, if any
-     * @param args the Objects to format
+     * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
-     * @throws IllegalArgumentException thrown if this component does not support the formatting of this Object
      */
     public String format(
             String         soFar,
-            ArrayFacade<T> args,
-            int            maxLength )
+            ArrayFacade<T> arg,
+            int            maxLength,
+            boolean        colloquial )
     {
-        T [] realArgs = args.getArray();
+        T [] realArgs = arg.getArray();
 
         T localArg = realArgs[ thePlaceholderIndex ];
-        String ret = theStringifier.attemptFormat( soFar, localArg, maxLength );
+        String ret = theStringifier.attemptFormat( soFar, localArg, maxLength, colloquial );
 
         return ret;
     }

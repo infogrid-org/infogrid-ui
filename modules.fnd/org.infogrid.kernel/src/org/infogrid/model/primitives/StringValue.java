@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -214,19 +214,21 @@ public final class StringValue
     }
 
     /**
-     * Convert this PropertyValue to its String representation, using the representation scheme.
+     * Obtain a String representation of this instance that can be shown to the user.
      *
-     * @param representation the representation scheme
+     * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @return the String representation
+     * @param colloquial if applicable, output in colloquial form
+     * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        representation,
+            StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
-        return representation.formatEntry( getClass(), DEFAULT_ENTRY, maxLength, theValue );
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY, maxLength, colloquial, theValue );
     }
 
     /**

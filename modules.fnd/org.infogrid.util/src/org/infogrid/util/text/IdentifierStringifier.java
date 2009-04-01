@@ -68,12 +68,14 @@ public class IdentifierStringifier
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      */
     public String format(
             String     soFar,
             Identifier arg,
-            int        maxLength )
+            int        maxLength,
+            boolean    colloquial )
     {
         String ext = escape( arg.toExternalForm() );
 
@@ -99,18 +101,20 @@ public class IdentifierStringifier
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
-            String soFar,
-            Object arg,
-            int    maxLength )
+            String  soFar,
+            Object  arg,
+            int     maxLength,
+            boolean colloquial )
         throws
             ClassCastException
     {
-        return format( soFar, (Identifier) arg, maxLength );
+        return format( soFar, (Identifier) arg, maxLength, colloquial );
     }
 
     /**
@@ -174,6 +178,37 @@ public class IdentifierStringifier
             final boolean matchAll )
     {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Helper method to convert a URL into colloquial form, i.e. dropping the http:// prefix.
+     *
+     * @param input the full URL
+     * @param colloquial if applicable, output in colloquial form
+     * @return colloquial form, if colloquial is true; unchanged otherwise
+     */
+    public static String colloquialUrl(
+            String  input,
+            boolean colloquial )
+    {
+        if( !colloquial ) {
+            return input;
+        }
+        if( input == null ) {
+            return null;
+        }
+
+        final String PREFIX = "http://";
+        if( input.startsWith( PREFIX )) {
+            String ret = input.substring( PREFIX.length() );
+            int    slash = ret.indexOf( '/' );
+            if( slash == ret.length()-1 ) {
+                // the first found slash is the last character
+                ret = ret.substring( 0, slash );
+            }
+            return ret;
+        }
+        return input;
     }
 
     /**

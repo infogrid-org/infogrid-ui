@@ -333,6 +333,7 @@ public class RestfulJeeFormatter
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the String to display
      */
     public String formatPropertyValue(
@@ -340,12 +341,13 @@ public class RestfulJeeFormatter
             PropertyValue      value,
             String             nullString,
             String             stringRepresentation,
-            int                maxLength )
+            int                maxLength,
+            boolean            colloquial )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
         
-        String ret = PropertyValue.toStringRepresentationOrNull( value, rep, context, maxLength );
+        String ret = PropertyValue.toStringRepresentationOrNull( value, rep, context, maxLength, colloquial );
         if( ret != null ) {
             return ret;
         } else {
@@ -371,7 +373,7 @@ public class RestfulJeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
  
-        String ret = identifier.toStringRepresentation( rep, context, maxLength );
+        String ret = identifier.toStringRepresentation( rep, context, maxLength, false );
         
         return ret;
     }
@@ -383,18 +385,20 @@ public class RestfulJeeFormatter
      * @param mesh the MeshObject that is to be formatted
      * @param stringRepresentation the StringRepresentation to use
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial should the value be emitted in colloquial form
      * @return the String to display
      */
     public String formatMeshObjectStart(
             PageContext pageContext,
             MeshObject  mesh,
             String      stringRepresentation,
-            int         maxLength )
+            int         maxLength,
+            boolean     colloquial )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String ret = mesh.toStringRepresentation( rep, context, maxLength );
+        String ret = mesh.toStringRepresentation( rep, context, maxLength, colloquial );
         return ret;
     }
 
@@ -438,7 +442,7 @@ public class RestfulJeeFormatter
         SimpleMeshStringRepresentationContext delegateContext
                 = SimpleMeshStringRepresentationContext.create( localMap, context );
 
-        String ret = mesh.getIdentifier().toStringRepresentation( rep, delegateContext, maxLength );
+        String ret = mesh.getIdentifier().toStringRepresentation( rep, delegateContext, maxLength, false );
         return ret;
     }
 
@@ -551,18 +555,20 @@ public class RestfulJeeFormatter
      * @param base the MeshBase whose identifier is to be formatted
      * @param stringRepresentation the StringRepresentation to use
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial should the value be emitted in colloquial form
      * @return the String to display
      */
     public String formatMeshBaseIdentifierStart(
             PageContext        pageContext,
             MeshBase           base,
             String             stringRepresentation,
-            int                maxLength )
+            int                maxLength,
+            boolean            colloquial )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String ret = base.toStringRepresentation( rep, context, maxLength );
+        String ret = base.toStringRepresentation( rep, context, maxLength, colloquial );
         return ret;
     }
 

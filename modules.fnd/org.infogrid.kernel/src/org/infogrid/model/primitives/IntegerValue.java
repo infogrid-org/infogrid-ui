@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -386,14 +386,16 @@ public final class IntegerValue
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
-        return rep.formatEntry( getClass(), DEFAULT_ENTRY, maxLength, theValue, theUnit );
+        return rep.formatEntry( getClass(), DEFAULT_ENTRY, maxLength, colloquial, theValue, theUnit );
     }
 
     /**

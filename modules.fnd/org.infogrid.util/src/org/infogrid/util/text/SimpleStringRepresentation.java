@@ -121,6 +121,7 @@ public class SimpleStringRepresentation
      * @param classOfFormattedObject the class of the to-be-formatted object
      * @param entry the entry in the ResourceHelper (but qualified by the prefix of this StringRepresentation)
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @param args the arguments for the entry in the ResourceHelper
      * @return the formatted String
      */
@@ -128,6 +129,7 @@ public class SimpleStringRepresentation
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
             int                                      maxLength,
+            boolean                                  colloquial,
             Object...                                args )
     {
         ResourceHelper rh           = ResourceHelper.getInstance( classOfFormattedObject, true );
@@ -137,7 +139,7 @@ public class SimpleStringRepresentation
             try {
                 AnyMessageStringifier stringifier = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
 
-                String ret = stringifier.format( null, ArrayFacade.<Object>create( args ), maxLength );
+                String ret = stringifier.format( null, ArrayFacade.<Object>create( args ), maxLength, colloquial );
                 return ret;
 
             } catch( StringifierException ex ) {
@@ -146,7 +148,7 @@ public class SimpleStringRepresentation
             }
         }
         if( theDelegate != null ) {
-            return theDelegate.formatEntry( classOfFormattedObject, entry, maxLength, args );
+            return theDelegate.formatEntry( classOfFormattedObject, entry, maxLength, colloquial, args );
         }
         String ret = rh.getResourceString( theName + entry ); // will emit warning
         ret = StringHelper.potentiallyShorten( ret, maxLength );
@@ -191,19 +193,21 @@ public class SimpleStringRepresentation
      * @param t the Throwable
      * @param context the StringRepresentationContext to use
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String formatThrowable(
             Throwable                   t,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         String ret;
         if( t instanceof HasStringRepresentation ) {
-            ret = formatHasStringRepresentationThrowable( (HasStringRepresentation) t, context, maxLength );
+            ret = formatHasStringRepresentationThrowable( (HasStringRepresentation) t, context, maxLength, colloquial );
 
         } else {
-            ret = formatNoStringRepresentationThrowable( t, context );
+            ret = formatNoStringRepresentationThrowable( t, context, colloquial );
         }
         return ret;
     }
@@ -214,14 +218,16 @@ public class SimpleStringRepresentation
      * @param t the Throwable
      * @param context the StringRepresentationContext to use
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String formatHasStringRepresentationThrowable(
             HasStringRepresentation     t,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
-        String ret = t.toStringRepresentation( this, context, maxLength );
+        String ret = t.toStringRepresentation( this, context, maxLength, colloquial );
         return ret;
     }
 
@@ -230,11 +236,13 @@ public class SimpleStringRepresentation
      * By default, we format 
      * @param t the Throwable
      * @param context the StringRepresentationContext to use
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String formatNoStringRepresentationThrowable(
             Throwable                   t,
-            StringRepresentationContext context )
+            StringRepresentationContext context,
+            boolean                     colloquial )
     {
         try {
             String                formatString = theResourceHelper.getResourceString( theName + "ThrowableMessage" );
@@ -251,7 +259,7 @@ public class SimpleStringRepresentation
             }
 
             Object [] args = { t.getClass(), message, localizedMessage, t };
-            String ret = stringifier.format( null, ArrayFacade.<Object>create( args ), HasStringRepresentation.UNLIMITED_LENGTH );
+            String ret = stringifier.format( null, ArrayFacade.<Object>create( args ), HasStringRepresentation.UNLIMITED_LENGTH, colloquial );
             return ret;
 
         } catch( StringifierException ex ) {
@@ -312,6 +320,17 @@ public class SimpleStringRepresentation
                     theName,
                     theDelegate
                 } );
+    }
+
+    /**
+     * Convert to String, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return super.toString() + "{ name: " + theName + " }";
     }
 
     /**

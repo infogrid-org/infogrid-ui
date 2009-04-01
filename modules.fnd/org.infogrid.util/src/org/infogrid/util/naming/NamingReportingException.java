@@ -57,18 +57,20 @@ public class NamingReportingException
 
     /**
      * Obtain a String representation of this instance that can be shown to the user.
-     * 
-     * @param rep the StringRepresentation to use
+     *
+     * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
-        String indentString = rep.formatEntry( getClass(), "Indent", HasStringRepresentation.UNLIMITED_LENGTH );
+        String indentString = rep.formatEntry( getClass(), "Indent", HasStringRepresentation.UNLIMITED_LENGTH, colloquial );
 
         StringBuilder contextDump = new StringBuilder();
         
@@ -81,10 +83,10 @@ public class NamingReportingException
             contextDump.append( "[naming exception occurred]" );
         }
         if( !hasAppended ) {
-            contextDump.append( rep.formatEntry( getClass(), "NoBindings", HasStringRepresentation.UNLIMITED_LENGTH ));
+            contextDump.append( rep.formatEntry( getClass(), "NoBindings", HasStringRepresentation.UNLIMITED_LENGTH, colloquial ));
         }
         
-        String ret = rep.formatEntry( getClass(), "String", maxLength, theName, contextDump.toString(), this );
+        String ret = rep.formatEntry( getClass(), "String", maxLength, colloquial, theName, contextDump.toString(), this );
         return ret;
     }
     
@@ -127,6 +129,7 @@ public class NamingReportingException
                     getClass(),
                     "Binding",
                     HasStringRepresentation.UNLIMITED_LENGTH,
+                    false,
                     indent.toString(),
                     name,
                     className ));

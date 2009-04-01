@@ -85,7 +85,8 @@ public abstract class AbstractLocalizedException
         return toStringRepresentation(
                 StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
                 null,
-                HasStringRepresentation.UNLIMITED_LENGTH );
+                HasStringRepresentation.UNLIMITED_LENGTH,
+                true );
     }
     
     /**
@@ -97,17 +98,18 @@ public abstract class AbstractLocalizedException
 
     /**
      * Obtain a String representation of this instance that can be shown to the user.
-     * This is only a default implementation; subclasses will want to override.
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         return constructStringRepresentation(
                 this,
@@ -116,7 +118,8 @@ public abstract class AbstractLocalizedException
                 findResourceHelperForLocalizedMessage(),
                 getLocalizationParameters(),
                 findStringRepresentationParameter(),
-                maxLength );
+                maxLength,
+                colloquial );
     }
 
     /**
@@ -175,6 +178,7 @@ public abstract class AbstractLocalizedException
      * @param params the localization parameters to use
      * @param messageParameter the name of the message parameter to use with the ResourceHelper
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the string
      */
     public static String constructStringRepresentation(
@@ -184,9 +188,10 @@ public abstract class AbstractLocalizedException
             ResourceHelper              theHelper,
             Object []                   params,
             String                      messageParameter,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
-        return rep.formatEntry( ex.getClass(), messageParameter, maxLength, params );
+        return rep.formatEntry( ex.getClass(), messageParameter, maxLength, colloquial, params );
     }
 
     /**

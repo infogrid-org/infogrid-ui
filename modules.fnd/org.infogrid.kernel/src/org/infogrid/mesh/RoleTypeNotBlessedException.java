@@ -107,6 +107,7 @@ public class RoleTypeNotBlessedException
      *
      * @param d the Dumper to dump to
      */
+    @Override
     public void dump(
             Dumper d )
     {

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -56,6 +56,7 @@ public class MeshTypeTag
         theMaxLength            = -1;
         theLocale               = null;
         theExactLocaleMatch     = null;
+        theColloquial           = false;
 
         super.initializeToDefaults();
     }
@@ -176,6 +177,28 @@ public class MeshTypeTag
     }
 
     /**
+     * Obtain value of the colloquial property.
+     *
+     * @return value of the colloquial property
+     * @see #setColloquial
+     */
+    public boolean getColloquial()
+    {
+        return theColloquial;
+    }
+
+    /**
+     * Set value of the colloquial property.
+     *
+     * @param newValue new value of the colloquial property
+     */
+    public void setColloquial(
+            boolean newValue )
+    {
+        theColloquial = newValue;
+    }
+
+    /**
      * Obtain value of the locale property.
      *
      * @return value of the locale property
@@ -260,7 +283,7 @@ public class MeshTypeTag
                 }
             } else if( found instanceof DataType ) {
                 DataType realFound = (DataType) found;
-                text = realFound.toStringRepresentation( rep, context, theMaxLength );
+                text = realFound.toStringRepresentation( rep, context, theMaxLength, theColloquial );
                 // a bit of a funny structure, but the best I can do
             } else {
                 throw new ClassCastException( "Found object named " + theMeshTypeName + " is neither a PropertyValue nor an L10Map: " + found );
@@ -278,7 +301,7 @@ public class MeshTypeTag
         }
         if( text == null ) {
             // a bit of a funny structure, but the best I can do
-            text = formatValue( pageContext, value, theNullString, rep.getName(), theMaxLength );
+            text = formatValue( pageContext, value, theNullString, rep.getName(), theMaxLength, theColloquial );
         }
         print( text );
         
@@ -309,6 +332,11 @@ public class MeshTypeTag
      * The maximum length of an emitted String.
      */
     protected int theMaxLength;
+
+    /**
+     * Should the value be outputted in colloquial form.
+     */
+    protected boolean theColloquial;
     
     /**
      * Locale.

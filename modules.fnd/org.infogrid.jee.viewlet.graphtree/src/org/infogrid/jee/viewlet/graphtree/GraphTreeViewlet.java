@@ -25,6 +25,7 @@ import org.infogrid.mesh.set.OrderedMeshObjectSet;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
@@ -220,7 +221,28 @@ public class GraphTreeViewlet
             HttpServletRequest request,
             String             stringRepresentation )
     {
-        String ret = theRenderer.determineCurrentLabel( node, request, stringRepresentation );
+        return determineCurrentLabel( node, request, stringRepresentation, HasStringRepresentation.UNLIMITED_LENGTH, true );
+    }
+
+    /**
+     * Determine the label to be shown to the user for a given
+     * MeshObject in the GraphTreeViewlet.
+     *
+     * @param node the MeshObject
+     * @param request the incoming request
+     * @param stringRepresentation the StringRepresentation to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
+     * @return the String to be shown
+     */
+    public String determineCurrentLabel(
+            MeshObject         node,
+            HttpServletRequest request,
+            String             stringRepresentation,
+            int                maxLength,
+            boolean            colloquial )
+    {
+        String ret = theRenderer.determineCurrentLabel( node, request, stringRepresentation, maxLength, colloquial );
         return ret;
     }
 

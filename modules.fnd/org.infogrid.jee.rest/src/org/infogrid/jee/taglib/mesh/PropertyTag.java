@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -51,6 +51,7 @@ public class PropertyTag
         theNullString           = "";
         theStringRepresentation = null;
         theMaxLength            = -1;
+        theColloquial           = false;
 
         super.initializeToDefaults();
     }
@@ -194,6 +195,28 @@ public class PropertyTag
     }
 
     /**
+     * Obtain value of the colloquial property.
+     *
+     * @return value of the colloquial property
+     * @see #setColloquial
+     */
+    public boolean getColloquial()
+    {
+        return theColloquial;
+    }
+
+    /**
+     * Set value of the colloquial property.
+     *
+     * @param newValue new value of the colloquial property
+     */
+    public void setColloquial(
+            boolean newValue )
+    {
+        theColloquial = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -237,7 +260,7 @@ public class PropertyTag
                 throw new JspException( ex );
             }        
         }
-        String text = formatValue( pageContext, value, theNullString, theStringRepresentation, theMaxLength );
+        String text = formatValue( pageContext, value, theNullString, theStringRepresentation, theMaxLength, theColloquial );
         
         print( text );
         
@@ -273,4 +296,9 @@ public class PropertyTag
      * The maximum length of an emitted String.
      */
     protected int theMaxLength;
+
+    /**
+     * Should the value be outputted in colloquial form.
+     */
+    protected boolean theColloquial;
 }

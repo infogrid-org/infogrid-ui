@@ -43,10 +43,14 @@ public interface GraphTreeNodeRenderer
      * @param node the MeshObject
      * @param request the incoming request
      * @param stringRepresentation the StringRepresentation to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the String to be shown
      */
     public String determineCurrentLabel(
             MeshObject         node,
             HttpServletRequest request,
-            String             stringRepresentation );
+            String             stringRepresentation,
+            int                maxLength,
+            boolean            colloquial );
 }

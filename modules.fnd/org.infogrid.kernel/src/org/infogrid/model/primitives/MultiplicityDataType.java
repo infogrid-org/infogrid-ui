@@ -140,22 +140,25 @@ public class MultiplicityDataType
 
     /**
      * Obtain a String representation of this instance that can be shown to the user.
-     * 
+     *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         return rep.formatEntry(
                 MultiplicityValue.class,
                 DEFAULT_ENTRY,
                 maxLength,
-                PropertyValue.toStringRepresentation( MultiplicityValue.ZERO_N, rep, context, maxLength ), // presumably shorter, but we don't know
+                colloquial,
+                PropertyValue.toStringRepresentation( MultiplicityValue.ZERO_N, rep, context, maxLength, colloquial ), // presumably shorter, but we don't know
                 theSupertype );
     }
 
@@ -170,7 +173,7 @@ public class MultiplicityDataType
      */
     public MultiplicityValue fromStringRepresentation(
             StringRepresentation representation,
-            String                      s )
+            String               s )
         throws
             PropertyValueParsingException
     {

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -45,7 +45,7 @@ public class StringStringifierTest1
         
         String            data1a = "abc";
         StringStringifier str1   = StringStringifier.create( );
-        String            res1a  = str1.format( null, data1a, HasStringRepresentation.UNLIMITED_LENGTH );
+        String            res1a  = str1.format( null, data1a, HasStringRepresentation.UNLIMITED_LENGTH, false );
         
         checkEquals( data1a, res1a, "not the same" );
 

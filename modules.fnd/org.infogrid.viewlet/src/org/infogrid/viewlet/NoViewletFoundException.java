@@ -20,6 +20,7 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.HasStringRepresentation;
+import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 
@@ -94,30 +95,34 @@ public class NoViewletFoundException
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         if( theObjectsToView.getViewletTypeName() == null ) {
             return rep.formatEntry(
                     getClass(),
                     DEFAULT_NO_VIEWLET_TYPE_ENTRY,
                     maxLength,
+                    colloquial,
                     theObjectsToView.getSubject(),
                     theObjectsToView.getSubject().getIdentifier(),
-                    theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+                    IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
 
         } else {
             return rep.formatEntry(
                     getClass(),
                     DEFAULT_VIEWLET_TYPE_ENTRY,
                     maxLength,
+                    colloquial,
                     theObjectsToView.getSubject(),
                     theObjectsToView.getSubject().getIdentifier(),
-                    theObjectsToView.getSubject().getIdentifier().toExternalForm() );
+                    IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
         }
     }
 

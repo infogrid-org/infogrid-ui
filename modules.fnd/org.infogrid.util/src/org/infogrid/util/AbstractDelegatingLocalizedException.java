@@ -77,24 +77,25 @@ public abstract class AbstractDelegatingLocalizedException
 
     /**
      * Obtain a String representation of this instance that can be shown to the user.
-     * This is only a default implementation; subclasses will want to override.
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     @Override
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         Throwable cause = getCause();
         if( cause instanceof LocalizedException ) {
-            return ((LocalizedException)cause).toStringRepresentation( rep, context, maxLength );
+            return ((LocalizedException)cause).toStringRepresentation( rep, context, maxLength, colloquial );
         } else {
-            return super.toStringRepresentation( rep, context, maxLength );
+            return super.toStringRepresentation( rep, context, maxLength, colloquial );
         }
     }
 

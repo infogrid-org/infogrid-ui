@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -61,19 +61,21 @@ public class LongStringifier
     }
 
     /**
-     * Format an Object using this Stringifier. This may be null.
+     * Format an Object using this Stringifier.
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      */
     public String format(
-            String soFar,
-            Long   arg,
-            int    maxLength )
+            String  soFar,
+            Long    arg,
+            int     maxLength,
+            boolean colloquial )
     {
-        return super.format( soFar, arg.longValue(), maxLength );
+        return super.format( soFar, arg.longValue(), maxLength, colloquial );
     }
     
     /**

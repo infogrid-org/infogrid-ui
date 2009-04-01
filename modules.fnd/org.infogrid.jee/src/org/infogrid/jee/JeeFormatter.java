@@ -956,12 +956,14 @@ public class JeeFormatter
      * @param request the incoming request
      * @param reportedProblems the reported problems
      * @param stringRepresentation the StringRepresentation to use
+     * @param colloquial if applicable, output in colloquial form
      * @return the String to display
      */
     public String formatProblems(
             SaneRequest        request,
             List<Throwable>    reportedProblems,
-            String             stringRepresentation )
+            String             stringRepresentation,
+            boolean            colloquial )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -971,7 +973,7 @@ public class JeeFormatter
         for( Throwable current : reportedProblems ) {
             Throwable toFormat = determineThrowableToFormat( current );
             
-            String temp = rep.formatThrowable( toFormat, context, HasStringRepresentation.UNLIMITED_LENGTH );
+            String temp = rep.formatThrowable( toFormat, context, HasStringRepresentation.UNLIMITED_LENGTH, colloquial );
             if(    buf.length() > 0
                 && temp.charAt( 0 ) != '\n'
                 && buf.charAt( buf.length()-1 ) != '\n' )

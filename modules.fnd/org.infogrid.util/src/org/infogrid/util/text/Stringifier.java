@@ -41,27 +41,31 @@ public interface Stringifier<T>
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      */
     public abstract String format(
-            String soFar,
-            T      arg,
-            int    maxLength );
-    
+            String  soFar,
+            T       arg,
+            int     maxLength,
+            boolean colloquial );
+
     /**
      * Format an Object using this Stringifier. This may be null.
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public abstract String attemptFormat(
-            String soFar,
-            Object arg,
-            int    maxLength )
+            String  soFar,
+            Object  arg,
+            int     maxLength,
+            boolean colloquial )
         throws
             ClassCastException;
 

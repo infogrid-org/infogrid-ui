@@ -20,7 +20,6 @@ import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectorySingleton;
@@ -110,12 +109,16 @@ public class DefaultGraphTreeNodeRenderer
      * @param node the MeshObject
      * @param request the incoming request
      * @param stringRepresentation the StringRepresentation to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return the String to be shown
      */
     public String determineCurrentLabel(
             MeshObject         node,
             HttpServletRequest request,
-            String             stringRepresentation )
+            String             stringRepresentation,
+            int                maxLength,
+            boolean            colloquial )
     {
         if( node == null ) {
             return "";
@@ -125,7 +128,7 @@ public class DefaultGraphTreeNodeRenderer
 
         StringRepresentationContext context = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String ret = node.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH );
+        String ret = node.toStringRepresentation( rep, context, maxLength, colloquial );
         return ret;
     }
 

@@ -8,14 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.model.primitives;
 
 import java.io.ObjectStreamException;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringifierException;
@@ -154,21 +153,25 @@ public final class StringDataType
 
     /**
      * Obtain a String representation of this instance that can be shown to the user.
-     * 
+     *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation        rep,
             StringRepresentationContext context,
-            int                         maxLength )
+            int                         maxLength,
+            boolean                     colloquial )
     {
         return rep.formatEntry(
                 StringValue.class,
                 DEFAULT_ENTRY,
                 maxLength,
-                PropertyValue.toStringRepresentation( theDefaultValue, rep, context, maxLength ), // presumably shorter, but we don't know
+                colloquial,
+                PropertyValue.toStringRepresentation( theDefaultValue, rep, context, maxLength, colloquial ), // presumably shorter, but we don't know
                 theSupertype );
     }
 

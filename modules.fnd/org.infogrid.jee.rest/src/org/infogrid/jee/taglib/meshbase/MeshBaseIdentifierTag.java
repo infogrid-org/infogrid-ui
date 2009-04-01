@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -47,6 +47,7 @@ public class MeshBaseIdentifierTag
         theMeshBaseName         = null;
         theStringRepresentation = null;
         theMaxLength            = -1;
+        theColloquial           = false;
 
         super.initializeToDefaults();
     }
@@ -120,6 +121,28 @@ public class MeshBaseIdentifierTag
     }
     
     /**
+     * Obtain value of the colloquial property.
+     *
+     * @return value of the colloquial property
+     * @see #setColloquial
+     */
+    public boolean getColloquial()
+    {
+        return theColloquial;
+    }
+
+    /**
+     * Set value of the colloquial property.
+     *
+     * @param newValue new value of the colloquial property
+     */
+    public void setColloquial(
+            boolean newValue )
+    {
+        theColloquial = newValue;
+    }
+
+    /**
      * Do the start tag operation.
      *
      * @return evaluate or skip body
@@ -133,7 +156,7 @@ public class MeshBaseIdentifierTag
     {
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
         
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseIdentifierStart( pageContext, mb, theStringRepresentation, theMaxLength );
+        String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseIdentifierStart( pageContext, mb, theStringRepresentation, theMaxLength, theColloquial );
         
         print( text );
 
@@ -175,4 +198,9 @@ public class MeshBaseIdentifierTag
      * The maximum length of an emitted String.
      */
     protected int theMaxLength;
+
+    /**
+     * Should the value be outputted in colloquial form.
+     */
+    protected boolean theColloquial;
 }

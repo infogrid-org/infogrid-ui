@@ -102,7 +102,7 @@ public class VerbatimStructuredResponseTemplate
         JeeFormatter theFormatter = getContext().findContextObjectOrThrow( JeeFormatter.class );
         
         List<Throwable> reportedProblems = structured.problems();
-        String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, StringRepresentationDirectory.TEXT_PLAIN_NAME );
+        String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, StringRepresentationDirectory.TEXT_PLAIN_NAME, false );
         if( errorContent != null ) {
             Writer w = delegate.getWriter();
             w.write( errorContent );
