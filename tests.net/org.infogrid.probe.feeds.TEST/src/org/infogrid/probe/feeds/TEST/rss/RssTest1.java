@@ -15,7 +15,6 @@
 package org.infogrid.probe.feeds.TEST.rss;
 
 import java.io.File;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
@@ -139,8 +138,6 @@ public class RssTest1
 
         theProbeDirectory.addXmlDomProbe( new ProbeDirectory.XmlDomProbeDescriptor( null, null, "rss", RssProbe.class ));
         
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         ShadowMeshBaseFactory theShadowFactory = MShadowMeshBaseFactory.create(
@@ -161,6 +158,8 @@ public class RssTest1
     public void cleanup()
     {
         theProbeManager1 = null;
+
+        exec.shutdown();
     }
 
     // Our Logger
@@ -180,4 +179,9 @@ public class RssTest1
      * The ProbeManager that we use for the first Probe.
      */
     protected PassiveProbeManager theProbeManager1;
+
+    /**
+     * Our ThreadPool.
+     */
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 }

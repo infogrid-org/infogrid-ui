@@ -258,6 +258,7 @@ public class ProbeTest8
         if( theMeshBase != null ) {
             theMeshBase.die();
         }
+        exec.shutdown();
     }
 
     /**

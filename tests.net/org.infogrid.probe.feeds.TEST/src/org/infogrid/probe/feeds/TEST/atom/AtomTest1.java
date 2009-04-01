@@ -139,8 +139,6 @@ public class AtomTest1
 
         theProbeDirectory.addXmlDomProbe( new ProbeDirectory.XmlDomProbeDescriptor( null, "http://www.w3.org/2005/Atom", "feed", AtomProbe.class ));
         
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
         ShadowMeshBaseFactory theShadowFactory = MShadowMeshBaseFactory.create(
@@ -161,6 +159,8 @@ public class AtomTest1
     public void cleanup()
     {
         theProbeManager1 = null;
+
+        exec.shutdown();
     }
 
     // Our Logger
@@ -180,4 +180,9 @@ public class AtomTest1
      * The ProbeManager that we use for the first Probe.
      */
     protected PassiveProbeManager theProbeManager1;
+
+    /**
+     * Our ThreadPool.
+     */
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 }

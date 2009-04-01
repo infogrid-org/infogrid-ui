@@ -15,7 +15,6 @@
 package org.infogrid.probe.feeds.TEST.atom;
 
 import java.io.File;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSelector;
@@ -163,8 +162,6 @@ public class AtomTest2
         testFile1Id = theMeshBaseIdentifierFactory.obtain( new File( testFile1 ) );
 
         theProbeDirectory.addXmlDomProbe( new ProbeDirectory.XmlDomProbeDescriptor( null, "http://www.w3.org/2005/Atom", "feed", AtomProbe.class ));
-        
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 
         MPingPongNetMessageEndpointFactory shadowEndpointFactory = MPingPongNetMessageEndpointFactory.create( exec );
 
@@ -186,6 +183,8 @@ public class AtomTest2
     public void cleanup()
     {
         theProbeManager1 = null;
+
+        exec.shutdown();
     }
 
     // Our Logger
@@ -205,4 +204,9 @@ public class AtomTest2
      * The ProbeManager that we use for the first Probe.
      */
     protected PassiveProbeManager theProbeManager1;
+
+    /**
+     * Our ThreadPool.
+     */
+    protected ScheduledExecutorService exec = createThreadPool( 1 );
 }

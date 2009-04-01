@@ -258,6 +258,15 @@ public class ProbeUpdateCalculatorTest1
         
     }
 
+    /**
+     * Clean up.
+     */
+    @Override
+    public void cleanup()
+    {
+        theExec.shutdown();
+    }
+
     // Our Logger
     private static Log log = Log.getLogInstance( ProbeUpdateCalculatorTest1.class );
 
