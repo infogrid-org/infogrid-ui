@@ -8,7 +8,7 @@
 #
 # For more information about InfoGrid go to http://infogrid.org/
 #
-# Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+# Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 # All rights reserved.
 #
 # (end of header)
@@ -35,7 +35,7 @@ done;
 if [ "${module}" == "" ]; then
 	echo Synopsis:
 	echo "    ${script} <module>"
-	echo "        <module>: name of a module, e.g. 'apps/org.infogrid.meshworld"
+	echo "        <module>: name of a module, e.g. 'apps.fnd/org.infogrid.meshworld"
 	exit 1;
 fi
 
