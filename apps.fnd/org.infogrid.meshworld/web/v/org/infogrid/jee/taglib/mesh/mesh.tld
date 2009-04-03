@@ -20,7 +20,7 @@
     
     <!-- Tags are ordered alphabetically by Java Class name. Makes it easier
          to find them in the IDE. -->
-         
+
     <tag>
         <name>blessedByIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectBlessedByIterateTag</tag-class>

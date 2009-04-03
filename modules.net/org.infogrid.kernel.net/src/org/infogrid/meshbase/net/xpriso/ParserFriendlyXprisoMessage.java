@@ -182,7 +182,7 @@ public class ParserFriendlyXprisoMessage
     }
 
     /**
-     * Add an identifier for a NetMeshObjects for which the sender requests
+     * Add an identifier for a NetMeshObject for which the sender requests
      * that a currently valid lease be chanceled.
      *
      * @param toAdd the NetMeshObjectIdentifier for the NetMeshObjects
@@ -202,6 +202,30 @@ public class ParserFriendlyXprisoMessage
     public NetMeshObjectIdentifier [] getRequestedCanceledObjects()
     {
         NetMeshObjectIdentifier [] ret = ArrayHelper.copyIntoNewArray( theRequestedCanceledObjects, NetMeshObjectIdentifier.class );
+        return ret;
+    }
+
+    /**
+     * Add an identifier for the NetMeshObjects for which the sender requests
+     * a freshening.
+     *
+     * @param toAdd the NetMeshObjectIdentifier for the NetMeshObjects
+     */
+    public void addRequestedFreshenReplica(
+            NetMeshObjectIdentifier toAdd )
+    {
+        theRequestedFreshenReplicas.add( toAdd );
+    }
+
+    /**
+     * Obtain the identifiers for the NetMeshObjects for which the sender requests
+     * a freshening.
+     *
+     * @return the NetMeshObjectIdentifiers for the NetMeshObjects
+     */
+    public NetMeshObjectIdentifier [] getRequestedFreshenReplicas()
+    {
+        NetMeshObjectIdentifier [] ret = ArrayHelper.copyIntoNewArray( theRequestedFreshenReplicas, NetMeshObjectIdentifier.class );
         return ret;
     }
 
@@ -744,50 +768,56 @@ public class ParserFriendlyXprisoMessage
     protected ArrayList<ExternalizedNetMeshObject> theConveyedMeshObjects = new ArrayList<ExternalizedNetMeshObject>();
 
     /**
-     * The set of MeshObjects, identified by a NetMeshObjectAccessSpecification, for which the
+     * The set of MeshObjects, identified by their NetMeshObjectAccessSpecifications, for which the
      * sender would like to obtain a first-time lease.
      */
     protected ArrayList<NetMeshObjectAccessSpecification> theRequestedFirstTimeObjects = new ArrayList<NetMeshObjectAccessSpecification>();
     
     /**
-     * The set of MeshObjects, identified by their MeshObjectIdentifier, for which the
-     * sender currently as a lease, but whose lease the sender would like to
+     * The set of MeshObjects, identified by their MeshObjectIdentifiers, for which the
+     * sender currently has a lease, but whose lease the sender would like to
      * cancel.
      */
     protected ArrayList<NetMeshObjectIdentifier> theRequestedCanceledObjects = new ArrayList<NetMeshObjectIdentifier>();
 
     /**
-     * The set of MeshObjects, identified by their IdentifierValues, that the sender
+     * The set of MeshObjects, identified by their MeshObjectIdentifiers, for which the
+     * sender requests a freshening.
+     */
+    protected ArrayList<NetMeshObjectIdentifier> theRequestedFreshenReplicas = new ArrayList<NetMeshObjectIdentifier>();
+
+    /**
+     * The set of MeshObjects, identified by their MeshObjectIdentifiers, that the sender
      * wishes to resynchronize as dependent replicas.
      */
     protected ArrayList<NetMeshObjectIdentifier> theRequestedResynchronizeReplicas = new ArrayList<NetMeshObjectIdentifier>();
     
     /**
-     * The set of MeshObjects, identified by their IdentifierValues, for which the
+     * The set of MeshObjects, identified by their MeshObjectIdentifiers, for which the
      * sender requests the lock.
      */
     protected ArrayList<NetMeshObjectIdentifier> theRequestedLockObjects = new ArrayList<NetMeshObjectIdentifier>();
     
     /**
-     * The set of MeshObjects, identified by their IdentifierValues, whose lock
+     * The set of MeshObjects, identified by their MeshObjectIdentifiers, whose lock
      * the sender surrenders to the receiver.
      */
     protected ArrayList<NetMeshObjectIdentifier> thePushLockObjects = new ArrayList<NetMeshObjectIdentifier>();
     
     /**
-     * The set of MeshObjects, identified by their IdentifierValues, whose lock
+     * The set of MeshObjects, identified by their MeshObjectIdentifiers, whose lock
      * the sender has forcefully reclaimed.
      */
     protected ArrayList<NetMeshObjectIdentifier> theReclaimedLockObjects = new ArrayList<NetMeshObjectIdentifier>();
     
     /**
-     * The set of MeshObjects, identified by their MeshObjectIdentifier, whose which the
+     * The set of MeshObjects, identified by their MeshObjectIdentifiers, whose which the
      * sender requests the homeReplica status.
      */
     protected ArrayList<NetMeshObjectIdentifier> theRequestedHomeReplicas = new ArrayList<NetMeshObjectIdentifier>();
 
     /**
-     * The set of MeshObjects, identified by the MeshObjectIdentifier, whose homeReplica status
+     * The set of MeshObjects, identified by the MeshObjectIdentifiers, whose homeReplica status
      * the sender surrenders to the receiver.
      */
     protected ArrayList<NetMeshObjectIdentifier> thePushHomeReplicas = new ArrayList<NetMeshObjectIdentifier>();

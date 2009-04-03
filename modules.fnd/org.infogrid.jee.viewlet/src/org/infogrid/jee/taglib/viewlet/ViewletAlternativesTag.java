@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -87,63 +87,58 @@ public class ViewletAlternativesTag
         
         ViewletFactory factory = c.findContextObjectOrThrow( ViewletFactory.class );
         
-        MeshObjectsToView toView = MeshObjectsToView.create( subject );
+        MeshObjectsToView       toView     = MeshObjectsToView.create( subject );
+        ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
 
-        try {
-            ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
+        if( candidates.length > 0 ) {
+            String nameInCss = getClass().getName().replace( '.', '-' );
+            println( "<div class=\"" + nameInCss + "\" id=\"" + nameInCss + "\">" );
+            print( "<h3><a href=\"javascript:toggle_viewlet_alternatives()\">" );
+            print( theResourceHelper.getResourceString( "Title" ));
+            println( "</a></h3>" );
+            println( "<ul>" );
 
-            if( candidates.length > 0 ) {
-                String nameInCss = getClass().getName().replace( '.', '-' );
-                println( "<div class=\"" + nameInCss + "\" id=\"" + nameInCss + "\">" );
-                print( "<h3><a href=\"javascript:toggle_viewlet_alternatives()\">" );
-                print( theResourceHelper.getResourceString( "Title" ));
-                println( "</a></h3>" );
-                println( "<ul>" );
+            String                 url = restful.getSaneRequest().getAbsoluteFullUri();
+            HashMap<String,String> map = new HashMap<String,String>();
 
-                String                 url = restful.getSaneRequest().getAbsoluteFullUri();
-                HashMap<String,String> map = new HashMap<String,String>();
-                
-                for( int i=0 ; i<candidates.length ; ++i ) {
-                    map.put( RestfulRequest.LID_FORMAT_PARAMETER_NAME, RestfulRequest.VIEWLET_PREFIX + candidates[i].getName() );
-                    print( "<li" );
-                    if( candidates[i].getName().equals( currentViewlet.getName() )) {
-                        print( " class=\"selected\"" );
-                    }
-                    print( ">" );
-                    print( "<a href=\"" );
-                    print( theFormatter.constructHrefWithDifferentArguments( url, map ));
-                    print( "\">" );
-                    print( candidates[i].getUserVisibleName() );
-                    print( "</a>" );
-                    println( "</li>" );
+            for( int i=0 ; i<candidates.length ; ++i ) {
+                map.put( RestfulRequest.LID_FORMAT_PARAMETER_NAME, RestfulRequest.VIEWLET_PREFIX + candidates[i].getName() );
+                print( "<li" );
+                if( candidates[i].getName().equals( currentViewlet.getName() )) {
+                    print( " class=\"selected\"" );
                 }
-                println( "</ul>" );
-                println( "</div>" );
-
-                StringBuilder js = new StringBuilder();
-                js.append( "<script src=\"" );
-                js.append( restful.getContextPath() );
-                js.append( "/v/" );
-                js.append( getClass().getName().replace( '.' , '/' ));
-                js.append( ".js" );
-                js.append( "\" type=\"text/javascript\"></script>\n" );
-
-                StringBuilder css = new StringBuilder();
-                css.append( "<link rel=\"stylesheet\" href=\"" );
-                css.append( restful.getContextPath() );
-                css.append( "/v/" );
-                css.append( getClass().getName().replace( '.' , '/' ));
-                css.append( ".css" );
-                css.append( "\" />\n" );
-                
-                TextStructuredResponseSection headSection = theResponse.obtainTextSection( StructuredResponse.HTML_HEAD_SECTION );
-                headSection.appendContent( js.toString() );
-                headSection.appendContent( css.toString() );
+                print( ">" );
+                print( "<a href=\"" );
+                print( theFormatter.constructHrefWithDifferentArguments( url, map ));
+                print( "\">" );
+                print( candidates[i].getUserVisibleName() );
+                print( "</a>" );
+                println( "</li>" );
             }
+            println( "</ul>" );
+            println( "</div>" );
 
-        } catch( NoViewletFoundException ex ) {
-            log.warn( ex );
+            StringBuilder js = new StringBuilder();
+            js.append( "<script src=\"" );
+            js.append( restful.getContextPath() );
+            js.append( "/v/" );
+            js.append( getClass().getName().replace( '.' , '/' ));
+            js.append( ".js" );
+            js.append( "\" type=\"text/javascript\"></script>\n" );
+
+            StringBuilder css = new StringBuilder();
+            css.append( "<link rel=\"stylesheet\" href=\"" );
+            css.append( restful.getContextPath() );
+            css.append( "/v/" );
+            css.append( getClass().getName().replace( '.' , '/' ));
+            css.append( ".css" );
+            css.append( "\" />\n" );
+
+            TextStructuredResponseSection headSection = theResponse.obtainTextSection( StructuredResponse.HTML_HEAD_SECTION );
+            headSection.appendContent( js.toString() );
+            headSection.appendContent( css.toString() );
         }
+
         return SKIP_BODY;
     }
     

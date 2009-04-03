@@ -836,6 +836,27 @@ public class ProxyProcessingInstructions
     }
 
     /**
+     * Set the time we wait to freshen replicas.
+     *
+     * @param newValue the wait, in milliseconds
+     */
+    public void setExpectedFreshenReplicasWait(
+            long newValue )
+    {
+        theExpectedFreshenReplicasWait = newValue;
+    }
+
+    /**
+     * Obtain the time to wait to freshen replicas.
+     *
+     * @return the time, in milliseconds
+     */
+    public long getExpectedFreshenReplicasWait()
+    {
+        return theExpectedFreshenReplicasWait;
+    }
+
+    /**
      * Set the DeletedEvents that shall be rippled.
      * 
      * @param deletions the DeletedEvents
@@ -1125,4 +1146,5 @@ public class ProxyProcessingInstructions
     protected long theExpectedForceObtainLocksWait = 2000L; // default.FIXME?
     protected long theExpectedResynchronizeWait = 2000L; // default. FIXME?
     protected long theExpectedCancelReplicasWait = 2000L; // default.FIXME?
+    protected long theExpectedFreshenReplicasWait = 2000L; // default.FIXME?
 }

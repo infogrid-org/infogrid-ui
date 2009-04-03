@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -147,12 +147,26 @@ public interface ProxyPolicy
      * Determine the ProxyProcessingInstructions for canceling one or more 
      * NetMeshObject leases via this Proxy.
      * 
-     * @param localReplicas the local replicas for which the the lease should be canceled
+     * @param localReplicas the local replicas for which the lease should be canceled
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
      * @return the calculated ProxyProcessingInstructions, or null
      */
     public ProxyProcessingInstructions calculateForCancelReplicas(
+            NetMeshObject [] localReplicas,
+            long             duration,
+            Proxy            proxy );
+
+    /**
+     * Determine the ProxyProcessingInstructions for freshening one or more
+     * NetMeshObject leases via this Proxy.
+     *
+     * @param localReplicas the local replicas that should be freshened
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
+     * @return the calculated ProxyProcessingInstructions, or null
+     */
+    public ProxyProcessingInstructions calculateForFreshenReplicas(
             NetMeshObject [] localReplicas,
             long             duration,
             Proxy            proxy );

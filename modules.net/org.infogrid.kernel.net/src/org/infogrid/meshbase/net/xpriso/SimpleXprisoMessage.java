@@ -205,6 +205,29 @@ public class SimpleXprisoMessage
     }
 
     /**
+     * Set the identifiers for the NetMeshObjects for which the sender requests
+     * a freshening.
+     *
+     * @param newValue the NetMeshObjectIdentifiers for the NetMeshObjects
+     */
+    public void setRequestedFreshenReplicas(
+            NetMeshObjectIdentifier [] newValue )
+    {
+        theRequestedFreshenReplicas = newValue;
+    }
+
+    /**
+     * Obtain the identifiers for the NetMeshObjects for which the sender requests
+     * a freshening.
+     *
+     * @return the NetMeshObjectIdentifiers for the NetMeshObjects
+     */
+    public NetMeshObjectIdentifier [] getRequestedFreshenReplicas()
+    {
+        return theRequestedFreshenReplicas;
+    }
+
+    /**
      * Set the identifiers for the NetMeshObjects for which the sender has a replica
      * that it wishes to resynchronize.
      *
@@ -736,7 +759,13 @@ public class SimpleXprisoMessage
      * cancel.
      */
     protected NetMeshObjectIdentifier [] theRequestedCanceledObjects = NetMeshObjectIdentifier.NET_EMPTY_ARRAY;
-    
+
+    /**
+     * The set of MeshObjects, identified by their MeshObjectIdentifier, for which the
+     * sender requests a freshening.
+     */
+    protected NetMeshObjectIdentifier [] theRequestedFreshenReplicas = NetMeshObjectIdentifier.NET_EMPTY_ARRAY;
+
     /**
      * The set of MeshObjects, identified by their MeshObjectIdentifier, that the sender
      * wishes to resynchronize as dependent replicas.

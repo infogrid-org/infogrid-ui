@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.jee.taglib.util;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
-
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
         
@@ -68,7 +67,7 @@ public class IfIterationHasNextTag
         }
         if( iterationTag == null ) {
             // not inside an iteration
-            throw new JspException( "Not contained inside an iteration tag" );
+            throw new JspException( "IfIterationHasNextTag: not contained inside an iteration tag" );
         }
 
         InfoGridIterationTag realIterationTag = (InfoGridIterationTag) iterationTag;

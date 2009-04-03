@@ -440,6 +440,40 @@ public abstract class AbstractProxyPolicy
     }
 
     /**
+     * Determine the ProxyProcessingInstructions for freshening one or more
+     * NetMeshObject leases via this Proxy.
+     *
+     * @param localReplicas the local replicas that should be freshened
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
+     * @return the calculated ProxyProcessingInstructions, or null
+     */
+    public ProxyProcessingInstructions calculateForFreshenReplicas(
+            NetMeshObject [] localReplicas,
+            long             duration,
+            Proxy            proxy )
+    {
+        NetMeshObjectIdentifier [] identifiers = new NetMeshObjectIdentifier[ localReplicas.length ];
+        for( int i=0 ; i<localReplicas.length ; ++i ) {
+            identifiers[i] = localReplicas[i].getIdentifier();
+        }
+
+        ProxyProcessingInstructions ret = createInstructions();
+
+        SimpleXprisoMessage outgoing = SimpleXprisoMessage.create(
+                proxy.getNetMeshBase().getIdentifier(),
+                proxy.getPartnerMeshBaseIdentifier() );
+
+        outgoing.setRequestedFreshenReplicas( identifiers );
+
+        ret.setStartCommunicating( true );
+        ret.setSendViaWaitEndpoint( outgoing );
+        ret.setWaitEndpointTimeout( calculateTimeoutDuration( duration, theDefaultRpcWaitDuration ));
+
+        return ret;
+    }
+
+    /**
      * Given a committed Transaction, determine the ProxyProcessingInstructions for notifying
      * our partner Proxy.
      * 
@@ -601,6 +635,7 @@ public abstract class AbstractProxyPolicy
 
         processIncomingRequestedFirstTimeObjects(      proxy, ret, perhapsOutgoing );
         processIncomingRequestedResynchronizeReplicas( proxy, ret, perhapsOutgoing );
+        processIncomingRequestedFreshenReplicas(       proxy, ret, perhapsOutgoing );
         processIncomingRequestedHomeReplicas(          proxy, ret, perhapsOutgoing );
         processIncomingRequestedLockObjects(           proxy, ret, perhapsOutgoing );
         processIncomingReclaimedLockObjects(           proxy, ret, perhapsOutgoing );
@@ -693,6 +728,21 @@ public abstract class AbstractProxyPolicy
                 }
             }
         }
+    }
+
+    /**
+     * Process the incoming request: freshen replicas.
+     *
+     * @param incomingProxy the incoming Proxy
+     * @param ret the instructions being assembled assembled
+     * @param perhapsOutgoing the outgoing message being assembled
+     */
+    protected void processIncomingRequestedFreshenReplicas(
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
+    {
+        // Do nothing. We are already the most fresh we are ever going to be
     }
 
     /**

@@ -34,7 +34,7 @@
 
         <entitytype ID="org.infogrid.lid.model.yadis#XrdsService">
             <name>XrdsService</name>
-            <username>XRDS Service</username>
+            <username>Other XRDS Service</username>
             <userdescription>This represents a Yadis/XRDS Service. The concept of a ServiceType is
 expressed by subclasses of this EntityType; as a result, this EntityType does not need to carry
 the Type URI(s).</userdescription>

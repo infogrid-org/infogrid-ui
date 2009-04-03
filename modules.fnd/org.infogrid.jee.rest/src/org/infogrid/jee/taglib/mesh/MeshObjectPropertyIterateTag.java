@@ -358,10 +358,10 @@ public class MeshObjectPropertyIterateTag
             IOException
     {
         if( thePropertyTypeLoopVar != null ) {
-            pageContext.removeAttribute( thePropertyTypeLoopVar );
+            pageContext.getRequest().removeAttribute( thePropertyTypeLoopVar );
         }
         if( thePropertyValueLoopVar != null ) {
-            pageContext.removeAttribute( thePropertyValueLoopVar );
+            pageContext.getRequest().removeAttribute( thePropertyValueLoopVar );
         }
 
         return EVAL_PAGE;

@@ -43,6 +43,22 @@ public abstract class YadisUtil
     }
 
     /**
+     * Given a web resource, return the associated XrdsServiceCollection, if any.
+     *
+     * @param resource the web resource
+     * @return the XrdsServiceCollection, if any
+     */
+    public static MeshObject determineXrdsServiceCollection(
+            MeshObject resource )
+    {
+        if( resource.isBlessedBy( YadisSubjectArea.XRDSSERVICECOLLECTION )) {
+            return resource;
+        }
+        MeshObjectSet xrdsServiceCollectionSet = resource.traverse( YadisSubjectArea.WEBRESOURCE_HASXRDSLINKTO_WEBRESOURCE.getSource() );
+        return xrdsServiceCollectionSet.getSingleMember();
+    }
+
+    /**
      * Given a web resource, return the set of associated services, in order of priority.
      *
      * @param resource the web resource

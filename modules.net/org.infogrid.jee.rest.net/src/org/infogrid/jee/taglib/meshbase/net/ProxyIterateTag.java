@@ -205,7 +205,7 @@ public class ProxyIterateTag
     protected int realDoEndTag()
     {
         if( theLoopVar != null ) {
-            pageContext.removeAttribute( theLoopVar );
+            pageContext.getRequest().removeAttribute( theLoopVar );
         }
 
         return EVAL_PAGE;

@@ -157,7 +157,7 @@ public class TabbedCursorIteratorTag
             Object current = theCursorIterator.next();
 
             if( theLoopVar != null ) {
-                pageContext.setAttribute( theLoopVar, current );
+                pageContext.getRequest().setAttribute( theLoopVar, current );
             }
 
             return EVAL_BODY_AGAIN;
@@ -176,7 +176,7 @@ public class TabbedCursorIteratorTag
     protected int realDoEndTag()
     {
         if( theLoopVar != null ) {
-            pageContext.removeAttribute( theLoopVar );
+            pageContext.getRequest().removeAttribute( theLoopVar );
         }
         return EVAL_PAGE;
     }

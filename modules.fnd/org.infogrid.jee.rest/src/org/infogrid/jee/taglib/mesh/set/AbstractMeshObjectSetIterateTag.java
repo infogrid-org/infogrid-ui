@@ -17,6 +17,7 @@ package org.infogrid.jee.taglib.mesh.set;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.jstl.core.LoopTagStatus;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
@@ -47,8 +48,11 @@ public abstract class AbstractMeshObjectSetIterateTag
     protected void initializeToDefaults()
     {
         theMeshObjectLoopVar = null;
+        theStatusVar         = null;
+        theCounter           = 0;
         theSet               = null;
         theIterator          = null;
+        theCurrent           = null;
         isFirstIteration     = false;
 
         super.initializeToDefaults();
@@ -78,6 +82,29 @@ public abstract class AbstractMeshObjectSetIterateTag
     }
 
     /**
+     * Obtain value of the statusVar property.
+     *
+     * @return value of the statusVar property
+     * @see #setStatusVar
+     */
+    public final String getStatusVar()
+    {
+        return theStatusVar;
+    }
+
+    /**
+     * Set value of the statusVar property.
+     *
+     * @param newValue new value of the statusVar property
+     * @see #getStatusVar
+     */
+    public final void setStatusVar(
+            String newValue )
+    {
+        theStatusVar = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -96,16 +123,21 @@ public abstract class AbstractMeshObjectSetIterateTag
         theIterator      = theSet.iterator();
         isFirstIteration = true;
 
-        MeshObject current = null;
         if( theIterator.hasNext() ) {
-            current = theIterator.next();
+            theCurrent = theIterator.next();
+        } else {
+            theCurrent = null;
         }
         if( theMeshObjectLoopVar != null ) {
-            if( current != null ) {
-                pageContext.getRequest().setAttribute( theMeshObjectLoopVar, current );
+            if( theCurrent != null ) {
+                pageContext.getRequest().setAttribute( theMeshObjectLoopVar, theCurrent );
             } else {
                 pageContext.getRequest().removeAttribute( theMeshObjectLoopVar );
             }
+        }
+        if( theStatusVar != null ) {
+            LoopTagStatus status = new MyLoopTagStatus();
+            pageContext.getRequest().setAttribute( theStatusVar, status );
         }
         
         return EVAL_BODY_AGAIN; // we may have to do this at least once, for the header, even if the set is empty
@@ -143,15 +175,20 @@ public abstract class AbstractMeshObjectSetIterateTag
         }
 
         if( theIterator.hasNext() ) {
-            MeshObject current = theIterator.next();
+            theCurrent = theIterator.next();
 
             if( theMeshObjectLoopVar != null ) {
-                pageContext.setAttribute( theMeshObjectLoopVar, current );
+                pageContext.getRequest().setAttribute( theMeshObjectLoopVar, theCurrent );
             }
+            ++theCounter;
 
             return EVAL_BODY_AGAIN;
 
         } else {
+            if( theMeshObjectLoopVar != null ) {
+                pageContext.getRequest().removeAttribute( theMeshObjectLoopVar );
+            }
+
             return SKIP_BODY;
         }
     }
@@ -165,7 +202,10 @@ public abstract class AbstractMeshObjectSetIterateTag
     protected int realDoEndTag()
     {
         if( theMeshObjectLoopVar != null ) {
-            pageContext.removeAttribute( theMeshObjectLoopVar );
+            pageContext.getRequest().removeAttribute( theMeshObjectLoopVar );
+        }
+        if( theStatusVar != null ) {
+            pageContext.getRequest().removeAttribute( theStatusVar );
         }
         return EVAL_PAGE;
     }
@@ -208,9 +248,19 @@ public abstract class AbstractMeshObjectSetIterateTag
     }
 
     /**
-     * String containing the name of the loop variable that contains the currentMeshObject.
+     * String containing the name of the loop variable that contains the current MeshObject.
      */
     private String theMeshObjectLoopVar;
+
+    /**
+     * String containing the name of the loop variable that contains the LoopTagStatus.
+     */
+    private String theStatusVar;
+
+    /**
+     * Counts the number of iterations performed so far.
+     */
+    protected int theCounter;
 
     /**
      * The MeshObjectSet that we iterate over.
@@ -221,9 +271,55 @@ public abstract class AbstractMeshObjectSetIterateTag
      * Iterator over the MeshObjectSet.
      */
     private Iterator<MeshObject> theIterator;
-    
+
+    /**
+     * The current or most recently returned MeshObject.
+     */
+    protected MeshObject theCurrent;
+
     /**
      *  True if this is the first iteration.
      */
     private boolean isFirstIteration;
+
+    /**
+     * LoopTagStatus implementation for this class.
+     */
+    class MyLoopTagStatus
+            implements
+                LoopTagStatus
+    {
+        public Integer getBegin()
+        {
+            return null;
+        }
+        public int getCount()
+        {
+            return theCounter+1;
+        }
+        public Object getCurrent()
+        {
+            return theCurrent;
+        }
+        public Integer getEnd()
+        {
+            return null;
+        }
+        public int getIndex()
+        {
+            return theCounter;
+        }
+        public Integer getStep()
+        {
+            return null;
+        }
+        public boolean isFirst()
+        {
+            return isFirstIteration;
+        }
+        public boolean isLast()
+        {
+            return theIterator.hasNext();
+        }
+    }
 }

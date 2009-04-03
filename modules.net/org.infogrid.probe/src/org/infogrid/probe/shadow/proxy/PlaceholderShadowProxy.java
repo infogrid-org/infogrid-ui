@@ -233,6 +233,21 @@ public class PlaceholderShadowProxy
     }
 
     /**
+     * <p>Ask this Proxy to ask the partner to forward all outstanding changes relating to the
+     * given NetMeshObjects in the returning XprisoMessage.</p>
+     *
+     * @param localReplicas the local replicas that need to be freshened
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     * @return the duration, in milliseconds, that the Proxy believes this operation will take
+     */
+    public long freshen(
+            NetMeshObject [] localReplicas,
+            long             duration )
+    {
+        throw new UnsupportedOperationException( "should never be called" );
+    }
+
+    /**
      * Invoked by the NetMeshBase that this Proxy belongs to,
      * it causes this Proxy to initiate the "ceasing communication" sequence with
      * the partner NetMeshBase, and then kill itself.

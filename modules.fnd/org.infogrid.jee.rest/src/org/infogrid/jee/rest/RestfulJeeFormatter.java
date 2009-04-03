@@ -691,6 +691,7 @@ public class RestfulJeeFormatter
             if( !haveAlready ) {
                 StringBuilder toAdd = new StringBuilder();
                 if( addArguments != null && addArguments.length() > 0 ) {
+                    toAdd.append( addArguments );
                     toAdd.append( '&' );
                 }
                 toAdd.append( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );

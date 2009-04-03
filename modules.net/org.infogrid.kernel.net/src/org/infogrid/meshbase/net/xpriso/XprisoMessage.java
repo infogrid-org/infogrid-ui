@@ -98,6 +98,14 @@ public interface XprisoMessage
     public NetMeshObjectIdentifier [] getRequestedCanceledObjects();
 
     /**
+     * Obtain the identifiers for the NetMeshObjects for which the sender requests
+     * a freshening.
+     *
+     * @return the NetMeshObjectIdentifiers for the NetMeshObjects
+     */
+    public NetMeshObjectIdentifier [] getRequestedFreshenReplicas();
+
+    /**
      * Obtain the identifiers for the NetMeshObjects for which the sender has a replica
      * that it wishes to resynchronize.
      *

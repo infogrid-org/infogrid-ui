@@ -175,7 +175,7 @@ public class MeshObjectBlessedByIterateTag
     protected int realDoEndTag()
     {
         if( theBlessedByLoopVar != null ) {
-            pageContext.removeAttribute( theBlessedByLoopVar );
+            pageContext.getRequest().removeAttribute( theBlessedByLoopVar );
         }
         return EVAL_PAGE;
     }

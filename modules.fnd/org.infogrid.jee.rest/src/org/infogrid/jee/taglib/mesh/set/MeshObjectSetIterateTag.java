@@ -8,17 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.mesh.set;
 
+import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
-
 import org.infogrid.mesh.set.MeshObjectSet;
 
-import javax.servlet.jsp.JspException;
 
 /**
  * Iterate over a <code>MeshObjectSet</code> given as a bean. Ordering is accomplished
@@ -74,7 +73,7 @@ public class MeshObjectSetIterateTag
     }
 
     /**
-     * Orovide the MeshObjectSet over which we iterate.
+     * Provide the MeshObjectSet over which we iterate.
      *
      * @return the set to iterate over
      * @throws JspException if a JSP exception has occurred

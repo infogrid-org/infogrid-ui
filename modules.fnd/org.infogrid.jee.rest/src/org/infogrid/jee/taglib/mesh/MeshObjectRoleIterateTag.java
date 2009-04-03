@@ -210,7 +210,7 @@ public class MeshObjectRoleIterateTag
     protected int realDoEndTag()
     {
         if( theRoleTypeLoopVar != null ) {
-            pageContext.removeAttribute( theRoleTypeLoopVar );
+            pageContext.getRequest().removeAttribute( theRoleTypeLoopVar );
         }
         return EVAL_PAGE;
     }

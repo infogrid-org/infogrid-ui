@@ -175,7 +175,7 @@ public class MeshObjectNeighborIterateTag
     protected int realDoEndTag()
     {
         if( theNeighborLoopVar != null ) {
-            pageContext.removeAttribute( theNeighborLoopVar );
+            pageContext.getRequest().removeAttribute( theNeighborLoopVar );
         }
         return EVAL_PAGE;
     }

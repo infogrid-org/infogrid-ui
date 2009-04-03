@@ -400,7 +400,7 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        return accessLocally( remoteLocation, objectIdentifier, -1L ); // theAccessLocallyTimeout );
+        return accessLocally( remoteLocation, objectIdentifier, -1L );
     }
 
     /**
@@ -459,7 +459,7 @@ public abstract class AnetMeshBase
                 objectIdentifier,
                 coherence );
         
-        return accessLocally( path, -1L ); // theAccessLocallyTimeout );
+        return accessLocally( path, -1L );
     }
     
     /**
@@ -555,7 +555,7 @@ public abstract class AnetMeshBase
             NetMeshObjectAccessException,
             NotPermittedException
     {
-        return accessLocally( pathsToObjects, -1L ); // theAccessLocallyTimeout );
+        return accessLocally( pathsToObjects, -1L );
     }
 
     /**
@@ -1052,6 +1052,97 @@ public abstract class AnetMeshBase
     public final AccessLocallySynchronizer getAccessLocallySynchronizer()
     {
         return theAccessLocallySynchronizer;
+    }
+
+    /**
+     * <p>Attempt to update the set of NetMeshObjects to their most current state. Usually, InfoGrid manages
+     * this automatically and on its own schedule. However, under some circumstances the user may
+     * want to request an immediate update; that is what this method is for.</p>
+     *
+     * <p>In many cases, this method will do nothing as the local replicas are already most current.</p>
+     *
+     * @param toFreshen the set of NetMeshObjects to freshen
+     */
+    public void freshenNow(
+            NetMeshObject [] toFreshen )
+    {
+        freshenNow( toFreshen, -1L );
+    }
+
+    /**
+     * <p>Attempt to update the set of NetMeshObjects to their most current state. Usually, InfoGrid manages
+     * this automatically and on its own schedule. However, under some circumstances the user may
+     * want to request an immediate update; that is what this method is for.</p>
+     *
+     * <p>In many cases, this method will do nothing as the local replicas are already most current.</p>
+     *
+     * @param toFreshen the set of NetMeshObjects to freshen
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     */
+    public void freshenNow(
+            NetMeshObject [] toFreshen,
+            long             duration )
+    {
+        if( log.isTraceEnabled() ) {
+            log.traceMethodCallEntry( this, "freshenNow", toFreshen, duration );
+        }
+
+        // we need to group by Proxy
+
+        NetMeshObject [] workDown       = ArrayHelper.copyIntoNewArray( toFreshen, NetMeshObject.class );
+        long             actualDuration = 0L;
+        try {
+            theAccessLocallySynchronizer.beginTransaction();
+
+            for( int i=0 ; i<workDown.length ; ++i ) {
+                if( workDown[i] == null ) {
+                    continue;
+                }
+
+                Proxy towardsLock = workDown[i].getProxyTowardsLockReplica();
+                if( towardsLock == null ) {
+                    // nothing to do here
+                    workDown[i] = null;
+                    continue;
+                }
+
+                NetMeshObject [] thisChunk = new NetMeshObject[ workDown.length ]; // potentially over-allocated
+
+                thisChunk[0] = workDown[i];
+                workDown[i]  = null;
+                int counter  = 1; // have first element already
+
+                for( int j=i+1 ; j<workDown.length ; ++j ) {
+                    if( workDown[j] == null ) {
+                        continue;
+                    }
+                    Proxy towardsLock2 = workDown[j].getProxyTowardsLockReplica();
+                    if( towardsLock2 == null || towardsLock2 != towardsLock ) {
+                        continue;
+                    }
+                    thisChunk[counter++] = workDown[j];
+                    workDown[j] = null;
+                }
+                if( counter < thisChunk.length ) {
+                    thisChunk = ArrayHelper.copyIntoNewArray( thisChunk, 0, counter, NetMeshObject.class );
+                }
+                long requestedDuration = towardsLock.freshen( thisChunk, duration );
+                actualDuration = Math.max( actualDuration, requestedDuration );
+
+            }
+            if( actualDuration > duration && duration >= 0L ) {
+                actualDuration = duration;
+            }
+            theAccessLocallySynchronizer.join( actualDuration );
+
+            theAccessLocallySynchronizer.endTransaction();
+
+        } catch( ReturnSynchronizerException ex ) {
+            log.error( ex );
+        } catch( InterruptedException ex ) {
+            log.error( ex );
+        }
+
     }
 
     /**

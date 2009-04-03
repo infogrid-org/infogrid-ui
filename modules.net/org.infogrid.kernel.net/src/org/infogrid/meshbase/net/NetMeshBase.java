@@ -513,6 +513,32 @@ public interface NetMeshBase
     public abstract AccessLocallySynchronizer getAccessLocallySynchronizer();
 
     /**
+     * <p>Attempt to update the set of NetMeshObjects to their most current state. Usually, InfoGrid manages
+     * this automatically and on its own schedule. However, under some circumstances the user may
+     * want to request an immediate update; that is what this method is for.</p>
+     *
+     * <p>In many cases, this method will do nothing as the local replicas are already most current.</p>
+     *
+     * @param toFreshen the set of NetMeshObjects to freshen
+     */
+    public void freshenNow(
+            NetMeshObject [] toFreshen );
+
+    /**
+     * <p>Attempt to update the set of NetMeshObjects to their most current state. Usually, InfoGrid manages
+     * this automatically and on its own schedule. However, under some circumstances the user may
+     * want to request an immediate update; that is what this method is for.</p>
+     *
+     * <p>In many cases, this method will do nothing as the local replicas are already most current.</p>
+     *
+     * @param toFreshen the set of NetMeshObjects to freshen
+     * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
+     */
+    public void freshenNow(
+            NetMeshObject [] toFreshen,
+            long             duration );
+
+    /**
      * Set a XprisoMessageLogger for all incoming and outgoing XprisoMessages.
      *
      * @param newValue the new value

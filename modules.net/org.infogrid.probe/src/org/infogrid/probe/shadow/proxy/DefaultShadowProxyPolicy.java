@@ -8,12 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.probe.shadow.proxy;
 
+import org.infogrid.comm.ReceivingMessageEndpoint;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
@@ -29,6 +30,7 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectRelationshipEvent;
 import org.infogrid.meshbase.net.xpriso.ParserFriendlyXprisoMessage;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.transaction.Transaction;
+import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CreateWhenNeeded;
@@ -160,6 +162,99 @@ public class DefaultShadowProxyPolicy
             Proxy            proxy )
     {
         throw new UnsupportedOperationException( "A Shadow should not invoke this" );
+    }
+
+    /**
+     * Determine the necessary operations that need to be performed to process
+     * this incoming message according to this ProxyPolicy.
+     *
+     * @param endpoint the MessageEndpoint through which the message arrived
+     * @param incoming the incoming XprisoMessage
+     * @param isResponseToOngoingQuery if true, this message is known to be a response to a still-ongoing
+     *        query
+     * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
+     * @return the calculated ProxyProcessingInstructions, or null
+     */
+    @Override
+    public ProxyProcessingInstructions calculateForIncomingMessage(
+            ReceivingMessageEndpoint<XprisoMessage> endpoint,
+            XprisoMessage                           incoming,
+            boolean                                 isResponseToOngoingQuery,
+            final Proxy                             proxy )
+    {
+        if( arrayHasContent( incoming.getRequestedFreshenReplicas() )) {
+            // Doesn't matter what replica was supposed to be freshened
+            ShadowMeshBase shadow = (ShadowMeshBase) proxy.getNetMeshBase();
+            try {
+                shadow.doUpdateNow();
+            } catch( ProbeException ex ) {
+                log.warn( ex );
+            }
+        }
+
+        ProxyProcessingInstructions ret = createInstructions();
+
+        ret.setIncomingXprisoMessageEndpoint( endpoint );
+        ret.setIncomingXprisoMessage( incoming );
+
+        CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing = new CreateWhenNeeded<ParserFriendlyXprisoMessage>() {
+                /**
+                 * Instantiation method.
+                 *
+                 * @return the instantiated object
+                 */
+                protected ParserFriendlyXprisoMessage instantiate()
+                {
+                    ParserFriendlyXprisoMessage ret = ParserFriendlyXprisoMessage.create(
+                            proxy.getNetMeshBase().getIdentifier(),
+                            proxy.getPartnerMeshBaseIdentifier() );
+                    return ret;
+                }
+        };
+
+        processIncomingRequestedFirstTimeObjects(      proxy, ret, perhapsOutgoing );
+        processIncomingRequestedResynchronizeReplicas( proxy, ret, perhapsOutgoing );
+        // Do not invoke processIncomingRequestedFreshenReplicas -- handled earlier for the shadow
+        processIncomingRequestedHomeReplicas(          proxy, ret, perhapsOutgoing );
+        processIncomingRequestedLockObjects(           proxy, ret, perhapsOutgoing );
+        processIncomingReclaimedLockObjects(           proxy, ret, perhapsOutgoing );
+        processIncomingCanceledObjects(                proxy, ret, perhapsOutgoing );
+        processIncomingConveyedObjects(                proxy, ret, perhapsOutgoing, isResponseToOngoingQuery );
+        processIncomingPushedLocks(                    proxy, ret, perhapsOutgoing );
+        processIncomingPushedHomes(                    proxy, ret, perhapsOutgoing );
+        processIncomingPropertyChanges(                proxy, ret, perhapsOutgoing );
+        processIncomingTypeChanges(                    proxy, ret, perhapsOutgoing );
+        processIncomingNeighborRoleChanges(            proxy, ret, perhapsOutgoing );
+        processIncomingEquivalentChanges(              proxy, ret, perhapsOutgoing );
+        processIncomingDeleteChanges(                  proxy, ret, perhapsOutgoing );
+
+        if( incoming.getRequestId() != 0 ) {
+            perhapsOutgoing.obtain().setResponseId( incoming.getRequestId() ); // make this message as a response
+        }
+
+        // send message
+        if( perhapsOutgoing.hasBeenCreated() && !perhapsOutgoing.obtain().isEmpty() ) {
+            ret.setStartCommunicating( true );
+            ret.setSendViaEndpoint( perhapsOutgoing.obtain() );
+        }
+
+        return ret;
+    }
+
+    /**
+     * Process the incoming request: freshen replicas.
+     *
+     * @param incomingProxy the incoming Proxy
+     * @param ret the instructions being assembled assembled
+     * @param perhapsOutgoing the outgoing message being assembled
+     */
+    @Override
+    protected void processIncomingRequestedFreshenReplicas(
+            Proxy                                         incomingProxy,
+            ProxyProcessingInstructions                   ret,
+            CreateWhenNeeded<ParserFriendlyXprisoMessage> perhapsOutgoing )
+    {
+        throw new UnsupportedOperationException(); // This should never be called in the shadow
     }
 
     /**

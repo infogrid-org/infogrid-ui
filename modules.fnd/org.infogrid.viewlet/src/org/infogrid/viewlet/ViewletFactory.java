@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -58,13 +58,9 @@ public interface ViewletFactory
      *
      * @param theObjectsToView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
-     * @throws NoViewletFoundException thrown if no Viewlet could be found that can meet the
-     *         requirements expressed in the theObjectsToView
      */
     public ViewletFactoryChoice [] determineFactoryChoices(
-            MeshObjectsToView theObjectsToView )
-        throws
-            NoViewletFoundException;
+            MeshObjectsToView theObjectsToView );
 
     /**
      * Find the ViewletFactoryChoices that apply to these MeshObjectsToView, and return them in
@@ -72,11 +68,7 @@ public interface ViewletFactory
      *
      * @param theObjectsToView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
-     * @throws NoViewletFoundException thrown if no Viewlet could be found that can meet the
-     *         requirements expressed in the theObjectsToView
      */
     public ViewletFactoryChoice [] determineFactoryChoicesOrderedByMatchQuality(
-            MeshObjectsToView theObjectsToView )
-        throws
-            NoViewletFoundException;
+            MeshObjectsToView theObjectsToView );
 }

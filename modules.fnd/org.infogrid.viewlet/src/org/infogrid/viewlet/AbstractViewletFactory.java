@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -88,13 +88,9 @@ public abstract class AbstractViewletFactory
      *
      * @param theObjectsToView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
-     * @throws NoViewletFoundException thrown if no Viewlet could be found that can meet the
-     *         requirements expressed in the theObjectsToView
      */
     public ViewletFactoryChoice [] determineFactoryChoicesOrderedByMatchQuality(
             MeshObjectsToView theObjectsToView )
-        throws
-            NoViewletFoundException
     {
         ViewletFactoryChoice [] ret = determineFactoryChoices( theObjectsToView );
         
@@ -108,13 +104,9 @@ public abstract class AbstractViewletFactory
      *
      * @param theObjectsToView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
-     * @throws NoViewletFoundException thrown if no Viewlet could be found that can meet the
-     *         requirements expressed in the theObjectsToView
      */
     public ViewletFactoryChoice [] determineFactoryChoices(
             MeshObjectsToView theObjectsToView )
-        throws
-            NoViewletFoundException
     {
         // find substitute viewlet type name if none given
         MeshObject subject         = theObjectsToView.getSubject();

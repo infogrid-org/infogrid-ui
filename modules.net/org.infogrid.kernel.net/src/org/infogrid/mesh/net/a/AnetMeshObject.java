@@ -964,8 +964,7 @@ public class AnetMeshObject
 
         return ret;
     }
-    
-    
+
 // ReplicaProxyInterface    
     
     /**

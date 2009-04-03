@@ -43,6 +43,10 @@ public class InfoGridWebAppContextListener
     public void contextDestroyed(
             ServletContextEvent event )
     {
-        InfoGridWebApp.getSingleton().die();
+        InfoGridWebApp app = InfoGridWebApp.getSingleton();
+        if( app != null ) {
+            // may be destroyed before it was accessed even once
+            app.die();
+        }
     }
 }

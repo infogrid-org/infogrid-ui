@@ -160,6 +160,14 @@ public class XprisoMessageDumper
             }
         }
 
+        if( obj.getRequestedFreshenReplicas().length > 0 ) {
+            emit( "\n    requestedFreshen:" );
+            for( NetMeshObjectIdentifier current : obj.getRequestedFreshenReplicas() ) {
+                emit( "\n        " );
+                emit( current.toExternalForm() );
+            }
+        }
+
         if( obj.getRequestedResynchronizeReplicas().length > 0 ) {
             emit( "\n    requestedResynchronized:" );
             for( NetMeshObjectIdentifier current : obj.getRequestedResynchronizeReplicas() ) {

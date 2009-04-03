@@ -203,7 +203,7 @@ public class MeshObjectRelatedIterateTag
     protected int realDoEndTag()
     {
         if( theRelatedLoopVar != null ) {
-            pageContext.removeAttribute( theRelatedLoopVar );
+            pageContext.getRequest().removeAttribute( theRelatedLoopVar );
         }
         return EVAL_PAGE;
     }

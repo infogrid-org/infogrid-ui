@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -47,7 +47,7 @@ public class RotatingTrTag
     @Override
     protected void initializeToDefaults()
     {
-        theVarStatus         = null;
+        theStatusVar         = null;
         theHtmlClasses       = null;
         theSeparator         = ",";
         theFirstRowHtmlClass = null;
@@ -57,26 +57,26 @@ public class RotatingTrTag
     }
 
     /**
-     * Obtain value of the varStatus property.
+     * Obtain value of the statusVar property.
      *
-     * @return value of the varStatus property
-     * @see #setVarStatus
+     * @return value of the statusVar property
+     * @see #setStatusVar
      */
-    public final String getVarStatus()
+    public final String getStatusVar()
     {
-        return theVarStatus;
+        return theStatusVar;
     }
 
     /**
-     * Set value of the varStatus property.
+     * Set value of the statusVar property.
      *
-     * @param newValue new value of the varStatus property
-     * @see #getVarStatus
+     * @param newValue new value of the statusVar property
+     * @see #getStatusVar
      */
-    public final void setVarStatus(
+    public final void setStatusVar(
             String newValue )
     {
-        theVarStatus = newValue;
+        theStatusVar = newValue;
     }
 
     /**
@@ -183,7 +183,7 @@ public class RotatingTrTag
             JspException,
             IgnoreException
     {
-        if( theVarStatus == null || theVarStatus.length() == 0 ) {
+        if( theStatusVar == null || theStatusVar.length() == 0 ) {
             throw new JspException( "Missing varStatus attribute" );
         }
         if( theHtmlClasses == null || theHtmlClasses.length() == 0 ) {
@@ -197,7 +197,7 @@ public class RotatingTrTag
             }
             theParsedClassNames = ArrayHelper.copyIntoNewArray( found, String.class );
         }
-        LoopTagStatus varStatus = (LoopTagStatus) lookupOrThrow( theVarStatus );
+        LoopTagStatus varStatus = (LoopTagStatus) lookupOrThrow( theStatusVar );
         int           iteration = varStatus.getCount();
         boolean       isFirst   = varStatus.isFirst();
         boolean       isLast    = varStatus.isLast();
@@ -259,7 +259,7 @@ public class RotatingTrTag
     /**
      * Name of the bean that contains the varStatus from the enclosing j:forSearch.
      */
-    protected String theVarStatus;
+    protected String theStatusVar;
     
     /**
      * Name of the HTML classes to rotate through.
