@@ -7,7 +7,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,6 @@ import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
 import org.infogrid.meshbase.net.proxy.AbstractProxyFactory;
-import org.infogrid.meshbase.net.proxy.NiceAndTrustingProxyPolicy;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyPolicyFactory;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpoint;
@@ -125,8 +124,9 @@ public class DefaultShadowProxyFactory
     {
         ExternalizedShadowProxy realExternalized = (ExternalizedShadowProxy) externalized;
 
-        NiceAndTrustingProxyPolicy policy = NiceAndTrustingProxyPolicy.create( // in the future, this should become configurable -- FIXME
-                externalized.getCoherenceSpecification() );
+        ProxyPolicy policy = theProxyPolicyFactory.obtainFor(
+                externalized.getNetworkIdentifierOfPartner(),
+                externalized.getCoherenceSpecification() );// in the future, this should become configurable
 
         Proxy ret;
         if( realExternalized.getIsPlaceholder() ) {
