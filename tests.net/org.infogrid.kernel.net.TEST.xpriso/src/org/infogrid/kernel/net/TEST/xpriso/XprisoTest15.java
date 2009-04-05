@@ -100,7 +100,7 @@ public class XprisoTest15
             checkProxies( found[i], new NetMeshBase[] { otherMbs[i] }, otherMbs[i], otherMbs[i], "obj with index " + i + " has wrong proxies" );
         }
 
-        checkInRange( delta, 0, PINGPONG_ROUNDTRIP_DURATION*3, "Not completed in expected time range" );
+        checkInRange( delta, 0, PINGPONG_ROUNDTRIP_DURATION*5, "Not completed in expected time range" );
     }
 
     /**
