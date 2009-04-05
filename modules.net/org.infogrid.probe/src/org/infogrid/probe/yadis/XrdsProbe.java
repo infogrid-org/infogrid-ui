@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -41,6 +41,7 @@ import org.infogrid.model.primitives.IntegerValue;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.MeshTypeSynonymDictionary;
 import org.infogrid.modelbase.ModelBase;
@@ -271,7 +272,8 @@ public class XrdsProbe
             return;
         }
 
-        int epCounter = 0;
+        int epCounter   = 0;
+        int typeCounter = 0;
 
         NodeList infoList = serviceNode.getChildNodes();
         for( int k=0 ; k<infoList.getLength() ; ++k ) {
@@ -300,7 +302,22 @@ public class XrdsProbe
                         }
                     }
 
+                    try {
+                        NetMeshObject serviceMeshObjectType = base.getMeshBaseLifecycleManager().createMeshObject(
+                                base.getMeshObjectIdentifierFactory().fromExternalForm( serviceMeshObject.getIdentifier().toExternalForm() + "-type-" + typeCounter ),
+                                YadisSubjectArea.XRDSSERVICETYPE );
+                        serviceMeshObjectType.setPropertyValue( YadisSubjectArea.XRDSSERVICETYPE_SERVICETYPEIDENTIFIER, StringValue.create( realFound ));
+
+                        serviceMeshObject.relateAndBless( YadisSubjectArea.XRDSSERVICE_HASTYPE_XRDSSERVICETYPE.getSource(), serviceMeshObjectType );
+                        ++typeCounter;
+
+                    } catch( EntityNotBlessedException ex ) {
+                        log.error( ex );
+                    } catch( RelatedAlreadyException ex ) {
+                        log.error( ex );
+                    }
                 }
+                
             } else if( XRD_XML_NAMESPACE.equals( infoNode.getNamespaceURI() ) && "URI".equals( infoNode.getLocalName() )) {
                 NodeList     childList = infoNode.getChildNodes();
                 StringBuffer found     = new StringBuffer();

@@ -15,49 +15,39 @@
 package org.infogrid.jee.taglib.mesh.set;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.Tag;
-import org.infogrid.jee.taglib.AbstractInfoGridTag;
+import org.infogrid.mesh.set.MeshObjectSet;
 
 /**
- * Tag that collects the content within the <code>MeshObjectSetIterate</code> tag
- * to be shown once if the <code>MeshObjectSet</code> is not empty.
+ * Tag that evaluates its content when a <code>MeshObjectSet</code> obtained by traversal is empty.
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class MeshObjectSetIterateContentTag
+public class IfTraverseSetEmptyTag
     extends
-        AbstractInfoGridTag
+        AbstractTraverseSetTestTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
      * Constructor.
      */
-    public MeshObjectSetIterateContentTag()
+    public IfTraverseSetEmptyTag()
     {
         // noop
     }
 
     /**
-     * Our implementation of doStartTag().
+     * Evaluatate the condition. If it returns true, the content of this tag is processed.
      *
-     * @return evaluate or skip body
+     * @param set the MeshObjectSet to evaluate
+     * @return true in order to output the Nodes contained in this Node.
      * @throws JspException thrown if an evaluation error occurred
      */
-    protected int realDoStartTag()
+    protected boolean evaluateTest(
+            MeshObjectSet set )
         throws
             JspException
     {
-        Tag parentTag = getParent();
-        if( parentTag == null || !( parentTag instanceof AbstractMeshObjectSetIterateTag )) {
-            throw new JspException( "IterateContentRow tag must be directly contained in an AbstractMeshObjectSetIterateTag tag" );
-        }
-
-        AbstractMeshObjectSetIterateTag realParentTag = (AbstractMeshObjectSetIterateTag) parentTag;
-
-        if( !realParentTag.processesEmptySet() ) {
-            return EVAL_BODY_INCLUDE;
-        } else {
-            return SKIP_BODY;
-        }
+        boolean ret = set.isEmpty();
+        return ret;
     }
 }

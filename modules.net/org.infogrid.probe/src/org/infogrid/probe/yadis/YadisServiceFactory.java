@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -288,14 +288,22 @@ public class YadisServiceFactory
                             YadisSubjectArea.XRDSSERVICE );
 
                     serviceMeshObject.bless( AuthSubjectArea.AUTHENTICATION1_0SERVICE ); // FIXME? OpenIDAuthentication.TYPE );
+
                     if( delegateIdentifier != null ) {
                         serviceMeshObject.setPropertyValue(
                                 AuthSubjectArea.AUTHENTICATIONSERVICE_DELEGATE,
                                 StringValue.create( delegateIdentifier.toExternalForm() ));
                     }
 
+                    NetMeshObject serviceMeshObjectType = base.getMeshBaseLifecycleManager().createMeshObject(
+                            base.getMeshObjectIdentifierFactory().fromExternalForm( "YadisService-0-type-0" ),
+                            YadisSubjectArea.XRDSSERVICETYPE );
+                    serviceMeshObjectType.setPropertyValue( YadisSubjectArea.XRDSSERVICETYPE_SERVICETYPEIDENTIFIER, OPENID1_0TYPEIDENTIFIER );
+
+                    serviceMeshObject.relateAndBless( YadisSubjectArea.XRDSSERVICE_HASTYPE_XRDSSERVICETYPE.getSource(), serviceMeshObjectType );
+
                     NetMeshObject endpoint = base.getMeshBaseLifecycleManager().createMeshObject(
-                            base.getMeshObjectIdentifierFactory().fromExternalForm( "Endpoint=0" ),
+                            base.getMeshObjectIdentifierFactory().fromExternalForm( "Endpoint-0" ),
                             YadisSubjectArea.ENDPOINT );
                     // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( identityServer ));
                     

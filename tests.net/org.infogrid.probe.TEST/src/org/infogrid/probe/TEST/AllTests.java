@@ -127,6 +127,18 @@ public class AllTests
                         YadisTest6.class,
                         AbstractTest.fileSystemFileName( YadisTest6.class, "YadisTest6.xml" ),
                         "2000" ),
+
+              new TestSpec(
+                        YadisTest7.class.getName() + " (delay 0)",
+                        YadisTest7.class,
+                        AbstractTest.fileSystemFileName( YadisTest7.class, "YadisTest7.xml" ),
+                        "0" ),
+
+                new TestSpec(
+                        YadisTest7.class.getName() + " (delay 2000)",
+                        YadisTest7.class,
+                        AbstractTest.fileSystemFileName( YadisTest7.class, "YadisTest7.xml" ),
+                        "2000" ),
         };
 
         TestSpec [] writableProbeTests = {

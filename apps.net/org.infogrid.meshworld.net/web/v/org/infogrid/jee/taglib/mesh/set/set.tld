@@ -68,6 +68,62 @@
     </tag>
 
     <tag>
+        <name>ifTraverseSetEmpty</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.IfTraverseSetEmptyTag</tag-class>
+
+        <attribute>
+            <name>startObjectName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>traversalSpecification</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ifTraverseSetNotEmpty</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.IfTraverseSetNotEmptyTag</tag-class>
+
+        <attribute>
+            <name>startObjectName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>traversalSpecification</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>iteratecontentrow</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateContentRowTag</tag-class>
     </tag>
@@ -77,11 +133,6 @@
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateHeaderTag</tag-class>
     </tag>
     
-    <tag>
-        <name>iteratecontent</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateContentTag</tag-class>
-    </tag>
-
     <tag>
         <name>iteratenocontent</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateNoContentTag</tag-class>

@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -35,9 +35,9 @@
         <entitytype ID="org.infogrid.lid.model.yadis#XrdsService">
             <name>XrdsService</name>
             <username>Other XRDS Service</username>
-            <userdescription>This represents a Yadis/XRDS Service. The concept of a ServiceType is
-expressed by subclasses of this EntityType; as a result, this EntityType does not need to carry
-the Type URI(s).</userdescription>
+            <userdescription>This represents a Yadis/XRDS Service. Known ServiceTypes are
+expressed by subclasses of this EntityType. Also, an XrdsServiceType EntityType is instantiated
+for both known and unknown ServiceTypes.</userdescription>
             
             <propertytype ID="org.infogrid.lid.model.yadis#XrdsService/Priority">
                 <name>Priority</name>
@@ -45,6 +45,22 @@ the Type URI(s).</userdescription>
                 <userdescription>Priority of this XRDS Service.</userdescription>
                 <datatype>
                     <IntegerDataType/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+        </entitytype>
+
+        <entitytype ID="org.infogrid.lid.model.yadis#XrdsServiceType">
+            <name>XrdsServiceType</name>
+            <username>Other XRDS Service</username>
+            <userdescription>Captures the Yadis type identifier for an XrdsServiceType.</userdescription>
+
+            <propertytype ID="org.infogrid.lid.model.yadis#XrdsServiceType/ServiceTypeIdentifier">
+                <name>ServiceTypeIdentifier</name>
+                <username>ServiceTypeIdentifier</username>
+                <userdescription>Unique identifier for this ServiceType</userdescription>
+                <datatype>
+                    <StringDataType/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -79,6 +95,20 @@ to the XRDS Service Collection itself.</userdescription>
               <MultiplicityValue>1:N</MultiplicityValue>
               <!-- This needs to be N, so we can have validated and non-validated collections
                      containing the same instances -->
+            </dest>
+        </relationshiptype>
+
+        <relationshiptype ID="org.infogrid.lid.model.yadis#XrdsService_HasType_XrdsServiceType">
+            <name>XrdsService_HasType_XrdsServiceType</name>
+            <username>Has Type</username>
+            <userdescription>Relates an XRDS Service to an object capturing the Yadis ServiceType identifier.</userdescription>
+            <src>
+              <e>org.infogrid.lid.model.yadis#XrdsService</e>
+              <MultiplicityValue>1:1</MultiplicityValue>
+            </src>
+            <dest>
+              <e>org.infogrid.lid.model.yadis#XrdsServiceType</e>
+              <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>
 

@@ -8,11 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.probe.yadis;
+
+import org.infogrid.model.primitives.StringValue;
 
 /**
  * Collects constants used in Yadis XML files.
@@ -38,4 +40,9 @@ public interface XmlConstants
      * Name of the OpenID Delegate field in XML.
      */
     final static public String OPENID_XML_DELEGATE_FIELD_NAME = "Delegate";
+
+    /**
+     * Yadis type identifier for OpenID Authentication 1.0.
+     */
+    final static public StringValue OPENID1_0TYPEIDENTIFIER = StringValue.create( "http://openid.net/signon/1.0" );
 }
