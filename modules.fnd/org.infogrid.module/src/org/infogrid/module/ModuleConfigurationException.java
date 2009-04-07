@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -75,7 +75,7 @@ public class ModuleConfigurationException
     public String toString()
     {
         StringBuffer buf = new StringBuffer( 100 ); // fudge
-        buf.append( "ModuleActivationException: could not configure Module " );
+        buf.append( "ModuleConfigurationException: could not configure Module " );
         if( theModuleAdvertisement != null ) {
             buf.append( theModuleAdvertisement.getModuleName() );
             buf.append( ", version " );

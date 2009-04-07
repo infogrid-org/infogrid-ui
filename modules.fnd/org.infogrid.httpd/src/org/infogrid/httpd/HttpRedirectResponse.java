@@ -8,18 +8,17 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.httpd;
 
-import org.infogrid.util.ResourceHelper;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import org.infogrid.util.ResourceHelper;
 
 /**
   * An HTTP Response indicating an HTTP redirect.
@@ -29,13 +28,29 @@ public class HttpRedirectResponse
         HttpResponse
 {
     /**
-      * Constructor.
-      *
-      * @param req the incoming HttpRequest
-      * @param newUrl the URL to which this HttpRedirectResponse redirects
-      * @param returnCode the HTTP return code
-      */
-    public HttpRedirectResponse(
+     * Factory method.
+     *
+     * @param req the incoming HttpRequest
+     * @param newUrl the URL to which this HttpRedirectResponse redirects
+     * @param returnCode the HTTP return code
+     * @return the created response
+     */
+    public static HttpRedirectResponse create(
+            HttpRequest req,
+            String      newUrl,
+            String      returnCode )
+    {
+        return new HttpRedirectResponse( req, newUrl, returnCode );
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param req the incoming HttpRequest
+     * @param newUrl the URL to which this HttpRedirectResponse redirects
+     * @param returnCode the HTTP return code
+     */
+    protected HttpRedirectResponse(
             HttpRequest req,
             String      newUrl,
             String      returnCode )

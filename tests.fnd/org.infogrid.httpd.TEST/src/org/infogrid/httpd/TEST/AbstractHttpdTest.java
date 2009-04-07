@@ -8,12 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.httpd.TEST;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
 import org.infogrid.httpd.HttpEntity;
 import org.infogrid.httpd.HttpEntityResponse;
 import org.infogrid.httpd.HttpRequest;
@@ -22,12 +26,6 @@ import org.infogrid.httpd.HttpResponseFactory;
 import org.infogrid.httpd.server.HttpServer;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.logging.Log;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Common functionality for all HTTP tests.
@@ -92,7 +90,7 @@ public abstract class AbstractHttpdTest
     protected static final int NUMBER_THREADS = 0;
 
     /**
-      * A HttpResponseFactory that acts as the RelyingParty.
+      * Defines the content at the web server for the tests.
       */
     static class MyResponseFactory
         implements

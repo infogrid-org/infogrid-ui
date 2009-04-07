@@ -8,38 +8,32 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.module;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import java.io.InputStream;
 import java.io.IOException;
-
 import java.lang.reflect.Array;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.text.ParseException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This helper program takes XML advertisements and instantiates them.
@@ -65,12 +59,14 @@ public class ModuleAdvertisementXmlParser
      * Parse the XML file.
      *
      * @param theStream the stream from which we read the ModuleAdvertisement
+     * @param fileName the file name that is being parsed, for error reporting purposes
      * @return the read ModuleAdvertisement (may be subclass)
      * @throws IOException an input/output error occurred
      * @throws ModuleConfigurationException a configuration error occurred during parsing or setup
      */
     public synchronized ModuleAdvertisement readAdvertisement(
-            InputStream theStream )
+            InputStream theStream,
+            String      fileName )
         throws
             IOException,
             ModuleConfigurationException
@@ -85,9 +81,9 @@ public class ModuleAdvertisementXmlParser
             theParser.parse( theStream, this );
 
         } catch( ParserConfigurationException ex ) {
-            throw new ModuleConfigurationException( null, ex );
+            throw new ModuleConfigurationException( null, "Could not parse file " + fileName, ex );
         } catch( SAXException ex ) {
-            throw new ModuleConfigurationException( null, ex );
+            throw new ModuleConfigurationException( null, "Could not parse file " + fileName, ex );
         }
 
         ModuleAdvertisement ret;

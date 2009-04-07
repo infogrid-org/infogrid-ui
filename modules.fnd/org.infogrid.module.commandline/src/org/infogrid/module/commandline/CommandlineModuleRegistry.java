@@ -8,18 +8,11 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.module.commandline;
-
-import org.infogrid.module.ModuleAdvertisement;
-import org.infogrid.module.ModuleAdvertisementXmlParser;
-import org.infogrid.module.ModuleConfigurationException;
-import org.infogrid.module.ModuleErrorHandler;
-import org.infogrid.module.ModuleRegistry;
-import org.infogrid.module.SoftwareInstallation;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -28,6 +21,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.infogrid.module.ModuleAdvertisement;
+import org.infogrid.module.ModuleAdvertisementXmlParser;
+import org.infogrid.module.ModuleConfigurationException;
+import org.infogrid.module.ModuleErrorHandler;
+import org.infogrid.module.ModuleRegistry;
+import org.infogrid.module.SoftwareInstallation;
 
 /**
  * A ModuleRegistry particularly appropriate for the CommandlineBootLoader.
@@ -99,7 +98,7 @@ public class CommandlineModuleRegistry
                         try {
                             theStream = new BufferedInputStream( new FileInputStream( candidateModuleFile ));
 
-                            ModuleAdvertisement ad = theParser.readAdvertisement( theStream );
+                            ModuleAdvertisement ad = theParser.readAdvertisement( theStream, candidateModuleFile.getAbsolutePath() );
                             if( !ads.contains( ad )) {
                                 ads.add( ad );
                             }

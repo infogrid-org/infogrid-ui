@@ -707,6 +707,23 @@ public class HttpRequest
     }
 
     /**
+     * Obtain the value of a post argument.
+     *
+     * @param name the name of the post argument
+     * @return the value, or null
+     */
+    public String getPostArgument(
+            String name )
+    {
+        Map<String,String> args = getPostArguments();
+        if( args == null ) {
+            return null;
+        }
+        String ret = args.get( name );
+        return ret;
+    }
+
+    /**
      * Dump this object.
      *
      * @param d the Dumper to dump to

@@ -1253,7 +1253,7 @@ public abstract class HTTP
                         theHeaderFields,
                         theContent,
                         ( theContent != null ) ? theContent.length : "n/a",
-                        new String( theContent ),
+                        ( theContent != null ) ? new String( theContent ) : null,
                         theCookies,
                     } );
         }

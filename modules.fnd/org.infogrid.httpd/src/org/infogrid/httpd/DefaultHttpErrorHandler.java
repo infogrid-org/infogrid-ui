@@ -8,17 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.httpd;
 
-import org.infogrid.util.ResourceHelper;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import org.infogrid.util.ResourceHelper;
 
 /**
  * A very simple default implementation of the HttpErrorHandler.
@@ -27,6 +26,11 @@ public class DefaultHttpErrorHandler
     implements
         HttpErrorHandler
 {
+    /**
+     * Singleton instance of this class.
+     */
+    public static final DefaultHttpErrorHandler SINGLETON = new DefaultHttpErrorHandler();
+
     /**
      * Obtain a Stream with content in response to a particular error.
      *

@@ -149,7 +149,7 @@ public abstract class PropertyValue
      * @param one the first PropertyValue or null to be compared
      * @param two the second PropertyValue or null to be compared
      * @return 0 if the two values are equal, +1/-1 if the second is smaller/larger than the first,
-     *         +2 if the two values are of same type but not comparable, -2 if one of them is null
+     *         +2/-2 if one of them is null
      * @throws ClassCastException if the PropertyValue are of a different type
      */
     public static int compare(
@@ -166,7 +166,7 @@ public abstract class PropertyValue
             }
         } else {
             if( two == null ) {
-                return -2;
+                return +2;
             } else {
                 int temp = one.compareTo( two );
                 if( temp > 0 ) {

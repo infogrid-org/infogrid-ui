@@ -397,16 +397,19 @@ public class XrdsProbe
             priorityNode = nodeWithPriority.getAttributes().getNamedItem( "priority" );
             // seems like a good compromise? FIXME?
         }
-        int priorityValue = Integer.MAX_VALUE;
+
+        IntegerValue ret = null;
         if( priorityNode != null ) {
             String tmp = ((Attr)priorityNode).getValue();
             try {
-                priorityValue = Integer.parseInt( tmp );
+                int found = Integer.parseInt( tmp );
+                ret = IntegerValue.create( found );
             } catch( Exception ex ) {
                 log.warn( ex );
             }
         }
-        return IntegerValue.create( priorityValue );
+        
+        return ret;
     }
 
     /**
