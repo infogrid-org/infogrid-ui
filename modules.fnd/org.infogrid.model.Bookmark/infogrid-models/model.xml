@@ -101,8 +101,30 @@
                 </datatype>
                 <isoptional/>
             </propertytype>
+            <propertytype ID="org.infogrid.model.Bookmark#Bookmark/SequenceNumber">
+                <name>SequenceNumber</name>
+                <username>Sequence Number</username>
+                <userdescription>Defines the position of the Bookmark with respect to its siblings</userdescription>
+                <datatype>
+                    <FloatDataType/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
 
         </entitytype>
+
+        <relationshiptype ID="org.infogrid.model.Bookmark#BookmarkCollection_Collects_MeshObject">
+            <name>BookmarkCollection_Collects_MeshObject</name>
+            <username>Collects</username>
+            <userdescription>Relates a MeshObject to the BookmarkCollections in which it is collected.</userdescription>
+            <src>
+              <e>org.infogrid.model.Bookmark#BookmarkCollection</e>
+              <MultiplicityValue>0:N</MultiplicityValue>
+            </src>
+            <dest>
+              <MultiplicityValue>0:N</MultiplicityValue>
+            </dest>
+        </relationshiptype>
 
         <relationshiptype ID="org.infogrid.model.Bookmark#BookmarkCollection_Collects_Bookmark">
             <name>BookmarkCollection_Collects_Bookmark</name>
@@ -111,10 +133,12 @@
             <src>
               <e>org.infogrid.model.Bookmark#BookmarkCollection</e>
               <MultiplicityValue>0:N</MultiplicityValue>
+              <refines>org.infogrid.model.Bookmark#BookmarkCollection_Collects_MeshObject-S</refines>
             </src>
             <dest>
               <e>org.infogrid.model.Bookmark#Bookmark</e>
               <MultiplicityValue>1:1</MultiplicityValue>
+              <refines>org.infogrid.model.Bookmark#BookmarkCollection_Collects_MeshObject-D</refines>
             </dest>
         </relationshiptype>
 
@@ -131,7 +155,7 @@
             </dest>
         </relationshiptype>
         
-        <relationshiptype ID="org.infogrid.model.Tagging#MeshObject_Uses_BookmarkCollection">
+        <relationshiptype ID="org.infogrid.model.Bookmark#MeshObject_Uses_BookmarkCollection">
             <name>MeshObject_Uses_BookmarkCollection</name>
             <username>Uses</username>
             <userdescription>Enables a MeshObject (such as a person) to identify those BookmarkCollections they use.</userdescription>
