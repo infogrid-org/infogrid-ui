@@ -109,7 +109,7 @@ public abstract class AbstractTraverseSetTestTag
             IgnoreException
     {
         MeshObject             start = (MeshObject) lookupOrThrow( theStartObjectName );
-        TraversalSpecification spec  = findRoleTypeOrThrow( theTraversalSpecification );
+        TraversalSpecification spec  = findTraversalSpecificationOrThrow( theTraversalSpecification );
                 // FIXME: In the future, this should allow more complex traversal specifications
 
         MeshObjectSet ret = start.traverse( spec );

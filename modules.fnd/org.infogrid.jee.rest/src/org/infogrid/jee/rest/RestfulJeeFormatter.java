@@ -36,12 +36,15 @@ import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RoleType;
+import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
+import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -54,6 +57,8 @@ public class RestfulJeeFormatter
         extends
             JeeFormatter
 {
+    private static final Log log = Log.getLogInstance( RestfulJeeFormatter.class ); // our own, private logger
+
     /**
      * Factory method.
      * 
@@ -283,44 +288,64 @@ public class RestfulJeeFormatter
     }
 
     /**
-     * Find a RoleType, or return null.
+     * Find a TraversalSpecification, or return null.
      *
-     * @param name name of the RoleType
-     * @return the found RoleType, or null
+     * @param name name of the TraversalSpecification
+     * @return the found TraversalSpecification, or null
      */
-    public RoleType findRoleType(
+    public TraversalSpecification findTraversalSpecification(
             String name )
     {
-        ModelBase mb = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( ModelBase.class );
-
+        ModelBase                 mb     = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( ModelBase.class );
         MeshTypeIdentifierFactory idFact = mb.getMeshTypeIdentifierFactory();
-        MeshTypeIdentifier        id     = idFact.fromExternalForm( name );
 
-        RoleType ret;
-        try {
-            ret = mb.findRoleTypeByIdentifier( id );
+        TraversalSpecification ret;
+        String [] componentNames = name.split( "!" );
 
-        } catch( MeshTypeWithIdentifierNotFoundException ex ) {
-            ret = null;
+        if( componentNames.length == 1) {
+            MeshTypeIdentifier id = idFact.fromExternalForm( name );
+
+            try {
+                ret = mb.findRoleTypeByIdentifier( id );
+
+            } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+                log.warn( ex );
+                return null; // gotta do something
+            }
+        } else {
+            RoleType [] components = new RoleType[ componentNames.length ];
+            for( int i=0 ; i<componentNames.length ; ++i ) {
+                MeshTypeIdentifier id = idFact.fromExternalForm( componentNames[i] );
+
+                try {
+                    components[i] = mb.findRoleTypeByIdentifier( id );
+
+                } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+                    log.warn( ex );
+                    return null; // gotta do something
+                }
+            }
+            ret = SequentialCompoundTraversalSpecification.create( components );
         }
+
         return ret;
     }
 
     /**
-     * Find a RoleType, or throw an Exception.
+     * Find a TraversalSpecification, or throw an Exception.
      *
-     * @param name name of the RoleType
-     * @return the found RoleType
-     * @throws JspException thrown if the RoleType could not be found
+     * @param name name of the TraversalSpecification
+     * @return the found TraversalSpecification
+     * @throws JspException thrown if the TraversalSpecification could not be found
      */
-    public RoleType findRoleTypeOrThrow(
+    public TraversalSpecification findTraversalSpecificationOrThrow(
             String name )
         throws
             JspException
     {
-        RoleType ret = findRoleType( name );
+        TraversalSpecification ret = findTraversalSpecification( name );
         if( ret == null ) {
-            throw new JspException( "Could not find roleType " + name );
+            throw new JspException( "Could not find TraversalSpecification " + name );
         }
         return ret;
     }

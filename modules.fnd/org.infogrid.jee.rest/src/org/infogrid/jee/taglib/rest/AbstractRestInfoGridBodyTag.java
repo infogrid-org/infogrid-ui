@@ -21,7 +21,7 @@ import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
-import org.infogrid.model.primitives.RoleType;
+import org.infogrid.model.traversal.TraversalSpecification;
 
 /**
  * Adds REST awareness to the AbstractInfoGridTag.
@@ -104,29 +104,29 @@ public abstract class AbstractRestInfoGridBodyTag
     }
 
     /**
-     * Find a RoleType, or throw an Exception.
+     * Find a TraversalSpecification, or throw an Exception.
      *
-     * @param name name of the RoleType
-     * @return the found RoleType
-     * @throws JspException thrown if the RoleType could not be found
+     * @param name name of the TraversalSpecification
+     * @return the found TraversalSpecification
+     * @throws JspException thrown if the TraversalSpecification could not be found
      */
-    protected RoleType findRoleTypeOrThrow(
+    protected TraversalSpecification findTraversalSpecificationOrThrow(
             String name )
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findRoleTypeOrThrow( name );
+        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationOrThrow( name );
     }
 
     /**
-     * Find a RoleType, or return null.
+     * Find a TraversalSpecification, or return null.
      *
-     * @param name name of the RoleType
-     * @return the found RoleType, or null
+     * @param name name of the TraversalSpecification
+     * @return the found TraversalSpecification, or null
      */
-    protected RoleType findRoleType(
+    protected TraversalSpecification findTraversalSpecification(
             String name )
     {
-        return ((RestfulJeeFormatter)theFormatter).findRoleType( name );
+        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecification( name );
     }
 }
