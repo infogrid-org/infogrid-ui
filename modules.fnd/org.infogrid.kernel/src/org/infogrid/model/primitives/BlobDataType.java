@@ -14,13 +14,12 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.ArrayHelper;
-
-import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringifierException;
-
 import java.io.ObjectStreamException;
+import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.text.StringifierException;
+import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
   * This represents a Binary Large Object DataType. It carries a MIME type, identifying its content.
@@ -556,7 +555,7 @@ public final class BlobDataType
      */
     public BlobValue fromStringRepresentation(
             StringRepresentation representation,
-            String                      s )
+            String               s )
         throws
             PropertyValueParsingException
     {
@@ -567,15 +566,15 @@ public final class BlobDataType
 
             switch( found.length ) {
                 case 1:
-                    ret = BlobValue.create( (String) found[0] );
+                    ret = BlobValue.create( (String) found[0], determineParsedMimeType( representation, found[0], null ) );
                     break;
 
                 case 3:
                     if( found[2] != null ) {
                         // we prefer String over byte here
-                        ret = BlobValue.create( (String) found[2], (String) found[0] );
+                        ret = BlobValue.create( (String) found[2], determineParsedMimeType( representation, found[2], (String) found[0] ));
                     } else {
-                        ret = BlobValue.create( (byte []) found[1], (String) found[0] );
+                        ret = BlobValue.create( (byte []) found[1], determineParsedMimeType( representation, found[1], (String) found[0] ));
                     }
                     break;
 
@@ -592,7 +591,47 @@ public final class BlobDataType
             throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
-    
+
+    /**
+     * Given a String representation, an optional parsed mime type and this BlobDataType, determine which MIME type it should be.
+     *
+     * @param representation the StringRepresentation in which the content was given
+     * @param content the found content
+     * @param mime the parsed mime type, if any
+     * @return the correct mime type
+     */
+    protected String determineParsedMimeType(
+            StringRepresentation representation,
+            Object               content,
+            String               mime )
+    {
+        // FIXME this needs more work
+        if( mime != null ) {
+            return mime;
+        }
+        if( content instanceof String ) {
+            if( theMimeType == null || "text".equals( theMimeType )) {
+                if( StringRepresentationDirectory.TEXT_HTML_NAME.equals( representation.getName() )) {
+                    return BlobValue.TEXT_HTML_MIME_TYPE;
+                } else {
+                    return BlobValue.TEXT_PLAIN_MIME_TYPE;
+                }
+            }
+        }
+        if( theMimeType == null ) {
+            return null;
+        }
+        StringBuilder ret = new StringBuilder();
+        ret.append( theMimeType );
+        ret.append( '/' );
+        if( theMimeSubTypes != null && theMimeSubTypes.length > 0 ) {
+            ret.append( theMimeSubTypes[0] );
+        } else {
+            ret.append( '*' ); // FIXME?
+        }
+        return ret.toString();
+    }
+
     /**
      * The default value that goes with this DataType.
      */

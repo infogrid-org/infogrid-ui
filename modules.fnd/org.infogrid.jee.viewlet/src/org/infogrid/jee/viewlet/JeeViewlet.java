@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -39,6 +39,13 @@ public interface JeeViewlet
         extends
             Viewlet
 {
+    /**
+     * Obtain the current state of the Viewlet.
+     *
+     * @return the current state of the Viewlet
+     */
+    public JeeViewletState getViewletState();
+
     /**
      * Obtain the Html class name for this Viewlet that will be used for the enclosing <tt>div</tt> tag.
      * 
@@ -182,4 +189,14 @@ public interface JeeViewlet
      * Name of the Request attribute that contains the REST-ful subject MeshObject.
      */
     public static final String SUBJECT_ATTRIBUTE_NAME = "Subject";
+
+    /**
+     * Name of the viewlet parameter that contains the current JeeViewletState.
+     */
+    public static final String VIEWLET_STATE_NAME = "ViewletState";
+
+    /**
+     * Name of the viewlet parameter that contains the desired JeeViewletStateTransition.
+     */
+    public static final String VIEWLET_STATE_TRANSITION_NAME = "ViewletStateTransition";
 }    

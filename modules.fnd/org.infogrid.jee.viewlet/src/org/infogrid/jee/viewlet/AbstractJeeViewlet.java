@@ -29,6 +29,8 @@ import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.AbstractViewlet;
+import org.infogrid.viewlet.CannotViewException;
+import org.infogrid.viewlet.MeshObjectsToView;
 
 /**
  * Factors out commonly used functionality for JeeViewlets.
@@ -54,6 +56,59 @@ public abstract class AbstractJeeViewlet
         super( viewed, c );
     }
     
+    /**
+      * The Viewlet is being instructed to view certain objects, which are packaged as MeshObjectsToView.
+      *
+      * @param toView the MeshObjects to view
+      * @throws CannotViewException thrown if this Viewlet cannot view these MeshObjects
+      */
+    @Override
+    public void view(
+            MeshObjectsToView toView )
+        throws
+            CannotViewException
+    {
+        super.view( toView );
+
+        theViewletState           = (JeeViewletState)           toView.getViewletParameter( VIEWLET_STATE_NAME );
+        theViewletStateTransition = (JeeViewletStateTransition) toView.getViewletParameter( VIEWLET_STATE_TRANSITION_NAME );
+    }
+
+    /**
+     * Obtain the current state of the Viewlet.
+     *
+     * @return the current state of the Viewlet, if any
+     */
+    public JeeViewletState getViewletState()
+    {
+        return theViewletState;
+    }
+
+    /**
+     * Obtain the desired next state of the Viewlet.
+     *
+     * @return the desired next state of the Viewlet, if any
+     */
+    public JeeViewletState getNextViewletState()
+    {
+        JeeViewletStateTransition trans = getViewletStateTransition();
+        if( trans != null ) {
+            return trans.getNextState();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Obtain the desired transition from the current state of the Viewlet.
+     *
+     * @return the desired transition from the current state of the Viewlet, if any
+     */
+    public JeeViewletStateTransition getViewletStateTransition()
+    {
+        return theViewletStateTransition;
+    }
+
     /**
      * Obtain the Html class name for this Viewlet that will be used for the enclosing <tt>div</tt> tag.
      * By default, it is the Java class name, having replaced all periods with hyphens.
@@ -357,4 +412,14 @@ public abstract class AbstractJeeViewlet
      * The request currently being processed.
      */
     protected RestfulRequest theCurrentRequest;
+
+    /**
+     * The current JeeViewletState.
+     */
+    protected JeeViewletState theViewletState;
+
+    /**
+     * The desired transition from the current JeeViewletState.
+     */
+    protected JeeViewletStateTransition theViewletStateTransition;
 }

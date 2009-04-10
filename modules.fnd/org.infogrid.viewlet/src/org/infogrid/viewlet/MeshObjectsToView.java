@@ -160,6 +160,22 @@ public class MeshObjectsToView
     }
 
     /**
+     * Obtain the value of a named Viewlet parameter.
+     *
+     * @param name the name of the Viewlet parameter
+     * @return the value, if any
+     */
+    public Object getViewletParameter(
+            String name )
+    {
+        if( theViewletParameters != null ) {
+            Object ret = theViewletParameters.get( name );
+            return ret;
+        }
+        return null;
+    }
+
+    /**
      * Obtain the parameters that the Viewlet is supposed to use.
      *
      * @return the parameters that the Viewlet is supposed to use

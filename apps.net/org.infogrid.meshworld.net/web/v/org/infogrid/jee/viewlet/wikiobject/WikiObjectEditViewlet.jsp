@@ -11,37 +11,36 @@
 <v:viewlet>
  <h1>Wiki Editor Viewlet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" maxLength="30"/></h1>
  <u:safeForm action="" method="post">
-  <c:if test="${mode eq 'edit'}">
-   <div class="mode"><p>Edit mode (not saved yet)</p></div>
+  <c:if test="${'edit' eq ViewletState}">
+   <div class="viewlet-state"><p>Edit (not saved yet)</p></div>
    <textarea class="current-content" name="current-content">${Viewlet.currentContent}</textarea>
    <table class="dialog-buttons">
     <tr>
-     <td><button type="submit" name="action" value="cancel">Cancel edits</button></td>
-     <td><button type="submit" name="action" value="preview">Preview</button></td>
-     <td><button type="submit" name="action" value="publish">Publish</button></td>
+     <td><button type="submit" name="ViewletStateTransition" value="do-cancel">Discard</button></td>
+     <td><button type="submit" name="ViewletStateTransition" value="do-preview">Preview</button></td>
+     <td><button type="submit" name="ViewletStateTransition" value="do-commit">Save</button></td>
     </tr>
    </table>
   </c:if>
-  <c:if test="${mode eq 'preview'}">
-   <div class="mode"><p>Preview mode (not saved yet)</p></div>
+  <c:if test="${'preview' eq ViewletState}">
+   <div class="viewlet-state"><p>Preview (not saved yet)</p></div>
    <div class="content">${Viewlet.currentContent}</div>
    <textarea class="current-content" name="current-content">${Viewlet.currentContent}</textarea>
    <table class="dialog-buttons">
     <tr>
-     <td><button type="submit" name="action" value="cancel">Cancel edits</button></td>
-     <td><button type="submit" name="action" value="publish">Publish</button></td>
-     <td><button type="submit" name="action" value="edit">Edit</button></td>
+     <td><button type="submit" name="ViewletStateTransition" value="do-cancel">Discard</button></td>
+     <td><button type="submit" name="ViewletStateTransition" value="do-preview">Preview</button></td>
+     <td><button type="submit" name="ViewletStateTransition" value="do-commit">Save</button></td>
     </tr>
    </table>
   </c:if>
-  <c:if test="${mode eq 'view'}">
-   <div class="mode"><p>View mode</p></div>
+  <c:if test="${'view' eq ViewletState}">
    <div class="content">
     ${Viewlet.currentContent}
    </div>
    <table class="dialog-buttons">
     <tr>
-     <td><button type="submit" name="action" value="edit">Edit</button></td>
+     <td><button type="submit" name="ViewletStateTransition" value="do-edit">Edit</button></td>
     </tr>
    </table>
   </c:if>

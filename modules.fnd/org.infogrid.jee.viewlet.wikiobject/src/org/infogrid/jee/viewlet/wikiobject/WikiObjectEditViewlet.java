@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,11 +18,12 @@ import javax.servlet.ServletException;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
+import org.infogrid.jee.viewlet.DefaultJeeViewletStateTransitionEnum;
 import org.infogrid.mesh.IllegalPropertyTypeException;
-import org.infogrid.mesh.IllegalPropertyValueException;
-import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.transaction.Transaction;
+import org.infogrid.meshbase.transaction.TransactionAction;
+import org.infogrid.meshbase.transaction.TransactionActionException;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.Wiki.WikiSubjectArea;
@@ -170,17 +171,67 @@ public class WikiObjectEditViewlet
     {
         SaneRequest sane = request.getSaneRequest();
 
-        String actionName = sane.getPostArgument( "action" );
-        Action theAction  = Action.findAction( actionName );
-        
-        Mode theMode = theAction.determineMode();
+        final String postedContent = sane.getPostArgument( "current-content" );
+        String       oldContent    = "";
 
-        sane.setAttribute( "action", theAction.getName() );
-        sane.setAttribute( "mode",   theMode.getName() );
+        try {
+            BlobValue oldValue = (BlobValue) getSubject().getPropertyValue( WikiSubjectArea.WIKIOBJECT_CONTENT );
+            if( oldValue != null ) {
+                oldContent = oldValue.getAsString();
+            }
 
-        String currentContent = sane.getPostArgument( "current-content" );
+            if( theViewletStateTransition == null ) {
+                theCurrentContent = oldContent;
+                
+            } else {
+                switch( (DefaultJeeViewletStateTransitionEnum) theViewletStateTransition ) {
+                    case DO_EDIT:
+                        theCurrentContent = oldContent;
+                        break;
 
-        theCurrentContent = theAction.process( getSubject(), theMode, currentContent );
+                    case DO_PREVIEW:
+                        theCurrentContent = postedContent;
+                        break;
+
+                    case DO_COMMIT:
+                        theCurrentContent = postedContent;
+                        getSubject().getMeshBase().executeAsap( new TransactionAction<Void>() {
+                            public Void execute(
+                                    Transaction tx )
+                                throws
+                                    TransactionActionException,
+                                    TransactionException
+                            {
+                                try {
+                                    getSubject().setPropertyValue( WikiSubjectArea.WIKIOBJECT_CONTENT, BlobValue.create( postedContent, BlobValue.TEXT_HTML_MIME_TYPE ));
+
+                                } catch( Exception ex ) {
+                                    throw new TransactionActionException.Error( ex );
+                                }
+                                return null;
+                            }
+                        });
+
+                        break;
+
+                    case DO_CANCEL:
+                        theCurrentContent = oldContent;
+                        break;
+                }
+            }
+
+        } catch( IllegalPropertyTypeException ex ) {
+            throw new ServletException( ex );
+
+        } catch( TransactionException ex ) {
+            throw new ServletException( ex );
+
+        } catch( TransactionActionException ex ) {
+            throw new ServletException( ex );
+
+        } catch( NotPermittedException ex ) {
+            throw new ServletException( ex );
+        }
     }
     
     /**
@@ -197,302 +248,4 @@ public class WikiObjectEditViewlet
      * The current content of the WikiObject.
      */
     protected String theCurrentContent;
-
-    /**
-     * The modes in which this Viewlet can be.
-     */
-    static enum Mode
-    {
-        VIEW( "view" ),
-        EDIT( "edit" ),
-        PREVIEW( "preview" );
-        
-        /**
-         * Constructur.
-         *
-         * @param modeName name of the mode in which the Viewlet is
-         */
-        private Mode(
-                String modeName )
-        {
-            theModeName = modeName;
-        }
-        
-        /**
-         * Obtain the name of this Mode.
-         *
-         * @return the name of this Mode
-         */
-        public String getName()
-        {
-            return theModeName;
-        }
-
-        /**
-         * Name of the mode, as used in the protocol, of the current mode.
-         */
-        protected String theModeName;
-    }
-    
-    /**
-     * The action that was taken by the user.
-     */
-    static enum Action
-    {
-        CANCEL( "cancel" )
-        {
-            /**
-             * Process the incoming request.
-             *
-             * @param subject the WikiObject
-             * @param mode the Mode to put the Viewlet in
-             * @param currentContent the current content
-             * @throws ServletException thrown if an error occurred
-             * @return the new content
-             */
-            protected String process(
-                    MeshObject subject,
-                    Mode       mode,
-                    String     currentContent )
-                throws
-                    ServletException
-            {
-                // restore old content
-                try {
-                    BlobValue oldValue = (BlobValue) subject.getPropertyValue( WikiSubjectArea.WIKIOBJECT_CONTENT );
-                    String    ret;
-                    if( oldValue != null ) {
-                        ret = oldValue.getAsString();
-                    } else {
-                        ret = "";
-                    }
-                    return ret;
-
-                } catch( IllegalPropertyTypeException ex ) {
-                    throw new ServletException( ex );
-
-                } catch( NotPermittedException ex ) {
-                    throw new ServletException( ex );
-                }
-            }
-
-            /**
-             * Given this action, determine the mode that the Viewlet is in.
-             *
-             * @return the Mode
-             */
-            public Mode determineMode()
-            {
-                return Mode.VIEW;
-            }
-        },
-
-        PREVIEW( "preview" )
-        {
-            /**
-             * Process the incoming request.
-             *
-             * @param subject the WikiObject
-             * @param mode the Mode to put the Viewlet in
-             * @param currentContent the current content
-             * @throws ServletException thrown if an error occurred
-             * @return the new content
-             */
-            protected String process(
-                    MeshObject subject,
-                    Mode       mode,
-                    String     currentContent )
-                throws
-                    ServletException
-            {
-                return currentContent;
-            }
-
-            /**
-             * Given this action, determine the mode that the Viewlet is in.
-             *
-             * @return the Mode
-             */
-            public Mode determineMode()
-            {
-                return Mode.PREVIEW;
-            }
-        },
-
-        PUBLISH( "publish" )
-        {
-            /**
-             * Process the incoming request.
-             *
-             * @param subject the WikiObject
-             * @param mode the Mode to put the Viewlet in
-             * @param currentContent the current content
-             * @throws ServletException thrown if an error occurred
-             * @return the new content
-             */
-            protected String process(
-                    MeshObject subject,
-                    Mode       mode,
-                    String     currentContent )
-                throws
-                    ServletException
-            {
-                Transaction tx = null;
-                try {
-                    tx = subject.getMeshBase().createTransactionAsapIfNeeded();
-                    
-                    BlobValue newValue = BlobValue.create( currentContent );
-                    subject.setPropertyValue( WikiSubjectArea.WIKIOBJECT_CONTENT, newValue );
-
-                } catch( TransactionException ex ) {
-                    log.error( ex );
-
-                } catch( IllegalPropertyTypeException ex ) {
-                    throw new ServletException( ex );
-
-                } catch( IllegalPropertyValueException ex ) {
-                    throw new ServletException( ex );
-
-                } catch( NotPermittedException ex ) {
-                    throw new ServletException( ex );
-
-                } finally {
-                    if( tx != null ) {
-                        tx.commitTransaction();
-                    }
-                }
-                return currentContent;
-            }
-
-
-            /**
-             * Given this action, determine the mode that the Viewlet is in.
-             *
-             * @return the Mode
-             */
-            public Mode determineMode()
-            {
-                return Mode.VIEW;
-            }
-        },
-        EDIT( "edit" )
-        {
-            /**
-             * Process the incoming request.
-             *
-             * @param subject the WikiObject
-             * @param mode the Mode to put the Viewlet in
-             * @param currentContent the current content
-             * @throws ServletException thrown if an error occurred
-             * @return the new content
-             */
-            protected String process(
-                    MeshObject subject,
-                    Mode       mode,
-                    String     currentContent )
-                throws
-                    ServletException
-            {
-                // if there is new content, use new content, otherwise restore old content
-                if( currentContent != null ) {
-                    return currentContent;
-                }
-
-                try {
-                    BlobValue oldValue = (BlobValue) subject.getPropertyValue( WikiSubjectArea.WIKIOBJECT_CONTENT );
-                    String    ret;
-                    if( oldValue != null ) {
-                        ret = oldValue.getAsString();
-                    } else {
-                        ret = "";
-                    }
-                    return ret;
-
-                } catch( IllegalPropertyTypeException ex ) {
-                    throw new ServletException( ex );
-
-                } catch( NotPermittedException ex ) {
-                    throw new ServletException( ex );
-                }
-            }
-
-            /**
-             * Given this action, determine the mode that the Viewlet is in.
-             *
-             * @return the Mode
-             */
-            public Mode determineMode()
-            {
-                return Mode.EDIT;
-            }
-        };
-
-        /**
-         * Constructor.
-         *
-         * @param actionName name of the action
-         */
-        private Action(
-                String actionName )
-        {
-            theActionName = actionName;
-        }
-
-        /**
-         * Obtain the name of this Action.
-         *
-         * @return the name of this Action
-         */
-        public String getName()
-        {
-            return theActionName;
-        }
-
-        /**
-         * Find the correct action, given the keyword.
-         *
-         * @param keyword the keyword
-         * @return the found Action
-         */
-        public static Action findAction(
-                Object keyword )
-        {
-            if( keyword != null ) {
-                for( Action candidate : Action.values() ) {
-                    if( candidate.theActionName.equals( keyword )) {
-                        return candidate;
-                    }
-                }
-            }
-            return CANCEL;            
-        }
-        
-        /**
-         * Process the incoming request.
-         *
-         * @param subject the WikiObject
-         * @param mode the Mode to put the Viewlet in
-         * @param currentContent the current content
-         * @throws ServletException thrown if an error occurred
-         * @return the new content
-         */
-        protected abstract String process(
-                MeshObject subject,
-                Mode       mode,
-                String     currentContent )
-            throws
-                ServletException;
-
-        /**
-         * Given this action, determine the mode that the Viewlet is in.
-         *
-         * @return the Mode
-         */
-        public abstract Mode determineMode();
-        
-        /**
-         * Name of the action, as used in the protocol, of the current action.
-         */
-        protected String theActionName;
-    }
 }

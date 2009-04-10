@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.viewlet.servlet;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
@@ -32,7 +33,11 @@ import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.servlet.TemplatesFilter;
+import org.infogrid.jee.viewlet.DefaultJeeViewletStateEnum;
+import org.infogrid.jee.viewlet.DefaultJeeViewletStateTransitionEnum;
 import org.infogrid.jee.viewlet.JeeViewlet;
+import org.infogrid.jee.viewlet.JeeViewletState;
+import org.infogrid.jee.viewlet.JeeViewletStateTransition;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -135,10 +140,21 @@ public class ViewletDispatcherServlet
                 throw new ServletException( ex ); // pass on
             }
         }
-
-        // create a stack of Viewlets
+        
+        // create a stack of Viewlets and other request attributes
         JeeViewlet oldViewlet = (JeeViewlet) servletRequest.getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
         servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, viewlet );
+
+        String oldState           = (String) request.getAttribute( JeeViewlet.VIEWLET_STATE_NAME );
+        String oldStateTransition = (String) request.getAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
+
+        if( toView != null ) {
+            JeeViewletState state = (JeeViewletState) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_NAME );
+            request.setAttribute( JeeViewlet.VIEWLET_STATE_NAME, state != null ? state.getName() : null ); // even set if null
+
+            JeeViewletStateTransition transition = (JeeViewletStateTransition) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
+            request.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition != null ? transition.getName() : null ); // even set if null
+        }
 
         synchronized( viewlet ) {
             Throwable thrown  = null;
@@ -182,7 +198,9 @@ public class ViewletDispatcherServlet
             } finally {
                 viewlet.performAfter( restfulRequest, structured, thrown );
 
-                servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, oldViewlet );
+                servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME,        oldViewlet );
+                servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_NAME,            oldState );
+                servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, oldStateTransition );
             }
         }
     }
@@ -228,24 +246,98 @@ public class ViewletDispatcherServlet
             URISyntaxException,
             NotPermittedException
     {
-        MeshObject           subject           = restful.determineRequestedMeshObject();
-        MeshObjectIdentifier subjectIdentifier = restful.determineRequestedMeshObjectIdentifier();
-        String               viewletClassName  = restful.getRequestedViewletClassName();
-        String               traversalString   = restful.getRequestedTraversal();
+        MeshObject subject           = restful.determineRequestedMeshObject();
+        String     viewletClassName  = restful.getRequestedViewletClassName();
+        String     traversalString   = restful.getRequestedTraversal();
+
+        TraversalSpecification traversal = ( traversalDict != null ) ? traversalDict.translate( subject, traversalString ) : null;
 
         if( subject == null ) {
+            MeshObjectIdentifier subjectIdentifier = restful.determineRequestedMeshObjectIdentifier();
             throw new CannotViewException.NoSubject( subjectIdentifier );
         }
 
-        TraversalSpecification traversal   = ( traversalDict != null ) ? traversalDict.translate( subject, traversalString ) : null;
-        Map<String,Object>     viewletPars = null;
-        
+        Map<String,Object> viewletPars = determineViewletParameters( restful, traversalDict );
+
         MeshObjectsToView ret = MeshObjectsToView.create(
                 subject,
                 null,
                 viewletClassName,
                 viewletPars,
                 traversal );
+        return ret;
+    }
+
+    /**
+     * Determine the Viewlet parameters for the MeshObjectsToView.
+     * Factored out to make overriding easier in subclasses.
+     *
+     * @param restful the incoming RESTful request
+     * @param traversalDict the TraversalDictionary to use
+     * @return the created Map, or null
+     * @throws MeshObjectAccessException thrown if one or more MeshObjects could not be accessed
+     * @throws URISyntaxException thrown if a URI parsing error occurred
+     * @throws NotPermittedException thrown if an attempted operation was not permitted
+     */
+    protected Map<String,Object> determineViewletParameters(
+            RestfulRequest       restful,
+            TraversalDictionary  traversalDict )
+        throws
+            MeshObjectAccessException,
+            URISyntaxException,
+            NotPermittedException
+    {
+        Map<String,Object> viewletPars = null;
+
+        JeeViewletStateTransition transition = determineViewletStateTransition( restful );
+        if( transition != null ) {
+            if( viewletPars == null ) {
+                viewletPars = new HashMap<String,Object>();
+            }
+            viewletPars.put( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition );
+        }
+
+        // if there is a transition, it determines the state. If there is none, we try if we can tell the current state.
+        JeeViewletState state = null;
+        if( transition != null ) {
+            state = transition.getNextState();
+        }
+        if( state == null ) {
+            state = determineViewletState( restful );
+        }
+        if( state != null ) {
+            if( viewletPars == null ) {
+                viewletPars = new HashMap<String,Object>();
+            }
+            viewletPars.put( JeeViewlet.VIEWLET_STATE_NAME, state );
+        }
+
+        return viewletPars;
+    }
+
+    /**
+     * Overridable method to determine the current JeeViewletState from a request.
+     *
+     * @param restful the incoming RESTful request
+     * @return the desired JeeViewletState
+     */
+    protected JeeViewletState determineViewletState(
+            RestfulRequest restful )
+    {
+        JeeViewletState ret = DefaultJeeViewletStateEnum.fromRequest( restful );
+        return ret;
+    }
+
+    /**
+     * Overridable method to determine the desired JeeViewletStateTransition from a request.
+     *
+     * @param restful the incoming RESTful request
+     * @return the desired JeeViewletState
+     */
+    protected JeeViewletStateTransition determineViewletStateTransition(
+            RestfulRequest restful )
+    {
+        JeeViewletStateTransition ret = DefaultJeeViewletStateTransitionEnum.fromRequest( restful );
         return ret;
     }
 }

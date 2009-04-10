@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -68,7 +68,7 @@ public class MainMeshWorldViewletFactory
             ret.add( WikiObjectDisplayViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( WikiObjectEditViewlet.choice(    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
-        ret.add( GraphTreeViewlet.choice( new TraversalSpecification[3], ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+        ret.add( GraphTreeViewlet.choice( new TraversalSpecification[3], ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
         ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",         ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
