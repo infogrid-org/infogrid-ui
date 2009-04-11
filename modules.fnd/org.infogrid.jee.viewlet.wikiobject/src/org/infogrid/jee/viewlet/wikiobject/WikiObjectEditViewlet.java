@@ -29,7 +29,6 @@ import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.Wiki.WikiSubjectArea;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
@@ -45,8 +44,6 @@ public class WikiObjectEditViewlet
         extends
             AbstractJeeViewlet
 {
-    private static final Log log = Log.getLogInstance( WikiObjectEditViewlet.class ); // our own, private logger
-
     /**
      * Factory method.
      *

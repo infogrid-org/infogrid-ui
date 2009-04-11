@@ -57,7 +57,7 @@ public enum DefaultJeeViewletStateEnum
     public static DefaultJeeViewletStateEnum fromRequest(
             RestfulRequest request )
     {
-        String value = request.getSaneRequest().getPostArgument( VIEWLET_STATE_PAR_NAME );
+        String value = request.getSaneRequest().getArgument( VIEWLET_STATE_PAR_NAME );
         if( value != null ) {
             for( DefaultJeeViewletStateEnum candidate : DefaultJeeViewletStateEnum.values() ) {
                 if( candidate.theStateName.equals( value )) {
