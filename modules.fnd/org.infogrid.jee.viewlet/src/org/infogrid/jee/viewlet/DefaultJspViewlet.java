@@ -26,7 +26,7 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
  * A Viewlet Class that can impersonate any other Viewlet, as long as the Viewlet
  * does not override or add any methods.
  */
-public class PseudoJspViewlet
+public class DefaultJspViewlet
         extends
             AbstractJeeViewlet
 {
@@ -37,12 +37,12 @@ public class PseudoJspViewlet
      * @param c the application context
      * @return the created Viewlet
      */
-    public static PseudoJspViewlet create(
+    public static DefaultJspViewlet create(
             String  pseudoClassName,
             Context c )
     {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
-        PseudoJspViewlet         ret    = new PseudoJspViewlet( pseudoClassName, viewed, c );
+        DefaultJspViewlet         ret    = new DefaultJspViewlet( pseudoClassName, viewed, c );
 
         viewed.setViewlet( ret );
 
@@ -60,7 +60,7 @@ public class PseudoJspViewlet
             final String pseudoClassName,
             double       matchQuality )
     {
-        return new PseudoJspViewletFactoryChoice( pseudoClassName, matchQuality ) {
+        return new DefaultJspViewletFactoryChoice( pseudoClassName, matchQuality ) {
                 public Viewlet instantiateViewlet(
                         MeshObjectsToView        toView,
                         Context                  c )
@@ -79,7 +79,7 @@ public class PseudoJspViewlet
      * @param viewed the AbstractViewedMeshObjects implementation to use
      * @param c the application context
      */
-    protected PseudoJspViewlet(
+    protected DefaultJspViewlet(
             String                    pseudoClassName,
             AbstractViewedMeshObjects viewed,
             Context                   c )

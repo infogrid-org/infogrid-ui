@@ -26,7 +26,7 @@ import org.infogrid.viewlet.DefaultViewletFactoryChoice;
  *    pseudoClassName that does not add any functionality itself.</p>
  * <p>The main purpose of this class is to avoid having to write empty Viewlet classes.</p>
  */
-public abstract class PseudoJspViewletFactoryChoice
+public abstract class DefaultJspViewletFactoryChoice
         extends
             DefaultViewletFactoryChoice
 {
@@ -36,7 +36,7 @@ public abstract class PseudoJspViewletFactoryChoice
      * @param pseudoClassName the name of the (non-exististing) Viewlet class
      * @param matchQuality the match quality
      */
-    protected PseudoJspViewletFactoryChoice(
+    protected DefaultJspViewletFactoryChoice(
             String         pseudoClassName,
             double         matchQuality )
     {
@@ -53,7 +53,7 @@ public abstract class PseudoJspViewletFactoryChoice
     @Override
     public String getUserVisibleName()
     {
-        ResourceHelper rh  = ResourceHelper.getInstance( thePseudoClassName, PseudoJspViewletFactoryChoice.class.getClassLoader()  );
+        ResourceHelper rh  = ResourceHelper.getInstance( thePseudoClassName, DefaultJspViewletFactoryChoice.class.getClassLoader()  );
 
         String ret = rh.getResourceStringOrDefault( "UserVisibleName", thePseudoClassName );
 

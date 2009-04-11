@@ -15,7 +15,7 @@
 package org.infogrid.jee.net.testapp;
 
 import java.util.ArrayList;
-import org.infogrid.jee.viewlet.PseudoJspViewlet;
+import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshBasesViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
@@ -76,13 +76,13 @@ public class TestAppViewletFactory
             }
             
             if( base instanceof LocalNetMeshBase ) {
-                ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.meshbase.net.AllShadowsViewlet", ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+                ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.meshbase.net.AllShadowsViewlet", ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             }
         }
 
-        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
-//        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
-//        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+//        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
+//        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

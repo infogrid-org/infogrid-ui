@@ -15,7 +15,7 @@
 package org.infogrid.jee.testapp;
 
 import java.util.ArrayList;
-import org.infogrid.jee.viewlet.PseudoJspViewlet;
+import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.image.ImageViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
@@ -59,7 +59,7 @@ public class TestAppViewletFactory
         if( subject.isBlessedBy( BlobSubjectArea.IMAGE )) {
             ret.add( ImageViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
         }
-        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

@@ -15,7 +15,7 @@
 package org.infogrid.meshworld.net;
 
 import java.util.ArrayList;
-import org.infogrid.jee.viewlet.PseudoJspViewlet;
+import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet;
 import org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -61,8 +61,8 @@ public class IframeNetMeshWorldViewletFactory
             ret.add( WikiObjectDisplayViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( WikiObjectEditViewlet.choice(    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
-        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
-        ret.add( PseudoJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }
