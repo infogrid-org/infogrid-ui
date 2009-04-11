@@ -9,17 +9,16 @@ div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet table.dialog-butto
     width: 33.3%
 }
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet textarea.current-content {
-    width: 880px;
+    width: 100%;
     min-height: 200px;
-    margin: 20px 10px;
-    padding: 8px;
+    border: #808080 1px solid;
+    margin: 0;
+    padding: 0;
 }
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.content {
-    width: 880px;
-    border-width: 1px;
-    border-style: solid;
-    margin: 20px 10px;
-    padding: 8px;
+    width: auto;
+    margin: 0;
+    padding: 0 2px 0 0 ;
 }
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet > div.viewlet-state {
     float: right;
