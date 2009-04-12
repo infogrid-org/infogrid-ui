@@ -23,12 +23,12 @@ import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
- * A Viewlet Class that can impersonate any other Viewlet, as long as the Viewlet
+ * A Viewlet Class that can impersonate any other JSP-based Viewlet, as long as the Viewlet
  * does not override or add any methods.
  */
 public class DefaultJspViewlet
         extends
-            AbstractJeeViewlet
+            AbstractJspViewlet
 {
     /**
      * Factory method.
@@ -42,7 +42,7 @@ public class DefaultJspViewlet
             Context c )
     {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
-        DefaultJspViewlet         ret    = new DefaultJspViewlet( pseudoClassName, viewed, c );
+        DefaultJspViewlet        ret    = new DefaultJspViewlet( pseudoClassName, viewed, c );
 
         viewed.setViewlet( ret );
 
@@ -84,53 +84,6 @@ public class DefaultJspViewlet
             AbstractViewedMeshObjects viewed,
             Context                   c )
     {
-        super( viewed, c );
-
-        thePseudoClassName = pseudoClassName;
+        super( pseudoClassName, viewed, c );
     }
-
-    /**
-     * Obtain the Html class name for this Viewlet. By default, it is the Java class
-     * name, having replaced all periods with hyphens.
-     * 
-     * @return the HTML class name
-     */
-    @Override
-    public String getHtmlClass()
-    {
-        String ret = thePseudoClassName;
-
-        ret = ret.replaceAll( "\\.", "-" );
-        
-        return ret;
-    }
-
-    /**
-     * Obtain the path to the Servlet for this JeeViewlet.
-     * 
-     * @return the Servlet path
-     */
-    @Override
-    public String getServletPath()
-    {
-        String ret = constructDefaultDispatcherUrl( thePseudoClassName );
-        return ret;
-    }
-
-    /**
-     * Obtain the computable name of the Viewlet.
-     * 
-     * @return the Viewet's name
-     */
-    @Override
-    public String getName()
-    {
-        return thePseudoClassName;
-    }
-
-    /**
-     * The name of the Viewlet class this would have been if it had been created as a separate
-     * Viewlet class.
-     */
-    protected String thePseudoClassName;
 }

@@ -17,7 +17,7 @@ package org.infogrid.jee.viewlet.wikiobject;
 import javax.servlet.ServletException;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.viewlet.AbstractJeeViewlet;
+import org.infogrid.jee.viewlet.AbstractJspViewlet;
 import org.infogrid.jee.viewlet.DefaultJeeViewletStateTransitionEnum;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.NotPermittedException;
@@ -42,7 +42,7 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
  */
 public class WikiObjectEditViewlet
         extends
-            AbstractJeeViewlet
+            AbstractJspViewlet
 {
     /**
      * Factory method.
@@ -53,8 +53,22 @@ public class WikiObjectEditViewlet
     public static WikiObjectEditViewlet create(
             Context c )
     {
+        return create( WikiObjectEditViewlet.class.getName(), c );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param pseudoClassName the fully-qualified class name of the class that will be impersonated
+     * @param c the application context
+     * @return the created Viewlet
+     */
+    public static WikiObjectEditViewlet create(
+            String  pseudoClassName,
+            Context c )
+    {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
-        WikiObjectEditViewlet    ret    = new WikiObjectEditViewlet( viewed, c );
+        WikiObjectEditViewlet    ret    = new WikiObjectEditViewlet( pseudoClassName, viewed, c );
 
         viewed.setViewlet( ret );
 
@@ -70,6 +84,20 @@ public class WikiObjectEditViewlet
     public static ViewletFactoryChoice choice(
             double matchQuality )
     {
+        return choice( WikiObjectEditViewlet.class.getName(), matchQuality );
+    }
+
+    /**
+     * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
+     *
+     * @param pseudoClassName the fully-qualified class name of the class that will be impersonated
+     * @param matchQuality the match quality
+     * @return the ViewletFactoryChoice
+     */
+    public static ViewletFactoryChoice choice(
+            final String pseudoClassName,
+            double       matchQuality )
+    {
         return new DefaultViewletFactoryChoice( WikiObjectEditViewlet.class, matchQuality ) {
                 public Viewlet instantiateViewlet(
                         MeshObjectsToView        toView,
@@ -77,7 +105,7 @@ public class WikiObjectEditViewlet
                     throws
                         CannotViewException
                 {
-                    return create( c );
+                    return create( pseudoClassName, c );
                 }
         };
     }
@@ -85,14 +113,16 @@ public class WikiObjectEditViewlet
     /**
      * Constructor. This is protected: use factory method or subclass.
      *
+     * @param pseudoClassName the fully-qualified class name of the class that will be impersonated
      * @param viewed the AbstractViewedMeshObjects implementation to use
      * @param c the application context
      */
     protected WikiObjectEditViewlet(
+            String                    pseudoClassName,
             AbstractViewedMeshObjects viewed,
             Context                   c )
     {
-        super( viewed, c );
+        super( pseudoClassName, viewed, c );
     }
 
     /**
@@ -166,6 +196,10 @@ public class WikiObjectEditViewlet
         throws
             ServletException
     {
+        if( !getSubject().isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
+            return; // rather safe than sorry, in particular for subclasses
+        }
+
         SaneRequest sane = request.getSaneRequest();
 
         final String postedContent = sane.getPostArgument( "current-content" );
