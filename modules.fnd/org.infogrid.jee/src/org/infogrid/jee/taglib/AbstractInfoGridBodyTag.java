@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -60,12 +60,12 @@ public abstract class AbstractInfoGridBodyTag
         BodyTagSupport
 {
     /**
-     * This has a constructor to invoke initializeToDefaults()
+     * Constructor.
      */
     protected AbstractInfoGridBodyTag()
     {
         theFormatter = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( JeeFormatter.class );
-        
+
         initializeToDefaults(); // may invoke subclass invocation
     }
 
@@ -246,6 +246,8 @@ public abstract class AbstractInfoGridBodyTag
         try {
             int ret = realDoEndTag();
             
+            initializeToDefaults();
+
             return ret;
             
         } catch( IgnoreException ex ) {
@@ -392,7 +394,6 @@ public abstract class AbstractInfoGridBodyTag
     public final void release()
     {
         internalRelease();
-        initializeToDefaults();
     }
     
     /**

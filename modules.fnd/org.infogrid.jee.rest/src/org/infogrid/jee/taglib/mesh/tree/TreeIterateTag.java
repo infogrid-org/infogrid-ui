@@ -57,10 +57,16 @@ public class TreeIterateTag
     {
         theStartObjectName        = null;
         theTraversalSpecification = null;
+        theTraversals             = null;
         theMeshObjectLoopVar      = null;
         theLevelVar               = null;
         theState                  = STATE.INIT;
-        theStack                  = new Stack<CursorIterator<MeshObject>>();
+        theCurrentNode            = null;
+        if( theStack == null ) {
+            theStack = new Stack<CursorIterator<MeshObject>>();
+        } else {
+            theStack.clear();
+        }
 
         super.initializeToDefaults();
     }
@@ -216,6 +222,7 @@ public class TreeIterateTag
             if( log.isTraceEnabled() ) {
                 log.traceMethodCallExit( this, "realDoStartTag" );
             }
+            // pageContext.getOut().print( "<pre><b>realDoStartTag():</b>\n" + this + "</pre>\n" );
         }
     }
 
@@ -224,11 +231,13 @@ public class TreeIterateTag
      *
      * @return evaluate or skip body
      * @throws JspException thrown if an error occurred
+     * @throws IOException thrown if an I/O Exception occurred
      */
     @Override
     protected int realDoAfterBody()
         throws
-            JspException
+            JspException,
+            IOException
     {
         if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "realDoAfterBody" );
@@ -331,6 +340,7 @@ public class TreeIterateTag
             if( log.isTraceEnabled() ) {
                 log.traceMethodCallExit( this, "realDoAfterBody" );
             }
+            // pageContext.getOut().print( "<pre><b>realDoAfterBodyTag():</b>\n" + this + "</pre>\n" );
         }
     }
 
