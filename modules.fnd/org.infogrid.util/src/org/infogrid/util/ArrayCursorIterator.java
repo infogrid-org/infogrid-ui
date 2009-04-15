@@ -15,6 +15,8 @@
 package org.infogrid.util;
 
 import java.util.NoSuchElementException;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * An interator for arrays. It supports the <code>java.util.Enumeration</code>,
@@ -26,7 +28,8 @@ public class ArrayCursorIterator<E>
         extends
             AbstractCursorIterator<E>
         implements
-            CursorIterator<E>
+            CursorIterator<E>,
+            CanBeDumped
 {
     /**
      * Factory method. Position cursor at the beginning of the array. Iterate over the
@@ -392,6 +395,29 @@ public class ArrayCursorIterator<E>
         }
         
         thePosition = realPosition.thePosition;
+    }
+
+    /**
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
+    {
+        d.dump( this,
+                new String[] {
+                    "array",
+                    "position",
+                    "lower",
+                    "upper"
+                },
+                new Object[] {
+                    theArray,
+                    thePosition,
+                    theLowerBound,
+                    theUpperBound
+                } );
     }
 
     /**

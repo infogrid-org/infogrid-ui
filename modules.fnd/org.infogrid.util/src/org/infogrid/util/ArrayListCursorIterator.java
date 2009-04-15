@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,8 @@ package org.infogrid.util;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * An interator for ArrayLists. It supports the <code>java.util.Enumeration</code>,
@@ -27,7 +29,8 @@ public class ArrayListCursorIterator<E>
         extends
             AbstractCursorIterator<E>
         implements
-            CursorIterator<E>
+            CursorIterator<E>,
+            CanBeDumped
 {
     /**
      * Factory method. Position cursor at the beginning of the array. Iterate over the
@@ -373,6 +376,29 @@ public class ArrayListCursorIterator<E>
         }
         
         thePosition = realPosition.thePosition;
+    }
+
+    /**
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
+    {
+        d.dump( this,
+                new String[] {
+                    "array",
+                    "position",
+                    "lower",
+                    "upper"
+                },
+                new Object[] {
+                    theArray,
+                    thePosition,
+                    theLowerBound,
+                    theUpperBound
+                } );
     }
 
     /**

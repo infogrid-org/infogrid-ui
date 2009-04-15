@@ -129,4 +129,19 @@ public abstract class AbstractRestInfoGridBodyTag
     {
         return ((RestfulJeeFormatter)theFormatter).findTraversalSpecification( name );
     }
+
+    /**
+     * Find a sequence of TraversalSpecifications, or throw an Exception.
+     *
+     * @param name name of the TraversalSpecification sequence
+     * @return the found sequence of TraversalSpecifications
+     * @throws JspException thrown if the TraversalSpecification could not be found
+     */
+    protected TraversalSpecification [] findTraversalSpecificationSequenceOrThrow(
+            String name )
+        throws
+            JspException
+    {
+        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationSequenceOrThrow( name );
+    }
 }

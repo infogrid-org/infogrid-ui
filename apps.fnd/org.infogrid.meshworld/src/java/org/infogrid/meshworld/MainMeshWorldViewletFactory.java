@@ -18,14 +18,12 @@ import java.util.ArrayList;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
-import org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
 import org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet;
 import org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.Wiki.WikiSubjectArea;
-import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.viewlet.AbstractViewletFactory;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactoryChoice;
@@ -68,8 +66,8 @@ public class MainMeshWorldViewletFactory
             ret.add( WikiObjectDisplayViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( WikiObjectEditViewlet.choice(    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
-        ret.add( GraphTreeViewlet.choice( new TraversalSpecification[3], ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet",         ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",         ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );

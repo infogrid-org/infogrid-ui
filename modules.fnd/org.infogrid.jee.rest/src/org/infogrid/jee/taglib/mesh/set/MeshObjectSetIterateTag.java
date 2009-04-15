@@ -18,7 +18,6 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.mesh.set.MeshObjectSet;
 
-
 /**
  * Iterate over a <code>MeshObjectSet</code> given as a bean. Ordering is accomplished
  * by passing in a <code>OrderedMeshObjectSet</code>.

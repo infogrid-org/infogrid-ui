@@ -35,8 +35,8 @@ import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
-import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
+import org.infogrid.model.traversal.StayRightHereTraversalSpecification;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
@@ -300,29 +300,42 @@ public class RestfulJeeFormatter
         MeshTypeIdentifierFactory idFact = mb.getMeshTypeIdentifierFactory();
 
         TraversalSpecification ret;
+
+        name = name.trim();
+
         String [] componentNames = name.split( "!" );
 
-        if( componentNames.length == 1) {
-            MeshTypeIdentifier id = idFact.fromExternalForm( name );
-
-            try {
-                ret = mb.findRoleTypeByIdentifier( id );
-
-            } catch( MeshTypeWithIdentifierNotFoundException ex ) {
-                log.warn( ex );
-                return null; // gotta do something
-            }
-        } else {
-            RoleType [] components = new RoleType[ componentNames.length ];
-            for( int i=0 ; i<componentNames.length ; ++i ) {
-                MeshTypeIdentifier id = idFact.fromExternalForm( componentNames[i] );
+        if( componentNames.length == 1 ) {
+            if( ".".equals( name )) {
+                ret = StayRightHereTraversalSpecification.create();
+            } else {
+                MeshTypeIdentifier id = idFact.fromExternalForm( name );
 
                 try {
-                    components[i] = mb.findRoleTypeByIdentifier( id );
+                    ret = mb.findRoleTypeByIdentifier( id );
 
                 } catch( MeshTypeWithIdentifierNotFoundException ex ) {
                     log.warn( ex );
                     return null; // gotta do something
+                }
+            }
+        } else {
+            TraversalSpecification [] components = new TraversalSpecification[ componentNames.length ];
+            for( int i=0 ; i<componentNames.length ; ++i ) {
+                componentNames[i] = componentNames[i].trim();
+                
+                if( ".".equals( componentNames[i] )) {
+                    components[i] = StayRightHereTraversalSpecification.create();
+                } else {
+                    MeshTypeIdentifier id = idFact.fromExternalForm( componentNames[i] );
+
+                    try {
+                        components[i] = mb.findRoleTypeByIdentifier( id );
+
+                    } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+                        log.warn( ex );
+                        return null; // gotta do something
+                    }
                 }
             }
             ret = SequentialCompoundTraversalSpecification.create( components );
@@ -343,9 +356,36 @@ public class RestfulJeeFormatter
         throws
             JspException
     {
+        name = name.trim();
+        if( "*".equals( name )) {
+            return null;
+        }
+
         TraversalSpecification ret = findTraversalSpecification( name );
+
         if( ret == null ) {
             throw new JspException( "Could not find TraversalSpecification " + name );
+        }
+        return ret;
+    }
+
+    /**
+     * Find a sequence of TraversalSpecifications, or throw an Exception.
+     *
+     * @param name name of the TraversalSpecification sequence
+     * @return the found sequence of TraversalSpecifications
+     * @throws JspException thrown if the TraversalSpecification could not be found
+     */
+    public TraversalSpecification [] findTraversalSpecificationSequenceOrThrow(
+            String name )
+        throws
+            JspException
+    {
+        String [] components = name.split( "\\s" );
+
+        TraversalSpecification [] ret = new TraversalSpecification[ components.length ];
+        for( int i=0 ; i<components.length ; ++i ) {
+            ret[i] = findTraversalSpecificationOrThrow( components[i] );
         }
         return ret;
     }
