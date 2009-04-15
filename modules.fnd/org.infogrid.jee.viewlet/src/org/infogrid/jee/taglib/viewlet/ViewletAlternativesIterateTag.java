@@ -55,10 +55,10 @@ public class ViewletAlternativesIterateTag
     @Override
     protected void initializeToDefaults()
     {
-        super.initializeToDefaults();
-
         theSubjectName = null;
         theLoopVar     = null;
+        
+        super.initializeToDefaults();
     }
 
     /**

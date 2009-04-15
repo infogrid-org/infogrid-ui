@@ -8,21 +8,19 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.util;
 
-import org.infogrid.jee.taglib.AbstractInfoGridTag;
-import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.util.ResourceHelper;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.taglib.AbstractInfoGridTag;
+import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.util.ResourceHelper;
 
 /**
  * <p>Formats a time stamp.</p>

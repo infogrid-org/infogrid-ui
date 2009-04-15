@@ -8,18 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.mesh.net;
 
+import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
-
 import org.infogrid.mesh.net.NetMeshObject;
-
-import javax.servlet.jsp.JspException;
 
 /**
  * <p>Abstract superclass for tags that perform tests about whether a NetMeshObject is the home replica or not.</p>

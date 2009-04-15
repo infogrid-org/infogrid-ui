@@ -48,8 +48,6 @@ public class SafeFormTag
     @Override
     protected void initializeToDefaults()
     {
-        super.initializeToDefaults();
-        
         theId            = null;
         theStyle         = null;
         theTitle         = null;
@@ -72,6 +70,8 @@ public class SafeFormTag
         theOnsubmit      = null;
         theOnReset       = null;
         theAcceptCharset = null;
+
+        super.initializeToDefaults();
     }
 
     /**
