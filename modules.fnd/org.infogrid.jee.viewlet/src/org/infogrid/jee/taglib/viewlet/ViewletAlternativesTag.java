@@ -30,7 +30,6 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.viewlet.NoViewletFoundException;
 
 /**
  * Allows the user to select an alternate JeeViewlet to display the current subject.
