@@ -14,6 +14,7 @@
 
 package org.infogrid.meshbase;
 
+import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
@@ -26,6 +27,8 @@ import org.infogrid.util.text.StringRepresentationContext;
  * Identifies a MeshBase.
  */
 public class MeshBaseIdentifier
+        extends
+             AbstractIdentifier
         implements
             Identifier,
             CanBeDumped

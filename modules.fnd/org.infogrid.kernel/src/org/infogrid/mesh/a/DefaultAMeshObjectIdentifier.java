@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.a.DefaultAMeshObjectIdentifierFactory;
+import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
@@ -28,6 +29,8 @@ import org.infogrid.util.text.StringRepresentationContext;
  * Implements MeshObjectIdentifier for the "A" implementation.
  */
 public class DefaultAMeshObjectIdentifier
+        extends
+             AbstractIdentifier
         implements
             MeshObjectIdentifier
 {

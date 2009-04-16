@@ -22,6 +22,8 @@ import org.infogrid.util.text.StringRepresentationContext;
  * Trivially simple implementation of Identifier using a String.
  */
 public class SimpleStringIdentifier
+        extends
+             AbstractIdentifier
         implements
             Identifier
 {

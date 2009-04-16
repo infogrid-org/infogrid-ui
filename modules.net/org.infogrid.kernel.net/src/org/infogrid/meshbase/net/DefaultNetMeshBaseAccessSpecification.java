@@ -14,6 +14,7 @@
 
 package org.infogrid.meshbase.net;
 
+import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
@@ -26,6 +27,8 @@ import org.infogrid.util.text.StringRepresentationContext;
  * Default implementation of NetMeshBaseAccessSpecification.
  */
 public class DefaultNetMeshBaseAccessSpecification
+        extends
+             AbstractIdentifier
         implements
             NetMeshBaseAccessSpecification,
             CanBeDumped

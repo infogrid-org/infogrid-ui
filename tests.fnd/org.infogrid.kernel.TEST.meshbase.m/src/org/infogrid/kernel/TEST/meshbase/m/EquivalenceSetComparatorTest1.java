@@ -16,6 +16,7 @@ package org.infogrid.kernel.TEST.meshbase.m;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.a.AMeshObjectEquivalenceSetComparator;
+import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -213,6 +214,8 @@ public class EquivalenceSetComparatorTest1
      * MeshObjectIdentifier test class.
      */
     static class TestMeshObjectIdentifier
+            extends
+                 AbstractIdentifier
             implements
                 MeshObjectIdentifier
     {

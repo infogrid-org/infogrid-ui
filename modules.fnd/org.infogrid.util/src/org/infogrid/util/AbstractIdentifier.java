@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -14,23 +14,13 @@
 
 package org.infogrid.util;
 
-import org.infogrid.util.text.HasStringRepresentation;
-
 /**
- * An abstract interface to capture the semantics of identifiers.
+ * Makes implementing subtypes of Identifier just a tiny bit easier.
  */
-public interface Identifier
-        extends
-            HasStringRepresentation
+public abstract class AbstractIdentifier
+    implements
+        Identifier
 {
-    /**
-     * Obtain an external form for this Identifier, similar to
-     * <code>java.net.URL.toExternalForm()</code>.
-     *
-     * @return external form of this Identifier
-     */
-    public abstract String toExternalForm();
-
     /**
      * Obtain an external form for this Identifier, similar to
      * <code>java.net.URL.toExternalForm()</code>. This is provided
@@ -38,5 +28,8 @@ public interface Identifier
      *
      * @return external form of this Identifier
      */
-    public abstract String getExternalForm();
+    public final String getExternalForm()
+    {
+        return toExternalForm();
+    }
 }

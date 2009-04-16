@@ -16,6 +16,7 @@ package org.infogrid.modelbase.m;
 
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 
+import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -24,6 +25,8 @@ import org.infogrid.util.text.StringRepresentationContext;
  * MeshTypeIdentifier implementation for MModelBase.
  */
 public class MMeshTypeIdentifier
+        extends
+             AbstractIdentifier
         implements
              MeshTypeIdentifier
 {
