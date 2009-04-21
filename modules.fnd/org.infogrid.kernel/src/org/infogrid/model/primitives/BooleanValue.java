@@ -16,6 +16,7 @@ package org.infogrid.model.primitives;
 
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
   * This is a boolean value for PropertyValues.
@@ -186,20 +187,18 @@ public final class BooleanValue
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         if( theValue ) {
-            return rep.formatEntry( getClass(), "True", maxLength, colloquial );
+            return rep.formatEntry( getClass(), "True", pars );
         } else {
-            return rep.formatEntry( getClass(), "False", maxLength, colloquial );
+            return rep.formatEntry( getClass(), "False", pars );
         }
     }
 

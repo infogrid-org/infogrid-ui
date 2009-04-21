@@ -77,21 +77,19 @@ public abstract class CompoundStringifier<T>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String         soFar,
-            ArrayFacade<T> arg,
-            int            maxLength,
-            boolean        colloquial )
+            String                         soFar,
+            ArrayFacade<T>                 arg,
+            StringRepresentationParameters pars )
     {
         StringBuffer ret = new StringBuffer();
         for( int i=0 ; i<theComponents.length ; ++i ) {
             CompoundStringifierComponent<T> current = theComponents[i];
             
-            String found = current.format( soFar + ret.toString(), arg, maxLength, colloquial ); // presumably shorter, but we don't know
+            String found = current.format( soFar + ret.toString(), arg, pars ); // presumably shorter, but we don't know
             
             ret.append( found );
         }
@@ -109,22 +107,20 @@ public abstract class CompoundStringifier<T>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
-    @SuppressWarnings(value={"unchecked"})
+    @SuppressWarnings("unchecked")
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
-        return format( soFar, (ArrayFacade<T>) arg, maxLength, colloquial );
+        return format( soFar, (ArrayFacade<T>) arg, pars );
     }
 
     /**

@@ -17,6 +17,7 @@ package org.infogrid.util;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Trivially simple implementation of Identifier using a String.
@@ -66,17 +67,15 @@ public class SimpleStringIdentifier
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
-        String ret = IdentifierStringifier.colloquialUrl( toExternalForm(), colloquial );
+        String ret = IdentifierStringifier.defaultFormat( toExternalForm(), pars );
         return ret;
     }
 

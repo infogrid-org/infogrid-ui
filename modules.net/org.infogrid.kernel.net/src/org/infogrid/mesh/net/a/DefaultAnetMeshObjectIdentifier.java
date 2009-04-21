@@ -25,6 +25,7 @@ import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Implements NetMeshObjectIdentifier for the Anet implementation.
@@ -141,16 +142,14 @@ public class DefaultAnetMeshObjectIdentifier
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     @Override
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
         String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
@@ -191,14 +190,13 @@ public class DefaultAnetMeshObjectIdentifier
             meshObjectExternalForm = toExternalForm();
         }
 
-        meshBaseExternalForm   = IdentifierStringifier.colloquialUrl( meshBaseExternalForm,   colloquial );
-        meshObjectExternalForm = IdentifierStringifier.colloquialUrl( meshObjectExternalForm, colloquial );
+        meshBaseExternalForm   = IdentifierStringifier.defaultFormat( meshBaseExternalForm,   pars );
+        meshObjectExternalForm = IdentifierStringifier.defaultFormat( meshObjectExternalForm, pars );
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 key,
-                maxLength,
-                colloquial,
+                pars,
                 meshObjectExternalForm,
                 contextPath,
                 meshBaseExternalForm );
@@ -299,8 +297,7 @@ public class DefaultAnetMeshObjectIdentifier
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subclass
                 key,
-                HasStringRepresentation.UNLIMITED_LENGTH,
-                false,
+                null,
                 meshObjectExternalForm,
                 contextPath,
                 meshBaseExternalForm,
@@ -365,8 +362,7 @@ public class DefaultAnetMeshObjectIdentifier
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subclass
                 key,
-                HasStringRepresentation.UNLIMITED_LENGTH,
-                false,
+                null,
                 meshObjectExternalForm,
                 contextPath,
                 meshBaseExternalForm );

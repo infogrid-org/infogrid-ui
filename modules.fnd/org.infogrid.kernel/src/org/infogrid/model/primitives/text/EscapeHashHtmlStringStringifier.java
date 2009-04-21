@@ -15,6 +15,7 @@
 package org.infogrid.model.primitives.text;
 
 import org.infogrid.util.text.HtmlStringStringifier;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierParseException;
 
 /**
@@ -29,18 +30,16 @@ public class EscapeHashHtmlStringStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     @Override
     public String format(
-            String  soFar,
-            String  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            String                         arg,
+            StringRepresentationParameters pars )
     {
-        String s   = super.format( soFar, arg, maxLength, colloquial );
+        String s   = super.format( soFar, arg, pars );
         String ret = s.replaceAll( "#", "%23" );
 
         return ret;

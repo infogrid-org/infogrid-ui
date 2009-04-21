@@ -19,6 +19,7 @@ import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -477,22 +478,19 @@ public class EnumeratedDataType
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         return rep.formatEntry(
                 EnumeratedValue.class,
                 DEFAULT_ENTRY,
-                maxLength,
-                colloquial,
-                PropertyValue.toStringRepresentation( theDomain[0], rep, context, maxLength, colloquial ),
+                pars,
+                PropertyValue.toStringRepresentation( theDomain[0], rep, context, pars ),
                 theDomain,
                 theSupertype );
     }
@@ -508,7 +506,7 @@ public class EnumeratedDataType
      */
     public EnumeratedValue fromStringRepresentation(
             StringRepresentation representation,
-            String                      s )
+            String               s )
         throws
             PropertyValueParsingException
     {
@@ -542,37 +540,6 @@ public class EnumeratedDataType
         }
     }
     
-//    /**
-//     * Obtain a PropertyValue that corresponds to this DataType, based on the String representation
-//     * of the PropertyValue.
-//     *
-//     * @param s the String representation
-//     * @return the PropertyValue
-//     * @throws PropertyValueParsingException thrown if the String representation could not be parsed
-//     *         into a PropertyValue conforming to this PropertyType
-//     */
-//    public EnumeratedValue fromString(
-//            String s )
-//        throws
-//            PropertyValueParsingException
-//    {
-//        if( s == null || s.length() == 0 ) {
-//            return null;
-//        }
-//        // try for both userVisibleName and name
-//        for( EnumeratedValue candidate : theDomain ) {
-//            if( s.equals( candidate.getUserVisibleName().value() )) {
-//                return candidate;
-//            }
-//        }
-//        for( EnumeratedValue candidate : theDomain ) {
-//            if( s.equals( candidate.value() )) {
-//                return candidate;
-//            }
-//        }
-//        throw new PropertyValueParsingException( this, s );
-//    }
-
     /**
       * The value of the domain.
       */

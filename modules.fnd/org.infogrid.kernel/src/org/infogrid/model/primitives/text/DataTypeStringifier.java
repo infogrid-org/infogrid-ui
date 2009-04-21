@@ -16,8 +16,8 @@ package org.infogrid.model.primitives.text;
 
 import java.util.Iterator;
 import org.infogrid.model.primitives.DataType;
-import org.infogrid.util.StringHelper;
-import org.infogrid.util.text.Stringifier;
+import org.infogrid.util.text.AbstractStringifier;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierParseException;
 import org.infogrid.util.text.StringifierParsingChoice;
 
@@ -25,8 +25,8 @@ import org.infogrid.util.text.StringifierParsingChoice;
  * A Stringifier to stringify subclasses of DataType.
  */
 public class DataTypeStringifier
-        implements
-            Stringifier<DataType>
+        extends
+            AbstractStringifier<DataType>
 {
     /**
      * Factory method.
@@ -51,18 +51,16 @@ public class DataTypeStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String   soFar,
-            DataType arg,
-            int      maxLength,
-            boolean  colloquial )
+            String                         soFar,
+            DataType                       arg,
+            StringRepresentationParameters pars )
     {
         String ret = arg.getName();
-        ret = StringHelper.potentiallyShorten( ret, maxLength );
+        ret = potentiallyShorten( ret, pars );
         return ret;
     }
 
@@ -71,21 +69,19 @@ public class DataTypeStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
-        return format( soFar, (DataType) arg, maxLength, colloquial );
+        return format( soFar, (DataType) arg, pars );
     }
 
     /**

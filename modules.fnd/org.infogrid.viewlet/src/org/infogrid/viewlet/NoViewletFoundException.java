@@ -23,6 +23,7 @@ import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * No Viewlet could be found with the the required Viewlet type.
@@ -94,35 +95,31 @@ public class NoViewletFoundException
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         if( theObjectsToView.getViewletTypeName() == null ) {
             return rep.formatEntry(
                     getClass(),
                     DEFAULT_NO_VIEWLET_TYPE_ENTRY,
-                    maxLength,
-                    colloquial,
+                    pars,
                     theObjectsToView.getSubject(),
                     theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
+                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
 
         } else {
             return rep.formatEntry(
                     getClass(),
                     DEFAULT_VIEWLET_TYPE_ENTRY,
-                    maxLength,
-                    colloquial,
+                    pars,
                     theObjectsToView.getSubject(),
                     theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.colloquialUrl( theObjectsToView.getSubject().getIdentifier().toExternalForm(), colloquial ));
+                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
         }
     }
 

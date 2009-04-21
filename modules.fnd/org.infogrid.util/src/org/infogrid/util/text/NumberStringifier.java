@@ -14,12 +14,14 @@
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.StringHelper;
-
 /**
  * Factors out common functionality for Stringifiers that process numbers.
+ *
+ * @param <T> the type of the Objects to be stringified
  */
-public abstract class NumberStringifier
+public abstract class NumberStringifier<T>
+        extends
+            AbstractStringifier<T>
 {
     /**
      * Constructor.
@@ -33,19 +35,17 @@ public abstract class NumberStringifier
     }
     
     /**
-     * Format a numeric value using this Stringifier.
+     * Format an Object using this Stringifier.
      *
      * @param soFar the String so far, if any
-     * @param arg the numerica value, as long
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param arg the Object to format, or null
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
-    protected String format(
-            String  soFar,
-            long    arg,
-            int     maxLength,
-            boolean colloquial )
+    public String format(
+            String                         soFar,
+            long                           arg,
+            StringRepresentationParameters pars )
     {
         String ret;
         if( theDigits <= 0 ) {
@@ -71,7 +71,7 @@ public abstract class NumberStringifier
             prepend.append( ret );
             ret = prepend.toString();
         }
-        ret = StringHelper.potentiallyShorten( ret, maxLength );
+        ret = potentiallyShorten( ret, pars );
         return ret;
 
     }
@@ -81,26 +81,24 @@ public abstract class NumberStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
         if( arg instanceof Short ) {
-            return format( soFar, ((Short)arg).longValue(), maxLength, colloquial );
+            return format( soFar, ((Short)arg).longValue(), pars );
         } else if( arg instanceof Long ) {
-            return format( soFar, ((Long)arg).longValue(), maxLength, colloquial );
+            return format( soFar, ((Long)arg).longValue(), pars );
         } else {
-            return format( soFar, ((Integer)arg).longValue(), maxLength, colloquial );
+            return format( soFar, ((Integer)arg).longValue(), pars );
         }
     }
     

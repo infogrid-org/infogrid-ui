@@ -48,6 +48,7 @@ import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications
@@ -412,7 +413,8 @@ public class RestfulJeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
         
-        String ret = PropertyValue.toStringRepresentationOrNull( value, rep, context, maxLength, colloquial );
+        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial );
+        String ret = PropertyValue.toStringRepresentationOrNull( value, rep, context, pars );
         if( ret != null ) {
             return ret;
         } else {
@@ -438,7 +440,8 @@ public class RestfulJeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
  
-        String ret = identifier.toStringRepresentation( rep, context, maxLength, false );
+        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, false );
+        String ret = identifier.toStringRepresentation( rep, context, pars );
         
         return ret;
     }
@@ -463,7 +466,9 @@ public class RestfulJeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String ret = mesh.toStringRepresentation( rep, context, maxLength, colloquial );
+        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial );
+
+        String ret = mesh.toStringRepresentation( rep, context, pars );
         return ret;
     }
 
@@ -507,7 +512,8 @@ public class RestfulJeeFormatter
         SimpleMeshStringRepresentationContext delegateContext
                 = SimpleMeshStringRepresentationContext.create( localMap, context );
 
-        String ret = mesh.getIdentifier().toStringRepresentation( rep, delegateContext, maxLength, false );
+        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, false );
+        String ret = mesh.getIdentifier().toStringRepresentation( rep, delegateContext, pars );
         return ret;
     }
 
@@ -633,7 +639,8 @@ public class RestfulJeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
-        String ret = base.toStringRepresentation( rep, context, maxLength, colloquial );
+        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial );
+        String ret = base.toStringRepresentation( rep, context, pars );
         return ret;
     }
 

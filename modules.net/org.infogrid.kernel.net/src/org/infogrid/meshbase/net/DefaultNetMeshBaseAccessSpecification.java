@@ -18,10 +18,10 @@ import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Default implementation of NetMeshBaseAccessSpecification.
@@ -93,23 +93,20 @@ public class DefaultNetMeshBaseAccessSpecification
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
-        String externalForm = IdentifierStringifier.colloquialUrl( toExternalForm(), colloquial );
+        String externalForm = IdentifierStringifier.defaultFormat( toExternalForm(), pars );
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 DEFAULT_ENTRY,
-                maxLength,
-                colloquial,
+                pars,
                 externalForm );
 
         return ret;
@@ -138,8 +135,7 @@ public class DefaultNetMeshBaseAccessSpecification
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 DEFAULT_LINK_START_ENTRY,
-                HasStringRepresentation.UNLIMITED_LENGTH,
-                false,
+                null,
                 contextPath,
                 externalForm,
                 additionalArguments,
@@ -165,8 +161,7 @@ public class DefaultNetMeshBaseAccessSpecification
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
                 DEFAULT_LINK_END_ENTRY,
-                HasStringRepresentation.UNLIMITED_LENGTH,
-                false,
+                null,
                 contextPath,
                 externalForm );
         return ret;

@@ -67,15 +67,13 @@ public class IdentifierStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String     soFar,
-            Identifier arg,
-            int        maxLength,
-            boolean    colloquial )
+            String                         soFar,
+            Identifier                     arg,
+            StringRepresentationParameters pars )
     {
         String ext = escape( arg.toExternalForm() );
 
@@ -100,21 +98,19 @@ public class IdentifierStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
-        return format( soFar, (Identifier) arg, maxLength, colloquial );
+        return format( soFar, (Identifier) arg, pars );
     }
 
     /**
@@ -181,17 +177,24 @@ public class IdentifierStringifier
     }
 
     /**
-     * Helper method to convert a URL into colloquial form, i.e. dropping the http:// prefix.
+     * Default format. This evaluates and processes the COLLOQUIAL parameter.
      *
      * @param input the full URL
-     * @param colloquial if applicable, output in colloquial form
-     * @return colloquial form, if colloquial is true; unchanged otherwise
+     * @param pars collects parameters that may influence the String representation
+     * @return the potentially formatted URL
      */
-    public static String colloquialUrl(
-            String  input,
-            boolean colloquial )
+    public static String defaultFormat(
+            String                         input,
+            StringRepresentationParameters pars )
     {
-        if( !colloquial ) {
+        if( pars == null ) {
+            return input;
+        }
+        Boolean colloquial = (Boolean) pars.get( StringRepresentationParameters.COLLOQUIAL );
+        if( colloquial == null ) {
+            return input;
+        }
+        if( !colloquial.booleanValue() ) {
             return input;
         }
         if( input == null ) {

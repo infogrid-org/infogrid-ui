@@ -22,6 +22,7 @@ import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Helper Exception class to report Naming errors better than with the default NamingExceptions.
@@ -60,17 +61,15 @@ public class NamingReportingException
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
-        String indentString = rep.formatEntry( getClass(), "Indent", HasStringRepresentation.UNLIMITED_LENGTH, colloquial );
+        String indentString = rep.formatEntry( getClass(), "Indent", pars );
 
         StringBuilder contextDump = new StringBuilder();
         
@@ -83,10 +82,10 @@ public class NamingReportingException
             contextDump.append( "[naming exception occurred]" );
         }
         if( !hasAppended ) {
-            contextDump.append( rep.formatEntry( getClass(), "NoBindings", HasStringRepresentation.UNLIMITED_LENGTH, colloquial ));
+            contextDump.append( rep.formatEntry( getClass(), "NoBindings", pars ));
         }
         
-        String ret = rep.formatEntry( getClass(), "String", maxLength, colloquial, theName, contextDump.toString(), this );
+        String ret = rep.formatEntry( getClass(), "String", pars, theName, contextDump.toString(), this );
         return ret;
     }
     
@@ -128,8 +127,7 @@ public class NamingReportingException
             buf.append( rep.formatEntry(
                     getClass(),
                     "Binding",
-                    HasStringRepresentation.UNLIMITED_LENGTH,
-                    false,
+                    null,
                     indent.toString(),
                     name,
                     className ));

@@ -30,10 +30,11 @@ import org.infogrid.util.FactoryException;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.HasStringRepresentation;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications.
@@ -968,12 +969,14 @@ public class JeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
 
+        StringRepresentationParameters pars = constructStringRepresentationParameters( -1, colloquial );
+
         String        sep = "";
         StringBuilder buf = new StringBuilder();
         for( Throwable current : reportedProblems ) {
             Throwable toFormat = determineThrowableToFormat( current );
-            
-            String temp = rep.formatThrowable( toFormat, context, HasStringRepresentation.UNLIMITED_LENGTH, colloquial );
+
+            String temp = rep.formatThrowable( toFormat, context, pars );
             if(    buf.length() > 0
                 && temp.charAt( 0 ) != '\n'
                 && buf.charAt( buf.length()-1 ) != '\n' )
@@ -1053,6 +1056,34 @@ public class JeeFormatter
             sanitized = temp.toString();
         }
         return sanitized;
+    }
+
+    /**
+     * Helper method to create a StringRepresentationParameters from a
+     * maximum length and a colloquial, if needed.
+     *
+     * @param maxLength the maximum length. -1 means unlimited.
+     * @param colloquial if true, emit colloquial representation
+     * @return the StringRepresentationParameters, if any
+     */
+    public StringRepresentationParameters constructStringRepresentationParameters(
+            int     maxLength,
+            boolean colloquial )
+    {
+        StringRepresentationParameters ret;
+        if( maxLength >= 0 ) {
+            ret = SimpleStringRepresentationParameters.create();
+            ret.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
+            if( colloquial ) {
+                ret.put( StringRepresentationParameters.COLLOQUIAL, true );
+            }
+        } else if( colloquial ) {
+            ret = SimpleStringRepresentationParameters.create();
+            ret.put( StringRepresentationParameters.COLLOQUIAL, true );
+        } else {
+            ret = null;
+        }
+        return ret;
     }
 
     /**

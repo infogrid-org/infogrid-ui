@@ -21,9 +21,9 @@ import org.infogrid.util.AbstractLocalizedRuntimeException;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /** 
   * <p>The central class in the org.infogrid.util.logging package.</p>
@@ -715,24 +715,26 @@ public abstract class Log
      * @param t               Throwable to be logged
      * @param rep             the StringRepresentation to use
      * @param context         the StringRepresentationContext to use
+     * @param pars collects parameters that may influence the String representation
      */
     public final void userFatal(
-            Object                      parentComponent,
-            Throwable                   t,
-            StringRepresentation        rep,
-            StringRepresentationContext context )
+            Object                         parentComponent,
+            Throwable                      t,
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userFatal(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
+                    realEx.toStringRepresentation( rep, context, pars ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userFatal(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
+                    realEx.toStringRepresentation( rep, context, pars ),
                     parentComponent,
                     realEx );
 
@@ -840,24 +842,26 @@ public abstract class Log
      * @param t               Throwable to be logged
      * @param rep             the StringRepresentation to use
      * @param context         the StringRepresentationContext to use
+     * @param pars            collects parameters that may influence the String representation
      */
     public final void userError(
-            Object                      parentComponent,
-            Throwable                   t,
-            StringRepresentation        rep,
-            StringRepresentationContext context )
+            Object                         parentComponent,
+            Throwable                      t,
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userError(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
+                    realEx.toStringRepresentation( rep, context, pars ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userError(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
+                    realEx.toStringRepresentation( rep, context, pars ),
                     parentComponent,
                     realEx );
         } else {
@@ -964,24 +968,26 @@ public abstract class Log
      * @param t               Throwable to be logged
      * @param rep             the StringRepresentation to use
      * @param context         the StringRepresentationContext to use
+     * @param pars collects parameters that may influence the String representation
      */
     public final void userWarn(
-            Object                      parentComponent,
-            Throwable                   t,
-            StringRepresentation        rep,
-            StringRepresentationContext context )
+            Object                         parentComponent,
+            Throwable                      t,
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
             userWarn(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
+                    realEx.toStringRepresentation( rep, context, pars ),
                     parentComponent,
                     realEx );
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
             userWarn(
-                    realEx.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, true ),
+                    realEx.toStringRepresentation( rep, context, pars ),
                     parentComponent,
                     realEx );
 

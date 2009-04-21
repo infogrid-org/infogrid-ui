@@ -14,18 +14,16 @@
 
 package org.infogrid.util.text;
 
+import java.util.Iterator;
 import org.infogrid.util.OneElementIterator;
 import org.infogrid.util.ZeroElementCursorIterator;
-
-import java.util.Iterator;
-import org.infogrid.util.StringHelper;
 
 /**
  * Stringifies a single Double.
  */
 public class DoubleStringifier
-        implements
-            Stringifier<Double>
+        extends
+            AbstractStringifier<Double>
 {
     /**
      * Factory method.
@@ -50,44 +48,40 @@ public class DoubleStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String  soFar,
-            Double  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Double                         arg,
+            StringRepresentationParameters pars )
     {
         String ret = String.valueOf( arg );
-        ret = StringHelper.potentiallyShorten( ret, maxLength );
+        ret = potentiallyShorten( ret, pars );
         return ret;
     }
-    
+
     /**
      * Format an Object using this Stringifier. This may be null.
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
         if( arg instanceof Float ) {
-            return format( soFar, ((Float)arg).doubleValue(), maxLength, colloquial );
+            return format( soFar, ((Float)arg).doubleValue(), pars );
         } else {
-            return format( soFar, (Double) arg, maxLength, colloquial );
+            return format( soFar, (Double) arg, pars );
         }
     }
     

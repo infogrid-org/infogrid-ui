@@ -17,6 +17,7 @@ package org.infogrid.model.primitives;
 import java.io.ObjectStreamException;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -159,22 +160,19 @@ public final class TimePeriodDataType
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         return rep.formatEntry(
                 TimePeriodValue.class,
                 DEFAULT_ENTRY,
-                maxLength,
-                colloquial,
-                PropertyValue.toStringRepresentation( theDefaultValue, rep, context, maxLength, colloquial ), // presumably shorter, but we don't know
+                pars,
+                PropertyValue.toStringRepresentation( theDefaultValue, rep, context, pars ), // presumably shorter, but we don't know
                 theSupertype );
     }
 

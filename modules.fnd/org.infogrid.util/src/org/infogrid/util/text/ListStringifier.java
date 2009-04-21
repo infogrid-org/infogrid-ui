@@ -16,7 +16,6 @@ package org.infogrid.util.text;
 
 import java.util.Iterator;
 import java.util.List;
-import org.infogrid.util.StringHelper;
 
 /**
  * A Stringifier that processes lists.
@@ -24,8 +23,8 @@ import org.infogrid.util.StringHelper;
  * @param <T> the type of the Objects to be stringified
  */
 public class ListStringifier<T extends List<?>>
-        implements
-             Stringifier<T>
+        extends
+             AbstractStringifier<T>
 {
     /**
      * Factory method. This creates an ListStringifier that merely appends the
@@ -150,15 +149,13 @@ public class ListStringifier<T extends List<?>>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String  soFar,
-            T       arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            T                              arg,
+            StringRepresentationParameters pars )
     {
         if( arg == null || arg.isEmpty() ) {
             if( theEmptyString != null ) {
@@ -193,7 +190,7 @@ public class ListStringifier<T extends List<?>>
             ret.append( theEnd );
         }
 
-        return StringHelper.potentiallyShorten( ret.toString(), maxLength );
+        return potentiallyShorten( ret.toString(), pars );
     }
 
     /**
@@ -201,22 +198,20 @@ public class ListStringifier<T extends List<?>>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
-    @SuppressWarnings(value={"unchecked"})
+    @SuppressWarnings("unchecked")
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
-        return format( soFar, (T) arg, maxLength, colloquial );
+        return format( soFar, (T) arg, pars );
     }
 
     /**

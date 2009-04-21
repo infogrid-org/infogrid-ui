@@ -14,11 +14,11 @@
 
 package org.infogrid.util;
 
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectorySingleton;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * This is a supertype for Exceptions that knows how to internationalize themselves.
@@ -85,8 +85,7 @@ public abstract class AbstractLocalizedException
         return toStringRepresentation(
                 StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
                 null,
-                HasStringRepresentation.UNLIMITED_LENGTH,
-                true );
+                null );
     }
     
     /**
@@ -101,15 +100,13 @@ public abstract class AbstractLocalizedException
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         return constructStringRepresentation(
                 this,
@@ -118,8 +115,7 @@ public abstract class AbstractLocalizedException
                 findResourceHelperForLocalizedMessage(),
                 getLocalizationParameters(),
                 findStringRepresentationParameter(),
-                maxLength,
-                colloquial );
+                pars );
     }
 
     /**
@@ -177,21 +173,19 @@ public abstract class AbstractLocalizedException
      * @param theHelper the ResourceHelper to use
      * @param params the localization parameters to use
      * @param messageParameter the name of the message parameter to use with the ResourceHelper
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the string
      */
     public static String constructStringRepresentation(
-            LocalizedException          ex,
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            ResourceHelper              theHelper,
-            Object []                   params,
-            String                      messageParameter,
-            int                         maxLength,
-            boolean                     colloquial )
+            LocalizedException             ex,
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            ResourceHelper                 theHelper,
+            Object []                      params,
+            String                         messageParameter,
+            StringRepresentationParameters pars )
     {
-        return rep.formatEntry( ex.getClass(), messageParameter, maxLength, colloquial, params );
+        return rep.formatEntry( ex.getClass(), messageParameter, pars, params );
     }
 
     /**

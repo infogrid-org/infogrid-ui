@@ -20,7 +20,6 @@ import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.mesh.text.SimpleMeshStringRepresentationContext;
 import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -78,7 +77,7 @@ public class NetRestfulJeeFormatter
 
         context = perhapsOverrideStringRepresentationContext( rootPath, context );
         
-        String ret = p.toStringRepresentation( rep, context, HasStringRepresentation.UNLIMITED_LENGTH, false );
+        String ret = p.toStringRepresentation( rep, context, null );
         return ret;
     }
 

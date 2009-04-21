@@ -22,8 +22,10 @@ import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.L10Map;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Tag that displays the user-visible String of a <code>MeshType</code>.
@@ -283,7 +285,10 @@ public class MeshTypeTag
                 }
             } else if( found instanceof DataType ) {
                 DataType realFound = (DataType) found;
-                text = realFound.toStringRepresentation( rep, context, theMaxLength, theColloquial );
+
+                StringRepresentationParameters pars = theFormatter.constructStringRepresentationParameters( theMaxLength, theColloquial );
+
+                text = realFound.toStringRepresentation( rep, context, pars );
                 // a bit of a funny structure, but the best I can do
             } else {
                 throw new ClassCastException( "Found object named " + theMeshTypeName + " is neither a PropertyValue nor an L10Map: " + found );

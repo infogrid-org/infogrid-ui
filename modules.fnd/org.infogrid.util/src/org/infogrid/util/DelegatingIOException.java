@@ -15,11 +15,11 @@
 package org.infogrid.util;
 
 import java.io.IOException;
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectorySingleton;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Subclass of <code>java.io.IOException</code> that can carry a <code>Throwable</code> as a
@@ -72,8 +72,7 @@ public class DelegatingIOException
         return toStringRepresentation(
                 StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
                 null,
-                HasStringRepresentation.UNLIMITED_LENGTH,
-                true );
+                null );
     }
 
     /**
@@ -91,15 +90,13 @@ public class DelegatingIOException
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         return AbstractLocalizedException.constructStringRepresentation(
                 this,
@@ -108,8 +105,7 @@ public class DelegatingIOException
                 findResourceHelperForLocalizedMessage(),
                 getLocalizationParameters(),
                 findStringRepresentationParameter(),
-                maxLength,
-                colloquial );
+                pars );
     }
 
     /**

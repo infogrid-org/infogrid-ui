@@ -14,10 +14,8 @@
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.ArrayFacade;
-
 import java.util.Iterator;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.ArrayFacade;
 
 /**
  * A Stringifier that processes arrays. Arrays must be passed as
@@ -27,8 +25,8 @@ import org.infogrid.util.StringHelper;
  * @param <T> the type of the Objects to be stringified
  */
 public class ArrayStringifier<T>
-        implements
-             Stringifier<ArrayFacade<T>>
+        extends
+             AbstractStringifier<ArrayFacade<T>>
 {
     /**
      * Factory method. This creates an ArrayStringifier that merely appends the
@@ -164,15 +162,13 @@ public class ArrayStringifier<T>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String         soFar,
-            ArrayFacade<T> arg,
-            int            maxLength,
-            boolean        colloquial )
+            String                         soFar,
+            ArrayFacade<T>                 arg,
+            StringRepresentationParameters pars )
     {
         if( arg == null || arg.getArray().length == 0 ) {
             if( theEmptyString != null ) {
@@ -198,7 +194,7 @@ public class ArrayStringifier<T>
             if( sep != null ) {
                 ret.append( sep );
             }
-            String childInput = theDelegate.format( soFar + ret.toString(), data[i], maxLength, colloquial ); // presumably shorter, but we don't know
+            String childInput = theDelegate.format( soFar + ret.toString(), data[i], pars ); // presumably shorter, but we don't know
             if( childInput != null ) {
                 ret.append( childInput );
             }
@@ -207,7 +203,7 @@ public class ArrayStringifier<T>
         if( theEnd != null ) {
             ret.append( theEnd );
         }
-        return StringHelper.potentiallyShorten( ret.toString(), maxLength );
+        return potentiallyShorten( ret.toString(), pars );
     }
     
     /**
@@ -215,25 +211,23 @@ public class ArrayStringifier<T>
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
-    @SuppressWarnings(value={"unchecked"})
+    @SuppressWarnings("unchecked")
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
         if( arg instanceof ArrayFacade ) {
-            return format( soFar, (ArrayFacade<T>) arg, maxLength, colloquial );
+            return format( soFar, (ArrayFacade<T>) arg, pars );
         } else {
-            return format( soFar, ArrayFacade.<T>create( (T []) arg ), maxLength, colloquial );
+            return format( soFar, ArrayFacade.<T>create( (T []) arg ), pars );
         }
     }
 

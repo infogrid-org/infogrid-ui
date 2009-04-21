@@ -50,6 +50,7 @@ import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * One particular implementation of MeshObject.
@@ -2011,18 +2012,16 @@ public class AMeshObject
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
-        String meshObjectExternalForm = IdentifierStringifier.colloquialUrl( theIdentifier.toExternalForm(), colloquial );
-        String meshBaseExternalForm   = IdentifierStringifier.colloquialUrl( theMeshBase.getIdentifier().toExternalForm(), colloquial );
+        String meshObjectExternalForm = IdentifierStringifier.defaultFormat( theIdentifier.toExternalForm(), pars );
+        String meshBaseExternalForm   = IdentifierStringifier.defaultFormat( theMeshBase.getIdentifier().toExternalForm(), pars );
         String userVisible            = getUserVisibleString( getTypes() );
 
         String ret;
@@ -2031,8 +2030,7 @@ public class AMeshObject
             ret = rep.formatEntry(
                     getClass(), // dispatch to the right subtype
                     DEFAULT_ENTRY,
-                    maxLength,
-                    colloquial,
+                    pars,
                     userVisible,
                     meshObjectExternalForm,
                     meshBaseExternalForm );
@@ -2042,13 +2040,12 @@ public class AMeshObject
             contextObjects.put( SimpleMeshStringRepresentationContext.MESHOBJECT_KEY, this );
             
             StringRepresentationContext delegateContext = SimpleMeshStringRepresentationContext.create( contextObjects, context );
-            String identifierRep = theIdentifier.toStringRepresentation( rep, delegateContext, maxLength, colloquial );
+            String identifierRep = theIdentifier.toStringRepresentation( rep, delegateContext, pars );
 
             ret = rep.formatEntry(
                     getClass(), // dispatch to the right subtype
                     NO_USER_VISIBLE_STRING_ENTRY,
-                    maxLength,
-                    colloquial,
+                    pars,
                     identifierRep,
                     meshObjectExternalForm,
                     meshBaseExternalForm );

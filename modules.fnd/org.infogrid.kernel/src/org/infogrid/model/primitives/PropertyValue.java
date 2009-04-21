@@ -20,6 +20,7 @@ import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
   * This is the abstract supertype for values of all supported DataTypes for
@@ -100,21 +101,19 @@ public abstract class PropertyValue
      * @param v the PropertyValue to convert
      * @param representation the representation scheme
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the String representation
      */
     public static String toStringRepresentationOrNull(
-            PropertyValue               v,
-            StringRepresentation        representation,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            PropertyValue                  v,
+            StringRepresentation           representation,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         if( v == null ) {
             return null;
         } else {
-            return v.toStringRepresentation( representation, context, maxLength, colloquial );
+            return v.toStringRepresentation( representation, context, pars );
         }
     }
 
@@ -125,21 +124,19 @@ public abstract class PropertyValue
      * @param v the PropertyValue to convert
      * @param representation the representation scheme
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the String representation
      */
     public final static String toStringRepresentation(
-            PropertyValue               v,
-            StringRepresentation        representation,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            PropertyValue                  v,
+            StringRepresentation           representation,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         if( v == null ) {
-            return representation.formatEntry( PropertyValue.class, "Null", maxLength, colloquial );
+            return representation.formatEntry( PropertyValue.class, "Null", pars );
         } else {
-            return v.toStringRepresentation( representation, context, maxLength, colloquial );
+            return v.toStringRepresentation( representation, context, pars );
         }
     }
 

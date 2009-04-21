@@ -20,6 +20,7 @@ import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Tests the AMeshObjectEquivalenceSetComparator.
@@ -256,15 +257,13 @@ public class EquivalenceSetComparatorTest1
          *
          * @param rep the StringRepresentation
          * @param context the StringRepresentationContext of this object
-         * @param maxLength maximum length of emitted String. -1 means unlimited.
-         * @param colloquial if applicable, output in colloquial form
+         * @param pars collects parameters that may influence the String representation
          * @return String representation
          */
         public String toStringRepresentation(
-                StringRepresentation        rep,
-                StringRepresentationContext context,
-                int                         maxLength,
-                boolean                     colloquial )
+                StringRepresentation           rep,
+                StringRepresentationContext    context,
+                StringRepresentationParameters pars )
         {
             throw new UnsupportedOperationException();
         }

@@ -14,17 +14,15 @@
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.OneElementIterator;
-
 import java.util.Iterator;
-import org.infogrid.util.StringHelper;
+import org.infogrid.util.OneElementIterator;
 
 /**
  * Stringifies a single String.
  */
 public class StringStringifier
-        implements
-            Stringifier<String>
+        extends
+            AbstractStringifier<String>
 {
     /**
      * Factory method.
@@ -49,18 +47,16 @@ public class StringStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String  soFar,
-            String  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            String                         arg,
+            StringRepresentationParameters pars )
     {
         String ret = escape( arg );
-        ret = StringHelper.potentiallyShorten( ret, maxLength );
+        ret = potentiallyShorten( ret, pars );
 
         return ret;
     }
@@ -70,26 +66,24 @@ public class StringStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
         if( arg == null ) {
             return "";
         } else if( arg instanceof String ) {
-            return format( soFar, (String) arg, maxLength, colloquial );
+            return format( soFar, (String) arg, pars );
         } else {
-            return format( soFar, String.valueOf( arg ), maxLength, colloquial ); // fallback
+            return format( soFar, String.valueOf( arg ), pars ); // fallback
         }
     }
     

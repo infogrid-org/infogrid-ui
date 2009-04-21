@@ -16,6 +16,7 @@ package org.infogrid.model.primitives.text;
 
 import java.util.Iterator;
 import org.infogrid.model.primitives.EnumeratedValue;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.Stringifier;
 import org.infogrid.util.text.StringifierParseException;
 import org.infogrid.util.text.StringifierParsingChoice;
@@ -50,15 +51,13 @@ public class EnumeratedValueStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String          soFar,
-            EnumeratedValue arg,
-            int             maxLength,
-            boolean         colloquial )
+            String                         soFar,
+            EnumeratedValue                arg,
+            StringRepresentationParameters pars )
     {
         String ret = arg.getUserVisibleName().value();
         return ret;
@@ -69,21 +68,19 @@ public class EnumeratedValueStringifier
      *
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
     public String attemptFormat(
-            String  soFar,
-            Object  arg,
-            int     maxLength,
-            boolean colloquial )
+            String                         soFar,
+            Object                         arg,
+            StringRepresentationParameters pars )
         throws
             ClassCastException
     {
-        return format( soFar, (EnumeratedValue) arg, maxLength, colloquial );
+        return format( soFar, (EnumeratedValue) arg, pars );
     }
 
     /**

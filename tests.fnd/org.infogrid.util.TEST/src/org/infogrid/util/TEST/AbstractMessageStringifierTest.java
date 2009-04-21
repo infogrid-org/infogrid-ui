@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.ArrayFacade;
 import org.infogrid.util.text.AnyMessageStringifier;
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.HtmlStacktraceStringifier;
 import org.infogrid.util.text.IntegerStringifier;
 import org.infogrid.util.text.MessageStringifier;
@@ -68,7 +67,7 @@ public abstract class AbstractMessageStringifierTest
 
         ArrayFacade<Object> temp = new ArrayFacade<Object>( current.theData );
 
-        String result1a = str1.format( null, temp, HasStringRepresentation.UNLIMITED_LENGTH, false );
+        String result1a = str1.format( null, temp, null );
         
         current.checkResult( this, result1a, "wrong formatting result" );
 

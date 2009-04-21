@@ -40,19 +40,17 @@ public class ConstantStringifierComponent<T>
     }
 
     /**
-     * Format an Object using this Stringifier.
+     * Format zero or one Objects in the ArrayFacade.
      *
      * @param soFar the String so far, if any
-     * @param arg the Object to format, or null
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param arg the Object to format
+     * @param pars collects parameters that may influence the String representation
      * @return the formatted String
      */
     public String format(
-            String         soFar,
-            ArrayFacade<T> arg,
-            int            maxLength,
-            boolean        colloquial )
+            String                         soFar,
+            ArrayFacade<T>                 arg,
+            StringRepresentationParameters pars )
     {
         // regardless of argument, we always return the same -- this is a constant after all
         return theString;

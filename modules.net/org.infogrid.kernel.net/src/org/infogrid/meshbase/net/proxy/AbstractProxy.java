@@ -25,10 +25,10 @@ import org.infogrid.util.FlexibleListenerSet;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Factors out common functionality of Proxy implementations.
@@ -267,20 +267,18 @@ public abstract class AbstractProxy
      *
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
-     * @param colloquial if applicable, output in colloquial form
+     * @param pars collects parameters that may influence the String representation
      * @return String representation
      */
     public String toStringRepresentation(
-            StringRepresentation        rep,
-            StringRepresentationContext context,
-            int                         maxLength,
-            boolean                     colloquial )
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
     {
         boolean isDefaultMeshBase = context != null ? ( getNetMeshBase().equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
 
-        String proxyExternalForm    = IdentifierStringifier.colloquialUrl( getPartnerMeshBaseIdentifier().toExternalForm(), colloquial );
-        String meshBaseExternalForm = IdentifierStringifier.colloquialUrl( getNetMeshBase().getIdentifier().toExternalForm(), colloquial );
+        String proxyExternalForm    = IdentifierStringifier.defaultFormat( getPartnerMeshBaseIdentifier().toExternalForm(), pars );
+        String meshBaseExternalForm = IdentifierStringifier.defaultFormat( getNetMeshBase().getIdentifier().toExternalForm(), pars );
 
         String key;
         if( isDefaultMeshBase ) {
@@ -292,8 +290,7 @@ public abstract class AbstractProxy
         String ret = rep.formatEntry(
                 getClass(),
                 key,
-                maxLength,
-                colloquial,
+                pars,
                 proxyExternalForm,
                 meshBaseExternalForm );
 
@@ -332,8 +329,7 @@ public abstract class AbstractProxy
         String ret = rep.formatEntry(
                 getClass(),
                 key,
-                HasStringRepresentation.UNLIMITED_LENGTH,
-                false,
+                null,
                 contextPath,
                 proxyExternalForm,
                 meshBaseExternalForm,
@@ -371,8 +367,7 @@ public abstract class AbstractProxy
         String ret = rep.formatEntry(
                 getClass(),
                 key,
-                HasStringRepresentation.UNLIMITED_LENGTH,
-                false,
+                null,
                 contextPath,
                 proxyExternalForm,
                 meshBaseExternalForm );
