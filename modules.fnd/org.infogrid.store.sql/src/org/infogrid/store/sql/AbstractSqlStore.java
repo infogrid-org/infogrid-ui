@@ -350,7 +350,11 @@ public abstract class AbstractSqlStore
             SQLException
     {
         if( theConnection != null ) {
-            theConnection.close();
+            try {
+                theConnection.close();
+            } catch( Throwable t ) {
+                // might be closed already -- ignore
+            }
         }
         theConnection = theDataSource.getConnection();
 
