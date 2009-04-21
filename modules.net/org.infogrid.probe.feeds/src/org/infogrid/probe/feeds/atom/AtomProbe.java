@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -37,6 +37,7 @@ import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.feeds.AbstractFeedProbe;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -103,6 +104,7 @@ public class AtomProbe
      *         RelationshipType, in the same direction. Throwing this typically indicates a programming error.
      * @throws TransactionException a Transaction problem occurred. Throwing this typically indicates a programming error.
      * @throws URISyntaxException thrown if a URI was constructed in an invalid way
+     * @throws StringRepresentationParseException a StringRepresentation could not be parsed
      */
     public void parseDocument(
             NetMeshBaseIdentifier  dataSourceIdentifier,
@@ -124,7 +126,8 @@ public class AtomProbe
             RelatedAlreadyException,
             RoleTypeBlessedAlreadyException,
             TransactionException,
-            URISyntaxException
+            URISyntaxException,
+            StringRepresentationParseException
     {
         Element atomNode = theDocument.getDocumentElement();
         if ( !"feed".equals( atomNode.getLocalName())) {

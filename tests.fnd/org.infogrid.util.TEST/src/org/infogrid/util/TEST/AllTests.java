@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -51,10 +51,14 @@ public class AllTests
 
                 new TestSpec( StringStringifierTest1.class ),
                 new TestSpec( IntegerStringifierTest1.class ),
+                new TestSpec( IntegerStringifierTest2.class ),
+                new TestSpec( IntegerStringifierTest3.class ),
                 new TestSpec( LongStringifierTest1.class ),
                 new TestSpec( DoubleStringifierTest1.class ),
                 new TestSpec( MessageStringifierTest1.class ),
                 new TestSpec( MessageStringifierTest2.class ),
+                new TestSpec( MessageStringifierTest3.class ),
+                new TestSpec( MessageStringifierTest4.class ),
                 new TestSpec( ArrayStringifierTest1.class ),
 
                 new TestSpec( UrlEncodingTest1.class ),

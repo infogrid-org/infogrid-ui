@@ -14,7 +14,6 @@
 
 package org.infogrid.store.util;
 
-import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 import org.infogrid.store.IterableStoreCursor;
 import org.infogrid.store.StoreEntryMapper;
@@ -24,6 +23,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Iterator over all keys in an InterableStoreBackedMap.
@@ -83,7 +83,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
 
             return ret;
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -104,7 +104,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
 
             return ret;
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -182,7 +182,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
 
             return ret;
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -206,7 +206,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
             try {
                 ret[i] = theMapper.stringToKey( values[i].getKey() );
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.error( ex );
                 return null;
             }
@@ -229,7 +229,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
 
             return ret;
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -258,7 +258,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
             try {
                 ret[i] = theMapper.stringToKey( values[i].getKey() );
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.error( ex );
                 return null;
             }

@@ -19,8 +19,8 @@ import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.util.text.StringRepresentationParameters;
-import org.infogrid.util.text.StringifierException;
 
 /**
   * An enumerated DataType for PropertyValues. It requires the explicit specification of
@@ -524,19 +524,19 @@ public class EnumeratedDataType
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, s );
+                    throw new PropertyValueParsingException( this, representation, null, s );
             }
 
             return ret;
 
-        } catch( StringifierException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, ex );
+        } catch( StringRepresentationParseException ex ) {
+            throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( UnknownEnumeratedValueException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, ex );
+            throw new PropertyValueParsingException( this, representation, s, null, ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, ex );
+            throw new PropertyValueParsingException( this, representation, s, null, ex );
         }
     }
     

@@ -15,10 +15,10 @@
 package org.infogrid.meshbase.net;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factors out common behaviors of NetMeshObjectAccessSpecificationFactory implementations.
@@ -81,12 +81,12 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * 
      * @param raw the String
      * @return the created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the String could not be parsed
+     * @throws StringRepresentationParseException thrown if the String could not be parsed
      */
     public NetMeshObjectAccessSpecification fromExternalForm(
             String raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         if( raw == null ) {
             return null;
@@ -190,7 +190,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ),
                     NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -237,7 +237,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ),
                     scope );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -264,7 +264,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ),
                     NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -339,7 +339,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ),
                     scope );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -387,7 +387,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ].getNetMeshBaseIdentifier(), null ),
                     NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -433,7 +433,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ].getNetMeshBaseIdentifier(), null ),
                     scope );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -478,7 +478,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ], null ),
                     NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -525,7 +525,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ], null ),
                     scope );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             return null;
         }
@@ -559,12 +559,12 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * 
      * @param remoteLocation the URI
      * @return created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             URI remoteLocation )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         NetMeshBaseIdentifier oneElementName = theMeshBaseIdentifierFactory.obtain( remoteLocation );
         return obtain( oneElementName );
@@ -578,13 +578,13 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * @param remoteLocation the URI
      * @param coherence the CoherenceSpecification
      * @return created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             URI                    remoteLocation,
             CoherenceSpecification coherence )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         NetMeshBaseIdentifier oneElementName = theMeshBaseIdentifierFactory.obtain( remoteLocation );
         return obtain( oneElementName, coherence );
@@ -598,13 +598,13 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * @param remoteLocation the URI
      * @param scope the ScopeSpecification
      * @return created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             URI                remoteLocation,
             ScopeSpecification scope )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         NetMeshBaseIdentifier oneElementName = theMeshBaseIdentifierFactory.obtain( remoteLocation );
         return obtain( oneElementName, scope );
@@ -619,14 +619,14 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
      * @param scope the ScopeSpecification
      * @param coherence the CoherenceSpecification
      * @return created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public DefaultNetMeshObjectAccessSpecification obtain(
             URI                    remoteLocation,
             ScopeSpecification     scope,
             CoherenceSpecification coherence )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         NetMeshBaseIdentifier oneElementName = theMeshBaseIdentifierFactory.obtain( remoteLocation );
         return obtain( oneElementName, scope, coherence );

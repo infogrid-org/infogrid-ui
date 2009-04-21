@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -31,6 +31,7 @@ import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.module.ModuleException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * <p>This interface is supported by all Probes that can
@@ -104,6 +105,7 @@ public interface NonXmlStreamProbe
      *         RelationshipType, in the same direction. Throwing this typically indicates a programming error.
      * @throws TransactionException a Transaction problem occurred. Throwing this typically indicates a programming error.
      * @throws URISyntaxException thrown if a URI was constructed in an invalid way
+     * @throws StringRepresentationParseException a StringRepresentation could not be parsed
      */
     public void readFromStream(
             NetMeshBaseIdentifier  dataSourceIdentifier,
@@ -126,5 +128,6 @@ public interface NonXmlStreamProbe
             RelatedAlreadyException,
             RoleTypeBlessedAlreadyException,
             TransactionException,
-            URISyntaxException;
+            URISyntaxException,
+            StringRepresentationParseException;
 }

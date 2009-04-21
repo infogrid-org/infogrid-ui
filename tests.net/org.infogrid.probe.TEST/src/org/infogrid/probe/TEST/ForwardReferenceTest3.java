@@ -46,6 +46,7 @@ import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Tests that unresolvable ForwardReferences behave. Very similar to ForwardReferenceTest2.
@@ -177,7 +178,7 @@ public class ForwardReferenceTest3
         try {
             temp = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://some.example.com/outer" );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
         }
         OUTER_URL = temp;
@@ -192,7 +193,7 @@ public class ForwardReferenceTest3
         try {
             temp = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://some.example.com/inner" );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
         }
         INNER_URL = temp;

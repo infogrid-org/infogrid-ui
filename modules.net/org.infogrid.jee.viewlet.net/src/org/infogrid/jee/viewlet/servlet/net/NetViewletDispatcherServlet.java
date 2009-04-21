@@ -14,7 +14,6 @@
 
 package org.infogrid.jee.viewlet.servlet.net;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import org.infogrid.jee.rest.RestfulRequest;
@@ -25,6 +24,7 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.model.traversal.TraversalDictionary;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Extends ViewletDispatcherServlet to also be able to render Shadows and Proxies.
@@ -65,7 +65,7 @@ public class NetViewletDispatcherServlet
      * @param traversalDict the TraversalDictionary to use
      * @return the created Map, or null
      * @throws MeshObjectAccessException thrown if one or more MeshObjects could not be accessed
-     * @throws URISyntaxException thrown if a URI parsing error occurred
+     * @throws StringRepresentationParseException thrown if a URI parsing error occurred
      * @throws NotPermittedException thrown if an attempted operation was not permitted
      */
     @Override
@@ -74,7 +74,7 @@ public class NetViewletDispatcherServlet
             TraversalDictionary  traversalDict )
         throws
             MeshObjectAccessException,
-            URISyntaxException,
+            StringRepresentationParseException,
             NotPermittedException
     {
         Map<String,Object> viewletPars = super.determineViewletParameters( restful, traversalDict );

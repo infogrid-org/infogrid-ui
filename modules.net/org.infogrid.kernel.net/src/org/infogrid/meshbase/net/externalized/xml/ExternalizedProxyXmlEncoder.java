@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.infogrid.meshbase.net.CoherenceSpecification;
@@ -31,6 +30,7 @@ import org.infogrid.meshbase.net.xpriso.xml.XprisoMessageXmlEncoder;
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -218,7 +218,7 @@ public class ExternalizedProxyXmlEncoder
             if( here != null ) {
                 try {
                     theProxyBeingParsed.setNetworkIdentifier( ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( here ));
-                } catch( URISyntaxException ex ) {
+                } catch( StringRepresentationParseException ex ) {
                     log.warn( ex ); // we can do without this one
                 }
             }
@@ -226,7 +226,7 @@ public class ExternalizedProxyXmlEncoder
             if( there != null ) {
                 try {
                     theProxyBeingParsed.setNetworkIdentifierOfPartner( ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( there ));
-                } catch( URISyntaxException ex ) {
+                } catch( StringRepresentationParseException ex ) {
                     error( ex ); // we cannot do without this one
                 }
             } else {

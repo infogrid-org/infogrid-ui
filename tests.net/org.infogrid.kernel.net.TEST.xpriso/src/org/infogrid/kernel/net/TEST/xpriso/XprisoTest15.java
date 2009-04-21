@@ -14,7 +14,6 @@
 
 package org.infogrid.kernel.net.TEST.xpriso;
 
-import java.net.URISyntaxException;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
@@ -30,6 +29,7 @@ import org.infogrid.meshbase.transaction.TransactionAction;
 import org.infogrid.meshbase.transaction.TransactionActionException;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Tests concurrent execution of accessLocally to different NetMeshBases.
@@ -63,7 +63,7 @@ public class XprisoTest15
                                     tx.getMeshBase().getMeshObjectIdentifierFactory().fromExternalForm( "#obj" ));
                         } catch( MeshObjectIdentifierNotUniqueException ex ) {
                             throw new TransactionActionException.Error( ex );
-                        } catch( URISyntaxException ex ) {
+                        } catch( StringRepresentationParseException ex ) {
                             throw new TransactionActionException.Error( ex );
                         } catch( NotPermittedException ex ) {
                             throw new TransactionActionException.Error( ex );

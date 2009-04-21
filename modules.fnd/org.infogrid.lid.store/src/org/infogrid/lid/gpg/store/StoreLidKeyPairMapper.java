@@ -8,14 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid.gpg.store;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import org.infogrid.lid.gpg.LidKeyPair;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
@@ -23,6 +22,7 @@ import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.IdentifierFactory;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Maps LidKeyPairs from and to the Store. FIXME: This is not a very robust implementation.
@@ -72,12 +72,12 @@ public class StoreLidKeyPairMapper
      *
      * @param stringKey the key in String form
      * @return the corresponding key object
-     * @throws URISyntaxException thrown if a stringKey could not be converted into a valid Identifier
+     * @throws StringRepresentationParseException thrown if a stringKey could not be converted into a valid Identifier
      */
     public Identifier stringToKey(
             String stringKey )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return theIdentifierFactory.fromExternalForm( stringKey );
     }

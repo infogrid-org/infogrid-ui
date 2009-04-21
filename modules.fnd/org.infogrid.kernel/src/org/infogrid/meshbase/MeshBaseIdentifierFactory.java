@@ -8,15 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase;
 
-import java.net.URISyntaxException;
 import org.infogrid.util.IdentifierFactory;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factory for MeshBaseIdentifiers.
@@ -30,12 +30,12 @@ public interface MeshBaseIdentifierFactory
      *
      * @param raw the external form
      * @return the created MeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public MeshBaseIdentifier fromExternalForm(
             String raw )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Recreate a MeshBaseIdentifier from an external form. Be lenient about syntax and
@@ -44,12 +44,12 @@ public interface MeshBaseIdentifierFactory
      *
      * @param raw the external form
      * @return the created MeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public MeshBaseIdentifier guessFromExternalForm(
             String raw )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Convert this StringRepresentation back to a MeshBaseIdentifier.
@@ -57,11 +57,11 @@ public interface MeshBaseIdentifierFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created MeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public MeshBaseIdentifier fromStringRepresentation(
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 }

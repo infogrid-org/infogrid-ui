@@ -22,9 +22,44 @@
          to find them in the IDE. -->
 
     <tag>
+        <name>changeViewletState</name>
+        <tag-class>org.infogrid.jee.taglib.viewlet.ChangeViewletStateTag</tag-class>
+        <attribute>
+            <name>viewletStates</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>display</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ifState</name>
+        <tag-class>org.infogrid.jee.taglib.viewlet.IfViewletStateTag</tag-class>
+        <attribute>
+            <name>viewletState</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>notIfState</name>
+        <tag-class>org.infogrid.jee.taglib.viewlet.NotIfViewletStateTag</tag-class>
+        <attribute>
+            <name>viewletState</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>viewlet</name>
         <tag-class>org.infogrid.jee.taglib.viewlet.ViewletTag</tag-class>
     </tag>
+
     <tag>
         <name>viewletAlternatives</name>
         <tag-class>org.infogrid.jee.taglib.viewlet.ViewletAlternativesTag</tag-class>

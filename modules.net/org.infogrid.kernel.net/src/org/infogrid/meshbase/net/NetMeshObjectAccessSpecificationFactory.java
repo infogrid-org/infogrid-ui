@@ -8,15 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factory for NetMeshObjectAccessSpecifications.
@@ -49,12 +49,12 @@ public interface NetMeshObjectAccessSpecificationFactory
      * 
      * @param raw the String
      * @return the created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the String could not be parsed
+     * @throws StringRepresentationParseException thrown if the String could not be parsed
      */
     public NetMeshObjectAccessSpecification fromExternalForm(
             String raw )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
     
     /**
      * Factory method to obtain a NetMeshObjectAccessSpecification to a locally available MeshObject. This
@@ -285,12 +285,12 @@ public interface NetMeshObjectAccessSpecificationFactory
      * 
      * @param remoteLocation the URI
      * @return created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshObjectAccessSpecification obtain(
             URI remoteLocation )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Convenience factory method to obtain a single-element NetMeshObjectAccessSpecification
@@ -300,13 +300,13 @@ public interface NetMeshObjectAccessSpecificationFactory
      * @param remoteLocation the URI
      * @param coherence the CoherenceSpecification
      * @return created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshObjectAccessSpecification obtain(
             URI                    remoteLocation,
             CoherenceSpecification coherence )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Convenience factory method to obtain a single-element NetMeshObjectAccessSpecification
@@ -316,13 +316,13 @@ public interface NetMeshObjectAccessSpecificationFactory
      * @param remoteLocation the URI
      * @param scope the ScopeSpecification
      * @return created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshObjectAccessSpecification obtain(
             URI                remoteLocation,
             ScopeSpecification scope )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Convenience factory method to obtain a single-element NetMeshObjectAccessSpecification
@@ -333,12 +333,12 @@ public interface NetMeshObjectAccessSpecificationFactory
      * @param scope the ScopeSpecification
      * @param coherence the CoherenceSpecification
      * @return created NetMeshObjectAccessSpecification
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshObjectAccessSpecification obtain(
             URI                    remoteLocation,
             ScopeSpecification     scope,
             CoherenceSpecification coherence )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 }

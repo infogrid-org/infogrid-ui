@@ -8,15 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase;
 
-import java.net.URISyntaxException;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringifierException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * The default implementation of MeshBaseIdentifierFactory.
@@ -49,12 +48,12 @@ public class DefaultMeshBaseIdentifierFactory
      *
      * @param raw the external form
      * @return the created MeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public MeshBaseIdentifier fromExternalForm(
             String raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         MeshBaseIdentifier ret = new MeshBaseIdentifier( raw );
         return ret;
@@ -67,12 +66,12 @@ public class DefaultMeshBaseIdentifierFactory
      *
      * @param raw the external form
      * @return the created MeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public MeshBaseIdentifier guessFromExternalForm(
             String raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         // On this level, we treat all Strings as uninterpreted. Thus this matches to fromExternalForm.
         return fromExternalForm( raw );
@@ -84,13 +83,13 @@ public class DefaultMeshBaseIdentifierFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created MeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public MeshBaseIdentifier fromStringRepresentation(
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         try {
             Object [] found = representation.parseEntry( MeshBaseIdentifier.class, MeshBaseIdentifier.DEFAULT_ENTRY, s );
@@ -102,16 +101,15 @@ public class DefaultMeshBaseIdentifierFactory
                     break;
 
                 default:
-                    throw new URISyntaxException( s, "Cannot parse identifier" );
+                    throw new StringRepresentationParseException( s, null, null );
             }
 
             return ret;
 
-        } catch( StringifierException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
+        // pass-through StringRepresentationParseException
 
         } catch( ClassCastException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
+            throw new StringRepresentationParseException( s, null, ex );
         }
         
     }

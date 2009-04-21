@@ -15,9 +15,9 @@
 package org.infogrid.model.primitives;
 
 import java.io.ObjectStreamException;
-import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
@@ -440,33 +440,18 @@ public class FloatDataType
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, s );
+                    throw new PropertyValueParsingException( this, representation, null, s );
             }
 
             return ret;
 
-        } catch( StringifierException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, ex );
+        } catch( StringRepresentationParseException ex ) {
+            throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, ex );
+            throw new PropertyValueParsingException( this, representation, s, null, ex );
         }
     }
-
-//    /**
-//     * Obtain a PropertyValue that corresponds to this DataType, based on the String representation
-//     * of the PropertyValue.
-//     *
-//     * @param s the String representation
-//     * @return the PropertyValue
-//     */
-//    public FloatValue fromString(
-//            String s )
-//    {
-//        double value = Double.parseDouble( s );
-//        FloatValue ret = FloatValue.create( value );
-//        return ret;
-//    }
 
     /**
       * The value for the minimum.

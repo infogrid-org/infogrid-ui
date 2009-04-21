@@ -17,6 +17,7 @@ package org.infogrid.model.primitives;
 import org.infogrid.util.text.StringRepresentation;
 
 import java.awt.geom.Point2D;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
 
@@ -219,7 +220,28 @@ public final class PointValue
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
     {
-        return rep.formatEntry( getClass(), DEFAULT_ENTRY, pars, x, y );
+        Object editVariable;
+        Object meshObject;
+        Object propertyType;
+        if( pars != null ) {
+            editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
+            meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
+            propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+        } else {
+            editVariable = null;
+            meshObject   = null;
+            propertyType = null;
+        }
+
+        return rep.formatEntry(
+                getClass(),
+                DEFAULT_ENTRY,
+                pars,
+                x,
+                y,
+                meshObject,
+                propertyType,
+                editVariable );
     }
 
     /**

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -48,6 +48,7 @@ import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.probe.shadow.store.StoreShadowMeshBaseFactory;
 import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Tests ProbeManager restore of StoreShadowMeshBase with a One-Time-Only CoherenceSpecification.
@@ -250,7 +251,8 @@ public class StoreShadowMeshBaseTest1
                 ProbeException,
                 IOException,
                 ModuleException,
-                URISyntaxException
+                URISyntaxException,
+                StringRepresentationParseException
         {
             ++probeRunCounter;
 

@@ -14,6 +14,7 @@
 
 package org.infogrid.model.primitives;
 
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
@@ -195,11 +196,33 @@ public final class BooleanValue
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
     {
-        if( theValue ) {
-            return rep.formatEntry( getClass(), "True", pars );
+        Object editVariable;
+        Object meshObject;
+        Object propertyType;
+        if( pars != null ) {
+            editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
+            meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
+            propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
         } else {
-            return rep.formatEntry( getClass(), "False", pars );
+            editVariable = null;
+            meshObject   = null;
+            propertyType = null;
         }
+
+        String s;
+        if( theValue ) {
+            s = "True";
+        } else {
+            s = "False";
+        }
+
+        return rep.formatEntry(
+                getClass(),
+                s,
+                pars,
+                meshObject,
+                propertyType,
+                editVariable );
     }
 
     /**

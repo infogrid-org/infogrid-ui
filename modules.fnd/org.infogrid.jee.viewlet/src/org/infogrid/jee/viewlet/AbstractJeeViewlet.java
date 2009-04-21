@@ -85,6 +85,18 @@ public abstract class AbstractJeeViewlet
     }
 
     /**
+     * Obtain all possible states of this Viewlet. This may depend on the current MeshObjectsToView
+     * (e.g. whether the user may edit a MeshObject or not).
+     *
+     * @return the possible ViewletStates
+     */
+    public JeeViewletState [] getPossibleViewletStates()
+    {
+        // FIXME: should take MeshObject access rights into account
+        return DefaultJeeViewletStateEnum.values();
+    }
+
+    /**
      * Obtain the desired next state of the Viewlet.
      *
      * @return the desired next state of the Viewlet, if any

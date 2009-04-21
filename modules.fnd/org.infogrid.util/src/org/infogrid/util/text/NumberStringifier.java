@@ -27,11 +27,14 @@ public abstract class NumberStringifier<T>
      * Constructor.
      *
      * @param digits the number of digits
+     * @param radix the radix to use, e.g. 16 for hexadecimal
      */
     protected NumberStringifier(
-            int digits )
+            int digits,
+            int radix )
     {
         theDigits = digits;
+        theRadix  = radix;
     }
     
     /**
@@ -55,10 +58,10 @@ public abstract class NumberStringifier<T>
             boolean negative;
 
             if( arg >= 0 ) {
-                ret = String.valueOf( arg );
+                ret = Long.toString( arg, theRadix );
                 negative = false;
             } else {
-                ret = String.valueOf( -arg );
+                ret = Long.toString( -arg, theRadix );
                 negative = true;
             }
             StringBuilder prepend = new StringBuilder();
@@ -129,6 +132,7 @@ public abstract class NumberStringifier<T>
         }
 
         char c = s.charAt( pos );
+        c = Character.toLowerCase( c );
 
         if( pos == min && length > min ) {
             if( c == '+' || c == '-' ) {
@@ -139,7 +143,23 @@ public abstract class NumberStringifier<T>
                 }
             }
         }
-        boolean ret = Character.isDigit( c );
+
+        boolean ret;
+        if( c < '0' ) {
+            ret = false;
+        } else if( c <= '9' ) {
+            if( c - '0' >= theRadix ) {
+                ret = false;
+            } else {
+                ret = true;
+            }
+        } else if( c < 'a' ) {
+            ret = false;
+        } else if( c - 'a' + 10 >= theRadix ) {
+            ret = false;
+        } else {
+            ret = true;
+        }
         return ret;
     }
     
@@ -147,4 +167,9 @@ public abstract class NumberStringifier<T>
      * The number of digits to make. -1 means "don't pay any attention".
      */
     protected int theDigits;
+
+    /**
+     * The radix to use, e.g. 16 for hexadecimal.
+     */
+    protected int theRadix;
 }

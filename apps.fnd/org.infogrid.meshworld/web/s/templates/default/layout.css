@@ -100,3 +100,16 @@ span.org-infogrid-model-primitives-BlobValue > span.mime {
 span.org-infogrid-model-primitives-ColorValue {
     padding: 0 1em;
 }
+
+table.dialog-buttons {
+    border: dotted #808080 !important;
+    border-width: 1px 0 0 0 !important;
+    width: 100%;
+    margin-top: 20px;
+}
+table.dialog-buttons > tbody > tr > td {
+    border: 0 !important;
+    text-align: center;
+    padding: 15px 0 5px 0;
+    width: 33.3%
+}

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -38,6 +38,7 @@ import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Tests a multi-step TraversalSpecification with a Shadow. Was reported as a bug.
@@ -194,7 +195,8 @@ public class ShadowTest8
                 RelatedAlreadyException,
                 TransactionException,
                 TransactionException,
-                URISyntaxException
+                URISyntaxException,
+                StringRepresentationParseException
         {
             MeshBaseLifecycleManager    life   = mb.getMeshBaseLifecycleManager();
             MeshObjectIdentifierFactory idfact = mb.getMeshObjectIdentifierFactory();

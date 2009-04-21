@@ -819,7 +819,11 @@ public class JeeFormatter
             char sep = '?';
             for( String key : args.keySet() ) {
                 String value = args.get( key );
-                ret.append( sep ).append( HTTP.encodeToValidUrlArgument( key ) ).append( '=' ).append( HTTP.encodeToValidUrlArgument( value ));
+                ret.append( sep ).append( HTTP.encodeToValidUrlArgument( key ) );
+                ret.append( '=' );
+                if( value != null ) {
+                    ret.append( HTTP.encodeToValidUrlArgument( value ));
+                }
                 sep = '&';
             }
             return ret.toString();
@@ -832,7 +836,7 @@ public class JeeFormatter
             for( String key : args.keySet() ) {
                 String value        = args.get( key );
                 String escapedKey   = HTTP.encodeToValidUrlArgument( key );
-                String escapedValue = HTTP.encodeToValidUrlArgument( value );
+                String escapedValue = value != null ? HTTP.encodeToValidUrlArgument( value ) : null;
 
                 String pattern = "&" + escapedKey + "=";
                 
@@ -844,11 +848,20 @@ public class JeeFormatter
                     }
                     StringBuilder newUrlArgs = new StringBuilder();
                     newUrlArgs.append( urlArgs.substring( 0, found+1 ));
-                    newUrlArgs.append( escapedKey ).append( '=' ).append( escapedValue );
+                    newUrlArgs.append( escapedKey );
+                    newUrlArgs.append( '=' );
+                    if( escapedValue != null ) {
+                        newUrlArgs.append( escapedValue );
+                    }
                     newUrlArgs.append( urlArgs.substring( found2 ));
                     urlArgs = newUrlArgs;
                 } else {
-                    append.append( '&' ).append( escapedKey ).append( '=' ).append( escapedValue );
+                    append.append( '&' );
+                    append.append( escapedKey );
+                    append.append( '=' );
+                    if( escapedValue != null ) {
+                        append.append( escapedValue );
+                    }
                 }
             }
             StringBuilder ret = new StringBuilder();
@@ -1049,6 +1062,10 @@ public class JeeFormatter
 
         if( raw == null || raw.length() == 0 ) {
             sanitized = "Html";
+
+        } else if( "Edit".equals( raw )) {
+            sanitized = "EditHtml";
+
         } else {
             StringBuilder temp = new StringBuilder( raw.length() );
             temp.append( Character.toUpperCase( raw.charAt( 0 )));
@@ -1094,7 +1111,7 @@ public class JeeFormatter
     /**
      * Maps lowercase JSP scope names to their PageContext integer constant values.
      */
-    private static Map<String,Integer> scopes = new HashMap<String,Integer>();
+    private static final Map<String,Integer> scopes = new HashMap<String,Integer>();
 
     static {
         scopes.put( "page",        PageContext.PAGE_SCOPE );

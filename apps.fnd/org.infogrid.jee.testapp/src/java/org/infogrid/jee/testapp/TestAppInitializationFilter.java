@@ -8,13 +8,12 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.testapp;
 
-import java.net.URISyntaxException;
 import org.infogrid.jee.rest.defaultapp.m.AbstractMRestfulAppInitializationFilter;
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
@@ -29,6 +28,7 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Blob.BlobSubjectArea;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.viewlet.ViewletFactory;
 
 /**
@@ -70,7 +70,7 @@ public class TestAppInitializationFilter
             
             mb.getHomeObject().relate( image );
             
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             getLog().error( ex );
         } catch( MeshObjectIdentifierNotUniqueException ex ) {
             getLog().error( ex );

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.store.util;
 
 import java.io.IOException;
 import java.lang.ref.Reference;
-import java.net.URISyntaxException;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -26,6 +25,7 @@ import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * This is a <code>java.util.Map</code> that stores the values in the
@@ -343,7 +343,7 @@ public abstract class IterableStoreBackedSwappingHashMap<K,V>
                 K          ret   = theMap.theMapper.stringToKey( value.getKey() );
                 return ret;
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.error( ex );
                 return null;
             }

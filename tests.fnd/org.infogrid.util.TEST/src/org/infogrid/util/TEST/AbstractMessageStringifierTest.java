@@ -22,6 +22,7 @@ import org.infogrid.util.ArrayFacade;
 import org.infogrid.util.text.AnyMessageStringifier;
 import org.infogrid.util.text.HtmlStacktraceStringifier;
 import org.infogrid.util.text.IntegerStringifier;
+import org.infogrid.util.text.LongStringifier;
 import org.infogrid.util.text.MessageStringifier;
 import org.infogrid.util.text.StacktraceStringifier;
 import org.infogrid.util.text.StringStringifier;
@@ -53,6 +54,8 @@ public abstract class AbstractMessageStringifierTest
 
         HashMap<String,Stringifier<? extends Object>> map1 = new HashMap<String,Stringifier<? extends Object>>();
         map1.put( "int",            IntegerStringifier.create() );
+        map1.put( "hex2",           IntegerStringifier.create( 2, 16 ) );
+        map1.put( "longhex4",       LongStringifier.create( 4, 16 ) );
         map1.put( "string",         StringStringifier.create() );
         map1.put( "stacktrace",     StacktraceStringifier.create() );
         map1.put( "htmlstacktrace", HtmlStacktraceStringifier.create() );
@@ -76,7 +79,7 @@ public abstract class AbstractMessageStringifierTest
         if( doParse ) {
             getLog().debug( "Iterating over parse results" );
 
-            Iterator<StringifierParsingChoice<ArrayFacade<Object>>> iter = str1.parsingChoiceIterator( result1a, 0, result1a.length(), result1a.length(), false );
+            Iterator<StringifierParsingChoice<ArrayFacade<Object>>> iter = str1.parsingChoiceIterator( result1a, 0, result1a.length(), result1a.length(), true );
             while( iter.hasNext() ) {
                 StringifierParsingChoice<ArrayFacade<Object>> childChoice = iter.next();
                 getLog().debug( "found: " + childChoice );

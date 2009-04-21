@@ -8,18 +8,17 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.modelbase;
 
+import java.net.URISyntaxException;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
-
 import org.infogrid.util.IdentifierFactory;
 import org.infogrid.util.text.StringRepresentation;
-
-import java.net.URISyntaxException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factory for MeshTypeIdentifiers.
@@ -49,5 +48,5 @@ public interface MeshTypeIdentifierFactory
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 }

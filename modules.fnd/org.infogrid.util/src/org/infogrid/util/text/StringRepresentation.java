@@ -60,14 +60,14 @@ public interface StringRepresentation
      * @param entry the entry (prefixed by theName) of the resource
      * @param s the to-be-parsed String
      * @return the found values
-     * @throws StringifierException thrown if the String could not be parsed.
+     * @throws StringRepresentationParseException thrown if the String could not be parsed.
      */
     public Object [] parseEntry(
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
             String                                   s )
         throws
-            StringifierException;
+            StringRepresentationParseException;
 
     /**
      * Format a Throwable about which nothing else is known.

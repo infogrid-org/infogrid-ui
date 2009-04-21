@@ -86,6 +86,7 @@ import org.infogrid.util.ReturnSynchronizerException;
 import org.infogrid.util.StreamUtils;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.xml.sax.SAXException;
@@ -213,7 +214,7 @@ public class ProbeDispatcher
                 problem = ex;
                 throw new ProbeException.Other( sourceIdentifier, ex ); // should never happen
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 problem = ex;
                 throw new ProbeException.SyntaxError( sourceIdentifier, ex );
 
@@ -451,7 +452,7 @@ public class ProbeDispatcher
      * @return the ProbeResult
      * @throws ProbeException thrown if unable to compute a result
      * @throws TransactionException thrown if invoked outside of proper Transaction boundaries
-     * @throws URISyntaxException thrown if a URI could not be parsed
+     * @throws StringRepresentationParseException thrown if a URI could not be parsed
      * @throws IOException thrown if an I/O error occurred
      */
     protected ProbeResult handleStream(
@@ -461,7 +462,7 @@ public class ProbeDispatcher
         throws
             ProbeException,
             TransactionException,
-            URISyntaxException,
+            StringRepresentationParseException,
             IOException
     {
         boolean               updated          = false;
@@ -802,6 +803,9 @@ public class ProbeDispatcher
             } catch( URISyntaxException ex ) {
                 throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
 
+            } catch( StringRepresentationParseException ex ) {
+                throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
+
             } catch( ModuleException ex ) {
                 throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
 
@@ -1022,6 +1026,9 @@ public class ProbeDispatcher
             } catch( URISyntaxException ex ) {
                 throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
 
+            } catch( StringRepresentationParseException ex ) {
+                throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
+
             } catch( ModuleException ex ) {
                 throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
 
@@ -1184,6 +1191,9 @@ public class ProbeDispatcher
                 throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
 
             } catch( URISyntaxException ex ) {
+                throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
+
+            } catch( StringRepresentationParseException ex ) {
                 throw new ProbeException.ErrorInProbe( sourceIdentifier, ex, foundClass );
 
             } catch( ModuleException ex ) {

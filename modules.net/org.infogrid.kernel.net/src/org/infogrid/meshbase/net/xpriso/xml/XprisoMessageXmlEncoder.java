@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.URISyntaxException;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.externalized.ParserFriendlyExternalizedMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
@@ -44,6 +43,7 @@ import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -376,7 +376,7 @@ public class XprisoMessageXmlEncoder
                 if( sender != null && sender.length() > 0 ) {
                     senderId = ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( sender );
                 }
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             try {
@@ -384,7 +384,7 @@ public class XprisoMessageXmlEncoder
                 if( receiver != null && receiver.length() > 0 ) {
                     receiverId = ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( receiver );
                 }
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
 
@@ -400,7 +400,7 @@ public class XprisoMessageXmlEncoder
                 NetMeshObjectAccessSpecification path = 
                         ((NetMeshBase)theMeshBase).getNetMeshObjectAccessSpecificationFactory().fromExternalForm( pathString );
                 theMessage.addRequestedFirstTimeObject( path );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             
@@ -408,7 +408,7 @@ public class XprisoMessageXmlEncoder
             try {
                 NetMeshObjectIdentifier ref = ((NetMeshObjectIdentifierFactory)theMeshBase.getMeshObjectIdentifierFactory()).fromExternalForm( attrs.getValue( IDENTIFIER_TAG ));
                 theMessage.addRequestedCanceledObject( ref );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
 
@@ -417,7 +417,7 @@ public class XprisoMessageXmlEncoder
                 MeshObjectIdentifier ref  = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( attrs.getValue( IDENTIFIER_TAG ));
                 long                 time = parseLong( attrs, TIME_UPDATED_TAG, -1L );
                 theMessage.addDeleteChange( new NetMeshObjectDeletedEvent( null, theMessage.getSenderIdentifier(), null, ref, theMessage.getSenderIdentifier(), null, time ));
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             
@@ -436,7 +436,7 @@ public class XprisoMessageXmlEncoder
             if( identifier != null ) {
                 try {
                     theMeshObjectBeingParsed.setIdentifier( theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( XmlUtils.descape( identifier )));
-                } catch( URISyntaxException ex ) {
+                } catch( StringRepresentationParseException ex ) {
                     log.warn( ex );
                 }
             }
@@ -469,7 +469,7 @@ public class XprisoMessageXmlEncoder
                 MeshObjectIdentifier neighbor = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( attrs.getValue( NEIGHBOR_TAG ));
                 long           updated  = parseLong( attrs, TIME_UPDATED_TAG, -1L );
                 theHasTypesBeingParsed  = new ParserFriendlyExternalizedMeshObject.HasRoleTypes( ref, neighbor, updated );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             
@@ -479,7 +479,7 @@ public class XprisoMessageXmlEncoder
                 MeshTypeIdentifier   type = theMeshBase.getModelBase().getMeshTypeIdentifierFactory().fromExternalForm( attrs.getValue( TYPE_TAG ));
                 long           updated  = parseLong( attrs, TIME_UPDATED_TAG, -1L );
                 theHasPropertiesBeingParsed = new ParserFriendlyExternalizedMeshObject.HasProperties( ref, type, updated );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
 
@@ -488,7 +488,7 @@ public class XprisoMessageXmlEncoder
                 MeshObjectIdentifier ref = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( attrs.getValue( IDENTIFIER_TAG ));
                 long           updated = parseLong( attrs, TIME_UPDATED_TAG, -1L );
                 theHasTypesBeingParsed = new ParserFriendlyExternalizedMeshObject.HasTypes( ref, updated );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             
@@ -497,7 +497,7 @@ public class XprisoMessageXmlEncoder
                 MeshObjectIdentifier ref = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( attrs.getValue( IDENTIFIER_TAG ));
                 long           updated = parseLong( attrs, TIME_UPDATED_TAG, -1L );
                 theHasTypesBeingParsed = new ParserFriendlyExternalizedMeshObject.HasTypes( ref, updated );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             
@@ -505,7 +505,7 @@ public class XprisoMessageXmlEncoder
             try {
                 NetMeshObjectIdentifier ref = ((NetMeshObjectIdentifierFactory)theMeshBase.getMeshObjectIdentifierFactory()).fromExternalForm( attrs.getValue( IDENTIFIER_TAG ));
                 theMessage.addRequestedLockObject( ref );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             
@@ -513,7 +513,7 @@ public class XprisoMessageXmlEncoder
             try {
                 NetMeshObjectIdentifier ref = ((NetMeshObjectIdentifierFactory)theMeshBase.getMeshObjectIdentifierFactory()).fromExternalForm( attrs.getValue( IDENTIFIER_TAG ));
                 theMessage.addPushLockObject( ref );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             
@@ -521,7 +521,7 @@ public class XprisoMessageXmlEncoder
             try {
                 NetMeshObjectIdentifier ref = ((NetMeshObjectIdentifierFactory)theMeshBase.getMeshObjectIdentifierFactory()).fromExternalForm( attrs.getValue( IDENTIFIER_TAG ));
                 theMessage.addReclaimedLockObject( ref );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             
@@ -529,7 +529,7 @@ public class XprisoMessageXmlEncoder
             try {
                 NetMeshObjectIdentifier ref = ((NetMeshObjectIdentifierFactory)theMeshBase.getMeshObjectIdentifierFactory()).fromExternalForm( attrs.getValue( IDENTIFIER_TAG ));
                 theMessage.addRequestedResynchronizeReplica( ref );
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 log.warn( ex );
             }
             

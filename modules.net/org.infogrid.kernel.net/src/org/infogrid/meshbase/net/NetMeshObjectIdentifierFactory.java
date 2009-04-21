@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,8 +16,7 @@ package org.infogrid.meshbase.net;
 
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
-
-import java.net.URISyntaxException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Specializes MeshObjectIdentifierFactory to create NetMeshObjectIdentifiers.
@@ -46,13 +45,13 @@ public interface NetMeshObjectIdentifierFactory
      *
      * @param raw the identifier String
      * @return the created NetMeshObjectIdentifier
-     * @throws URISyntaxException a parsing error occurred
+     * @throws StringRepresentationParseException a parsing error occurred
      */
     // @Override except that the compiler doesn't like it
     public NetMeshObjectIdentifier fromExternalForm(
             String raw )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Create an identifier for a MeshObject held at a different MeshBase.
@@ -60,13 +59,13 @@ public interface NetMeshObjectIdentifierFactory
      * @param meshBaseIdentifier MeshBaseIdentifier of the MeshBase where the object is held
      * @param raw the identifier String
      * @return the created NetMeshObjectIdentifier
-     * @throws URISyntaxException a parsing error occurred
+     * @throws StringRepresentationParseException a parsing error occurred
      */
     public NetMeshObjectIdentifier fromExternalForm(
             NetMeshBaseIdentifier meshBaseIdentifier,
             String                raw )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Recreate a NetMeshObjectIdentifier from an external form. Be lenient about syntax and
@@ -75,12 +74,12 @@ public interface NetMeshObjectIdentifierFactory
      *
      * @param raw the external form
      * @return the created MeshObjectIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public NetMeshObjectIdentifier guessFromExternalForm(
             String raw )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Determine whether a given String is to be treated as a global identifier. This

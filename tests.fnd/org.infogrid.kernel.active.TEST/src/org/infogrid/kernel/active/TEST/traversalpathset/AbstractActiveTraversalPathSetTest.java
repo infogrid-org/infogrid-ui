@@ -14,7 +14,6 @@
 
 package org.infogrid.kernel.active.TEST.traversalpathset;
 
-import java.net.URISyntaxException;
 import org.infogrid.kernel.active.TEST.AllTests;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
@@ -27,17 +26,16 @@ import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.m.MMeshBase;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
-import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.testharness.AbstractTest;
-import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factors out functionality common to ActiveTraversalPathSetTests.
@@ -51,13 +49,13 @@ public abstract class AbstractActiveTraversalPathSetTest
      * 
      * @param testClass the Class containing the test
      * @throws MeshTypeNotFoundException a MeshType could not be found
-     * @throws URISyntaxException a MeshBaseIdentifier could not be created
+     * @throws StringRepresentationParseException a MeshBaseIdentifier could not be created
      */
     protected AbstractActiveTraversalPathSetTest(
             Class<?> testClass )
         throws
             MeshTypeNotFoundException,
-            URISyntaxException
+            StringRepresentationParseException
     {
         super( localFileName( AllTests.class, "/ResourceHelper" ) );
 

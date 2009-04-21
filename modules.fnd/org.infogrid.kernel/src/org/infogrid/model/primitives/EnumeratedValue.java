@@ -17,6 +17,7 @@ package org.infogrid.model.primitives;
 import org.infogrid.util.text.StringRepresentation;
 
 import java.util.Locale;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
 
@@ -222,6 +223,19 @@ public final class EnumeratedValue
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
     {
+        Object editVariable;
+        Object meshObject;
+        Object propertyType;
+        if( pars != null ) {
+            editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
+            meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
+            propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+        } else {
+            editVariable = null;
+            meshObject   = null;
+            propertyType = null;
+        }
+
         return rep.formatEntry(
                 getClass(),
                 DEFAULT_ENTRY,
@@ -229,7 +243,10 @@ public final class EnumeratedValue
                 theValue,
                 theDataType,
                 getUserVisibleName()        != null ? getUserVisibleName().value()        : null,
-                getUserVisibleDescription() != null ? getUserVisibleDescription().value() : null );
+                getUserVisibleDescription() != null ? getUserVisibleDescription().value() : null,
+                meshObject,
+                propertyType,
+                editVariable );
     }
 
     /**

@@ -32,7 +32,7 @@ public class LongStringifier
      */
     public static LongStringifier create()
     {
-        return new LongStringifier( -1 );
+        return new LongStringifier( -1, 10 );
     }
 
     /**
@@ -44,18 +44,34 @@ public class LongStringifier
     public static LongStringifier create(
             int digits )
     {
-        return new LongStringifier( digits );
+        return new LongStringifier( digits, 10 );
+    }
+
+    /**
+     * Factory method for an LongStringifier that attempts to display N digits, inserting leading zeros if needed.
+     *
+     * @param digits the number of digits to display
+     * @param radix the radix to use, e.g. 16 for hexadecimal
+     * @return the created LongStringifier
+     */
+    public static LongStringifier create(
+            int digits,
+            int radix )
+    {
+        return new LongStringifier( digits, radix );
     }
 
     /**
      * Constructor. Use factory method.
      *
      * @param digits the number of digits to display
+     * @param radix the radix to use, e.g. 16 for hexadecimal
      */
     protected LongStringifier(
-            int digits )
+            int digits,
+            int radix )
     {
-        super( digits );
+        super( digits, radix );
     }
 
     /**
@@ -87,7 +103,12 @@ public class LongStringifier
             StringifierParseException
     {
         try {
-            Long ret = Long.parseLong( rawString );
+            Long ret;
+            if( theDigits != -1 && rawString.length() > theDigits ) {
+                ret = Long.parseLong( rawString.substring( 0, theDigits ), theRadix );
+            } else {
+                ret = Long.parseLong( rawString, theRadix );
+            }
 
             return ret;
 
@@ -123,13 +144,28 @@ public class LongStringifier
                 }
             }
             return OneElementIterator.<StringifierParsingChoice<Long>>create(
-                    new StringifierValueParsingChoice<Long>( startIndex, endIndex, Long.parseLong( rawString.substring( startIndex, endIndex ))));
+                    new StringifierValueParsingChoice<Long>( startIndex, endIndex, Long.parseLong( rawString.substring( startIndex, endIndex ), theRadix )));
 
         } else {
+            final int finalEnd = theDigits == -1 ? rawString.length() : ( startIndex + theDigits );
+            if( theDigits != -1 && startIndex + theDigits > endIndex ) {
+                // need theDigits but don't have enough
+                return ZeroElementCursorIterator.<StringifierParsingChoice<Long>>create();
+            }
+
             return new Iterator<StringifierParsingChoice<Long>>() {
                 /** Constructor */
                 {
-                    currentEnd = startIndex;
+                    if( theDigits == -1 ) {
+                        char c = rawString.charAt( startIndex );
+                        if( c == '-' || c == '+' ) {
+                            currentEnd = startIndex + 1;
+                        } else {
+                            currentEnd = startIndex;
+                        }
+                    } else {
+                        currentEnd = startIndex + theDigits -1;
+                    }
                 }
                 /**
                  * Does the iterator have a next element?
@@ -141,7 +177,7 @@ public class LongStringifier
                     if( counter >= max ) {
                         return false;
                     }
-                    if( currentEnd >= rawString.length()) {
+                    if( currentEnd >= finalEnd ) {
                         return false;
                     }
                     if( !validChar( currentEnd, startIndex, endIndex, rawString ) ) {
@@ -155,22 +191,28 @@ public class LongStringifier
                  *
                  * @return the next element
                  */
-                @SuppressWarnings("fallthrough")
                 public StringifierParsingChoice<Long> next()
                 {
-                    char c = rawString.charAt( currentEnd++ );
-                    switch( c ) {
-                        // sequence is significant here
-                        case '-':
-                            isNegative = true;
-                            // no break
+                    ++currentEnd;
 
-                        case '+':
-                            c = rawString.charAt( currentEnd++ );
-                            // no break
+                    boolean isNegative   = false;
+                    long    currentValue = 0;
 
-                        default:
-                            currentValue = currentValue*10 + Character.digit( c, 10 );
+                    for( int i=startIndex ; i<currentEnd ; ++i ) {
+                        char c = rawString.charAt( i );
+                        switch( c ) {
+                            case '-':
+                                isNegative = true;
+                                break;
+
+                            case '+':
+                                c = rawString.charAt( currentEnd++ );
+                                break;
+
+                            default:
+                                currentValue = currentValue*theRadix + Character.digit( c, theRadix );
+                                break;
+                        }
                     }
                     ++counter;
                     return new StringifierValueParsingChoice<Long>( startIndex, currentEnd, isNegative ? (-currentValue) : currentValue );
@@ -189,24 +231,14 @@ public class LongStringifier
                 }
 
                 /**
-                 * Capture whether this is a negative number.
-                 */
-                protected boolean isNegative = false;
-
-                /**
                  * The current end, incremented every iteration.
                  */
                 protected int currentEnd;
                 
                 /**
-                 * The current number, without the negative number.
-                 */
-                protected long currentValue = 0;
-                
-                /**
                  * Counts the number of iterations returned already.
                  */
-                protected int counter      = 0;
+                protected int counter = 0;
             };
         }
     }

@@ -22,8 +22,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Default implementation of NetMeshBaseIdentifierFactory.
@@ -67,50 +67,18 @@ public class DefaultNetMeshBaseIdentifierFactory
         theSupportedProtocols = protocols;
     }
 
-//    /**
-//     * Factory method to obtain a NetMeshBaseIdentifier that is resolvable into a stream,
-//     * e.g. http URL.
-//     * 
-//     * @param canonicalForm the canonical form of this NetMeshBaseIdentifier
-//     * @return the created NetMeshBaseIdentifier
-//     * @throws URISyntaxException thrown if the syntax could not be parsed
-//     */
-//    public NetMeshBaseIdentifier obtain(
-//            String canonicalForm )
-//        throws
-//            URISyntaxException
-//    {
-//        return obtain( null, canonicalForm, true, false );
-//    }
-//    
-//    /**
-//     * Factory method to obtain a NetMeshBaseIdentifier that cannot be resolved into a stream,
-//     * e.g. jdbc.
-//     * 
-//     * @param canonicalForm the canonical form of this NetMeshBaseIdentifier
-//     * @return the created NetMeshBaseIdentifier
-//     * @throws URISyntaxException thrown if the syntax could not be parsed
-//     */
-//    public NetMeshBaseIdentifier obtainUnresolvable(
-//            String canonicalForm )
-//        throws
-//            URISyntaxException
-//    {
-//        return obtain( null, canonicalForm, false, false );
-//    }
-//    
     /**
      * Factory method to obtain a NetMeshBaseIdentifier that is resolvable into a stream,
      * e.g. http URL. This method attempts to guess the protocol if none has been provided.
      * 
      * @param string the (potentially incomplete) String form of this NetMeshBaseIdentifier
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshBaseIdentifier guessFromExternalForm(
             String string )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( null, string, true );
     }
@@ -122,13 +90,13 @@ public class DefaultNetMeshBaseIdentifierFactory
      * @param context the NetMeshBaseIdentifier that forms the context
      * @param string the (potentially incomplete) String form of this NetMeshBaseIdentifier
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshBaseIdentifier guessFromExternalForm(
             NetMeshBaseIdentifier context,
             String                string )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( context, string, true );
     }
@@ -140,14 +108,14 @@ public class DefaultNetMeshBaseIdentifierFactory
      * @param string the (potentially incomplete) String form of this NetMeshBaseIdentifier
      * @param guess if true, attempt to guess the protocol if none was given
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     protected NetMeshBaseIdentifier obtain(
             NetMeshBaseIdentifier context,
             String                string,
             boolean               guess )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         if( string == null ) {
             throw new NullPointerException();
@@ -170,15 +138,25 @@ public class DefaultNetMeshBaseIdentifierFactory
         }
 
         if( string.length() == 0 ) {
-            throw new URISyntaxException( string, "identifier cannot be empty String" );
+            throw new StringRepresentationParseException( string, null, null );
         }
 
         if( isXriGlobalContextSymbol( string.charAt( 0 ))) {
-            return new NetMeshBaseIdentifier( string, new URI( theXriResolverPrefix + string ), true );
+            try {
+                return new NetMeshBaseIdentifier( string, new URI( theXriResolverPrefix + string ), true );
+                
+            } catch( URISyntaxException ex ) {
+                throw new StringRepresentationParseException( string, null, ex );
+            }
         }
         if( string.startsWith( theXriResolverPrefix )) {
             string = string.substring( theXriResolverPrefix.length() );
-            return new NetMeshBaseIdentifier( string, new URI( theXriResolverPrefix + string ), true );
+            try {
+                return new NetMeshBaseIdentifier( string, new URI( theXriResolverPrefix + string ), true );
+
+            } catch( URISyntaxException ex ) {
+                throw new StringRepresentationParseException( string, null, ex );
+            }
         }
 
         String lower = string.toLowerCase();
@@ -207,14 +185,21 @@ public class DefaultNetMeshBaseIdentifierFactory
         
         for( Protocol p : theSupportedProtocols ) {
             if( lower.startsWith( p.getName() + ":" )) {
-                return new NetMeshBaseIdentifier( string, new URI( string ), p.getIsRestfullyResolvable() );
+                try {
+                    return new NetMeshBaseIdentifier( string, new URI( string ), p.getIsRestfullyResolvable() );
+
+                } catch( URISyntaxException ex ) {
+                    throw new StringRepresentationParseException( string, null, ex );
+                }
             }
         }
-        throw new URISyntaxException(
+        throw new StringRepresentationParseException(
                 string,
-                "canonical identifier uses unknown protocol (need one of "
-                + ArrayHelper.join( theSupportedProtocols )
-                + ")" );
+                null,
+                new IllegalArgumentException(
+                        "canonical identifier uses unknown protocol (need one of "
+                        + ArrayHelper.join( theSupportedProtocols )
+                        + ")" ));
     }
 
     /**
@@ -222,12 +207,12 @@ public class DefaultNetMeshBaseIdentifierFactory
      * 
      * @param file the local File whose NetMeshBaseIdentifier we obtain
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshBaseIdentifier obtain(
             File file )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( file.toURI() );
     }
@@ -237,12 +222,12 @@ public class DefaultNetMeshBaseIdentifierFactory
      * 
      * @param url the URL whose NetMeshBaseIdentifier we obtain
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshBaseIdentifier obtain(
             URL url )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( null, url.toExternalForm(), false );
     }
@@ -252,12 +237,12 @@ public class DefaultNetMeshBaseIdentifierFactory
      * 
      * @param uri the URI whose NetMeshBaseIdentifier we obtain
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public NetMeshBaseIdentifier obtain(
             URI uri )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( null, uri.toASCIIString(), false );
     }
@@ -267,12 +252,12 @@ public class DefaultNetMeshBaseIdentifierFactory
      *
      * @param raw the external form
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public NetMeshBaseIdentifier fromExternalForm(
             String raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( null, raw, false );
     }
@@ -283,13 +268,13 @@ public class DefaultNetMeshBaseIdentifierFactory
      * @param context the NetMeshBaseIdentifier that forms the context
      * @param raw the external form
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public NetMeshBaseIdentifier fromExternalForm(
             NetMeshBaseIdentifier context,
             String                raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( context, raw, false );
     }
@@ -300,13 +285,13 @@ public class DefaultNetMeshBaseIdentifierFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created NetMeshBaseIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public NetMeshBaseIdentifier fromStringRepresentation(
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         try {
             Object [] found = representation.parseEntry( NetMeshBaseIdentifier.class, NetMeshBaseIdentifier.DEFAULT_ENTRY, s );
@@ -318,16 +303,15 @@ public class DefaultNetMeshBaseIdentifierFactory
                     break;
 
                 default:
-                    throw new URISyntaxException( s, "Cannot parse identifier" );
+                    throw new StringRepresentationParseException( s, null, null );
             }
 
             return ret;
 
-        } catch( StringifierException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
+        // pass-through StringRepresentationParseException
 
         } catch( ClassCastException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
+            throw new StringRepresentationParseException( s, null, null );
         }
         
     }

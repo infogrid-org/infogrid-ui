@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -35,6 +35,7 @@ import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * A Probe for testing purposes.
@@ -62,7 +63,8 @@ public class TestProbe1
             RelatedAlreadyException,
             RoleTypeBlessedAlreadyException,
             TransactionException,
-            URISyntaxException
+            URISyntaxException,
+            StringRepresentationParseException
     {
         StagingMeshBaseLifecycleManager life = freshMeshBase.getMeshBaseLifecycleManager();
         

@@ -47,6 +47,14 @@ public interface JeeViewlet
     public JeeViewletState getViewletState();
 
     /**
+     * Obtain all possible states of this Viewlet. This may depend on the current MeshObjectsToView
+     * (e.g. whether the user may edit a MeshObject or not).
+     *
+     * @return the possible ViewletStates
+     */
+    public JeeViewletState [] getPossibleViewletStates();
+
+    /**
      * Obtain the Html class name for this Viewlet that will be used for the enclosing <tt>div</tt> tag.
      * 
      * @return the HTML class name

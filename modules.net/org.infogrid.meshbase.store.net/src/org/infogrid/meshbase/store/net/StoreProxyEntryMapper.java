@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -32,7 +32,7 @@ import org.infogrid.util.logging.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Knows how to map StoreProxies to and from StoreValues.
@@ -83,12 +83,12 @@ public class StoreProxyEntryMapper
      *
      * @param stringKey the key in String form
      * @return the corresponding key object
-     * @throws URISyntaxException thrown if a stringKey could not be converted into a valid Identifier
+     * @throws StringRepresentationParseException thrown if a stringKey could not be converted into a valid Identifier
      */
     public NetMeshBaseIdentifier stringToKey(
             String stringKey )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         NetMeshBaseIdentifier ret = theMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( stringKey );
         return ret;

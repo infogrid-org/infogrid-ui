@@ -8,15 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util;
 
 import org.infogrid.util.text.StringRepresentation;
-
-import java.net.URISyntaxException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * An abstract factory for {@link Identifier Identifiers}.
@@ -29,12 +28,12 @@ public interface IdentifierFactory
      *
      * @param externalForm the externalForm
      * @return the Identifier
-     * @throws URISyntaxException thrown if the externalForm could not be successfully parsed
+     * @throws StringRepresentationParseException thrown if the externalForm could not be successfully parsed
      */
     public Identifier fromExternalForm(
             String externalForm )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Convert a String in a given {@link org.infogrid.util.text.StringRepresentation}
@@ -43,11 +42,11 @@ public interface IdentifierFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created Identifier
-     * @throws URISyntaxException thrown if the String could not be successfully parsed
+     * @throws StringRepresentationParseException thrown if the String could not be successfully parsed
      */
     public Identifier fromStringRepresentation(
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 }

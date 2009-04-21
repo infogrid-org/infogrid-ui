@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.meshbase.net.a;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.a.DefaultAnetMeshObjectIdentifier;
@@ -25,8 +24,8 @@ import org.infogrid.meshbase.a.DefaultAMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
-import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * The default NetMeshObjectIdentifierFactory in the "A" implementation.
@@ -85,13 +84,13 @@ public class DefaultAnetMeshObjectIdentifierFactory
      *
      * @param raw the identifier String
      * @return the created DefaultAnetMeshObjectIdentifier
-     * @throws URISyntaxException a parsing error occurred
+     * @throws StringRepresentationParseException a parsing error occurred
      */
     @Override
     public DefaultAnetMeshObjectIdentifier fromExternalForm(
             String raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         DefaultAnetMeshObjectIdentifier ret = obtain( theMeshBaseIdentifier, raw, false );
         return ret;
@@ -103,13 +102,13 @@ public class DefaultAnetMeshObjectIdentifierFactory
      * @param contextIdentifier identifier of the NetMeshBase relative to which the external form is to be evaluated
      * @param raw the external form of the DefaultAnetMeshObjectIdentifier
      * @return the created DefaultAnetMeshObjectIdentifier
-     * @throws URISyntaxException thrown if a syntax error was encountered during parsing
+     * @throws StringRepresentationParseException thrown if a syntax error was encountered during parsing
      */
     public DefaultAnetMeshObjectIdentifier fromExternalForm(
             NetMeshBaseIdentifier contextIdentifier,
             String                raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( contextIdentifier, raw, false );
     }
@@ -121,14 +120,14 @@ public class DefaultAnetMeshObjectIdentifierFactory
      * @param raw the external form of the DefaultAnetMeshObjectIdentifier
      * @param guess if true, attempt to guess the protocol if none was given
      * @return the created DefaultAnetMeshObjectIdentifier
-     * @throws URISyntaxException thrown if a syntax error was encountered during parsing
+     * @throws StringRepresentationParseException thrown if a syntax error was encountered during parsing
      */
     protected DefaultAnetMeshObjectIdentifier obtain(
             NetMeshBaseIdentifier contextIdentifier,
             String                raw,
             boolean               guess )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         if( raw == null ) {
             return new HomeObject( this, contextIdentifier );
@@ -175,13 +174,13 @@ public class DefaultAnetMeshObjectIdentifierFactory
      *
      * @param raw the external form
      * @return the created MeshObjectIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     @Override
     public DefaultAnetMeshObjectIdentifier guessFromExternalForm(
             String raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( theMeshBaseIdentifier, raw, true );
     }
@@ -191,12 +190,12 @@ public class DefaultAnetMeshObjectIdentifierFactory
      *
      * @param file the local File whose NetMeshObjectIdentifier we obtain
      * @return the created NetMeshObjectIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public DefaultAnetMeshObjectIdentifier obtain(
             File file )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( file.toURI() );
     }
@@ -206,12 +205,12 @@ public class DefaultAnetMeshObjectIdentifierFactory
      *
      * @param url the URL whose NetMeshObjectIdentifier we obtain
      * @return the created NetMeshObjectIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public DefaultAnetMeshObjectIdentifier obtain(
             URL url )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( theMeshBaseIdentifier, url.toExternalForm(), false );
     }
@@ -221,12 +220,12 @@ public class DefaultAnetMeshObjectIdentifierFactory
      *
      * @param uri the URI whose NetMeshObjectIdentifier we obtain
      * @return the created NetMeshObjectIdentifier
-     * @throws URISyntaxException thrown if the syntax could not be parsed
+     * @throws StringRepresentationParseException thrown if the syntax could not be parsed
      */
     public DefaultAnetMeshObjectIdentifier obtain(
             URI uri )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return obtain( theMeshBaseIdentifier, uri.toASCIIString(), false );
     }
@@ -248,7 +247,7 @@ public class DefaultAnetMeshObjectIdentifierFactory
             MeshBaseIdentifier found = theMeshBaseIdentifierFactory.fromExternalForm( raw );
             return true;
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             // ignore
         }
         return false;
@@ -260,18 +259,20 @@ public class DefaultAnetMeshObjectIdentifierFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created MeshObjectIdentifier
-     * @throws URISyntaxException a parsing error occurred
+     * @throws StringRepresentationParseException a parsing error occurred
      */
     @Override
     public DefaultAnetMeshObjectIdentifier fromStringRepresentation(
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         String [] entriesToTry1 = {
                 DefaultAnetMeshObjectIdentifier.DEFAULT_MESH_BASE_HOME_ENTRY,
                 DefaultAnetMeshObjectIdentifier.NON_DEFAULT_MESH_BASE_HOME_ENTRY };
+
+        Throwable firstException = null;
 
         for( String entry : entriesToTry1 ) {
 
@@ -279,8 +280,11 @@ public class DefaultAnetMeshObjectIdentifierFactory
                 representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, entry, s );
                 return fromExternalForm( "" );
 
-            } catch( StringifierException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 // that wasn't it ...
+                if( firstException == null ) {
+                    firstException = ex;
+                }
             }
         }
 
@@ -297,14 +301,20 @@ public class DefaultAnetMeshObjectIdentifierFactory
                     return ret;
                 }
 
-            } catch( StringifierException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 // that wasn't it ...
+                if( firstException == null ) {
+                    firstException = ex;
+                }
 
             } catch( ClassCastException ex ) {
                 // that wasn't it ...
+                if( firstException == null ) {
+                    firstException = ex;
+                }
             }
         }
-        throw new URISyntaxException( s, "Cannot parse identifier" );
+        throw new StringRepresentationParseException( s, null, firstException );
     }
 
     /**

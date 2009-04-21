@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -41,6 +41,7 @@ import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.probe.WritableProbe;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Tests creating MeshObjects with WritableProbe.
@@ -318,7 +319,8 @@ public class WritableProbeTest9
                 ProbeException,
                 IOException,
                 ModuleException,
-                URISyntaxException
+                URISyntaxException,
+                StringRepresentationParseException
         {
             if( log.isDebugEnabled() ) {
                 log.debug( "Probe: readFromApi()" );

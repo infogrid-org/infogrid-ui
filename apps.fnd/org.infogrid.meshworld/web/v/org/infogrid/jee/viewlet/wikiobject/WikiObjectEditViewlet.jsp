@@ -10,10 +10,12 @@
 <v:viewletAlternatives />
 <v:viewlet>
  <h1>Wiki Editor Viewlet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" maxLength="30"/></h1>
- <u:safeForm action="" method="post">
-  <c:if test="${'edit' eq ViewletState}">
+ <u:safeForm action="${Viewlet.postUrl}" method="post">
+  <v:ifState viewletState="edit">
    <div class="viewlet-state"><p>Edit (not saved yet)</p></div>
-   <textarea class="current-content" name="current-content">${Viewlet.currentContent}</textarea>
+   <div class="current-content">
+    <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki#WikiObject/Content"/>
+   </div>
    <table class="dialog-buttons">
     <tr>
      <td><button type="submit" name="ViewletStateTransition" value="do-cancel">Discard</button></td>
@@ -21,11 +23,15 @@
      <td><button type="submit" name="ViewletStateTransition" value="do-commit">Save</button></td>
     </tr>
    </table>
-  </c:if>
-  <c:if test="${'preview' eq ViewletState}">
+  </v:ifState>
+  <v:ifState viewletState="preview">
    <div class="viewlet-state"><p>Preview (not saved yet)</p></div>
-   <div class="content">${Viewlet.currentContent}</div>
-   <textarea class="current-content" name="current-content">${Viewlet.currentContent}</textarea>
+   <div class="content">
+    <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki#WikiObject/Content" stringRepresentation="Plain"/>
+   </div>
+   <div class="current-content">
+    <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki#WikiObject/Content" stringRepresentation="Edit"/>
+   </div>
    <table class="dialog-buttons">
     <tr>
      <td><button type="submit" name="ViewletStateTransition" value="do-cancel">Discard</button></td>
@@ -33,16 +39,16 @@
      <td><button type="submit" name="ViewletStateTransition" value="do-commit">Save</button></td>
     </tr>
    </table>
-  </c:if>
-  <c:if test="${'view' eq ViewletState}">
+  </v:ifState>
+  <v:ifState viewletState="view">
    <div class="content">
-    ${Viewlet.currentContent}
+    <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki#WikiObject/Content" />
    </div>
    <table class="dialog-buttons">
     <tr>
      <td><button type="submit" name="ViewletStateTransition" value="do-edit">Edit</button></td>
     </tr>
    </table>
-  </c:if>
+  </v:ifState>
  </u:safeForm>  
 </v:viewlet>

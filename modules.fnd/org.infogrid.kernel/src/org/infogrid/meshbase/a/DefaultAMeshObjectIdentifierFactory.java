@@ -8,18 +8,17 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.a;
 
-import java.net.URISyntaxException;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.a.DefaultAMeshObjectIdentifier;
 import org.infogrid.meshbase.AbstractMeshObjectIdentifierFactory;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringifierException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Default implementation of MeshObjectIdentifierFactory for the A implementation.
@@ -51,12 +50,12 @@ public class DefaultAMeshObjectIdentifierFactory
      * Create an identifier for a MeshObject at held locally at this MeshBase.
      *
      * @param raw the raw String
-     * @throws URISyntaxException
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public DefaultAMeshObjectIdentifier fromExternalForm(
             String raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         return DefaultAMeshObjectIdentifier.create( this, raw );
     }
@@ -67,26 +66,31 @@ public class DefaultAMeshObjectIdentifierFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created MeshObjectIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public DefaultAMeshObjectIdentifier fromStringRepresentation(
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         String [] entriesToTry1 = {
                 DefaultAMeshObjectIdentifier.DEFAULT_MESH_BASE_HOME_ENTRY,
                 DefaultAMeshObjectIdentifier.NON_DEFAULT_MESH_BASE_HOME_ENTRY };
-        
+
+        Throwable firstException = null;
+
         for( String entry : entriesToTry1 ) {
 
             try {
                 representation.parseEntry( DefaultAMeshObjectIdentifier.class, entry, s );
                 return fromExternalForm( "" );
 
-            } catch( StringifierException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 // that wasn't it ...
+                if( firstException == null ) {
+                    firstException = ex;
+                }
             }
         }
 
@@ -103,14 +107,20 @@ public class DefaultAMeshObjectIdentifierFactory
                     return ret;
                 }
 
-            } catch( StringifierException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 // that wasn't it ...
+                if( firstException == null ) {
+                    firstException = ex;
+                }
 
             } catch( ClassCastException ex ) {
                 // that wasn't it ...
+                if( firstException == null ) {
+                    firstException = ex;
+                }
             }
         }
-        throw new URISyntaxException( s, "Cannot parse identifier" );
+        throw new StringRepresentationParseException( s, null, firstException );
     }
     
     /**
@@ -120,12 +130,12 @@ public class DefaultAMeshObjectIdentifierFactory
      *
      * @param raw the external form
      * @return the created MeshObjectIdentifier
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public MeshObjectIdentifier guessFromExternalForm(
             String raw )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         // on this level, everything is opaque
         return DefaultAMeshObjectIdentifier.create( this, raw );

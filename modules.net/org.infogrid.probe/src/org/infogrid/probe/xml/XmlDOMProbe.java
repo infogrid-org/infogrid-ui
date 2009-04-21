@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -32,6 +32,7 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.module.ModuleException;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.w3c.dom.Document;
 
 /**
@@ -105,6 +106,7 @@ public interface XmlDOMProbe
      *         RelationshipType, in the same direction. Throwing this typically indicates a programming error.
      * @throws TransactionException a Transaction problem occurred. Throwing this typically indicates a programming error.
      * @throws URISyntaxException thrown if a URI was constructed in an invalid way
+     * @throws StringRepresentationParseException thrown if a StringRepresentation could not be parsed
      */
     public void parseDocument(
             NetMeshBaseIdentifier  dataSourceIdentifier,
@@ -126,5 +128,6 @@ public interface XmlDOMProbe
             RelatedAlreadyException,
             RoleTypeBlessedAlreadyException,
             TransactionException,
-            URISyntaxException;
+            URISyntaxException,
+            StringRepresentationParseException;
 }

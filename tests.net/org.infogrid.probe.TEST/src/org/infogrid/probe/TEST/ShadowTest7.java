@@ -38,6 +38,7 @@ import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Relates a ShadowMeshBase-producted MeshObject A to another MeshObject B outside of the ShadowMeshBase,
@@ -226,7 +227,8 @@ public class ShadowTest7
                 TransactionException,
                 TransactionException,
                 URISyntaxException,
-                RoleTypeBlessedAlreadyException
+                RoleTypeBlessedAlreadyException,
+                StringRepresentationParseException
         {
             ++theProbeRunCounter;
             

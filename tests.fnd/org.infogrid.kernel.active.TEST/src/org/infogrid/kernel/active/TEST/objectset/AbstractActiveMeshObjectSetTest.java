@@ -14,7 +14,6 @@
 
 package org.infogrid.kernel.active.TEST.objectset;
 
-import java.net.URISyntaxException;
 import org.infogrid.kernel.active.TEST.AllTests;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
@@ -37,6 +36,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factors out functionality common to ActiveMeshObjectSetTests.
@@ -50,13 +50,13 @@ public abstract class AbstractActiveMeshObjectSetTest
      * 
      * @param testClass the Class containing the test
      * @throws MeshTypeNotFoundException a MeshType could not be found
-     * @throws URISyntaxException a MeshBaseIdentifier could not be created
+     * @throws StringRepresentationParseException a MeshBaseIdentifier could not be created
      */
     protected AbstractActiveMeshObjectSetTest(
             Class<?> testClass )
         throws
             MeshTypeNotFoundException,
-            URISyntaxException
+            StringRepresentationParseException
     {
         super( localFileName( AllTests.class, "/ResourceHelper" ));
 

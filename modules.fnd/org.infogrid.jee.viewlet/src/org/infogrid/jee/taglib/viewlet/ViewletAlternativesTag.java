@@ -71,15 +71,9 @@ public class ViewletAlternativesTag
             JspException,
             IgnoreException
     {
-        StructuredResponse theResponse = (StructuredResponse) lookupOrThrow(
-                StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-
-        // this needs to be simple lookup so the periods in the class name don't trigger nestedLookup
-        RestfulRequest restful = (RestfulRequest) lookupOrThrow(
-                RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
-
-        Viewlet currentViewlet = (Viewlet) lookupOrThrow(
-                JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+        StructuredResponse theResponse    = (StructuredResponse) lookupOrThrow( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+        RestfulRequest     restful        = (RestfulRequest) lookupOrThrow( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
+        Viewlet            currentViewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
         
         MeshObject subject = currentViewlet.getSubject();
         Context    c       = currentViewlet.getContext();
@@ -102,6 +96,7 @@ public class ViewletAlternativesTag
 
             for( int i=0 ; i<candidates.length ; ++i ) {
                 map.put( RestfulRequest.LID_FORMAT_PARAMETER_NAME, RestfulRequest.VIEWLET_PREFIX + candidates[i].getName() );
+                map.put( JeeViewlet.VIEWLET_STATE_NAME, null ); // erase ViewletState
                 print( "<li" );
                 if( candidates[i].getName().equals( currentViewlet.getName() )) {
                     print( " class=\"selected\"" );

@@ -48,6 +48,7 @@ import org.infogrid.util.AbstractQuitListener;
 import org.infogrid.util.QuitManager;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are net-enabled and REST-ful.
@@ -104,7 +105,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             try {
                 mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 throw new RuntimeException( ex );
             }
             

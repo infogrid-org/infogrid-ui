@@ -14,7 +14,6 @@
 
 package org.infogrid.jee.viewlet.probe.shadow;
 
-import java.net.URISyntaxException;
 import javax.servlet.ServletException;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.templates.StructuredResponse;
@@ -30,6 +29,7 @@ import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
@@ -148,7 +148,7 @@ public class ShadowAwareAllMeshBasesViewlet
         try {
             meshBaseIdentifier = mainMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( meshBaseName );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.warn( ex );
             return; // silently fail
         }

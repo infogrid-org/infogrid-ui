@@ -32,4 +32,12 @@ public interface StringRepresentationParameters
      * The key into this object that identifies whether or not colloquial output is desired.
      */
     public final String COLLOQUIAL = "colloquial";
+
+    /**
+     * The key into this object that identifies the variable to which an edited value is
+     * assigned. The meaning of "variable" depends on the user interface technology. For
+     * example, in a web application, it may refer to an HTTP POST parameter. This is only
+     * relevant for StringRepresentations that are intended to be edited.
+     */
+    public final String EDIT_VARIABLE = "variable";
 }

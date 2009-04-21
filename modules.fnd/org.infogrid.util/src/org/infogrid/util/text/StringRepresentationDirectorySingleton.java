@@ -90,6 +90,18 @@ public class StringRepresentationDirectorySingleton
         // html: same as plain
         // url:  same as plain
 
+        plainMap.put(   "hex",            LongStringifier.create( -1, 16 ) );
+        // html: same as plain
+        // url:  same as plain
+
+        plainMap.put(   "hex2",           LongStringifier.create( 2, 16 ) );
+        // html: same as plain
+        // url:  same as plain
+
+        plainMap.put(   "hex4",           LongStringifier.create( 4, 16 ) );
+        // html: same as plain
+        // url:  same as plain
+
         plainMap.put(   "double",         DoubleStringifier.create() );
         // html: same as plain
         // url:  same as plain
@@ -143,8 +155,15 @@ public class StringRepresentationDirectorySingleton
         SimpleStringRepresentation plain = SimpleStringRepresentation.create(
                 StringRepresentationDirectory.TEXT_PLAIN_NAME,
                 plainMap );
+        SimpleStringRepresentation editPlain = SimpleStringRepresentation.create(
+                StringRepresentationDirectory.EDIT_TEXT_PLAIN_NAME,
+                plainMap );
         SimpleStringRepresentation html = SimpleStringRepresentation.create(
                 StringRepresentationDirectory.TEXT_HTML_NAME,
+                htmlMap,
+                plain );
+        SimpleStringRepresentation editHtml = SimpleStringRepresentation.create(
+                StringRepresentationDirectory.EDIT_TEXT_HTML_NAME,
                 htmlMap,
                 plain );
         SimpleStringRepresentation url = SimpleStringRepresentation.create(
@@ -154,9 +173,11 @@ public class StringRepresentationDirectorySingleton
 
         theSingleton = new StringRepresentationDirectorySingleton( storage, plain );
 
-        theSingleton.put(   plain.getName(), plain );
-        theSingleton.put(    html.getName(), html  );
-        theSingleton.put(     url.getName(), url   );
+        theSingleton.put(     plain.getName(), plain );
+        theSingleton.put( editPlain.getName(), editPlain );
+        theSingleton.put(      html.getName(), html );
+        theSingleton.put(  editHtml.getName(), editHtml );
+        theSingleton.put(       url.getName(), url );
 
         return theSingleton;
     }

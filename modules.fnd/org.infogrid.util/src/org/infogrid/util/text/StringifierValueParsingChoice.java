@@ -58,6 +58,22 @@ public class StringifierValueParsingChoice<T>
     }
 
     /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( super.toString() );
+        buf.append( "{ value: " );
+        buf.append( theValue );
+        buf.append( " }" );
+        return buf.toString();
+    }
+
+    /**
      * Dump this object.
      *
      * @param d the Dumper to dump to

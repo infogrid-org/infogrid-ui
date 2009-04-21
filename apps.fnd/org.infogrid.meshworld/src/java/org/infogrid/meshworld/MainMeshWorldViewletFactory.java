@@ -66,9 +66,10 @@ public class MainMeshWorldViewletFactory
             ret.add( WikiObjectDisplayViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( WikiObjectEditViewlet.choice(    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
-        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet",         ViewletFactoryChoice.BAD_MATCH_QUALITY ));
-        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",         ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet",             ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.AjaxPropertySheetViewlet", ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",     ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",             ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

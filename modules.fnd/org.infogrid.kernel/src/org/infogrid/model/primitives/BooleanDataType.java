@@ -217,6 +217,6 @@ public final class BooleanDataType
         if( compareTo.equalsIgnoreCase( s )) {
             return BooleanValue.FALSE;
         }
-        throw new PropertyValueParsingException( this, representation, s );
+        throw new PropertyValueParsingException( this, representation, null, s );
     }
 }

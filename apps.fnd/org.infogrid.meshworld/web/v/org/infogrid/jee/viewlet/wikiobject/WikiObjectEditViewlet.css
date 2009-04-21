@@ -1,13 +1,3 @@
-div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet table.dialog-buttons {
-    border-top: 1px dotted #808080;
-    width: 100%;
-    margin-top: 20px;
-}
-div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet table.dialog-buttons td {
-    text-align: center;
-    padding: 15px 0 5px 0;
-    width: 33.3%
-}
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet textarea.current-content {
     width: 100%;
     min-height: 200px;

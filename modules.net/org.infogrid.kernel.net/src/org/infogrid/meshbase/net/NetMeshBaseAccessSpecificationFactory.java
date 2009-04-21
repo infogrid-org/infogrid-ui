@@ -8,14 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net;
 
-import java.net.URISyntaxException;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factory for NetMeshBaseAccessSpecifications.
@@ -47,12 +47,12 @@ public interface NetMeshBaseAccessSpecificationFactory
      *
      * @param raw the external form
      * @return the created NetMeshBaseAccessSpecification
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public NetMeshBaseAccessSpecification fromExternalForm(
             String raw )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Convert this StringRepresentation back to a NetMeshBaseAccessSpecification.
@@ -60,11 +60,11 @@ public interface NetMeshBaseAccessSpecificationFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created NetMeshBaseAccessSpecification
-     * @throws URISyntaxException thrown if a parsing error occurred
+     * @throws StringRepresentationParseException thrown if a parsing error occurred
      */
     public NetMeshBaseAccessSpecification fromStringRepresentation(
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException;
+            StringRepresentationParseException;
 }

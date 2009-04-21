@@ -16,7 +16,6 @@ package org.infogrid.probe.yadis;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
@@ -42,6 +41,7 @@ import org.infogrid.model.Web.WebSubjectArea;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -105,7 +105,7 @@ public class YadisServiceFactory
             log.warn( ex );
         } catch( SAXException ex ) {
             log.warn( ex );
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.warn( ex );
         }
     }
@@ -134,7 +134,7 @@ public class YadisServiceFactory
             log.error( ex );
         } catch( MeshObjectIdentifierNotUniqueException ex ) {
             log.error( ex );
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.warn( ex );
         }
     }
@@ -149,7 +149,7 @@ public class YadisServiceFactory
      * @throws TransactionException thrown if invoked outside of proper Transaction boundaries. This should not happen.
      * @throws NotPermittedException an operation was not permitted. This should not happen.
      * @throws MeshObjectIdentifierNotUniqueException an identifier was not unique. This should not happen.
-     * @throws URISyntaxException a syntax error occurred
+     * @throws StringRepresentationParseException a syntax error occurred
      */
     public void addYadisServicesFromHtml(
             NetMeshBaseIdentifier dataSourceIdentifier,
@@ -160,7 +160,7 @@ public class YadisServiceFactory
             TransactionException,
             NotPermittedException,
             MeshObjectIdentifierNotUniqueException,
-            URISyntaxException
+            StringRepresentationParseException
     {
         Matcher startHeadMatcher       = startHeadPattern.matcher( content );
         Matcher endHeadMatcher         = endHeadPattern.matcher( content );
@@ -223,7 +223,7 @@ public class YadisServiceFactory
                             log.error( ex );
                         }
                     }
-                } catch( URISyntaxException ex ) {
+                } catch( StringRepresentationParseException ex ) {
                     log.warn( ex );
                 }
             }
@@ -269,7 +269,7 @@ public class YadisServiceFactory
                             }
                         }
                     }
-                } catch( URISyntaxException ex ) {
+                } catch( StringRepresentationParseException ex ) {
                     log.warn( ex );
                 }
 

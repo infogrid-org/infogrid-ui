@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.probe.TEST;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
@@ -38,6 +37,7 @@ import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.instrument.Breakpoint;
 import org.infogrid.util.instrument.InstrumentedThread;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
   * Tests multi-threaded behavior of Probes / Shadows.
@@ -368,7 +368,8 @@ public class ProbeTest8
                 ProbeException,
                 IOException,
                 ModuleException,
-                URISyntaxException
+                URISyntaxException,
+                StringRepresentationParseException
         {
             MeshObject                      home   = mb.getHomeObject();
             StagingMeshBaseLifecycleManager life   = mb.getMeshBaseLifecycleManager();

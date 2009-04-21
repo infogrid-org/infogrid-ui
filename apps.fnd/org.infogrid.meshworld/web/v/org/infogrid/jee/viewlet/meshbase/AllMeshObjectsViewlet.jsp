@@ -16,6 +16,7 @@
   <thead>
    <tr>
     <th>Identifier</th>
+    <th>Neighbors</th>
     <th>Types and Attributes</th>
     <th>Audit</th>
    </tr>
@@ -26,6 +27,11 @@
      <td>
       <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/trash.png" alt="Delete"/></a></div>
       <mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current" maxLength="30"/></mesh:meshObjectLink>
+     </td>
+     <td>
+      <mesh:neighborIterate meshObjectName="current" neighborLoopVar="neighbor">
+       <mesh:meshObjectLink meshObjectName="neighbor"><mesh:meshObjectId meshObjectName="neighbor" maxLength="30"/></mesh:meshObjectLink><br />
+      </mesh:neighborIterate>
      </td>
      <td>
       <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-bless', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Bless this MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Add type"/></a></div>

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.probe.manager.store;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
@@ -29,6 +28,7 @@ import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Maps ShadowMeshBases to and from Stores.
@@ -66,12 +66,12 @@ public class StoreProbeManagerMapper
      *
      * @param stringKey the key in String form
      * @return the corresponding key object
-     * @throws URISyntaxException thrown if a stringKey could not be converted into a valid Identifier
+     * @throws StringRepresentationParseException thrown if a stringKey could not be converted into a valid Identifier
      */
     public NetMeshBaseIdentifier stringToKey(
             String stringKey )
         throws
-             URISyntaxException
+             StringRepresentationParseException
     {
         NetMeshBaseIdentifier ret = theFactory.getNetMeshBaseIdentifierFactory().fromExternalForm( stringKey );
         return ret;

@@ -49,6 +49,7 @@ import org.infogrid.util.StringHelper;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * This Probe knows how to read VCards (RFC 2426). It instantiates VCard, subtypes of
@@ -113,6 +114,7 @@ public class VCardProbe
      *         RelationshipType, in the same direction. Throwing this typically indicates a programming error.
      * @throws TransactionException a Transaction problem occurred. Throwing this typically indicates a programming error.
      * @throws URISyntaxException thrown if a URI was constructed in an invalid way
+     * @throws StringRepresentationParseException a StringRepresentation could not be parsed
      */
     @SuppressWarnings( "fallthrough" )
     public void readFromStream(
@@ -136,7 +138,8 @@ public class VCardProbe
             ProbeException,
             IOException,
             ModuleException,
-            URISyntaxException
+            URISyntaxException,
+            StringRepresentationParseException
     {
         MeshObject home = freshMeshBase.getHomeObject();
         home.bless( VCardSubjectArea.VCARD );

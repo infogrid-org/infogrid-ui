@@ -182,7 +182,16 @@ public class PropertyValueTag
     {
         PropertyValue value = (PropertyValue) lookupOrThrow( thePropertyValueName );
         
-        String text = formatValue( pageContext, value, theNullString, theStringRepresentation, theMaxLength, theColloquial );
+        String text = formatValue(
+                pageContext,
+                null,
+                null,
+                value,
+                null,
+                theNullString,
+                theStringRepresentation,
+                theMaxLength,
+                theColloquial );
 
         print( text );
         

@@ -13,11 +13,15 @@
 
 package org.infogrid.jee.viewlet;
 
+import org.infogrid.util.text.HasStringRepresentation;
+
 /**
  * Many Viewlets can attempt to transition from one state to another, such as "begin edit" vs. "cancel edit".
  * This type captures that transition.
  */
 public interface JeeViewletStateTransition
+        extends
+            HasStringRepresentation
 {
     /**
      * Obtain the name of this transition.

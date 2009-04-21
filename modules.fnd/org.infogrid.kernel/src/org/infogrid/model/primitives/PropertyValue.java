@@ -16,7 +16,6 @@ package org.infogrid.model.primitives;
 
 import java.io.Serializable;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
@@ -36,8 +35,6 @@ public abstract class PropertyValue
             Serializable,
             Comparable<PropertyValue>
 {
-    private static final Log log = Log.getLogInstance( PropertyValue.class ); // our own, private logger
-
     /**
      * Obtain a string which is the Java-language constructor expression reflecting this value.
      * For example, a StringValue with value "my foo" would return

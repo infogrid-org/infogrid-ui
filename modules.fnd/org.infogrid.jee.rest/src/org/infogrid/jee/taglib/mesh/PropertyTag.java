@@ -20,6 +20,7 @@ import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.util.ResourceHelper;
 
 /**
  * Tag that renders a property of a <code>MeshObject</code>.
@@ -52,6 +53,7 @@ public class PropertyTag
         theStringRepresentation = null;
         theMaxLength            = -1;
         theColloquial           = false;
+        theState                = null;
 
         super.initializeToDefaults();
     }
@@ -217,6 +219,37 @@ public class PropertyTag
     }
 
     /**
+     * Obtain value of the state property.
+     *
+     * @return value of the state property
+     * @see #setState
+     */
+    public String getState()
+    {
+        return theState;
+    }
+
+    /**
+     * Set value of the state property.
+     *
+     * @param newValue new value of the state property
+     * @see #getState
+     */
+    public void setState(
+            String newValue )
+    {
+        // make first letter uppercase
+        if( newValue != null && newValue.length() > 0 && !Character.isUpperCase( newValue.charAt( 0 ))) {
+            StringBuilder buf = new StringBuilder();
+            buf.append( Character.toUpperCase( newValue.charAt( 0 )));
+            buf.append( newValue.substring( 1 ));
+            theState = buf.toString();
+        } else {
+            theState = newValue;
+        }
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -231,7 +264,7 @@ public class PropertyTag
         MeshObject obj  = (MeshObject) lookupOrThrow( theMeshObjectName );
 
         if( obj == null ) {
-            // ignore == true
+            // if we get here, ignore is necessarily true
             return SKIP_BODY;
         }
         PropertyType  type  = null;
@@ -260,9 +293,40 @@ public class PropertyTag
                 throw new JspException( ex );
             }        
         }
-        String text = formatValue( pageContext, value, theNullString, theStringRepresentation, theMaxLength, theColloquial );
+
+        Integer varCounter = (Integer) lookup( VARIABLE_COUNTER_NAME );
+        if( varCounter == null ) {
+            varCounter = 0;
+        }
+
+        String realStringRep;
+
+        if( theState == null ) {
+            realStringRep = theStringRepresentation;
+
+        } else if( theStringRepresentation == null ) {
+            realStringRep = theState;
+
+        } else {
+            realStringRep = theState + theStringRepresentation;
+        }
+
+        String editVar = String.format( VARIABLE_PATTERN, varCounter );
         
+        String text = formatValue(
+                pageContext,
+                obj,
+                type,
+                value,
+                editVar,
+                theNullString,
+                realStringRep,
+                theMaxLength,
+                theColloquial );
+
         print( text );
+
+        pageContext.getRequest().setAttribute( VARIABLE_COUNTER_NAME, varCounter.intValue()+1 );
         
         return SKIP_BODY;
     }
@@ -301,4 +365,26 @@ public class PropertyTag
      * Should the value be outputted in colloquial form.
      */
     protected boolean theColloquial;
+
+    /**
+     * The state of the tag, e.g. edit vs. view.
+     */
+    protected String theState;
+
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( PropertyTag.class );
+
+    /**
+     * Name of the request variable that we use internally to count up variables.
+     */
+    public static final String VARIABLE_COUNTER_NAME = PropertyTag.class.getName().replace( '.', '_' ) + "-varCounter";
+
+    /**
+     * Format String to generate variable names.
+     */
+    public static final String VARIABLE_PATTERN = theResourceHelper.getResourceStringOrDefault(
+            "VariablePattern",
+            "shell.propertyTagMeshObject%d" );
 }

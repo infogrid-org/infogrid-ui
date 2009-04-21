@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -37,6 +37,7 @@ import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Relates a ShadowMeshBase-producted MeshObject A to another MeshObject B outside of the ShadowMeshBase,
@@ -218,7 +219,8 @@ public class ShadowTest4
                 RelatedAlreadyException,
                 TransactionException,
                 TransactionException,
-                URISyntaxException
+                URISyntaxException,
+                StringRepresentationParseException
         {
             MeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
 

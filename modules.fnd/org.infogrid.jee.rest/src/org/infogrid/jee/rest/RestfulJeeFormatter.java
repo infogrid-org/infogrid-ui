@@ -15,7 +15,6 @@
 package org.infogrid.jee.rest;
 
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -35,6 +34,8 @@ import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
+import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationParameters;
 import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
 import org.infogrid.model.traversal.StayRightHereTraversalSpecification;
 import org.infogrid.model.traversal.TraversalSpecification;
@@ -49,6 +50,7 @@ import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications
@@ -395,7 +397,10 @@ public class RestfulJeeFormatter
      * Format a PropertyValue.
      *
      * @param pageContext the PageContext object for this page
+     * @param owningMeshObject the MeshObject that owns this PropertyValue, if any
+     * @param propertyType the PropertyType of the PropertyValue, if any
      * @param value the PropertyValue
+     * @param editVar name of the HTML form elements to use
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
      * @param maxLength maximum length of emitted String. -1 means unlimited.
@@ -403,17 +408,20 @@ public class RestfulJeeFormatter
      * @return the String to display
      */
     public String formatPropertyValue(
-            PageContext        pageContext,
-            PropertyValue      value,
-            String             nullString,
-            String             stringRepresentation,
-            int                maxLength,
-            boolean            colloquial )
+            PageContext   pageContext,
+            MeshObject    owningMeshObject,
+            PropertyType  propertyType,
+            PropertyValue value,
+            String        editVar,
+            String        nullString,
+            String        stringRepresentation,
+            int           maxLength,
+            boolean       colloquial )
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
         
-        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial );
+        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial, owningMeshObject, propertyType, editVar );
         String ret = PropertyValue.toStringRepresentationOrNull( value, rep, context, pars );
         if( ret != null ) {
             return ret;
@@ -602,14 +610,14 @@ public class RestfulJeeFormatter
      * @param representation the StringRepresentation of the to-be-parsed String
      * @param s the String
      * @return the MeshObjectIdentifier
-     * @throws URISyntaxException thrown if a syntax error occurred
+     * @throws StringRepresentationParseException thrown if a syntax error occurred
      */
     public MeshObjectIdentifier fromMeshObjectIdentifier(
             MeshObjectIdentifierFactory factory,
             StringRepresentation        representation,
             String                      s )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         if( s == null ) {
             return null;
@@ -772,6 +780,58 @@ public class RestfulJeeFormatter
 
                 ret = toAdd.toString();
             }
+        }
+        return ret;
+    }
+
+    /**
+     * Helper method to create a StringRepresentationParameters from a
+     * maximum length, a colloquial, and owning MeshObject and PropertyType, if needed.
+     *
+     * @param maxLength the maximum length. -1 means unlimited.
+     * @param colloquial if true, emit colloquial representation
+     * @param owningMeshObject the MeshObject that owns this PropertyValue, if any
+     * @param propertyType the PropertyType of the PropertyValue, if any
+     * @param editVar name of the HTML form elements to use
+     * @return the StringRepresentationParameters, if any
+     */
+    public StringRepresentationParameters constructStringRepresentationParameters(
+            int          maxLength,
+            boolean      colloquial,
+            MeshObject   owningMeshObject,
+            PropertyType propertyType,
+            String       editVar )
+    {
+        StringRepresentationParameters ret = null;
+        if( maxLength >= 0 ) {
+            if( ret == null ) {
+                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+            }
+            ret.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
+        }
+        if( colloquial ) {
+            if( ret == null ) {
+                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+            }
+            ret.put( StringRepresentationParameters.COLLOQUIAL, true );
+        }
+        if( owningMeshObject != null ) {
+            if( ret == null ) {
+                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+            }
+            ret.put( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT, owningMeshObject.getIdentifier().toExternalForm() );
+        }
+        if( propertyType != null ) {
+            if( ret == null ) {
+                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+            }
+            ret.put( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE, propertyType.getIdentifier().toExternalForm() );
+        }
+        if( editVar != null ) {
+            if( ret == null ) {
+                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+            }
+            ret.put( StringRepresentationParameters.EDIT_VARIABLE, editVar );
         }
         return ret;
     }

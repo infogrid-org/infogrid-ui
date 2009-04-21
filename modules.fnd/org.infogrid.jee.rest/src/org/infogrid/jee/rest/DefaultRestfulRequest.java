@@ -14,7 +14,6 @@
 
 package org.infogrid.jee.rest;
 
-import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.jee.app.InfoGridWebApp;
@@ -29,6 +28,7 @@ import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Default implementation of RestfulRequest.
@@ -86,13 +86,13 @@ public class DefaultRestfulRequest
      * 
      * @throws MeshObjectAccessException thrown if the requested MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller did not have the permission to perform this operation
-     * @throws URISyntaxException thrown if the request URI could not be parsed
+     * @throws StringRepresentationParseException thrown if the request URI could not be parsed
      */
     protected void calculate()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                URISyntaxException
+                StringRepresentationParseException
     {
         String relativeBaseUrl = theSaneRequest.getRelativeBaseUri();
         if( relativeBaseUrl.startsWith( theContextPath )) {
@@ -130,7 +130,7 @@ public class DefaultRestfulRequest
             MeshBase mb = meshBaseNameServer.get( theRequestedMeshBaseIdentifier );
 
             if( mb == null ) {
-                throw new URISyntaxException( meshBaseIdentifierString, "Cannot find a MeshBase with this identifier" );
+                throw new StringRepresentationParseException( meshBaseIdentifierString, null, null );
             }
 
             theRequestedMeshObjectIdentifier = mb.getMeshObjectIdentifierFactory().fromExternalForm( meshObjectIdentifierString );

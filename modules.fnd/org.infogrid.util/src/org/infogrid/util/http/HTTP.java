@@ -794,6 +794,51 @@ public abstract class HTTP
     }
 
     /**
+     * Append an argument to a URL if it does not exist yet; replace if it exists already.
+     *
+     * @param url the URL to which we append the argument
+     * @param name the name of the argument, not escaped yet
+     * @param value the value of the argument, not escaped yet
+     * @return the result
+     */
+    public static String replaceOrAppendArgumentToUrl(
+            String url,
+            String name,
+            String value )
+    {
+        int q = url.indexOf( '?' );
+        if( q < 0 ) {
+            return appendArgumentToUrl( url, name, value );
+        }
+        String    query      = url.substring( q+1 );
+        String [] args       = query.split( "&" );
+        String    nameEquals = name + "=";
+
+        for( int i=0 ; i<args.length ; ++i ) {
+            if( args[i].startsWith( nameEquals )) {
+                // replace
+                StringBuilder ret = new StringBuilder( url.length() + 10 ); // fudge
+                ret.append( url.substring( 0, q ));
+                ret.append( '?' );
+                for( int j=0 ; j<args.length ; ++j ) {
+                    if( j == i ) {
+                        ret.append( encodeToValidUrlArgument( name ));
+                        if( value != null ) {
+                            ret.append( '=' );
+                            ret.append( encodeToValidUrlArgument( value ));
+                        }
+                    } else {
+                        ret.append( args[j] );
+                    }
+                }
+                return ret.toString();
+            }
+        }
+
+        return appendArgumentToUrl( url, name, value );
+    }
+
+    /**
      * Obtain a named argument from a URL.
      *
      * @param u the URL

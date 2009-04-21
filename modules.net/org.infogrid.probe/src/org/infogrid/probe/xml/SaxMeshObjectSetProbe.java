@@ -61,6 +61,7 @@ import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.util.Base64;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -219,6 +220,9 @@ public class SaxMeshObjectSetProbe
             throw new ProbeException.SyntaxError( dataSourceIdentifier, ex );
 
         } catch( MeshTypeNotFoundException ex ) {
+            throw new ProbeException.SyntaxError( dataSourceIdentifier, ex );
+
+        } catch( StringRepresentationParseException ex ) {
             throw new ProbeException.SyntaxError( dataSourceIdentifier, ex );
 
         } finally {

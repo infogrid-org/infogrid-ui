@@ -14,7 +14,6 @@
 
 package org.infogrid.jee.rest.defaultapp.m;
 
-import java.net.URISyntaxException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +32,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are REST-ful and use MMeshBase.
@@ -85,7 +85,7 @@ public abstract class AbstractMRestfulAppInitializationFilter
         try {
             mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             throw new RuntimeException( ex );
         }
 

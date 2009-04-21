@@ -15,6 +15,10 @@
 package org.infogrid.jee.viewlet;
 
 import org.infogrid.jee.rest.RestfulRequest;
+import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Default implementation of JeeViewletState.
@@ -28,7 +32,7 @@ public enum DefaultJeeViewletStateEnum
     PREVIEW( "preview" );
 
     /**
-     * Constructur.
+     * Constructor.
      *
      * @param stateName state of the state in which the Viewlet is
      */
@@ -69,7 +73,62 @@ public enum DefaultJeeViewletStateEnum
     }
 
     /**
+     * Obtain a String representation of this instance that can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @param pars collects parameters that may influence the String representation
+     * @return String representation
+     */
+    public String toStringRepresentation(
+            StringRepresentation           rep,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
+    {
+        return theResourceHelper.getResourceString( toString() + "_VALUE" );
+    }
+
+    /**
+     * Obtain the start part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkStart(
+            String                      additionalArguments,
+            String                      target,
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param context the StringRepresentationContext of this object
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation        rep,
+            StringRepresentationContext context )
+    {
+        return "";
+    }
+
+    /**
      * Name of the state.
      */
     protected String theStateName;
+
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( DefaultJeeViewletStateEnum.class );
 }

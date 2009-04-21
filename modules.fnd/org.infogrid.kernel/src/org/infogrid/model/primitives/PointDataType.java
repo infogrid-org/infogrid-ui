@@ -14,12 +14,11 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.text.StringifierException;
-import org.infogrid.util.text.StringRepresentation;
-
 import java.io.ObjectStreamException;
+import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
   * This is a point DataType for MetaAttributes.
@@ -199,16 +198,16 @@ public class PointDataType
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, s );
+                    throw new PropertyValueParsingException( this, representation, null, s );
             }
 
             return ret;
 
-        } catch( StringifierException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, ex );
+        } catch( StringRepresentationParseException ex ) {
+            throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, ex );
+            throw new PropertyValueParsingException( this, representation, s, null, ex );
         }
     }
 }

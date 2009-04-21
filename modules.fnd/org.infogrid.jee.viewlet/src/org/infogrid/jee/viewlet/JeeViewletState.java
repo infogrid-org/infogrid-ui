@@ -13,11 +13,15 @@
 
 package org.infogrid.jee.viewlet;
 
+import org.infogrid.util.text.HasStringRepresentation;
+
 /**
  * Many Viewlets can be in several states, such as "display" vs. "edit" vs. "preview".
  * This type captures that state.
  */
 public interface JeeViewletState
+        extends
+            HasStringRepresentation
 {
     /**
      * Obtain the name of this state.

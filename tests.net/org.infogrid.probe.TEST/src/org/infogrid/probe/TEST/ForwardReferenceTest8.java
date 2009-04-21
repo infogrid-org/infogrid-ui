@@ -40,6 +40,7 @@ import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.testharness.util.IteratorElementCounter;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Tests two Probes instantiating ForwardReferences pointing to each other.
@@ -177,7 +178,7 @@ public class ForwardReferenceTest8
             temp = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://some.example.com/outer" );
             // temp = NetMeshBaseIdentifier.create( "=foo" );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
         }
         OUTER_URL = temp;
@@ -192,7 +193,7 @@ public class ForwardReferenceTest8
         try {
             temp = theMeshBaseIdentifierFactory.fromExternalForm( PROTOCOL_NAME + "://some.example.com/inner" );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
         }
         INNER_URL = temp;
@@ -233,7 +234,8 @@ public class ForwardReferenceTest8
                 ProbeException,
                 IOException,
                 ModuleException,
-                URISyntaxException
+                URISyntaxException,
+                StringRepresentationParseException
         {
             MeshObject                      home = mb.getHomeObject();
             StagingMeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
@@ -282,7 +284,8 @@ public class ForwardReferenceTest8
                 ProbeException,
                 IOException,
                 ModuleException,
-                URISyntaxException
+                URISyntaxException,
+                StringRepresentationParseException
         {
             // don't touch the home object here
             StagingMeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();

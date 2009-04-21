@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.mesh.net.externalized.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.externalized.xml.ExternalizedMeshObjectXmlEncoder;
@@ -33,6 +32,7 @@ import org.infogrid.model.primitives.externalized.DecodingException;
 import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -327,7 +327,7 @@ public class ExternalizedNetMeshObjectXmlEncoder
                 NetMeshBaseIdentifier proxyId = ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( proxyString );
                 realObjectBeingParsed.addProxyNetworkIdentifier( proxyId, YES_TAG.equals( homeProxy ), YES_TAG.equals( lockProxy ));
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 error( ex );
             }
 
@@ -341,7 +341,7 @@ public class ExternalizedNetMeshObjectXmlEncoder
                 NetMeshBaseIdentifier proxyId = ((NetMeshBase)theMeshBase).getMeshBaseIdentifierFactory().fromExternalForm( proxyString );
                 realRelationship.addRelationshipProxyIdentifier( proxyId );
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 error( ex );
             }
 

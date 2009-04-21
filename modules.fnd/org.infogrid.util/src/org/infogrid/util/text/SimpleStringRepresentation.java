@@ -164,23 +164,31 @@ public class SimpleStringRepresentation
      * @param entry the entry (prefixed by theName) of the resource
      * @param s the to-be-parsed String
      * @return the found values
-     * @throws StringifierException thrown if the String could not be parsed.
+     * @throws StringRepresentationParseException thrown if the String could not be parsed.
      */
     public Object [] parseEntry(
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
             String                                   s )
         throws
-            StringifierException
+            StringRepresentationParseException
     {
         ResourceHelper        rh           = ResourceHelper.getInstance( classOfFormattedObject );
         String                formatString = rh.getResourceStringOrDefault( theName + entry, null );
 
         if( formatString != null ) {
-            AnyMessageStringifier stringifier  = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
+            try {
+                AnyMessageStringifier stringifier = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
 
-            Object [] ret = stringifier.unformat( s ).getArray();
-            return ret;
+                Object [] ret = stringifier.unformat( s ).getArray();
+                return ret;
+
+            } catch( StringifierParseException ex ) {
+                throw new StringRepresentationParseException( s, formatString, ex );
+
+            } catch( CompoundStringifierCompileException ex ) {
+                log.error( ex );
+            }
         }
         if( theDelegate != null ) {
             return theDelegate.parseEntry( classOfFormattedObject, entry, s );

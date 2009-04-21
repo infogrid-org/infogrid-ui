@@ -15,7 +15,6 @@
 package org.infogrid.probe.xml;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -62,6 +61,7 @@ import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.util.Base64;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -545,7 +545,7 @@ public class DomMeshObjectSetProbe
             }
             return ret;
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             throw new ProbeException.SyntaxError( dataSourceIdentifier, ex );
         }
     }
@@ -574,7 +574,7 @@ public class DomMeshObjectSetProbe
             
             return ret;
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             throw new ProbeException.SyntaxError( dataSourceIdentifier, ex );
         }
     }

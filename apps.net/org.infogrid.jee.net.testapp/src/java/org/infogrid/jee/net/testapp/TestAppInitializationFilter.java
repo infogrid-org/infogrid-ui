@@ -8,13 +8,12 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.net.testapp;
 
-import java.net.URISyntaxException;
 import org.infogrid.jee.rest.net.local.defaultapp.m.AbstractMNetLocalRestfulAppInitializationFilter;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
@@ -33,6 +32,7 @@ import org.infogrid.probe.ProbeDirectory;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.viewlet.ViewletFactory;
 
 /**
@@ -76,13 +76,13 @@ public class TestAppInitializationFilter
      *
      * @param meshBaseIdentifierFactory the NetMeshBaseIdentifierFactory to us
      * @return the created and populated ProbeDirectory
-     * @throws URISyntaxException thrown if an identifier could not be parsed
+     * @throws StringRepresentationParseException thrown if an identifier could not be parsed
      */
     @Override
     protected ProbeDirectory createAndPopulateProbeDirectory(
             NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         MProbeDirectory ret = MProbeDirectory.create();
         toAccess = new NetMeshBaseIdentifier[] {
@@ -141,7 +141,7 @@ public class TestAppInitializationFilter
             getLog().error( ex );
         } catch( NotPermittedException ex ) {
             getLog().error( ex );
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             getLog().error( ex );
         } finally {
             if( tx != null ) {

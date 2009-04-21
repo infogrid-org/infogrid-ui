@@ -8,13 +8,12 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.rest;
 
-import java.net.URISyntaxException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -22,6 +21,7 @@ import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Collects common behaviors of implementations of RestfulRequest.
@@ -168,11 +168,11 @@ public abstract class AbstractRestfulRequest
      * Determine the identifier of the requested MeshBase.
      * 
      * @return the MeshBaseIdentifier
-     * @throws URISyntaxException thrown if the request URI could not be parsed
+     * @throws StringRepresentationParseException thrown if the request URI could not be parsed
      */
     public MeshBaseIdentifier determineRequestedMeshBaseIdentifier()
             throws
-                URISyntaxException
+                StringRepresentationParseException
     {
         if( theRequestedMeshBaseIdentifier == null ) {
             try {
@@ -191,11 +191,11 @@ public abstract class AbstractRestfulRequest
      * Determine the identifier of the requested MeshObject.
      * 
      * @return the MeshObjectIdentifier
-     * @throws URISyntaxException thrown if the request URI could not be parsed
+     * @throws StringRepresentationParseException thrown if the request URI could not be parsed
      */
     public MeshObjectIdentifier determineRequestedMeshObjectIdentifier()
             throws
-                URISyntaxException
+                StringRepresentationParseException
     {
         if( theRequestedMeshObjectIdentifier == null ) {
             try {
@@ -215,13 +215,13 @@ public abstract class AbstractRestfulRequest
      * 
      * @throws MeshObjectAccessException thrown if the requested MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller did not have the permission to perform this operation
-     * @throws URISyntaxException thrown if the request URI could not be parsed
+     * @throws StringRepresentationParseException thrown if the request URI could not be parsed
      */
     protected abstract void calculate()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                URISyntaxException;
+                StringRepresentationParseException;
 
     /**
      * Determine the requested MeshObject.
@@ -229,13 +229,13 @@ public abstract class AbstractRestfulRequest
      * @return the MeshObject, or null if not found
      * @throws MeshObjectAccessException thrown if the requested MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller did not have the permission to perform this operation
-     * @throws URISyntaxException thrown if the request URI could not be parsed
+     * @throws StringRepresentationParseException thrown if the request URI could not be parsed
      */
     public MeshObject determineRequestedMeshObject()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                URISyntaxException
+                StringRepresentationParseException
     {
         if( theRequestedMeshObject == null ) {
             calculate();

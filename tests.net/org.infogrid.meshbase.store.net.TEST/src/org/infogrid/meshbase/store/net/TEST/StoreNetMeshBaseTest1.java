@@ -14,7 +14,6 @@
 
 package org.infogrid.meshbase.store.net.TEST;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
@@ -34,6 +33,7 @@ import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.store.prefixing.PrefixingStore;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Makes sure we do the right number of writes and reads.
@@ -222,7 +222,7 @@ public class StoreNetMeshBaseTest1
         try {
             id = theMeshBaseIdentifierFactory.fromExternalForm( "test://i.am.here" );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             log.error( ex );
             id = null;
         }

@@ -61,41 +61,6 @@ public class IntegerStringifierTest1
         String res1b = "123"; // something entirely different
         temp = str1.unformat( res1b );
         checkEquals( temp.toString(), res1b, "Wrong found value" );
-        
-        //
-        
-        int                data2a = -2347561;
-        IntegerStringifier str2   = IntegerStringifier.create( );
-        String             res2a  = String.valueOf( data2a );
-
-        Iterator<StringifierParsingChoice<Integer>> iter2    = str2.parsingChoiceIterator( res2a, 0, res2a.length(), Integer.MAX_VALUE, false );
-        StringifierParsingChoice<Integer> []        choices2 = (StringifierParsingChoice<Integer> []) ArrayHelper.copyIntoNewArray( iter2, StringifierParsingChoice.class );
-        checkEquals( choices2.length, res2a.length()-1, "Wrong number of choices" ); // -1 because of the minus
-        for( int i=0 ; i<choices2.length ; ++i ) {
-            
-            log.debug( "Found " + i + ": " + choices2[i] );
-
-            checkEquals( choices2[i].getStartIndex(), 0,   "Wrong start index" );
-            checkEquals( choices2[i].getEndIndex(),   i+2, "Wrong end index" );
-
-            checkCondition( choices2[i].unformat() instanceof Integer, "Wrong result type at index " + i );
-            checkEquals( choices2[i].unformat().toString(), res2a.substring( 0, i+2 ), "Wrong result value at index " + i );
-        }
-
-        final int MAX = 4;
-        iter2 = str2.parsingChoiceIterator( res2a, 0, res2a.length(), MAX, false );
-        choices2 = ArrayHelper.copyIntoNewArray( iter2, StringifierParsingChoice.class );
-        checkEquals( choices2.length, MAX, "Wrong number of choices" );
-        for( int i=0 ; i<choices2.length ; ++i ) {
-            
-            log.debug( "Found " + i + ": " + choices2[i] );
-            
-            checkEquals( choices2[i].getStartIndex(), 0,   "Wrong start index" );
-            checkEquals( choices2[i].getEndIndex(),   i+2, "Wrong end index" );
-
-            checkCondition( choices2[i].unformat() instanceof Integer, "Wrong result type at index " + i );
-            checkEquals( choices2[i].unformat().toString(), res2a.substring( 0, i+2 ), "Wrong result at index " + i );
-        }
     }
 
     /**

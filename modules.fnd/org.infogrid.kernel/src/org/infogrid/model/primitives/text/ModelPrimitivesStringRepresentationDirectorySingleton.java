@@ -59,8 +59,8 @@ public class ModelPrimitivesStringRepresentationDirectorySingleton
         StringRepresentation plain = theSingleton.get( TEXT_PLAIN_NAME );
         StringRepresentation html  = theSingleton.get( TEXT_HTML_NAME );
 
-        Map<String,Stringifier<? extends Object>> plainMap = plain.getLocalStringifierMap();
-        Map<String,Stringifier<? extends Object>> htmlMap  = html.getLocalStringifierMap();
+        Map<String,Stringifier<? extends Object>> plainMap = plain.getLocalStringifierMap();  // this returns both the view and the edit map
+        Map<String,Stringifier<? extends Object>> htmlMap  = html.getLocalStringifierMap();   // this returns both the view and the edit map
 
         Map<String,Stringifier<? extends Object>> javadocMap = new HashMap<String,Stringifier<? extends Object>>();
         Map<String,Stringifier<? extends Object>> javaMap    = new HashMap<String,Stringifier<? extends Object>>();
@@ -81,11 +81,11 @@ public class ModelPrimitivesStringRepresentationDirectorySingleton
 
         // double
         // javadoc: same as html
-        javaMap.put(    "double",         JavaDoubleStringifier.create() );
+        javaMap.put(    "double",           JavaDoubleStringifier.create() );
 
         // string
-        javadocMap.put( "string",         JavadocHtmlStringStringifier.create() );
-        javaMap.put(    "string",         JavaStringStringifier.create() );
+        javadocMap.put( "string",           JavadocHtmlStringStringifier.create() );
+        javaMap.put(    "string",           JavaStringStringifier.create() );
 
         // stacktrace
         // javadoc: same as html
@@ -102,30 +102,30 @@ public class ModelPrimitivesStringRepresentationDirectorySingleton
         // new tags for all
 
         // enumarray
-        plainMap.put(   "enumarray",      ArrayStringifier.create( EnumeratedValueStringifier.create(), ", " ));
-        htmlMap.put(    "enumarray",      ArrayStringifier.create( EnumeratedValueStringifier.create(), "<ul><li>", "</li><li>", "</li></ul>", "" ));
+        plainMap.put(   "enumarray",        ArrayStringifier.create( EnumeratedValueStringifier.create(), ", " ));
+        htmlMap.put(    "enumarray",        ArrayStringifier.create( EnumeratedValueStringifier.create(), "<ul><li>", "</li><li>", "</li></ul>", "" ));
         // javadoc: same as html
         // FIXME Java enumarray
 
-        plainMap.put(   "multiplicity",   MultiplicityValueStringStringifier.create() );
+        plainMap.put(   "multiplicity",     MultiplicityValueStringStringifier.create() );
         // html: same as plain
         // javadoc: same as html
-        javaMap.put(    "multiplicity",   JavaPropertyValueStringifier.create());
+        javaMap.put(    "multiplicity",     JavaPropertyValueStringifier.create());
 
         plainMap.put(   "escapehashstring", EscapeHashHtmlStringStringifier.create() );
         // html: same as plain
         // javadoc: same as html
         // java: same as plain
 
-        plainMap.put(   "type",           DataTypeStringifier.create() );
+        plainMap.put(   "type",             DataTypeStringifier.create() );
         // html: same as plain
         // javadoc: same as html
         // java: same as plain
 
-        plainMap.put(   "pv",             PropertyValueStringifier.create( plain, null ) );
+        plainMap.put(   "pv",               PropertyValueStringifier.create( plain, null ) );
         // html: same as plain
         // javadoc: same as html
-        javaMap.put(    "pv",             JavaPropertyValueStringifier.create());
+        javaMap.put(    "pv",               JavaPropertyValueStringifier.create());
 
 
         SimpleStringRepresentation javadoc = SimpleStringRepresentation.create(
@@ -138,7 +138,6 @@ public class ModelPrimitivesStringRepresentationDirectorySingleton
                 plain );
 
         // after the fact due to dependency
-
 
         theSingleton.put( javadoc.getName(), javadoc  );
         theSingleton.put(    java.getName(), java  );

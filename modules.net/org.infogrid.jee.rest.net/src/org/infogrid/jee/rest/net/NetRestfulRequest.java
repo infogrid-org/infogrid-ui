@@ -8,18 +8,18 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.rest.net;
 
-import java.net.URISyntaxException;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Encapsulates parameter parsing according to InfoGrid REST conventions.
@@ -32,22 +32,28 @@ public interface NetRestfulRequest
     /**
      * Determine the identifier of the requested Proxy, if any.
      * 
-     * @return the NetMeshIdentifier
+     * @return the NetMeshBaseIdentifier
+     * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
+     * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
+     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
      */
     public NetMeshBaseIdentifier determineRequestedProxyIdentifier()
         throws
             MeshObjectAccessException,
             NotPermittedException,
-            URISyntaxException;
+            StringRepresentationParseException;
     
     /**
      * Determine the requested Proxy, if any.
      * 
      * @return the Proxy
+     * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
+     * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
+     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
      */
     public Proxy determineRequestedProxy()
         throws
             MeshObjectAccessException,
             NotPermittedException,
-            URISyntaxException;
+            StringRepresentationParseException;
 }

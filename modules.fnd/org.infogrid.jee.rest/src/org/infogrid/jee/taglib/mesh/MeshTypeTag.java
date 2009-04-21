@@ -22,7 +22,6 @@ import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.L10Map;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyValue;
-import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
@@ -306,7 +305,16 @@ public class MeshTypeTag
         }
         if( text == null ) {
             // a bit of a funny structure, but the best I can do
-            text = formatValue( pageContext, value, theNullString, rep.getName(), theMaxLength, theColloquial );
+            text = formatValue(
+                    pageContext,
+                    null,
+                    null,
+                    value,
+                    null,
+                    theNullString,
+                    rep.getName(),
+                    theMaxLength,
+                    theColloquial );
         }
         print( text );
         

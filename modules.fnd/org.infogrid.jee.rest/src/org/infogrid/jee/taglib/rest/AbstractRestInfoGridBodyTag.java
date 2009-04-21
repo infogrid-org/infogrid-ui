@@ -42,29 +42,37 @@ public abstract class AbstractRestInfoGridBodyTag
      * Format a PropertyValue.
      *
      * @param pageContext the PageContext in which to format the PropertyValue
+     * @param owningMeshObject the MeshObject that owns this PropertyValue, if any
+     * @param propertyType the PropertyType of the PropertyValue, if any
      * @param value the PropertyValue
+     * @param editVar name of the HTML form elements to use
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
-     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param theMaxLength the maximum length of an emitted String
      * @param colloquial if applicable, output in colloquial form
      * @return the String to display
      */
     protected final String formatValue(
             PageContext   pageContext,
+            MeshObject    owningMeshObject,
+            PropertyType  propertyType,
             PropertyValue value,
+            String        editVar,
             String        nullString,
             String        stringRepresentation,
-            int           maxLength,
+            int           theMaxLength,
             boolean       colloquial )
     {
         String ret = ((RestfulJeeFormatter)theFormatter).formatPropertyValue(
                 pageContext,
+                owningMeshObject,
+                propertyType,
                 value,
+                editVar,
                 nullString,
                 stringRepresentation,
-                maxLength,
+                theMaxLength,
                 colloquial );
-
         return ret;
     }
 

@@ -17,6 +17,7 @@ package org.infogrid.model.primitives;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
@@ -514,6 +515,19 @@ public final class TimeStampValue
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
     {
+        Object editVariable;
+        Object meshObject;
+        Object propertyType;
+        if( pars != null ) {
+            editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
+            meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
+            propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+        } else {
+            editVariable = null;
+            meshObject   = null;
+            propertyType = null;
+        }
+
         return rep.formatEntry(
                 getClass(),
                 DEFAULT_ENTRY,
@@ -525,7 +539,10 @@ public final class TimeStampValue
                 theMinute,
                 theSecond,
                 (int) theSecond,
-                ((int) ( theSecond * 1000 )) % 1000 );
+                ((int) ( theSecond * 1000 )) % 1000,
+                meshObject,
+                propertyType,
+                editVariable );
     }
 
     /**

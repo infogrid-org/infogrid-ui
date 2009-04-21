@@ -38,9 +38,21 @@ public interface StringRepresentationDirectory
     
     /**
      * Name of the StringRepresentation, contained in this StringRepresentationDirectory, that contains
+     * the default text/plain formatting for edit mode.
+     */
+    public static final String EDIT_TEXT_PLAIN_NAME = "EditPlain";
+
+    /**
+     * Name of the StringRepresentation, contained in this StringRepresentationDirectory, that contains
      * the default text/html formatting.
      */
     public static final String TEXT_HTML_NAME = "Html";
+
+    /**
+     * Name of the StringRepresentation, contained in this StringRepresentationDirectory, that contains
+     * the default text/html formatting for edit mode.
+     */
+    public static final String EDIT_TEXT_HTML_NAME = "EditHtml";
 
     /**
      * Name of the StringRepresentation, contained in this StringRepresentationDirectory, that contains

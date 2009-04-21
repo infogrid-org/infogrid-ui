@@ -15,7 +15,6 @@
 package org.infogrid.jee.viewlet.servlet;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.GenericServlet;
@@ -49,6 +48,7 @@ import org.infogrid.util.FactoryException;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactory;
@@ -123,7 +123,7 @@ public class ViewletDispatcherServlet
         } catch( CannotViewException ex ) {
             throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_BAD_REQUEST ); // 400
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_BAD_REQUEST ); // 400
         }
 
@@ -234,7 +234,7 @@ public class ViewletDispatcherServlet
      * @return the created MeshObjectsToView
      * @throws MeshObjectAccessException thrown if one or more MeshObjects could not be accessed
      * @throws CannotViewException thrown if a Viewlet could not view the requested MeshObjects
-     * @throws URISyntaxException thrown if a URI parsing error occurred
+     * @throws StringRepresentationParseException thrown if a URI parsing error occurred
      * @throws NotPermittedException thrown if an attempted operation was not permitted
      */
     protected MeshObjectsToView createMeshObjectsToView(
@@ -243,7 +243,7 @@ public class ViewletDispatcherServlet
         throws
             MeshObjectAccessException,
             CannotViewException,
-            URISyntaxException,
+            StringRepresentationParseException,
             NotPermittedException
     {
         MeshObject subject           = restful.determineRequestedMeshObject();
@@ -276,7 +276,7 @@ public class ViewletDispatcherServlet
      * @param traversalDict the TraversalDictionary to use
      * @return the created Map, or null
      * @throws MeshObjectAccessException thrown if one or more MeshObjects could not be accessed
-     * @throws URISyntaxException thrown if a URI parsing error occurred
+     * @throws StringRepresentationParseException thrown if a URI parsing error occurred
      * @throws NotPermittedException thrown if an attempted operation was not permitted
      */
     protected Map<String,Object> determineViewletParameters(
@@ -284,7 +284,7 @@ public class ViewletDispatcherServlet
             TraversalDictionary  traversalDict )
         throws
             MeshObjectAccessException,
-            URISyntaxException,
+            StringRepresentationParseException,
             NotPermittedException
     {
         Map<String,Object> viewletPars = null;

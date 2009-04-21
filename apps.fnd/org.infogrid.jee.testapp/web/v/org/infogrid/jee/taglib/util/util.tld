@@ -160,6 +160,11 @@
     </tag>
     
     <tag>
+        <name>safeFormHiddenInput</name>
+        <tag-class>org.infogrid.jee.taglib.util.SafeFormHiddenInputTag</tag-class>
+    </tag>
+
+    <tag>
         <name>timeStamp</name>
         <tag-class>org.infogrid.jee.taglib.util.TimeStampTag</tag-class>
         <attribute>
@@ -210,6 +215,4 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-
-
 </taglib>

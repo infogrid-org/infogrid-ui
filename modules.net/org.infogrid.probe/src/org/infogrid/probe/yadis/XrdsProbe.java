@@ -50,6 +50,7 @@ import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.xml.XmlDOMProbe;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -105,6 +106,7 @@ public class XrdsProbe
      *         RelationshipType, in the same direction. Throwing this typically indicates a programming error.
      * @throws TransactionException a Transaction problem occurred. Throwing this typically indicates a programming error.
      * @throws URISyntaxException thrown if a URI was constructed in an invalid way
+     * @throws StringRepresentationParseException thrown if a StringRepresentation could not be parsed
      */
     public void parseDocument(
             NetMeshBaseIdentifier  dataSourceIdentifier,
@@ -126,7 +128,8 @@ public class XrdsProbe
             RelatedAlreadyException,
             RoleTypeBlessedAlreadyException,
             TransactionException,
-            URISyntaxException
+            URISyntaxException,
+            StringRepresentationParseException
     {
         addYadisServicesFromXml( dataSourceIdentifier, theDocument, freshMeshBase );
     }
@@ -143,7 +146,7 @@ public class XrdsProbe
      * @throws IllegalPropertyTypeException thrown if a MeshObject did not carry a specified PropertyType. This should not happen.
      * @throws IllegalPropertyValueException thrown if a property could not be set to the specified PropertyValue. This should not happen
      * @throws MeshObjectIdentifierNotUniqueException an identifier was not unique. This should not happen.
-     * @throws URISyntaxException a syntax error occurred
+     * @throws StringRepresentationParseException a syntax error occurred
      */
     public void addYadisServicesFromXml(
             NetMeshBaseIdentifier dataSourceIdentifier,
@@ -156,7 +159,7 @@ public class XrdsProbe
             IllegalPropertyTypeException,
             IllegalPropertyValueException,
             MeshObjectIdentifierNotUniqueException,
-            URISyntaxException
+            StringRepresentationParseException
     {
         NetMeshObject subject = base.getHomeObject();
 
@@ -242,7 +245,7 @@ public class XrdsProbe
      * @throws IllegalPropertyTypeException thrown if a MeshObject did not carry a specified PropertyType. This should not happen.
      * @throws IllegalPropertyValueException thrown if a property could not be set to the specified PropertyValue. This should not happen
      * @throws MeshObjectIdentifierNotUniqueException an identifier was not unique. This should not happen.
-     * @throws URISyntaxException a syntax error occurred
+     * @throws StringRepresentationParseException a syntax error occurred
      */
     public void createService(
             NetMeshBaseIdentifier dataSourceIdentifier,
@@ -257,7 +260,7 @@ public class XrdsProbe
             IllegalPropertyTypeException,
             IllegalPropertyValueException,
             MeshObjectIdentifierNotUniqueException,
-            URISyntaxException
+            StringRepresentationParseException
     {
         try {
             serviceMeshObject.setPropertyValue(

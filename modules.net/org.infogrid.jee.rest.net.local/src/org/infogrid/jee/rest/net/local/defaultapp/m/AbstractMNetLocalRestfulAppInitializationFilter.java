@@ -14,7 +14,6 @@
 
 package org.infogrid.jee.rest.net.local.defaultapp.m;
 
-import java.net.URISyntaxException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import javax.servlet.ServletException;
@@ -46,6 +45,7 @@ import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are net-enabled and REST-ful.
@@ -100,7 +100,7 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
             try {
                 mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 throw new RuntimeException( ex );
             }
 
@@ -185,12 +185,12 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
      *
      * @param meshBaseIdentifierFactory the NetMeshBaseIdentifierFactory to us
      * @return the created and populated ProbeDirectory
-     * @throws URISyntaxException thrown if an identifier could not be parsed
+     * @throws StringRepresentationParseException thrown if an identifier could not be parsed
      */
     protected ProbeDirectory createAndPopulateProbeDirectory(
             NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         ProbeDirectory ret = MProbeDirectory.create();
         return ret;

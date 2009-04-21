@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,9 +16,7 @@ package org.infogrid.modelbase.m;
 
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringifierException;
-
-import java.net.URISyntaxException;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factory for creating MeshTypeIdentifiers appropriate for the MModelBase
@@ -64,13 +62,13 @@ public class MMeshTypeIdentifierFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created MMeshTypeIdentifier
-     * @throws URISyntaxException thrown if the String could not be successfully parsed
+     * @throws StringRepresentationParseException thrown if the String could not be successfully parsed
      */
     public MMeshTypeIdentifier fromStringRepresentation(
             StringRepresentation representation,
             String               s )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         try {
             Object [] found = representation.parseEntry( MMeshTypeIdentifier.class, MMeshTypeIdentifier.DEFAULT_ENTRY, s );
@@ -82,16 +80,15 @@ public class MMeshTypeIdentifierFactory
                     break;
 
                 default:
-                    throw new URISyntaxException( s, "Cannot parse identifier" );
+                    throw new StringRepresentationParseException( s, null, null );
             }
 
             return ret;
 
-        } catch( StringifierException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
+        // pass-through StringRepresentationParseException
 
         } catch( ClassCastException ex ) {
-            throw new URISyntaxException( s, "Cannot parse identifier" );
+            throw new StringRepresentationParseException( s, null, ex );
         }
     }
 }

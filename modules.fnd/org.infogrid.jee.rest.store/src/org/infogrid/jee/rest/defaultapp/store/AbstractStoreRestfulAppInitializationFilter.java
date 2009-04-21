@@ -15,7 +15,6 @@
 package org.infogrid.jee.rest.defaultapp.store;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import javax.naming.NamingException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -36,6 +35,7 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.store.IterableStore;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are REST-ful and use a Store for MeshBase persistence.
@@ -90,7 +90,7 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         try {
             mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
 
-        } catch( URISyntaxException ex ) {
+        } catch( StringRepresentationParseException ex ) {
             throw new RuntimeException( ex );
         }
 

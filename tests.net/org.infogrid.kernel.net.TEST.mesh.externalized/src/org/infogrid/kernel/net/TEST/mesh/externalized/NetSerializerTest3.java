@@ -14,9 +14,9 @@
 
 package org.infogrid.kernel.net.TEST.mesh.externalized;
 
-import java.net.URISyntaxException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 
 /**
@@ -49,7 +49,7 @@ public class NetSerializerTest3
                 
                 reportError( "No exception thrown", testData[i] );
 
-            } catch( URISyntaxException ex ) {
+            } catch( StringRepresentationParseException ex ) {
                 // ok
             }
         }

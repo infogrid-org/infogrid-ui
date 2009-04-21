@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,7 +17,6 @@ package org.infogrid.probe.shadow.store;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxyEncoder;
@@ -32,6 +31,7 @@ import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * A StoreEntryMapper for Proxies that supports the distinction between placeholder Proxies and regular Proxies for
@@ -83,12 +83,12 @@ public class ShadowStoreProxyEntryMapper
      *
      * @param stringKey the key in String form
      * @return the corresponding key object
-     * @throws URISyntaxException thrown if a stringKey could not be converted into a valid Identifier
+     * @throws StringRepresentationParseException thrown if a stringKey could not be converted into a valid Identifier
      */
     public NetMeshBaseIdentifier stringToKey(
             String stringKey )
         throws
-            URISyntaxException
+            StringRepresentationParseException
     {
         NetMeshBaseIdentifier ret = theMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( stringKey );
         return ret;

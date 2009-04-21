@@ -8,13 +8,12 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.rest.net;
 
-import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.jee.app.InfoGridWebApp;
@@ -29,6 +28,7 @@ import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Default implementation of Net RestfulRequest.
@@ -86,13 +86,13 @@ public class DefaultNetRestfulRequest
      * 
      * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
-     * @throws URISyntaxException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
+     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
      */
     protected void calculate()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                URISyntaxException
+                StringRepresentationParseException
     {
         String relativeBaseUrl = theSaneRequest.getRelativeBaseUri();
         if( relativeBaseUrl.startsWith( theContextPath )) {
@@ -133,7 +133,7 @@ public class DefaultNetRestfulRequest
             NetMeshBase mb = meshBaseNameServer.get( (NetMeshBaseIdentifier) theRequestedMeshBaseIdentifier );
 
             if( mb == null ) {
-                throw new URISyntaxException( meshBaseIdentifierString, "Cannot find a MeshBase with this identifier" );
+                throw new StringRepresentationParseException( meshBaseIdentifierString, null, null );
             }
             
             theRequestedMeshObjectIdentifier = mb.getMeshObjectIdentifierFactory().fromExternalForm( meshObjectIdentifierString );
@@ -152,16 +152,16 @@ public class DefaultNetRestfulRequest
     /**
      * Determine the identifier of the requested Proxy, if any.
      * 
-     * @return the NetMeshIdentifier
+     * @return the NetMeshBaseIdentifier
      * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
-     * @throws URISyntaxException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
+     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
      */
     public NetMeshBaseIdentifier determineRequestedProxyIdentifier()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                URISyntaxException
+                StringRepresentationParseException
     {
         if( theRequestedProxyIdentifier == null ) {
             calculate();
@@ -172,16 +172,16 @@ public class DefaultNetRestfulRequest
     /**
      * Determine the requested Proxy, if any.
      * 
+     * @return the Proxy
      * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
-     * @throws URISyntaxException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
-     * @return the Proxy
+     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
      */
     public Proxy determineRequestedProxy()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                URISyntaxException
+                StringRepresentationParseException
     {
         if( theRequestedProxy == null ) {
             calculate();

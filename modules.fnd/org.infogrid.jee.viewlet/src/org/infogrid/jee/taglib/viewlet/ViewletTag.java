@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
+import org.infogrid.jee.viewlet.DefaultJeeViewletStateEnum;
 import org.infogrid.jee.viewlet.JeeViewlet;
+import org.infogrid.mesh.MeshObject;
 
 /**
  * Container for a JeeViewlet.
@@ -53,10 +55,22 @@ public class ViewletTag
         JeeViewlet vl = (JeeViewlet) pageContext.getRequest().getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
 
         StringBuilder content = new StringBuilder( 256 );
+
+        if( !DefaultJeeViewletStateEnum.VIEW.getName().equals( vl.getViewletState().getName() )) { // compare Strings, enum's won't allow equals() override
+            content.append( "<form method=\"POST\" action=\"" );
+            content.append( vl.getPostUrl() );
+            content.append( "\">\n" );
+//
+//            MeshObject subject = vl.getSubject();
+//            if( subject != null ) {
+//                content.append( " <input type=\"hidden\" name=\"shell.subject\" value=\"" );
+//                content.append( vl.getSubject().getIdentifier().toExternalForm() );
+//                content.append( "\" />\n" );
+//            }
+        }
         content.append( "<div class=\"viewlet" );
 
         if( vl != null ) {
-            // This should not happen
             String vlHtmlClass = vl.getHtmlClass();
 
             content.append( " " ).append( vlHtmlClass.replace( '.', '-') );
@@ -79,7 +93,13 @@ public class ViewletTag
         throws
             JspException
     {
+        JeeViewlet vl = (JeeViewlet) pageContext.getRequest().getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+
         theFormatter.println( pageContext, false, "</div>" );
+
+        if( !DefaultJeeViewletStateEnum.VIEW.getName().equals( vl.getViewletState().getName() )) { // compare Strings, enum's won't allow equals() override
+            theFormatter.println( pageContext, false, "</form>" );
+        }
 
         return EVAL_PAGE;
     }

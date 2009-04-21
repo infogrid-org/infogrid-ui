@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectStreamException;
 import java.io.OutputStream;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.util.PortableIcon;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
@@ -473,6 +474,19 @@ public abstract class BlobValue
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
     {
+        Object editVariable;
+        Object meshObject;
+        Object propertyType;
+        if( pars != null ) {
+            editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
+            meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
+            propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+        } else {
+            editVariable = null;
+            meshObject   = null;
+            propertyType = null;
+        }
+
         if( getMimeType().startsWith( "text" )) {
             return rep.formatEntry(
                     getClass(),
@@ -480,14 +494,21 @@ public abstract class BlobValue
                     pars,
                     theMimeType,
                     value(),
-                    getAsString());
+                    getAsString(),
+                    meshObject,
+                    propertyType,
+                    editVariable );
         } else {
             return rep.formatEntry(
                     getClass(),
                     "ByteString",
                     pars,
                     theMimeType,
-                    value() );
+                    value(),
+                    null,
+                    meshObject,
+                    propertyType,
+                    editVariable );
         }
     }
         
