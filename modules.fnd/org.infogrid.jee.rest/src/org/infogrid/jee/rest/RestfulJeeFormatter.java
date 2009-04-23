@@ -422,7 +422,7 @@ public class RestfulJeeFormatter
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
         
         StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial, owningMeshObject, propertyType, editVar );
-        String ret = PropertyValue.toStringRepresentationOrNull( value, rep, context, pars );
+        String ret = PropertyValue.toStringRepresentation( value, rep, context, pars );
         if( ret != null ) {
             return ret;
         } else {
@@ -819,13 +819,13 @@ public class RestfulJeeFormatter
             if( ret == null ) {
                 ret = SimpleModelPrimitivesStringRepresentationParameters.create();
             }
-            ret.put( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT, owningMeshObject.getIdentifier().toExternalForm() );
+            ret.put( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT, owningMeshObject );
         }
         if( propertyType != null ) {
             if( ret == null ) {
                 ret = SimpleModelPrimitivesStringRepresentationParameters.create();
             }
-            ret.put( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE, propertyType.getIdentifier().toExternalForm() );
+            ret.put( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE, propertyType );
         }
         if( editVar != null ) {
             if( ret == null ) {

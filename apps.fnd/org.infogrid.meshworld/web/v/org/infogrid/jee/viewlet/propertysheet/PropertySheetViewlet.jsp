@@ -8,6 +8,8 @@
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet.css"/>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/viewlet/ChangeViewletStateTag.css"/>
+<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/MeshObjectTag.css"/>
+<tmpl:script src="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/MeshObjectTag.js"/>
 
 <v:viewletAlternatives />
 <v:changeViewletState viewletStates="edit" display="compact"/>
@@ -33,7 +35,7 @@
   <u:safeFormHiddenInput/>
   <table class="dialog-buttons">
    <tr>
-    <td><button type="submit" name="ViewletStateTransition" value="do-cancel">Stop Editing</button></td>
+    <td><button type="submit" name="ViewletStateTransition" value="do-cancel">Cancel Editing</button></td>
     <td><button type="submit" name="ViewletStateTransition" value="do-commit">Save</button></td>
    </tr>
   </table>

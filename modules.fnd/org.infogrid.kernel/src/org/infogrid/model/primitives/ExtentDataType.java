@@ -186,23 +186,26 @@ public final class ExtentDataType
      */
     public ExtentValue fromStringRepresentation(
             StringRepresentation representation,
-            String                      s )
+            String               s )
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
         try {
             Object [] found = representation.parseEntry( ExtentValue.class, ExtentValue.DEFAULT_ENTRY, s );
 
             ExtentValue ret;
             switch( found.length ) {
-                case 2:
+                case 6:
                     ret = ExtentValue.create(
-                            ((Number) found[0]).doubleValue(),
-                            ((Number) found[1]).doubleValue() );
+                            ((Number) found[4]).doubleValue(),
+                            ((Number) found[5]).doubleValue() );
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
             return ret;
@@ -211,7 +214,7 @@ public final class ExtentDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
 }

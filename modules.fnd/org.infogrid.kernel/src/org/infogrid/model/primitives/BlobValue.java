@@ -492,23 +492,25 @@ public abstract class BlobValue
                     getClass(),
                     "TextString",
                     pars,
-                    theMimeType,
-                    value(),
-                    getAsString(),
-                    meshObject,
-                    propertyType,
-                    editVariable );
+            /* 0 */ editVariable,
+            /* 1 */ meshObject,
+            /* 2 */ propertyType,
+            /* 3 */ this,
+            /* 4 */ theMimeType,
+            /* 5 */ value(),
+            /* 6 */ getAsString() );
         } else {
             return rep.formatEntry(
                     getClass(),
                     "ByteString",
                     pars,
-                    theMimeType,
-                    value(),
-                    null,
-                    meshObject,
-                    propertyType,
-                    editVariable );
+            /* 0 */ editVariable,
+            /* 1 */ meshObject,
+            /* 2 */ propertyType,
+            /* 3 */ this,
+            /* 4 */ theMimeType,
+            /* 5 */ value(),
+            /* 6 */ null );
         }
     }
         
@@ -917,7 +919,7 @@ public abstract class BlobValue
                 sb.append( theMimeType );
                 sb.append("\"");
             }
-            sb.append( DataType.CLOSE_PAREN_STRING );
+            sb.append( DataType.CLOSE_PARENTHESIS_STRING );
 
             return sb.toString();
         }
@@ -1153,7 +1155,7 @@ public abstract class BlobValue
                 sb.append( theMimeType );
                 sb.append("\"");
             }
-            sb.append( DataType.CLOSE_PAREN_STRING );
+            sb.append( DataType.CLOSE_PARENTHESIS_STRING );
 
             return sb.toString();
         }

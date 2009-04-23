@@ -385,7 +385,7 @@ public class FloatDataType
                 ret.append( NULL_STRING );
             }
 
-            ret.append( CLOSE_PAREN_STRING );
+            ret.append( CLOSE_PARENTHESIS_STRING );
             return ret.toString();
         }
     }
@@ -429,18 +429,22 @@ public class FloatDataType
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
         try {
             Object [] found = representation.parseEntry( FloatValue.class, FloatValue.DEFAULT_ENTRY, s );
 
             FloatValue ret;
 
             switch( found.length ) {
-                case 1:
-                    ret = FloatValue.create( (Number) found[0] );
+                case 5:
+                case 6:
+                    ret = FloatValue.create( (Number) found[4] );
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
             return ret;
@@ -449,7 +453,7 @@ public class FloatDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
 

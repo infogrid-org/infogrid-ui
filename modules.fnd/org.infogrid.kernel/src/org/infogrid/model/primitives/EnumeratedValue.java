@@ -240,13 +240,14 @@ public final class EnumeratedValue
                 getClass(),
                 DEFAULT_ENTRY,
                 pars,
-                theValue,
-                theDataType,
-                getUserVisibleName()        != null ? getUserVisibleName().value()        : null,
-                getUserVisibleDescription() != null ? getUserVisibleDescription().value() : null,
-                meshObject,
-                propertyType,
-                editVariable );
+        /* 0 */ editVariable,
+        /* 1 */ meshObject,
+        /* 2 */ propertyType,
+        /* 3 */ this,
+        /* 4 */ theValue,
+        /* 5 */ theDataType,
+        /* 6 */ getUserVisibleName()        != null ? getUserVisibleName().value()        : null,
+        /* 7 */ getUserVisibleDescription() != null ? getUserVisibleDescription().value() : null );
     }
 
     /**

@@ -249,7 +249,7 @@ public class EnumeratedDataType
             ret.append( theDomain[i].value() );
             ret.append( "\" )" );
         }
-        ret.append( CLOSE_PAREN_STRING );
+        ret.append( CLOSE_PARENTHESIS_STRING );
         return ret.toString();
     }
 
@@ -432,7 +432,7 @@ public class EnumeratedDataType
             } else {
                 ret.append( NULL_STRING );
             }
-            ret.append( CLOSE_PAREN_STRING );
+            ret.append( CLOSE_PARENTHESIS_STRING );
 
             return ret.toString();
         }
@@ -510,21 +510,27 @@ public class EnumeratedDataType
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
         try {
             Object [] found = representation.parseEntry( EnumeratedValue.class, EnumeratedValue.DEFAULT_ENTRY, s );
 
             EnumeratedValue ret;
 
             switch( found.length ) {
-                case 1:
-                    ret = select( (String) found[0] );
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    ret = selectOrNull( (String) found[4] );
                     if( ret == null ) {
-                        ret = selectByUserVisibleName( (String) found[0] );
+                        ret = selectByUserVisibleName( (String) found[4] );
                     }
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
             return ret;
@@ -533,10 +539,10 @@ public class EnumeratedDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( UnknownEnumeratedValueException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
     

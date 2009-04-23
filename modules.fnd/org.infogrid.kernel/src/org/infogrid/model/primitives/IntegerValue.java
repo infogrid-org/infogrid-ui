@@ -412,11 +412,12 @@ public final class IntegerValue
                 getClass(),
                 DEFAULT_ENTRY,
                 pars,
-                theValue,
-                theUnit,
-                meshObject,
-                propertyType,
-                editVariable );
+        /* 0 */ editVariable,
+        /* 1 */ meshObject,
+        /* 2 */ propertyType,
+        /* 3 */ this,
+        /* 4 */ theValue,
+        /* 5 */ theUnit );
     }
 
     /**

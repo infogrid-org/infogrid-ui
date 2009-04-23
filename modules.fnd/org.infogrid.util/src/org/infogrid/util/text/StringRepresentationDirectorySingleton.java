@@ -16,8 +16,6 @@ package org.infogrid.util.text;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.infogrid.util.CachingMap;
-import org.infogrid.util.MCachingHashMap;
 
 /**
  * Helps find a StringRepresentationDirectory. The found StringRepresentationDirectory
@@ -30,16 +28,10 @@ public class StringRepresentationDirectorySingleton
 {
     /**
      * Private constructor, use static singleton methods.
-     *
-     * @param storage the storage to use for this instance
-     * @param fallback the fallback StringRepresentation, if any
      */
-    protected StringRepresentationDirectorySingleton(
-            CachingMap<String,StringRepresentation> storage,
-            StringRepresentation                    fallback )
+    protected StringRepresentationDirectorySingleton()
     {
-        super( null, storage, fallback );
-        // no delegate factory
+        super();
     }
 
     /**
@@ -47,7 +39,7 @@ public class StringRepresentationDirectorySingleton
      *
      * @return the StringRepresentationDirectory
      */
-    public static StringRepresentationDirectory getSingleton()
+    public static StringRepresentationDirectorySingleton getSingleton()
     {
         if( theSingleton == null ) {
             // never mind threads
@@ -62,7 +54,7 @@ public class StringRepresentationDirectorySingleton
      * @param newValue the new value for the singleton
      */
     public static void setSingleton(
-            StringRepresentationDirectory newValue )
+            StringRepresentationDirectorySingleton newValue )
     {
         theSingleton = newValue;
     }
@@ -150,28 +142,31 @@ public class StringRepresentationDirectorySingleton
         htmlMap.put(    "list",           ListStringifier.create( "<ul><li>", "</li>\n<li>", "</li></ul>", "<ul class=\"empty\"></ul>" ));
         // url:  same as plain
 
-        MCachingHashMap<String,StringRepresentation> storage = MCachingHashMap.create();
+        theSingleton = new StringRepresentationDirectorySingleton(); // not the factory method here
 
         SimpleStringRepresentation plain = SimpleStringRepresentation.create(
+                theSingleton,
                 StringRepresentationDirectory.TEXT_PLAIN_NAME,
                 plainMap );
         SimpleStringRepresentation editPlain = SimpleStringRepresentation.create(
+                theSingleton,
                 StringRepresentationDirectory.EDIT_TEXT_PLAIN_NAME,
                 plainMap );
         SimpleStringRepresentation html = SimpleStringRepresentation.create(
+                theSingleton,
                 StringRepresentationDirectory.TEXT_HTML_NAME,
                 htmlMap,
                 plain );
         SimpleStringRepresentation editHtml = SimpleStringRepresentation.create(
+                theSingleton,
                 StringRepresentationDirectory.EDIT_TEXT_HTML_NAME,
                 htmlMap,
                 plain );
         SimpleStringRepresentation url = SimpleStringRepresentation.create(
+                theSingleton,
                 StringRepresentationDirectory.TEXT_URL_NAME,
                 urlMap,
                 plain );
-
-        theSingleton = new StringRepresentationDirectorySingleton( storage, plain );
 
         theSingleton.put(     plain.getName(), plain );
         theSingleton.put( editPlain.getName(), editPlain );
@@ -179,11 +174,13 @@ public class StringRepresentationDirectorySingleton
         theSingleton.put(  editHtml.getName(), editHtml );
         theSingleton.put(       url.getName(), url );
 
+        theSingleton.setFallback( plain );
+
         return theSingleton;
     }
 
     /**
      * The current singleton, initialized to a minimum set of defaults when used for the first time.
      */
-    protected static StringRepresentationDirectory theSingleton;
+    protected static StringRepresentationDirectorySingleton theSingleton;
 }

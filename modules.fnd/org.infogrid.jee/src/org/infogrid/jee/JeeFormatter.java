@@ -26,7 +26,6 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyContent;
 import org.infogrid.jee.servlet.InitializationFilter;
-import org.infogrid.util.FactoryException;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
@@ -1037,12 +1036,8 @@ public class JeeFormatter
     {
         String sanitized = determineStringRepresentationString( in );
 
-        StringRepresentation ret = null;
-        try {
-            ret = theStringRepresentationDirectory.obtainFor( sanitized );
-        } catch( FactoryException ex ) {
-            log.info( ex );
-        }
+        StringRepresentation ret = theStringRepresentationDirectory.get( sanitized );
+
         if( ret == null ) {
             ret = theStringRepresentationDirectory.getFallback();
         }

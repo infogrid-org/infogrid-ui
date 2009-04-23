@@ -36,47 +36,54 @@ public class SimpleStringRepresentation
     /**
      * Smart factory method.
      *
+     * @param directory the StringRepresentationDirectory in which this StringRepresentation will be defined
      * @param name the name of the StringRepresentation
      * @param map the StringifierMap to use
      * @return the created StringRepresentation
      */
     public static synchronized SimpleStringRepresentation create(
+            StringRepresentationDirectory             directory,
             String                                    name,
             Map<String,Stringifier<? extends Object>> map )
     {
-        SimpleStringRepresentation ret = new SimpleStringRepresentation( name, map, null );
+        SimpleStringRepresentation ret = new SimpleStringRepresentation( directory, name, map, null );
         return ret;
     }
 
     /**
      * Smart factory method.
      *
+     * @param directory the StringRepresentationDirectory in which this StringRepresentation will be defined
      * @param name the name of the StringRepresentation
      * @param map the StringifierMap to use
      * @param delegate the StringRepresentation to use if this instance cannot perform the operation
      * @return the created StringRepresentation
      */
     public static synchronized SimpleStringRepresentation create(
+            StringRepresentationDirectory             directory,
             String                                    name,
             Map<String,Stringifier<? extends Object>> map,
             StringRepresentation                      delegate )
     {
-        SimpleStringRepresentation ret = new SimpleStringRepresentation( name, map, delegate );
+        SimpleStringRepresentation ret = new SimpleStringRepresentation( directory, name, map, delegate );
         return ret;
     }
 
     /**
      * Constructor.
      *
+     * @param directory the StringRepresentationDirectory in which this StringRepresentation will be defined
      * @param name the name of the StringRepresentation
      * @param map the map of Stringifiers
      * @param delegate the StringRepresentation to use if this instance cannot perform the operation
      */
     protected SimpleStringRepresentation(
+            StringRepresentationDirectory             directory,
             String                                    name,
             Map<String,Stringifier<? extends Object>> map,
             StringRepresentation                      delegate )
     {
+        theDirectory           = directory;
         theName                = name;
         theLocalStringifierMap = map;
         theDelegate            = delegate;
@@ -86,6 +93,16 @@ public class SimpleStringRepresentation
         }
     }
     
+    /**
+     * Obtain the StringRepresentationDirectory in which this StringRepresentation is defined.
+     *
+     * @return the StringRepresentationDirectory
+     */
+    public StringRepresentationDirectory getStringRepresentationDirectory()
+    {
+        return theDirectory;
+    }
+
     /**
      * Obtain the name of the StringRepresentation.
      *
@@ -338,6 +355,11 @@ public class SimpleStringRepresentation
     {
         return super.toString() + "{ name: " + theName + " }";
     }
+
+    /**
+     * The StringRepresentationDirectory in which this StringRepresentation is defined.
+     */
+    protected StringRepresentationDirectory theDirectory;
 
     /**
      * The name of the StringRepresentation, which also used as prefix in the ResourceHelper.

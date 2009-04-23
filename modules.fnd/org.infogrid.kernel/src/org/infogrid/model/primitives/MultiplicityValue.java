@@ -186,7 +186,7 @@ public final class MultiplicityValue
         } else {
             buf.append( String.valueOf( maximum ));
         }
-        buf.append( DataType.CLOSE_PAREN_STRING );
+        buf.append( DataType.CLOSE_PARENTHESIS_STRING );
         return buf.toString();
     }
 
@@ -244,10 +244,10 @@ public final class MultiplicityValue
                 getClass(),
                 DEFAULT_ENTRY,
                 pars,
-                this,
-                meshObject,
-                propertyType,
-                editVariable );
+        /* 0 */ editVariable,
+        /* 1 */ meshObject,
+        /* 2 */ propertyType,
+        /* 3 */ this );
     }
 
     /**

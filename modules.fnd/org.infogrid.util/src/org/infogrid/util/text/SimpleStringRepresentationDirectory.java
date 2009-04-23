@@ -14,50 +14,51 @@
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.CachingMap;
-import org.infogrid.util.Factory;
-import org.infogrid.util.MCachingHashMap;
-import org.infogrid.util.MSmartFactory;
+import org.infogrid.util.MNameServer;
+import org.infogrid.util.WritableNameServer;
 
 /**
  * A simple implementation of StringRepresentationDirectory with default content.
  */
 public class SimpleStringRepresentationDirectory
         extends
-            MSmartFactory<String,StringRepresentation,StringRepresentation>
+            MNameServer<String,StringRepresentation>
         implements
-            StringRepresentationDirectory
+            StringRepresentationDirectory,
+            WritableNameServer<String,StringRepresentation>
 {
     /**
      * Factory method.
      *
-     * @param delegateFactory the factory that knows how to instantiate the various StringRepresentations
-     * @param fallback the fallback StringRepresentation, if any
      * @return the created SimpleStringRepresentationDirectory
      */
-    public static SimpleStringRepresentationDirectory create(
-            Factory<String,StringRepresentation,StringRepresentation> delegateFactory,
-            StringRepresentation                                      fallback )
+    @SuppressWarnings("unchecked") // No idea what this is needed
+    public static SimpleStringRepresentationDirectory create()
     {
-        MCachingHashMap<String,StringRepresentation> storage = MCachingHashMap.create();
-        return new SimpleStringRepresentationDirectory( delegateFactory, storage, fallback );
+        SimpleStringRepresentationDirectory ret = new SimpleStringRepresentationDirectory();
+        return ret;
     }
 
     /**
      * Constructor for subclasses only, use factory method.
-     *
-     * @param delegateFactory the Factory that knows how to instantiate values
-     * @param storage the storage to use for this instance
-     * @param fallback the fallback StringRepresentation, if any
-     */
-    protected SimpleStringRepresentationDirectory(
-            Factory<String,StringRepresentation,StringRepresentation> delegateFactory,
-            CachingMap<String,StringRepresentation>                   storage,
-            StringRepresentation                                      fallback )
+\     */
+    protected SimpleStringRepresentationDirectory()
     {
-        super( delegateFactory, storage );
-        
-        theFallback = fallback;
+        super( );
+    }
+
+    /**
+     * Set the fallback.
+     *
+     * @param newValue new value
+     */
+    public void setFallback(
+            StringRepresentation newValue )
+    {
+        if( newValue == null ) {
+            throw new NullPointerException();
+        }
+        theFallback = newValue;
     }
 
     /**
@@ -67,6 +68,9 @@ public class SimpleStringRepresentationDirectory
      */
     public StringRepresentation getFallback()
     {
+        if( theFallback == null ) {
+            throw new NullPointerException( "No fallback was specified when initializing " + this );
+        }
         return theFallback;
     }
     

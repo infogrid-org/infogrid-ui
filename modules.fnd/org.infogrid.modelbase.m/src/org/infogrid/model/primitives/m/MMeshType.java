@@ -263,6 +263,22 @@ public abstract class MMeshType
     }
 
     /**
+     * Convert to String, for debugging.
+     *
+     * @return String
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( super.toString() );
+        buf.append( "{ identifier: " );
+        buf.append( theIdentifier.toExternalForm() );
+        buf.append( " }" );
+        return buf.toString();
+    }
+
+    /**
       * Value of the Identifier property.
       */
     private MeshTypeIdentifier theIdentifier;

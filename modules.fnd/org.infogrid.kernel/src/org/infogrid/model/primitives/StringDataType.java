@@ -184,21 +184,25 @@ public final class StringDataType
      */
     public StringValue fromStringRepresentation(
             StringRepresentation representation,
-            String                      s )
+            String               s )
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
+
         try {
             Object [] found = representation.parseEntry( StringValue.class, StringValue.DEFAULT_ENTRY, s );
 
             StringValue ret;
             switch( found.length ) {
-                case 1:
-                    ret = StringValue.create( (String) found[0] );
+                case 5:
+                    ret = StringValue.create( (String) found[4] );
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
             return ret;
@@ -207,7 +211,7 @@ public final class StringDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
 

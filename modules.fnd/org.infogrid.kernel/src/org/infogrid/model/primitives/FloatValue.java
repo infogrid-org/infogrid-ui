@@ -337,7 +337,7 @@ public final class FloatValue
             buf.append( ", " );
             buf.append( theUnit.getJavaConstructorString() );
         }
-        buf.append( DataType.CLOSE_PAREN_STRING );
+        buf.append( DataType.CLOSE_PARENTHESIS_STRING );
         return buf.toString();
     }
 
@@ -397,11 +397,12 @@ public final class FloatValue
                 getClass(),
                 DEFAULT_ENTRY,
                 pars,
-                theValue,
-                theUnit,
-                meshObject,
-                propertyType,
-                editVariable );
+        /* 0 */ editVariable,
+        /* 1 */ meshObject,
+        /* 2 */ propertyType,
+        /* 3 */ this,
+        /* 4 */ theValue,
+        /* 5 */ theUnit );
     }
 
     /**

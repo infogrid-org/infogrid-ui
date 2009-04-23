@@ -186,19 +186,22 @@ public class PointDataType
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
         try {
             Object [] found = representation.parseEntry( PointValue.class, PointValue.DEFAULT_ENTRY, s );
 
             PointValue ret;
             switch( found.length ) {
-                case 2:
+                case 6:
                     ret = PointValue.create(
-                            ((Number) found[0]).doubleValue(),
-                            ((Number) found[1]).doubleValue() );
+                            ((Number) found[4]).doubleValue(),
+                            ((Number) found[5]).doubleValue() );
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
             return ret;
@@ -207,7 +210,7 @@ public class PointDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
 }

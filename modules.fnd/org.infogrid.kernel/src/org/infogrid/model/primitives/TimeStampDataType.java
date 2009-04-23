@@ -175,26 +175,29 @@ public final class TimeStampDataType
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
         try {
             Object [] found = representation.parseEntry( TimeStampValue.class, TimeStampValue.DEFAULT_ENTRY, s );
 
             TimeStampValue ret;
 
             switch( found.length ) {
-                case 6:
-                case 7:
-                case 8:
+                case 10:
+                case 11:
+                case 12:
                     ret = TimeStampValue.create(
-                            ((Number) found[0]).shortValue(),   // year
-                            ((Number) found[1]).shortValue(),   // month
-                            ((Number) found[2]).shortValue(),   // day
-                            ((Number) found[3]).shortValue(),   // hour
-                            ((Number) found[4]).shortValue(),   // minute
-                            ((Number) found[5]).floatValue());  // second
+                            ((Number) found[4]).shortValue(),   // year
+                            ((Number) found[5]).shortValue(),   // month
+                            ((Number) found[6]).shortValue(),   // day
+                            ((Number) found[7]).shortValue(),   // hour
+                            ((Number) found[8]).shortValue(),   // minute
+                            ((Number) found[9]).floatValue());  // second
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
             return ret;
@@ -203,7 +206,7 @@ public final class TimeStampDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
 }

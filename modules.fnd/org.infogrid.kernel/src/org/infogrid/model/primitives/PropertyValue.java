@@ -15,6 +15,7 @@
 package org.infogrid.model.primitives;
 
 import java.io.Serializable;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
@@ -107,10 +108,10 @@ public abstract class PropertyValue
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
     {
-        if( v == null ) {
-            return null;
-        } else {
+        if( v != null ) {
             return v.toStringRepresentation( representation, context, pars );
+        } else {
+            return null;
         }
     }
 
@@ -130,11 +131,20 @@ public abstract class PropertyValue
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
     {
-        if( v == null ) {
-            return representation.formatEntry( PropertyValue.class, "Null", pars );
-        } else {
+        if( v != null ) {
             return v.toStringRepresentation( representation, context, pars );
         }
+        if( pars != null ) {
+            PropertyType type = (PropertyType) pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+            if( type != null ) {
+                String ret = type.nullValueStringRepresentation( representation, context, pars );
+            
+                return ret;
+            }
+        }
+        // falling through here to the default
+
+        return representation.formatEntry( PropertyValue.class, "Null", pars );
     }
 
     /**

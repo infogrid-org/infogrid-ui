@@ -32,6 +32,21 @@ public class PropertyValueParsingException
      * @param type the DataType to which the PropertyValue was supposed to conform
      * @param representation the representation of the PropertyValue in the String
      * @param s the String whose parsing was unsuccessful
+     */
+    public PropertyValueParsingException(
+            DataType             type,
+            StringRepresentation representation,
+            String               s )
+    {
+        this( type, representation, s, (String) null );
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param type the DataType to which the PropertyValue was supposed to conform
+     * @param representation the representation of the PropertyValue in the String
+     * @param s the String whose parsing was unsuccessful
      * @param formatString the format String used, if any
      */
     public PropertyValueParsingException(
@@ -46,6 +61,23 @@ public class PropertyValueParsingException
         theFormatString   = formatString;
     }
     
+    /**
+     * Constructor.
+     *
+     * @param type the DataType to which the PropertyValue was supposed to conform
+     * @param representation the representation of the PropertyValue in the String
+     * @param s the String whose parsing was unsuccessful
+     * @param cause the underlying exception
+     */
+    public PropertyValueParsingException(
+            DataType             type,
+            StringRepresentation representation,
+            String               s,
+            Throwable            cause )
+    {
+        this( type, representation, s, null, cause );
+    }
+
     /**
      * Constructor.
      *

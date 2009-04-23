@@ -22,6 +22,13 @@ import java.util.Map;
 public interface StringRepresentation
 {
     /**
+     * Obtain the StringRepresentationDirectory in which this StringRepresentation is defined.
+     *
+     * @return the StringRepresentationDirectory
+     */
+    public StringRepresentationDirectory getStringRepresentationDirectory();
+
+    /**
      * Obtain the name of the StringRepresentation.
      *
      * @return the name

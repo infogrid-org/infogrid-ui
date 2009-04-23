@@ -254,7 +254,7 @@ public final class ColorValue
         buf.append( getClass().getName());
         buf.append( DataType.CREATE_STRING );
         buf.append( theValue );
-        buf.append( DataType.CLOSE_PAREN_STRING );
+        buf.append( DataType.CLOSE_PARENTHESIS_STRING );
         return buf.toString();
     }
 
@@ -349,14 +349,15 @@ public final class ColorValue
                 getClass(),
                 DEFAULT_ENTRY,
                 pars,
-                getRed(),
-                getGreen(),
-                getBlue(),
-                getAlpha(),
-                getRGB(),
-                meshObject,
-                propertyType,
-                editVariable );
+        /* 0 */ editVariable,
+        /* 1 */ meshObject,
+        /* 2 */ propertyType,
+        /* 3 */ this,
+        /* 4 */ getRed(),
+        /* 5 */ getGreen(),
+        /* 6 */ getBlue(),
+        /* 7 */ getAlpha(),
+        /* 8 */ getRGB() );
     }
 
     /**

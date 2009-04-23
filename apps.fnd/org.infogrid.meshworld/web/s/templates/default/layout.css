@@ -92,6 +92,20 @@ a.infogrid {
     margin-top: 12px;
 }
 
+div.org-infogrid-model-primitives-BlobValue a,
+div.org-infogrid-model-primitives-BooleanValue a,
+div.org-infogrid-model-primitives-ColorValue a,
+div.org-infogrid-model-primitives-EnumeratedValue a,
+div.org-infogrid-model-primitives-ExtentValue a,
+div.org-infogrid-model-primitives-FloatValue a,
+div.org-infogrid-model-primitives-IntegerValue a,
+div.org-infogrid-model-primitives-MultiplicityValue a,
+div.org-infogrid-model-primitives-PointValue a,
+div.org-infogrid-model-primitives-StringValue a,
+div.org-infogrid-model-primitives-TimePeriodValue a,
+div.org-infogrid-model-primitives-TimeStampValue a {
+    font-size: 70%;
+}
 
 span.org-infogrid-model-primitives-BlobValue > span.mime {
     display: none;

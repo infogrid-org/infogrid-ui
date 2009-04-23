@@ -220,9 +220,9 @@ public final class BooleanValue
                 getClass(),
                 s,
                 pars,
-                meshObject,
-                propertyType,
-                editVariable );
+        /* 0 */ editVariable,
+        /* 1 */ meshObject,
+        /* 2 */ propertyType );
     }
 
     /**

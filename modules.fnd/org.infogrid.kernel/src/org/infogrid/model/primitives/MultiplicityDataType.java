@@ -175,18 +175,21 @@ public class MultiplicityDataType
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
         try {
             Object [] found = representation.parseEntry( MultiplicityValue.class, MultiplicityValue.DEFAULT_ENTRY, s );
 
             switch( found.length ) {
-                case 1:
+                case 4:
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
-            MultiplicityValue ret = (MultiplicityValue) found[0];
+            MultiplicityValue ret = (MultiplicityValue) found[3];
 
             return ret;
 
@@ -194,7 +197,7 @@ public class MultiplicityDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
 }

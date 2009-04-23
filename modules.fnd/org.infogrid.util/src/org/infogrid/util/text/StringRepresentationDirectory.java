@@ -14,14 +14,14 @@
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.SmartFactory;
+import org.infogrid.util.NameServer;
 
 /**
  * A directory of StringRepresentations.
  */
 public interface StringRepresentationDirectory
         extends
-            SmartFactory<String,StringRepresentation,StringRepresentation>
+            NameServer<String,StringRepresentation>
 {
     /**
      * Obtain the fallback. This fallback is known to exist even if the factory method failed.

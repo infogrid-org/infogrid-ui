@@ -608,11 +608,9 @@ public class HttpShellFilter
             theMainMeshBase              = appContext.findContextObjectOrThrow( MeshBase.class );
 
             StringRepresentationDirectory dir = appContext.findContextObjectOrThrow( StringRepresentationDirectory.class );
-            try {
-                theParsingRepresentation = dir.obtainFor( StringRepresentationDirectory.TEXT_PLAIN_NAME );
 
-            } catch( FactoryException ex ) {
-                log.error( ex );
+            theParsingRepresentation = dir.get( StringRepresentationDirectory.TEXT_PLAIN_NAME );
+            if( theParsingRepresentation == null ) {
                 theParsingRepresentation = dir.getFallback();
             }
 

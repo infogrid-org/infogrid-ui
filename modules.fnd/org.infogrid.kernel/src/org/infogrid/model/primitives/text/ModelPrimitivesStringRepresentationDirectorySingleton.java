@@ -16,7 +16,6 @@ package org.infogrid.model.primitives.text;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.infogrid.util.CachingMap;
 import org.infogrid.util.text.ArrayStringifier;
 import org.infogrid.util.text.SimpleStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
@@ -34,15 +33,10 @@ public class ModelPrimitivesStringRepresentationDirectorySingleton
 {
     /**
      * Private constructor, use static singleton methods.
-     *
-     * @param storage the storage to use for this instance
-     * @param fallback the fallback StringRepresentation, if any
      */
-    protected ModelPrimitivesStringRepresentationDirectorySingleton(
-            CachingMap<String,StringRepresentation> storage,
-            StringRepresentation                    fallback )
+    protected ModelPrimitivesStringRepresentationDirectorySingleton()
     {
-        super( storage, fallback );
+        super();
     }
 
     /**
@@ -129,10 +123,12 @@ public class ModelPrimitivesStringRepresentationDirectorySingleton
 
 
         SimpleStringRepresentation javadoc = SimpleStringRepresentation.create(
+                theSingleton,
                 StringRepresentationDirectory.TEXT_JAVADOC_NAME,
                 javadocMap,
                 html );
         SimpleStringRepresentation java = SimpleStringRepresentation.create(
+                theSingleton,
                 StringRepresentationDirectory.TEXT_JAVA_NAME,
                 javaMap,
                 plain );

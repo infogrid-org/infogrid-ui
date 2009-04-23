@@ -362,7 +362,7 @@ public final class BlobDataType
             almostRet.append( varName );
             almostRet.append( ".getMimeType() )" );
         }
-        almostRet.append( CLOSE_PAREN_STRING );
+        almostRet.append( CLOSE_PARENTHESIS_STRING );
         return almostRet.toString();
     }
 
@@ -557,27 +557,26 @@ public final class BlobDataType
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
         try {
             Object [] found = representation.parseEntry( BlobValue.class, "TextString", s );
 
             BlobValue ret;
 
             switch( found.length ) {
-                case 1:
-                    ret = BlobValue.create( (String) found[0], determineParsedMimeType( representation, found[0], null ) );
-                    break;
-
-                case 3:
-                    if( found[2] != null ) {
+                case 7:
+                    if( found[6] != null ) {
                         // we prefer String over byte here
-                        ret = BlobValue.create( (String) found[2], determineParsedMimeType( representation, found[2], (String) found[0] ));
+                        ret = BlobValue.create( (String) found[6], determineParsedMimeType( representation, found[6], (String) found[4] ));
                     } else {
-                        ret = BlobValue.create( (byte []) found[1], determineParsedMimeType( representation, found[1], (String) found[0] ));
+                        ret = BlobValue.create( (byte []) found[5], determineParsedMimeType( representation, found[5], (String) found[4] ));
                     }
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
             return ret;
@@ -586,7 +585,7 @@ public final class BlobDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
 

@@ -450,7 +450,7 @@ public class L10MapImpl
             ret.append( "} " );
         }
 
-        ret.append( DataType.CLOSE_PAREN_STRING );
+        ret.append( DataType.CLOSE_PARENTHESIS_STRING );
         return ret.toString();
     }
 

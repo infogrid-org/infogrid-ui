@@ -15,9 +15,12 @@
 package org.infogrid.model.primitives;
 
 import java.io.Serializable;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.util.text.HasStringRepresentation;
+import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
   * This represents a data type for properties. This is an abstract class;
@@ -209,6 +212,50 @@ public abstract class DataType
             PropertyValueParsingException;
 
     /**
+     * Emit String representation of a null PropertyValue of this PropertyType.
+     *
+     * @param representation the representation scheme
+     * @param context the StringRepresentationContext of this object
+     * @param pars collects parameters that may influence the String representation
+     * @return the String representation
+     */
+    public String nullValueStringRepresentation(
+            StringRepresentation           representation,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
+    {
+        PropertyValue defaultValue = instantiate();
+
+        Object editVariable;
+        Object meshObject;
+        Object propertyType;
+        if( pars != null ) {
+            editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
+            meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
+            propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+        } else {
+            editVariable = null;
+            meshObject   = null;
+            propertyType = null;
+        }
+
+        return representation.formatEntry(
+                defaultValue.getClass(),
+                NULL_ENTRY,
+                pars,
+        /* 0 */ editVariable,
+        /* 1 */ meshObject,
+        /* 2 */ propertyType,
+        /* 3 */ this,
+        /* 4 */ PropertyValue.toStringRepresentation(
+                        defaultValue,
+                        representation.getStringRepresentationDirectory().get( SimpleStringRepresentationDirectory.TEXT_PLAIN_NAME ),
+                        context,
+                        pars ),
+        /* 5 */ NULL_VALUE_STRING );
+     }
+
+    /**
      * The supertype of this DataType (if any).
      */
     protected DataType theSupertype;
@@ -241,10 +288,20 @@ public abstract class DataType
     /**
      * String constant used in our subclasses in order to avoid using up more memory than necessary.
      */
-    public static final String CLOSE_PAREN_STRING = " )";
+    public static final String CLOSE_PARENTHESIS_STRING = " )";
 
     /**
-     * The default entry in the resouce files, prefixed by the StringRepresentation's prefix.
+     * The default entry in the resource files for a DataType, prefixed by the StringRepresentation's prefix.
      */
     public static final String DEFAULT_ENTRY = "Type";
+
+    /**
+     * The default entry in the resource files for a null value of this DataType, prefixed by the StringRepresentation's prefix.
+     */
+    public static final String NULL_ENTRY = "Null";
+
+    /**
+     * This weird character string indicates "null".
+     */
+    public static final String NULL_VALUE_STRING = "!@NUlL#$";
 }

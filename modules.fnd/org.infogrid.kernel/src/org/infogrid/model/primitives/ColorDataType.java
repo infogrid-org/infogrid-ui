@@ -185,34 +185,33 @@ public final class ColorDataType
         throws
             PropertyValueParsingException
     {
+        if( NULL_VALUE_STRING.equals( s )) {
+            return null;
+        }
         try {
             Object [] found = representation.parseEntry( ColorValue.class, ColorValue.DEFAULT_ENTRY, s );
 
             ColorValue ret;
 
             switch( found.length ) {
-                case 1:
+                case 7:
                     ret = ColorValue.create(
-                            ((Long) found[0]).intValue());
+                            ((Long) found[4]).intValue(),
+                            ((Long) found[5]).intValue(),
+                            ((Long) found[6]).intValue() );
                     break;
 
-                case 3:
+                case 8:
+                case 9:
                     ret = ColorValue.create(
-                            ((Long) found[0]).intValue(),
-                            ((Long) found[1]).intValue(),
-                            ((Long) found[2]).intValue() );
-                    break;
-
-                case 4:
-                    ret = ColorValue.create(
-                            ((Long) found[0]).intValue(),
-                            ((Long) found[1]).intValue(),
-                            ((Long) found[2]).intValue(),
-                            ((Long) found[3]).intValue() );
+                            ((Long) found[4]).intValue(),
+                            ((Long) found[5]).intValue(),
+                            ((Long) found[6]).intValue(),
+                            found[7] != null ? ((Long) found[7]).intValue() : 255 );
                     break;
 
                 default:
-                    throw new PropertyValueParsingException( this, representation, null, s );
+                    throw new PropertyValueParsingException( this, representation, s );
             }
 
             return ret;
@@ -221,7 +220,7 @@ public final class ColorDataType
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
         } catch( ClassCastException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, null, ex );
+            throw new PropertyValueParsingException( this, representation, s, ex );
         }
     }
 

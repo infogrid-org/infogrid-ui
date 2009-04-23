@@ -31,6 +31,8 @@ import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
   * Implementation of a value-holding property of an AttributableMeshObjectType.
@@ -420,6 +422,22 @@ public class MPropertyType
         return theDataType.fromStringRepresentation( representation, s );
     }
     
+    /**
+     * Emit String representation of a null PropertyValue of this PropertyType.
+     *
+     * @param representation the representation scheme
+     * @param context the StringRepresentationContext of this object
+     * @param pars collects parameters that may influence the String representation
+     * @return the String representation
+     */
+    public String nullValueStringRepresentation(
+            StringRepresentation           representation,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
+    {
+        return theDataType.nullValueStringRepresentation( representation, context, pars );
+    }
+
     /**
      * Dump this object.
      *
