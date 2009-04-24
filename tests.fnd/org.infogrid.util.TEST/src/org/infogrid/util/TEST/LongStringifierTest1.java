@@ -48,10 +48,10 @@ public class LongStringifierTest1
         
         checkEquals( String.valueOf( data1a ), res1a, "not the same" );
 
-        Long temp = str1.unformat( res1a );
+        Long temp = str1.unformat( res1a, null );
         checkEquals( temp.intValue(), data1a, "Wrong found value" );
 
-        Iterator<StringifierParsingChoice<Long>> iter1    = str1.parsingChoiceIterator( res1a, 0, res1a.length(), Integer.MAX_VALUE, true );
+        Iterator<StringifierParsingChoice<Long>> iter1    = str1.parsingChoiceIterator( res1a, 0, res1a.length(), Integer.MAX_VALUE, true, null );
         StringifierParsingChoice<Long> []        choices1 = (StringifierParsingChoice<Long> []) ArrayHelper.copyIntoNewArray( iter1, StringifierParsingChoice.class );
         
         checkEquals( choices1.length, 1, "Wrong number of choices" );
@@ -59,7 +59,7 @@ public class LongStringifierTest1
         checkEquals( choices1[0].getEndIndex(),   res1a.length(), "Wrong end index" );
 
         String res1b = "123"; // something entirely different
-        temp = str1.unformat( res1b );
+        temp = str1.unformat( res1b, null );
         checkEquals( temp.toString(), res1b, "Wrong found value" );
         
         //
@@ -68,7 +68,7 @@ public class LongStringifierTest1
         LongStringifier str2   = LongStringifier.create( );
         String          res2a  = String.valueOf( data2a );
 
-        Iterator<StringifierParsingChoice<Long>> iter2    = str2.parsingChoiceIterator( res2a, 0, res2a.length(), Integer.MAX_VALUE, false );
+        Iterator<StringifierParsingChoice<Long>> iter2    = str2.parsingChoiceIterator( res2a, 0, res2a.length(), Integer.MAX_VALUE, false, null );
         StringifierParsingChoice<Long> []        choices2 = (StringifierParsingChoice<Long> []) ArrayHelper.copyIntoNewArray( iter2, StringifierParsingChoice.class );
         checkEquals( choices2.length, res2a.length()-1, "Wrong number of choices" ); // -1 because of the minus
         for( int i=0 ; i<choices2.length ; ++i ) {
@@ -83,7 +83,7 @@ public class LongStringifierTest1
         }
 
         final int MAX = 4;
-        iter2 = str2.parsingChoiceIterator( res2a, 0, res2a.length(), MAX, false );
+        iter2 = str2.parsingChoiceIterator( res2a, 0, res2a.length(), MAX, false, null );
         choices2 = ArrayHelper.copyIntoNewArray( iter2, StringifierParsingChoice.class );
         checkEquals( choices2.length, MAX, "Wrong number of choices" );
         for( int i=0 ; i<choices2.length ; ++i ) {

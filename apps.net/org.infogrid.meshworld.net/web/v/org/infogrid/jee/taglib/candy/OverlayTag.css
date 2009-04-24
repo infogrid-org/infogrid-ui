@@ -1,5 +1,5 @@
 div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
-    position: absolute;
+    position: fixed;
     left: 0px;
     top: 0px;
     width: 100%;
@@ -14,11 +14,12 @@ div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
 }
 div.org-infogrid-jee-taglib-candy-OverlayTag {
     z-index: 11;
-    position: absolute;
-    top: 50px;
-    right: 100px;
+    position: fixed;
+    top: 30%;
+    left: 50%;
     -moz-border-radius: 20px;
     width: 400px;
+    margin-left: -200px;
     padding: 25px;
     background: #ffffff;
     display: none;
@@ -30,6 +31,9 @@ div.org-infogrid-jee-taglib-candy-OverlayTag  > * {
 div.org-infogrid-jee-taglib-candy-OverlayTag h2 {
     margin-top: 0;
     color: rgb(0,80,144);
+}
+div.org-infogrid-jee-taglib-candy-OverlayTag td.dialog-fields > input {
+    width: 95%;
 }
 div.org-infogrid-jee-taglib-candy-OverlayTag table.dialog-buttons {
     border-top: 1px dotted #808080;

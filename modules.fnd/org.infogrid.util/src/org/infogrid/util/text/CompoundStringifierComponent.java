@@ -21,10 +21,8 @@ import org.infogrid.util.ArrayFacade;
  * A component in the CompoundStringifier. This is not quite symmetric: the <code>format</code> argument
  * takes all arguments of the CompoundStringifier (and picks out the ones that apply), while the
  * Iterator only returns this CompoundStringifierComponent's contribution.
- * 
- * @param <T> the type of the Objects to be stringified
  */
-public interface CompoundStringifierComponent<T>
+public interface CompoundStringifierComponent
 {
     /**
      * Format zero or one Objects in the ArrayFacade.
@@ -36,7 +34,7 @@ public interface CompoundStringifierComponent<T>
      */
     public String format(
             String                         soFar,
-            ArrayFacade<T>                 arg,
+            ArrayFacade<Object>            arg,
             StringRepresentationParameters pars );
     
     /**
@@ -48,12 +46,14 @@ public interface CompoundStringifierComponent<T>
      * @param max the maximum number of choices to be returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
-    public Iterator<? extends StringifierParsingChoice<? extends T>> parsingChoiceIterator(
-            String  rawString,
-            int     startIndex,
-            int     endIndex,
-            int     max,
-            boolean matchAll );
+    public Iterator<? extends StringifierParsingChoice<?>> parsingChoiceIterator(
+            String                     rawString,
+            int                        startIndex,
+            int                        endIndex,
+            int                        max,
+            boolean                    matchAll,
+            StringifierUnformatFactory factory );
 }

@@ -8,16 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
 
+import java.util.Iterator;
 import org.infogrid.util.ArrayFacade;
 import org.infogrid.util.ResourceHelper;
-
-import java.util.Iterator;
 
 /**
  * Iterator for a CompoundStringifier. This is basically an iterative implementation of a
@@ -25,9 +24,9 @@ import java.util.Iterator;
  * 
  * @param <T> the type of the Objects to be stringified
  */
-class CompoundStringifierIterator<T>
+class CompoundStringifierIterator
         implements
-            Iterator<StringifierParsingChoice<ArrayFacade<T>>>
+            Iterator<StringifierParsingChoice<ArrayFacade<Object>>>
 {
     /**
      * Constructor.
@@ -39,15 +38,17 @@ class CompoundStringifierIterator<T>
      * @param endIndex the end index (exclusive) of the String to parse
      * @param max the maximum number of elements to return
      * @param matchAll if true, only return StringifierParsingChoice that consume the entire String
+     * @param factory the factory needed to create the parsed values, if any
      */
     public CompoundStringifierIterator(
-            CompoundStringifier<T>             stringifier,
-            CompoundStringifierComponent<T> [] components,
-            String  rawString,
-            int     startIndex,
-            int     endIndex,
-            int     max,
-            boolean matchAll )
+            CompoundStringifier             stringifier,
+            CompoundStringifierComponent [] components,
+            String                          rawString,
+            int                             startIndex,
+            int                             endIndex,
+            int                             max,
+            boolean                         matchAll,
+            StringifierUnformatFactory      factory )
     {
         theStringifier  = stringifier;
         theComponents   = components;
@@ -56,6 +57,7 @@ class CompoundStringifierIterator<T>
         theEndIndex     = endIndex;
         theMax          = max;
         theMatchAll     = matchAll;
+        theFactory      = factory;
         
         initializeIteratorsAndStatus();
         
@@ -67,7 +69,8 @@ class CompoundStringifierIterator<T>
                 0,
                 theRawString.length(),
                 theChildMax,
-                theComponents.length == theDepth+1 ); // first one is the last one
+                theComponents.length == theDepth+1, // first one is the last one
+                theFactory );
         goNext();
     }
     
@@ -97,9 +100,9 @@ class CompoundStringifierIterator<T>
      *
      * @return the next StringifierParsingChoice
      */
-    public StringifierParsingChoice<ArrayFacade<T>> next()
+    public StringifierParsingChoice<ArrayFacade<Object>> next()
     {
-        StringifierParsingChoice<ArrayFacade<T>> ret = theNext;
+        StringifierParsingChoice<ArrayFacade<Object>> ret = theNext;
         
         goNext();
         
@@ -119,7 +122,7 @@ class CompoundStringifierIterator<T>
                     // last component
                     if( !theMatchAll || theStatus[theDepth].getEndIndex() == theRawString.length() ) {
                         // found
-                        theNext = new CompoundStringifierChildChoice<T>(
+                        theNext = new CompoundStringifierChildChoice(
                                 theStringifier,
                                 theStatus.clone(),
                                 0,
@@ -134,7 +137,8 @@ class CompoundStringifierIterator<T>
                             theStatus[theDepth-1].getEndIndex(),
                             theRawString.length(),
                             theChildMax,
-                            theMatchAll && ( theDepth == theIterators.length-1 ) ? true : false );
+                            theMatchAll && ( theDepth == theIterators.length-1 ) ? true : false,
+                            theFactory );
                 }
             }
             --theDepth;
@@ -156,12 +160,12 @@ class CompoundStringifierIterator<T>
      * The Stringifier this Iterator belongs to. Making this explicit seems easier than a non-static inner class
      * with all these generics.
      */
-    protected CompoundStringifier<T> theStringifier;
+    protected CompoundStringifier theStringifier;
     
     /**
      * The CompoundStringifierComponent inside the stringifier to which this Iterator belongs to.
      */
-    protected CompoundStringifierComponent<T> [] theComponents;
+    protected CompoundStringifierComponent [] theComponents;
 
     /**
      * The String being parsed.
@@ -194,6 +198,11 @@ class CompoundStringifierIterator<T>
     protected boolean theMatchAll;
     
     /**
+     * The factory needed to create the parsed values, if any.
+     */
+    protected StringifierUnformatFactory theFactory;
+
+    /**
      * Reflects the current depth of the state of the search algorithm.
      */
     protected int theDepth;
@@ -201,7 +210,7 @@ class CompoundStringifierIterator<T>
     /**
      * The current child iterators, ordered from left to right.
      */
-    protected Iterator<? extends StringifierParsingChoice<? extends T>> [] theIterators;
+    protected Iterator<? extends StringifierParsingChoice<?>> [] theIterators;
     
     /**
      * The most-recently returned result of the child iterators, in same sequence as theIterators.
@@ -211,8 +220,8 @@ class CompoundStringifierIterator<T>
     /**
      * The next result to return from this Iterator.
      */
-    protected StringifierParsingChoice<ArrayFacade<T>> theNext;
-    
+    protected StringifierParsingChoice<ArrayFacade<Object>> theNext;
+
     /**
      * The ResourceHelper.
      */

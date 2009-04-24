@@ -14,8 +14,6 @@
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.StringHelper;
-
 /**
  * Stringifies a URL argument by prepending & or ? correctly.
  */

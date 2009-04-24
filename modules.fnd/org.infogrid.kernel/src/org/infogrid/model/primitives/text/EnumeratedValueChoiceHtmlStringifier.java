@@ -14,45 +14,48 @@
 
 package org.infogrid.model.primitives.text;
 
-import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.EnumeratedValue;
 import org.infogrid.util.text.AbstractStringifier;
-import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
- * A Stringifier to stringify PropertyValues into Strings. The reverse is currently NOT supported.
+ * Stringifies the domain of an EnumeratedValue's EnumeratedDataType, highlighting the EnumeratedValue.
  */
-public class PropertyValueStringifier
+public class EnumeratedValueChoiceHtmlStringifier
         extends
-            AbstractStringifier<PropertyValue>
+            AbstractStringifier<EnumeratedValue>
 {
     /**
      * Factory method.
      *
-     * @param rep the StringRepresentation to use
-     * @param context the StringRepresentationContext to use
-     * @return the created PropertyValueStringifier
+     * @param tag the HTML tag to use
+     * @return the created EnumeratedValueStringifier
      */
-    public static PropertyValueStringifier create(
-            StringRepresentation        rep,
-            StringRepresentationContext context )
+    public static EnumeratedValueChoiceHtmlStringifier create(
+            String tag )
     {
-        return new PropertyValueStringifier( rep, context );
+        return new EnumeratedValueChoiceHtmlStringifier( tag );
     }
 
     /**
      * Private constructor for subclasses only, use factory method.
      *
-     * @param rep the StringRepresentation to use
-     * @param context the StringRepresentationContext to use
+     * @param tag the HTML tag to use
      */
-    protected PropertyValueStringifier(
-            StringRepresentation        rep,
-            StringRepresentationContext context )
+    protected EnumeratedValueChoiceHtmlStringifier(
+            String tag )
     {
-        theStringRepresentation = rep;
-        theContext              = context;
+        theTag = tag;
+    }
+
+    /**
+     * Obtain the HTML tag.
+     *
+     * @return the HTML tag
+     */
+    public String getTag()
+    {
+        return theTag;
     }
 
     /**
@@ -65,15 +68,28 @@ public class PropertyValueStringifier
      */
     public String format(
             String                         soFar,
-            PropertyValue                  arg,
+            EnumeratedValue                arg,
             StringRepresentationParameters pars )
     {
-        String ret = PropertyValue.toStringRepresentationOrNull(
-                arg,
-                theStringRepresentation,
-                theContext,
-                pars );
-        return ret;
+        EnumeratedValue [] values = arg.getDataType().getDomain();
+        StringBuilder      ret    = new StringBuilder();
+
+        for( int i=0 ; i<values.length ; ++i ) {
+            String name        = values[i].value();
+            String userVisible = values[i].getUserVisibleName().value();
+
+            ret.append( "<" ).append( theTag );
+            ret.append( " value=\"" ).append( name );
+
+            if( arg == values[i] ) {
+                ret.append( "\" selected=\"true" );
+            }
+            ret.append( "\">" );
+            ret.append( userVisible );
+            ret.append( "</" ).append( theTag ).append( ">\n" );
+
+        }
+        return potentiallyShorten( ret.toString(), pars );
     }
 
     /**
@@ -93,20 +109,11 @@ public class PropertyValueStringifier
         throws
             ClassCastException
     {
-        if( arg == null ) {
-            return "null";
-        } else {
-            return format( soFar, (PropertyValue) arg, pars );
-        }
+        return format( soFar, (EnumeratedValue) arg, pars );
     }
 
     /**
-     * The StringRepresentation to use. This recursion should be handled better. (FIXME)
+     * The HTML tag to use.
      */
-    protected StringRepresentation theStringRepresentation;
-
-    /**
-     * The StringRepresentationContext to use,
-     */
-    protected StringRepresentationContext theContext;
+    protected String theTag;
 }

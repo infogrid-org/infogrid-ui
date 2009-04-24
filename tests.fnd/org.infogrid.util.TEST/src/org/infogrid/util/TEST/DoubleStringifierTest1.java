@@ -48,10 +48,10 @@ public class DoubleStringifierTest1
         
         checkEquals( String.valueOf( data1a ), res1a, "not the same" );
 
-        Double temp = str1.unformat( res1a );
+        Double temp = str1.unformat( res1a, null );
         checkEquals( temp.doubleValue(), data1a, "Wrong found value" );
 
-        Iterator<StringifierParsingChoice<Double>> iter1    = str1.parsingChoiceIterator( res1a, 0, res1a.length(), Integer.MAX_VALUE, true );
+        Iterator<StringifierParsingChoice<Double>> iter1    = str1.parsingChoiceIterator( res1a, 0, res1a.length(), Integer.MAX_VALUE, true, null );
         StringifierParsingChoice<Double> []        choices1 = (StringifierParsingChoice<Double> []) ArrayHelper.copyIntoNewArray( iter1, StringifierParsingChoice.class );
         
         checkEquals( choices1.length, 1, "Wrong number of choices" );
@@ -59,7 +59,7 @@ public class DoubleStringifierTest1
         checkEquals( choices1[0].getEndIndex(),   res1a.length(), "Wrong end index" );
 
         String res1b = "1234567.1"; // something entirely different
-        temp = str1.unformat( res1b );
+        temp = str1.unformat( res1b, null );
         checkEquals( temp.toString(), res1b, "Wrong found value" );
         
         //
@@ -68,7 +68,7 @@ public class DoubleStringifierTest1
         DoubleStringifier str2   = DoubleStringifier.create( );
         String            res2a  = String.valueOf( data2a );
 
-        Iterator<StringifierParsingChoice<Double>> iter2    = str2.parsingChoiceIterator( res2a, 0, res2a.length(), Integer.MAX_VALUE, false );
+        Iterator<StringifierParsingChoice<Double>> iter2    = str2.parsingChoiceIterator( res2a, 0, res2a.length(), Integer.MAX_VALUE, false, null );
         StringifierParsingChoice<Double> []        choices2 = (StringifierParsingChoice<Double> []) ArrayHelper.copyIntoNewArray( iter2, StringifierParsingChoice.class );
         checkEquals( choices2.length, res2a.length()-2, "Wrong number of choices" ); // -2 because of the minus and the decimal point
         for( int i=0 ; i<choices2.length ; ++i ) {
@@ -83,7 +83,7 @@ public class DoubleStringifierTest1
         }
 
         final int MAX = 4;
-        iter2 = str2.parsingChoiceIterator( res2a, 0, res2a.length(), MAX, false );
+        iter2 = str2.parsingChoiceIterator( res2a, 0, res2a.length(), MAX, false, null );
         choices2 = (StringifierParsingChoice<Double> []) ArrayHelper.copyIntoNewArray( iter2, StringifierParsingChoice.class );
         checkEquals( choices2.length, MAX, "Wrong number of choices" );
         for( int i=0 ; i<choices2.length ; ++i ) {

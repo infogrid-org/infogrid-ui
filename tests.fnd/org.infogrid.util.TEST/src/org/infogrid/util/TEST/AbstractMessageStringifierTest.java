@@ -60,7 +60,7 @@ public abstract class AbstractMessageStringifierTest
         map1.put( "stacktrace",     StacktraceStringifier.create() );
         map1.put( "htmlstacktrace", HtmlStacktraceStringifier.create() );
 
-        MessageStringifier<Object> str1 = AnyMessageStringifier.create( current.theFormatString, map1 );
+        MessageStringifier str1 = AnyMessageStringifier.create( current.theFormatString, map1 );
 
         checkEquals( str1.getMessageComponents().length, current.theCorrectComponents, "Wrong number of child stringifiers" );
 
@@ -79,7 +79,7 @@ public abstract class AbstractMessageStringifierTest
         if( doParse ) {
             getLog().debug( "Iterating over parse results" );
 
-            Iterator<StringifierParsingChoice<ArrayFacade<Object>>> iter = str1.parsingChoiceIterator( result1a, 0, result1a.length(), result1a.length(), true );
+            Iterator<StringifierParsingChoice<ArrayFacade<Object>>> iter = str1.parsingChoiceIterator( result1a, 0, result1a.length(), result1a.length(), true, null );
             while( iter.hasNext() ) {
                 StringifierParsingChoice<ArrayFacade<Object>> childChoice = iter.next();
                 getLog().debug( "found: " + childChoice );
@@ -94,7 +94,7 @@ public abstract class AbstractMessageStringifierTest
 
             getLog().debug( "Now parsing" );
 
-            Object [] result1b = str1.unformat( result1a ).getArray();
+            Object [] result1b = str1.unformat( result1a, null ).getArray();
             checkEqualsInSequence( current.theData, result1b, "wrong parsing result" );
         }
     }

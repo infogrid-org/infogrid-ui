@@ -277,7 +277,7 @@ public class DefaultAnetMeshObjectIdentifierFactory
         for( String entry : entriesToTry1 ) {
 
             try {
-                representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, entry, s );
+                representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, entry, s, this );
                 return fromExternalForm( "" );
 
             } catch( StringRepresentationParseException ex ) {
@@ -294,7 +294,7 @@ public class DefaultAnetMeshObjectIdentifierFactory
 
         for( String entry : entriesToTry2 ) {
             try {
-                Object [] found = representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, entry, s );
+                Object [] found = representation.parseEntry( DefaultAnetMeshObjectIdentifier.class, entry, s, this );
 
                 if( found.length == 1 ) {
                     DefaultAnetMeshObjectIdentifier ret = obtain( theMeshBaseIdentifier, (String) found[0], true );

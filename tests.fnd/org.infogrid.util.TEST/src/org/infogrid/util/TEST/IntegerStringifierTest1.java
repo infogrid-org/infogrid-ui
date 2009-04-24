@@ -48,10 +48,10 @@ public class IntegerStringifierTest1
         
         checkEquals( String.valueOf( data1a ), res1a, "not the same" );
 
-        Integer temp = str1.unformat( res1a );
+        Integer temp = str1.unformat( res1a, null );
         checkEquals( temp.intValue(), data1a, "Wrong found value" );
 
-        Iterator<StringifierParsingChoice<Integer>> iter1    = str1.parsingChoiceIterator( res1a, 0, res1a.length(), Integer.MAX_VALUE, true );
+        Iterator<StringifierParsingChoice<Integer>> iter1    = str1.parsingChoiceIterator( res1a, 0, res1a.length(), Integer.MAX_VALUE, true, null );
         StringifierParsingChoice<Integer> []        choices1 = (StringifierParsingChoice<Integer> []) ArrayHelper.copyIntoNewArray( iter1, StringifierParsingChoice.class );
         
         checkEquals( choices1.length, 1, "Wrong number of choices" );
@@ -59,7 +59,7 @@ public class IntegerStringifierTest1
         checkEquals( choices1[0].getEndIndex(),   res1a.length(), "Wrong end index" );
 
         String res1b = "123"; // something entirely different
-        temp = str1.unformat( res1b );
+        temp = str1.unformat( res1b, null );
         checkEquals( temp.toString(), res1b, "Wrong found value" );
     }
 

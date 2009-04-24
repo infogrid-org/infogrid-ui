@@ -294,7 +294,7 @@ public class DefaultNetMeshBaseIdentifierFactory
             StringRepresentationParseException
     {
         try {
-            Object [] found = representation.parseEntry( NetMeshBaseIdentifier.class, NetMeshBaseIdentifier.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( NetMeshBaseIdentifier.class, NetMeshBaseIdentifier.DEFAULT_ENTRY, s, this );
 
             NetMeshBaseIdentifier ret;
             switch( found.length ) {

@@ -189,7 +189,7 @@ public final class ColorDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( ColorValue.class, ColorValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( ColorValue.class, ColorValue.DEFAULT_ENTRY, s, this );
 
             ColorValue ret;
 

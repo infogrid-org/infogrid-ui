@@ -195,7 +195,7 @@ public final class TimePeriodDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( TimePeriodValue.class, TimePeriodValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( TimePeriodValue.class, TimePeriodValue.DEFAULT_ENTRY, s, this );
 
             TimePeriodValue ret;
 

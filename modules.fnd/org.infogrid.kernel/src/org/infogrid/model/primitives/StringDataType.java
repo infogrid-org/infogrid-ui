@@ -193,7 +193,7 @@ public final class StringDataType
         }
 
         try {
-            Object [] found = representation.parseEntry( StringValue.class, StringValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( StringValue.class, StringValue.DEFAULT_ENTRY, s, this );
 
             StringValue ret;
             switch( found.length ) {

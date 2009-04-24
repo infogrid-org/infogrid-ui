@@ -179,7 +179,7 @@ public final class TimeStampDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( TimeStampValue.class, TimeStampValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( TimeStampValue.class, TimeStampValue.DEFAULT_ENTRY, s, this );
 
             TimeStampValue ret;
 

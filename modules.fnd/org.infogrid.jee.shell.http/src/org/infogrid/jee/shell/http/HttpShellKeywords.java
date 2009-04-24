@@ -91,4 +91,21 @@ public interface HttpShellKeywords
      * not throw an exception if its execution failed.
      */
     public static final String THROW_TAG = SEPARATOR + "throw";
+
+    /**
+     * Keyword indicating whether the commands shell be performed or ignored. This makes it
+     * easier to develop HTML forms that have a cancel button.
+     */
+    public static final String SUBMIT_TAG = "submit";
+
+    /**
+     * Optimization to also have this one around.
+     */
+    public static final String FULL_SUBMIT_TAG = PREFIX + SUBMIT_TAG;
+
+    /**
+     * Value of the SUBMIT_TAG keyword that indicates "perform operations". All other values,
+     * if the SUBMIT_TAG is given, indicate "ignore commands".
+     */
+    public static final String SUBMIT_COMMIT_VALUE = "commit";
 }

@@ -180,13 +180,16 @@ public class SimpleStringRepresentation
      * @param classOfFormattedObject the class of the formatted object
      * @param entry the entry (prefixed by theName) of the resource
      * @param s the to-be-parsed String
+     * @param factory optional factory object that may be required to instantiate one or more of the values. This is highly
+     *        dependent on the context of use of this method.
      * @return the found values
      * @throws StringRepresentationParseException thrown if the String could not be parsed.
      */
     public Object [] parseEntry(
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
-            String                                   s )
+            String                                   s,
+            StringifierUnformatFactory               factory )
         throws
             StringRepresentationParseException
     {
@@ -197,7 +200,7 @@ public class SimpleStringRepresentation
             try {
                 AnyMessageStringifier stringifier = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
 
-                Object [] ret = stringifier.unformat( s ).getArray();
+                Object [] ret = stringifier.unformat( s, factory ).getArray();
                 return ret;
 
             } catch( StringifierParseException ex ) {
@@ -208,7 +211,7 @@ public class SimpleStringRepresentation
             }
         }
         if( theDelegate != null ) {
-            return theDelegate.parseEntry( classOfFormattedObject, entry, s );
+            return theDelegate.parseEntry( classOfFormattedObject, entry, s, factory );
         }
         Object ignore = rh.getResourceString( theName + entry ); // will emit warning
         return new Object[0];

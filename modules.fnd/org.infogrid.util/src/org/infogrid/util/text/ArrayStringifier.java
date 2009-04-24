@@ -124,7 +124,7 @@ public class ArrayStringifier<T>
         theStart       = start;
         theMiddle      = middle;
         theEnd         = end;
-        theEmptyString = empty;
+        theEmpty       = empty;
     }
     
     /**
@@ -158,6 +158,16 @@ public class ArrayStringifier<T>
     }
 
     /**
+     * Obtain the empty String, if any.
+     *
+     * @return the empty String, if any
+     */
+    public String getEmpty()
+    {
+        return theEmpty;
+    }
+
+    /**
      * Format an Object using this Stringifier.
      *
      * @param soFar the String so far, if any
@@ -171,8 +181,8 @@ public class ArrayStringifier<T>
             StringRepresentationParameters pars )
     {
         if( arg == null || arg.getArray().length == 0 ) {
-            if( theEmptyString != null ) {
-                return theEmptyString;
+            if( theEmpty != null ) {
+                return theEmpty;
             } else if( theStart != null ) {
                 if( theEnd != null ) {
                     return theStart+theEnd;
@@ -235,15 +245,18 @@ public class ArrayStringifier<T>
      * Parse out the Object in rawString that were inserted using this Stringifier.
      *
      * @param rawString the String to parse
+     * @param factory the factory needed to create the parsed values, if any
      * @return the found Object
      * @throws StringifierParseException thrown if a parsing problem occurred
      */
+    @Override
     public ArrayFacade<T> unformat(
-            String rawString )
+            String                     rawString,
+            StringifierUnformatFactory factory )
         throws
             StringifierParseException
     {
-        Iterator<StringifierParsingChoice<ArrayFacade<T>>> iter  = parsingChoiceIterator( rawString, 0, rawString.length(), 1, true ); // only need one
+        Iterator<StringifierParsingChoice<ArrayFacade<T>>> iter  = parsingChoiceIterator( rawString, 0, rawString.length(), 1, true, factory ); // only need one
         StringifierParsingChoice<ArrayFacade<T>>           found = null;
 
         while( iter.hasNext() ) {
@@ -274,14 +287,17 @@ public class ArrayStringifier<T>
      * @param max the maximum number of choices to be returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
+    @Override
     public Iterator<StringifierParsingChoice<ArrayFacade<T>>> parsingChoiceIterator(
-            String  rawString,
-            int     startIndex,
-            int     endIndex,
-            int     max,
-            boolean matchAll )
+            String                     rawString,
+            int                        startIndex,
+            int                        endIndex,
+            int                        max,
+            boolean                    matchAll,
+            StringifierUnformatFactory factory )
     {
 //        if( theStart != null && !theStart.regionMatches( 0, rawString, startIndex, theStart.length() )) {
 //            return new ZeroElementIterator<StringifierParsingChoice<ArrayFacade<T>>>();
@@ -316,7 +332,7 @@ public class ArrayStringifier<T>
     /**
      * The String to emit if the array if empty. May be null, in which case it is assumed to the theStart+theEnd.
      */
-    protected String theEmptyString;
+    protected String theEmpty;
     
     /**
      * The delegate Stringifier to which all element stringifications are delegated.

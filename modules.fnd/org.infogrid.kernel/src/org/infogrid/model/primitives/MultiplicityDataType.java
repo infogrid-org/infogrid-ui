@@ -179,7 +179,7 @@ public class MultiplicityDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( MultiplicityValue.class, MultiplicityValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( MultiplicityValue.class, MultiplicityValue.DEFAULT_ENTRY, s, this );
 
             switch( found.length ) {
                 case 4:

@@ -15,7 +15,6 @@
 package org.infogrid.util.text;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Helps find a StringRepresentationDirectory. The found StringRepresentationDirectory
@@ -66,9 +65,9 @@ public class StringRepresentationDirectorySingleton
      */
     protected static StringRepresentationDirectory instantiateDefaultSingleton()
     {
-        Map<String,Stringifier<? extends Object>> plainMap   = new HashMap<String,Stringifier<? extends Object>>();
-        Map<String,Stringifier<? extends Object>> htmlMap    = new HashMap<String,Stringifier<? extends Object>>();
-        Map<String,Stringifier<? extends Object>> urlMap     = new HashMap<String,Stringifier<? extends Object>>();
+        HashMap<String,Stringifier<? extends Object>> plainMap = new HashMap<String,Stringifier<? extends Object>>();
+        HashMap<String,Stringifier<? extends Object>> htmlMap  = new HashMap<String,Stringifier<? extends Object>>();
+        HashMap<String,Stringifier<? extends Object>> urlMap   = new HashMap<String,Stringifier<? extends Object>>();
 
         plainMap.put(   "int",            LongStringifier.create() );
         // html: same as plain
@@ -139,7 +138,7 @@ public class StringRepresentationDirectorySingleton
         // url:  same as plain
 
         plainMap.put(   "list",           ListStringifier.create( ", " ));
-        htmlMap.put(    "list",           ListStringifier.create( "<ul><li>", "</li>\n<li>", "</li></ul>", "<ul class=\"empty\"></ul>" ));
+        htmlMap.put(    "list",           ListStringifier.create( "<li>", "</li>\n<li>", "</li>", "" ));
         // url:  same as plain
 
         theSingleton = new StringRepresentationDirectorySingleton(); // not the factory method here
@@ -148,20 +147,26 @@ public class StringRepresentationDirectorySingleton
                 theSingleton,
                 StringRepresentationDirectory.TEXT_PLAIN_NAME,
                 plainMap );
+
+        @SuppressWarnings("unchecked")
         SimpleStringRepresentation editPlain = SimpleStringRepresentation.create(
                 theSingleton,
                 StringRepresentationDirectory.EDIT_TEXT_PLAIN_NAME,
-                plainMap );
+                (HashMap<String,Stringifier<? extends Object>>) plainMap.clone() );
+
         SimpleStringRepresentation html = SimpleStringRepresentation.create(
                 theSingleton,
                 StringRepresentationDirectory.TEXT_HTML_NAME,
                 htmlMap,
                 plain );
+
+        @SuppressWarnings("unchecked")
         SimpleStringRepresentation editHtml = SimpleStringRepresentation.create(
                 theSingleton,
                 StringRepresentationDirectory.EDIT_TEXT_HTML_NAME,
-                htmlMap,
+                (HashMap<String,Stringifier<? extends Object>>) htmlMap.clone(),
                 plain );
+
         SimpleStringRepresentation url = SimpleStringRepresentation.create(
                 theSingleton,
                 StringRepresentationDirectory.TEXT_URL_NAME,

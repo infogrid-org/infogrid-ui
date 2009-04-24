@@ -437,7 +437,7 @@ public class IntegerDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( IntegerValue.class, IntegerValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( IntegerValue.class, IntegerValue.DEFAULT_ENTRY, s, this );
 
             IntegerValue ret;
 

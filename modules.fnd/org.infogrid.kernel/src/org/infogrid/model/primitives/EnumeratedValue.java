@@ -245,7 +245,7 @@ public final class EnumeratedValue
         /* 2 */ propertyType,
         /* 3 */ this,
         /* 4 */ theValue,
-        /* 5 */ theDataType,
+        /* 5 */ theDataType.getDomain(),
         /* 6 */ getUserVisibleName()        != null ? getUserVisibleName().value()        : null,
         /* 7 */ getUserVisibleDescription() != null ? getUserVisibleDescription().value() : null );
     }

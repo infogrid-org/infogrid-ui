@@ -92,7 +92,7 @@ public class DefaultMeshBaseIdentifierFactory
             StringRepresentationParseException
     {
         try {
-            Object [] found = representation.parseEntry( MeshBaseIdentifier.class, MeshBaseIdentifier.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( MeshBaseIdentifier.class, MeshBaseIdentifier.DEFAULT_ENTRY, s, this );
 
             MeshBaseIdentifier ret;
             switch( found.length ) {

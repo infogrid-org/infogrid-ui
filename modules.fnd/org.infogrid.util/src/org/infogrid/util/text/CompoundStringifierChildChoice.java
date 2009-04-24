@@ -22,9 +22,9 @@ import org.infogrid.util.logging.Dumper;
  * 
  * @param T the type of the Objects to be stringified
  */
-class CompoundStringifierChildChoice<T>
+class CompoundStringifierChildChoice
         extends
-            StringifierParsingChoice<ArrayFacade<T>>
+            StringifierParsingChoice<ArrayFacade<Object>>
 {
     /**
      * Constructor.
@@ -35,7 +35,7 @@ class CompoundStringifierChildChoice<T>
      * @param endIndex the endIndex of the String match (exclusive)
      */
     public CompoundStringifierChildChoice(
-            CompoundStringifier<T>           stringifier,
+            CompoundStringifier              stringifier,
             StringifierParsingChoice []      componentChoices,
             int                              startIndex,
             int                              endIndex )
@@ -53,7 +53,7 @@ class CompoundStringifierChildChoice<T>
      *
      * @return the Object parsed
      */
-    public ArrayFacade<T> unformat()
+    public ArrayFacade<Object> unformat()
     {
         return theStringifier.compoundUnformat( theComponentChoices );
     }
@@ -81,7 +81,7 @@ class CompoundStringifierChildChoice<T>
     /**
      * Pointer back to our CompoundStringifier. Somehow, the non-static inner class thing wasn't working.
      */
-    protected CompoundStringifier<T> theStringifier;
+    protected CompoundStringifier theStringifier;
 
     /**
      * The choices of the children.

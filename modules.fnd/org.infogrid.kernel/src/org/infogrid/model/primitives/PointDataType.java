@@ -190,7 +190,7 @@ public class PointDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( PointValue.class, PointValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( PointValue.class, PointValue.DEFAULT_ENTRY, s, this );
 
             PointValue ret;
             switch( found.length ) {

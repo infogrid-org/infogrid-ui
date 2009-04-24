@@ -43,7 +43,7 @@ public class IntegerStringifierTest3
         String             res2a  = String.valueOf( data2a );
 
         final int MAX = 4;
-        Iterator<StringifierParsingChoice<Integer>> iter2 = str2.parsingChoiceIterator( res2a, 0, res2a.length(), MAX, false );
+        Iterator<StringifierParsingChoice<Integer>> iter2 = str2.parsingChoiceIterator( res2a, 0, res2a.length(), MAX, false, null );
         StringifierParsingChoice<Integer> [] choices2 = ArrayHelper.copyIntoNewArray( iter2, StringifierParsingChoice.class );
         checkEquals( choices2.length, MAX, "Wrong number of choices" );
         for( int i=0 ; i<choices2.length ; ++i ) {

@@ -95,10 +95,13 @@ public class IntegerStringifier
      *
      * @param rawString the String to parse
      * @return the found Object
+     * @param factory the factory needed to create the parsed values, if any
      * @throws StringifierParseException thrown if a parsing problem occurred
      */
+    @Override
     public Integer unformat(
-            String rawString )
+            String                     rawString,
+            StringifierUnformatFactory factory )
         throws
             StringifierParseException
     {
@@ -128,14 +131,17 @@ public class IntegerStringifier
      * @param max the maximum number of choices to be returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
+    @Override
     public Iterator<StringifierParsingChoice<Integer>> parsingChoiceIterator(
-            final String  rawString,
-            final int     startIndex,
-            final int     endIndex,
-            final int     max,
-            final boolean matchAll )
+            final String                     rawString,
+            final int                        startIndex,
+            final int                        endIndex,
+            final int                        max,
+            final boolean                    matchAll,
+            final StringifierUnformatFactory factory )
     {
         if( matchAll ) {
             for( int i = 0 ; i < endIndex-startIndex ; ++i ) {

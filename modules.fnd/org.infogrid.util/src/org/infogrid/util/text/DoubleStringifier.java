@@ -89,11 +89,14 @@ public class DoubleStringifier
      * Parse out the Object in rawString that were inserted using this Stringifier.
      *
      * @param rawString the String to parse
+     * @param factory the factory needed to create the parsed values, if any
      * @return the found Object
      * @throws StringifierParseException thrown if a parsing problem occurred
      */
+    @Override
     public Double unformat(
-            String rawString )
+            String                     rawString,
+            StringifierUnformatFactory factory )
         throws
             StringifierParseException
     {
@@ -118,14 +121,17 @@ public class DoubleStringifier
      * @param max the maximum number of choices to be returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
+    @Override
     public Iterator<StringifierParsingChoice<Double>> parsingChoiceIterator(
-            final String  rawString,
-            final int     startIndex,
-            final int     endIndex,
-            final int     max,
-            final boolean matchAll )
+            final String               rawString,
+            final int                  startIndex,
+            final int                  endIndex,
+            final int                  max,
+            final boolean              matchAll,
+            StringifierUnformatFactory factory )
     {
         if( matchAll ) {
             try {

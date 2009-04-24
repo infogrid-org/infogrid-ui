@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,6 +21,7 @@ import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierUnformatFactory;
 
 /**
   * This represents a data type for properties. This is an abstract class;
@@ -35,6 +36,7 @@ import org.infogrid.util.text.StringRepresentationParameters;
 public abstract class DataType
         implements
             HasStringRepresentation,
+            StringifierUnformatFactory,
             Serializable
 {
     /**

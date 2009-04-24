@@ -23,8 +23,6 @@ import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
 import org.infogrid.jee.viewlet.probe.shadow.ShadowAwareAllMeshBasesViewlet;
 import org.infogrid.jee.viewlet.servlet.net.NetViewletDispatcherServlet;
-import org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet;
-import org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.proxy.Proxy;
@@ -80,8 +78,8 @@ public class MainNetMeshWorldViewletFactory
         
         // Type-based rules
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
-            ret.add( WikiObjectDisplayViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( WikiObjectEditViewlet.choice(    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
+            ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet",                ViewletFactoryChoice.BAD_MATCH_QUALITY ));
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));

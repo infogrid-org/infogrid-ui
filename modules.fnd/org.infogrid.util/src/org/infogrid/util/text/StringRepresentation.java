@@ -66,13 +66,16 @@ public interface StringRepresentation
      * @param classOfFormattedObject the class of the formatted object
      * @param entry the entry (prefixed by theName) of the resource
      * @param s the to-be-parsed String
+     * @param factory optional factory object that may be required to instantiate one or more of the values. This is highly
+     *        dependent on the context of use of this method.
      * @return the found values
      * @throws StringRepresentationParseException thrown if the String could not be parsed.
      */
     public Object [] parseEntry(
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
-            String                                   s )
+            String                                   s,
+            StringifierUnformatFactory               factory )
         throws
             StringRepresentationParseException;
 

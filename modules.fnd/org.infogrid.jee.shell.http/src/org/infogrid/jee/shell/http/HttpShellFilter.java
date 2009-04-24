@@ -121,7 +121,10 @@ public class HttpShellFilter
                 if(    SafeUnsafePostFilter.isSafePost( lidRequest )
                     || SafeUnsafePostFilter.mayBeSafeOrUnsafePost( lidRequest ))
                 {
-                    performFactoryOperations( lidRequest );
+                    String command = lidRequest.getPostArgument( FULL_SUBMIT_TAG );
+                    if( command == null || command.equals( SUBMIT_COMMIT_VALUE )) {
+                        performFactoryOperations( lidRequest );
+                    }
 
                 } else {
                     getLog().warn( "Ignoring unsafe POST " + lidRequest );
@@ -172,6 +175,9 @@ public class HttpShellFilter
                     continue; // skip all that aren't for us
                 }
                 String coreArg = arg.substring( PREFIX.length() );
+                if( coreArg.equals( SUBMIT_TAG )) {
+                    continue; // skip submit tag
+                }
                 if( coreArg.indexOf( SEPARATOR ) >= 0 ) {
                     continue; // skip all that aren't referring to the MeshObjects
                 }

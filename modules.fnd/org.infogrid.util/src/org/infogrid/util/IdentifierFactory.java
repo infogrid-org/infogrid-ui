@@ -16,11 +16,14 @@ package org.infogrid.util;
 
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationParseException;
+import org.infogrid.util.text.StringifierUnformatFactory;
 
 /**
  * An abstract factory for {@link Identifier Identifiers}.
  */
 public interface IdentifierFactory
+        extends
+            StringifierUnformatFactory
 {
     /**
      * Create an {@link Identifier} given its external form.

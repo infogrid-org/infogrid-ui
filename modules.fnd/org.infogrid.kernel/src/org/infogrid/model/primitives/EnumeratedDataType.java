@@ -21,6 +21,7 @@ import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierUnformatFactory;
 
 /**
   * An enumerated DataType for PropertyValues. It requires the explicit specification of
@@ -30,6 +31,7 @@ public class EnumeratedDataType
         extends
             DataType
         implements
+            StringifierUnformatFactory,
             CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
@@ -490,7 +492,9 @@ public class EnumeratedDataType
                 EnumeratedValue.class,
                 DEFAULT_ENTRY,
                 pars,
-                PropertyValue.toStringRepresentation( theDomain[0], rep, context, pars ),
+                getDefaultValue(),
+                // PropertyValue.toStringRepresentation( getDefaultValue(), rep, context, pars ),
+                this,
                 theDomain,
                 theSupertype );
     }
@@ -514,19 +518,13 @@ public class EnumeratedDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( EnumeratedValue.class, EnumeratedValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( EnumeratedValue.class, EnumeratedValue.DEFAULT_ENTRY, s, this );
 
             EnumeratedValue ret;
 
             switch( found.length ) {
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                    ret = selectOrNull( (String) found[4] );
-                    if( ret == null ) {
-                        ret = selectByUserVisibleName( (String) found[4] );
-                    }
+                case 4:
+                    ret = (EnumeratedValue) found[3];
                     break;
 
                 default:
@@ -538,9 +536,9 @@ public class EnumeratedDataType
         } catch( StringRepresentationParseException ex ) {
             throw new PropertyValueParsingException( this, representation, s, ex.getFormatString(), ex );
 
-        } catch( UnknownEnumeratedValueException ex ) {
-            throw new PropertyValueParsingException( this, representation, s, ex );
-
+//        } catch( UnknownEnumeratedValueException ex ) {
+//            throw new PropertyValueParsingException( this, representation, s, ex );
+//
         } catch( ClassCastException ex ) {
             throw new PropertyValueParsingException( this, representation, s, ex );
         }

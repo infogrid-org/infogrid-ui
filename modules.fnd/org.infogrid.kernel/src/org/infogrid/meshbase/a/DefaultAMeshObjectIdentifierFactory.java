@@ -83,7 +83,7 @@ public class DefaultAMeshObjectIdentifierFactory
         for( String entry : entriesToTry1 ) {
 
             try {
-                representation.parseEntry( DefaultAMeshObjectIdentifier.class, entry, s );
+                representation.parseEntry( DefaultAMeshObjectIdentifier.class, entry, s, this );
                 return fromExternalForm( "" );
 
             } catch( StringRepresentationParseException ex ) {
@@ -100,7 +100,7 @@ public class DefaultAMeshObjectIdentifierFactory
 
         for( String entry : entriesToTry2 ) {
             try {
-                Object [] found = representation.parseEntry( DefaultAMeshObjectIdentifier.class, entry, s );
+                Object [] found = representation.parseEntry( DefaultAMeshObjectIdentifier.class, entry, s, this );
 
                 if( found.length == 1 ) {
                     DefaultAMeshObjectIdentifier ret = fromExternalForm( (String) found[0] );

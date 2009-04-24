@@ -561,7 +561,7 @@ public final class BlobDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( BlobValue.class, "TextString", s );
+            Object [] found = representation.parseEntry( BlobValue.class, "TextString", s, this );
 
             BlobValue ret;
 

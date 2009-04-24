@@ -14,7 +14,6 @@
 
 package org.infogrid.modelbase;
 
-import java.net.URISyntaxException;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.util.IdentifierFactory;
 import org.infogrid.util.text.StringRepresentation;
@@ -42,7 +41,7 @@ public interface MeshTypeIdentifierFactory
      * @param representation the StringRepresentation in which this String is represented
      * @param s the String to parse
      * @return the created MeshObjectIdentifier
-     * @throws URISyntaxException thrown if the String could not be successfully parsed
+     * @throws StringRepresentationParseException thrown if the String could not be successfully parsed
      */
     public MeshTypeIdentifier fromStringRepresentation(
             StringRepresentation representation,

@@ -23,12 +23,10 @@ import org.infogrid.util.ArrayFacade;
  * By default, this class assumes that the child Stringifiers are ordered, and that the
  * result of a {@link #format format} operation is a concatenation of the child
  * Stringifiers' results of their respective {@link #format format} operation.
- * 
- * @param <T> the type of the Objects to be stringified
  */
-public abstract class CompoundStringifier<T>
+public abstract class CompoundStringifier
         implements
-            Stringifier<ArrayFacade<T>>
+            Stringifier<ArrayFacade<Object>>
 {
     /**
      * Constructor, for subclasses only. This does not invoke {@link #compile compile}.
@@ -58,7 +56,7 @@ public abstract class CompoundStringifier<T>
      * @return the components of this CompoundStringifier
      * @throws CompoundStringifierCompileException thrown if the compilation failed.
      */
-    protected abstract CompoundStringifierComponent<T> [] compileIntoComponents()
+    protected abstract CompoundStringifierComponent [] compileIntoComponents()
         throws
             CompoundStringifierCompileException;
     
@@ -67,7 +65,7 @@ public abstract class CompoundStringifier<T>
      *
      * @return the child components
      */
-    public final CompoundStringifierComponent<T> [] getMessageComponents()
+    public final CompoundStringifierComponent [] getMessageComponents()
     {
         return theComponents;
     }
@@ -82,12 +80,12 @@ public abstract class CompoundStringifier<T>
      */
     public String format(
             String                         soFar,
-            ArrayFacade<T>                 arg,
+            ArrayFacade<Object>            arg,
             StringRepresentationParameters pars )
     {
         StringBuffer ret = new StringBuffer();
         for( int i=0 ; i<theComponents.length ; ++i ) {
-            CompoundStringifierComponent<T> current = theComponents[i];
+            CompoundStringifierComponent current = theComponents[i];
             
             String found = current.format( soFar + ret.toString(), arg, pars ); // presumably shorter, but we don't know
             
@@ -120,26 +118,28 @@ public abstract class CompoundStringifier<T>
         throws
             ClassCastException
     {
-        return format( soFar, (ArrayFacade<T>) arg, pars );
+        return format( soFar, (ArrayFacade<Object>) arg, pars );
     }
 
     /**
      * Parse out the Object in rawString that were inserted using this Stringifier.
      *
      * @param rawString the String to parse
+     * @param factory the factory needed to create the parsed values, if any
      * @return the found Object
      * @throws StringifierParseException thrown if a parsing problem occurred
      */
-    public ArrayFacade<T> unformat(
-            String rawString )
+    public ArrayFacade<Object> unformat(
+            String                     rawString,
+            StringifierUnformatFactory factory )
         throws
             StringifierParseException
     {
-        Iterator<StringifierParsingChoice<ArrayFacade<T>>> iter  = parsingChoiceIterator( rawString, 0, rawString.length(), 1, true ); // only need one
-        StringifierParsingChoice<ArrayFacade<T>>           found = null;
+        Iterator<StringifierParsingChoice<ArrayFacade<Object>>> iter  = parsingChoiceIterator( rawString, 0, rawString.length(), 1, true, factory ); // only need one
+        StringifierParsingChoice<ArrayFacade<Object>>           found = null;
 
         while( iter.hasNext() ) {
-            StringifierParsingChoice<ArrayFacade<T>> choice = iter.next();
+            StringifierParsingChoice<ArrayFacade<Object>> choice = iter.next();
             
             if( choice.getEndIndex() == rawString.length() ) {
                 // found
@@ -161,8 +161,8 @@ public abstract class CompoundStringifier<T>
             }
         }
 
-        ArrayFacade<T> ret = ArrayFacade.<T>create( max+1 );        
-        T [] values = found.unformat().getArray();
+        ArrayFacade<Object> ret = ArrayFacade.create( max+1 );
+        Object [] values = found.unformat().getArray();
         
         for( int i = 0 ; i<theComponents.length ; ++i ) {
             if( theComponents[i] instanceof CompoundStringifierPlaceholder ) {
@@ -184,23 +184,26 @@ public abstract class CompoundStringifier<T>
      * @param max the maximum number of choices to be returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
-    public Iterator<StringifierParsingChoice<ArrayFacade<T>>> parsingChoiceIterator(
-            String  rawString,
-            int     startIndex,
-            int     endIndex,
-            int     max,
-            boolean matchAll )
+    public Iterator<StringifierParsingChoice<ArrayFacade<Object>>> parsingChoiceIterator(
+            String                     rawString,
+            int                        startIndex,
+            int                        endIndex,
+            int                        max,
+            boolean                    matchAll,
+            StringifierUnformatFactory factory )
     {
-        CompoundStringifierIterator<T> ret = new CompoundStringifierIterator<T>(
+        CompoundStringifierIterator ret = new CompoundStringifierIterator(
                 this,
                 theComponents,
                 rawString,
                 startIndex,
                 endIndex,
                 max,
-                matchAll );
+                matchAll,
+                factory );
         
         return ret;
     }
@@ -211,11 +214,11 @@ public abstract class CompoundStringifier<T>
      * @param childChoices the childrens' StringifierParsingChoices
      * @return this CompoundStringifier's choice
      */
-    protected abstract ArrayFacade<T> compoundUnformat(
+    protected abstract ArrayFacade<Object> compoundUnformat(
             StringifierParsingChoice [] childChoices );
     
     /**
      * The components in the CompoundStringifier.
      */
-    protected CompoundStringifierComponent<T> [] theComponents;
+    protected CompoundStringifierComponent [] theComponents;
 }

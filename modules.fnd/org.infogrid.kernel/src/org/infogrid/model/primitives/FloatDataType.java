@@ -433,7 +433,7 @@ public class FloatDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( FloatValue.class, FloatValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( FloatValue.class, FloatValue.DEFAULT_ENTRY, s, this );
 
             FloatValue ret;
 

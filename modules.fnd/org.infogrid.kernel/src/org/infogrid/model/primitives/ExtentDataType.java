@@ -194,7 +194,7 @@ public final class ExtentDataType
             return null;
         }
         try {
-            Object [] found = representation.parseEntry( ExtentValue.class, ExtentValue.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( ExtentValue.class, ExtentValue.DEFAULT_ENTRY, s, this );
 
             ExtentValue ret;
             switch( found.length ) {

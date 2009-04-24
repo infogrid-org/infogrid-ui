@@ -23,9 +23,9 @@ import java.util.Iterator;
  * 
  * @param <T> the type of the Objects to be stringified
  */
-class CompoundStringifierPlaceholder<T>
+class CompoundStringifierPlaceholder
         implements
-            CompoundStringifierComponent<T>
+            CompoundStringifierComponent
 {
     /**
      * Constructor.
@@ -34,8 +34,8 @@ class CompoundStringifierPlaceholder<T>
      * @param placeholderIndex the index of the placeholder
      */
     public CompoundStringifierPlaceholder(
-            Stringifier<? extends T> stringifier,
-            int                      placeholderIndex )
+            Stringifier<? extends Object> stringifier,
+            int            placeholderIndex )
     {
         theStringifier      = stringifier;
         thePlaceholderIndex = placeholderIndex;
@@ -51,12 +51,12 @@ class CompoundStringifierPlaceholder<T>
      */
     public String format(
             String                         soFar,
-            ArrayFacade<T>                 arg,
+            ArrayFacade<Object>            arg,
             StringRepresentationParameters pars )
     {
-        T [] realArgs = arg.getArray();
+        Object [] realArgs = arg.getArray();
 
-        T localArg = realArgs[ thePlaceholderIndex ];
+        Object localArg = realArgs[ thePlaceholderIndex ];
         String ret = theStringifier.attemptFormat( soFar, localArg, pars );
 
         return ret;
@@ -73,17 +73,19 @@ class CompoundStringifierPlaceholder<T>
      * @param max the maximum number of choices to be returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
-    public Iterator<? extends StringifierParsingChoice<? extends T>> parsingChoiceIterator(
-            String  rawString,
-            int     startIndex,
-            int     endIndex,
-            int     max,
-            boolean matchAll )
+    public Iterator<? extends StringifierParsingChoice<?>> parsingChoiceIterator(
+            String                     rawString,
+            int                        startIndex,
+            int                        endIndex,
+            int                        max,
+            boolean                    matchAll,
+            StringifierUnformatFactory factory )
     {
-         Iterator<? extends StringifierParsingChoice<? extends T>> ret
-                 = theStringifier.parsingChoiceIterator( rawString, startIndex, endIndex, max, matchAll );
+         Iterator<? extends StringifierParsingChoice<?>> ret
+                 = theStringifier.parsingChoiceIterator( rawString, startIndex, endIndex, max, matchAll, factory );
          return ret;
     }
 
@@ -92,7 +94,7 @@ class CompoundStringifierPlaceholder<T>
      *
      * @return the underlying Stringifier
      */
-    public Stringifier getStringifier()
+    public Stringifier<?> getStringifier()
     {
         return theStringifier;
     }
@@ -110,7 +112,7 @@ class CompoundStringifierPlaceholder<T>
     /**
      * The underlying Stringifier.
      */
-    protected Stringifier<? extends T> theStringifier;
+    protected Stringifier<?> theStringifier;
 
     /**
      * The index of the placeholder, e.g. 2 for {2}.

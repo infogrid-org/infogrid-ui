@@ -58,6 +58,10 @@
     <tag>
         <name>viewlet</name>
         <tag-class>org.infogrid.jee.taglib.viewlet.ViewletTag</tag-class>
+        <attribute>
+            <name>formId</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>

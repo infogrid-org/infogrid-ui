@@ -42,7 +42,7 @@ public class IntegerStringifierTest2
         IntegerStringifier str2   = IntegerStringifier.create( );
         String             res2a  = String.valueOf( data2a );
 
-        Iterator<StringifierParsingChoice<Integer>> iter2    = str2.parsingChoiceIterator( res2a, 0, res2a.length(), Integer.MAX_VALUE, false );
+        Iterator<StringifierParsingChoice<Integer>> iter2    = str2.parsingChoiceIterator( res2a, 0, res2a.length(), Integer.MAX_VALUE, false, null );
         StringifierParsingChoice<Integer> []        choices2 = (StringifierParsingChoice<Integer> []) ArrayHelper.copyIntoNewArray( iter2, StringifierParsingChoice.class );
         checkEquals( choices2.length, res2a.length()-1, "Wrong number of choices" ); // -1 because of the minus
         for( int i=0 ; i<choices2.length ; ++i ) {

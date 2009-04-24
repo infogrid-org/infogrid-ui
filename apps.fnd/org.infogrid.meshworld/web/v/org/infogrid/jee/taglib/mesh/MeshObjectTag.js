@@ -16,7 +16,6 @@ function org_infogrid_jee_taglib_mesh_MeshObjectTag_toggle( nodeName, nullValue,
         div2.className = 'org-infogrid-jee-taglib-mesh-MeshObjectTag-hide ';
     } else {
         div2.className = 'org-infogrid-jee-taglib-mesh-MeshObjectTag-show';
-
         input.value = defaultValue;
     }
     

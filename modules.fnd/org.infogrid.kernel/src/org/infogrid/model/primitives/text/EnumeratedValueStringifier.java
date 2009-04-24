@@ -15,35 +15,45 @@
 package org.infogrid.model.primitives.text;
 
 import java.util.Iterator;
+import org.infogrid.model.primitives.EnumeratedDataType;
 import org.infogrid.model.primitives.EnumeratedValue;
+import org.infogrid.util.OneElementIterator;
+import org.infogrid.util.ZeroElementCursorIterator;
+import org.infogrid.util.text.AbstractStringifier;
 import org.infogrid.util.text.StringRepresentationParameters;
-import org.infogrid.util.text.Stringifier;
 import org.infogrid.util.text.StringifierParseException;
 import org.infogrid.util.text.StringifierParsingChoice;
+import org.infogrid.util.text.StringifierUnformatFactory;
+import org.infogrid.util.text.StringifierValueParsingChoice;
 
 /**
  * Stringifies EnumeratedValues.
  */
 public class EnumeratedValueStringifier
-        implements
-            Stringifier<EnumeratedValue>
+        extends
+            AbstractStringifier<EnumeratedValue>
 {
     /**
      * Factory method.
      *
      * @return the created EnumeratedValueStringifier
+     * @param emitUserVisible if false, emit computable name; if true, emit user-visible name.
      */
-    public static EnumeratedValueStringifier create()
+    public static EnumeratedValueStringifier create(
+            boolean emitUserVisible )
     {
-        return new EnumeratedValueStringifier();
+        return new EnumeratedValueStringifier( emitUserVisible );
     }
 
     /**
      * Private constructor for subclasses only, use factory method.
+     *
+     * @param emitUserVisible if false, emit computable name; if true, emit user-visible name.
      */
-    protected EnumeratedValueStringifier()
+    protected EnumeratedValueStringifier(
+            boolean emitUserVisible )
     {
-        // no op
+        theEmitUserVisible = emitUserVisible;
     }
 
     /**
@@ -59,7 +69,12 @@ public class EnumeratedValueStringifier
             EnumeratedValue                arg,
             StringRepresentationParameters pars )
     {
-        String ret = arg.getUserVisibleName().value();
+        String ret;
+        if( theEmitUserVisible ) {
+            ret = arg.getUserVisibleName().value();
+        } else {
+            ret = arg.value();
+        }
         return ret;
     }
 
@@ -87,15 +102,27 @@ public class EnumeratedValueStringifier
      * Parse out the Object in rawString that were inserted using this Stringifier.
      *
      * @param rawString the String to parse
+     * @param factory the factory needed to create the parsed values, if any
      * @return the found Object
      * @throws StringifierParseException thrown if a parsing problem occurred
      */
+    @Override
     public EnumeratedValue unformat(
-            String rawString )
+            String                     rawString,
+            StringifierUnformatFactory factory )
         throws
             StringifierParseException
     {
-        throw new UnsupportedOperationException();
+        EnumeratedDataType type = (EnumeratedDataType) factory;
+
+        for( EnumeratedValue candidate : type.getDomain() ) {
+            String candidateName = candidate.value();
+
+            if( candidateName.equals( rawString )) {
+                return candidate;
+            }
+        }
+        return null;
     }
 
     /**
@@ -108,15 +135,35 @@ public class EnumeratedValueStringifier
      * @param max the maximum number of choices returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
+    @Override
     public Iterator<StringifierParsingChoice<EnumeratedValue>> parsingChoiceIterator(
-            final String  rawString,
-            final int     startIndex,
-            final int     endIndex,
-            final int     max,
-            final boolean matchAll )
+            final String               rawString,
+            final int                  startIndex,
+            final int                  endIndex,
+            final int                  max,
+            final boolean              matchAll,
+            StringifierUnformatFactory factory )
     {
-        throw new UnsupportedOperationException();
+        EnumeratedDataType type = (EnumeratedDataType) factory;
+
+        for( EnumeratedValue candidate : type.getDomain() ) {
+            String candidateName = candidate.value();
+
+            if(    candidateName.length() == endIndex - startIndex
+                && candidateName.regionMatches( 0, rawString, startIndex, endIndex - startIndex ))
+            {
+                return OneElementIterator.<StringifierParsingChoice<EnumeratedValue>>create(
+                        new StringifierValueParsingChoice<EnumeratedValue>( startIndex, endIndex, candidate ));
+            }
+        }
+        return ZeroElementCursorIterator.create();
     }
+
+    /**
+     * If false, emit computable name. If true, emit user-visible name.
+     */
+    protected boolean theEmitUserVisible;
 }

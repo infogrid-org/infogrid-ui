@@ -71,7 +71,7 @@ public class MMeshTypeIdentifierFactory
             StringRepresentationParseException
     {
         try {
-            Object [] found = representation.parseEntry( MMeshTypeIdentifier.class, MMeshTypeIdentifier.DEFAULT_ENTRY, s );
+            Object [] found = representation.parseEntry( MMeshTypeIdentifier.class, MMeshTypeIdentifier.DEFAULT_ENTRY, s, this );
 
             MMeshTypeIdentifier ret;
             switch( found.length ) {

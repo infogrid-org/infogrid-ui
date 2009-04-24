@@ -8,22 +8,21 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.util.text;
 
-import org.infogrid.util.ArrayFacade;
-
 import java.util.Map;
+import org.infogrid.util.ArrayFacade;
 
 /**
  * A MessageStringifier that works on Objects and does not require more specific subclasses.
  */
 public class AnyMessageStringifier
         extends
-            MessageStringifier<Object>
+            MessageStringifier
 {
     /**
      * Factory method.
@@ -34,8 +33,8 @@ public class AnyMessageStringifier
      * @throws CompoundStringifierCompileException thrown if the format string could not be compiled
      */
     public static AnyMessageStringifier create(
-            String                                    formatString,
-            Map<String,Stringifier<? extends Object>> childStringifiers )
+            String                     formatString,
+            Map<String,Stringifier<?>> childStringifiers )
         throws
             CompoundStringifierCompileException
     {
@@ -51,8 +50,8 @@ public class AnyMessageStringifier
      * @param childStringifiers the mapping between symbolic names (e.g. "string", "currency") to the actual Stringifier
      */
     protected AnyMessageStringifier(
-            String                                    formatString,
-            Map<String,Stringifier<? extends Object>> childStringifiers )
+            String                     formatString,
+            Map<String,Stringifier<?>> childStringifiers )
     {
         super( formatString, childStringifiers );
     }

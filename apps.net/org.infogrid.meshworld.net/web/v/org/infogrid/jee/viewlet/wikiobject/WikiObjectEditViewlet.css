@@ -12,10 +12,14 @@ div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.content {
 }
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet > div.viewlet-state {
     float: right;
-    border-width: 1px;
-    border-style: solid;
+    border: #c08080 2px solid;
+    -moz-border-radius: 8px;
     padding: 10px;
     font-size: 0.7em;
     margin: 0 0 10px 10px;
     padding: 5px;
+}
+div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet input {
+    min-height: 200px;
+    width: 600px;
 }

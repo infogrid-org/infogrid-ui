@@ -22,6 +22,7 @@ import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.Stringifier;
 import org.infogrid.util.text.StringifierParseException;
 import org.infogrid.util.text.StringifierParsingChoice;
+import org.infogrid.util.text.StringifierUnformatFactory;
 import org.infogrid.util.text.StringifierValueParsingChoice;
 
 /**
@@ -106,11 +107,13 @@ public class MultiplicityValueStringStringifier
      * Parse out the Object in rawString that were inserted using this Stringifier.
      *
      * @param rawString the String to parse
+     * @param factory the factory needed to create the parsed values, if any
      * @return the found Object
      * @throws StringifierParseException thrown if a parsing problem occurred
      */
     public MultiplicityValue unformat(
-            String rawString )
+            String                     rawString,
+            StringifierUnformatFactory factory )
         throws
             StringifierParseException
     {
@@ -148,7 +151,7 @@ public class MultiplicityValueStringStringifier
         }
     }
 
-    /**
+   /**
      * Obtain an iterator that iterates through all the choices that exist for this Stringifier to
      * parse the String. The iterator returns zero elements if the String could not be parsed
      * by this Stringifier.
@@ -159,17 +162,19 @@ public class MultiplicityValueStringStringifier
      * @param max the maximum number of choices to be returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
     public Iterator<StringifierParsingChoice<MultiplicityValue>> parsingChoiceIterator(
-            final String  rawString,
-            final int     startIndex,
-            final int     endIndex,
-            final int     max,
-            final boolean matchAll )
+            String                     rawString,
+            int                        startIndex,
+            int                        endIndex,
+            int                        max,
+            boolean                    matchAll,
+            StringifierUnformatFactory factory )
     {
         try {
-            MultiplicityValue found = unformat( rawString.substring( startIndex, endIndex ));
+            MultiplicityValue found = unformat( rawString.substring( startIndex, endIndex ), factory );
 
             StringifierValueParsingChoice<MultiplicityValue> choice = new StringifierValueParsingChoice<MultiplicityValue>(
                         startIndex,

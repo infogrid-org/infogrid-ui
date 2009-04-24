@@ -16,8 +16,6 @@ package org.infogrid.meshworld.net;
 
 import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
-import org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet;
-import org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.model.Wiki.WikiSubjectArea;
@@ -58,8 +56,8 @@ public class IframeNetMeshWorldViewletFactory
 
         // Type-based rules
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
-            ret.add( WikiObjectDisplayViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( WikiObjectEditViewlet.choice(    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
+            ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better

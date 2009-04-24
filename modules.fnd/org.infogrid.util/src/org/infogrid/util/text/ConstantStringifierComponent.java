@@ -21,12 +21,10 @@ import org.infogrid.util.ZeroElementCursorIterator;
 
 /**
  * The constant blocks of text inside a (compound) MessageStringifier.
- * 
- * @param <T> the type of the Objects to be stringified
  */
-public class ConstantStringifierComponent<T>
+public class ConstantStringifierComponent
         implements
-            CompoundStringifierComponent<T>
+            CompoundStringifierComponent
 {
     /**
      * Constructor.
@@ -49,7 +47,7 @@ public class ConstantStringifierComponent<T>
      */
     public String format(
             String                         soFar,
-            ArrayFacade<T>                 arg,
+            ArrayFacade<Object>            arg,
             StringRepresentationParameters pars )
     {
         // regardless of argument, we always return the same -- this is a constant after all
@@ -67,26 +65,28 @@ public class ConstantStringifierComponent<T>
      * @param max the maximum number of choices to be returned by the Iterator.
      * @param matchAll if true, only return those matches that match the entire String from startIndex to endIndex.
      *                 If false, return other matches that only match the beginning of the String.
+     * @param factory the factory needed to create the parsed values, if any
      * @return the Iterator
      */
-    public Iterator<StringifierParsingChoice<T>> parsingChoiceIterator(
-            String  rawString,
-            int     startIndex,
-            int     endIndex,
-            int     max,
-            boolean matchAll )
+    public Iterator<? extends StringifierParsingChoice<Object>> parsingChoiceIterator(
+            String                     rawString,
+            int                        startIndex,
+            int                        endIndex,
+            int                        max,
+            boolean                    matchAll,
+            StringifierUnformatFactory factory )
     {
         if( rawString.regionMatches( startIndex, theString, 0, theString.length() )) {
-            return OneElementIterator.<StringifierParsingChoice<T>>create(
-                    new StringifierParsingChoice<T>( startIndex, startIndex + theString.length() ) {
-                        public T unformat() {
+            return OneElementIterator.<StringifierParsingChoice<Object>>create(
+                    new StringifierParsingChoice<Object>( startIndex, startIndex + theString.length() ) {
+                        public Object unformat() {
                             // this doesn't return any value
                             return null;
                         }
                     }
                 );
         } else {
-            return ZeroElementCursorIterator.<StringifierParsingChoice<T>>create();
+            return ZeroElementCursorIterator.<StringifierParsingChoice<Object>>create();
         }
     }
 
