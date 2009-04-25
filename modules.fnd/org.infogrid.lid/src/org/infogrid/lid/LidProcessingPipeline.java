@@ -14,11 +14,11 @@
 
 package org.infogrid.lid;
 
-import java.net.URISyntaxException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.http.SaneRequestUtils;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Processes LID requests.
@@ -33,14 +33,14 @@ public interface LidProcessingPipeline
      * @return the authentication status of the client
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
-     * @throws URISyntaxException thrown if the specified client identifier could not be interpreted
+     * @throws StringRepresentationParseException thrown if the specified client identifier could not be interpreted
      */
     public LidClientAuthenticationStatus processPipeline(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
             LidAbortProcessingPipelineException,
-            URISyntaxException;
+            StringRepresentationParseException;
 
     /**
      * Name of the LidClientAuthenticationStatus instance found in the request after the
