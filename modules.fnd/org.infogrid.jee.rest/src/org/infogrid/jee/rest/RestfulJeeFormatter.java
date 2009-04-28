@@ -421,13 +421,10 @@ public class RestfulJeeFormatter
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
         
-        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial, owningMeshObject, propertyType, editVar );
+        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial, owningMeshObject, propertyType, nullString, editVar );
+
         String ret = PropertyValue.toStringRepresentation( value, rep, context, pars );
-        if( ret != null ) {
-            return ret;
-        } else {
-            return nullString;
-        }
+        return ret;
     }
 
     /**
@@ -792,6 +789,7 @@ public class RestfulJeeFormatter
      * @param colloquial if true, emit colloquial representation
      * @param owningMeshObject the MeshObject that owns this PropertyValue, if any
      * @param propertyType the PropertyType of the PropertyValue, if any
+     * @param nullString the String to display of the value is null
      * @param editVar name of the HTML form elements to use
      * @return the StringRepresentationParameters, if any
      */
@@ -800,6 +798,7 @@ public class RestfulJeeFormatter
             boolean      colloquial,
             MeshObject   owningMeshObject,
             PropertyType propertyType,
+            String       nullString,
             String       editVar )
     {
         StringRepresentationParameters ret = null;
@@ -826,6 +825,12 @@ public class RestfulJeeFormatter
                 ret = SimpleModelPrimitivesStringRepresentationParameters.create();
             }
             ret.put( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE, propertyType );
+        }
+        if( nullString != null ) {
+            if( ret == null ) {
+                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+            }
+            ret.put( StringRepresentationParameters.NULL_STRING, nullString );
         }
         if( editVar != null ) {
             if( ret == null ) {

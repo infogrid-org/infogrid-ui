@@ -40,4 +40,10 @@ public interface StringRepresentationParameters
      * relevant for StringRepresentations that are intended to be edited.
      */
     public final String EDIT_VARIABLE = "variable";
+
+    /**
+     * The key into this object that identifies the null value to display, if the object to
+     * be rendered is null.
+     */
+    public final String NULL_STRING = "nullString";
 }

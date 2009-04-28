@@ -231,14 +231,17 @@ public abstract class DataType
         Object editVariable;
         Object meshObject;
         Object propertyType;
+        Object nullString;
         if( pars != null ) {
             editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
             meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
             propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+            nullString   = pars.get( StringRepresentationParameters.NULL_STRING );
         } else {
             editVariable = null;
             meshObject   = null;
             propertyType = null;
+            nullString   = null;
         }
 
         return representation.formatEntry(
@@ -254,7 +257,7 @@ public abstract class DataType
                         representation.getStringRepresentationDirectory().get( SimpleStringRepresentationDirectory.TEXT_PLAIN_NAME ),
                         context,
                         pars ),
-        /* 5 */ NULL_VALUE_STRING );
+        /* 5 */ nullString != null ? nullString : NULL_VALUE_STRING );
      }
 
     /**
