@@ -82,7 +82,7 @@ public class DelegatingIOException
      */
     public Object [] getLocalizationParameters()
     {
-        return new Object[0];
+        return new Object[] { getCause().getMessage(), getCause().getLocalizedMessage() };
     }
 
     /**
