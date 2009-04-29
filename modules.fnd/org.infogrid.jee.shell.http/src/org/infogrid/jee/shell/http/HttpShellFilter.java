@@ -188,9 +188,6 @@ public class HttpShellFilter
                 HttpShellAccessVerb accessVerb = HttpShellAccessVerb.findAccessFor( varName, lidRequest );
 
                 MeshObjectIdentifier id = parseMeshObjectIdentifier( base.getMeshObjectIdentifierFactory(), varValue );
-                if( id == null ) {
-                    throw new HttpShellException( new IllegalArgumentException( "HttpShell variable '" + arg + "' has not been set." ));
-                }
                 OnDemandTransaction  tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( id, base, tx, lidRequest );

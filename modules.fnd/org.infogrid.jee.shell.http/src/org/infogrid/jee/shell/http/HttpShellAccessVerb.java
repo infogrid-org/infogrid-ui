@@ -93,11 +93,16 @@ public enum HttpShellAccessVerb
                     TransactionException,
                     NotPermittedException
             {
-                MeshObject found = mb.accessLocally( identifier );
-                if( found == null ) {
+                MeshObject found = null;
+                if( identifier != null ) {
+                    found = mb.accessLocally( identifier );
+                }
+
+                if( found != null ) {
+                    return found;
+                } else {
                     throw new MeshObjectsNotFoundException( mb, identifier );
                 }
-                return found;
             }
     },
     FIND_IF_EXISTS( "findifexists" ) {
@@ -126,7 +131,10 @@ public enum HttpShellAccessVerb
                     TransactionException,
                     NotPermittedException
             {
-                MeshObject found = mb.accessLocally( identifier );
+                MeshObject found = null;
+                if( identifier != null ) {
+                    found = mb.accessLocally( identifier );
+                }
                 // return null if not found
                 return found;
             }
@@ -155,6 +163,9 @@ public enum HttpShellAccessVerb
                     TransactionException,
                     NotPermittedException
             {
+                if( identifier == null ) {
+                    throw new MeshObjectsNotFoundException( mb, identifier );
+                }
                 MeshObject found = mb.findMeshObjectByIdentifier( identifier );
                 if( found == null ) {
                     Transaction tx2 = tx.obtain();
@@ -192,6 +203,9 @@ public enum HttpShellAccessVerb
                     TransactionException,
                     NotPermittedException
             {
+                if( identifier == null ) {
+                    throw new MeshObjectsNotFoundException( mb, identifier );
+                }
                 MeshObject found = mb.findMeshObjectByIdentifier( identifier );
                 if( found == null ) {
                     throw new MeshObjectsNotFoundException( mb, identifier );
