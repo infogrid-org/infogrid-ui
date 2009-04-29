@@ -30,7 +30,7 @@ public enum HttpShellRelationshipVerb
         implements
             HttpShellKeywords
 {
-    RELATE ( "relate") {
+    RELATE ( "relate" ) {
             /**
              * Perform this verb.
              *
@@ -55,6 +55,35 @@ public enum HttpShellRelationshipVerb
                 Transaction tx2 = tx.obtain();
 
                 source.relate( destination );
+            }
+    },
+    RELATE_IF_NEEDED ( "relateifneeded" ) {
+            /**
+             * Perform this verb.
+             *
+             * @param source the source MeshObject
+             * @param destination the destination MeshObject
+             * @param tx the Transaction if and when created
+             * @param request the request
+             * @throws RelatedAlreadyException thrown if the two MeshObjects are related already
+             * @throws TransactionException thrown if a problem occurred with the Transaction
+             * @throws NotPermittedException thrown if the caller did not have sufficient permissions to perform this operation
+             */
+            public void perform(
+                    MeshObject                    source,
+                    MeshObject                    destination,
+                    CreateWhenNeeded<Transaction> tx,
+                    SaneRequest                   request )
+                throws
+                    RelatedAlreadyException,
+                    TransactionException,
+                    NotPermittedException
+            {
+                if( !source.isRelated( destination )) {
+                    Transaction tx2 = tx.obtain();
+
+                    source.relate( destination );
+                }
             }
     },
     UNRELATE( "unrelate" ) {
@@ -82,6 +111,35 @@ public enum HttpShellRelationshipVerb
                 Transaction tx2 = tx.obtain();
 
                 source.unrelate( destination );
+            }
+    },
+    UNRELATE_IF_NEEDED( "unrelateifneeded" ) {
+            /**
+             * Perform this verb.
+             *
+             * @param source the source MeshObject
+             * @param destination the destination MeshObject
+             * @param tx the Transaction if and when created
+             * @param request the request
+             * @throws NotRelatedException thrown if the two MeshObjects are not related
+             * @throws TransactionException thrown if a problem occurred with the Transaction
+             * @throws NotPermittedException thrown if the caller did not have sufficient permissions to perform this operation
+             */
+            public void perform(
+                    MeshObject                    source,
+                    MeshObject                    destination,
+                    CreateWhenNeeded<Transaction> tx,
+                    SaneRequest                   request )
+                throws
+                    NotRelatedException,
+                    TransactionException,
+                    NotPermittedException
+            {
+                if( source.isRelated( destination )) {
+                    Transaction tx2 = tx.obtain();
+
+                    source.unrelate( destination );
+                }
             }
     };
 
@@ -121,8 +179,9 @@ public enum HttpShellRelationshipVerb
         if( value == null ) {
             return null;
         }
+        value = value.toLowerCase();
         for( HttpShellRelationshipVerb v : values() ) {
-            if( value.equals(  v.theString )) {
+            if( value.equals( v.theString )) {
                 return v;
             }
         }

@@ -188,15 +188,20 @@ public class HttpShellFilter
                 HttpShellAccessVerb accessVerb = HttpShellAccessVerb.findAccessFor( varName, lidRequest );
 
                 MeshObjectIdentifier id = parseMeshObjectIdentifier( base.getMeshObjectIdentifierFactory(), varValue );
+                if( id == null ) {
+                    throw new HttpShellException( new IllegalArgumentException( "HttpShell variable '" + arg + "' has not been set." ));
+                }
                 OnDemandTransaction  tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( id, base, tx, lidRequest );
-                variables.put( varName, accessed );
+                if( accessed != null ) {
+                    variables.put( varName, accessed );
 
-                // first bless then unbless, then properties
-                potentiallyBless(         varName, accessed, tx, lidRequest );
-                potentiallyUnbless(       varName, accessed, tx, lidRequest );
-                potentiallySetProperties( varName, accessed, tx, lidRequest );
+                    // first bless then unbless, then properties
+                    potentiallyBless(         varName, accessed, tx, lidRequest );
+                    potentiallyUnbless(       varName, accessed, tx, lidRequest );
+                    potentiallySetProperties( varName, accessed, tx, lidRequest );
+                }
             }
 
             // then look for all arguments of the form <PREFIX>.<VARIABLE>.<ACCESS_TAG> for which
@@ -222,12 +227,14 @@ public class HttpShellFilter
                 OnDemandTransaction  tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( null, base, tx, lidRequest );
-                variables.put( varName, accessed );
+                if( accessed != null ) {
+                    variables.put( varName, accessed );
 
-                // first bless then unbless, then properties
-                potentiallyBless(         varName, accessed, tx, lidRequest );
-                potentiallyUnbless(       varName, accessed, tx, lidRequest );
-                potentiallySetProperties( varName, accessed, tx, lidRequest );
+                    // first bless then unbless, then properties
+                    potentiallyBless(         varName, accessed, tx, lidRequest );
+                    potentiallyUnbless(       varName, accessed, tx, lidRequest );
+                    potentiallySetProperties( varName, accessed, tx, lidRequest );
+                }
             }
 
             // now unbless roles
@@ -302,6 +309,62 @@ public class HttpShellFilter
                                 RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
                                 Transaction tx2 = tx.obtain();
                                 found1.blessRelationship( toBless, found2 );
+                            }
+                        }
+                    }
+                }
+            }
+
+            // now deal with checkboxes
+            for( String var1Name : variables.keySet() ) {
+                String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
+
+                for( String arg : postArguments.keySet() ) {
+                    if( !arg.startsWith( key )) {
+                        continue; // not relevant here
+                    }
+                    if( arg.endsWith( CHECKBOX_ROLE_TAG )) {
+                        String     var2Name = arg.substring( key.length(), arg.length()-CHECKBOX_ROLE_TAG.length() );
+                        MeshObject found2   = variables.get( var2Name );
+                        MeshObject found1   = variables.get( var1Name );
+
+                        String   value = lidRequest.getPostArgument( arg );
+                        RoleType rt    = (RoleType) findMeshType( value );
+
+                        // now look for whether the checkbox argument has been POST'd or not
+                        String arg2 = arg.substring( 0, arg.length()-CHECKBOX_ROLE_TAG.length() ) + CHECKBOX_TAG;
+                        String [] values = lidRequest.getMultivaluedPostArgument( arg2 );
+
+                        OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
+                        tx.obtain();
+
+                        if( values != null && values.length > 0 ) {
+                            // relate and bless
+                            try {
+                                found1.relate( found2 );
+                            } catch( RelatedAlreadyException t ) {
+                                // ignore
+                            }
+                            try {
+                                found1.blessRelationship( rt, found2 );
+                            } catch( RoleTypeBlessedAlreadyException ex ) {
+                                // ignore
+                            }
+                        } else {
+                            // unbless and possibly unrelate
+                            try {
+                                found1.unblessRelationship( rt, found2 );
+                            } catch( RoleTypeNotBlessedException ex ) {
+                                // ignore
+                            } catch( NotRelatedException ex ) {
+                                // ignore
+                            }
+                            if( found1.getRoleTypes( found2 ).length == 0 ) {
+                                try {
+                                    found1.unrelate( found2 );
+                                } catch( NotRelatedException ex ) {
+                                    // ignore
+                                }
                             }
                         }
                     }

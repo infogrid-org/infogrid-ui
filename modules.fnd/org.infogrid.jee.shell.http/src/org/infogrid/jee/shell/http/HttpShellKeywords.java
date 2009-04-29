@@ -87,6 +87,17 @@ public interface HttpShellKeywords
     public static final String UNBLESS_ROLE_TAG = SEPARATOR + "unblessRole";
 
     /**
+     * Keyword indicating the presence of a relationship checkbox by specifying a RoleType that
+     * should be blessed/unblessed.
+     */
+    public static final String CHECKBOX_ROLE_TAG = SEPARATOR + "checkbox.role";
+
+    /**
+     * Keyword indicating that a checkbox was selected to bless a relationship.
+     */
+    public static final String CHECKBOX_TAG = SEPARATOR + "checkbox";
+
+    /**
      * Keyword indicating whether any particular component of the operation should or should
      * not throw an exception if its execution failed.
      */

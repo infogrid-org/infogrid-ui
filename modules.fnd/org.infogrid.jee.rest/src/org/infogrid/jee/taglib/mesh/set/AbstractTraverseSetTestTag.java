@@ -110,7 +110,6 @@ public abstract class AbstractTraverseSetTestTag
     {
         MeshObject             start = (MeshObject) lookupOrThrow( theStartObjectName );
         TraversalSpecification spec  = findTraversalSpecificationOrThrow( theTraversalSpecification );
-                // FIXME: In the future, this should allow more complex traversal specifications
 
         MeshObjectSet ret = start.traverse( spec );
         return ret;

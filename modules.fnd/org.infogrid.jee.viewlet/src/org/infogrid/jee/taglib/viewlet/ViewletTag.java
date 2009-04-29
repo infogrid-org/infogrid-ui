@@ -16,8 +16,6 @@ package org.infogrid.jee.taglib.viewlet;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.viewlet.DefaultJeeViewletStateEnum;
 import org.infogrid.jee.viewlet.JeeViewlet;
@@ -46,7 +44,8 @@ public class ViewletTag
     @Override
     protected void initializeToDefaults()
     {
-        theFormId = null;
+        theFormId   = null;
+        theCssClass = null;
 
         super.initializeToDefaults();
     }
@@ -72,6 +71,29 @@ public class ViewletTag
             String newValue )
     {
         theFormId = newValue;
+    }
+
+    /**
+     * Obtain value of the cssClass property.
+     *
+     * @return value of the cssClass property
+     * @see #setCssClass
+     */
+    public final String getCssClass()
+    {
+        return theCssClass;
+    }
+
+    /**
+     * Set value of the cssClass property.
+     *
+     * @param newValue new value of the cssClass property
+     * @see #getCssClass
+     */
+    public final void setCssClass(
+            String newValue )
+    {
+        theCssClass = newValue;
     }
 
     /**
@@ -106,7 +128,10 @@ public class ViewletTag
             String vlHtmlClass = vl.getHtmlClass();
 
             content.append( " " ).append( vlHtmlClass.replace( '.', '-') );
-        }        
+        }
+        if( theCssClass != null ) {
+            content.append( " " ).append( theCssClass );
+        }
         content.append( "\">" );
         theFormatter.println( pageContext, false, content.toString() );
 
@@ -140,4 +165,9 @@ public class ViewletTag
      * The value of the id element of the generated HTML form, if any, if the form is generated.
      */
     protected String theFormId;
+
+    /**
+     * Additional HTML/CSS class attribute, if any.
+     */
+    protected String theCssClass;
 }

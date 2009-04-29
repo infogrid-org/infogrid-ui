@@ -5,31 +5,32 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.logic;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
-import org.infogrid.model.traversal.TraversalDictionary;
 import org.infogrid.model.traversal.TraversalSpecification;
 
 /**
- * <p>Abstract superclass for all tags evaluating a MeshObjects related to a start MeshObject.</p>
+ * <p>Factors out common functionality of tags testing the relationship of one MeshObject
+ *    to another.</p>
  */
 public abstract class AbstractRelatedTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractRestInfoGridBodyTag
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
      * Constructor.
      */
@@ -47,12 +48,11 @@ public abstract class AbstractRelatedTag
         theMeshObjectName             = null;
         theTraversalSpecification     = null;
         theTraversalSpecificationName = null;
-        theMinFound                   = null;
-        theMaxFound                   = null;
-        
+        theNeighborName               = null;
+
         super.initializeToDefaults();
     }
-    
+
     /**
      * Obtain value of the meshObjectName property.
      *
@@ -123,134 +123,61 @@ public abstract class AbstractRelatedTag
     }
 
     /**
-     * Obtain value of the minFound property.
+     * Obtain value of the neighborName property.
      *
-     * @return value of the minFound property
-     * @see #setMinFound
+     * @return value of the neighborName property
+     * @see #setNeighborName
      */
-    public final String getMinFound()
+    public final String getNeighborName()
     {
-        return theMinFound;
+        return theNeighborName;
     }
 
     /**
-     * Set value of the minFound property.
+     * Set value of the neighborName property.
      *
-     * @param newValue new value of the minFound property
-     * @see #getMinFound
+     * @param newValue new value of the neighborName property
+     * @see #getNeighborName
      */
-    public final void setMinFound(
+    public final void setNeighborName(
             String newValue )
     {
-        theMinFound = newValue;
-    }
-    
-    /**
-     * Obtain value of the maxFound property.
-     *
-     * @return value of the maxFound property
-     * @see #setMaxFound
-     */
-    public final String getMaxFound()
-    {
-        return theMaxFound;
+        theNeighborName = newValue;
     }
 
     /**
-     * Set value of the maxFound property.
-     *
-     * @param newValue new value of the minFound property
-     * @see #getMaxFound
-     */
-    public final void setMaxFound(
-            String newValue )
-    {
-        theMaxFound = newValue;
-    }
-    
-    /**
-     * Our implementation of doStartTag().
-     *
-     * @return evaluate or skip body
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    @Override
-    protected int realDoStartTag()
-        throws
-            JspException,
-            IgnoreException
-    {
-        if( evaluateTest() ) {
-            return EVAL_BODY_INCLUDE;
-        } else {
-            return SKIP_BODY;
-        }
-    }
-
-    /**
-     * Evaluatate the condition. If it returns true, we include, in the output,
-     * the content contained in this tag. This is abstract as concrete
-     * subclasses of this class need to have the ability to determine what
-     * their evaluation criteria are.
+     * Evaluatate the condition. If it returns true, the content of this tag is processed.
      *
      * @return true in order to output the Nodes contained in this Node.
      * @throws JspException thrown if an evaluation error occurred
      * @throws IgnoreException thrown to abort processing without an error
      */
-    protected abstract boolean evaluateTest()
-        throws
-            JspException,
-            IgnoreException;
-
-    /**
-     * Determine the PropertyValue to be used in the test.
-     *
-     * @return the PropertyValue
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    protected MeshObjectSet evaluate()
+    protected boolean evaluateTest()
         throws
             JspException,
             IgnoreException
     {
-        MeshObject obj  = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject start    = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject neighbor = (MeshObject) lookupOrThrow( theNeighborName );
 
         TraversalSpecification spec;
         if( theTraversalSpecification != null ) {
             if( theTraversalSpecificationName != null ) {
-                throw new JspException( "Must not specify both traversalSpecification and traversalSpecificationName" );
-            } else {
-                TraversalDictionary dict = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( TraversalDictionary.class );
-                spec = dict.translate( obj, theTraversalSpecification );
+                throw new JspException( "Must specify either traversalSpecification or traversalSpecificationName, not both" );
             }
-            
+            spec = findTraversalSpecificationOrThrow( theTraversalSpecification );
         } else if( theTraversalSpecificationName != null ) {
             spec = (TraversalSpecification) lookupOrThrow( theTraversalSpecificationName );
-
         } else {
             throw new JspException( "Must specify either traversalSpecification or traversalSpecificationName" );
         }
 
-        MeshObjectSet found = obj.traverse( spec );
-        return found;
-    }
-
-    /**
-     * Determine the integer value of the provided String.
-     *
-     * @param s the String
-     * @return the corresponding integer value
-     */
-    protected int determineValue(
-            String s )
-    {
-        if( s == null || s.length() == 0 ) {
-            return -1;
+        MeshObjectSet ret = start.traverse( spec );
+        if( ret.contains( neighbor )) {
+            return true;
+        } else {
+            return false;
         }
-        int ret = Integer.parseInt( s );
-        return ret;
     }
 
     /**
@@ -269,12 +196,7 @@ public abstract class AbstractRelatedTag
     protected String theTraversalSpecificationName;
 
     /**
-     * The minimum number of MeshObjects found.
+     * String containing the name of the bean that is the to-be-evaluated neighbor MeshObject.
      */
-    protected String theMinFound;
-
-    /**
-     * The maximum number of MeshObjects found.
-     */
-    protected String theMaxFound;
+    protected String theNeighborName;
 }

@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -18,10 +18,10 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 
 /**
- * <p>This tag tests whether two MeshObjects are related to each other with a given TraversalSpecification.</p>
+ * <p>This tag tests whether two MeshObjects are not related to each other with a given TraversalSpecification.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class IfRelatedTag
+public class NotIfRelatedTag
     extends
         AbstractRelatedTag
 {
@@ -30,7 +30,7 @@ public class IfRelatedTag
     /**
      * Constructor.
      */
-    public IfRelatedTag()
+    public NotIfRelatedTag()
     {
         // noop
     }
@@ -49,9 +49,9 @@ public class IfRelatedTag
             IgnoreException
     {
         if( evaluateTest() ) {
-            return EVAL_BODY_INCLUDE;
-        } else {
             return SKIP_BODY;
+        } else {
+            return EVAL_BODY_INCLUDE;
         }
     }
 }

@@ -22,8 +22,62 @@
          to find them in the IDE. -->
 
     <tag>
+        <name>ifSetContains</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.IfSetContainsTag</tag-class>
+        
+        <attribute>
+            <name>meshObjectSetName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>minFound</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>maxFound</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    
+    <tag>
         <name>ifSetEmpty</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.IfSetEmptyTag</tag-class>
+
+        <attribute>
+            <name>meshObjectSetName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ifSetNotEmpty</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.IfSetNotEmptyTag</tag-class>
         
         <attribute>
             <name>meshObjectSetName</name>
@@ -43,15 +97,28 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
-        <name>ifSetNotEmpty</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.IfSetNotEmptyTag</tag-class>
-        
+        <name>ifTraverseSetContains</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.IfTraverseSetContainsTag</tag-class>
+
         <attribute>
-            <name>meshObjectSetName</name>
-            <rtexprvalue>true</rtexprvalue>
+            <name>startObjectName</name>
             <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>traversalSpecification</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>minFound</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>maxFound</name>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>filter</name>

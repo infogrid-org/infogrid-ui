@@ -73,27 +73,19 @@
     </tag>
 
     <tag>
-        <name>ifRelated</name>
-        <tagclass>org.infogrid.jee.taglib.logic.IfRelatedTag</tagclass>
+        <name>if</name>
+        <tagclass>org.infogrid.jee.taglib.logic.IfTag</tagclass>
         <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
             <required>true</required>
         </attribute>
         <attribute>
-            <name>traversalSpecification</name>
+            <name>propertyTypeName</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>traversalSpecificationName</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>minFound</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>maxFound</name>
+            <name>propertyType</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -111,20 +103,25 @@
     </tag>
 
     <tag>
-        <name>if</name>
-        <tagclass>org.infogrid.jee.taglib.logic.IfTag</tagclass>
+        <name>ifRelated</name>
+        <tagclass>org.infogrid.jee.taglib.logic.IfRelatedTag</tagclass>
         <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
             <required>true</required>
         </attribute>
         <attribute>
-            <name>propertyTypeName</name>
+            <name>traversalSpecification</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>propertyType</name>
+            <name>traversalSpecificationName</name>
             <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>neighborName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
         </attribute>
         <attribute>
             <name>filter</name>
@@ -285,6 +282,41 @@
         </attribute>
     </tag>
     
+    <tag>
+        <name>notIfRelated</name>
+        <tagclass>org.infogrid.jee.taglib.logic.NotIfRelatedTag</tagclass>
+        <attribute>
+            <name>meshObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>traversalSpecification</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>traversalSpecificationName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>neighborName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
     <tag>
         <name>notIfType</name>
         <tagclass>org.infogrid.jee.taglib.logic.NotIfTypeTag</tagclass>
