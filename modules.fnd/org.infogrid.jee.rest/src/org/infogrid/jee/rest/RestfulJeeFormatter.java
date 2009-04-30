@@ -295,9 +295,12 @@ public class RestfulJeeFormatter
      *
      * @param name name of the TraversalSpecification
      * @return the found TraversalSpecification, or null
+     * @throws MeshTypeWithIdentifierNotFoundException thrown if a MeshTypeIdentifier was not found
      */
     public TraversalSpecification findTraversalSpecification(
             String name )
+        throws
+            MeshTypeWithIdentifierNotFoundException
     {
         ModelBase                 mb     = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( ModelBase.class );
         MeshTypeIdentifierFactory idFact = mb.getMeshTypeIdentifierFactory();
@@ -314,13 +317,7 @@ public class RestfulJeeFormatter
             } else {
                 MeshTypeIdentifier id = idFact.fromExternalForm( name );
 
-                try {
-                    ret = mb.findRoleTypeByIdentifier( id );
-
-                } catch( MeshTypeWithIdentifierNotFoundException ex ) {
-                    log.warn( ex );
-                    return null; // gotta do something
-                }
+                ret = mb.findRoleTypeByIdentifier( id );
             }
         } else {
             TraversalSpecification [] components = new TraversalSpecification[ componentNames.length ];
@@ -332,13 +329,8 @@ public class RestfulJeeFormatter
                 } else {
                     MeshTypeIdentifier id = idFact.fromExternalForm( componentNames[i] );
 
-                    try {
-                        components[i] = mb.findRoleTypeByIdentifier( id );
+                    components[i] = mb.findRoleTypeByIdentifier( id );
 
-                    } catch( MeshTypeWithIdentifierNotFoundException ex ) {
-                        log.warn( ex );
-                        return null; // gotta do something
-                    }
                 }
             }
             ret = SequentialCompoundTraversalSpecification.create( components );
@@ -364,12 +356,13 @@ public class RestfulJeeFormatter
             return null;
         }
 
-        TraversalSpecification ret = findTraversalSpecification( name );
+        try {
+            TraversalSpecification ret = findTraversalSpecification( name );
+            return ret;
 
-        if( ret == null ) {
-            throw new JspException( "Could not find TraversalSpecification " + name );
+        } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+            throw new JspException( ex );
         }
-        return ret;
     }
 
     /**

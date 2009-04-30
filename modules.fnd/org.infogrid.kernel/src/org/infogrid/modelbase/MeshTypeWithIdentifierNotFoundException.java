@@ -85,6 +85,17 @@ public class MeshTypeWithIdentifierNotFoundException
     }
 
     /**
+     * Convert to String form, for debugging.
+     *
+     * @return String form
+     */
+    @Override
+    public String toString()
+    {
+        return super.toString() + "{ id: " + theIdentifier + " }";
+    }
+
+    /**
      * Obtain parameters for the internationalization.
      *
      * @return the parameters

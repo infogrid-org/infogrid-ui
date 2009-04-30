@@ -127,18 +127,6 @@ public abstract class AbstractRestInfoGridTag
     }
 
     /**
-     * Find a TraversalSpecification, or return null.
-     *
-     * @param name name of the TraversalSpecification
-     * @return the found TraversalSpecification, or null
-     */
-    protected TraversalSpecification findTraversalSpecification(
-            String name )
-    {
-        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecification( name );
-    }
-
-    /**
      * Find a sequence of TraversalSpecifications, or throw an Exception.
      *
      * @param name name of the TraversalSpecification sequence
