@@ -185,9 +185,6 @@ public final class ColorDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( ColorValue.class, ColorValue.DEFAULT_ENTRY, s, this );
 

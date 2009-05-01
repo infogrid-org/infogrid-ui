@@ -413,7 +413,7 @@ public class HttpShellFilter
         } catch( RoleTypeRequiresEntityTypeException ex ) {
             throw new HttpShellException( ex );
 
-        } catch( InconsistentArgumentsException ex ) {
+        } catch( InvalidArgumentException ex ) {
             throw new HttpShellException( ex );
 
         } catch( FactoryException ex ) {
@@ -599,7 +599,7 @@ public class HttpShellFilter
      * @param obj the accessed object
      * @param tx the Transaction if and when created
      * @param request the request
-     * @throws InconsistentArgumentsException a wrong argument combination was given
+     * @throws InvalidArgumentException an argument was missing or invalid
      * @throws ClassCastException thrown if a MeshType with this identifier could be found, but it was of the wrong type
      * @throws MeshTypeWithIdentifierNotFoundException thrown if a MeshType with this identifier could not be found
      * @throws PropertyValueParsingException thrown if a PropertyValue could not be parsed
@@ -614,7 +614,7 @@ public class HttpShellFilter
             CreateWhenNeeded<Transaction> tx,
             SaneRequest                   request )
         throws
-            InconsistentArgumentsException,
+            InvalidArgumentException,
             ClassCastException,
             MeshTypeWithIdentifierNotFoundException,
             PropertyValueParsingException,
@@ -623,37 +623,57 @@ public class HttpShellFilter
             TransactionException,
             NotPermittedException
     {
+        Map<String,String[]> postArguments = request.getPostArguments();
+
         StringBuilder buf = new StringBuilder();
         buf.append( PREFIX );
         buf.append( varName );
         buf.append( PROPERTY_TYPE_TAG );
 
-        String [] propertyTypesStrings = request.getMultivaluedPostArgument( buf.toString() );
+        String propTypePrefix = buf.toString();
 
-        buf = new StringBuilder();
-        buf.append( PREFIX );
-        buf.append( varName );
-        buf.append( PROPERTY_VALUE_TAG );
-
-        String [] propertyValuesStrings = request.getMultivaluedPostArgument( buf.toString() );
-
-        int propTypesLength  = propertyTypesStrings  != null ? propertyTypesStrings.length  : 0;
-        int propValuesLength = propertyValuesStrings != null ? propertyValuesStrings.length : 0;
-
-        if( propTypesLength != propValuesLength ) {
-            throw new InconsistentArgumentsException( HttpShellFilter.PROPERTY_TYPE_TAG, HttpShellFilter.PROPERTY_VALUE_TAG );
-        }
-
-        if( propTypesLength > 0 ) {
-            for( int i=0 ; i<propertyTypesStrings.length ; ++i ) {
-                PropertyType propertyType = (PropertyType) findMeshType( propertyTypesStrings[i] );
-
-                PropertyValue value = propertyType.fromStringRepresentation( theParsingRepresentation, propertyValuesStrings[i] );
-
-                Transaction tx2 = tx.obtain();
-
-                obj.setPropertyValue( propertyType, value );
+        for( String arg : postArguments.keySet() ) {
+            if( !arg.startsWith( propTypePrefix )) {
+                continue; // not relevant here
             }
+            String propVarName = arg.substring( propTypePrefix.length() );
+
+            buf = new StringBuilder();
+            buf.append( PREFIX );
+            buf.append( varName );
+            buf.append( PROPERTY_VALUE_TAG );
+            buf.append( propVarName );
+
+            String propValueKey    = buf.toString();
+            String propValueString = request.getPostArgument( propValueKey );
+            String propTypeString  = request.getPostArgument( arg );
+
+            PropertyType propertyType = (PropertyType) findMeshType( propTypeString );
+
+            buf = new StringBuilder();
+            buf.append( PREFIX );
+            buf.append( varName );
+            buf.append( PROPERTY_VALUE_TAG );
+            buf.append( propVarName );
+            buf.append( NULL_PROPERTY_VALUE_TAG );
+
+            String nullValueKey    = buf.toString();
+            String nullValueString = request.getPostArgument( nullValueKey );
+
+            PropertyValue value;
+
+            if( NULL_PROPERTY_VALUE_TAG_TRUE.equals( nullValueString )) {
+                value = null;
+            } else {
+                if( propValueString == null ) {
+                    throw new InvalidArgumentException( propValueKey );
+                }
+                value = propertyType.fromStringRepresentation( theParsingRepresentation, propValueString );
+            }
+
+            Transaction tx2 = tx.obtain();
+
+            obj.setPropertyValue( propertyType, value );
         }
     }
 

@@ -175,9 +175,6 @@ public class MultiplicityDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( MultiplicityValue.class, MultiplicityValue.DEFAULT_ENTRY, s, this );
 

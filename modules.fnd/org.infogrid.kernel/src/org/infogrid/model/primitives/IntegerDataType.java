@@ -433,9 +433,6 @@ public class IntegerDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( IntegerValue.class, IntegerValue.DEFAULT_ENTRY, s, this );
 

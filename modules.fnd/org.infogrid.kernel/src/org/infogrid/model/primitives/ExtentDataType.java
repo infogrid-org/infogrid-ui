@@ -190,9 +190,6 @@ public final class ExtentDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( ExtentValue.class, ExtentValue.DEFAULT_ENTRY, s, this );
 

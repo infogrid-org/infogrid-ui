@@ -257,7 +257,7 @@ public abstract class DataType
                         representation.getStringRepresentationDirectory().get( SimpleStringRepresentationDirectory.TEXT_PLAIN_NAME ),
                         context,
                         pars ),
-        /* 5 */ nullString != null ? nullString : NULL_VALUE_STRING );
+        /* 5 */ nullString );
      }
 
     /**
@@ -304,9 +304,4 @@ public abstract class DataType
      * The default entry in the resource files for a null value of this DataType, prefixed by the StringRepresentation's prefix.
      */
     public static final String NULL_ENTRY = "Null";
-
-    /**
-     * This weird character string indicates "null".
-     */
-    public static final String NULL_VALUE_STRING = "!@NUlL#$";
 }

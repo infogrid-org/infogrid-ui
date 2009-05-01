@@ -429,9 +429,6 @@ public class FloatDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( FloatValue.class, FloatValue.DEFAULT_ENTRY, s, this );
 

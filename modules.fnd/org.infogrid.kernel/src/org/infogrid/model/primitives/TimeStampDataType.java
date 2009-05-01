@@ -175,9 +175,6 @@ public final class TimeStampDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( TimeStampValue.class, TimeStampValue.DEFAULT_ENTRY, s, this );
 

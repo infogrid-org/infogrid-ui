@@ -191,9 +191,6 @@ public final class TimePeriodDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( TimePeriodValue.class, TimePeriodValue.DEFAULT_ENTRY, s, this );
 

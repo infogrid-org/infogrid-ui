@@ -144,7 +144,7 @@ public abstract class PropertyValue
         }
         // falling through here to the default
 
-        return representation.formatEntry( PropertyValue.class, "Null", pars );
+        return representation.formatEntry( PropertyValue.class, "Null", pars, null, null, null, null, null, null );
     }
 
     /**

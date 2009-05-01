@@ -201,9 +201,6 @@ public final class BooleanDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         String compareTo = representation.formatEntry( BooleanValue.class, "True", null );
         if( compareTo.equalsIgnoreCase( s )) {
             return BooleanValue.TRUE;

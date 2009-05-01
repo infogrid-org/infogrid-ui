@@ -281,7 +281,7 @@ public class EnumeratedDataType
       *
       * @return a PropertyValue with a reasonable default value that is an instance of this DataType
       */
-    public PropertyValue instantiate()
+    public EnumeratedValue instantiate()
     {
         return theDomain[0];
     }
@@ -291,7 +291,7 @@ public class EnumeratedDataType
      *
      * @return the default value of this DataType
      */
-    public PropertyValue getDefaultValue()
+    public EnumeratedValue getDefaultValue()
     {
         return theDomain[0];
     }
@@ -514,9 +514,6 @@ public class EnumeratedDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( EnumeratedValue.class, EnumeratedValue.DEFAULT_ENTRY, s, this );
 

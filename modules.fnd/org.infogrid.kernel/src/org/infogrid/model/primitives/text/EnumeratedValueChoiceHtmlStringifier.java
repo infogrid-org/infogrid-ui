@@ -14,6 +14,7 @@
 
 package org.infogrid.model.primitives.text;
 
+import org.infogrid.model.primitives.EnumeratedDataType;
 import org.infogrid.model.primitives.EnumeratedValue;
 import org.infogrid.util.text.AbstractStringifier;
 import org.infogrid.util.text.StringRepresentationParameters;
@@ -109,7 +110,13 @@ public class EnumeratedValueChoiceHtmlStringifier
         throws
             ClassCastException
     {
-        return format( soFar, (EnumeratedValue) arg, pars );
+        if( arg instanceof EnumeratedValue ) {
+            return format( soFar, (EnumeratedValue) arg, pars );
+        } else if( arg instanceof EnumeratedDataType ) {
+            return format( soFar, ((EnumeratedDataType) arg).getDefaultValue(), pars );
+        } else {
+            throw new ClassCastException( "Cannot cast this object to a supported type: " + arg );
+        }
     }
 
     /**

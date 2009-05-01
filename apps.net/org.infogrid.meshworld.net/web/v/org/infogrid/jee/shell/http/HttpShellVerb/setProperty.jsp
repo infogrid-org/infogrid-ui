@@ -10,11 +10,11 @@
    </tr>
    <tr>
     <td class="label">Property Type:</td>
-    <td><input class="propertytype" name="shell.subject.propertytype" size="32" /></td>
+    <td><input class="propertytype" name="shell.subject.propertytype.1" size="32" /></td>
    </tr>
    <tr>
     <td class="label">Property Value:</td>
-    <td><input class="propertyvalue" name="shell.subject.propertyvalue" size="32" /></td>
+    <td><input class="propertyvalue" name="shell.subject.propertyvalue.1" size="32" /></td>
    </tr>
    <tr>
     <td colspan="2">

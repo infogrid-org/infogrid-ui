@@ -186,9 +186,6 @@ public class PointDataType
         throws
             PropertyValueParsingException
     {
-        if( NULL_VALUE_STRING.equals( s )) {
-            return null;
-        }
         try {
             Object [] found = representation.parseEntry( PointValue.class, PointValue.DEFAULT_ENTRY, s, this );
 

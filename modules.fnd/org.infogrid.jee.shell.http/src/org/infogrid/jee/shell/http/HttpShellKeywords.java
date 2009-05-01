@@ -48,12 +48,22 @@ public interface HttpShellKeywords
     /**
      * Keyword indicating the <code>PropertyType</code> for an operation.
      */
-    public static final String PROPERTY_TYPE_TAG  = SEPARATOR + "propertytype";
+    public static final String PROPERTY_TYPE_TAG  = SEPARATOR + "propertytype" + SEPARATOR;
 
     /**
      * Keyword indicating the <code>PropertyValue</code> for an operation.
      */
-    public static final String PROPERTY_VALUE_TAG = SEPARATOR + "propertyvalue";
+    public static final String PROPERTY_VALUE_TAG = SEPARATOR + "propertyvalue" + SEPARATOR;
+
+    /**
+     * Keyword indicating a null <code>PropertyValue</code> for a property.
+     */
+    public static final String NULL_PROPERTY_VALUE_TAG = SEPARATOR + "null";
+
+    /**
+     * Value for the NULL_PROPERTY_VALUE_TAG.
+     */
+    public static final String NULL_PROPERTY_VALUE_TAG_TRUE = "true";
 
     /**
      * Keyword indicating with which <code>EntityType</code> a MeshObject shall be blessed.

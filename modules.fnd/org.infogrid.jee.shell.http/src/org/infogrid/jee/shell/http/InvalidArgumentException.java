@@ -21,7 +21,7 @@ import org.infogrid.util.AbstractLocalizedException;
  * it is thrown if a different number of propertyTypes and propertyValues are given
  * for setting properties on a MeshObject.
  */
-public class InconsistentArgumentsException
+public class InvalidArgumentException
         extends
             AbstractLocalizedException
 {
@@ -30,35 +30,22 @@ public class InconsistentArgumentsException
     /**
      * Constructor.
      *
-     * @param arg1Name name of the first inconsistent argument
-     * @param arg2Name name of the first inconsistent argument
+     * @param argName name of the invalid argument
      */
-    public InconsistentArgumentsException(
-            String        arg1Name,
-            String        arg2Name )
+    public InvalidArgumentException(
+            String argName )
     {
-        theArgument1Name = arg1Name;
-        theArgument2Name = arg2Name;
+        theArgumentName = argName;
     }
     
     /**
-     * Obtain the name of the first argument that was inconsistent.
+     * Obtain the name of the argument that was invalid
      *
      * @return name of the argument
      */
-    public String getFirstArgumentName()
+    public String getArgumentName()
     {
-        return theArgument1Name;
-    }
-
-    /**
-     * Obtain the name of the second argument that was inconsistent.
-     *
-     * @return name of the argument
-     */
-    public String getSecondArgumentName()
-    {
-        return theArgument2Name;
+        return theArgumentName;
     }
 
     /**
@@ -68,16 +55,11 @@ public class InconsistentArgumentsException
      */    
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theArgument1Name, theArgument2Name };
+        return new Object[] { theArgumentName };
     }
 
     /**
-     * Name of the first argument that was inconsistent.
+     * Name of the argument that was invalid.
      */
-    protected String theArgument1Name;
-
-    /**
-     * Name of the second argument that was inconsistent.
-     */
-    protected String theArgument2Name;
+    protected String theArgumentName;
 }
