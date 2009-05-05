@@ -24,6 +24,7 @@ import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * This is a Binary Large Object (BLOB) value for PropertyValues.
@@ -89,7 +90,7 @@ public abstract class BlobValue
             throw new IllegalArgumentException( "null value" );
         }
         if( mimeType == null ) {
-            mimeType = NULL_MIME_TYPE;
+            mimeType = TEXT_PLAIN_MIME_TYPE;
         }
 
         return new BlobValue.StringBlob( value, mimeType );
@@ -113,7 +114,7 @@ public abstract class BlobValue
         }
 
         if( mimeType == null ) {
-            mimeType = NULL_MIME_TYPE;
+            mimeType = TEXT_PLAIN_MIME_TYPE;
         }
 
         return new BlobValue.StringBlob( value, mimeType );
@@ -135,7 +136,7 @@ public abstract class BlobValue
             throw new IllegalArgumentException( "null value" );
         }
         if( mimeType == null ) {
-            mimeType = NULL_MIME_TYPE;
+            mimeType = OCTET_STREAM_MIME_TYPE;
         }
 
         return new BlobValue.ByteBlob( value, mimeType );
@@ -158,7 +159,7 @@ public abstract class BlobValue
             return null;
         }
         if( mimeType == null ) {
-            mimeType = NULL_MIME_TYPE;
+            mimeType = OCTET_STREAM_MIME_TYPE;
         }
 
         return new BlobValue.ByteBlob( value, mimeType );
@@ -468,11 +469,14 @@ public abstract class BlobValue
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         Object editVariable;
         Object meshObject;
@@ -547,7 +551,19 @@ public abstract class BlobValue
     /**
      * Pre-defined MIME type for unknown.
      */
-    public static final String NULL_MIME_TYPE = "application/octet-stream";
+    public static final String OCTET_STREAM_MIME_TYPE = "application/octet-stream";
+
+    /**
+     * The set of all known MIME types. FIXME, insert longer list.
+     */
+    protected static final String [] KNOWN_MIME_TYPES = {
+        TEXT_PLAIN_MIME_TYPE,
+        TEXT_HTML_MIME_TYPE,
+        IMAGE_GIF_MIME_TYPE,
+        IMAGE_JPG_MIME_TYPE,
+        IMAGE_PNG_MIME_TYPE,
+        OCTET_STREAM_MIME_TYPE
+    };
 
     /**
      * This private subclass of BlobValue stores the data as a String.

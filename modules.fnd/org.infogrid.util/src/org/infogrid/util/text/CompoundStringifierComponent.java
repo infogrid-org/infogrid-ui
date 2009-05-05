@@ -31,11 +31,14 @@ public interface CompoundStringifierComponent
      * @param arg the Object to format
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String format(
             String                         soFar,
             ArrayFacade<Object>            arg,
-            StringRepresentationParameters pars );
+            StringRepresentationParameters pars )
+        throws
+            StringifierException;
     
     /**
      * Obtain an iterator that goes with this CompoundStringifierComponent.

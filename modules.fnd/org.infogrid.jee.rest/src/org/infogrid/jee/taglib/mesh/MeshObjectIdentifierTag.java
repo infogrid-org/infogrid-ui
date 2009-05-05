@@ -19,6 +19,7 @@ import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>Tag that displays the identifier of a MeshObject.</p>
@@ -132,10 +133,14 @@ public class MeshObjectIdentifierTag
             IgnoreException
     {
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
- 
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifierStart( pageContext, obj, theStringRepresentation, theMaxLength );
-        
-        print( text );
+
+        try {
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifierStart( pageContext, obj, theStringRepresentation, theMaxLength );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_BODY_INCLUDE;
     }
@@ -154,10 +159,14 @@ public class MeshObjectIdentifierTag
             IgnoreException
     {
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
- 
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifierEnd( pageContext, obj, theStringRepresentation );
 
-        print( text );
+        try {
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifierEnd( pageContext, obj, theStringRepresentation );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_PAGE;
     }

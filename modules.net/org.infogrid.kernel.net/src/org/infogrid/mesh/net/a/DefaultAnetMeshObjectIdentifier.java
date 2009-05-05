@@ -21,11 +21,11 @@ import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.a.DefaultAnetMeshObjectIdentifierFactory;
-import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Implements NetMeshObjectIdentifier for the Anet implementation.
@@ -144,12 +144,15 @@ public class DefaultAnetMeshObjectIdentifier
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     @Override
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
         String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
@@ -213,6 +216,7 @@ public class DefaultAnetMeshObjectIdentifier
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     @Override
     public String toStringRepresentationLinkStart(
@@ -220,6 +224,8 @@ public class DefaultAnetMeshObjectIdentifier
             String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
         String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
@@ -314,11 +320,14 @@ public class DefaultAnetMeshObjectIdentifier
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     @Override
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
         String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;

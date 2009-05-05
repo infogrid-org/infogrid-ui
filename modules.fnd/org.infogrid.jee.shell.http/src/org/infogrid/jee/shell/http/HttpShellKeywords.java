@@ -61,6 +61,16 @@ public interface HttpShellKeywords
     public static final String NULL_PROPERTY_VALUE_TAG = SEPARATOR + "null";
 
     /**
+     * Keyword indicating an uploaded <code>PropertyValue</code> for a property.
+     */
+    public static final String UPLOAD_PROPERTY_VALUE_TAG = SEPARATOR + "upload";
+
+    /**
+     * Keyword indicating the MIME type for a <code>BlobValue</code> for a property.
+     */
+    public static final String MIME_TAG = SEPARATOR + "mime";
+
+    /**
      * Value for the NULL_PROPERTY_VALUE_TAG.
      */
     public static final String NULL_PROPERTY_VALUE_TAG_TRUE = "true";

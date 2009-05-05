@@ -19,6 +19,7 @@ import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>Tag that displays a MeshObject.</p>
@@ -156,9 +157,13 @@ public class MeshObjectTag
     {
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
 
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectStart( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
+        try {
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectStart( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
+            print( text );
 
-        print( text );
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_BODY_INCLUDE;
     }
@@ -178,9 +183,13 @@ public class MeshObjectTag
     {
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
 
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectEnd( pageContext, obj, theStringRepresentation );
+        try {
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectEnd( pageContext, obj, theStringRepresentation );
+            print( text );
 
-        print( text );
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_PAGE;
     }

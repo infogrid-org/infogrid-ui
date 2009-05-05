@@ -24,6 +24,7 @@ import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Implements MeshObjectIdentifier for the "A" implementation.
@@ -160,12 +161,15 @@ public class DefaultAMeshObjectIdentifier
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
         String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
@@ -219,6 +223,7 @@ public class DefaultAMeshObjectIdentifier
      * @param target the HTML target, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */
     public String toStringRepresentationLinkStart(
@@ -226,6 +231,8 @@ public class DefaultAMeshObjectIdentifier
             String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
         String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
@@ -283,10 +290,13 @@ public class DefaultAMeshObjectIdentifier
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         MeshObject meshObject  = context != null ? (MeshObject) context.get( MeshStringRepresentationContext.MESHOBJECT_KEY ) : null;
         String     contextPath = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;

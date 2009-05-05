@@ -146,6 +146,88 @@ public abstract class StreamUtils
     }
 
     /**
+     * Read an InputStream until EOF but no further than util a boundary marker has been found.
+     * The stream position will be right after the boundary.
+     *
+     * @param inStream the InputStream
+     * @param boundary the boundary to look for
+     * @return the buffer into which the bytes have been written
+     * @throws IOException an I/O error occurred
+     */
+    public static byte [] slurpUntilBoundary(
+            InputStream inStream,
+            byte []     boundary )
+        throws
+            IOException
+    {
+        byte [] ret = slurpUntilBoundary(
+                inStream,
+                new byte[][] {
+                    boundary
+                });
+        return ret;
+    }
+
+    /**
+     * Read an InputStream until EOF but no further than util one of several possible boundary markers has been found.
+     * The stream position will be right after the found boundary.
+     *
+     * @param inStream the InputStream
+     * @param boundaries the boundaries to look for
+     * @return the buffer into which the bytes have been written
+     * @throws IOException an I/O error occurred
+     */
+    public static byte [] slurpUntilBoundary(
+            InputStream inStream,
+            byte [][]   boundaries )
+        throws
+            IOException
+    {
+        byte [] ret = new byte[ 512 ];
+
+        int count = 0;
+
+        outer:
+        while( true ) {
+            int b = inStream.read();
+            if( b < 0 ) {
+                break; // we are done
+            }
+            if( count == ret.length ) {
+                byte [] tmp = new byte[ ret.length * 2 ];
+                System.arraycopy( ret, 0, tmp, 0, ret.length );
+                ret = tmp;
+            }
+            ret[count++] = (byte) b;
+
+            // Now compare
+            for( int i=0 ; i<boundaries.length ; ++i ) {
+                byte [] currentBoundary = boundaries[i];
+                if( count < currentBoundary.length ) {
+                    continue; // can't be, we haven't read enough
+                }
+
+                boolean found = true;
+                for( int j=0 ; j<currentBoundary.length ; ++j ) {
+                    if( currentBoundary[j] != ret[count-currentBoundary.length+j ] ) {
+                        found = false;
+                        break;
+                    }
+                }
+                if( found ) {
+                    break outer;
+                }
+            }
+        }
+        if( count < ret.length ) {
+            byte [] tmp = new byte[ count ];
+            System.arraycopy( ret, 0, tmp, 0, count );
+            ret = tmp;
+        }
+        return ret;
+    }
+
+    /**
      * Read a Reader until EOF and put found content into a String.
      *
      * @param inReader the Reader

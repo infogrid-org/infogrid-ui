@@ -24,6 +24,7 @@ import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * No Viewlet could be found with the the required Viewlet type.
@@ -97,11 +98,14 @@ public class NoViewletFoundException
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         if( theObjectsToView.getViewletTypeName() == null ) {
             return rep.formatEntry(

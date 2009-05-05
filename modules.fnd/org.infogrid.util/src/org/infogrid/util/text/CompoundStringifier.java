@@ -77,11 +77,14 @@ public abstract class CompoundStringifier
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String format(
             String                         soFar,
             ArrayFacade<Object>            arg,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         StringBuffer ret = new StringBuffer();
         for( int i=0 ; i<theComponents.length ; ++i ) {
@@ -107,6 +110,7 @@ public abstract class CompoundStringifier
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
@@ -116,6 +120,7 @@ public abstract class CompoundStringifier
             Object                         arg,
             StringRepresentationParameters pars )
         throws
+            StringifierException,
             ClassCastException
     {
         return format( soFar, (ArrayFacade<Object>) arg, pars );

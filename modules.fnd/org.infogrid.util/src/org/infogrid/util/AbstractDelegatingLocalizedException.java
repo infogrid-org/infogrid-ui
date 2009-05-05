@@ -17,6 +17,7 @@ package org.infogrid.util;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * An AbstractLocalizedException used only for those Exceptions that primarily delegate to
@@ -83,12 +84,15 @@ public abstract class AbstractDelegatingLocalizedException
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     @Override
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         Throwable cause = getCause();
         if( cause instanceof LocalizedException ) {
@@ -107,6 +111,7 @@ public abstract class AbstractDelegatingLocalizedException
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     @Override
     public String toStringRepresentationLinkStart(
@@ -114,6 +119,8 @@ public abstract class AbstractDelegatingLocalizedException
             String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         Throwable cause = getCause();
         if( cause instanceof LocalizedException ) {
@@ -130,11 +137,14 @@ public abstract class AbstractDelegatingLocalizedException
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     @Override
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         Throwable cause = getCause();
         if( cause instanceof LocalizedException ) {

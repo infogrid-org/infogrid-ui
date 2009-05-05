@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="${CONTEXT}/s/templates/default/master.css" type="text/css" />
   <link rel="stylesheet" href="${CONTEXT}/s/templates/default/layout.css" type="text/css" />
   <link rel="stylesheet" href="${CONTEXT}/s/templates/default/color.css"  type="text/css" />
+  <link rel="stylesheet" href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/RefreshTag.css" type="text/css" />
   <tmpl:inline sectionName="html-head"/>
  </head>
  <body>

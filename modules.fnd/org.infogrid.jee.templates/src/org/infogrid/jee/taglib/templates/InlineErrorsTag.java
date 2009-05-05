@@ -22,6 +22,8 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseSection;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringifierException;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Inlines the reported errors into the output.
@@ -103,8 +105,13 @@ public class InlineErrorsTag
         }
         SaneRequest sane = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        String content = theFormatter.formatProblems( sane, reportedProblems, theStringRepresentation, false );
-        print( content );
+        try {
+            String content = theFormatter.formatProblems( sane, reportedProblems, theStringRepresentation, false );
+            print( content );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return SKIP_BODY;
     }

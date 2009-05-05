@@ -17,6 +17,7 @@ package org.infogrid.lid.credential;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Factors out functionality common to LidCredentialTypes.
@@ -50,11 +51,14 @@ public abstract class AbstractLidCredentialType
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         return rep.formatEntry( getClass(), DEFAULT_ENTRY, pars, getFullName() );
     }
@@ -68,12 +72,15 @@ public abstract class AbstractLidCredentialType
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         return "";
     }
@@ -85,10 +92,13 @@ public abstract class AbstractLidCredentialType
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         return "";
     }

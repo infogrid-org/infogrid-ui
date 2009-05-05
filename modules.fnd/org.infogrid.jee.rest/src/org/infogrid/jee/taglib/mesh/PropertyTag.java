@@ -21,6 +21,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Tag that renders a property of a <code>MeshObject</code>.
@@ -312,19 +313,23 @@ public class PropertyTag
         }
 
         String editVar = String.format( VARIABLE_PATTERN, varCounter );
-        
-        String text = formatValue(
-                pageContext,
-                obj,
-                type,
-                value,
-                editVar,
-                theNullString,
-                realStringRep,
-                theMaxLength,
-                theColloquial );
 
-        print( text );
+        try {
+            String text = formatValue(
+                    pageContext,
+                    obj,
+                    type,
+                    value,
+                    editVar,
+                    theNullString,
+                    realStringRep,
+                    theMaxLength,
+                    theColloquial );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         pageContext.getRequest().setAttribute( VARIABLE_COUNTER_NAME, varCounter.intValue()+1 );
         

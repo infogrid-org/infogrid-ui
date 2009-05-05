@@ -52,13 +52,16 @@ public interface StringRepresentation
      * @param entry the entry in the ResourceHelper (but qualified by the prefix of this StringRepresentation)
      * @param pars collects parameters that may influence the String representation
      * @param args the arguments for the entry in the ResourceHelper
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return the formatted String
      */
     public String formatEntry(
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
             StringRepresentationParameters           pars,
-            Object...                                args );
+            Object...                                args )
+        throws
+            StringifierException;
 
     /**
      * Parse an entry that has been formatted using this StringRepresentation.
@@ -86,11 +89,14 @@ public interface StringRepresentation
      * @param context the StringRepresentationContext to use
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatThrowable(
             Throwable                      t,
             StringRepresentationContext    context,
-            StringRepresentationParameters pars );
+            StringRepresentationParameters pars )
+        throws
+            StringifierException;
 
     /**
      * Obtain the local StringifierMap. This enables modification of the map.

@@ -18,6 +18,7 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Tag that renders an instance of <code>PropertyValue</code>, held in the context.
@@ -181,19 +182,23 @@ public class PropertyValueTag
             IgnoreException
     {
         PropertyValue value = (PropertyValue) lookupOrThrow( thePropertyValueName );
-        
-        String text = formatValue(
-                pageContext,
-                null,
-                null,
-                value,
-                null,
-                theNullString,
-                theStringRepresentation,
-                theMaxLength,
-                theColloquial );
 
-        print( text );
+        try {
+            String text = formatValue(
+                    pageContext,
+                    null,
+                    null,
+                    value,
+                    null,
+                    theNullString,
+                    theStringRepresentation,
+                    theMaxLength,
+                    theColloquial );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
         
         return SKIP_BODY;
     }

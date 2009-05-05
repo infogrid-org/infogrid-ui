@@ -51,6 +51,7 @@ import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * One particular implementation of MeshObject.
@@ -2013,12 +2014,15 @@ public class AMeshObject
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         String meshObjectExternalForm = IdentifierStringifier.defaultFormat( theIdentifier.toExternalForm(), pars );
         String meshBaseExternalForm   = IdentifierStringifier.defaultFormat( theMeshBase.getIdentifier().toExternalForm(), pars );
@@ -2062,12 +2066,15 @@ public class AMeshObject
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         return "";
     }
@@ -2079,10 +2086,13 @@ public class AMeshObject
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         return "";
     }

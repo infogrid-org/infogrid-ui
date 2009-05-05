@@ -42,11 +42,14 @@ public interface Stringifier<T>
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public abstract String format(
             String                         soFar,
             T                              arg,
-            StringRepresentationParameters pars );
+            StringRepresentationParameters pars )
+        throws
+            StringifierException;
 
     /**
      * Format an Object using this Stringifier. This may be null.
@@ -55,6 +58,7 @@ public interface Stringifier<T>
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
@@ -63,6 +67,7 @@ public interface Stringifier<T>
             Object                         arg,
             StringRepresentationParameters pars )
         throws
+            StringifierException,
             ClassCastException;
 
     /**

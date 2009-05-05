@@ -23,6 +23,7 @@ import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications
@@ -64,6 +65,7 @@ public class NetRestfulJeeFormatter
      * @param stringRepresentation the StringRepresentation to use
      * @param maxLength maximum length of emitted String
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatProxyIdentifierStart(
             PageContext pageContext,
@@ -71,6 +73,8 @@ public class NetRestfulJeeFormatter
             String      rootPath,
             String      stringRepresentation,
             int         maxLength )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -109,6 +113,7 @@ public class NetRestfulJeeFormatter
      * @param target the HTML target, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatProxyLinkStart(
             PageContext pageContext,
@@ -117,6 +122,8 @@ public class NetRestfulJeeFormatter
             String      addArguments,
             String      target,
             String      stringRepresentation )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -135,12 +142,15 @@ public class NetRestfulJeeFormatter
      * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatProxyLinkEnd(
             PageContext pageContext,
             Proxy       p,
             String      rootPath,
             String      stringRepresentation )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );

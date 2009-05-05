@@ -48,11 +48,14 @@ class CompoundStringifierPlaceholder
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String format(
             String                         soFar,
             ArrayFacade<Object>            arg,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         Object [] realArgs = arg.getArray();
 

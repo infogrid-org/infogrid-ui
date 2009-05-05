@@ -51,6 +51,7 @@ import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentationParseException;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications
@@ -399,6 +400,7 @@ public class RestfulJeeFormatter
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param colloquial if applicable, output in colloquial form
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatPropertyValue(
             PageContext   pageContext,
@@ -410,6 +412,8 @@ public class RestfulJeeFormatter
             String        stringRepresentation,
             int           maxLength,
             boolean       colloquial )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -428,12 +432,15 @@ public class RestfulJeeFormatter
      * @param stringRepresentation the StringRepresentation to use
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshTypeIdentifier(
             PageContext        pageContext,
             MeshTypeIdentifier identifier,
             String             stringRepresentation,
             int                maxLength )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -453,6 +460,7 @@ public class RestfulJeeFormatter
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param colloquial should the value be emitted in colloquial form
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshObjectStart(
             PageContext pageContext,
@@ -460,6 +468,8 @@ public class RestfulJeeFormatter
             String      stringRepresentation,
             int         maxLength,
             boolean     colloquial )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -477,11 +487,14 @@ public class RestfulJeeFormatter
      * @param mesh the MeshObject that is to be formatted
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshObjectEnd(
             PageContext pageContext,
             MeshObject  mesh,
             String      stringRepresentation )
+        throws
+            StringifierException
     {
         return ""; // nothing
     }
@@ -494,12 +507,15 @@ public class RestfulJeeFormatter
      * @param stringRepresentation the StringRepresentation to use
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshObjectIdentifierStart(
             PageContext        pageContext,
             MeshObject         mesh,
             String             stringRepresentation,
             int                maxLength )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -522,11 +538,14 @@ public class RestfulJeeFormatter
      * @param mesh the MeshObject whose identifier is to be formatted
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshObjectIdentifierEnd(
             PageContext        pageContext,
             MeshObject         mesh,
             String             stringRepresentation )
+        throws
+            StringifierException
     {
         return ""; // nothing
     }
@@ -541,6 +560,7 @@ public class RestfulJeeFormatter
      * @param target the HTML target, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshObjectLinkStart(
             PageContext        pageContext,
@@ -549,6 +569,8 @@ public class RestfulJeeFormatter
             String             addArguments,
             String             target,
             String             stringRepresentation )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -573,12 +595,15 @@ public class RestfulJeeFormatter
      * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshObjectLinkEnd(
             PageContext        pageContext,
             MeshObject         mesh,
             String             rootPath,
             String             stringRepresentation )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -626,6 +651,7 @@ public class RestfulJeeFormatter
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param colloquial should the value be emitted in colloquial form
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshBaseIdentifierStart(
             PageContext        pageContext,
@@ -633,6 +659,8 @@ public class RestfulJeeFormatter
             String             stringRepresentation,
             int                maxLength,
             boolean            colloquial )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -649,11 +677,14 @@ public class RestfulJeeFormatter
      * @param base the MeshBase whose identifier is to be formatted
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshBaseIdentifierEnd(
             PageContext        pageContext,
             MeshBase           base,
             String             stringRepresentation )
+        throws
+            StringifierException
     {
         return ""; // nothing
     }
@@ -668,6 +699,7 @@ public class RestfulJeeFormatter
      * @param target the HTML target, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshBaseLinkStart(
             PageContext        pageContext,
@@ -676,6 +708,8 @@ public class RestfulJeeFormatter
             String             addArguments,
             String             target,
             String             stringRepresentation )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
@@ -694,12 +728,15 @@ public class RestfulJeeFormatter
      * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatMeshBaseLinkEnd(
             PageContext        pageContext,
             MeshBase           base,
             String             rootPath,
             String             stringRepresentation )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );

@@ -22,6 +22,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Adds REST awareness to the AbstractInfoGridTag.
@@ -51,6 +52,7 @@ public abstract class AbstractRestInfoGridTag
      * @param theMaxLength the maximum length of an emitted String
      * @param colloquial if applicable, output in colloquial form
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     protected final String formatValue(
             PageContext   pageContext,
@@ -62,6 +64,8 @@ public abstract class AbstractRestInfoGridTag
             String        stringRepresentation,
             int           theMaxLength,
             boolean       colloquial )
+        throws
+            StringifierException
     {
         String ret = ((RestfulJeeFormatter)theFormatter).formatPropertyValue(
                 pageContext,

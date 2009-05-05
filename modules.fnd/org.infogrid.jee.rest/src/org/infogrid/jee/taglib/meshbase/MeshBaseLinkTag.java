@@ -19,6 +19,7 @@ import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>Tag that links/hyperlinks to a NetMeshBase.</p>
@@ -181,9 +182,14 @@ public class MeshBaseLinkTag
             IgnoreException
     {
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
-        
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkStart( pageContext, mb, theRootPath, theAddArguments, theTarget, theStringRepresentation );
-        print( text );
+
+        try {
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkStart( pageContext, mb, theRootPath, theAddArguments, theTarget, theStringRepresentation );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_BODY_INCLUDE;
     }
@@ -203,8 +209,13 @@ public class MeshBaseLinkTag
     {
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
 
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkEnd( pageContext, mb, theRootPath, theStringRepresentation );
-        print( text );
+        try {
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkEnd( pageContext, mb, theRootPath, theStringRepresentation );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_PAGE;
     }

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,6 +19,7 @@ import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>Tag that links / hyperlinks to a MeshObject.</p>
@@ -182,8 +183,13 @@ public class MeshObjectLinkTag
     {
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
 
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, theAddArguments, theTarget, theStringRepresentation );
-        print( text );
+        try {
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, theAddArguments, theTarget, theStringRepresentation );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_BODY_INCLUDE;
     }
@@ -202,9 +208,14 @@ public class MeshObjectLinkTag
             IgnoreException
     {
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
- 
-        String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, theRootPath, theStringRepresentation );
-        print( text );
+
+        try {
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, theRootPath, theStringRepresentation );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_PAGE;
     }

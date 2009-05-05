@@ -34,6 +34,7 @@ import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Collection of utility methods that are useful with InfoGrid JEE applications.
@@ -818,6 +819,9 @@ public class JeeFormatter
             char sep = '?';
             for( String key : args.keySet() ) {
                 String value = args.get( key );
+                if( value == null ) {
+                    continue; // no point
+                }
                 ret.append( sep ).append( HTTP.encodeToValidUrlArgument( key ) );
                 ret.append( '=' );
                 if( value != null ) {
@@ -846,19 +850,20 @@ public class JeeFormatter
                         found2 = urlArgs.length();
                     }
                     StringBuilder newUrlArgs = new StringBuilder();
-                    newUrlArgs.append( urlArgs.substring( 0, found+1 ));
-                    newUrlArgs.append( escapedKey );
-                    newUrlArgs.append( '=' );
+                    newUrlArgs.append( urlArgs.substring( 0, found ));
                     if( escapedValue != null ) {
+                        newUrlArgs.append( '&' );
+                        newUrlArgs.append( escapedKey );
+                        newUrlArgs.append( '=' );
                         newUrlArgs.append( escapedValue );
                     }
                     newUrlArgs.append( urlArgs.substring( found2 ));
                     urlArgs = newUrlArgs;
                 } else {
-                    append.append( '&' );
-                    append.append( escapedKey );
-                    append.append( '=' );
                     if( escapedValue != null ) {
+                        append.append( '&' );
+                        append.append( escapedKey );
+                        append.append( '=' );
                         append.append( escapedValue );
                     }
                 }
@@ -971,12 +976,15 @@ public class JeeFormatter
      * @param stringRepresentation the StringRepresentation to use
      * @param colloquial if applicable, output in colloquial form
      * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatProblems(
             SaneRequest        request,
             List<Throwable>    reportedProblems,
             String             stringRepresentation,
             boolean            colloquial )
+        throws
+            StringifierException
     {
         StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
         StringRepresentationContext context = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );

@@ -15,15 +15,18 @@
 package org.infogrid.model.primitives;
 
 import java.io.ObjectStreamException;
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 /**
   * This is a boolean DataType.
   */
 public final class BooleanDataType
         extends DataType
 {
+    private static final Log  log              = Log.getLogInstance( BooleanDataType.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
@@ -173,11 +176,14 @@ public final class BooleanDataType
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         return rep.formatEntry(
                 BooleanValue.class,
@@ -201,21 +207,40 @@ public final class BooleanDataType
         throws
             PropertyValueParsingException
     {
-        String compareTo = representation.formatEntry( BooleanValue.class, "True", null );
-        if( compareTo.equalsIgnoreCase( s )) {
-            return BooleanValue.TRUE;
+        try {
+            String compareTo = representation.formatEntry( BooleanValue.class, "True", null );
+            if( compareTo.equalsIgnoreCase( s )) {
+                return BooleanValue.TRUE;
+            }
+        } catch( StringifierException ex ) {
+            log.error( ex );
         }
-        compareTo = representation.formatEntry( BooleanValue.class, "False", null );
-        if( compareTo.equalsIgnoreCase( s )) {
-            return BooleanValue.FALSE;
+
+        try {
+            String compareTo = representation.formatEntry( BooleanValue.class, "False", null );
+            if( compareTo.equalsIgnoreCase( s )) {
+                return BooleanValue.FALSE;
+            }
+        } catch( StringifierException ex ) {
+            log.error( ex );
         }
-        compareTo = representation.formatEntry( BooleanValue.class, "True", null );
-        if( compareTo.equalsIgnoreCase( s )) {
-            return BooleanValue.TRUE;
+
+        try {
+            String compareTo = representation.formatEntry( BooleanValue.class, "True", null );
+            if( compareTo.equalsIgnoreCase( s )) {
+                return BooleanValue.TRUE;
+            }
+        } catch( StringifierException ex ) {
+            log.error( ex );
         }
-        compareTo = representation.formatEntry( BooleanValue.class, "False", null );
-        if( compareTo.equalsIgnoreCase( s )) {
-            return BooleanValue.FALSE;
+
+        try {
+            String compareTo = representation.formatEntry( BooleanValue.class, "False", null );
+            if( compareTo.equalsIgnoreCase( s )) {
+                return BooleanValue.FALSE;
+            }
+        } catch( StringifierException ex ) {
+            log.error( ex );
         }
         throw new PropertyValueParsingException( this, representation, s );
     }

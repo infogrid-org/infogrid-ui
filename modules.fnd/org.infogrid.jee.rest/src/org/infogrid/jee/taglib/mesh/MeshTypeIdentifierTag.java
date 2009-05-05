@@ -20,6 +20,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Tag that displays the user-visible String of a <code>MeshType</code>.
@@ -170,14 +171,18 @@ public class MeshTypeIdentifierTag
             theIdentifier = null;
         }
 
-        String text;
-        if( theIdentifier != null ) {
-            text = ((RestfulJeeFormatter)theFormatter).formatMeshTypeIdentifier( pageContext, theIdentifier, theStringRepresentation, theMaxLength );
-        } else {
-            text = theNullString;
-        }
+        try {
+            String text;
+            if( theIdentifier != null ) {
+                text = ((RestfulJeeFormatter)theFormatter).formatMeshTypeIdentifier( pageContext, theIdentifier, theStringRepresentation, theMaxLength );
+            } else {
+                text = theNullString;
+            }
+            print( text );
 
-        print( text );
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return SKIP_BODY;
     }

@@ -58,6 +58,7 @@ import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * This abstract, partial implementation of MeshBase provides
@@ -1252,12 +1253,15 @@ public abstract class AbstractMeshBase
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         boolean isDefaultMeshBase = context != null ? ( equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
 
@@ -1288,12 +1292,15 @@ public abstract class AbstractMeshBase
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         boolean isDefaultMeshBase = context != null ? ( equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
         String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;
@@ -1329,10 +1336,13 @@ public abstract class AbstractMeshBase
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         boolean isDefaultMeshBase = context != null ? ( equals( context.get( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY ))) : true;
         String  contextPath       = context != null ? (String) context.get(  StringRepresentationContext.WEB_CONTEXT_KEY ) : null;

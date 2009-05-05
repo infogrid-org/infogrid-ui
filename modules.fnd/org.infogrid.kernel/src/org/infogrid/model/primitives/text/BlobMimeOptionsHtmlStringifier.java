@@ -14,44 +14,38 @@
 
 package org.infogrid.model.primitives.text;
 
-import org.infogrid.model.primitives.EnumeratedDataType;
-import org.infogrid.model.primitives.EnumeratedValue;
+import org.infogrid.model.primitives.BlobDataType;
+import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.util.text.AbstractStringifier;
 import org.infogrid.util.text.StringRepresentationParameters;
-import org.infogrid.util.text.Stringifier;
-import org.infogrid.util.text.StringifierException;
 
 /**
- * Stringifies the domain of EnumeratedDataTypes.
+ * Stringifies the allowed MIME types of a BlobDataType.
  */
-public class EnumeratedDataTypeDomainStringifier
+public class BlobMimeOptionsHtmlStringifier
         extends
-            AbstractStringifier<EnumeratedDataType>
+            AbstractStringifier<BlobDataType>
 {
     /**
      * Factory method.
      *
-     * @param delegate the Stringifier responsible for stringifying the contained EnumeratedValues
      * @return the created EnumeratedValueStringifier
      */
-    public static EnumeratedDataTypeDomainStringifier create(
-            Stringifier<EnumeratedValue> delegate )
+    public static BlobMimeOptionsHtmlStringifier create()
     {
-        return new EnumeratedDataTypeDomainStringifier( delegate, null, null, null );
+        return new BlobMimeOptionsHtmlStringifier( null, null, null );
     }
 
     /**
      * Factory method.
      *
      * @param middle the string to insert in the middle
-     * @param delegate the Stringifier responsible for stringifying the contained EnumeratedValues
      * @return the created EnumeratedValueStringifier
      */
-    public static EnumeratedDataTypeDomainStringifier create(
-            Stringifier<EnumeratedValue> delegate,
-            String                       middle )
+    public static BlobMimeOptionsHtmlStringifier create(
+            String middle )
     {
-        return new EnumeratedDataTypeDomainStringifier( delegate, null, middle, null );
+        return new BlobMimeOptionsHtmlStringifier( null, middle, null );
     }
 
     /**
@@ -60,33 +54,28 @@ public class EnumeratedDataTypeDomainStringifier
      * @param start the string to insert at the beginning
      * @param middle the string to insert in the middle
      * @param end the string to append at the end
-     * @param delegate the Stringifier responsible for stringifying the contained EnumeratedValues
      * @return the created EnumeratedValueStringifier
      */
-    public static EnumeratedDataTypeDomainStringifier create(
-            Stringifier<EnumeratedValue> delegate,
-            String                       start,
-            String                       middle,
-            String                       end )
+    public static BlobMimeOptionsHtmlStringifier create(
+            String start,
+            String middle,
+            String end )
     {
-        return new EnumeratedDataTypeDomainStringifier( delegate, start, middle, end );
+        return new BlobMimeOptionsHtmlStringifier( start, middle, end );
     }
 
     /**
      * Private constructor for subclasses only, use factory method.
      *
-     * @param delegate the Stringifier responsible for stringifying the contained EnumeratedValues
      * @param start the string to insert at the beginning
      * @param middle the string to insert in the middle
      * @param end the string to append at the end
      */
-    protected EnumeratedDataTypeDomainStringifier(
-            Stringifier<EnumeratedValue> delegate,
-            String                       start,
-            String                       middle,
-            String                       end )
+    protected BlobMimeOptionsHtmlStringifier(
+            String start,
+            String middle,
+            String end )
     {
-        theDelegate = delegate;
         theStart    = start;
         theMiddle   = middle;
         theEnd      = end;
@@ -128,28 +117,23 @@ public class EnumeratedDataTypeDomainStringifier
      * @param soFar the String so far, if any
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
-     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return the formatted String
      */
     public String format(
             String                         soFar,
-            EnumeratedDataType             arg,
+            BlobDataType                   arg,
             StringRepresentationParameters pars )
-        throws
-            StringifierException
     {
-        EnumeratedValue [] values = arg.getDomain();
-        StringBuilder      ret    = new StringBuilder();
-        String             sep    = theStart;
+        String []     values = arg.getMimeTypes();
+        StringBuilder ret    = new StringBuilder();
+        String        sep    = theStart;
 
         for( int i=0 ; i<values.length ; ++i ) {
             if( sep != null ) {
                 ret.append( sep );
             }
-            String childInput = theDelegate.format( soFar + ret.toString(), values[i], pars ); // presumably shorter, but we don't know
-            if( childInput != null ) {
-                ret.append( childInput );
-            }
+            ret.append( values[i] );
+
             sep = theMiddle;
         }
         if( theEnd != null ) {
@@ -165,7 +149,6 @@ public class EnumeratedDataTypeDomainStringifier
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
-     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
@@ -174,16 +157,16 @@ public class EnumeratedDataTypeDomainStringifier
             Object                         arg,
             StringRepresentationParameters pars )
         throws
-            StringifierException,
             ClassCastException
     {
-        return format( soFar, (EnumeratedDataType) arg, pars );
+        if( arg instanceof BlobDataType ) {
+            return format( soFar, (BlobDataType) arg, pars );
+        } else if( arg instanceof PropertyType ) {
+            return format( soFar, (BlobDataType) ((PropertyType) arg).getDataType(), pars );
+        } else {
+            throw new ClassCastException( "Cannot stringify " + arg );
+        }
     }
-
-    /**
-     * The underlying Stringifier responsible for stringifying the contained EnumeratedValues.
-     */
-    protected Stringifier<EnumeratedValue> theDelegate;
 
     /**
      * The String to insert at the beginning. May be null.

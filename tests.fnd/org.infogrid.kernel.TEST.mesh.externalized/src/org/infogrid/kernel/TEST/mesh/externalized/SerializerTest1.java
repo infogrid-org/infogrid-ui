@@ -431,7 +431,7 @@ public class SerializerTest1
                          BlobValue.create( new byte[] { (byte) 11 }, "ext/html" )
                     } ),
         new TestCase(
-                BlobDataType.theTextAnyType,
+                BlobDataType.theTextPlainOrHtmlType,
                 new BlobValue[] {
                      BlobValue.create( "a" ), // works
                      BlobValue.create( "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" ),

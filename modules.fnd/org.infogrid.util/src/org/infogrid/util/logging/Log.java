@@ -21,9 +21,11 @@ import org.infogrid.util.AbstractLocalizedRuntimeException;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.HasStringRepresentation;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /** 
   * <p>The central class in the org.infogrid.util.logging package.</p>
@@ -726,17 +728,25 @@ public abstract class Log
     {
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
-            userFatal(
-                    realEx.toStringRepresentation( rep, context, pars ),
-                    parentComponent,
-                    realEx );
+            try {
+                userFatal(
+                        realEx.toStringRepresentation( rep, context, pars ),
+                        parentComponent,
+                        realEx );
+            } catch( StringifierException ex ) {
+                error( ex );
+            }
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
-            userFatal(
-                    realEx.toStringRepresentation( rep, context, pars ),
-                    parentComponent,
-                    realEx );
+            try {
+                userFatal(
+                        realEx.toStringRepresentation( rep, context, pars ),
+                        parentComponent,
+                        realEx );
+            } catch( StringifierException ex ) {
+                error( ex );
+            }
 
         } else {
             userFatal(
@@ -853,17 +863,25 @@ public abstract class Log
     {
         if( t instanceof AbstractLocalizedException ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
-            userError(
-                    realEx.toStringRepresentation( rep, context, pars ),
-                    parentComponent,
-                    realEx );
+            try {
+                userError(
+                        realEx.toStringRepresentation( rep, context, pars ),
+                        parentComponent,
+                        realEx );
+            } catch( StringifierException ex ) {
+                error( ex );
+            }
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
-            userError(
-                    realEx.toStringRepresentation( rep, context, pars ),
-                    parentComponent,
-                    realEx );
+            try {
+                userError(
+                        realEx.toStringRepresentation( rep, context, pars ),
+                        parentComponent,
+                        realEx );
+            } catch( StringifierException ex ) {
+                error( ex );
+            }
         } else {
             userError(
                     theResourceHelper.getResourceString( t.getClass().getName() ),
@@ -977,19 +995,27 @@ public abstract class Log
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
     {
-        if( t instanceof AbstractLocalizedException ) {
+        if( t instanceof HasStringRepresentation ) {
             AbstractLocalizedException realEx = (AbstractLocalizedException) t;
-            userWarn(
-                    realEx.toStringRepresentation( rep, context, pars ),
-                    parentComponent,
-                    realEx );
+            try {
+                userWarn(
+                        realEx.toStringRepresentation( rep, context, pars ),
+                        parentComponent,
+                        realEx );
+            } catch( StringifierException ex ) {
+                error( ex );
+            }
 
         } else if( t instanceof AbstractLocalizedRuntimeException ) {
             AbstractLocalizedRuntimeException realEx = (AbstractLocalizedRuntimeException) t;
-            userWarn(
-                    realEx.toStringRepresentation( rep, context, pars ),
-                    parentComponent,
-                    realEx );
+            try {
+                userWarn(
+                        realEx.toStringRepresentation( rep, context, pars ),
+                        parentComponent,
+                        realEx );
+            } catch( StringifierException ex ) {
+                error( ex );
+            }
 
         } else {
             userWarn(

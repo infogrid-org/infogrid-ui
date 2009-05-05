@@ -119,7 +119,7 @@ public class ViewletTag
                 content.append( "\" id=\"" );
                 content.append( theFormId );
             }
-            content.append( "\">\n" );
+            content.append( "\" enctype=\"multipart/form-data\">\n" ); // use the more general form
 
         }
         content.append( "<div class=\"viewlet" );

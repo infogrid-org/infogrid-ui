@@ -19,6 +19,7 @@ import org.infogrid.util.text.AbstractStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * A Stringifier to stringify PropertyValues into Strings. The reverse is currently NOT supported.
@@ -62,11 +63,14 @@ public class PropertyValueStringifier
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String format(
             String                         soFar,
             PropertyValue                  arg,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         String ret = PropertyValue.toStringRepresentationOrNull(
                 arg,
@@ -83,6 +87,7 @@ public class PropertyValueStringifier
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
@@ -91,6 +96,7 @@ public class PropertyValueStringifier
             Object                         arg,
             StringRepresentationParameters pars )
         throws
+            StringifierException,
             ClassCastException
     {
         if( arg == null ) {

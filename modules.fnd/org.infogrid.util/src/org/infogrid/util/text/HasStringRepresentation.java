@@ -27,11 +27,14 @@ public interface HasStringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
-            StringRepresentationParameters pars );
+            StringRepresentationParameters pars )
+        throws
+            StringifierException;
 
     /**
      * Obtain the start part of a String representation of this object that acts
@@ -41,13 +44,16 @@ public interface HasStringRepresentation
      * @param target the HTML target, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
             StringRepresentation        rep,
-            StringRepresentationContext context );
+            StringRepresentationContext context )
+        throws
+            StringifierException;
 
     /**
      * Obtain the end part of a String representation of this object that acts
@@ -55,11 +61,14 @@ public interface HasStringRepresentation
      * 
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
-            StringRepresentationContext context );
+            StringRepresentationContext context )
+        throws
+            StringifierException;
 
     /**
      * Constant representing unlimited length.

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,7 @@ package org.infogrid.jee.testapp;
 
 import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
-import org.infogrid.jee.viewlet.image.ImageViewlet;
+import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.Blob.BlobSubjectArea;
@@ -57,9 +57,9 @@ public class TestAppViewletFactory
 
         // NetMeshBase's Home Object
         if( subject.isBlessedBy( BlobSubjectArea.IMAGE )) {
-            ret.add( ImageViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( BlobViewlet.choice( ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         }
-        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

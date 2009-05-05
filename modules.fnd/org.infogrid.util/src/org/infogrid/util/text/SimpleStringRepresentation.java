@@ -139,27 +139,24 @@ public class SimpleStringRepresentation
      * @param entry the entry in the ResourceHelper (but qualified by the prefix of this StringRepresentation)
      * @param args the arguments for the entry in the ResourceHelper
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to
      */
     public String formatEntry(
             Class<? extends HasStringRepresentation> classOfFormattedObject,
             String                                   entry,
             StringRepresentationParameters           pars,
             Object...                                args )
+        throws
+            StringifierException
     {
         ResourceHelper rh           = ResourceHelper.getInstance( classOfFormattedObject, true );
         String         formatString = rh.getResourceStringOrDefault( theName + entry, null );
 
         if( formatString != null ) {
-            try {
-                AnyMessageStringifier stringifier = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
+            AnyMessageStringifier stringifier = AnyMessageStringifier.create( formatString, getRecursiveStringifierMap() );
 
-                String ret = stringifier.format( null, ArrayFacade.<Object>create( args ), pars );
-                return ret;
-
-            } catch( StringifierException ex ) {
-                log.error( ex );
-                return null;
-            }
+            String ret = stringifier.format( null, ArrayFacade.<Object>create( args ), pars );
+            return ret;
         }
         if( theDelegate != null ) {
             return theDelegate.formatEntry( classOfFormattedObject, entry, pars, args );
@@ -224,11 +221,14 @@ public class SimpleStringRepresentation
      * @param context the StringRepresentationContext to use
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatThrowable(
             Throwable                      t,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         String ret;
         if( t instanceof HasStringRepresentation ) {
@@ -247,11 +247,14 @@ public class SimpleStringRepresentation
      * @param context the StringRepresentationContext to use
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatHasStringRepresentationThrowable(
             HasStringRepresentation        t,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         String ret = t.toStringRepresentation( this, context, pars );
         return ret;

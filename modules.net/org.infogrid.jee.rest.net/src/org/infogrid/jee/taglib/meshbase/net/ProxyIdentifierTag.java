@@ -19,6 +19,7 @@ import org.infogrid.jee.rest.net.NetRestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>Tag that displays the identifier of the PartnerNetMeshBase of a Proxy.</p>
@@ -131,10 +132,14 @@ public class ProxyIdentifierTag
             IgnoreException
     {
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
-        
-        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierStart( pageContext, p, null, theStringRepresentation, theMaxLength );
-        
-        print( text );
+
+        try {
+            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierStart( pageContext, p, null, theStringRepresentation, theMaxLength );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_BODY_INCLUDE;
     }

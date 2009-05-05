@@ -25,6 +25,7 @@ import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Tag that displays the user-visible String of a <code>MeshType</code>.
@@ -287,8 +288,13 @@ public class MeshTypeTag
 
                 StringRepresentationParameters pars = theFormatter.constructStringRepresentationParameters( theMaxLength, theColloquial );
 
-                text = realFound.toStringRepresentation( rep, context, pars );
-                // a bit of a funny structure, but the best I can do
+                try {
+                    text = realFound.toStringRepresentation( rep, context, pars );
+
+                } catch( StringifierException ex ) {
+                    throw new JspException( ex );
+                }
+                    // a bit of a funny structure, but the best I can do
             } else {
                 throw new ClassCastException( "Found object named " + theMeshTypeName + " is neither a PropertyValue nor an L10Map: " + found );
             }
@@ -305,16 +311,21 @@ public class MeshTypeTag
         }
         if( text == null ) {
             // a bit of a funny structure, but the best I can do
-            text = formatValue(
-                    pageContext,
-                    null,
-                    null,
-                    value,
-                    null,
-                    theNullString,
-                    rep.getName(),
-                    theMaxLength,
-                    theColloquial );
+            try {
+                text = formatValue(
+                        pageContext,
+                        null,
+                        null,
+                        value,
+                        null,
+                        theNullString,
+                        rep.getName(),
+                        theMaxLength,
+                        theColloquial );
+
+            } catch( StringifierException ex ) {
+                throw new JspException( ex );
+            }
         }
         print( text );
         

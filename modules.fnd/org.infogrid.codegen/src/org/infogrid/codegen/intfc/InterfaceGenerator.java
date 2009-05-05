@@ -30,6 +30,7 @@ import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringifierException;
 
 /**
   * This class is a code generator that generates the interface code
@@ -60,11 +61,13 @@ public class InterfaceGenerator
      * @param theMeshType the EntityType to generate code for
      * @return the fully-qualified file name where it was generated
      * @throws IOException thrown if an I/O error occurred during code generation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     protected String generateCodeForEntityType(
             EntityType theMeshType )
         throws
-            IOException
+            IOException,
+            StringifierException
     {
         if( !theMeshType.getDoGenerateInterfaceCode().value() ) {
             return null;
@@ -329,12 +332,14 @@ public class InterfaceGenerator
      * @param theSa the SubjectArea for which to generate code
      * @return the fully-qualified file name where it was generated
      * @throws IOException an input/output error occurred
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     @Override
     protected String generateCodeForSubjectArea(
             SubjectArea theSa )
         throws
-            IOException
+            IOException,
+            StringifierException
     {
         if( !theSa.getDoGenerateInterfaceCode().value() ) {
             return null;
@@ -434,10 +439,13 @@ public class InterfaceGenerator
      * @param theSubjectArea the SubjectArea to generate documentation for
      * @return the fully-qualified file name where it was generated
      * @throws IOException thrown if an I/O error occurred during code generation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     protected String generateJavaDocForSubjectArea(
             SubjectArea theSubjectArea )
-        throws IOException
+        throws
+            IOException,
+            StringifierException
     {
         PrintWriter w = this.getJavaDocPrintWriterFor( theSubjectArea );
         

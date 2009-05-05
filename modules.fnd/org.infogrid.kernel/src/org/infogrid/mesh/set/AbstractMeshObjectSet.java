@@ -139,7 +139,7 @@ public abstract class AbstractMeshObjectSet
                 return get( 0 );
 
             default:
-                throw new IllegalStateException( "Set had " + size + " members, not one" );
+                throw new IllegalStateException( "MeshObjectSet has " + size + " members, not one" );
         }
     }
 

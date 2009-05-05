@@ -19,6 +19,7 @@ import org.infogrid.jee.rest.net.NetRestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>Tag that links/hyperlinks to a Proxy.</p>
@@ -180,9 +181,14 @@ public class ProxyLinkTag
             IgnoreException
     {
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
-        
-        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkStart( pageContext, p, theRootPath, theAddArguments, theTarget, theStringRepresentation );
-        print( text );
+
+        try {
+            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkStart( pageContext, p, theRootPath, theAddArguments, theTarget, theStringRepresentation );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_BODY_INCLUDE;
     }
@@ -201,9 +207,14 @@ public class ProxyLinkTag
             IgnoreException
     {
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
-        
-        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkEnd( pageContext, p, theRootPath, theStringRepresentation );
-        print( text );
+
+        try {
+            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkEnd( pageContext, p, theRootPath, theStringRepresentation );
+            print( text );
+
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        }
 
         return EVAL_PAGE;
     }

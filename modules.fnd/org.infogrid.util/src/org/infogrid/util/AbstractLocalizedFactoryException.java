@@ -14,11 +14,13 @@
 
 package org.infogrid.util;
 
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * A FactoryException that is also localized.
@@ -29,6 +31,8 @@ public abstract class AbstractLocalizedFactoryException
         implements
             LocalizedException
 {
+    private static final Log log = Log.getLogInstance( AbstractLocalizedFactoryException.class ); // our own, private logger
+
     /**
      * Constructor.
      * 
@@ -89,10 +93,15 @@ public abstract class AbstractLocalizedFactoryException
     @Override
     public String getLocalizedMessage()
     {
-        return toStringRepresentation(
-                StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
-                null,
-                null );
+        try {
+            return toStringRepresentation(
+                    StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
+                    null,
+                    null );
+        } catch( StringifierException ex ) {
+            log.error( ex );
+            return super.getLocalizedMessage();
+        }
     }
 
     /**
@@ -109,11 +118,14 @@ public abstract class AbstractLocalizedFactoryException
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         return AbstractLocalizedException.constructStringRepresentation(
                 this,
@@ -134,12 +146,15 @@ public abstract class AbstractLocalizedFactoryException
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         return AbstractLocalizedException.constructStringRepresentationLinkStart(
                 this,
@@ -157,10 +172,13 @@ public abstract class AbstractLocalizedFactoryException
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         return AbstractLocalizedException.constructStringRepresentationLinkEnd(
                 this,

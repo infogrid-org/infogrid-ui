@@ -34,6 +34,7 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * The InfoGrid code generator.
@@ -182,11 +183,13 @@ public class CodeGenerator
      *
      * @param sas the SubjectArea
      * @throws IOException thrown if an I/O error occurred
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public void generateForAll(
             SubjectArea [] sas )
         throws
-            IOException
+            IOException,
+            StringifierException
     {
         InterfaceGenerator theInterfaceGenerator = new InterfaceGenerator( theOutputDirectory, theCommentsRepresentation );
         theInterfaceGenerator.generateForAll( sas );

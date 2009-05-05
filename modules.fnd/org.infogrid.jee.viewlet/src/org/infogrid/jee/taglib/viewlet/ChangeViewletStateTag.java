@@ -23,6 +23,7 @@ import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.JeeViewletState;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Allows the user to select an alternate JeeViewletState.
@@ -141,24 +142,29 @@ public class ChangeViewletStateTag
                 if( found == null ) {
                     continue;
                 }
-                if( found.equals( currentState )) {
-                    if( !DISPLAY_COMPACT.equals( theDisplay )) {
+                try {
+                    if( found.equals( currentState )) {
+                        if( !DISPLAY_COMPACT.equals( theDisplay )) {
+                            buf.append( "  <li>" );
+                            buf.append( "<b>" );
+                            buf.append( found.toStringRepresentation( null, null, null ) ); // arguments don't matter
+                            buf.append( "</b>" );
+                            buf.append( "  </li>\n" );
+                        }
+                    } else {
                         buf.append( "  <li>" );
-                        buf.append( "<b>" );
+                        buf.append( "<a href=\"" );
+                        buf.append( HTTP.replaceOrAppendArgumentToUrl( href, JeeViewletState.VIEWLET_STATE_PAR_NAME, current ));
+                        buf.append( "\">" );
                         buf.append( found.toStringRepresentation( null, null, null ) ); // arguments don't matter
-                        buf.append( "</b>" );
+                        buf.append( "</a>" );
                         buf.append( "  </li>\n" );
-                    }
-                } else {
-                    buf.append( "  <li>" );
-                    buf.append( "<a href=\"" );
-                    buf.append( HTTP.replaceOrAppendArgumentToUrl( href, JeeViewletState.VIEWLET_STATE_PAR_NAME, current ));
-                    buf.append( "\">" );
-                    buf.append( found.toStringRepresentation( null, null, null ) ); // arguments don't matter
-                    buf.append( "</a>" );
-                    buf.append( "  </li>\n" );
 
-                    hasOtherElement = true;
+                        hasOtherElement = true;
+                    }
+
+                } catch( StringifierException ex ) {
+                    throw new JspException( ex );
                 }
             }
             buf.append( " </ul>\n" );

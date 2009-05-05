@@ -21,6 +21,7 @@ import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentationParseException;
+import org.infogrid.util.text.StringifierException;
 
 /**
   * This represents a Binary Large Object DataType. It carries a MIME type, identifying its content.
@@ -37,18 +38,16 @@ public final class BlobDataType
       * This DataType allows any MIME type.
       */
     public static final BlobDataType theAnyType = create(
-            BlobValue.create( new byte[0], "*/*" ),
-            null,
-            null,
+            BlobValue.create( "", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+            BlobValue.KNOWN_MIME_TYPES,
             null );
 
     /**
      * This is a text DataType of any text format, plain or formatted.
      */
-    public static final BlobDataType theTextAnyType = create(
+    public static final BlobDataType theTextPlainOrHtmlType = create(
             BlobValue.create( "", BlobValue.TEXT_PLAIN_MIME_TYPE ),
-            "text",
-            null,
+            new String[] { BlobValue.TEXT_PLAIN_MIME_TYPE, BlobValue.TEXT_HTML_MIME_TYPE },
             theAnyType );
 
     /**
@@ -56,14 +55,14 @@ public final class BlobDataType
      */
     public static final BlobDataType theTextPlainType = create(
             BlobValue.create( "", BlobValue.TEXT_PLAIN_MIME_TYPE ),
-            theTextAnyType );
+            theTextPlainOrHtmlType );
 
     /**
      * This is an HTML text DataType.
      */
     public static final BlobDataType theTextHtmlType = create(
             BlobValue.create( "", BlobValue.TEXT_HTML_MIME_TYPE ),
-            theTextAnyType );
+            theTextPlainOrHtmlType );
 
     /**
      * Helper variable.
@@ -83,8 +82,7 @@ public final class BlobDataType
                     BlobDataType.class.getClassLoader(),
                     packageName + "/BlobDefaultValue.gif",
                     BlobValue.IMAGE_JPG_MIME_TYPE ),
-            "image",
-            new String[] { "gif", "jpg", "png" },
+            new String[] { "image/gif", "image/jpg", "image/png" },
             theAnyType );
 
     /**
@@ -116,18 +114,16 @@ public final class BlobDataType
      * Factory method.
      *
      * @param defaultValue default value for instances of this DataType
-     * @param mimeType major MIME type (eg. "text")
-     * @param mimeSubTypes list of allowed minor MIME types (eg. "plain", "html")
+     * @param mimeTypes the allowed MIME types
      * @param superType supertype of this DataType
      * @return the created BlobDataType
      */
     public static BlobDataType create(
             BlobValue defaultValue,
-            String    mimeType,
-            String [] mimeSubTypes,
+            String [] mimeTypes,
             DataType  superType )
     {
-        return new BlobDataType( defaultValue, mimeType, mimeSubTypes, superType );
+        return new BlobDataType( defaultValue, mimeTypes, superType );
     }
 
     /**
@@ -142,14 +138,10 @@ public final class BlobDataType
             DataType  superType )
     {
         String mime = defaultValue.getMimeType();
-        int slash = mime.indexOf( '/' );
-        if( slash < 0 ) {
-            throw new IllegalArgumentException( "Illegal Mime Type " + mime );
-        }
+
         return new BlobDataType(
                 defaultValue,
-                mime.substring( 0, slash ),
-                new String[] { mime.substring( slash+1 ) },
+                new String[] { mime },
                 superType );
     }
 
@@ -157,14 +149,12 @@ public final class BlobDataType
      * Private constructor, use factory methods.
      *
      * @param defaultValue default value for instances of this DataType
-     * @param mimeType major MIME type (eg. "text")
-     * @param mimeSubTypes list of allowed minor MIME types (eg. "plain", "html")
+     * @param mimeTypes the allowed MIME types
      * @param superType supertype of this DataType
      */
     private BlobDataType(
             BlobValue defaultValue,
-            String    mimeType,
-            String [] mimeSubTypes,
+            String [] mimeTypes,
             DataType  superType )
     {
         super( superType );
@@ -172,31 +162,38 @@ public final class BlobDataType
         if( defaultValue == null ) {
             throw new IllegalArgumentException( "Cannot have null default value" );
         }
+        if( mimeTypes == null || mimeTypes.length == 0 ) {
+            throw new IllegalArgumentException( "Must support at least one MIME type" );
+        }
         theDefaultValue = defaultValue;
-        theMimeType     = mimeType;
-        theMimeSubTypes = mimeSubTypes;
+        theMimeTypes    = mimeTypes;
     }
 
     /**
-     * Determine the fully MIME type, consisting of major and minor component.
+     * Determine the allowed MIME types. If this is null, all MIME types are allowed.
      *
-     * @return the MIME type
+     * @return the MIME types
      */
-    public String getMimeType()
+    public String [] getMimeTypes()
     {
-        StringBuffer almostRet = new StringBuffer();
-        if( theMimeType == null ) {
-            almostRet.append( "*" );
-        } else {
-            almostRet.append( theMimeType );
+        return theMimeTypes;
+    }
+
+    /**
+     * Determine whether this BlobDataType supports a particular MIME type.
+     *
+     * @param mime the MIME type to test
+     * @return true of this BlobDataType supports the given MIME type
+     */
+    public boolean supportsMimeType(
+            String mime )
+    {
+        for( int i=0 ; i<theMimeTypes.length ; ++i ) {
+            if( mime.equals( theMimeTypes[i] )) {
+                return true;
+            }
         }
-        almostRet.append( "/" );
-        if( theMimeSubTypes == null || theMimeSubTypes.length > 1 ) { // FIXME? Is this right?
-            almostRet.append( "*" );
-        } else {
-            almostRet.append( theMimeSubTypes[0] );
-        }
-        return almostRet.toString();
+        return false;
     }
 
     /**
@@ -212,27 +209,12 @@ public final class BlobDataType
         if( other instanceof BlobDataType ) {
             BlobDataType realOther = (BlobDataType) other;
 
-            if( theMimeType == null ) {
-                if( realOther.theMimeType != null ) {
-                    return false;
-                }
-            } else if( ! theMimeType.equals( realOther.theMimeType )) {
-                return false;
-            }
-
-            if( theMimeSubTypes == null ) {
-                if( realOther.theMimeSubTypes != null ) {
-                    return false;
-                }
-            } else if( ! ArrayHelper.hasSameContentOutOfOrder( theMimeSubTypes, realOther.theMimeSubTypes, true )) {
+            if( !ArrayHelper.hasSameContentOutOfOrder( theMimeTypes, realOther.theMimeTypes, true )) {
                 return false;
             }
 
             if( theDefaultValue == null ) {
                 return realOther.theDefaultValue == null;
-            }
-            if( realOther.theDefaultValue == null ) {
-                return false;
             }
 
             return theDefaultValue.equals( realOther.theDefaultValue );
@@ -255,19 +237,7 @@ public final class BlobDataType
         if( other instanceof BlobDataType ) {
             BlobDataType realOther = (BlobDataType) other;
 
-            if( theMimeType == null ) {
-                return true;
-            }
-
-            if( ! theMimeType.equals( realOther.theMimeType )) {
-                return false;
-            }
-
-            if( theMimeSubTypes == null ) {
-                return true;
-            }
-
-            return ArrayHelper.firstHasSecondAsSubset( theMimeSubTypes, realOther.theMimeSubTypes, true );
+            return ArrayHelper.firstHasSecondAsSubset( theMimeTypes, realOther.theMimeTypes, true );
         }
         return false;
     }
@@ -284,26 +254,14 @@ public final class BlobDataType
         if( value instanceof BlobValue ) {
             BlobValue realValue = (BlobValue) value;
 
-            if( theMimeType == null ) {
-                return true;
-            }
-
-            if( !realValue.getMimeType().startsWith( theMimeType )) {
-                return false;
-            }
-            if( theMimeSubTypes == null ) {
-                return true;
-            }
-
-            String remainder = realValue.getMimeType().substring( theMimeType.length() );
-            // FIXME? Am I missing the / or something?
+            String mime = realValue.getMimeType();
             
-            for( int i=0 ; i<theMimeSubTypes.length ; ++i ) {
-                if( remainder.equals( theMimeSubTypes[i] )) {
-                    return false;
+            for( int i=0 ; i<theMimeTypes.length ; ++i ) {
+                if( mime.equals( theMimeTypes[i] )) {
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
         return false;
     }
@@ -340,24 +298,14 @@ public final class BlobDataType
     public String getJavaDomainCheckExpression(
             String varName )
     {
-        if( theMimeType == null ) {
-            return "true";
-        }
-
-        if( theMimeSubTypes == null ) {
-            return varName + ".getMimeType().startsWith( \"" + theMimeType + "/\" )";
-        }
-
-        StringBuffer almostRet = new StringBuffer( 100 );
+        StringBuilder almostRet = new StringBuilder( 100 );
         almostRet.append( "(" );
-        for( int i=0 ; i<theMimeSubTypes.length ; ++i ) {
+        for( int i=0 ; i<theMimeTypes.length ; ++i ) {
             if( i!=0 ) {
                 almostRet.append( " ||" );
             }
             almostRet.append( " \"" );
-            almostRet.append( theMimeType );
-            almostRet.append( "/" );
-            almostRet.append( theMimeSubTypes[i] );
+            almostRet.append( theMimeTypes[i] );
             almostRet.append( "\".equals( " );
             almostRet.append( varName );
             almostRet.append( ".getMimeType() )" );
@@ -409,11 +357,9 @@ public final class BlobDataType
         return  "BlobDataType: with"
                 + ((theDefaultValue == null ) ? "out" : "" )
                 + " default, mime: "
-                + ( ( theMimeType == null ) ? "?" : theMimeType )
-                + "/"
-                + ( ( theMimeSubTypes == null ) ? "?" :
-                        ( (theMimeSubTypes.length == 1 ) ? theMimeSubTypes[0] :
-                                ArrayHelper.arrayToString( theMimeSubTypes )) );
+                + ( (theMimeTypes.length == 1 )
+                        ? theMimeTypes[0]
+                        : ArrayHelper.arrayToString( theMimeTypes ));
     }
 
     /**
@@ -436,8 +382,8 @@ public final class BlobDataType
             return theJdkSupportedBitmapType;
         } else if( this.equals( theJpgType )) {
             return theJpgType;
-        } else if( this.equals( theTextAnyType )) {
-            return theTextAnyType;
+        } else if( this.equals( theTextPlainOrHtmlType )) {
+            return theTextPlainOrHtmlType;
         } else if( this.equals( theTextHtmlType )) {
             return theTextHtmlType;
         } else if( this.equals( theTextPlainType )) {
@@ -473,8 +419,8 @@ public final class BlobDataType
             return className + ".theJdkSupportedBitmapType";
         } else if( this == theJpgType ) {
             return className + ".theJpgType";
-        } else if( this == theTextAnyType ) {
-            return className + ".theTextAnyType";
+        } else if( this == theTextPlainOrHtmlType ) {
+            return className + ".theTextPlainOrHtmlType";
         } else if( this == theTextHtmlType ) {
             return className + ".theTextHtmlType";
         } else if( this == theTextPlainType ) {
@@ -488,18 +434,14 @@ public final class BlobDataType
                 ret.append( NULL_STRING );
             }
             ret.append( COMMA_STRING );
-            ret.append( QUOTE_STRING );
-            ret.append( theMimeType );
-            ret.append( QUOTE_STRING );
-            ret.append( COMMA_STRING );
 
-            if( theMimeSubTypes != null ) {
+            if( theMimeTypes != null ) {
                 ret.append( "new String[] { " );
-                for( int i=0 ; i<theMimeSubTypes.length ; ++i ) {
+                for( int i=0 ; i<theMimeTypes.length ; ++i ) {
                     ret.append( QUOTE_STRING );
-                    ret.append( theMimeSubTypes[i] );
+                    ret.append( theMimeTypes[i] );
                     ret.append( QUOTE_STRING );
-                    if( i<theMimeSubTypes.length-1 ) {
+                    if( i<theMimeTypes.length-1 ) {
                         ret.append( COMMA_STRING );
                     }
                 }
@@ -526,19 +468,21 @@ public final class BlobDataType
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
      * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         return rep.formatEntry(
                 getClass(),
                 DEFAULT_ENTRY,
                 pars,
                 PropertyValue.toStringRepresentation( theDefaultValue, rep, context, pars ), // presumably shorter, but we don't know
-                theMimeType     != null ? theMimeType     : "*",
-                theMimeSubTypes != null ? theMimeSubTypes : "*",
+                theMimeTypes,
                 theSupertype );
     }
 
@@ -604,26 +548,17 @@ public final class BlobDataType
             return mime;
         }
         if( content instanceof String ) {
-            if( theMimeType == null || "text".equals( theMimeType )) {
-                if( StringRepresentationDirectory.TEXT_HTML_NAME.equals( representation.getName() )) {
+            if( StringRepresentationDirectory.TEXT_HTML_NAME.equals( representation.getName() )) {
+                if( supportsMimeType( BlobValue.TEXT_HTML_MIME_TYPE )) {
                     return BlobValue.TEXT_HTML_MIME_TYPE;
-                } else {
+                }
+            } else {
+                if( supportsMimeType( BlobValue.TEXT_PLAIN_MIME_TYPE )) {
                     return BlobValue.TEXT_PLAIN_MIME_TYPE;
                 }
             }
         }
-        if( theMimeType == null ) {
-            return null;
-        }
-        StringBuilder ret = new StringBuilder();
-        ret.append( theMimeType );
-        ret.append( '/' );
-        if( theMimeSubTypes != null && theMimeSubTypes.length > 0 ) {
-            ret.append( theMimeSubTypes[0] );
-        } else {
-            ret.append( '*' ); // FIXME?
-        }
-        return ret.toString();
+        return BlobValue.OCTET_STREAM_MIME_TYPE;
     }
 
     /**
@@ -632,13 +567,8 @@ public final class BlobDataType
     protected BlobValue theDefaultValue;
 
     /**
-     * The major MIME type that goes with this data type. Can be null to indicate "any".
+     * The set of MIME types allowed for BlobValues. This must not be null. Wildcard
+     * subtypes (e.g. "all types of text") are not supported.
      */
-    protected String theMimeType;
-
-    /**
-     * The MIME sub-types that go with this DataType. Can be null to indicate "any",
-     * an array of length 1 to indicate exactly one, or a set of alternatives.
-     */
-    protected String [] theMimeSubTypes;
+    protected String [] theMimeTypes;
 }

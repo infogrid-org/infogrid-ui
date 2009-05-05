@@ -174,11 +174,14 @@ public class ArrayStringifier<T>
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String format(
             String                         soFar,
             ArrayFacade<T>                 arg,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         if( arg == null || arg.getArray().length == 0 ) {
             if( theEmpty != null ) {
@@ -223,6 +226,7 @@ public class ArrayStringifier<T>
      * @param arg the Object to format, or null
      * @param pars collects parameters that may influence the String representation
      * @return the formatted String
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @throws ClassCastException thrown if this Stringifier could not format the provided Object
      *         because the provided Object was not of a type supported by this Stringifier
      */
@@ -232,6 +236,7 @@ public class ArrayStringifier<T>
             Object                         arg,
             StringRepresentationParameters pars )
         throws
+            StringifierException,
             ClassCastException
     {
         if( arg instanceof ArrayFacade ) {

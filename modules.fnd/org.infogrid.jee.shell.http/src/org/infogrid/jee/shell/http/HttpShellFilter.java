@@ -53,6 +53,7 @@ import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
@@ -644,9 +645,11 @@ public class HttpShellFilter
             buf.append( PROPERTY_VALUE_TAG );
             buf.append( propVarName );
 
-            String propValueKey    = buf.toString();
-            String propValueString = request.getPostArgument( propValueKey );
-            String propTypeString  = request.getPostArgument( arg );
+            String propValueKey     = buf.toString();
+            String propValueString  = request.getPostArgument( propValueKey );
+            String propMimeString   = request.getPostArgument( propValueKey + MIME_TAG );
+            String propUploadString = request.getPostArgument( propValueKey + UPLOAD_PROPERTY_VALUE_TAG );
+            String propTypeString   = request.getPostArgument( arg );
 
             PropertyType propertyType = (PropertyType) findMeshType( propTypeString );
 
@@ -662,13 +665,22 @@ public class HttpShellFilter
 
             PropertyValue value;
 
+            // null has preference over upload, which has preference over the regular value
             if( NULL_PROPERTY_VALUE_TAG_TRUE.equals( nullValueString )) {
                 value = null;
+                
+            } else if( propUploadString != null && propUploadString.length() > 0 ) {
+                value = BlobValue.create( propUploadString, propMimeString );
+
             } else {
                 if( propValueString == null ) {
                     throw new InvalidArgumentException( propValueKey );
                 }
-                value = propertyType.fromStringRepresentation( theParsingRepresentation, propValueString );
+                if( propMimeString == null || propMimeString.startsWith( "text/" )) {
+                    value = propertyType.fromStringRepresentation( theParsingRepresentation, propValueString );
+                } else {
+                    value = BlobValue.create( propValueString, propMimeString );
+                }
             }
 
             Transaction tx2 = tx.obtain();

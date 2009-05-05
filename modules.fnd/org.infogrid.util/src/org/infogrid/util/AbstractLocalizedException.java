@@ -14,11 +14,13 @@
 
 package org.infogrid.util;
 
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * This is a supertype for Exceptions that knows how to internationalize themselves.
@@ -32,6 +34,8 @@ public abstract class AbstractLocalizedException
         implements
             LocalizedException
 {
+    private static final Log log = Log.getLogInstance( AbstractLocalizedException.class ); // our own, private logger
+
     /**
      * Constructor.
      */
@@ -82,10 +86,15 @@ public abstract class AbstractLocalizedException
     @Override
     public String getLocalizedMessage()
     {
-        return toStringRepresentation(
-                StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
-                null,
-                null );
+        try {
+            return toStringRepresentation(
+                    StringRepresentationDirectorySingleton.getSingleton().get( StringRepresentationDirectory.TEXT_PLAIN_NAME ),
+                    null,
+                    null );
+        } catch( StringifierException ex ) {
+            log.error( ex );
+            return super.getLocalizedMessage();
+        }
     }
     
     /**
@@ -101,12 +110,15 @@ public abstract class AbstractLocalizedException
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param pars collects parameters that may influence the String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */
     public String toStringRepresentation(
             StringRepresentation           rep,
             StringRepresentationContext    context,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         return constructStringRepresentation(
                 this,
@@ -133,6 +145,8 @@ public abstract class AbstractLocalizedException
             String                      target,
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         return constructStringRepresentationLinkStart(
                 this,
@@ -154,6 +168,8 @@ public abstract class AbstractLocalizedException
     public String toStringRepresentationLinkEnd(
             StringRepresentation        rep,
             StringRepresentationContext context )
+        throws
+            StringifierException
     {
         return constructStringRepresentationLinkEnd(
                 this,
@@ -174,6 +190,7 @@ public abstract class AbstractLocalizedException
      * @param params the localization parameters to use
      * @param messageParameter the name of the message parameter to use with the ResourceHelper
      * @param pars collects parameters that may influence the String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return the string
      */
     public static String constructStringRepresentation(
@@ -184,6 +201,8 @@ public abstract class AbstractLocalizedException
             Object []                      params,
             String                         messageParameter,
             StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
         return rep.formatEntry( ex.getClass(), messageParameter, pars, params );
     }
@@ -197,6 +216,7 @@ public abstract class AbstractLocalizedException
      * @param theHelper the ResourceHelper to use
      * @param params the localization parameters to use
      * @param messageParameter the name of the message parameter to use with the ResourceHelper
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return the string
      */
     public static String constructStringRepresentationLinkStart(
@@ -206,6 +226,8 @@ public abstract class AbstractLocalizedException
             ResourceHelper              theHelper,
             Object []                   params,
             String                      messageParameter )
+        throws
+            StringifierException
     {
         return "";
     }
@@ -219,6 +241,7 @@ public abstract class AbstractLocalizedException
      * @param theHelper the ResourceHelper to use
      * @param params the localization parameters to use
      * @param messageParameter the name of the message parameter to use with the ResourceHelper
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return the string
      */
     public static String constructStringRepresentationLinkEnd(
@@ -228,6 +251,8 @@ public abstract class AbstractLocalizedException
             ResourceHelper              theHelper,
             Object []                   params,
             String                      messageParameter )
+        throws
+            StringifierException
     {
         return "";
     }

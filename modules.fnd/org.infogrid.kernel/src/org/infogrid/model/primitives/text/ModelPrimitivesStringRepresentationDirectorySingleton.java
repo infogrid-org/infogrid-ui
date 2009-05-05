@@ -98,6 +98,10 @@ public class ModelPrimitivesStringRepresentationDirectorySingleton
 
         // new tags for all
 
+        // blob
+        editHtmlMap.put(  "mimeoptions",      BlobMimeOptionsHtmlStringifier.create( "<option>", "</option><option>", "</option>" ));
+        editHtmlMap.put(  "mimelist",         BlobMimeOptionsHtmlStringifier.create( "," ));
+        
         // enum
         plainMap.put(     "enum",             EnumeratedValueStringifier.create( true ) );
         editPlainMap.put( "enum",             EnumeratedValueStringifier.create( true ) );
