@@ -1,4 +1,4 @@
-div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet textarea.current-content {
+div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.current-content textarea {
     width: 100%;
     min-height: 200px;
     border: #808080 1px solid;
@@ -12,7 +12,7 @@ div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.content {
 }
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet > div.viewlet-state {
     float: right;
-    border: #c08080 2px solid;
+    background: #e0e0ff;
     -moz-border-radius: 8px;
     padding: 10px;
     font-size: 0.7em;
@@ -22,4 +22,7 @@ div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet > div.viewlet-stat
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet input {
     min-height: 200px;
     width: 600px;
+}
+div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.org-infogrid-model-primitives-BlobValue-meta > * {
+    margin: 3px;
 }

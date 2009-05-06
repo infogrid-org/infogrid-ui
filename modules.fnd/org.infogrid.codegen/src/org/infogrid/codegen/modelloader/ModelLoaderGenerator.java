@@ -21,7 +21,6 @@ import org.infogrid.codegen.AbstractGenerator;
 import org.infogrid.mesh.set.ByTypeMeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.model.primitives.AttributableMeshType;
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.CollectableMeshType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.L10Map;
@@ -33,6 +32,7 @@ import org.infogrid.model.primitives.PropertyTypeGroup;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.model.traversal.AlternativeCompoundTraversalSpecification;
 import org.infogrid.model.traversal.SelectiveTraversalSpecification;
@@ -354,10 +354,10 @@ public class ModelLoaderGenerator
         outStream.println( "                theSa," ); // SubjectArea               theSubjectArea,
         outStream.println( "                " + getTypeString(  theEntity.getDirectSupertypes()               ) + ","   ); // AttributableMeshType [] supertypes,
         outStream.println( "                " + getIdentifierStrings( theEntity.getSynonyms()                 ) + ","   ); // AttributableMeshType [] supertypes,
-        outStream.println( "                " + getValueString( theEntity.getInheritingOverrideCode()         ) + ","   ); // BlobValue               inheritingOverrideCode,
+        outStream.println( "                " + getValueString( theEntity.getInheritingOverrideCode()         ) + ","   ); // StringValue             inheritingOverrideCode,
         outStream.println( "                " + classNameArray( theEntity.getLocalEntityTypeGuardClassNames() ) + ","   ); // String []               localEntityTypeGuardClassNames
-        outStream.println( "                " + getValueString( theEntity.getDeclaredMethods()                ) + ","   ); // BlobValue []            declaredMethods
-        outStream.println( "                " + getValueString( theEntity.getImplementedMethods()             ) + ","   ); // BlobValue []            implementedMethods
+        outStream.println( "                " + getValueString( theEntity.getDeclaredMethods()                ) + ","   ); // StringValue []          declaredMethods
+        outStream.println( "                " + getValueString( theEntity.getImplementedMethods()             ) + ","   ); // StringValue []          implementedMethods
         outStream.println( "                " + classNameArray( theEntity.getAdditionalInterfaces()           ) + ","   ); // String []               additionalInterfaces,
         outStream.println( "                " + getValueString( theEntity.getIsAbstract()                     ) + ","   ); // BooleanValue            isAbstract,
         outStream.println( "                " + getValueString( theEntity.getMayBeUsedAsForwardReference()    ) + ","   ); // BooleanValue            mayBeUsedAsForwardReference,
@@ -806,22 +806,22 @@ public class ModelLoaderGenerator
     }
 
     /**
-     * Format an array of BlobValue appropriately and return.
+     * Format an array of StringValues appropriately and return.
      *
-     * @param values the BlobValues
+     * @param values the StringValues
      * @return String representation
      */
     protected String getValueString(
-            BlobValue [] values )
+            StringValue [] values )
     {
         if( values == null ) {
             return "null";
         } else if( values.length == 0 ) {
-            return "new BlobValue[0]";
+            return "new StringValue[0]";
         } else {
             StringBuilder buf = new StringBuilder();
-            String sep = "new BlobValue[] { ";
-            for( BlobValue val : values ) {
+            String sep = "new StringValue[] { ";
+            for( StringValue val : values ) {
                 buf.append( sep );
                 buf.append( val.getJavaConstructorString( null, null ));
                 sep = ", ";

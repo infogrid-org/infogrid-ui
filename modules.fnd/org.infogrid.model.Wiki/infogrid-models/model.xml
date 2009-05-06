@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -30,9 +30,9 @@
                 <username>Content</username>
                 <userdescription>Current official content of the Wiki Object.</userdescription>
                 <datatype>
-                    <BlobDataType default="theTextAnyType"/>
+                    <BlobDataType default="theTextHtmlType"/>
                 </datatype>
-                <defaultvalue><![CDATA[<p>(Wiki Object Placeholder)</p>]]></defaultvalue>
+                <defaultvalue><![CDATA[mime:text/html <p>(Wiki Object Placeholder)</p>]]></defaultvalue>
             </propertytype>
         </entitytype>
     </subjectarea>

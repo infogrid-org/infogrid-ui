@@ -675,25 +675,25 @@ public class MyHandler
                     temp = theStack.peek();
                     if( temp instanceof ExternalizedSubjectArea ) {
                         theSubjectArea = (ExternalizedSubjectArea) temp;
-                        theSubjectArea.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createBlobValueFrom( theCharacters.toString(), BlobValue.TEXT_HTML_MIME_TYPE ));
+                        theSubjectArea.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createHtmlBlobValueFrom( theCharacters.toString() ));
                     } else if( temp instanceof ExternalizedEntityType ) {
                         theEntityType = (ExternalizedEntityType) temp;
-                        theEntityType.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createBlobValueFrom( theCharacters.toString(), BlobValue.TEXT_HTML_MIME_TYPE ));
+                        theEntityType.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createHtmlBlobValueFrom( theCharacters.toString() ));
                     } else if( temp instanceof ExternalizedRelationshipType ) {
                         theRelationshipType = (ExternalizedRelationshipType) temp;
-                        theRelationshipType.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createBlobValueFrom( theCharacters.toString(), BlobValue.TEXT_HTML_MIME_TYPE ));
+                        theRelationshipType.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createHtmlBlobValueFrom( theCharacters.toString() ));
                     } else if( temp instanceof ExternalizedPropertyType )  {
                         thePropertyType = (ExternalizedPropertyType) temp;
-                        thePropertyType.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createBlobValueFrom( theCharacters.toString(), BlobValue.TEXT_HTML_MIME_TYPE ));
+                        thePropertyType.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createHtmlBlobValueFrom( theCharacters.toString() ));
                     } else if( temp instanceof ExternalizedPropertyTypeGroup ) {
                         thePropertyTypeGroup = (ExternalizedPropertyTypeGroup) temp;
-                        thePropertyTypeGroup.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createBlobValueFrom( theCharacters.toString(), BlobValue.TEXT_HTML_MIME_TYPE ));
+                        thePropertyTypeGroup.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createHtmlBlobValueFrom( theCharacters.toString() ));
                     } else if( temp instanceof ExternalizedRoleType ) {
                         theRoleType = (ExternalizedRoleType) temp;
-                        theRoleType.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createBlobValueFrom( theCharacters.toString(), BlobValue.TEXT_HTML_MIME_TYPE ));
+                        theRoleType.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createHtmlBlobValueFrom( theCharacters.toString() ));
                     } else if( temp instanceof ExternalizedEnum ) {
                         theEnum = (ExternalizedEnum) temp;
-                        theEnum.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createBlobValueFrom( theCharacters.toString(), BlobValue.TEXT_HTML_MIME_TYPE ));
+                        theEnum.addUserDescription( theAttributes.getValue( XmlModelTokens.LOCALE_KEYWORD ), createHtmlBlobValueFrom( theCharacters.toString() ));
                     } else {
                         error( theErrorPrefix + "unexpected type: " + temp );
                     }
@@ -858,7 +858,7 @@ public class MyHandler
                     if( temp instanceof ExternalizedPropertyType ) {
                         thePropertyType = (ExternalizedPropertyType) temp;
                         if( theAttributes.getValue( XmlModelTokens.CODE_KEYWORD ) != null ) {
-                            thePropertyType.setDefaultValueCode( BlobValue.create( theCharacters.toString(), BlobValue.TEXT_PLAIN_MIME_TYPE ));
+                            thePropertyType.setDefaultValueCode( StringValue.create( theCharacters.toString() ));
                         } else {
                             thePropertyType.setDefaultValue( constructDefaultValue( theCharacters.toString(), thePropertyType ));
                         }
@@ -1134,17 +1134,15 @@ public class MyHandler
      * Create a BlobValue from a String.
      *
      * @param raw the String
-     * @param mime the MIME type for the BlobValue
      * @return the created BlobValue
      */
-    protected BlobValue createBlobValueFrom(
-            String raw,
-            String mime )
+    protected BlobValue createHtmlBlobValueFrom(
+            String raw )
     {
         if( raw == null || raw.length() == 0 ) {
             return null;
         }
-        return BlobValue.create( raw, mime );
+        return BlobDataType.theTextHtmlType.createBlobValue( raw, BlobValue.TEXT_HTML_MIME_TYPE );
     }
 
     /**
@@ -1209,31 +1207,34 @@ public class MyHandler
             String MIME_TAG   = "mime:";
             String LOADER_TAG = "loader:";
             String BYTES_TAG  = "bytes:";
+
+            BlobDataType realType = (BlobDataType) type;
             
             if( raw.startsWith( STRING_TAG )) {
-                ret = BlobValue.create( raw.substring( STRING_TAG.length() ));
+                ret = realType.createBlobValue( raw.substring( STRING_TAG.length() ), BlobValue.TEXT_PLAIN_MIME_TYPE );
 
             } else if( raw.startsWith( MIME_TAG )) {
                 String raw2  = raw.substring( MIME_TAG.length() );
                 int    blank = raw2.indexOf( ' ' );
+                String mime  = raw2.substring( 0, blank ).trim();
 
                 if( raw2.regionMatches( blank+1, LOADER_TAG, 0, LOADER_TAG.length() )) {
-                    ret = BlobValue.createByLoadingFrom(
+                    ret = realType.createBlobValueByLoadingFrom(
                             getClass().getClassLoader(),
                             raw2.substring( blank+1+LOADER_TAG.length() ),
-                            raw2.substring( 0, blank ));
+                            mime );
 
                 } else if( raw2.regionMatches( blank+1, BYTES_TAG, 0, BYTES_TAG.length() )) {
                     byte [] bytes = Base64.base64decode( raw2.substring( blank+1+BYTES_TAG.length() ));
-                    ret = BlobValue.create(
+                    ret = realType.createBlobValue(
                             bytes,
-                            raw2.substring( 0, blank ));
+                            mime );
 
                 } else {
-                    ret = BlobValue.create( raw );
+                    ret = realType.createBlobValue( raw, mime );
                 }
             } else {
-                ret = BlobValue.create( raw );
+                ret = realType.createBlobValue( raw, realType.getDefaultMimeType() );
             }
 
         } else if( type instanceof BooleanDataType ) {
@@ -1499,11 +1500,14 @@ public class MyHandler
 
         BlobValue icon;
         if( theExternalizedEntityType.getRelativeIconPath() != null ) {
-            icon = BlobValue.createByLoadingFrom( theSubjectArea.getClassLoader(), theExternalizedEntityType.getRelativeIconPath(), theExternalizedEntityType.getIconMimeType() );
+            icon = BlobDataType.theJdkSupportedBitmapType.createBlobValueByLoadingFrom(
+                    theSubjectArea.getClassLoader(),
+                    theExternalizedEntityType.getRelativeIconPath(),
+                    theExternalizedEntityType.getIconMimeType() );
         } else {
             icon = null;
         }
-        BlobValue overrideCode = createBlobValueFrom( theExternalizedEntityType.getRawOverrideCode(), BlobValue.TEXT_PLAIN_MIME_TYPE );
+        StringValue overrideCode = StringValue.createOrNull( theExternalizedEntityType.getRawOverrideCode() );
 
         EntityType theEntityType = theInstantiator.createEntityType(
                     constructIdentifier( theExternalizedSubjectArea, theExternalizedEntityType ),
@@ -1516,8 +1520,8 @@ public class MyHandler
                     theExternalizedEntityType.getSynonyms(),
                     overrideCode,
                     theExternalizedEntityType.getLocalEntityTypeGuardClassNames(),
-                    BlobValue.createMultiple( theExternalizedEntityType.getDeclaredMethods() ),
-                    BlobValue.createMultiple( theExternalizedEntityType.getImplementedMethods() ),
+                    StringValue.createMultiple( theExternalizedEntityType.getDeclaredMethods() ),
+                    StringValue.createMultiple( theExternalizedEntityType.getImplementedMethods() ),
                     theExternalizedEntityType.getAdditionalInterfaces(),
                     theExternalizedEntityType.getIsAbstract(),
                     theExternalizedEntityType.getMayBeUsedAsForwardReference(),
@@ -2005,7 +2009,7 @@ public class MyHandler
 
         MeshTypeIdentifier identifier = constructIdentifier( theExternalizedSubjectArea, theExternalizedAmo, theExternalizedProjectedPropertyType );
 
-        BlobValue projectionCode = createBlobValueFrom( theExternalizedProjectedPropertyType.getRawProjectionCode(), BlobValue.TEXT_PLAIN_MIME_TYPE );
+        StringValue projectionCode = StringValue.create( theExternalizedProjectedPropertyType.getRawProjectionCode() );
 
         if(    theExternalizedProjectedPropertyType.getToOverrides() == null
             || theExternalizedProjectedPropertyType.getToOverrides().isEmpty() )

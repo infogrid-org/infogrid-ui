@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.infogrid.codegen.AbstractGenerator;
 import org.infogrid.model.primitives.AttributableMeshType;
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.CollectableMeshType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
@@ -27,6 +26,7 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
@@ -313,7 +313,7 @@ public class InterfaceGenerator
         }
 
         // any code that needs to be inserted
-        for( BlobValue declaredMethod : theMeshType.getDeclaredMethods() ) {
+        for( StringValue declaredMethod : theMeshType.getDeclaredMethods() ) {
             outStream.println( " // #### BEGIN DECLARED METHOD (INSERTED FROM model.xml FILE) ####" );
             outStream.println( declaredMethod.getAsString() );
             outStream.println( " // #### END DECLARED METHOD (INSERTED FROM model.xml FILE) ####" );

@@ -14,14 +14,12 @@
 
 package org.infogrid.model.primitives;
 
-import org.infogrid.util.AbstractLocalizedException;
-
 /**
  * Thrown if a non-existing EnumeratedValue within an EnumeratedDataType is selected.
  */
 public abstract class UnknownEnumeratedValueException
         extends
-            AbstractLocalizedException
+            NotInDomainException
 {
     /**
      * Private constructor for subclasses only.
@@ -31,7 +29,7 @@ public abstract class UnknownEnumeratedValueException
     protected UnknownEnumeratedValueException(
             EnumeratedDataType type )
     {
-        theType = type;
+        super( type );
     }
 
     /**
@@ -44,11 +42,6 @@ public abstract class UnknownEnumeratedValueException
     {
         return findParameterViaEnclosingClass( STRING_REPRESENTATION_KEY );
     }
-
-    /**
-     * The EnumeratedDataType in which the EnumeratedValue could not be found.
-     */
-    protected EnumeratedDataType theType;
 
     /**
      * Subclass that indicates the key could not be found.

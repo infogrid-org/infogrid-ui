@@ -18,8 +18,17 @@ function org_infogrid_jee_taglib_mesh_MeshObjectTag_toggle( nodeName, defaultVal
         div2.className = 'org-infogrid-jee-taglib-mesh-MeshObjectTag-hide ';
     } else {
         div2.className  = 'org-infogrid-jee-taglib-mesh-MeshObjectTag-show';
-        input.value     = defaultValue;
         nullInput.value = 'false';
+
+        if( input != null ) {
+            input.value = defaultValue;
+        } else {
+            var trueInput  = document.getElementById( nodeName + "-true" );
+            var falseInput = document.getElementById( nodeName + "-false" );
+            
+            trueInput.selected = defaultValue;
+            falseInput.selected = !defaultValue;
+        }
     }
     
     // if we do this later, things won't flash

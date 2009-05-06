@@ -38,7 +38,8 @@ public final class BlobDataType
       * This DataType allows any MIME type.
       */
     public static final BlobDataType theAnyType = create(
-            BlobValue.create( "", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+            "",
+            BlobValue.TEXT_PLAIN_MIME_TYPE,
             BlobValue.KNOWN_MIME_TYPES,
             null );
 
@@ -46,7 +47,8 @@ public final class BlobDataType
      * This is a text DataType of any text format, plain or formatted.
      */
     public static final BlobDataType theTextPlainOrHtmlType = create(
-            BlobValue.create( "", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+            "",
+            BlobValue.TEXT_PLAIN_MIME_TYPE,
             new String[] { BlobValue.TEXT_PLAIN_MIME_TYPE, BlobValue.TEXT_HTML_MIME_TYPE },
             theAnyType );
 
@@ -54,14 +56,18 @@ public final class BlobDataType
      * This is a plain text DataType.
      */
     public static final BlobDataType theTextPlainType = create(
-            BlobValue.create( "", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+            "",
+            BlobValue.TEXT_PLAIN_MIME_TYPE,
+            new String[] { BlobValue.TEXT_PLAIN_MIME_TYPE },
             theTextPlainOrHtmlType );
 
     /**
      * This is an HTML text DataType.
      */
     public static final BlobDataType theTextHtmlType = create(
-            BlobValue.create( "", BlobValue.TEXT_HTML_MIME_TYPE ),
+            "",
+            BlobValue.TEXT_HTML_MIME_TYPE,
+            new String[] { BlobValue.TEXT_HTML_MIME_TYPE },
             theTextPlainOrHtmlType );
 
     /**
@@ -77,32 +83,31 @@ public final class BlobDataType
      * This is an image DataType whose underlying representation is supported
      * by the JDK. Currently that is GIF, JPG and PNG.
      */
-    public static final BlobDataType theJdkSupportedBitmapType = create(
-            BlobValue.createByLoadingFrom(
-                    BlobDataType.class.getClassLoader(),
-                    packageName + "/BlobDefaultValue.gif",
-                    BlobValue.IMAGE_JPG_MIME_TYPE ),
+    public static final BlobDataType theJdkSupportedBitmapType = createByLoadingFrom(
+            BlobDataType.class.getClassLoader(),
+            packageName + "/BlobDefaultValue.gif",
+            BlobValue.IMAGE_JPG_MIME_TYPE,
             new String[] { "image/gif", "image/jpg", "image/png" },
             theAnyType );
 
     /**
      * This is a GIF DataType.
      */
-    public static final BlobDataType theGifType = create(
-            BlobValue.createByLoadingFrom(
-                    BlobDataType.class.getClassLoader(),
-                    packageName + "/BlobDefaultValue.gif",
-                    BlobValue.IMAGE_GIF_MIME_TYPE ),
+    public static final BlobDataType theGifType = createByLoadingFrom(
+            BlobDataType.class.getClassLoader(),
+            packageName + "/BlobDefaultValue.gif",
+            BlobValue.IMAGE_GIF_MIME_TYPE,
+            new String[] { BlobValue.IMAGE_GIF_MIME_TYPE },
             theJdkSupportedBitmapType );
 
     /**
      * Thisis a JPG DataType.
      */
-    public static final BlobDataType theJpgType = create(
-            BlobValue.createByLoadingFrom(
-                    BlobDataType.class.getClassLoader(),
-                    packageName + "/BlobDefaultValue.jpg",
-                    BlobValue.IMAGE_JPG_MIME_TYPE ),
+    public static final BlobDataType theJpgType = createByLoadingFrom(
+            BlobDataType.class.getClassLoader(),
+            packageName + "/BlobDefaultValue.jpg",
+            BlobValue.IMAGE_JPG_MIME_TYPE,
+            new String[] { BlobValue.IMAGE_JPG_MIME_TYPE },
             theJdkSupportedBitmapType );
 
     /**
@@ -113,60 +118,297 @@ public final class BlobDataType
     /**
      * Factory method.
      *
-     * @param defaultValue default value for instances of this DataType
+     * @param defaultValue default value for instances of this DataType, expressed as String. May be null.
+     * @param defaultValueMimeType MIME type of the default value
      * @param mimeTypes the allowed MIME types
      * @param superType supertype of this DataType
      * @return the created BlobDataType
      */
     public static BlobDataType create(
-            BlobValue defaultValue,
+            String    defaultValue,
+            String    defaultValueMimeType,
             String [] mimeTypes,
             DataType  superType )
     {
-        return new BlobDataType( defaultValue, mimeTypes, superType );
+        return new BlobDataType( defaultValue, defaultValueMimeType, mimeTypes, superType );
     }
 
     /**
-     * Factory method. Derive MIME types from the default value.
+     * Factory method.
      *
-     * @param defaultValue default value for instances of this DataType
+     * @param defaultValue default value for instances of this DataType, expressed as byte array. May be null.
+     * @param defaultValueMimeType MIME type of the default value
+     * @param mimeTypes the allowed MIME types
      * @param superType supertype of this DataType
      * @return the created BlobDataType
      */
     public static BlobDataType create(
-            BlobValue defaultValue,
+            byte []   defaultValue,
+            String    defaultValueMimeType,
+            String [] mimeTypes,
             DataType  superType )
     {
-        String mime = defaultValue.getMimeType();
+        return new BlobDataType( defaultValue, defaultValueMimeType, mimeTypes, superType );
+    }
 
-        return new BlobDataType(
-                defaultValue,
-                new String[] { mime },
-                superType );
+    /**
+     * Factory method.
+     *
+     * @param defaultValueLoader the ClassLoader through which the default value is loaded
+     * @param defaultValueLoadFrom the location relative to loader from which we load
+     * @param defaultValueMimeType MIME type of the default value
+     * @param mimeTypes the allowed MIME types
+     * @param superType supertype of this DataType
+     * @return the created BlobDataType
+     */
+    public static BlobDataType createByLoadingFrom(
+            ClassLoader  defaultValueLoader,
+            String       defaultValueLoadFrom,
+            String       defaultValueMimeType,
+            String []    mimeTypes,
+            DataType     superType )
+    {
+        return new BlobDataType( defaultValueLoader, defaultValueLoadFrom, defaultValueMimeType, mimeTypes, superType );
     }
 
     /**
      * Private constructor, use factory methods.
      *
-     * @param defaultValue default value for instances of this DataType
+     * @param defaultValue default value for instances of this DataType, expressed as String. May be null.
+     * @param defaultValueMimeType MIME type of the default value
      * @param mimeTypes the allowed MIME types
      * @param superType supertype of this DataType
      */
     private BlobDataType(
-            BlobValue defaultValue,
+            String    defaultValue,
+            String    defaultValueMimeType,
             String [] mimeTypes,
             DataType  superType )
     {
         super( superType );
 
-        if( defaultValue == null ) {
-            throw new IllegalArgumentException( "Cannot have null default value" );
-        }
         if( mimeTypes == null || mimeTypes.length == 0 ) {
             throw new IllegalArgumentException( "Must support at least one MIME type" );
         }
-        theDefaultValue = defaultValue;
         theMimeTypes    = mimeTypes;
+        theDefaultValue = createBlobValueOrNull( defaultValue, defaultValueMimeType );
+    }
+
+    /**
+     * Private constructor, use factory methods.
+     *
+     * @param defaultValue default value for instances of this DataType, expressed as a byte array. May be null.
+     * @param defaultValueMimeType MIME type of the default value
+     * @param mimeTypes the allowed MIME types
+     * @param superType supertype of this DataType
+     */
+    private BlobDataType(
+            byte []   defaultValue,
+            String    defaultValueMimeType,
+            String [] mimeTypes,
+            DataType  superType )
+    {
+        super( superType );
+
+        if( mimeTypes == null || mimeTypes.length == 0 ) {
+            throw new IllegalArgumentException( "Must support at least one MIME type" );
+        }
+        theMimeTypes    = mimeTypes;
+        theDefaultValue = createBlobValueOrNull( defaultValue, defaultValueMimeType );
+    }
+
+    /**
+     * Private constructor, use factory methods.
+     *
+     * @param defaultValueLoader the ClassLoader through which the default value is loaded
+     * @param defaultValueLoadFrom the location relative to loader from which we load
+     * @param defaultValueMimeType MIME type of the default value
+     * @param mimeTypes the allowed MIME types
+     * @param superType supertype of this DataType
+     */
+    private BlobDataType(
+            ClassLoader  defaultValueLoader,
+            String       defaultValueLoadFrom,
+            String       defaultValueMimeType,
+            String []    mimeTypes,
+            DataType     superType )
+    {
+        super( superType );
+
+        if( mimeTypes == null || mimeTypes.length == 0 ) {
+            throw new IllegalArgumentException( "Must support at least one MIME type" );
+        }
+        theMimeTypes    = mimeTypes;
+        theDefaultValue = createBlobValueByLoadingFrom( defaultValueLoader, defaultValueLoadFrom, defaultValueMimeType );
+    }
+
+    
+    /**
+     * Factory method to construct one with formatted text according
+     * to a certain MIME type in "abc/def" format.
+     *
+     * @param value the formatted text
+     * @param mimeType the MIME type of the text, in "abc/def" format
+     * @return the created BlobValue
+     */
+    public BlobValue createBlobValue(
+            String       value,
+            String       mimeType )
+    {
+        if( value == null ) {
+            throw new IllegalArgumentException( "null value" );
+        }
+        if( mimeType == null ) {
+            mimeType = BlobValue.TEXT_PLAIN_MIME_TYPE;
+        }
+        if( !isAllowedMimeType( mimeType )) {
+            throw new MimeTypeNotInDomainException( this, mimeType );
+        }
+
+        return new BlobValue.StringBlob( this, value, mimeType );
+    }
+
+    /**
+     * Factory method to construct one with formatted text according
+     * to a certain MIME type in "abc/def" format, or to return null if the
+     * value argument is null.
+     *
+     * @param value the formatted text
+     * @param mimeType the MIME type of the text, in "abc/def" format
+     * @return the created BlobValue, or null
+     */
+    public BlobValue createBlobValueOrNull(
+            String       value,
+            String       mimeType )
+    {
+        if( value == null ) {
+            return null;
+        }
+        if( mimeType == null ) {
+            mimeType = BlobValue.TEXT_PLAIN_MIME_TYPE;
+        }
+        if( !isAllowedMimeType( mimeType )) {
+            throw new MimeTypeNotInDomainException( this, mimeType );
+        }
+
+        return new BlobValue.StringBlob( this, value, mimeType );
+    }
+
+    /**
+      * Factory method to construct one with formatted text according
+      * to a certain MIME type in "abc/def" format.
+      *
+      * @param value the formatted text
+      * @param mimeType the MIME type of the text, in "abc/def" format
+      * @return the created BlobValue
+      */
+    public BlobValue createBlobValue(
+            byte []      value,
+            String       mimeType )
+    {
+        if( value == null ) {
+            throw new IllegalArgumentException( "null value" );
+        }
+        if( mimeType == null ) {
+            mimeType = BlobValue.OCTET_STREAM_MIME_TYPE;
+        }
+        if( !isAllowedMimeType( mimeType )) {
+            throw new MimeTypeNotInDomainException( this, mimeType );
+        }
+
+        return new BlobValue.ByteBlob( this, value, mimeType );
+    }
+
+    /**
+     * Factory method to construct one with formatted text according
+     * to a certain MIME type in "abc/def" format, or to return null
+     * if the argument is null.
+     *
+     * @param value the formatted text
+     * @param mimeType the MIME type of the text, in "abc/def" format
+     * @return the created BlobValue, or null
+     */
+    public BlobValue createBlobValueOrNull(
+            byte []      value,
+            String       mimeType )
+    {
+        if( value == null ) {
+            return null;
+        }
+        if( mimeType == null ) {
+            mimeType = BlobValue.OCTET_STREAM_MIME_TYPE;
+        }
+        if( !isAllowedMimeType( mimeType )) {
+            throw new MimeTypeNotInDomainException( this, mimeType );
+        }
+
+        return new BlobValue.ByteBlob( this, value, mimeType );
+    }
+
+    /**
+     * Factory method to construct one with a certain MIME type by loading it from
+     * a certain path relative to a given ClassLoader.
+     *
+     * @param loader the ClassLoader through which this is loaded
+     * @param loadFrom the location relative to loader from which we load
+     * @param mimeType the MIME type of the BlobValue, in "abc/def" format
+     * @return the created BlobValue
+     */
+    public BlobValue createBlobValueByLoadingFrom(
+            ClassLoader  loader,
+            String       loadFrom,
+            String       mimeType )
+    {
+        if( loadFrom == null ) {
+            throw new IllegalArgumentException( "null loadFrom" );
+        }
+        if( mimeType == null ) {
+            throw new IllegalArgumentException( "null mime type" );
+        }
+        if( !isAllowedMimeType( mimeType )) {
+            throw new MimeTypeNotInDomainException( this, mimeType );
+        }
+
+        return new BlobValue.DelayedByteBlob( this, loader, loadFrom, mimeType );
+    }
+
+    /**
+     * Factory method to construct one with a certain MIME type by loading it from
+     * a certain path relative to the default ClassLoader.
+     *
+     * @param loadFrom the location relative to the default ClassLoader
+     * @param mimeType the MIME type of the BlobValue, in "abc/def" format
+     * @return the created BlobValue
+     */
+    public BlobValue createBlobValueByLoadingFrom(
+            String       loadFrom,
+            String       mimeType )
+    {
+        if( !isAllowedMimeType( mimeType )) {
+            throw new MimeTypeNotInDomainException( this, mimeType );
+        }
+        return new BlobValue.DelayedByteBlob( this, null, loadFrom, mimeType );
+    }
+
+    /**
+     * Helper method to create an array of BlobValues from byte arrays.
+     *
+     * @param raw the array of byte arrays, or null
+     * @param mimeType the MIME type of the byte arrays, in the same sequence
+     * @return the corresponding array of raw, or null
+     */
+    public BlobValue [] createMultipleBlobValues(
+            byte [][]    raw,
+            String       mimeType )
+    {
+        if( raw == null ) {
+            return null;
+        }
+        BlobValue [] ret = new BlobValue[ raw.length ];
+        for( int i=0 ; i<ret.length ; ++i ) {
+            ret[i] = createBlobValue( raw[i], mimeType );
+        }
+        return ret;
     }
 
     /**
@@ -177,23 +419,6 @@ public final class BlobDataType
     public String [] getMimeTypes()
     {
         return theMimeTypes;
-    }
-
-    /**
-     * Determine whether this BlobDataType supports a particular MIME type.
-     *
-     * @param mime the MIME type to test
-     * @return true of this BlobDataType supports the given MIME type
-     */
-    public boolean supportsMimeType(
-            String mime )
-    {
-        for( int i=0 ; i<theMimeTypes.length ; ++i ) {
-            if( mime.equals( theMimeTypes[i] )) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -262,6 +487,23 @@ public final class BlobDataType
                 }
             }
             return false;
+        }
+        return false;
+    }
+
+    /**
+     * Determine whether a given MIME type is allowed.
+     *
+     * @param mime the MIME type to test
+     * @return true if it is allowed
+     */
+    public boolean isAllowedMimeType(
+            String mime )
+    {
+        for( int i=0 ; i<theMimeTypes.length ; ++i ) {
+            if( mime.equals( theMimeTypes[i] )) {
+                return true;
+            }
         }
         return false;
     }
@@ -340,9 +582,19 @@ public final class BlobDataType
      *
      * @return the default value of this DataType
      */
-    public PropertyValue getDefaultValue()
+    public BlobValue getDefaultValue()
     {
         return theDefaultValue;
+    }
+    
+    /**
+     * Obtain the default MIME type of this BlobDataType.
+     * 
+     * @return the default MIME type.
+     */
+    public String getDefaultMimeType()
+    {
+        return theMimeTypes[0];
     }
 
     /**
@@ -492,12 +744,14 @@ public final class BlobDataType
      * 
      * @param representation the StringRepresentation in which the String s is given
      * @param s the String
+     * @param mimeType the MIME type of the representation, if known
      * @return the PropertyValue
      * @throws PropertyValueParsingException thrown if the String representation could not be parsed successfully
      */
     public BlobValue fromStringRepresentation(
             StringRepresentation representation,
-            String               s )
+            String               s,
+            String               mimeType )
         throws
             PropertyValueParsingException
     {
@@ -510,9 +764,9 @@ public final class BlobDataType
                 case 7:
                     if( found[6] != null ) {
                         // we prefer String over byte here
-                        ret = BlobValue.create( (String) found[6], determineParsedMimeType( representation, found[6], (String) found[4] ));
+                        ret = createBlobValue( (String) found[6], determineParsedMimeType( representation, mimeType, found[6], (String) found[4] ));
                     } else {
-                        ret = BlobValue.create( (byte []) found[5], determineParsedMimeType( representation, found[5], (String) found[4] ));
+                        ret = createBlobValue( (byte []) found[5], determineParsedMimeType( representation, mimeType, found[5], (String) found[4] ));
                     }
                     break;
 
@@ -534,12 +788,14 @@ public final class BlobDataType
      * Given a String representation, an optional parsed mime type and this BlobDataType, determine which MIME type it should be.
      *
      * @param representation the StringRepresentation in which the content was given
+     * @param mimeContext the context in which this parsing took place
      * @param content the found content
      * @param mime the parsed mime type, if any
      * @return the correct mime type
      */
     protected String determineParsedMimeType(
             StringRepresentation representation,
+            String               mimeContext,
             Object               content,
             String               mime )
     {
@@ -547,13 +803,16 @@ public final class BlobDataType
         if( mime != null ) {
             return mime;
         }
+        if( mimeContext != null ) {
+            return mimeContext;
+        }
         if( content instanceof String ) {
             if( StringRepresentationDirectory.TEXT_HTML_NAME.equals( representation.getName() )) {
-                if( supportsMimeType( BlobValue.TEXT_HTML_MIME_TYPE )) {
+                if( isAllowedMimeType( BlobValue.TEXT_HTML_MIME_TYPE )) {
                     return BlobValue.TEXT_HTML_MIME_TYPE;
                 }
             } else {
-                if( supportsMimeType( BlobValue.TEXT_PLAIN_MIME_TYPE )) {
+                if( isAllowedMimeType( BlobValue.TEXT_PLAIN_MIME_TYPE )) {
                     return BlobValue.TEXT_PLAIN_MIME_TYPE;
                 }
             }

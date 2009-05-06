@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -27,6 +27,7 @@ import org.infogrid.model.primitives.EnumeratedValue;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.StringValue;
+import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -46,15 +47,15 @@ public class StoreMeshBaseTest2
         throws
             Exception
     {
-        EntityType typeAA = theModelBase.findEntityType( "org.infogrid.model.Test", null, "AA" );
-        EntityType typeB  = theModelBase.findEntityType( "org.infogrid.model.Test", null, "B" );
-        EntityType [] abctypes = { typeAA, typeB };
-
-        RelationshipType typeR  = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "R" );
-        
-        PropertyType ptX  = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "A",  "X" );
-        PropertyType ptXX = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "A",  "XX" );
-        PropertyType ptZ  = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "B",  "Z" );
+//        EntityType typeAA = theModelBase.findEntityType( "org.infogrid.model.Test", null, "AA" );
+//        EntityType typeB  = theModelBase.findEntityType( "org.infogrid.model.Test", null, "B" );
+        EntityType [] abctypes = { TestSubjectArea.AA, TestSubjectArea.B };
+//
+//        RelationshipType typeR  = theModelBase.findRelationshipType( "org.infogrid.model.Test", null, "R" );
+//
+//        PropertyType ptX  = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "A",  "X" );
+//        PropertyType ptXX = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "A",  "XX" );
+//        PropertyType ptZ  = theModelBase.findPropertyType( "org.infogrid.model.Test", null, "B",  "Z" );
 
         //
         
@@ -99,7 +100,7 @@ public class StoreMeshBaseTest2
         //
         
         final String PROP_VALUE_PREFIX = "This is <b>important&trade;</b>&#33; MeshObject "; // make sure HTML is in it
-        EnumeratedValue [] ptZdomain = ((EnumeratedDataType)ptZ.getDataType()).getDomain();
+        EnumeratedValue [] ptZdomain = TestSubjectArea.B_Z_type.getDomain();
 
         log.info( "Creating MeshObjects" );
         
@@ -118,17 +119,17 @@ public class StoreMeshBaseTest2
             }
             if( i>0 && i<mesh.length/2 ) {
                 if( i % 2 == 0 ) {
-                    mesh[i].blessRelationship( typeR.getSource(), mesh[i-1] );
+                    mesh[i].blessRelationship( TestSubjectArea.R.getSource(), mesh[i-1] );
                 } else {
-                    mesh[i].blessRelationship( typeR.getDestination(), mesh[i-1] );
+                    mesh[i].blessRelationship( TestSubjectArea.R.getDestination(), mesh[i-1] );
                 }
             }
             if( i/2 % 2 == 0 ) {
-                if( mesh[i].isBlessedBy( typeAA )) {
-                    mesh[i].setPropertyValue( ptX,  StringValue.create( PROP_VALUE_PREFIX + i ));
-                    mesh[i].setPropertyValue( ptXX, BlobValue.create( PROP_VALUE_PREFIX + i ));
+                if( mesh[i].isBlessedBy( TestSubjectArea.AA )) {
+                    mesh[i].setPropertyValue( TestSubjectArea.A_X,  StringValue.create( PROP_VALUE_PREFIX + i ));
+                    mesh[i].setPropertyValue( TestSubjectArea.A_XX, TestSubjectArea.A_XX_type.createBlobValue( PROP_VALUE_PREFIX + i, BlobValue.TEXT_PLAIN_MIME_TYPE ));
                 } else {
-                    mesh[i].setPropertyValue( ptZ, ptZdomain[ i % ptZdomain.length ] );
+                    mesh[i].setPropertyValue( TestSubjectArea.B_Z, ptZdomain[ i % ptZdomain.length ] );
                 }
             }
             
@@ -178,11 +179,11 @@ public class StoreMeshBaseTest2
                 checkEquals( mesh[i].getTypes()[0], abctypes[ i % abctypes.length ], "not the right MeshType" );
             }
             if( i/2 % 2 == 0 ) {
-                if( mesh[i].isBlessedBy( typeAA )) {
-                    checkEquals( mesh[i].getPropertyValue( ptX ),  PROP_VALUE_PREFIX + i, "Wrong ptX value" );
-                    checkEquals( mesh[i].getPropertyValue( ptXX ), BlobValue.create( PROP_VALUE_PREFIX + i ), "Wrong ptX value" );
+                if( mesh[i].isBlessedBy( TestSubjectArea.AA )) {
+                    checkEquals( mesh[i].getPropertyValue( TestSubjectArea.A_X ),  PROP_VALUE_PREFIX + i, "Wrong ptX value" );
+                    checkEquals( mesh[i].getPropertyValue( TestSubjectArea.A_XX ), TestSubjectArea.A_XX_type.createBlobValue( PROP_VALUE_PREFIX + i, BlobValue.TEXT_PLAIN_MIME_TYPE ), "Wrong ptX value" );
                 } else {
-                    checkEquals( mesh[i].getPropertyValue( ptZ ), ptZdomain[ i % ptZdomain.length ], "Wrong ptZ value" );
+                    checkEquals( mesh[i].getPropertyValue( TestSubjectArea.B_Z ), ptZdomain[ i % ptZdomain.length ], "Wrong ptZ value" );
                 }
             }
         }

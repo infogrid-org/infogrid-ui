@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -36,5 +36,5 @@ public interface ProjectedPropertyType
      *
      * @return the Java text containing the projection code for this ProjectedPropertyType
      */
-    public BlobValue getProjectionCode();
+    public StringValue getProjectionCode();
 }

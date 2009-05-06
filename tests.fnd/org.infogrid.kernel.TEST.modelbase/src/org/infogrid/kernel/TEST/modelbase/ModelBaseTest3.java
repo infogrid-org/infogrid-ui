@@ -8,14 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.kernel.TEST.modelbase;
 
 import org.infogrid.model.primitives.AttributableMeshType;
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.FloatValue;
@@ -80,8 +79,8 @@ public class ModelBaseTest3
                 new MeshTypeIdentifier[0],
                 null,
                 new String[0],
-                new BlobValue[0],
-                new BlobValue[0],
+                new StringValue[0],
+                new StringValue[0],
                 new String[0],
                 BooleanValue.FALSE,
                 BooleanValue.FALSE,
@@ -119,8 +118,8 @@ public class ModelBaseTest3
                 new MeshTypeIdentifier[0],
                 null,
                 new String[0],
-                new BlobValue[0],
-                new BlobValue[0],
+                new StringValue[0],
+                new StringValue[0],
                 new String[0],
                 BooleanValue.FALSE,
                 BooleanValue.FALSE,
@@ -156,8 +155,8 @@ public class ModelBaseTest3
                 new MeshTypeIdentifier[0],
                 null,
                 new String[0],
-                new BlobValue[0],
-                new BlobValue[0],
+                new StringValue[0],
+                new StringValue[0],
                 new String[0],
                 BooleanValue.FALSE,
                 BooleanValue.FALSE,
@@ -193,8 +192,8 @@ public class ModelBaseTest3
                 new MeshTypeIdentifier[0],
                 null,
                 new String[0],
-                new BlobValue[0],
-                new BlobValue[0],
+                new StringValue[0],
+                new StringValue[0],
                 new String[0],
                 BooleanValue.FALSE,
                 BooleanValue.FALSE,
@@ -216,8 +215,8 @@ public class ModelBaseTest3
                 new MeshTypeIdentifier[0],
                 null,
                 new String[0],
-                new BlobValue[0],
-                new BlobValue[0],
+                new StringValue[0],
+                new StringValue[0],
                 new String[0],
                 BooleanValue.FALSE,
                 BooleanValue.FALSE,
@@ -255,8 +254,8 @@ public class ModelBaseTest3
                     new MeshTypeIdentifier[0],
                     null,
                     new String[0],
-                    new BlobValue[0],
-                    new BlobValue[0],
+                    new StringValue[0],
+                    new StringValue[0],
                     new String[0],
                     BooleanValue.FALSE,
                     BooleanValue.FALSE,
@@ -282,8 +281,8 @@ public class ModelBaseTest3
                     new MeshTypeIdentifier[0],
                     null,
                     new String[0],
-                    new BlobValue[0],
-                    new BlobValue[0],
+                    new StringValue[0],
+                    new StringValue[0],
                     new String[0],
                     BooleanValue.FALSE,
                     BooleanValue.FALSE,
@@ -307,8 +306,8 @@ public class ModelBaseTest3
                 new MeshTypeIdentifier[0],
                 null,
                 new String[0],
-                new BlobValue[0],
-                new BlobValue[0],
+                new StringValue[0],
+                new StringValue[0],
                 new String[0],
                 BooleanValue.FALSE,
                 BooleanValue.FALSE,
@@ -344,8 +343,8 @@ public class ModelBaseTest3
                 new MeshTypeIdentifier[0],
                 null,
                 new String[0],
-                new BlobValue[0],
-                new BlobValue[0],
+                new StringValue[0],
+                new StringValue[0],
                 new String[0],
                 BooleanValue.FALSE,
                 BooleanValue.FALSE,

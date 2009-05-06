@@ -30,7 +30,6 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.Feeds.FeedsSubjectArea;
 import org.infogrid.module.ModuleException;
 import org.infogrid.probe.ProbeException;
@@ -140,8 +139,8 @@ public class AtomProbe
         String feedTitle       = getChildNodeValue( atomNode, "title" );
         String feedDescription = getChildNodeValue( atomNode, "description" );
         
-        home.setPropertyValue( FeedsSubjectArea.FEED_TITLE,       BlobValue.createOrNull( feedTitle,       "text/plain" ));
-        home.setPropertyValue( FeedsSubjectArea.FEED_DESCRIPTION, BlobValue.createOrNull( feedDescription, "text/plain" ));
+        home.setPropertyValue( FeedsSubjectArea.FEED_TITLE,       FeedsSubjectArea.FEED_TITLE_type.createBlobValueOrNull(       feedTitle,       "text/plain" ));
+        home.setPropertyValue( FeedsSubjectArea.FEED_DESCRIPTION, FeedsSubjectArea.FEED_DESCRIPTION_type.createBlobValueOrNull( feedDescription, "text/plain" ));
 
         handleInfoGridFeedExtensions( dataSourceIdentifier, theDocument, atomNode, home );
         
@@ -185,8 +184,8 @@ public class AtomProbe
                     FeedsSubjectArea.ATOMFEEDITEM,
                     freshMeshBase );
 
-            item.setPropertyValue( FeedsSubjectArea.FEEDITEM_TITLE,   BlobValue.createOrNull( entryTitle,   "text/plain" ));
-            item.setPropertyValue( FeedsSubjectArea.FEEDITEM_CONTENT, BlobValue.createOrNull( entryContent, entryContentMime ));
+            item.setPropertyValue( FeedsSubjectArea.FEEDITEM_TITLE,   FeedsSubjectArea.FEEDITEM_TITLE_type.createBlobValueOrNull(   entryTitle,   "text/plain" ));
+            item.setPropertyValue( FeedsSubjectArea.FEEDITEM_CONTENT, FeedsSubjectArea.FEEDITEM_CONTENT_type.createBlobValueOrNull( entryContent, "text/plain" ));
             
             try {
                 home.relate( item );

@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.model.primitives.AttributableMeshType;
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.EntityTypeGuard;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.modelbase.InheritanceConflictException;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.CanBeDumped;
@@ -209,7 +209,7 @@ public class MEntityType
      * @see #getInheritingOverrideCode
      */
     public final void setInheritingOverrideCode(
-            BlobValue newValue )
+            StringValue newValue )
     {
         theInheritingOverrideCode = newValue;
     }
@@ -221,7 +221,7 @@ public class MEntityType
      * @return text in Java that will be in-lined into the generated code
      * @see #setInheritingOverrideCode
      */
-    public final BlobValue getInheritingOverrideCode()
+    public final StringValue getInheritingOverrideCode()
     {
         return theInheritingOverrideCode;
     }
@@ -339,7 +339,7 @@ public class MEntityType
      * @param newValue the method declarations
      */
     public final void setDeclaredMethods(
-            BlobValue [] newValue )
+            StringValue [] newValue )
     {
         theDeclaredMethods = newValue;
     }
@@ -349,7 +349,7 @@ public class MEntityType
      *
      * @return Java method declarations
      */
-    public final BlobValue [] getDeclaredMethods()
+    public final StringValue [] getDeclaredMethods()
     {
         return theDeclaredMethods;
     }
@@ -360,7 +360,7 @@ public class MEntityType
      * @param newValue the method declarations
      */
     public final void setImplementedMethods(
-            BlobValue [] newValue )
+            StringValue [] newValue )
     {
         theImplementedMethods = newValue;
     }
@@ -370,7 +370,7 @@ public class MEntityType
      *
      * @return Java method implementations
      */
-    public final BlobValue [] getImplementedMethods()
+    public final StringValue [] getImplementedMethods()
     {
         return theImplementedMethods;
     }
@@ -605,7 +605,7 @@ public class MEntityType
      * The inheriting override code that we insert upon code generation. This is a transient variable
      * because we don't need to carry all this code around beyond code generation.
      */
-    private transient BlobValue theInheritingOverrideCode;
+    private transient StringValue theInheritingOverrideCode;
 
     /**
      * The set of EntityTypeGuards on this EntityType (not a supertype), expressed as the set of class names.
@@ -620,12 +620,12 @@ public class MEntityType
     /**
      * The declared methods code.
      */
-    private transient BlobValue [] theDeclaredMethods;
+    private transient StringValue [] theDeclaredMethods;
     
     /**
      * The implemented methods code.
      */
-    private transient BlobValue [] theImplementedMethods;
+    private transient StringValue [] theImplementedMethods;
 
     /**
      * The additional interfaces.

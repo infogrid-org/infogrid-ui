@@ -1090,7 +1090,7 @@ public class JeeFormatter
             int     maxLength,
             boolean colloquial )
     {
-        StringRepresentationParameters ret;
+        SimpleStringRepresentationParameters ret;
         if( maxLength >= 0 ) {
             ret = SimpleStringRepresentationParameters.create();
             ret.put( StringRepresentationParameters.MAX_LENGTH, maxLength );

@@ -321,7 +321,14 @@ public class SaneServletRequest
             IOException
     {
         String charset = "ISO-8859-1"; // FIXME, needs to be more general
+        String content;
 
+        if( true ) {
+            // makes debugging easier
+            byte [] content2 = StreamUtils.slurp( inStream );
+            inStream = new BufferedInputStream( new ByteArrayInputStream( content2 ));
+            content = new String( content2, charset );
+        }
         // determine boundary
         String  stringBoundary = FormDataUtils.determineBoundaryString( mime );
         byte [] byteBoundary   = FormDataUtils.constructByteBoundary( stringBoundary, charset );
@@ -367,6 +374,10 @@ public class SaneServletRequest
 
             // have headers now, let's get the data
             byte [] partData = StreamUtils.slurpUntilBoundary( inStream, byteBoundary );
+            if( partData == null || partData.length == 0 ) {
+                hasData = false;
+                break outer; // end of stream -- we don't want heads and no content
+            }
             partData = FormDataUtils.stripTrailingBoundary( partData, byteBoundary );
             FormDataUtils.advanceToBeginningOfLine( inStream );
 

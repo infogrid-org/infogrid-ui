@@ -17,7 +17,6 @@ package org.infogrid.model.primitives.m;
 import java.util.ArrayList;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
@@ -25,6 +24,7 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyTypeGuard;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.PropertyValueParsingException;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.modelbase.InheritanceConflictException;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.CanBeDumped;
@@ -113,7 +113,7 @@ public class MPropertyType
       * @see #getDefaultValueCode
       */
     public final void setDefaultValueCode(
-            BlobValue newValue )
+            StringValue newValue )
     {
         this.theDefaultValueCode = newValue;
     }
@@ -125,7 +125,7 @@ public class MPropertyType
      * @return the programming language code that determines the default value for this PropertyType.
      * @see #setDefaultValueCode
      */
-    public final BlobValue getDefaultValueCode()
+    public final StringValue getDefaultValueCode()
     {
         return theDefaultValueCode;
     }
@@ -411,16 +411,18 @@ public class MPropertyType
      *
      * @param representation the StringRepresentation in which the String s is given
      * @param s the String
+     * @param mimeType the MIME type of the representation, if known
      * @return the PropertyValue
      * @throws PropertyValueParsingException thrown if the String representation could not be parsed successfully
      */
     public PropertyValue fromStringRepresentation(
             StringRepresentation representation,
-            String               s )
+            String               s,
+            String               mimeType )
         throws
             PropertyValueParsingException
     {
-        return theDataType.fromStringRepresentation( representation, s );
+        return theDataType.fromStringRepresentation( representation, s, mimeType );
     }
     
     /**
@@ -486,7 +488,7 @@ public class MPropertyType
     /**
      * The code to calculate the default value.
      */
-    private BlobValue theDefaultValueCode;
+    private StringValue theDefaultValueCode;
 
     /**
      * The value for the IsOptional property.

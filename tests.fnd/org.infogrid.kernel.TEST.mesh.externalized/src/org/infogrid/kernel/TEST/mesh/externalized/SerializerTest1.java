@@ -419,30 +419,41 @@ public class SerializerTest1
             new TestCase(
                     BlobDataType.theAnyType,
                     new BlobValue[] {
-                         BlobValue.create( "a" ),
-                         BlobValue.create( "" ),
-                         BlobValue.create( "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" ),
-                         BlobValue.create( testString ),
-                         BlobValue.create( testString, "text/html" ),
-                         BlobValue.create( testString + testString + testString + testString ),
-                         BlobValue.create( testBytesShort, "something/unknown" ),
-                         BlobValue.create( testBytesLong, "something/unknown" ),
-                         BlobValue.create( new byte[] { (byte) 1 }, "a/b" ),
-                         BlobValue.create( new byte[] { (byte) 11 }, "ext/html" )
+                         BlobDataType.theAnyType.createBlobValue( "a", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( "", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( testString, BlobValue.TEXT_PLAIN_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( testString + testString + testString + testString, BlobValue.TEXT_PLAIN_MIME_TYPE ),
+
+                         BlobDataType.theAnyType.createBlobValue( "a", BlobValue.TEXT_HTML_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( "", BlobValue.TEXT_HTML_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", BlobValue.TEXT_HTML_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( testString, BlobValue.TEXT_HTML_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( testString + testString + testString + testString, BlobValue.TEXT_HTML_MIME_TYPE ),
+
+                         BlobDataType.theAnyType.createBlobValue( testBytesShort, BlobValue.OCTET_STREAM_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( testBytesLong, BlobValue.OCTET_STREAM_MIME_TYPE ),
+
+                         BlobDataType.theAnyType.createBlobValue( new byte[] { (byte) 1 }, BlobValue.OCTET_STREAM_MIME_TYPE ),
+                         BlobDataType.theAnyType.createBlobValue( new byte[] { (byte) 11 }, BlobValue.OCTET_STREAM_MIME_TYPE )
                     } ),
         new TestCase(
                 BlobDataType.theTextPlainOrHtmlType,
                 new BlobValue[] {
-                     BlobValue.create( "a" ), // works
-                     BlobValue.create( "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" ),
-                     BlobValue.create( testString ),
-                     BlobValue.create( testString, "text/html" ),
-                     BlobValue.create( testString + testString + testString + testString ),
+                     BlobDataType.theTextPlainOrHtmlType.createBlobValue( "a", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+                     BlobDataType.theTextPlainOrHtmlType.createBlobValue( "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", BlobValue.TEXT_PLAIN_MIME_TYPE ),
+                     BlobDataType.theTextPlainOrHtmlType.createBlobValue( testString, BlobValue.TEXT_PLAIN_MIME_TYPE ),
+                     BlobDataType.theTextPlainOrHtmlType.createBlobValue( testString + testString + testString + testString, BlobValue.TEXT_PLAIN_MIME_TYPE ),
+
+                     BlobDataType.theTextPlainOrHtmlType.createBlobValue( "a", BlobValue.TEXT_HTML_MIME_TYPE ),
+                     BlobDataType.theTextPlainOrHtmlType.createBlobValue( "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", BlobValue.TEXT_HTML_MIME_TYPE ),
+                     BlobDataType.theTextPlainOrHtmlType.createBlobValue( testString, BlobValue.TEXT_HTML_MIME_TYPE ),
+                     BlobDataType.theTextPlainOrHtmlType.createBlobValue( testString + testString + testString + testString, BlobValue.TEXT_HTML_MIME_TYPE ),
                 } ),
         new TestCase(
                 BlobDataType.theTextHtmlType,
                 new BlobValue[] {
-                     BlobValue.create( testString, "text/html" ),
+                     BlobDataType.theTextHtmlType.createBlobValue( testString, "text/html" ),
                 } ),
     };
 

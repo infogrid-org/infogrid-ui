@@ -69,8 +69,8 @@ public class RssTest1
                         ProbeSubjectArea.ONETIMEONLYPROBEUPDATESPECIFICATION },
                 "home object has wrong type" );
 
-        checkEquals( home1.getPropertyValue( FeedsSubjectArea.FEED_TITLE ),       BlobValue.create( "This title is plain text", "text/plain" ), "wrong feed title" );
-        checkEquals( home1.getPropertyValue( FeedsSubjectArea.FEED_DESCRIPTION ), null,                                                         "wrong feed description" );
+        checkEquals( home1.getPropertyValue( FeedsSubjectArea.FEED_TITLE ),       FeedsSubjectArea.FEED_TITLE_type.createBlobValue( "This title is plain text", "text/plain" ), "wrong feed title" );
+        checkEquals( home1.getPropertyValue( FeedsSubjectArea.FEED_DESCRIPTION ), null,                                                                                         "wrong feed description" );
 
         checkEquals( home1.traverseToNeighborMeshObjects().size(), 1, "wrong number of neighbors" );
         
@@ -83,7 +83,7 @@ public class RssTest1
                         FeedsSubjectArea.RSSFEEDITEM },
                 "wrong entry type" );
         
-        checkEquals( entry11.getPropertyValue( FeedsSubjectArea.FEEDITEM_TITLE ), BlobValue.create( "This entry title 1 is plain text", "text/plain" ), "wrong entry title" );
+        checkEquals( entry11.getPropertyValue( FeedsSubjectArea.FEEDITEM_TITLE ), FeedsSubjectArea.FEEDITEM_TITLE_type.createBlobValue( "This entry title 1 is plain text", "text/plain" ), "wrong entry title" );
     }
 
     /**

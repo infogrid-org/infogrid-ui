@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -103,21 +103,21 @@ public interface EntityType
      *
      * @return text in Java that will be in-lined into the generated code
      */
-    public BlobValue getInheritingOverrideCode();
+    public StringValue getInheritingOverrideCode();
 
     /**
      * Obtain the set of method declarations that this EntityType makes in addition.
      *
      * @return Java method declarations
      */
-    public BlobValue [] getDeclaredMethods();
+    public StringValue [] getDeclaredMethods();
 
     /**
      * Obtain the set of method implementations that this EntityType makes in addition.
      *
      * @return Java method implementations
      */
-    public BlobValue [] getImplementedMethods();
+    public StringValue [] getImplementedMethods();
 
     /**
      * Obtain the set of interfaces that this EntityType declares in addition.

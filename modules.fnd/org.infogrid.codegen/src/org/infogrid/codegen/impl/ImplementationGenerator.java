@@ -20,12 +20,12 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import org.infogrid.codegen.AbstractGenerator;
 import org.infogrid.model.primitives.AttributableMeshType;
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.ProjectedPropertyType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.model.traversal.BreadthFirstSupertypeIterator;
 import org.infogrid.util.UniqueIterator;
@@ -133,7 +133,7 @@ public class ImplementationGenerator
 
         // we generate the local override code in the Memory implementation
 
-        BlobValue code = theMeshType.getInheritingOverrideCode();
+        StringValue code = theMeshType.getInheritingOverrideCode();
         if( code != null ) {
             outStream.println( "// BEGIN INHERITED OVERRIDE CODE from local EntityType" );
             outStream.println();
@@ -167,7 +167,7 @@ public class ImplementationGenerator
         }
 
         // any code that needs to be inserted
-        for( BlobValue implementedMethod : theMeshType.getImplementedMethods() ) {
+        for( StringValue implementedMethod : theMeshType.getImplementedMethods() ) {
             outStream.println( " // #### BEGIN IMPLEMENTED METHOD (INSERTED FROM model.xml FILE) ####" );
             outStream.println( implementedMethod.getAsString() );
             outStream.println( " // #### END IMPLEMENTED METHOD (INSERTED FROM model.xml FILE) ####" );
@@ -345,7 +345,7 @@ public class ImplementationGenerator
 
             String        propertyTypeName = pts[i].getName().value();
             PropertyValue defaultValue     = pts[i].getDefaultValue();
-            BlobValue     defaultValueCode = pts[i].getDefaultValueCode();
+            StringValue   defaultValueCode = pts[i].getDefaultValueCode();
 
             if( defaultValue != null ) {
                 propTypesString.append(  "                    " + propertyTypeName.toUpperCase() );

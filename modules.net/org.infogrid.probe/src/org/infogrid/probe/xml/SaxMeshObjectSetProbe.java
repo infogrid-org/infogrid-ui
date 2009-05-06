@@ -36,6 +36,7 @@ import org.infogrid.meshbase.MeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.ColorValue;
@@ -60,6 +61,7 @@ import org.infogrid.module.ModuleException;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.util.Base64;
+import org.infogrid.util.XmlUtils;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationParseException;
 import org.xml.sax.Attributes;
@@ -337,9 +339,9 @@ public class SaxMeshObjectSetProbe
             if( mime != null && mime.length() > 0 ) {
                 BlobValue propertyValue;
                 if( loadFrom != null && loadFrom.length() > 0 ) {
-                    propertyValue = BlobValue.createByLoadingFrom( loadFrom, mime );
+                    propertyValue = BlobDataType.theAnyType.createBlobValueByLoadingFrom( loadFrom, mime );
                 } else {
-                    propertyValue = BlobValue.create( "placeholder", mime ); // that's a big ugly, but why not
+                    propertyValue = BlobDataType.theAnyType.createBlobValue( "placeholder", mime ); // that's a big ugly, but why not
                 }
                 theObjectBeingParsed.setCurrentPropertyValue( propertyValue );
             } else {
@@ -512,9 +514,12 @@ public class SaxMeshObjectSetProbe
 
             if( ( propValue instanceof BlobValue ) && ((BlobValue)propValue).delayedLoadingFrom() == null ) {
                 if( ((BlobValue)propValue).getMimeType().startsWith( "text/" ) ) {
-                    propValue = BlobValue.create( theCharacters.toString().trim(), ((BlobValue)propValue).getMimeType() );
+                    propValue = BlobDataType.theAnyType.createBlobValue(
+                            theCharacters != null ? XmlUtils.cdataDescape( theCharacters.toString().trim()) : "",
+                            ((BlobValue)propValue).getMimeType() );
                 } else {
-                    propValue = BlobValue.create( Base64.base64decode( theCharacters.toString().trim() ), ((BlobValue)propValue).getMimeType() );
+                    propValue = BlobDataType.theAnyType.createBlobValue( Base64.base64decode( theCharacters.toString().trim() ), ((BlobValue)propValue).getMimeType() );
+                    // This needs to be patched later once we have the instance of BlobDataType
                 }
             }
             theObjectBeingParsed.addPropertyValue( propValue );

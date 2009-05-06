@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -131,7 +131,7 @@ public class BlobProbe
         
         theBlobObject.bless( BlobSubjectArea.BLOBOBJECT );
 
-        theBlobObject.setPropertyValue( BlobSubjectArea.BLOBOBJECT_CONTENT,  BlobValue.create( buf, contentType ));
+        theBlobObject.setPropertyValue( BlobSubjectArea.BLOBOBJECT_CONTENT,  BlobSubjectArea.BLOBOBJECT_CONTENT_type.createBlobValue( buf, contentType ));
         theBlobObject.setPropertyValue( BlobSubjectArea.BLOBOBJECT_CODEBASE, StringValue.create( dataSourceIdentifier.toExternalForm() ));
     }
 }

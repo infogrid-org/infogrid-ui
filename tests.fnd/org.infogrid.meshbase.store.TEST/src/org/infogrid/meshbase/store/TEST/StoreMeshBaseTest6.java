@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -34,6 +34,7 @@ import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimePeriodValue;
 import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.model.Test.TestSubjectArea;
+import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -187,10 +188,10 @@ public class StoreMeshBaseTest6
             testData = new DataSet[] {
                 new DataSet(
                         "1",
-                        BlobValue.create( "Simple String Blog" ),
+                        BlobDataType.theAnyType.createBlobValue( "Simple String Blog", BlobValue.TEXT_PLAIN_MIME_TYPE ),
                         BooleanValue.create( true ),
                         ColorValue.create( 123 ),
-                        ((EnumeratedDataType)TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE.getDataType()).select( "Value1" ),
+                        TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE_type.select( "Value1" ),
                         ExtentValue.create( 12.34, 56.78 ),
                         FloatValue.create( 12.34 ),
                         IntegerValue.create( 123 ),
@@ -201,10 +202,10 @@ public class StoreMeshBaseTest6
                         TimeStampValue.create( 1L ) ),
                 new DataSet(
                         "2",
-                        BlobValue.create( "An <b>important&trade;</b>&#33; HTML String" ),
+                        BlobDataType.theAnyType.createBlobValue( "An <b>important&trade;</b>&#33; HTML String", BlobValue.TEXT_HTML_MIME_TYPE ),
                         BooleanValue.create( false ),
                         ColorValue.create( 255, 255, 255, 255 ),
-                        ((EnumeratedDataType)TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE.getDataType()).select( "Value2" ),
+                        TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE_type.select( "Value2" ),
                         ExtentValue.create( -12.34, 56.78 ),
                         FloatValue.create( -12.34 ),
                         IntegerValue.create( -123 ),
@@ -215,10 +216,10 @@ public class StoreMeshBaseTest6
                         TimeStampValue.create( 1L ) ),
                 new DataSet(
                         "3",
-                        BlobValue.create( "An <foo:bar>XML</foo:bar> String <!CDATA[with a CDATA]]> section." ),
+                        BlobDataType.theAnyType.createBlobValue( "An <foo:bar>XML</foo:bar> String <!CDATA[with a CDATA]]> section.", BlobValue.TEXT_HTML_MIME_TYPE ),
                         null,
                         ColorValue.create( 1378 ),
-                        ((EnumeratedDataType)TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE.getDataType()).select( "Value3" ),
+                        TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE_type.select( "Value3" ),
                         ExtentValue.create( Double.MAX_VALUE, 0 ),
                         FloatValue.create( Double.MIN_VALUE ),
                         IntegerValue.create( Integer.MAX_VALUE ),

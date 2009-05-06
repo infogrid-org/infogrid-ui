@@ -30,7 +30,6 @@ import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.Feeds.FeedsSubjectArea;
 import org.infogrid.module.ModuleException;
 import org.infogrid.probe.ProbeException;
@@ -160,8 +159,8 @@ public class RssProbe
             String channelTitleTitle  = getChildNodeValue( realChannelNode, "title" );
             String channelDescription = getChildNodeValue( realChannelNode, "description" );
 
-            home.setPropertyValue( FeedsSubjectArea.FEED_TITLE,       BlobValue.createOrNull( channelTitleTitle,  "text/plain" ));
-            home.setPropertyValue( FeedsSubjectArea.FEED_DESCRIPTION, BlobValue.createOrNull( channelDescription, "text/plain" ));
+            home.setPropertyValue( FeedsSubjectArea.FEED_TITLE,       FeedsSubjectArea.FEED_TITLE_type.createBlobValueOrNull(       channelTitleTitle,       "text/plain" ));
+            home.setPropertyValue( FeedsSubjectArea.FEED_DESCRIPTION, FeedsSubjectArea.FEED_DESCRIPTION_type.createBlobValueOrNull( channelDescription, "text/plain" ));
             
             NodeList itemNodes = realChannelNode.getElementsByTagName( "item" );
             for ( int j=0 ; j<itemNodes.getLength() ; j++ ) {
@@ -189,8 +188,8 @@ public class RssProbe
                         FeedsSubjectArea.RSSFEEDITEM,
                         freshMeshBase );
                 
-                item.setPropertyValue( FeedsSubjectArea.FEEDITEM_TITLE,   BlobValue.createOrNull( itemTitle,       "text/plain" ));
-                item.setPropertyValue( FeedsSubjectArea.FEEDITEM_CONTENT, BlobValue.createOrNull( itemDescription, "text/plain" ));
+                item.setPropertyValue( FeedsSubjectArea.FEEDITEM_TITLE,   FeedsSubjectArea.FEEDITEM_TITLE_type.createBlobValueOrNull(   itemTitle,       "text/plain" ));
+                item.setPropertyValue( FeedsSubjectArea.FEEDITEM_CONTENT, FeedsSubjectArea.FEEDITEM_CONTENT_type.createBlobValueOrNull( itemDescription, "text/plain" ));
 
                 try {
                     home.relate( item );

@@ -29,6 +29,7 @@ import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.ColorValue;
@@ -162,7 +163,7 @@ public abstract class AbstractFeedProbe
                     log.warn( "Empty type given for property on " + current );
                 } else {
                     try {
-                        PropertyType  type  = modelBase.findPropertyTypeByIdentifier(
+                        PropertyType type = modelBase.findPropertyTypeByIdentifier(
                                 modelBase.getMeshTypeIdentifierFactory().fromExternalForm( typeString ));
 
                         PropertyValue value = determinePropertyValue( dataSourceIdentifier, type, realChild );
@@ -256,7 +257,7 @@ public abstract class AbstractFeedProbe
     protected PropertyValue determinePropertyValue(
             NetMeshBaseIdentifier dataSourceIdentifier,
             PropertyType          type,
-            Element               here    )
+            Element               here )
         throws
             ProbeException.SyntaxError
     {
@@ -276,9 +277,11 @@ public abstract class AbstractFeedProbe
             if( MeshObjectSetProbeTags.BLOB_VALUE_TAG.equals( localName )) {
                 String mime     = realChild.getAttribute( MeshObjectSetProbeTags.BLOB_VALUE_MIME_TAG );
                 String loadFrom = realChild.getAttribute( MeshObjectSetProbeTags.BLOB_VALUE_LOAD_TAG );
-                
+
+                BlobDataType dataType = (BlobDataType) type.getDataType();
+
                 if( loadFrom != null ) {
-                    PropertyValue ret = BlobValue.createByLoadingFrom( loadFrom, mime );
+                    PropertyValue ret = dataType.createBlobValueByLoadingFrom( loadFrom, mime );
                     return ret;
 
                 } else {                
@@ -287,13 +290,13 @@ public abstract class AbstractFeedProbe
                     PropertyValue ret;
                     if( mime.startsWith( "text/" )) {
 
-                        ret = BlobValue.create( content, mime );
+                        ret = dataType.createBlobValue( content, mime );
                     } else {
                         if( !content.startsWith( "x\'" ) || !content.endsWith( "\'" )) {
                             throw new ProbeException.SyntaxError( dataSourceIdentifier, "hex-encoded binary BlobValue must be encapsulated in x'...'", null    );
                         }
                         content = content.substring( 2, content.length()-1 );
-                        ret = BlobValue.create( BlobValue.decodeHex( content ), mime );
+                        ret = dataType.createBlobValue( BlobValue.decodeHex( content ), mime );
                     }
                     return ret;
                 }

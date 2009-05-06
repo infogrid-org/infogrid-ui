@@ -188,11 +188,12 @@ public final class StringValue
             String classLoaderVar,
             String typeVar )
     {
-        StringBuffer buf = new StringBuffer( theValue.length() + 2 );
+        StringBuilder buf = new StringBuilder( theValue.length() + 30 ); // fudge
         buf.append( getClass().getName() );
         buf.append( DataType.CREATE_STRING );
-        buf.append( encodeAsJavaString( theValue ));
-        buf.append( " )" );
+        buf.append( "\"" );
+        encodeAsJavaString( theValue, buf );
+        buf.append( "\" )" );
         return buf.toString();
     }
 
@@ -257,32 +258,36 @@ public final class StringValue
     }
 
     /**
-     * Helper method to encode a String as a Java string.
-     * 
-     * @param s the String
-     * @return the encoded String
+     * Helper method to turn a String into a properly escaped Java String.
+     *
+     * @param in the input String
+     * @param sb the StringBuilder to append to
      */
-    public static String encodeAsJavaString(
-            String s )
+    public static void encodeAsJavaString(
+            String        in,
+            StringBuilder sb )
     {
-        StringBuilder ret = new StringBuilder( s.length() * 4 / 3 ); // fudge
-        ret.append( '"' );
-        
-        for( int i=0 ; i<s.length() ; ++i ) {
-            char c = s.charAt( i );
-            
-            switch( c ) {
-                case '"':
-                    ret.append( "\\\"" );
-                    break;
-                default:
-                    ret.append( c );
-                    break;
+        for( int i=0 ; i<in.length() ; ++i ) {
+            char c = in.charAt( i );
+            if( c == '\n' ) {
+                sb.append( "\\n" );
+            } else if( c == '"' ) {
+                sb.append( "\\\"" );
+            } else if( Character.isISOControl( c )) {
+                String v = String.valueOf( (int) c );
+
+                sb.append( "\\u" );
+                for( int j=v.length() ; j<4 ; ++j ) {
+                    sb.append( '0' );
+                }
+                sb.append( v );
+            }
+            else {
+                sb.append( c );
             }
         }
-        ret.append( '"' );
-        return ret.toString();
     }
+
 
     /**
       * The real value.

@@ -8,21 +8,19 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.modelbase.externalized;
 
-import org.infogrid.model.primitives.BlobValue;
+import java.util.ArrayList;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.model.primitives.PropertyValue;
-
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.util.ArrayHelper;
-
-import java.util.ArrayList;
 
 /**
  * This is data wanting to become a PropertyType, during reading. Also used as supertype
@@ -104,7 +102,7 @@ public class ExternalizedPropertyType
      * @param newValue the new value
      */
     public void setDefaultValueCode(
-            BlobValue newValue ) 
+            StringValue newValue )
     {
         defaultValueCode = newValue;
     }
@@ -114,7 +112,7 @@ public class ExternalizedPropertyType
      *
      * @return the value
      */
-    public BlobValue getDefaultValueCode()
+    public StringValue getDefaultValueCode()
     {
         return defaultValueCode;
     }
@@ -221,7 +219,7 @@ public class ExternalizedPropertyType
     /**
      * The code to initialize DefaultValue if it is to be calculated.
      */
-    protected BlobValue defaultValueCode = null;
+    protected StringValue defaultValueCode = null;
 
     /**
      * IsOptional.

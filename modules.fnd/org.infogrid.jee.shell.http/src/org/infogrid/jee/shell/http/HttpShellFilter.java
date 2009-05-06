@@ -53,7 +53,7 @@ import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.model.primitives.BlobValue;
+import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
@@ -669,18 +669,20 @@ public class HttpShellFilter
             if( NULL_PROPERTY_VALUE_TAG_TRUE.equals( nullValueString )) {
                 value = null;
                 
-            } else if( propUploadString != null && propUploadString.length() > 0 ) {
-                value = BlobValue.create( propUploadString, propMimeString );
+            } else if( propUploadString != null && propUploadString.length() > 0 && propertyType.getDataType() instanceof BlobDataType ) {
+                BlobDataType type = (BlobDataType) propertyType.getDataType();
+
+                value = type.createBlobValue( propUploadString, propMimeString );
 
             } else {
                 if( propValueString == null ) {
                     throw new InvalidArgumentException( propValueKey );
                 }
-                if( propMimeString == null || propMimeString.startsWith( "text/" )) {
-                    value = propertyType.fromStringRepresentation( theParsingRepresentation, propValueString );
-                } else {
-                    value = BlobValue.create( propValueString, propMimeString );
-                }
+                // if( propMimeString == null || propMimeString.startsWith( "text/" )) {
+                    value = propertyType.fromStringRepresentation( theParsingRepresentation, propValueString, propMimeString );
+                // } else {
+                //     value = BlobValue.create( propValueString, propMimeString );
+                // }
             }
 
             Transaction tx2 = tx.obtain();

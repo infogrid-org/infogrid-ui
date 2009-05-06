@@ -67,15 +67,15 @@ public class StoreNetMeshBaseTest3
 
         NetMeshObject obj1_mb1 = life1.createMeshObject( obj1Name, TestSubjectArea.AA );
         obj1_mb1.setPropertyValue( TestSubjectArea.A_X,  StringValue.create( "Object 1" ) );
-        obj1_mb1.setPropertyValue( TestSubjectArea.A_XX, BlobValue.create( "This is a (1) very looooong description" ));
+        obj1_mb1.setPropertyValue( TestSubjectArea.A_XX, TestSubjectArea.A_XX_type.createBlobValue( "This is a (1) very looooong description", BlobValue.TEXT_PLAIN_MIME_TYPE ));
 
         NetMeshObject obj2_mb1 = life1.createMeshObject( obj2Name, TestSubjectArea.AA );
         obj2_mb1.setPropertyValue( TestSubjectArea.A_X,  StringValue.create( "Object 2" ) );
-        obj2_mb1.setPropertyValue( TestSubjectArea.A_XX, BlobValue.create( "This is a (2) very looooong description" ));
+        obj2_mb1.setPropertyValue( TestSubjectArea.A_XX, TestSubjectArea.A_XX_type.createBlobValue( "This is a (2) very looooong description", BlobValue.TEXT_PLAIN_MIME_TYPE ));
 
         NetMeshObject obj3_mb1 = life1.createMeshObject( obj3Name, TestSubjectArea.AA );
         obj3_mb1.setPropertyValue( TestSubjectArea.A_X,  StringValue.create( "Object 3" ) );
-        obj3_mb1.setPropertyValue( TestSubjectArea.A_XX, BlobValue.create( "This is a (3) very looooong description" ));
+        obj3_mb1.setPropertyValue( TestSubjectArea.A_XX, TestSubjectArea.A_XX_type.createBlobValue( "This is a (3) very looooong description", BlobValue.TEXT_PLAIN_MIME_TYPE ));
 
         tx.commitTransaction();
         tx = null;

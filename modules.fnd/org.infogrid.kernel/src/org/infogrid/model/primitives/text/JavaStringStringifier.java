@@ -57,7 +57,11 @@ public class JavaStringStringifier
     protected String escape(
             String s )
     {
-        return StringValue.encodeAsJavaString( s );
+        StringBuilder sb = new StringBuilder( s.length() * 5 / 4 ); // fudge
+        sb.append(  "\"" );
+        StringValue.encodeAsJavaString( s, sb );
+        sb.append(  "\"" );
+        return sb.toString();
     }
 
     /**

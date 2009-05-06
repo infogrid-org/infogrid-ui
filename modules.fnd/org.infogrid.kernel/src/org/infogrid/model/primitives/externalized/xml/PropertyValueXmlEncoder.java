@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,6 +21,7 @@ import java.io.OutputStreamWriter;
 import java.util.Stack;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.ColorValue;
@@ -330,9 +331,9 @@ public class PropertyValueXmlEncoder
             if( mime != null && mime.length() > 0 ) {
                 BlobValue propertyValue;
                 if( loadFrom != null && loadFrom.length() > 0 ) {
-                    propertyValue = BlobValue.createByLoadingFrom( loadFrom, mime );
+                    propertyValue = BlobDataType.theAnyType.createBlobValueByLoadingFrom( loadFrom, mime );
                 } else {
-                    propertyValue = BlobValue.create( "placeholder", mime ); // that's a big ugly, but why not
+                    propertyValue = BlobDataType.theAnyType.createBlobValue( "placeholder", mime ); // that's a big ugly, but why not
                 }
                 thePropertyValue = propertyValue;
             } else {
@@ -504,11 +505,13 @@ public class PropertyValueXmlEncoder
         } else if( BLOB_VALUE_TAG.equals( qName )) {
             if( ( thePropertyValue instanceof BlobValue ) && ((BlobValue)thePropertyValue).delayedLoadingFrom() == null ) {
                 if( ((BlobValue)thePropertyValue).getMimeType().startsWith( "text/" ) ) {
-                    thePropertyValue = BlobValue.create(
+                    thePropertyValue = BlobDataType.theAnyType.createBlobValue(
                             theCharacters != null ? XmlUtils.cdataDescape( theCharacters.toString().trim()) : "",
                             ((BlobValue)thePropertyValue).getMimeType() );
+                    // This needs to be patched later once we have the instance of BlobDataType
                 } else {
-                    thePropertyValue = BlobValue.create( Base64.base64decode( theCharacters.toString().trim() ), ((BlobValue)thePropertyValue).getMimeType() );
+                    thePropertyValue = BlobDataType.theAnyType.createBlobValue( Base64.base64decode( theCharacters.toString().trim() ), ((BlobValue)thePropertyValue).getMimeType() );
+                    // This needs to be patched later once we have the instance of BlobDataType
                 }
             }
             

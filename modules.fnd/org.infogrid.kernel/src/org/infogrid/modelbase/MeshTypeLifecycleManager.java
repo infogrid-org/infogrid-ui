@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -71,10 +71,10 @@ public interface MeshTypeLifecycleManager
             SubjectArea             theSubjectArea,
             AttributableMeshType [] supertypes,
             MeshTypeIdentifier []   synonyms,
-            BlobValue               inheritingOverrideCode,
+            StringValue             inheritingOverrideCode,
             String []               localEntityTypeGuardClassNames,
-            BlobValue []            declaredMethods,
-            BlobValue []            implementedMethods,
+            StringValue []          declaredMethods,
+            StringValue []          implementedMethods,
             String []               additionalInterfaces,
             BooleanValue            isAbstract,
             BooleanValue            mayBeUsedAsForwardReference,
@@ -267,7 +267,7 @@ public interface MeshTypeLifecycleManager
             SubjectArea                theSubjectArea,
             DataType                   theDataType,
             PropertyValue              theDefaultValue,
-            BlobValue                  theDefaultValueCode,
+            StringValue                theDefaultValueCode,
             String []                  theLocalPropertyTypeGuardClassNames,
             BooleanValue               isOptional,
             BooleanValue               isReadOnly,
@@ -305,7 +305,7 @@ public interface MeshTypeLifecycleManager
             SubjectArea                theSubjectArea,
             DataType                   theDataType,
             PropertyValue              theDefaultValue,
-            BlobValue                  theDefaultValueCode,
+            StringValue                theDefaultValueCode,
             String []                  theLocalPropertyTypeGuardClassNames,
             BooleanValue               isOptional,
             BooleanValue               isReadOnly,
@@ -333,7 +333,7 @@ public interface MeshTypeLifecycleManager
      * @param theInputProperties the path to the the set of properties in particular Entities that needs to
      *        be monitored in order to determine when to re-run the projection code in instances. The Entities are
      *        determined through the TraversalSpecifications referenced by the theInputProperties.
-     * @param theProjectionCode a BlobValue with a text mime type that contains the projection code for determining
+     * @param theProjectionCode a StringValue with a text mime type that contains the projection code for determining
      *        the value of this ProjectedPropertyType in instances
      * @param doGenerateInterfaceCode if BooleanValue.TRUE, instructs code generator to generate interface code
      * @param doGenerateImplementationCode if BooleanValue.TRUE, instructs code generator to generate implementation code
@@ -349,9 +349,9 @@ public interface MeshTypeLifecycleManager
             SubjectArea                                      theSubjectArea,
             DataType                                         theDataType,
             PropertyValue                                    theDefaultValue,     // used only to initialize with something meaningful
-            BlobValue                                        theDefaultValueCode, // used only to initialize with something meaningful
+            StringValue                                      theDefaultValueCode, // used only to initialize with something meaningful
             TraversalToPropertySpecification []              theInputProperties,
-            BlobValue                                        theProjectionCode,
+            StringValue                                      theProjectionCode,
             BooleanValue                                     doGenerateInterfaceCode,
             BooleanValue                                     doGenerateImplementationCode,
             FloatValue                                       theSequenceNumber );
@@ -376,7 +376,7 @@ public interface MeshTypeLifecycleManager
      * @param theInputProperties the path to the the set of properties in particular Entities that needs to
      *        be monitored in order to determine when to re-run the projection code in instances. The Entities are
      *        determined through the TraversalSpecifications referenced by the theInputProperties.
-     * @param theProjectionCode a BlobValue with a text mime type that contains the projection code for determining
+     * @param theProjectionCode a StringValue with a text mime type that contains the projection code for determining
      *        the value of this ProjectedPropertyType in instances
      * @param doGenerateInterfaceCode if BooleanValue.TRUE, instructs code generator to generate interface code
      * @param doGenerateImplementationCode if BooleanValue.TRUE, instructs code generator to generate implementation code
@@ -392,9 +392,9 @@ public interface MeshTypeLifecycleManager
             SubjectArea                         theSubjectArea,
             DataType                            theDataType,
             PropertyValue                       theDefaultValue,     // used only to initialize with something meaningful
-            BlobValue                           theDefaultValueCode, // used only to instantiate with something meaningful
+            StringValue                         theDefaultValueCode, // used only to instantiate with something meaningful
             TraversalToPropertySpecification [] theInputProperties,
-            BlobValue                           theProjectionCode,
+            StringValue                         theProjectionCode,
             BooleanValue                        doGenerateInterfaceCode,
             BooleanValue                        doGenerateImplementationCode )
         throws

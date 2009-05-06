@@ -46,6 +46,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
@@ -831,7 +832,7 @@ public class RestfulJeeFormatter
             String       nullString,
             String       editVar )
     {
-        StringRepresentationParameters ret = null;
+        SimpleStringRepresentationParameters ret = null;
         if( maxLength >= 0 ) {
             if( ret == null ) {
                 ret = SimpleModelPrimitivesStringRepresentationParameters.create();

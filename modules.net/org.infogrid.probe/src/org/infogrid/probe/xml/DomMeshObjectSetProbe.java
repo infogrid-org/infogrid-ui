@@ -36,7 +36,7 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.model.primitives.BlobValue;
+import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.ColorValue;
 import org.infogrid.model.primitives.EnumeratedDataType;
@@ -220,11 +220,11 @@ public class DomMeshObjectSetProbe
 
                             if( mime != null && mime.length() > 0 ) {
                                 if( loadFrom != null && loadFrom.length() > 0 ) {
-                                    propValue = BlobValue.createByLoadingFrom( loadFrom, mime );
+                                    propValue = BlobDataType.theAnyType.createBlobValueByLoadingFrom( loadFrom, mime );
                                 } else if( mime.startsWith( "text/" )) {
-                                    propValue = BlobValue.create( Base64.base64decode( content.trim() ), mime );
+                                    propValue = BlobDataType.theAnyType.createBlobValue( Base64.base64decode( content.trim() ), mime );
                                 } else {
-                                    propValue = BlobValue.create( content.trim(), mime );
+                                    propValue = BlobDataType.theAnyType.createBlobValue( content.trim(), mime );
                                 }
                             } else {
                                 throw new ProbeException.SyntaxError( dataSourceIdentifier, "empty '" + BLOB_VALUE_MIME_TAG + "' on '" + BLOB_VALUE_TAG + "'", null );

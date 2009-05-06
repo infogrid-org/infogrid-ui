@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -64,7 +64,7 @@ public interface PropertyType
      *
      * @return the programming language code that determines the default value for this PropertyValue.
      */
-    public BlobValue getDefaultValueCode();
+    public StringValue getDefaultValueCode();
 
     /**
      * Obtain a PropertyValue that corresponds to this PropertyType, based on the String representation
@@ -72,12 +72,14 @@ public interface PropertyType
      * 
      * @param representation the StringRepresentation in which the String s is given
      * @param s the String
+     * @param mimeType the MIME type of the representation, if known
      * @return the PropertyValue
      * @throws PropertyValueParsingException thrown if the String representation could not be parsed successfully
      */
     public PropertyValue fromStringRepresentation(
             StringRepresentation representation,
-            String               s )
+            String               s,
+            String               mimeType )
         throws
             PropertyValueParsingException;
 

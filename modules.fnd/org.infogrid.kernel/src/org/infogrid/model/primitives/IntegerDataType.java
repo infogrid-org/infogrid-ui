@@ -428,12 +428,14 @@ public class IntegerDataType
      * 
      * @param representation the StringRepresentation in which the String s is given
      * @param s the String
+     * @param mimeType the MIME type of the representation, if known
      * @return the PropertyValue
      * @throws PropertyValueParsingException thrown if the String representation could not be parsed successfully
      */
     public IntegerValue fromStringRepresentation(
             StringRepresentation representation,
-            String                      s )
+            String               s,
+            String               mimeType )
         throws
             PropertyValueParsingException
     {

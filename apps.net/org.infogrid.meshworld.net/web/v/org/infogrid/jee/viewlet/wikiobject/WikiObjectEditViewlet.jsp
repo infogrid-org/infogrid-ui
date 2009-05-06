@@ -13,9 +13,11 @@
 <v:viewletAlternatives />
 <v:changeViewletState viewletStates="edit" display="compact"/>
 <v:viewlet formId="viewlet">
- <h1>Wiki Editor Viewlet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" maxLength="30"/></h1>
  <v:ifState viewletState="edit">
   <div class="viewlet-state"><p>Edit mode (not saved yet)</p></div>
+ </v:ifState>
+ <h1>Wiki Editor Viewlet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" maxLength="30"/></h1>
+ <v:ifState viewletState="edit">
   <div class="current-content">
    <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki#WikiObject/Content" stringRepresentation="Edit"/>
   </div>

@@ -14,15 +14,34 @@
 
 package org.infogrid.util.text;
 
-import java.util.Map;
-
 /**
  * Collects parameters that may influence the formatting of a String using StringRepresentation.
  */
 public interface StringRepresentationParameters
-    extends
-        Map<String,Object>
 {
+    /**
+     * Obtain the number of parameters.
+     *
+     * @return the number of parameters
+     */
+    public int size();
+
+    /**
+     * Returns <tt>true</tt> if this is empty.
+     *
+     * @return <tt>true</tt> if this is empty.
+     */
+    boolean isEmpty();
+
+    /**
+     * Obtain a named value, or null.
+     *
+     * @param key the name of the value
+     * @return the value, if any
+     */
+    public Object get(
+            String key );
+
     /**
      * The key into this object that identifies the desired maximum length of the produced String.
      */

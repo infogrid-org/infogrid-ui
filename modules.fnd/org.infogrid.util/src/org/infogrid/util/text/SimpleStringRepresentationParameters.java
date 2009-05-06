@@ -20,8 +20,6 @@ import java.util.HashMap;
  * Simple implementation of StringRepresentationParameters.
  */
 public class SimpleStringRepresentationParameters
-    extends
-        HashMap<String,Object>
     implements
         StringRepresentationParameters
 {
@@ -34,6 +32,108 @@ public class SimpleStringRepresentationParameters
      */
     public static SimpleStringRepresentationParameters create()
     {
-        return new SimpleStringRepresentationParameters();
+        return new SimpleStringRepresentationParameters( null );
     }
+
+    /**
+     * Factory method.
+     *
+     * @param delegate the delegate, if any
+     * @return the created SimpleStringRepresentationParameters
+     */
+    public static SimpleStringRepresentationParameters create(
+            StringRepresentationParameters delegate )
+    {
+        return new SimpleStringRepresentationParameters( delegate );
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param delegate the delegate, if any
+     */
+    protected SimpleStringRepresentationParameters(
+            StringRepresentationParameters delegate )
+    {
+        theDelegate = delegate;
+    }
+
+    /**
+     * Obtain the delegate, if any.
+     *
+     * @return the delegate, if any
+     */
+    public StringRepresentationParameters getDelegate()
+    {
+        return theDelegate;
+    }
+
+    /**
+     * Obtain the number of parameters.
+     *
+     * @return the number of parameters
+     */
+    public int size()
+    {
+        int ret = theStorage.size();
+        if( theDelegate != null ) {
+            ret += theDelegate.size();
+        }
+        return ret;
+    }
+
+    /**
+     * Returns <tt>true</tt> if this is empty.
+     *
+     * @return <tt>true</tt> if this is empty.
+     */
+    public boolean isEmpty()
+    {
+        if( !theStorage.isEmpty() ) {
+            return false;
+        }
+        if( theDelegate != null ) {
+            return theDelegate.isEmpty();
+        }
+        return true;
+    }
+
+    /**
+     * Obtain a named value, or null.
+     *
+     * @param key the name of the value
+     * @return the value, if any
+     */
+    public Object get(
+            String key )
+    {
+        Object ret = theStorage.get( key );
+        if( ret == null && theDelegate != null ) {
+            ret = theDelegate.get( key );
+        }
+        return ret;
+    }
+
+    /**
+     * Set a named value.
+     *
+     * @param key the name of the value
+     * @param value the value
+     */
+    public void put(
+            String key,
+            Object value )
+    {
+        theStorage.put( key, value );
+    }
+
+    /**
+     * The StringRepresentationParameters to ask if this object does not know of an entry.
+     */
+    protected StringRepresentationParameters theDelegate;
+
+    /**
+     * Storage.
+     */
+    protected HashMap<String,Object> theStorage = new HashMap<String,Object>();
 }

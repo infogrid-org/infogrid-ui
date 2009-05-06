@@ -15,6 +15,7 @@
 package org.infogrid.model.primitives.text;
 
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
+import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
  * Simple implementation of StringRepresentationParameters.
@@ -28,10 +29,33 @@ public class SimpleModelPrimitivesStringRepresentationParameters
     /**
      * Factory method.
      *
-     * @return the created SimpleStringRepresentationParameters
+     * @return the created SimpleModelPrimitivesStringRepresentationParameters
      */
     public static SimpleModelPrimitivesStringRepresentationParameters create()
     {
-        return new SimpleModelPrimitivesStringRepresentationParameters();
+        return new SimpleModelPrimitivesStringRepresentationParameters( null );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param delegate the delegate, if any
+     * @return the created SimpleModelPrimitivesStringRepresentationParameters
+     */
+    public static SimpleModelPrimitivesStringRepresentationParameters create(
+            StringRepresentationParameters delegate )
+    {
+        return new SimpleModelPrimitivesStringRepresentationParameters( delegate );
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param delegate the delegate, if any
+     */
+    protected SimpleModelPrimitivesStringRepresentationParameters(
+            StringRepresentationParameters delegate )
+    {
+        super( delegate );
     }
 }

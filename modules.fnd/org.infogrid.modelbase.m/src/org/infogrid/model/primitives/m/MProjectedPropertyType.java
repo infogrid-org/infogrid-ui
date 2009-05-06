@@ -8,16 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.model.primitives.m;
 
-import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.ProjectedPropertyType;
-
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.traversal.TraversalToPropertySpecification;
 
 /**
@@ -75,7 +74,7 @@ public final class MProjectedPropertyType
      * @see #getProjectionCode
      */
     public final void setProjectionCode(
-            BlobValue newValue )
+            StringValue newValue )
     {
         this.theProjectionCode = newValue;
     }
@@ -86,7 +85,7 @@ public final class MProjectedPropertyType
      * @return the Java text containing the projection code for this ProjectedPropertyType
      * @see #setProjectionCode
      */
-    public final BlobValue getProjectionCode()
+    public final StringValue getProjectionCode()
     {
         return theProjectionCode;
     }
@@ -100,5 +99,5 @@ public final class MProjectedPropertyType
      * The recalculate code. This is transient because we don't need to
      * carry this around beyond code generation.
      */
-    private transient BlobValue theProjectionCode;
+    private transient StringValue theProjectionCode;
 }

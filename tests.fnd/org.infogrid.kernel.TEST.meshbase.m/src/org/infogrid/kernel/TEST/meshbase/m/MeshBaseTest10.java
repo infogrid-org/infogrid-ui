@@ -68,7 +68,7 @@ public class MeshBaseTest10
         //
         
         PropertyValue [] testValues = {
-                BlobValue.create( "test", "text/plain" ),
+                TestSubjectArea.PROPERTYTEST_WHATABLOBDATATYPE_type.createBlobValue( "test", "text/plain" ),
                 BooleanValue.TRUE,
                 ColorValue.create( 0x202020 ),
                 TestSubjectArea.PROPERTYTEST_WHATAENUMERATEDDATATYPE_type.select( "Value3" ),

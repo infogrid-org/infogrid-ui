@@ -15,6 +15,7 @@
 package org.infogrid.model.primitives.text;
 
 import org.infogrid.model.primitives.BlobDataType;
+import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.util.text.AbstractStringifier;
 import org.infogrid.util.text.StringRepresentationParameters;
@@ -29,86 +30,94 @@ public class BlobMimeOptionsHtmlStringifier
     /**
      * Factory method.
      *
-     * @return the created EnumeratedValueStringifier
-     */
-    public static BlobMimeOptionsHtmlStringifier create()
-    {
-        return new BlobMimeOptionsHtmlStringifier( null, null, null );
-    }
-
-    /**
-     * Factory method.
-     *
-     * @param middle the string to insert in the middle
+     * @param begin String to print prior to a value if the value is not selected.
+     * @param beginSelected String to print prior to a value if the value is selected.
+     * @param middle String to print between values
+     * @param end String to print after a value if the value is not selected.
+     * @param endSelected String to print after a value if the value is selected.
      * @return the created EnumeratedValueStringifier
      */
     public static BlobMimeOptionsHtmlStringifier create(
-            String middle )
-    {
-        return new BlobMimeOptionsHtmlStringifier( null, middle, null );
-    }
-
-    /**
-     * Factory method.
-     *
-     * @param start the string to insert at the beginning
-     * @param middle the string to insert in the middle
-     * @param end the string to append at the end
-     * @return the created EnumeratedValueStringifier
-     */
-    public static BlobMimeOptionsHtmlStringifier create(
-            String start,
+            String begin,
+            String beginSelected,
             String middle,
-            String end )
+            String end,
+            String endSelected )
     {
-        return new BlobMimeOptionsHtmlStringifier( start, middle, end );
+        return new BlobMimeOptionsHtmlStringifier( begin, beginSelected, middle, end, endSelected );
     }
 
     /**
      * Private constructor for subclasses only, use factory method.
      *
-     * @param start the string to insert at the beginning
-     * @param middle the string to insert in the middle
-     * @param end the string to append at the end
+     * @param begin String to print prior to a value if the value is not selected.
+     * @param beginSelected String to print prior to a value if the value is selected.
+     * @param middle String to print between values
+     * @param end String to print after a value if the value is not selected.
+     * @param endSelected String to print after a value if the value is selected.
      */
     protected BlobMimeOptionsHtmlStringifier(
-            String start,
+            String begin,
+            String beginSelected,
             String middle,
-            String end )
+            String end,
+            String endSelected )
     {
-        theStart    = start;
-        theMiddle   = middle;
-        theEnd      = end;
+        theBeginString         = begin;
+        theBeginStringSelected = beginSelected;
+        theMiddleString        = middle;
+        theEndString           = end;
+        theEndStringSelected   = endSelected;
     }
 
     /**
-     * Obtain the start String, if any.
+     * Obtain the String to print prior to a value if the value is not selected.
      *
-     * @return the start String, if any
+     * @return the String, if any
      */
-    public String getStart()
+    public String getBeginString()
     {
-        return theStart;
+        return theBeginString;
     }
 
     /**
-     * Obtain the middle String, if any.
+     * Obtain the String to print prior to a value if the value is selected.
      *
-     * @return the middle String, if any
+     * @return the String, if any
      */
-    public String getMiddle()
+    public String getBeginStringSelected()
     {
-        return theMiddle;
+        return theBeginStringSelected;
     }
 
     /**
-     * Obtain the end String, if any.
+     * Obtain the String to print between values.
      *
-     * @return the end String, if any
+     * @return the String, if any
      */
-    public String getEnd()
+    public String getMiddleString()
     {
-        return theEnd;
+        return theMiddleString;
+    }
+
+    /**
+     * Obtain the String to print after a value if the value is not selected.
+     *
+     * @return the String, if any
+     */
+    public String getEndString()
+    {
+        return theEndString;
+    }
+
+    /**
+     * Obtain the String to print after a value if the value is selected.
+     *
+     * @return the String, if any
+     */
+    public String getEndStringSelected()
+    {
+        return theEndStringSelected;
     }
 
     /**
@@ -124,21 +133,46 @@ public class BlobMimeOptionsHtmlStringifier
             BlobDataType                   arg,
             StringRepresentationParameters pars )
     {
+        String selectedMime;
+        if( pars != null ) {
+            BlobValue selected = (BlobValue) pars.get( CURRENT_VALUE );
+            if( selected != null ) {
+                selectedMime = selected.getMimeType();
+            } else {
+                selectedMime = null;
+            }
+        } else {
+            selectedMime = null;
+        }
+
         String []     values = arg.getMimeTypes();
         StringBuilder ret    = new StringBuilder();
-        String        sep    = theStart;
 
+        String sep = null;
         for( int i=0 ; i<values.length ; ++i ) {
             if( sep != null ) {
                 ret.append( sep );
             }
-            ret.append( values[i] );
+            if( values[i].equals( selectedMime )) {
+                if( theBeginStringSelected != null ) {
+                    ret.append( theBeginStringSelected );
+                }
+                ret.append( values[i] );
+                if( theEndStringSelected != null ) {
+                    ret.append( theEndStringSelected );
+                }
+            } else {
+                if( theBeginString != null ) {
+                    ret.append( theBeginString );
+                }
+                ret.append( values[i] );
+                if( theEndString != null ) {
+                    ret.append( theEndString );
+                }
+            }
+            sep = theMiddleString;
+        }
 
-            sep = theMiddle;
-        }
-        if( theEnd != null ) {
-            ret.append( theEnd );
-        }
         return potentiallyShorten( ret.toString(), pars );
     }
 
@@ -160,26 +194,75 @@ public class BlobMimeOptionsHtmlStringifier
             ClassCastException
     {
         if( arg instanceof BlobDataType ) {
-            return format( soFar, (BlobDataType) arg, pars );
+            BlobDataType realArg = (BlobDataType) arg;
+
+            if( realArg.getDefaultValue() != null ) {
+                SimpleModelPrimitivesStringRepresentationParameters realPars
+                        = SimpleModelPrimitivesStringRepresentationParameters.create( pars );
+                realPars.put( CURRENT_VALUE, realArg.getDefaultValue() );
+
+                return format( soFar, realArg, realPars );
+
+            } else {
+                return format( soFar, realArg, pars );
+            }
+
         } else if( arg instanceof PropertyType ) {
-            return format( soFar, (BlobDataType) ((PropertyType) arg).getDataType(), pars );
+            PropertyType realArg  = (PropertyType) arg;
+            BlobDataType realType = (BlobDataType) realArg.getDataType();
+
+            if( realArg.getDefaultValue() != null ) {
+                SimpleModelPrimitivesStringRepresentationParameters realPars
+                        = SimpleModelPrimitivesStringRepresentationParameters.create( pars );
+                realPars.put( CURRENT_VALUE, realArg.getDefaultValue() );
+
+                return format( soFar, realType, realPars );
+
+            } else {
+                return format( soFar, realType, pars );
+            }
+
+        } else if( arg instanceof BlobValue ) {
+            BlobValue    realArg  = (BlobValue) arg;
+            BlobDataType realType = realArg.getDataType();
+
+            SimpleModelPrimitivesStringRepresentationParameters realPars = SimpleModelPrimitivesStringRepresentationParameters.create( pars );
+            realPars.put( CURRENT_VALUE, realArg );
+
+            return format( soFar, realType, realPars );
+
         } else {
             throw new ClassCastException( "Cannot stringify " + arg );
         }
     }
 
     /**
-     * The String to insert at the beginning. May be null.
+     * The String to print prior to a value if the value is not selected.
      */
-    protected String theStart;
+    protected String theBeginString;
 
     /**
-     * The String to insert when joining two elements. May be null.
+     * The String to print prior to a value if the value is selected.
      */
-    protected String theMiddle;
+    protected String theBeginStringSelected;
 
     /**
-     * The String to append at the end. May be null.
+     * The String to print between values.
      */
-    protected String theEnd;
+    protected String theMiddleString;
+
+    /**
+     * The String to print after a value if the value is not selected.
+     */
+    protected String theEndString;
+
+    /**
+     * The String to print after a value if the value is selected.
+     */
+    protected String theEndStringSelected;
+
+    /**
+     * Key for the current BlobValue, if any.
+     */
+    public static final String CURRENT_VALUE = "current-value";
 }

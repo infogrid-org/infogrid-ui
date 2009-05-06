@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -98,10 +98,10 @@ public class MMeshTypeLifecycleManager
             SubjectArea             theSubjectArea,
             AttributableMeshType [] supertypes,
             MeshTypeIdentifier []   synonyms,
-            BlobValue               inheritingOverrideCode,
+            StringValue             inheritingOverrideCode,
             String []               localEntityTypeGuardClassNames,
-            BlobValue []            declaredMethods,
-            BlobValue []            implementedMethods,
+            StringValue []          declaredMethods,
+            StringValue []          implementedMethods,
             String []               additionalInterfaces,
             BooleanValue            isAbstract,
             BooleanValue            mayBeUsedAsForwardReference,
@@ -678,7 +678,7 @@ public class MMeshTypeLifecycleManager
             SubjectArea                theSubjectArea,
             DataType                   theDataType,
             PropertyValue              theDefaultValue,
-            BlobValue                  theDefaultValueCode,
+            StringValue                theDefaultValueCode,
             String []                  theLocalPropertyTypeGuardClassNames,
             BooleanValue               isOptional,
             BooleanValue               isReadOnly,
@@ -800,7 +800,7 @@ public class MMeshTypeLifecycleManager
             SubjectArea                theSubjectArea,
             DataType                   theDataType,
             PropertyValue              theDefaultValue,
-            BlobValue                  theDefaultValueCode,
+            StringValue                theDefaultValueCode,
             String []                  theLocalPropertyTypeGuardClassNames,
             BooleanValue               isOptional,
             BooleanValue               isReadOnly,
@@ -959,7 +959,7 @@ public class MMeshTypeLifecycleManager
      * @param theInputProperties the set of PropertyTypes in particular RootEntities that needs to be monitored in order to
      *        determine when to re-run the projection code. The RootEntities are determined through the TraversalSpecifications
      *        referenced by the theInputProperties.
-     * @param theProjectionCode a BlobValue with a text mime type that contains the projection code for determining the value of this ProjectdPropertyType
+     * @param theProjectionCode a StringValue with a text mime type that contains the projection code for determining the value of this ProjectdPropertyType
      * @param doGenerateInterfaceCode if BooleanValue.TRUE, instructs code generator to generate interface code
      * @param doGenerateImplementationCode if BooleanValue.TRUE, instructs code generator to generate implementation code
      * @param theSequenceNumber determines the sequence of display in things like property sheets etc.
@@ -974,9 +974,9 @@ public class MMeshTypeLifecycleManager
             SubjectArea                         theSubjectArea,
             DataType                            theDataType,
             PropertyValue                       theDefaultValue,     // used only to initialize with something meaningful
-            BlobValue                           theDefaultValueCode, // used only to initialize with something meaningful
+            StringValue                         theDefaultValueCode, // used only to initialize with something meaningful
             TraversalToPropertySpecification [] theInputProperties,
-            BlobValue                           theProjectionCode,
+            StringValue                         theProjectionCode,
             BooleanValue                        doGenerateInterfaceCode,
             BooleanValue                        doGenerateImplementationCode,
             FloatValue                          theSequenceNumber )
@@ -1074,7 +1074,7 @@ public class MMeshTypeLifecycleManager
      * @param theInputProperties the set of PropertyTypes in particular RootEntities that needs to be monitored in order to
      *        determine when to re-run the projection code. The RootEntities are determined through the TraversalSpecifications
      *        referenced by the theInputProperties.
-     * @param theProjectionCode a BlobValue with a text mime type that contains the projection code for determining the value of this ProjectdPropertyType
+     * @param theProjectionCode a StringValue with a text mime type that contains the projection code for determining the value of this ProjectdPropertyType
      * @param doGenerateInterfaceCode if BooleanValue.TRUE, instructs code generator to generate interface code
      * @param doGenerateImplementationCode if BooleanValue.TRUE, instructs code generator to generate implementation code
      * @return the newly created ProjectedPropertyType
@@ -1088,9 +1088,9 @@ public class MMeshTypeLifecycleManager
             SubjectArea                         theSubjectArea,
             DataType                            theDataType,
             PropertyValue                       theDefaultValue,     // used only to initialize with something meaningful
-            BlobValue                           theDefaultValueCode, // used only to initialize with something meaningful
+            StringValue                         theDefaultValueCode, // used only to initialize with something meaningful
             TraversalToPropertySpecification [] theInputProperties,
-            BlobValue                           theProjectionCode,
+            StringValue                         theProjectionCode,
             BooleanValue                        doGenerateInterfaceCode,
             BooleanValue                        doGenerateImplementationCode )
         throws
