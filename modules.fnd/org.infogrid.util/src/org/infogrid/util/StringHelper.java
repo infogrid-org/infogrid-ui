@@ -318,7 +318,7 @@ public abstract class StringHelper
         if( s == null ) {
             return NULL_STRING;
         }
-        StringBuilder sb = new StringBuilder( s.length() );
+        StringBuilder sb = new StringBuilder( s.length() * 5 / 4 ); // fudge
 
         // true if last char was blank
         boolean lastWasBlankChar = false;
@@ -402,6 +402,43 @@ public abstract class StringHelper
                         }
                     }
                 }
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Escape characters in a String so the output becomes a valid String
+     * in JavaScript.
+     *
+     * @param s the unescaped String
+     * @return the escaped String
+     */
+    public static String stringToJavascript(
+            String s )
+    {
+        if( s == null ) {
+            return NULL_STRING;
+        }
+        StringBuilder sb = new StringBuilder( s.length() * 5 / 4 ); // fudge
+
+        int len = s.length();
+
+        for( int i=0; i<len; ++i ) {
+            char c = s.charAt( i );
+
+            switch( c ) {
+                case '"':
+                    sb.append( "\\\"" );
+                    break;
+
+                case '\'':
+                    sb.append( "\\'" );
+                    break;
+
+                default:
+                    sb.append( c );
+                    break;
             }
         }
         return sb.toString();

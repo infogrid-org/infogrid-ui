@@ -15,10 +15,11 @@
 package org.infogrid.model.primitives;
 
 import java.io.ObjectStreamException;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.text.SimpleStringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
-import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.util.text.StringifierException;
@@ -101,13 +102,23 @@ public final class BlobDataType
             theJdkSupportedBitmapType );
 
     /**
-     * Thisis a JPG DataType.
+     * This is a JPG DataType.
      */
     public static final BlobDataType theJpgType = createByLoadingFrom(
             BlobDataType.class.getClassLoader(),
             packageName + "/BlobDefaultValue.jpg",
             BlobValue.IMAGE_JPG_MIME_TYPE,
             new String[] { BlobValue.IMAGE_JPG_MIME_TYPE },
+            theJdkSupportedBitmapType );
+
+    /**
+     * This is a PNG DataType.
+     */
+    public static final BlobDataType thePngType = createByLoadingFrom(
+            BlobDataType.class.getClassLoader(),
+            packageName + "/BlobDefaultValue.png",
+            BlobValue.IMAGE_PNG_MIME_TYPE,
+            new String[] { BlobValue.IMAGE_PNG_MIME_TYPE },
             theJdkSupportedBitmapType );
 
     /**
@@ -509,6 +520,21 @@ public final class BlobDataType
     }
 
     /**
+     * Determine whether this BlobDataType supports at least one text MIME type.
+     *
+     * @return true if it supports at least one text MIME type
+     */
+    public boolean supportsTextMimeType()
+    {
+        for( int i=0 ; i<theMimeTypes.length ; ++i ) {
+            if( theMimeTypes[i].startsWith( "text/" )) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
       * Determine whether a domain check shall be performed on
       * assignments. Default to false.
       *
@@ -564,17 +590,6 @@ public final class BlobDataType
     public Class getCorrespondingJavaClass()
     {
         return BlobValue.class;
-    }
-
-    /**
-      * Instantiate this data type into a PropertyValue with a
-      * reasonable default value.
-      *
-      * @return a PropertyValue with a reasonable default value that is an instance of this DataType
-      */
-    public PropertyValue instantiate()
-    {
-        return theDefaultValue;
     }
 
     /**
@@ -671,6 +686,8 @@ public final class BlobDataType
             return className + ".theJdkSupportedBitmapType";
         } else if( this == theJpgType ) {
             return className + ".theJpgType";
+        } else if( this == thePngType ) {
+            return className + ".thePngType";
         } else if( this == theTextPlainOrHtmlType ) {
             return className + ".theTextPlainOrHtmlType";
         } else if( this == theTextHtmlType ) {
@@ -756,18 +773,13 @@ public final class BlobDataType
             PropertyValueParsingException
     {
         try {
-            Object [] found = representation.parseEntry( BlobValue.class, "TextString", s, this );
+            Object [] found = representation.parseEntry( BlobValue.class, "DontInterpretTextString", s, this );
 
             BlobValue ret;
 
             switch( found.length ) {
-                case 7:
-                    if( found[6] != null ) {
-                        // we prefer String over byte here
-                        ret = createBlobValue( (String) found[6], determineParsedMimeType( representation, mimeType, found[6], (String) found[4] ));
-                    } else {
-                        ret = createBlobValue( (byte []) found[5], determineParsedMimeType( representation, mimeType, found[5], (String) found[4] ));
-                    }
+                case 6:
+                    ret = createBlobValue( (String) found[5], mimeType );
                     break;
 
                 default:
@@ -784,40 +796,122 @@ public final class BlobDataType
         }
     }
 
+//    /**
+//     * Given a String representation, an optional parsed mime type and this BlobDataType, determine which MIME type it should be.
+//     *
+//     * @param representation the StringRepresentation in which the content was given
+//     * @param mimeContext the context in which this parsing took place
+//     * @param content the found content
+//     * @param mime the parsed mime type, if any
+//     * @return the correct mime type
+//     */
+//    protected String determineParsedMimeType(
+//            StringRepresentation representation,
+//            String               mimeContext,
+//            Object               content,
+//            String               mime )
+//    {
+//        // FIXME this needs more work
+//        if( mime != null ) {
+//            return mime;
+//        }
+//        if( mimeContext != null ) {
+//            return mimeContext;
+//        }
+//        if( content instanceof String ) {
+//            if( StringRepresentationDirectory.TEXT_HTML_NAME.equals( representation.getName() )) {
+//                if( isAllowedMimeType( BlobValue.TEXT_HTML_MIME_TYPE )) {
+//                    return BlobValue.TEXT_HTML_MIME_TYPE;
+//                }
+//            } else {
+//                if( isAllowedMimeType( BlobValue.TEXT_PLAIN_MIME_TYPE )) {
+//                    return BlobValue.TEXT_PLAIN_MIME_TYPE;
+//                }
+//            }
+//        }
+//        return BlobValue.OCTET_STREAM_MIME_TYPE;
+//    }
+
     /**
-     * Given a String representation, an optional parsed mime type and this BlobDataType, determine which MIME type it should be.
+     * Emit String representation of a null PropertyValue of this PropertyType. This must be overridden
+     * here because Blobs have too many variations.
      *
-     * @param representation the StringRepresentation in which the content was given
-     * @param mimeContext the context in which this parsing took place
-     * @param content the found content
-     * @param mime the parsed mime type, if any
-     * @return the correct mime type
+     * @param representation the representation scheme
+     * @param context the StringRepresentationContext of this object
+     * @param pars collects parameters that may influence the String representation
+     * @return the String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
-    protected String determineParsedMimeType(
-            StringRepresentation representation,
-            String               mimeContext,
-            Object               content,
-            String               mime )
+    @Override
+    public String nullValueStringRepresentation(
+            StringRepresentation           representation,
+            StringRepresentationContext    context,
+            StringRepresentationParameters pars )
+        throws
+            StringifierException
     {
-        // FIXME this needs more work
-        if( mime != null ) {
-            return mime;
+        BlobValue defaultValue = getDefaultValue();
+
+        Object editVariable;
+        Object meshObject;
+        Object propertyType;
+        Object nullString;
+        if( pars != null ) {
+            editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
+            meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
+            propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+            nullString   = pars.get( StringRepresentationParameters.NULL_STRING );
+        } else {
+            editVariable = null;
+            meshObject   = null;
+            propertyType = null;
+            nullString   = null;
         }
-        if( mimeContext != null ) {
-            return mimeContext;
-        }
-        if( content instanceof String ) {
-            if( StringRepresentationDirectory.TEXT_HTML_NAME.equals( representation.getName() )) {
-                if( isAllowedMimeType( BlobValue.TEXT_HTML_MIME_TYPE )) {
-                    return BlobValue.TEXT_HTML_MIME_TYPE;
-                }
+
+        if( supportsTextMimeType() ) {
+            if( defaultValue == null || defaultValue.hasTextMimeType() ) {
+                return representation.formatEntry(
+                        defaultValue.getClass(),
+                        "UploadEditStringWithTextDefault",
+                        pars,
+                /* 0 */ editVariable,
+                /* 1 */ meshObject,
+                /* 2 */ propertyType,
+                /* 3 */ this,
+                /* 4 */ PropertyValue.toStringRepresentation(
+                                defaultValue,
+                                representation.getStringRepresentationDirectory().get( SimpleStringRepresentationDirectory.TEXT_PLAIN_NAME ),
+                                context,
+                                pars ),
+                /* 5 */ nullString );
+
             } else {
-                if( isAllowedMimeType( BlobValue.TEXT_PLAIN_MIME_TYPE )) {
-                    return BlobValue.TEXT_PLAIN_MIME_TYPE;
-                }
+                return representation.formatEntry(
+                        defaultValue.getClass(),
+                        "UploadEditStringWithBinaryDefault",
+                        pars,
+                /* 0 */ editVariable,
+                /* 1 */ meshObject,
+                /* 2 */ propertyType,
+                /* 3 */ this,
+                /* 4 */ defaultValue,
+                /* 5 */ nullString );
+                
             }
+            
+        } else {
+            return representation.formatEntry(
+                    defaultValue.getClass(),
+                    "UploadNoEditStringWithBinaryDefault",
+                    pars,
+            /* 0 */ editVariable,
+            /* 1 */ meshObject,
+            /* 2 */ propertyType,
+            /* 3 */ this,
+            /* 4 */ defaultValue,
+            /* 5 */ nullString );
+            
         }
-        return BlobValue.OCTET_STREAM_MIME_TYPE;
     }
 
     /**

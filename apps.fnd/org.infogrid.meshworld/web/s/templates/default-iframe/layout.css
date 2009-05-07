@@ -59,6 +59,7 @@ span.org-infogrid-model-primitives-BlobValue > span.mime {
 span.org-infogrid-model-primitives-ColorValue {
     padding: 0 1em;
 }
-div.org-infogrid-jee-taglib-mesh-MeshObjectTag-show input {
+div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show input,
+div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show textarea {
     width: 330px;
 }

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import org.infogrid.util.CursorIterator;
 
 /**
  * A saner API for incoming HTTP requests than the JDK's HttpServletRequest.
@@ -308,4 +309,30 @@ public interface SaneRequest
      * @see #removeAttribute
      */
     public abstract Enumeration<String> getAttributeNames();
+
+    /**
+     * Obtain the names of the MimeParts conveyed.
+     *
+     * @return the names of the MimeParts
+     */
+    public abstract CursorIterator<String> getMimePartNames();
+
+    /**
+     * Obtain all MimeParts with a given name
+     *
+     * @param argName name of the MimePart
+     * @return the values, or <code>null</code>
+     */
+    public abstract MimePart [] getMultivaluedMimeParts(
+            String argName );
+
+    /**
+     * Obtain a MimePart that was HTTP POST'd. If more than one MimePart was posted with this name,
+     * this will throw an IllegalStateException.
+     *
+     * @param argName name of the argument
+     * @return the MimePart or null
+     */
+    public abstract MimePart getMimePart(
+            String argName );
 }

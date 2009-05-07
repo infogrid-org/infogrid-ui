@@ -18,7 +18,7 @@
       <v:ifState viewletState="edit">
        <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-unbless', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" />', 'shell.subject.unbless' : '<mesh:meshTypeId meshTypeName="blessedBy" stringRepresentation="Plain" filter="true" />' } )" title="Unbless this MeshObject"><img src="${CONTEXT}/s/images/trash.png" alt="Delete"/></a></div>
       </v:ifState>
-      <mesh:type meshTypeName="blessedBy"/>
+      <mesh:type meshTypeName="blessedBy"/> <mesh:meshTypeId meshTypeName="blessedBy"/>
      </th>
     </tr>
     <mesh:propertyIterate meshObjectName="Subject" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue" skipNullProperty="false">

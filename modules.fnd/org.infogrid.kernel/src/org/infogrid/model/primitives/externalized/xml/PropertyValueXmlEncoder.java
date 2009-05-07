@@ -509,9 +509,11 @@ public class PropertyValueXmlEncoder
                             theCharacters != null ? XmlUtils.cdataDescape( theCharacters.toString().trim()) : "",
                             ((BlobValue)thePropertyValue).getMimeType() );
                     // This needs to be patched later once we have the instance of BlobDataType
-                } else {
+                } else if( theCharacters != null ) {
                     thePropertyValue = BlobDataType.theAnyType.createBlobValue( Base64.base64decode( theCharacters.toString().trim() ), ((BlobValue)thePropertyValue).getMimeType() );
                     // This needs to be patched later once we have the instance of BlobDataType
+                } else {
+                    thePropertyValue = BlobDataType.theAnyType.createBlobValue("", ((BlobValue)thePropertyValue).getMimeType() );
                 }
             }
             

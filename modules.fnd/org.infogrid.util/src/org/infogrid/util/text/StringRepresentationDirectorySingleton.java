@@ -141,6 +141,9 @@ public class StringRepresentationDirectorySingleton
         htmlMap.put(    "list",           ListStringifier.create( "<li>", "</li>\n<li>", "</li>", "" ));
         // url:  same as plain
 
+        plainMap.put(   "htmlescaped",    HtmlStringStringifier.create() );
+        plainMap.put(   "javascriptescaped", JavaScriptStringStringifier.create() );
+
         theSingleton = new StringRepresentationDirectorySingleton(); // not the factory method here
 
         SimpleStringRepresentation plain = SimpleStringRepresentation.create(

@@ -478,12 +478,49 @@ public final class ResourceHelper
             }
         }
         
+        if( ret != null ) {
+            ret = replaceVariables( ret );
+        }
+
         if( log != null && log.isDebugEnabled() ) {
             log.debug( "     returning " + ret );
         }
         return ret;
     }
-    
+
+    /**
+     * Helper method to replace variables in a found resource.
+     *
+     * @param s the String with variables inside
+     * @return the String with all variables replaced.
+     */
+    protected String replaceVariables(
+            String s )
+    {
+        StringBuilder ret = new StringBuilder();
+
+        int current = 0;
+        while( true ) {
+            int start = s.indexOf( "${", current );
+            if( start < 0 ) {
+                break;
+            }
+            int end = s.indexOf( "}", start );
+            if( end < 0 ) {
+                break;
+            }
+            String var      = s.substring( start+2, end );
+            String expanded = internalGetResourceString( var );
+
+            ret.append( expanded );
+            
+            current = end+1;
+        }
+        ret.append( s.substring( current ));
+
+        return ret.toString();
+    }
+
     /**
       * Obtain the value of one URL resource.
       *
@@ -714,7 +751,7 @@ public final class ResourceHelper
                 msg.append( ", class loader is " + theClassLoader );
             }
             if( log != null ) {
-                log.info( msg );
+                log.info( msg.toString() );
             } else {
                 System.err.println( "WARN:" + msg );
             }

@@ -8,8 +8,8 @@
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet.css"/>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/viewlet/ChangeViewletStateTag.css"/>
-<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/MeshObjectTag.css"/>
-<tmpl:script src="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/MeshObjectTag.js"/>
+<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyValueTag.css"/>
+<tmpl:script src="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyValueTag.js"/>
 
 <v:viewletAlternatives />
 <v:changeViewletState viewletStates="edit" display="compact"/>

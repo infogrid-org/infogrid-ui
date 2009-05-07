@@ -15,6 +15,7 @@
 package org.infogrid.jee.shell.http;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
+import org.infogrid.util.http.MimePart;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
@@ -648,8 +650,8 @@ public class HttpShellFilter
             String propValueKey     = buf.toString();
             String propValueString  = request.getPostArgument( propValueKey );
             String propMimeString   = request.getPostArgument( propValueKey + MIME_TAG );
-            String propUploadString = request.getPostArgument( propValueKey + UPLOAD_PROPERTY_VALUE_TAG );
             String propTypeString   = request.getPostArgument( arg );
+            MimePart uploadPart     = request.getMimePart( propValueKey + UPLOAD_PROPERTY_VALUE_TAG );
 
             PropertyType propertyType = (PropertyType) findMeshType( propTypeString );
 
@@ -669,10 +671,20 @@ public class HttpShellFilter
             if( NULL_PROPERTY_VALUE_TAG_TRUE.equals( nullValueString )) {
                 value = null;
                 
-            } else if( propUploadString != null && propUploadString.length() > 0 && propertyType.getDataType() instanceof BlobDataType ) {
+            } else if( uploadPart != null && uploadPart.getContent().length > 0 && propertyType.getDataType() instanceof BlobDataType ) {
                 BlobDataType type = (BlobDataType) propertyType.getDataType();
 
-                value = type.createBlobValue( propUploadString, propMimeString );
+                if( uploadPart.getMimeType().startsWith( "text/" )) {
+                    try {
+                        value = type.createBlobValue( uploadPart.getContentAsString(), uploadPart.getMimeType() );
+                    } catch( UnsupportedEncodingException ex ) {
+                        log.warn( ex );
+                        value = type.createBlobValue( uploadPart.getContent(), uploadPart.getMimeType() ); // try this instead
+                    }
+                } else {
+                    value = type.createBlobValue( uploadPart.getContent(), uploadPart.getMimeType() );
+                }
+
 
             } else {
                 if( propValueString == null ) {

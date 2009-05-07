@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.sane;
 
+import org.infogrid.util.http.MimePart;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -335,10 +336,9 @@ public class SaneServletRequest
 
         // forward to first boundary
         StreamUtils.slurpUntilBoundary( inStream, byteBoundary );
-        FormDataUtils.advanceToBeginningOfLine( inStream );
+        boolean hasData = FormDataUtils.advanceToBeginningOfLine( inStream );
 
         // past first boundary now
-        boolean hasData = true;
         outer:
         while( hasData ) { // for all parts
 
@@ -379,18 +379,17 @@ public class SaneServletRequest
                 break outer; // end of stream -- we don't want heads and no content
             }
             partData = FormDataUtils.stripTrailingBoundary( partData, byteBoundary );
-            FormDataUtils.advanceToBeginningOfLine( inStream );
+            hasData  = FormDataUtils.advanceToBeginningOfLine( inStream );
 
             String partMime = partHeaders.get( "content-type" );
             if( partMime == null ) {
                 partMime = "text/plain"; // apparently the default
             }
 
-            String partCharset = charset; // FIXME?
-            
-            String partName       = null;
+            String partCharset     = charset; // FIXME?
+            String partName        = null;
             String partDisposition = null;
-            String disposition    = partHeaders.get( "content-disposition" );
+            String disposition     = partHeaders.get( "content-disposition" );
             if( disposition != null ) {
                 String [] dispositionData = disposition.split( ";" );
                 partDisposition = dispositionData[0];
@@ -414,7 +413,7 @@ public class SaneServletRequest
             }
 
             if( partName != null ) {
-                MimePart part = MimePart.create( partName, partHeaders, partDisposition, partData, partMime );
+                MimePart part = MimePart.create( partName, partHeaders, partDisposition, partData, partMime, partCharset );
 
                 MimePart [] already = mimeParts.get( partName );
                 MimePart [] toPut;
@@ -429,7 +428,7 @@ public class SaneServletRequest
             }
 
             // adding to post parameters too
-            if( partName != null && "form-data".equals( partDisposition )) {
+            if( partName != null && "form-data".equals( partDisposition ) && partMime.startsWith( "text/" )) {
                 String    value   = new String( partData, partCharset );
                 String [] already = postArguments.get( partName );
                 String [] toPut;
@@ -874,26 +873,6 @@ public class SaneServletRequest
         MimePart [] ret = theMimeParts.get( argName );
         return ret;
     }
-
-    /**
-     * Obtain a named MimePart.
-     *
-     * @param name the name of the MimePart
-     * @return the MimePart, if any
-     */
-    public MimePart getMimePart(
-            String name )
-    {
-        MimePart [] almost = getMultivaluedMimeParts( name );
-        if( almost == null || almost.length == 0 ) {
-            return null;
-        } else if( almost.length == 1 ) {
-            return almost[0];
-        } else {
-            throw new IllegalStateException();
-        }
-    }
-
 
     /**
      * Dump this object.

@@ -127,6 +127,7 @@ table.dialog-buttons > tbody > tr > td {
     padding: 15px 0 5px 0;
     width: 33.3%
 }
-div.org-infogrid-jee-taglib-mesh-MeshObjectTag-show input {
+div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show input,
+div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show textarea {
     width: 330px;
 }

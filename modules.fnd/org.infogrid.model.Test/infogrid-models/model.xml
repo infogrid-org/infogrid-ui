@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -235,6 +235,136 @@
                 <isoptional/>
             </propertytype>
 
+        </entitytype>
+
+        <entitytype ID="org.infogrid.model.Test#SimpleBlobTest">
+            <name>SimpleBlobTest</name>
+            <userdescription>Holds a single BlobValue. For GUI testing.</userdescription>
+
+            <propertytype ID="org.infogrid.model.Test#SimpleBlobTest/AnyOptional">
+                <name>AnyOptional</name>
+                <datatype>
+                    <BlobDataType default="theAnyType"/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+        </entitytype>
+
+        <entitytype ID="org.infogrid.model.Test#BlobTest">
+            <name>BlobTest</name>
+            <userdescription>Holds properties of a range of different BlobDataTypes.</userdescription>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/AnyOptional">
+                <name>AnyOptional</name>
+                <datatype>
+                    <BlobDataType default="theAnyType"/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/AnyMandatory">
+                <name>AnyMandatory</name>
+                <datatype>
+                    <BlobDataType default="theAnyType"/>
+                </datatype>
+                <defaultvalue>Default value for AnyMandatory</defaultvalue>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/TextPlainOrHtmlOptional">
+                <name>TextPlainOrHtmlOptional</name>
+                <datatype>
+                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/TextPlainOrHtmlMandatory">
+                <name>TextPlainOrHtmlMandatory</name>
+                <datatype>
+                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                </datatype>
+                <defaultvalue>Default value for TextPlainOrHtmlMandatory</defaultvalue>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/TextPlainOptional">
+                <name>TextPlainOptional</name>
+                <datatype>
+                    <BlobDataType default="theTextPlainType"/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/TextPlainMandatory">
+                <name>TextPlainMandatory</name>
+                <datatype>
+                    <BlobDataType default="theTextPlainType"/>
+                </datatype>
+                <defaultvalue>Default value for TextPlainMandatory</defaultvalue>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/TextHtmlOptional">
+                <name>TextHtmlOptional</name>
+                <datatype>
+                    <BlobDataType default="theTextHtmlType"/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/TextHtmlMandatory">
+                <name>TextHtmlMandatory</name>
+                <datatype>
+                    <BlobDataType default="theTextHtmlType"/>
+                </datatype>
+                <defaultvalue>Default value for TextHtmlMandatory</defaultvalue>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/GifOptional">
+                <name>GifOptional</name>
+                <datatype>
+                    <BlobDataType default="theGifType"/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/GifMandatory">
+                <name>GifMandatory</name>
+                <datatype>
+                    <BlobDataType default="theGifType"/>
+                </datatype>
+                <defaultvalue>FIXME</defaultvalue>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/JpgOptional">
+                <name>JpgOptional</name>
+                <datatype>
+                    <BlobDataType default="theJpgType"/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/JpgMandatory">
+                <name>JpgMandatory</name>
+                <datatype>
+                    <BlobDataType default="theJpgType"/>
+                </datatype>
+                <defaultvalue>FIXME</defaultvalue>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/PngOptional">
+                <name>PngOptional</name>
+                <datatype>
+                    <BlobDataType default="thePngType"/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+
+            <propertytype ID="org.infogrid.model.Test#BlobTest/PngMandatory">
+                <name>PngMandatory</name>
+                <datatype>
+                    <BlobDataType default="thePngType"/>
+                </datatype>
+                <defaultvalue>FIXME</defaultvalue>
+            </propertytype>
         </entitytype>
 
         <relationshiptype ID="org.infogrid.model.Test#R">

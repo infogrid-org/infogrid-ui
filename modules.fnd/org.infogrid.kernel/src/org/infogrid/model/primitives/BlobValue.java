@@ -102,6 +102,16 @@ public abstract class BlobValue
     }
 
     /**
+     * Determine whether this BlobValue has any kind of text MIME type.
+     *
+     * @return true if it has a text MIME type
+     */
+    public boolean hasTextMimeType()
+    {
+        return theMimeType.startsWith( "text/" );
+    }
+
+    /**
      * If this is non-null, this BlobValue is a delayed-loading Blob and the return value
      * is the relative path from which the content shall be loaded.
      *
@@ -259,30 +269,101 @@ public abstract class BlobValue
             propertyType = null;
         }
 
-        if( getMimeType().startsWith( "text" )) {
+        // These are the choices:
+        // 1. Text that is to be interpreted as HTML, i.e. <b>hi</b> shows bold face
+        // 2. Text that is not to be interpreted, i.e. <b> would be printed as just that (but needs to
+        //    be escaped if emitted in an HTML context, into &lt;b&gt;
+        // 3. Image that can be in-lined in HTML
+        // 4. A placeholder in lieu of bytes
+        // Further, for editing purposes, the choices are:
+        // 1. display upload only
+        // 2. display upload and text edit field
+
+        if( theMimeType.startsWith( "text/html" )) {
+            // html; display upload and text edit field
+
             return rep.formatEntry(
                     getClass(),
-                    "TextString",
+                    "InterpretTextString",
                     pars,
             /* 0 */ editVariable,
             /* 1 */ meshObject,
             /* 2 */ propertyType,
             /* 3 */ this,
             /* 4 */ theMimeType,
-            /* 5 */ value(),
-            /* 6 */ getAsString() );
+            /* 5 */ getAsString() );
+
+        } else if( theMimeType.startsWith( "text/" )) {
+            // all other text that is not html; display upload and text edit field
+
+            return rep.formatEntry(
+                    getClass(),
+                    "DontInterpretTextString",
+                    pars,
+            /* 0 */ editVariable,
+            /* 1 */ meshObject,
+            /* 2 */ propertyType,
+            /* 3 */ this,
+            /* 4 */ theMimeType,
+            /* 5 */ getAsString() );
+
+        } else if( BlobDataType.theJdkSupportedBitmapType.isAllowedMimeType( theMimeType )) {
+            // image that can be rendered
+            if( theDataType.supportsTextMimeType() ) {
+                // display upload and text edit field
+
+                return rep.formatEntry(
+                        getClass(),
+                        "ImageUploadEditString",
+                        pars,
+                /* 0 */ editVariable,
+                /* 1 */ meshObject,
+                /* 2 */ propertyType,
+                /* 3 */ this,
+                /* 4 */ theMimeType );
+
+            } else {
+                // only display upload field
+
+                return rep.formatEntry(
+                        getClass(),
+                        "ImageUploadNoEditString",
+                        pars,
+                /* 0 */ editVariable,
+                /* 1 */ meshObject,
+                /* 2 */ propertyType,
+                /* 3 */ this,
+                /* 4 */ theMimeType );
+            }
+            
         } else {
-            return rep.formatEntry(
-                    getClass(),
-                    "ByteString",
-                    pars,
-            /* 0 */ editVariable,
-            /* 1 */ meshObject,
-            /* 2 */ propertyType,
-            /* 3 */ this,
-            /* 4 */ theMimeType,
-            /* 5 */ value(),
-            /* 6 */ null );
+            // raw bytes
+            if( theDataType.supportsTextMimeType() ) {
+                // display upload and text edit field
+
+                return rep.formatEntry(
+                        getClass(),
+                        "ByteUploadEditString",
+                        pars,
+                /* 0 */ editVariable,
+                /* 1 */ meshObject,
+                /* 2 */ propertyType,
+                /* 3 */ this,
+                /* 4 */ theMimeType );
+
+            } else {
+                // only display upload field
+
+                return rep.formatEntry(
+                        getClass(),
+                        "ByteUploadNoEditString",
+                        pars,
+                /* 0 */ editVariable,
+                /* 1 */ meshObject,
+                /* 2 */ propertyType,
+                /* 3 */ this,
+                /* 4 */ theMimeType );
+            }
         }
     }
     

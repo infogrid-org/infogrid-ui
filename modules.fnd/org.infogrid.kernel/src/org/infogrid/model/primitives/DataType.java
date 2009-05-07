@@ -153,7 +153,17 @@ public abstract class DataType
       *
       * @return a PropertyValue with a reasonable default value that is an instance of this DataType
       */
-    public abstract PropertyValue instantiate();
+    public final PropertyValue instantiate()
+    {
+        return getDefaultValue();
+    }
+
+    /**
+     * Obtain the default value of this DataType.
+     *
+     * @return the default value of this DataType
+     */
+    public abstract PropertyValue getDefaultValue();
 
     /**
      * If this DataType is a refinement of another, find which DataType it refines.
@@ -232,7 +242,7 @@ public abstract class DataType
         throws
             StringifierException
     {
-        PropertyValue defaultValue = instantiate();
+        PropertyValue defaultValue = getDefaultValue();
 
         Object editVariable;
         Object meshObject;

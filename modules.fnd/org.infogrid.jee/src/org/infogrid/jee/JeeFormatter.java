@@ -1069,6 +1069,9 @@ public class JeeFormatter
         } else if( "Edit".equals( raw )) {
             sanitized = "EditHtml";
 
+        } else if( "View".equals( raw )) {
+            sanitized = "ViewHtml";
+
         } else {
             StringBuilder temp = new StringBuilder( raw.length() );
             temp.append( Character.toUpperCase( raw.charAt( 0 )));

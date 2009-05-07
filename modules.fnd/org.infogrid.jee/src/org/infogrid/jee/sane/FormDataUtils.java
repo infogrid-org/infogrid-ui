@@ -198,9 +198,10 @@ public abstract class FormDataUtils
      * Advance the stream to the beginning of the next line.
      *
      * @param inStream the InputStream
+     * @return true if there is more data
      * @throws IOException thrown if an I/O error occurred
      */
-    public static void advanceToBeginningOfLine(
+    public static boolean advanceToBeginningOfLine(
             BufferedInputStream inStream )
         throws
             IOException
@@ -209,11 +210,23 @@ public abstract class FormDataUtils
         int c2 = inStream.read();
 
         if( c1 < 0 || c2 < 0 ) {
-            return;
+            return false;
         }
-        if( c1 != CRLF[0] || c2 != CRLF[1] ) {
-            log.warn( "Unexpected characters found" );
+        if( c1 == '-' && c2 == '-' ) {
+            return false;
         }
+        if( c1 == CRLF[0] && c2 == CRLF[1] ) {
+            return true; // everything ok
+        }
+        log.warn(
+                "Unexpected characters found: \""
+                + ((char)c1)
+                + ((char)c2)
+                + "\" (0x"
+                + Integer.toHexString( c1 )
+                + Integer.toHexString( c2 )
+                + ")" );
+        return false;
     }
 
     /**

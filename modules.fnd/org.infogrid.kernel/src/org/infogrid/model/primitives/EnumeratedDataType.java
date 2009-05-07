@@ -277,17 +277,6 @@ public class EnumeratedDataType
     }
 
     /**
-      * Instantiate this data type into a PropertyValue with a
-      * reasonable default value.
-      *
-      * @return a PropertyValue with a reasonable default value that is an instance of this DataType
-      */
-    public EnumeratedValue instantiate()
-    {
-        return theDomain[0];
-    }
-
-    /**
      * Obtain the default value of this DataType.
      *
      * @return the default value of this DataType
