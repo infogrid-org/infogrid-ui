@@ -172,7 +172,7 @@
                  </c:forEach>                   
                  <tr>
                   <td class="label">Data&nbsp;type:</td>
-                  <td><mesh:type meshTypeName="prop" propertyName="dataType" filter="false"/></td>
+                  <td><mesh:type meshTypeName="prop" propertyName="dataType" filter="false" stringRepresentation="Plain" /></td>
                  </tr>
                  <tr>
                   <td class="label">Optional:</td>
