@@ -1070,7 +1070,7 @@ public class JeeFormatter
             sanitized = "EditHtml";
 
         } else if( "View".equals( raw )) {
-            sanitized = "ViewHtml";
+            sanitized = "Html";
 
         } else {
             StringBuilder temp = new StringBuilder( raw.length() );

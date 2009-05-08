@@ -39,7 +39,7 @@
          <mesh:type meshTypeName="blessedBy"/>
          <ul class="properties">
           <mesh:propertyIterate meshObjectName="current" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue">
-          <li><mesh:type          meshTypeName="propertyType" />:&nbsp;<mesh:propertyValue propertyValueName="propertyValue" /></li>
+           <li><mesh:type meshTypeName="propertyType" />:&nbsp;<mesh:property meshObjectName="current" propertyTypeName="propertyType" /></li>
           </mesh:propertyIterate>
          </ul>
         </li>

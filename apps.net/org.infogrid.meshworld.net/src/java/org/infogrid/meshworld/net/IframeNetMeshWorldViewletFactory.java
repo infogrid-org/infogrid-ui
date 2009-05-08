@@ -16,10 +16,16 @@ package org.infogrid.meshworld.net;
 
 import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
+import org.infogrid.jee.viewlet.blob.BlobViewlet;
+import org.infogrid.mesh.IllegalPropertyTypeException;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.net.NetMeshObject;
-import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.model.Wiki.WikiSubjectArea;
+import org.infogrid.model.primitives.BlobDataType;
+import org.infogrid.model.primitives.BlobValue;
+import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewletFactory;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactoryChoice;
@@ -31,6 +37,8 @@ public class IframeNetMeshWorldViewletFactory
         extends
             AbstractViewletFactory
 {
+    private static final Log log = Log.getLogInstance( IframeNetMeshWorldViewletFactory.class ); // our own, private logger
+
     /**
      * Constructor.
      */
@@ -52,12 +60,24 @@ public class IframeNetMeshWorldViewletFactory
         ArrayList<ViewletFactoryChoice> ret = new ArrayList<ViewletFactoryChoice>();
 
         NetMeshObject subject = (NetMeshObject) theObjectsToView.getSubject();
-        NetMeshBase   base    = subject.getMeshBase();
-
-        // Type-based rules
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
             ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
+        }
+        for( PropertyType type : subject.getAllPropertyTypes()) {
+            if( type.getDataType() instanceof BlobDataType ) {
+                try {
+                    BlobValue value = (BlobValue) subject.getPropertyValue( type );
+                    if( value != null && BlobDataType.theJdkSupportedBitmapType.isAllowedMimeType( value.getMimeType() )) {
+                        ret.add( BlobViewlet.choice( ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+                        break;
+                    }
+                } catch( IllegalPropertyTypeException ex ) {
+                    log.error( ex );
+                } catch( NotPermittedException ex ) {
+                    // ignore: then we'll do without this Viewlet
+                }
+            }
         }
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better

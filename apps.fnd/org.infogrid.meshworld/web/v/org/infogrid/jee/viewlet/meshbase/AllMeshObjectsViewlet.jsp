@@ -10,7 +10,9 @@
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/meshbase/AllMeshObjectsViewlet.css"/>
 <v:viewletAlternatives />
 <v:viewlet>
- <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Create"/></a></div>
+ <div class="slide-in-button">
+  <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Create"/></a>
+ </div>
  <h1>All MeshObjects in the MeshBase</h1>
  <table class="set">
   <thead>
@@ -42,7 +44,7 @@
          <mesh:type meshTypeName="blessedBy"/>
          <ul class="properties">
           <mesh:propertyIterate meshObjectName="current" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue">
-          <li><mesh:type          meshTypeName="propertyType" />:&nbsp;<mesh:propertyValue propertyValueName="propertyValue" /></li>
+           <li><mesh:type meshTypeName="propertyType" />:&nbsp;<mesh:property meshObjectName="current" propertyTypeName="propertyType" /></li>
           </mesh:propertyIterate>
          </ul>
         </li>

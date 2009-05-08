@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.Blob.BlobSubjectArea;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.viewlet.AbstractViewletFactory;
@@ -53,9 +52,7 @@ public class TestAppViewletFactory
         ArrayList<ViewletFactoryChoice> ret = new ArrayList<ViewletFactoryChoice>();
         
         MeshObject subject = theObjectsToView.getSubject();
-        MeshBase   base    = subject.getMeshBase();
 
-        // NetMeshBase's Home Object
         if( subject.isBlessedBy( BlobSubjectArea.IMAGE )) {
             ret.add( BlobViewlet.choice( ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         }

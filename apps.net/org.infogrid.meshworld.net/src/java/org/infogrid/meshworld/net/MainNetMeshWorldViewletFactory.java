@@ -16,6 +16,7 @@ package org.infogrid.meshworld.net;
 
 import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
+import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
@@ -23,11 +24,17 @@ import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
 import org.infogrid.jee.viewlet.probe.shadow.ShadowAwareAllMeshBasesViewlet;
 import org.infogrid.jee.viewlet.servlet.net.NetViewletDispatcherServlet;
+import org.infogrid.mesh.IllegalPropertyTypeException;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.Wiki.WikiSubjectArea;
+import org.infogrid.model.primitives.BlobDataType;
+import org.infogrid.model.primitives.BlobValue;
+import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewletFactory;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactoryChoice;
@@ -39,6 +46,8 @@ public class MainNetMeshWorldViewletFactory
         extends
             AbstractViewletFactory
 {
+    private static final Log log = Log.getLogInstance( MainNetMeshWorldViewletFactory.class ); // our own, private logger
+
     /**
      * Constructor.
      */
@@ -60,10 +69,7 @@ public class MainNetMeshWorldViewletFactory
         ArrayList<ViewletFactoryChoice> ret = new ArrayList<ViewletFactoryChoice>();
         
         NetMeshObject subject = (NetMeshObject) theObjectsToView.getSubject();
-        NetMeshBase   base    = subject.getMeshBase();
-
-        // NetMeshBase's Home Object
-        if( base.getHomeObject() == subject ) {
+        if( subject.getMeshBase().getHomeObject() == subject ) {
             ret.add( AllMeshObjectsViewlet.choice(          ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( AllMeshTypesViewlet.choice(            ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( BulkLoaderViewlet.choice(              ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
@@ -75,11 +81,24 @@ public class MainNetMeshWorldViewletFactory
                 ret.add( ProxyViewlet.choice( ViewletFactoryChoice.PERFECT_MATCH_QUALITY+1.d )); // not quite perfect
             }
         }
-        
-        // Type-based rules
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
             ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
+        }
+        for( PropertyType type : subject.getAllPropertyTypes()) {
+            if( type.getDataType() instanceof BlobDataType ) {
+                try {
+                    BlobValue value = (BlobValue) subject.getPropertyValue( type );
+                    if( value != null && BlobDataType.theJdkSupportedBitmapType.isAllowedMimeType( value.getMimeType() )) {
+                        ret.add( BlobViewlet.choice( ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+                        break;
+                    }
+                } catch( IllegalPropertyTypeException ex ) {
+                    log.error( ex );
+                } catch( NotPermittedException ex ) {
+                    // ignore: then we'll do without this Viewlet
+                }
+            }
         }
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet",                ViewletFactoryChoice.BAD_MATCH_QUALITY ));
         ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
