@@ -56,7 +56,7 @@ public class ModelBaseTest3
         log.info( "Creating test Model" );
 
         SubjectArea sa = life.createSubjectArea(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "Test.Sa#sa"),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "Test.Sa/sa"),
                 StringValue.create( "TestSa" ),
                 StringValue.create( "12354" ),
                 L10MapImpl.create( StringValue.create( "Test SA" ) ),
@@ -69,7 +69,7 @@ public class ModelBaseTest3
         theModelBase.checkSubjectArea( sa );
 
         EntityType a = life.createEntityType(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#A" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/A" ),
                 StringValue.create( "A" ),
                 L10MapImpl.create( StringValue.create( "This is a" ) ),
                 null,
@@ -89,7 +89,7 @@ public class ModelBaseTest3
                 BooleanValue.TRUE );
 
         PropertyType a_name = life.createPropertyType(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#A_Name" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/A_Name" ),
                 StringValue.create( "Name" ),
                 L10MapImpl.create( StringValue.create( "This is a name" ) ),
                 null,
@@ -108,7 +108,7 @@ public class ModelBaseTest3
         theModelBase.checkEntityType( a );
 
         EntityType b = life.createEntityType(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#B" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/B" ),
                 StringValue.create( "B" ),
                 L10MapImpl.create( StringValue.create( "This is b name" ) ),
                 null,
@@ -129,7 +129,7 @@ public class ModelBaseTest3
 
         PropertyType b_name = life.createOverridingPropertyType(
                 new PropertyType[] { a_name },
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#B_Name" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/B_Name" ),
                 L10MapImpl.create( StringValue.create( "This is b name" ) ),
                 b,
                 sa,
@@ -145,7 +145,7 @@ public class ModelBaseTest3
         theModelBase.checkEntityType( b );
 
         EntityType c = life.createEntityType(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#C" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/C" ),
                 StringValue.create( "C" ),
                 L10MapImpl.create( StringValue.create( "This is c" ) ),
                 null,
@@ -166,7 +166,7 @@ public class ModelBaseTest3
 
         PropertyType c_name = life.createOverridingPropertyType(
                 new PropertyType[] { a_name },
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#C_Name" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/C_Name" ),
                 null,
                 c,
                 sa,
@@ -182,7 +182,7 @@ public class ModelBaseTest3
         theModelBase.checkEntityType( c );
 
         EntityType d = life.createEntityType(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#D" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/D" ),
                 StringValue.create( "D" ),
                 L10MapImpl.create( StringValue.create( "This is d" ) ),
                 null,
@@ -205,7 +205,7 @@ public class ModelBaseTest3
         // we don't do an override on D
 
         EntityType e = life.createEntityType(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#E" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/E" ),
                 StringValue.create( "E" ),
                 L10MapImpl.create( StringValue.create( "This is e" ) ),
                 null,
@@ -226,7 +226,7 @@ public class ModelBaseTest3
 
         PropertyType e_name = life.createOverridingPropertyType(
                 new PropertyType[] { a_name },
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#E_Name" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/E_Name" ),
                 L10MapImpl.create( StringValue.create( "This is e name" ) ),
                 e,
                 sa,
@@ -244,7 +244,7 @@ public class ModelBaseTest3
         boolean exceptionThrown = false;
         try {
             EntityType f = life.createEntityType(
-                    theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#F" ),
+                    theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/F" ),
                     StringValue.create( "F" ),
                     L10MapImpl.create( StringValue.create( "This is f" ) ),
                     null,
@@ -271,7 +271,7 @@ public class ModelBaseTest3
         exceptionThrown = false;
         try {
             EntityType g = life.createEntityType(
-                    theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#G" ),
+                    theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/G" ),
                     StringValue.create( "G" ),
                     L10MapImpl.create( StringValue.create( "This is g" ) ),
                     null,
@@ -296,7 +296,7 @@ public class ModelBaseTest3
         checkCondition( exceptionThrown, "exception was not thrown when creating a conflict on meta-entity G" );
 
         EntityType h = life.createEntityType(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#H" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/H" ),
                 StringValue.create( "H" ),
                 L10MapImpl.create( StringValue.create( "This is h" ) ),
                 null,
@@ -317,7 +317,7 @@ public class ModelBaseTest3
 
         PropertyType h_name = life.createOverridingPropertyType(
                 new PropertyType[] { c_name },
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#H_Name" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/H_Name" ),
                 null,
                 h,
                 sa,
@@ -333,7 +333,7 @@ public class ModelBaseTest3
         theModelBase.checkEntityType( h );
 
         EntityType i = life.createEntityType(
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#I" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/I" ),
                 StringValue.create( "I" ),
                 L10MapImpl.create( StringValue.create( "This is i" ) ),
                 null,
@@ -356,7 +356,7 @@ public class ModelBaseTest3
         try {
             PropertyType i_name = life.createOverridingPropertyType(
                     new PropertyType[] { a_name },
-                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix#I_Name" ),
+                theModelBase.getMeshTypeIdentifierFactory().fromExternalForm( "pre.fix/I_Name" ),
                     null,
                     i,
                     sa,

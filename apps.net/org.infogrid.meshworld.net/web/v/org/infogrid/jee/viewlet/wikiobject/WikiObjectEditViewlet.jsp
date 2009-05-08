@@ -19,7 +19,7 @@
  <h1>Wiki Editor Viewlet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" maxLength="30"/></h1>
  <v:ifState viewletState="edit">
   <div class="current-content">
-   <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki#WikiObject/Content" stringRepresentation="Edit"/>
+   <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki/WikiObject_Content" stringRepresentation="Edit"/>
   </div>
   <table class="dialog-buttons">
    <u:safeFormHiddenInput/>
@@ -32,7 +32,7 @@
  </v:ifState>
  <v:ifState viewletState="view">
   <div class="content">
-   <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki#WikiObject/Content" stringRepresentation="Plain"/>
+   <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki/WikiObject_Content" stringRepresentation="Plain"/>
   </div>
  </v:ifState>
 </v:viewlet>

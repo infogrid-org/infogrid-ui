@@ -15,16 +15,16 @@
 
 <!DOCTYPE model PUBLIC '-//InfoGrid.org//InfoGrid Model//EN' 'http://infogrid.org/dtds/model.dtd'>
 <model>
-    <subjectarea ID="org.infogrid.model.Tagging#_SubjectArea">
+    <subjectarea ID="org.infogrid.model.Tagging">
         <name>org.infogrid.model.Tagging</name>
         <username>Tagging Subject Area</username>
         <userdescription>Tagging Subject Area</userdescription>
 
-        <entitytype ID="org.infogrid.model.Tagging#TagLibrary">
+        <entitytype ID="org.infogrid.model.Tagging/TagLibrary">
             <name>TagLibrary</name>
             <username>Tag Library</username>
             <userdescription>A library of tags.</userdescription>
-            <propertytype ID="org.infogrid.model.Tagging#TagLibrary/Name">
+            <propertytype ID="org.infogrid.model.Tagging/TagLibrary_Name">
                 <name>Name</name>
                 <username>Name</username>
                 <userdescription>The name of the Tag Library</userdescription>
@@ -35,11 +35,11 @@
             </propertytype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Tagging#Tag">
+        <entitytype ID="org.infogrid.model.Tagging/Tag">
             <name>Tag</name>
             <username>Tag</username>
             <userdescription>A tag.</userdescription>
-            <propertytype ID="org.infogrid.model.Tagging#Tag/Label">
+            <propertytype ID="org.infogrid.model.Tagging/Tag_Label">
                 <name>Label</name>
                 <username>Label</username>
                 <userdescription>The public representation of the Tag</userdescription>
@@ -50,26 +50,26 @@
             </propertytype>
         </entitytype>
 
-        <relationshiptype ID="org.infogrid.model.Tagging#TagLibrary_Collects_Tag">
+        <relationshiptype ID="org.infogrid.model.Tagging/TagLibrary_Collects_Tag">
             <name>TagLibrary_Collects_Tag</name>
             <username>Collects</username>
             <userdescription>Relates a Tag to the TagLibrary in which it is defined.</userdescription>
             <src>
-              <e>org.infogrid.model.Tagging#TagLibrary</e>
+              <e>org.infogrid.model.Tagging/TagLibrary</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.model.Tagging#Tag</e>
+              <e>org.infogrid.model.Tagging/Tag</e>
               <MultiplicityValue>1:1</MultiplicityValue>
             </dest>
         </relationshiptype>
 
-        <relationshiptype ID="org.infogrid.model.Tagging#Tag_Tags_MeshObject">
+        <relationshiptype ID="org.infogrid.model.Tagging/Tag_Tags_MeshObject">
             <name>Tag_Tags_MeshObject</name>
             <username>Tags</username>
             <userdescription>Relates a Tag to the zero or more MeshObjects that it tags.</userdescription>
             <src>
-              <e>org.infogrid.model.Tagging#Tag</e>
+              <e>org.infogrid.model.Tagging/Tag</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
@@ -77,7 +77,7 @@
             </dest>
         </relationshiptype>
         
-        <relationshiptype ID="org.infogrid.model.Tagging#MeshObject_Uses_TagLibrary">
+        <relationshiptype ID="org.infogrid.model.Tagging/MeshObject_Uses_TagLibrary">
             <name>MeshObject_Uses_TagLibrary</name>
             <username>Uses</username>
             <userdescription>Enables a MeshObject (such as a person) to identify those TagLibraries they use.</userdescription>
@@ -85,7 +85,7 @@
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.model.Tagging#TagLibrary</e>
+              <e>org.infogrid.model.Tagging/TagLibrary</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>

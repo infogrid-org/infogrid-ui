@@ -15,7 +15,6 @@
 package org.infogrid.modelbase.m;
 
 import org.infogrid.model.primitives.MeshTypeIdentifier;
-
 import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
@@ -41,6 +40,10 @@ public class MMeshTypeIdentifier
     public static MMeshTypeIdentifier create(
             String s )
     {
+        if( s.indexOf( '#' ) >= 0 ) {
+            throw new IllegalArgumentException( "Hashes in MeshTypeIdentifiers are no longer allowed: " + s );
+        }
+
         return new MMeshTypeIdentifier( s );
     }
 

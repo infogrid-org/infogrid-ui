@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -24,17 +24,17 @@
               timeUpdated="1999-12-13T14:15:16.189Z"
                  timeRead="1999-12-13T14:15:16.190Z"
           timeAutoDeletes="2009-12-13T14:15:16.191Z">
-    <MeshType>org.infogrid.model.Test#AA</MeshType>
-    <Property type="org.infogrid.model.Test#A/X"><StringValue>My test String.</StringValue></Property>
+    <MeshType>org.infogrid.model.Test/AA</MeshType>
+    <Property type="org.infogrid.model.Test/A_X"><StringValue>My test String.</StringValue></Property>
     <Relationship ID="#ghi">
-      <Role type="org.infogrid.model.Test#RR-S"/>
+      <Role type="org.infogrid.model.Test/RR-S"/>
     </Relationship>
   </MeshObject>
   <MeshObject ID="#ghi">
-    <MeshType>org.infogrid.model.Test#B</MeshType>
-    <Property type="org.infogrid.model.Test#B/Z"><EnumeratedValue>Value2</EnumeratedValue></Property>
+    <MeshType>org.infogrid.model.Test/B</MeshType>
+    <Property type="org.infogrid.model.Test/B_Z"><EnumeratedValue>Value2</EnumeratedValue></Property>
     <Relationship ID="#def">
-      <Role type="org.infogrid.model.Test#RR-D"/>
+      <Role type="org.infogrid.model.Test/RR-D"/>
     </Relationship>
   </MeshObject>
   

@@ -20,7 +20,7 @@
         <username>Feeds Subject Area</username>
         <userdescription>Concepts to represents RSS and Atom feeds and the like.</userdescription>
 
-        <entitytype ID="org.infogrid.model.Feeds#Feed">
+        <entitytype ID="org.infogrid.model.Feeds/Feed">
             <name>Feed</name>
             <username>Web Feed</username>
             <userdescription>A web feed such as an RSS or Atom feed.</userdescription>
@@ -30,7 +30,7 @@
                  Link attribute in the feed. -->
             <!-- The PubDate (RSS) or Updated (Atom) is the value of the timeUpdated property. -->
 
-            <propertytype ID="org.infogrid.model.Feeds#Feed/Title">
+            <propertytype ID="org.infogrid.model.Feeds/Feed_Title">
                 <name>Title</name>
                 <username>Title</username>
                 <userdescription>The feed's title</userdescription>
@@ -39,7 +39,7 @@
                 </datatype>
                 <isoptional/>
             </propertytype>
-            <propertytype ID="org.infogrid.model.Feeds#Feed/Description">
+            <propertytype ID="org.infogrid.model.Feeds/Feed_Description">
                 <name>Description</name>
                 <username>Description</username>
                 <userdescription>The feed's description</userdescription>
@@ -67,13 +67,13 @@
             
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Feeds#AtomFeed">
+        <entitytype ID="org.infogrid.model.Feeds/AtomFeed">
             <name>AtomFeed</name>
             <username>Atom Feed</username>
             <userdescription>A web feed in Atom format.</userdescription>
-            <supertype>org.infogrid.model.Feeds#Feed</supertype>
+            <supertype>org.infogrid.model.Feeds/Feed</supertype>
 
-            <propertytype ID="org.infogrid.model.Feeds#AtomFeed/Subtitle">
+            <propertytype ID="org.infogrid.model.Feeds/AtomFeed_Subtitle">
                 <name>Subtitle</name>
                 <username>Subtitle</username>
                 <userdescription>The feed's subtitle</userdescription>
@@ -84,14 +84,14 @@
             </propertytype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Feeds#RssFeed">
+        <entitytype ID="org.infogrid.model.Feeds/RssFeed">
             <name>RssFeed</name>
             <username>RSS Feed</username>
             <userdescription>A web feed in RSS format.</userdescription>
-            <supertype>org.infogrid.model.Feeds#Feed</supertype>
+            <supertype>org.infogrid.model.Feeds/Feed</supertype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Feeds#FeedItem">
+        <entitytype ID="org.infogrid.model.Feeds/FeedItem">
             <name>FeedItem</name>
             <username>Feed Item</username>
             <userdescription>An entry, or item, in a web feed.</userdescription>
@@ -101,7 +101,7 @@
                  Link attribute in the feed. -->
             <!-- The PubDate (RSS) or Updated (Atom) is the value of the timeUpdated property. -->
 
-            <propertytype ID="org.infogrid.model.Feeds#FeedItem/Title">
+            <propertytype ID="org.infogrid.model.Feeds/FeedItem_Title">
                 <name>Title</name>
                 <username>Title</username>
                 <userdescription>The feed item's title</userdescription>
@@ -110,7 +110,7 @@
                 </datatype>
                 <isoptional/>
             </propertytype>
-            <propertytype ID="org.infogrid.model.Feeds#FeedItem/Content">
+            <propertytype ID="org.infogrid.model.Feeds/FeedItem_Content">
                 <name>Content</name>
                 <username>Content</username>
                 <userdescription>The feed item's content.</userdescription>
@@ -134,13 +134,13 @@
             <!-- FIXME Published (Atom) -->
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Feeds#AtomFeedItem">
+        <entitytype ID="org.infogrid.model.Feeds/AtomFeedItem">
             <name>AtomFeedItem</name>
             <username>Atom Feed Item</username>
             <userdescription>An entry in a web feed in Atom format.</userdescription>
-            <supertype>org.infogrid.model.Feeds#FeedItem</supertype>
+            <supertype>org.infogrid.model.Feeds/FeedItem</supertype>
 
-            <propertytype ID="org.infogrid.model.Feeds#AtomFeedItem/Summary">
+            <propertytype ID="org.infogrid.model.Feeds/AtomFeedItem_Summary">
                 <name>Summary</name>
                 <username>Summary</username>
                 <userdescription>The feed item's summary</userdescription>
@@ -151,23 +151,23 @@
             </propertytype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Feeds#RssFeedItem">
+        <entitytype ID="org.infogrid.model.Feeds/RssFeedItem">
             <name>RssFeedItem</name>
             <username>RSS Feed Item</username>
             <userdescription>An entry in a web feed in RSS format.</userdescription>
-            <supertype>org.infogrid.model.Feeds#FeedItem</supertype>
+            <supertype>org.infogrid.model.Feeds/FeedItem</supertype>
         </entitytype>
         
-        <relationshiptype ID="org.infogrid.model.Feeds#Feed_Contains_FeedItem">
+        <relationshiptype ID="org.infogrid.model.Feeds/Feed_Contains_FeedItem">
             <name>Feed_Contains_FeedItem</name>
             <username>Contains</username>
             <userdescription>Relates a Web Feed to the items it contains.</userdescription>
             <src>
-              <e>org.infogrid.model.Feeds#Feed</e>
+              <e>org.infogrid.model.Feeds/Feed</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.model.Feeds#FeedItem</e>
+              <e>org.infogrid.model.Feeds/FeedItem</e>
               <MultiplicityValue>0:1</MultiplicityValue>
             </dest>
         </relationshiptype>

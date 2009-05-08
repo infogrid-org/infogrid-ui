@@ -2163,6 +2163,10 @@ public class MyHandler
     public MeshTypeIdentifier constructIdentifier(
             ExternalizedSubjectArea sa )
     {
+        if( sa.getIdentifier() != null ) {
+            return sa.getIdentifier();
+        }
+
         StringBuilder idString = new StringBuilder();
 
         idString.append( sa.getName().value() );

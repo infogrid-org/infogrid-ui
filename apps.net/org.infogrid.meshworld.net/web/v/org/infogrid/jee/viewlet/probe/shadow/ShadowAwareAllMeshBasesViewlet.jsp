@@ -28,23 +28,23 @@
          </tr>
          <tr>
           <th>Last run:</th>
-          <td><mesh:property meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe#ProbeUpdateSpecification/LastProbeRun"/></td>
+          <td><mesh:property meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe/ProbeUpdateSpecification_LastProbeRun"/></td>
          </tr>
          <tr>
           <th>Next run:</th>
-          <td><mesh:property meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe#ProbeUpdateSpecification/NextProbeRun"/></td>
+          <td><mesh:property meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe/ProbeUpdateSpecification_NextProbeRun"/></td>
          </tr>
          <tr>
           <th>&#35;&nbsp;Runs:</th>
-          <td><mesh:property meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe#ProbeUpdateSpecification/ProbeRunCounter"/></td>
+          <td><mesh:property meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe/ProbeUpdateSpecification_ProbeRunCounter"/></td>
          </tr>
          <tr>
           <th>Writable:</th>
           <td>
-           <logic:equal meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe#ProbeUpdateSpecification/LastRunUsedWritableProbe" value="-TRUE-">
+           <logic:equal meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe/ProbeUpdateSpecification_LastRunUsedWritableProbe" value="-TRUE-">
             Yes
            </logic:equal>
-           <logic:equal meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe#ProbeUpdateSpecification/LastRunUsedWritableProbe" value="-FALSE-">
+           <logic:equal meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe/ProbeUpdateSpecification_LastRunUsedWritableProbe" value="-FALSE-">
             No
            </logic:equal>
           </td>

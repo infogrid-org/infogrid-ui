@@ -79,7 +79,7 @@ public class ProbeTest3
             checkCondition( firstChangeSet.getChange( 0 ) instanceof NetMeshObjectPropertyChangeEvent, "wrong change type" );
             checkEquals(
                     ((NetMeshObjectPropertyChangeEvent)firstChangeSet.getChange( 0 )).getPropertyTypeIdentifier().toExternalForm(),
-                    "org.infogrid.model.Probe#ProbeUpdateSpecification/LastProbeRun",
+                    "org.infogrid.model.Probe/ProbeUpdateSpecification_LastProbeRun",
                     "Wrong property changed" );
             if( firstChangeSet.size() > 1 ) {
                 dumpChangeSet( firstChangeSet, log );

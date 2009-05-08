@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -19,7 +19,7 @@
               timeCreated="2007-01-02T03:04:05.061Z"
               timeUpdated="2007-01-02T03:04:05.061Z"
                  timeRead="2007-01-02T03:04:05.061Z">
-    <MeshType>org.infogrid.model.Test#B</MeshType>
+    <MeshType>org.infogrid.model.Test/B</MeshType>
     <Relationship ID="#abc"/>
     <Relationship ID="#def"/>
   </MeshObject>

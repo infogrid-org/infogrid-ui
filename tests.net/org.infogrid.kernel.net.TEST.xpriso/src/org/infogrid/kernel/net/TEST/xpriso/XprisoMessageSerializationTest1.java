@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -127,11 +127,11 @@ public class XprisoMessageSerializationTest1
         NetMeshObjectIdentifier nmo_ref5 = theNetMeshObjectIdentifierFactory.fromExternalForm( "#abc" );
         NetMeshObjectIdentifier nmo_ref6 = theNetMeshObjectIdentifierFactory.fromExternalForm( "#123%20456" );
 
-        MeshTypeIdentifier mt_ref1 = theMeshTypeIdentifierFactory.fromExternalForm( "org.infogrid.model.Some.Model" );
+        MeshTypeIdentifier mt_ref1 = theMeshTypeIdentifierFactory.fromExternalForm( "org.infogrid.model.Some/Model" );
         MeshTypeIdentifier mt_ref2 = theMeshTypeIdentifierFactory.fromExternalForm( "org.infogrid.model/Some/Model" );
-        MeshTypeIdentifier mt_ref3 = theMeshTypeIdentifierFactory.fromExternalForm( "http://foo.bar.example/com#123" );
-        MeshTypeIdentifier mt_ref4 = theMeshTypeIdentifierFactory.fromExternalForm( "=foobar" );
-        MeshTypeIdentifier mt_ref5 = theMeshTypeIdentifierFactory.fromExternalForm( "mailto:dev@null.com" );
+        MeshTypeIdentifier mt_ref3 = theMeshTypeIdentifierFactory.fromExternalForm( "http://foo.bar.example/com/123" );
+        MeshTypeIdentifier mt_ref4 = theMeshTypeIdentifierFactory.fromExternalForm( "https://foobar" );
+        MeshTypeIdentifier mt_ref5 = theMeshTypeIdentifierFactory.fromExternalForm( "https://foo.com/bar/12" );
         
         // Message 0
         

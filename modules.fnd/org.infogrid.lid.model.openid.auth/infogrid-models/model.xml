@@ -29,15 +29,15 @@
             </subjectareareference>
         </dependson>
 
-        <entitytype ID="org.infogrid.lid.model.openid.auth#AuthenticationService">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/AuthenticationService">
             <name>AuthenticationService</name>
             <username>OpenID Authentication Service</username>
             <userdescription>This represents an OpenID Authentication Service in any version.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#WebAuthenticationService</supertype>
+            <supertype>org.infogrid.lid.model.lid/WebAuthenticationService</supertype>
             <isabstract/>
             <synonym>http://openid.net/signon/</synonym>
             
-            <propertytype ID="org.infogrid.lid.model.openid.auth#AuthenticationService/Delegate">
+            <propertytype ID="org.infogrid.lid.model.openid.auth/AuthenticationService_Delegate">
                 <name>Delegate</name>
                 <username>Delegate</username>
                 <userdescription>The delegate identifier.</userdescription>
@@ -48,19 +48,19 @@
             </propertytype>
         </entitytype>        
 
-        <entitytype ID="org.infogrid.lid.model.openid.auth#Authentication1Service">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/Authentication1Service">
             <name>Authentication1Service</name>
             <username>OpenID Authentication Service (version 1)</username>
             <userdescription>This represents an OpenID Authentication Service (version 1)</userdescription>
-            <supertype>org.infogrid.lid.model.openid.auth#AuthenticationService</supertype>
+            <supertype>org.infogrid.lid.model.openid.auth/AuthenticationService</supertype>
             <isabstract/>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.openid.auth#Authentication1_0Service">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/Authentication1_0Service">
             <name>Authentication1_0Service</name>
             <username>OpenID Authentication Service (version 1.0)</username>
             <userdescription>This represents an OpenID Authentication Service (version 1.0)</userdescription>
-            <supertype>org.infogrid.lid.model.openid.auth#Authentication1Service</supertype>
+            <supertype>org.infogrid.lid.model.openid.auth/Authentication1Service</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
@@ -121,11 +121,11 @@
           <synonym>http://openid.net/signon/1.0</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.openid.auth#Authentication1_1Service">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/Authentication1_1Service">
             <name>Authentication1_1Service</name>
             <username>OpenID Authentication Service (version 1.1)</username>
             <userdescription>This represents an OpenID Authentication Service (version 1.1)</userdescription>
-            <supertype>org.infogrid.lid.model.openid.auth#Authentication1Service</supertype>
+            <supertype>org.infogrid.lid.model.openid.auth/Authentication1Service</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
@@ -186,11 +186,11 @@
           <synonym>http://openid.net/signon/1.1</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.openid.auth#Authentication2_0Service">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/Authentication2_0Service">
             <name>Authentication2_0Service</name>
             <username>OpenID Authentication Service (version 2.0)</username>
             <userdescription>This represents an OpenID Authentication Service (version 2.0)</userdescription>
-            <supertype>org.infogrid.lid.model.openid.auth#AuthenticationService</supertype>
+            <supertype>org.infogrid.lid.model.openid.auth/AuthenticationService</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
@@ -257,35 +257,35 @@
         </entitytype>
 
         
-        <entitytype ID="org.infogrid.lid.model.openid.auth#RelyingPartyService">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/RelyingPartyService">
             <name>RelyingPartyService</name>
             <username>OpenID Relying Party Service</username>
             <userdescription>This service is provided by OpenID RelyingParties in any version.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model.lid/RelyingPartyService</supertype>
             <synonym>http://specs.openid.net/auth/return_to</synonym>
         </entitytype>
         
-        <entitytype ID="org.infogrid.lid.model.openid.auth#RelyingParty1_0Service">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/RelyingParty1_0Service">
             <name>RelyingParty1_0Service</name>
             <username>OpenID Relying Party Service (version 1.0)</username>
             <userdescription>This service is provided by OpenID RelyingParties (version 1.0)</userdescription>
-            <supertype>org.infogrid.lid.model.openid.auth#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model.openid.auth/RelyingPartyService</supertype>
             <synonym>http://specs.openid.net/auth/1.0/return_to</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.openid.auth#RelyingParty1_1Service">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/RelyingParty1_1Service">
             <name>RelyingParty1_1Service</name>
             <username>OpenID Relying Party Service (version 1.1)</username>
             <userdescription>This service is provided by OpenID RelyingParties (version 1.1)</userdescription>
-            <supertype>org.infogrid.lid.model.openid.auth#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model.openid.auth/RelyingPartyService</supertype>
             <synonym>http://specs.openid.net/auth/1.1/return_to</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.openid.auth#RelyingParty2_0Service">
+        <entitytype ID="org.infogrid.lid.model.openid.auth/RelyingParty2_0Service">
             <name>RelyingParty2_0Service</name>
             <username>OpenID Relying Party Service (version 2.0)</username>
             <userdescription>This service is provided by OpenID RelyingParties (version 2.0)</userdescription>
-            <supertype>org.infogrid.lid.model.openid.auth#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model.openid.auth/RelyingPartyService</supertype>
             <synonym>http://specs.openid.net/auth/2.0/return_to</synonym>
         </entitytype>
     </subjectarea>

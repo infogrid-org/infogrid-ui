@@ -10,6 +10,6 @@
 <v:viewletAlternatives />
 <v:viewlet>
  <div class="content">
-  <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki#WikiObject/Content" stringRepresentation="plain"/>
+  <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki/WikiObject_Content" stringRepresentation="plain"/>
  </div>
 </v:viewlet>

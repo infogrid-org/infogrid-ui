@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -20,7 +20,7 @@
     <username>Annotation Subject Area</username>
     <userdescription>Allows the annotation of any other MeshObject.</userdescription>
 
-    <entitytype ID="org.infogrid.model.Annotation#Annotation">
+    <entitytype ID="org.infogrid.model.Annotation/Annotation">
       <name>Annotation</name>
       <username>Annotation</username>
       <userdescription>An annotation to another MeshObject.</userdescription>
@@ -28,12 +28,12 @@
       <isabstract/>
     </entitytype>
 
-    <relationshiptype ID="org.infogrid.model.Annotation#Annotation_Annotates_MeshObject">
+    <relationshiptype ID="org.infogrid.model.Annotation/Annotation_Annotates_MeshObject">
       <name>Annotation_Annotates_MeshObject</name>
       <username>annotates</username>
       <userdescription>Relates the Annotation to the MeshObject it annotates.</userdescription>
       <src>
-        <e>org.infogrid.model.Annotation#Annotation</e>
+        <e>org.infogrid.model.Annotation/Annotation</e>
         <MultiplicityValue>1:1</MultiplicityValue>
       </src>
       <dest>

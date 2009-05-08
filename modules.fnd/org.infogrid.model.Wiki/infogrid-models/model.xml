@@ -20,12 +20,12 @@
         <username>Wiki Subject Area</username>
         <userdescription>Defines concepts for wiki-style data representation.</userdescription>
 
-        <entitytype ID="org.infogrid.model.Wiki#WikiObject">
+        <entitytype ID="org.infogrid.model.Wiki/WikiObject">
             <name>WikiObject</name>
             <username>Wiki Object</username>
             <userdescription>A wiki object</userdescription>
 
-            <propertytype ID="org.infogrid.model.Wiki#WikiObject/Content">
+            <propertytype ID="org.infogrid.model.Wiki/WikiObject_Content">
                 <name>Content</name>
                 <username>Content</username>
                 <userdescription>Current official content of the Wiki Object.</userdescription>

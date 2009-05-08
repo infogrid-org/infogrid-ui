@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -21,25 +21,25 @@
         <userdescription>This Subject Area provides concepts that may be used to represent
 information found on the web.</userdescription>
 
-        <entitytype ID="org.infogrid.model.Web#WebResource">
+        <entitytype ID="org.infogrid.model.Web/WebResource">
             <name>WebResource</name>
             <username>Web Resource</username>
             <userdescription>The resource at a URI. The URI is found in the identifier property.</userdescription>
             <maybeusedasforwardreference/>
         </entitytype>
 
-        <relationshiptype ID="org.infogrid.model.Web#WebResource_HasLinkTo_WebResource">
+        <relationshiptype ID="org.infogrid.model.Web/WebResource_HasLinkTo_WebResource">
             <name>WebResource_HasLinkTo_WebResource</name>
             <username>has link to</username>
             <userdescription>Captures the link relationship between Web Resources, as expressed
 in HTTP Link headers, HTML link tags and the like. Specific types of link relationships are
 expressed using subtypes of this RelationshipType.</userdescription>
             <src>
-              <e>org.infogrid.model.Web#WebResource</e>
+              <e>org.infogrid.model.Web/WebResource</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.model.Web#WebResource</e>
+              <e>org.infogrid.model.Web/WebResource</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>

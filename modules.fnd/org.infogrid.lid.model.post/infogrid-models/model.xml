@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -26,17 +26,17 @@
             </subjectareareference>
         </dependson>
 
-        <entitytype ID="org.infogrid.lid.model.post#PostSender">
+        <entitytype ID="org.infogrid.lid.model.post/PostSender">
             <name>PostSender</name>
             <userdescription>A Yadis Service to send messages from one place to another.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
+            <supertype>org.infogrid.lid.model.yadis/XrdsService</supertype>
             <synonym>http://lid.netmesh.org/post/sender/2.0</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.post#PostReceiver">
+        <entitytype ID="org.infogrid.lid.model.post/PostReceiver">
             <name>PostReceiver</name>
             <userdescription>A Yadis Service to receive messages from another place.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
+            <supertype>org.infogrid.lid.model.yadis/XrdsService</supertype>
             <synonym>http://lid.netmesh.org/post/receiver/2.0</synonym>
         </entitytype>
     </subjectarea>

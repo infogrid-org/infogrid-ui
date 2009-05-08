@@ -26,20 +26,20 @@
             </subjectareareference>
         </dependson>
 
-        <entitytype ID="org.infogrid.lid.model.yadis#XrdsServiceCollection">
+        <entitytype ID="org.infogrid.lid.model.yadis/XrdsServiceCollection">
             <name>XrdsServiceCollection</name>
             <username>XRDS Service Collection</username>
             <userdescription>A collection of XRDS services.</userdescription>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.yadis#XrdsService">
+        <entitytype ID="org.infogrid.lid.model.yadis/XrdsService">
             <name>XrdsService</name>
             <username>Other XRDS Service</username>
             <userdescription>This represents a Yadis/XRDS Service. Known ServiceTypes are
 expressed by subclasses of this EntityType. Also, an XrdsServiceType EntityType is instantiated
 for both known and unknown ServiceTypes.</userdescription>
             
-            <propertytype ID="org.infogrid.lid.model.yadis#XrdsService/Priority">
+            <propertytype ID="org.infogrid.lid.model.yadis/XrdsService_Priority">
                 <name>Priority</name>
                 <username>Priority</username>
                 <userdescription>Priority of this XRDS Service.</userdescription>
@@ -50,12 +50,12 @@ for both known and unknown ServiceTypes.</userdescription>
             </propertytype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.yadis#XrdsServiceType">
+        <entitytype ID="org.infogrid.lid.model.yadis/XrdsServiceType">
             <name>XrdsServiceType</name>
             <username>Other XRDS Service</username>
             <userdescription>Captures the Yadis type identifier for an XrdsServiceType.</userdescription>
 
-            <propertytype ID="org.infogrid.lid.model.yadis#XrdsServiceType/ServiceTypeIdentifier">
+            <propertytype ID="org.infogrid.lid.model.yadis/XrdsServiceType_ServiceTypeIdentifier">
                 <name>ServiceTypeIdentifier</name>
                 <username>ServiceTypeIdentifier</username>
                 <userdescription>Unique identifier for this ServiceType</userdescription>
@@ -66,11 +66,11 @@ for both known and unknown ServiceTypes.</userdescription>
             </propertytype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.yadis#Endpoint">
+        <entitytype ID="org.infogrid.lid.model.yadis/Endpoint">
             <name>Endpoint</name>
             <userdescription>This represents an endpoint of a Yadis/XRDS Service.</userdescription>
 
-            <propertytype ID="org.infogrid.lid.model.yadis#Endpoint/Priority">
+            <propertytype ID="org.infogrid.lid.model.yadis/Endpoint_Priority">
                 <name>Priority</name>
                 <username>Priority</username>
                 <userdescription>Priority of this endpoint.</userdescription>
@@ -81,78 +81,78 @@ for both known and unknown ServiceTypes.</userdescription>
             </propertytype>
         </entitytype>
 
-        <relationshiptype ID="org.infogrid.lid.model.yadis#XrdsServiceCollection_Collects_XrdsService">
+        <relationshiptype ID="org.infogrid.lid.model.yadis/XrdsServiceCollection_Collects_XrdsService">
             <name>XrdsServiceCollection_Collects_XrdsService</name>
             <username>Collects</username>
             <userdescription>Relates the XRDS Services inside of an XRDS Service Collection
 to the XRDS Service Collection itself.</userdescription>
             <src>
-              <e>org.infogrid.lid.model.yadis#XrdsServiceCollection</e>
+              <e>org.infogrid.lid.model.yadis/XrdsServiceCollection</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.lid.model.yadis#XrdsService</e>
+              <e>org.infogrid.lid.model.yadis/XrdsService</e>
               <MultiplicityValue>1:N</MultiplicityValue>
               <!-- This needs to be N, so we can have validated and non-validated collections
                      containing the same instances -->
             </dest>
         </relationshiptype>
 
-        <relationshiptype ID="org.infogrid.lid.model.yadis#XrdsService_HasType_XrdsServiceType">
+        <relationshiptype ID="org.infogrid.lid.model.yadis/XrdsService_HasType_XrdsServiceType">
             <name>XrdsService_HasType_XrdsServiceType</name>
             <username>Has Type</username>
             <userdescription>Relates an XRDS Service to an object capturing the Yadis ServiceType identifier.</userdescription>
             <src>
-              <e>org.infogrid.lid.model.yadis#XrdsService</e>
+              <e>org.infogrid.lid.model.yadis/XrdsService</e>
               <MultiplicityValue>1:1</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.lid.model.yadis#XrdsServiceType</e>
+              <e>org.infogrid.lid.model.yadis/XrdsServiceType</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>
 
-        <relationshiptype ID="org.infogrid.lid.model.yadis#XrdsService_IsProvidedAt_Endpoint">
+        <relationshiptype ID="org.infogrid.lid.model.yadis/XrdsService_IsProvidedAt_Endpoint">
             <name>XrdsService_IsProvidedAt_Endpoint</name>
             <username>is provided at</username>
             <userdescription>Expresses at which endpoints an XRDS Service is available.</userdescription>
             <src>
-              <e>org.infogrid.lid.model.yadis#XrdsService</e>
+              <e>org.infogrid.lid.model.yadis/XrdsService</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.lid.model.yadis#Endpoint</e>
+              <e>org.infogrid.lid.model.yadis/Endpoint</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>
 
-        <relationshiptype ID="org.infogrid.lid.model.yadis#Endpoint_IsOperatedBy_WebResource">
+        <relationshiptype ID="org.infogrid.lid.model.yadis/Endpoint_IsOperatedBy_WebResource">
             <name>Endpoint_IsOperatedBy_WebResource</name>
             <username>is operated by</username>
             <userdescription>Expresses which WebResource acts as the Endpoint.</userdescription>
             <src>
-              <e>org.infogrid.lid.model.yadis#Endpoint</e>
+              <e>org.infogrid.lid.model.yadis/Endpoint</e>
               <MultiplicityValue>0:1</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.model.Web#WebResource</e>
+              <e>org.infogrid.model.Web/WebResource</e>
               <MultiplicityValue>0:n</MultiplicityValue>
             </dest>
         </relationshiptype>
 
-        <relationshiptype ID="org.infogrid.lid.model.yadis#WebResource_HasXrdsLinkTo_WebResource">
+        <relationshiptype ID="org.infogrid.lid.model.yadis/WebResource_HasXrdsLinkTo_WebResource">
             <name>WebResource_HasXrdsLinkTo_WebResource</name>
             <username>has XRDS link to</username>
             <userdescription>Relates a Web Resource to another Web Resource which contains
 the XRDS/Yadis data about the first Web Resource.</userdescription>
             <src>
-              <e>org.infogrid.model.Web#WebResource</e>
-              <refines>org.infogrid.model.Web#WebResource_HasLinkTo_WebResource-S</refines>
+              <e>org.infogrid.model.Web/WebResource</e>
+              <refines>org.infogrid.model.Web/WebResource_HasLinkTo_WebResource-S</refines>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.model.Web#WebResource</e>
-              <refines>org.infogrid.model.Web#WebResource_HasLinkTo_WebResource-D</refines>
+              <e>org.infogrid.model.Web/WebResource</e>
+              <refines>org.infogrid.model.Web/WebResource_HasLinkTo_WebResource-D</refines>
               <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>

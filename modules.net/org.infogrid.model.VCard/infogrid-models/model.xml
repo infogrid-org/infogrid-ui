@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -24,14 +24,14 @@
        <name>org.infogrid.model.Common</name>
      </subjectareareference>
     </dependson>
-    <entitytype ID="org.infogrid.model.VCard#VCard">
+    <entitytype ID="org.infogrid.model.VCard/VCard">
       <name>VCard</name>
       <username>VCard</username>
       <userdescription>An electronic business card</userdescription>
-      <supertype>org.infogrid.model.Common#DefinitionObject</supertype>
+      <supertype>org.infogrid.model.Common/DefinitionObject</supertype>
       <issignificant/>
 
-      <propertytype ID="org.infogrid.model.VCard#VCard/FullName">
+      <propertytype ID="org.infogrid.model.VCard/VCard_FullName">
         <name>FullName</name>
         <username>Full Name</username>
         <userdescription>The full name of the Person represented by the VCard.</userdescription>
@@ -41,7 +41,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#VCard/FamilyName">
+      <propertytype ID="org.infogrid.model.VCard/VCard_FamilyName">
         <name>FamilyName</name>
         <username>Family Name</username>
         <datatype>
@@ -50,7 +50,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#VCard/GivenName">
+      <propertytype ID="org.infogrid.model.VCard/VCard_GivenName">
         <name>GivenName</name>
         <username>Given Name</username>
         <datatype>
@@ -59,7 +59,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#VCard/AdditionalNames">
+      <propertytype ID="org.infogrid.model.VCard/VCard_AdditionalNames">
         <name>AdditionalNames</name>
         <username>Additional Names</username>
         <datatype>
@@ -68,7 +68,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#VCard/HonorificPrefixes">
+      <propertytype ID="org.infogrid.model.VCard/VCard_HonorificPrefixes">
         <name>HonorificPrefixes</name>
         <username>Honorific Names</username>
         <datatype>
@@ -77,7 +77,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#VCard/HonorificSuffixes">
+      <propertytype ID="org.infogrid.model.VCard/VCard_HonorificSuffixes">
         <name>HonorificSuffixes</name>
         <username>Honorific Suffixes</username>
         <datatype>
@@ -86,7 +86,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#VCard/NickName">
+      <propertytype ID="org.infogrid.model.VCard/VCard_NickName">
         <name>NickName</name>
         <username>Nick Name</username>
         <datatype>
@@ -95,7 +95,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#VCard/Note">
+      <propertytype ID="org.infogrid.model.VCard/VCard_Note">
         <name>Note</name>
         <datatype>
           <StringDataType/>
@@ -104,14 +104,14 @@
       </propertytype>
     </entitytype>
 
-    <entitytype ID="org.infogrid.model.VCard#Address">
+    <entitytype ID="org.infogrid.model.VCard/Address">
       <name>Address</name>
       <username>Address</username>
       <userdescription>An address on a VCard</userdescription>
       <isabstract/>
       <issignificant/>
 
-      <propertytype ID="org.infogrid.model.VCard#Address/IsPreferred">
+      <propertytype ID="org.infogrid.model.VCard/Address_IsPreferred">
         <name>IsPreferred</name>
         <username>Is preferred</username>
         <datatype>
@@ -120,7 +120,7 @@
         <defaultvalue>FALSE</defaultvalue>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#Address/IsHome">
+      <propertytype ID="org.infogrid.model.VCard/Address_IsHome">
         <name>IsHome</name>
         <username>Is this a home address?</username>
         <datatype>
@@ -129,7 +129,7 @@
         <defaultvalue>FALSE</defaultvalue>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#Address/IsWork">
+      <propertytype ID="org.infogrid.model.VCard/Address_IsWork">
         <name>IsWork</name>
         <username>Is this a work address?</username>
         <datatype>
@@ -139,14 +139,14 @@
       </propertytype>
     </entitytype>
 
-    <entitytype ID="org.infogrid.model.VCard#PhysicalAddress">
+    <entitytype ID="org.infogrid.model.VCard/PhysicalAddress">
       <name>PhysicalAddress</name>
       <username>Physical Address</username>
       <userdescription>A physical address on a VCard</userdescription>
-      <supertype>org.infogrid.model.VCard#Address</supertype>
+      <supertype>org.infogrid.model.VCard/Address</supertype>
       <issignificant/>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/PostOfficeBox">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_PostOfficeBox">
         <name>PostOfficeBox</name>
         <username>Post Office Box</username>
         <datatype>
@@ -155,7 +155,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/ExtendedAddress">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_ExtendedAddress">
         <name>ExtendedAddress</name>
         <username>Extended Address</username>
         <datatype>
@@ -164,7 +164,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/StreetAddress">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_StreetAddress">
         <name>StreetAddress</name>
         <username>Street Address</username>
         <datatype>
@@ -173,7 +173,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/Locality">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_Locality">
         <name>Locality</name>
         <username>Locality</username>
         <userdescription>The locality, e.g. city.</userdescription>
@@ -183,7 +183,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/Region">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_Region">
         <name>Region</name>
         <userdescription>The region, such as state or district.</userdescription>
         <datatype>
@@ -192,7 +192,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/PostalCode">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_PostalCode">
         <name>PostalCode</name>
         <username>Postal Code</username>
         <datatype>
@@ -201,7 +201,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/Country">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_Country">
         <name>Country</name>
         <datatype>
           <StringDataType/>
@@ -209,7 +209,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/IsPostal">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_IsPostal">
         <name>IsPostal</name>
         <username>Is this a postal address?</username>
         <userdescription>Is this a postal address?</userdescription>
@@ -219,7 +219,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/IsParcel">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_IsParcel">
         <name>IsParcel</name>
         <username>Is Postal Address</username>
         <userdescription>Is this a parcel address?</userdescription>
@@ -229,7 +229,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#PhysicalAddress/Scope">
+      <propertytype ID="org.infogrid.model.VCard/PhysicalAddress_Scope">
         <name>Scope</name>
         <userdescription>Scope of the address</userdescription>
         <datatype>
@@ -248,14 +248,14 @@
      </propertytype>
     </entitytype>
 
-    <entitytype ID="org.infogrid.model.VCard#CommunicationAddress">
+    <entitytype ID="org.infogrid.model.VCard/CommunicationAddress">
       <name>CommunicationAddress</name>
       <username>Physical Address</username>
       <userdescription>A communications address on a VCard, such as a phone number or e-mail address.</userdescription>
-      <supertype>org.infogrid.model.VCard#Address</supertype>
+      <supertype>org.infogrid.model.VCard/Address</supertype>
       <issignificant/>
 
-      <propertytype ID="org.infogrid.model.VCard#CommunicationAddress/Handle">
+      <propertytype ID="org.infogrid.model.VCard/CommunicationAddress_Handle">
         <name>Handle</name>
         <username>Address Handle</username>
         <userdescription>The address handle, such as foo@bar.com, or number, such as (408) 123-1234.</userdescription>
@@ -265,7 +265,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#CommunicationAddress/Type">
+      <propertytype ID="org.infogrid.model.VCard/CommunicationAddress_Type">
         <name>Type</name>
         <username>Address Type</username>
         <userdescription>This reflects the type of address, such as whether this is a fax number
@@ -326,7 +326,7 @@
         <isoptional/>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#CommunicationAddress/HasMessageBox">
+      <propertytype ID="org.infogrid.model.VCard/CommunicationAddress_HasMessageBox">
         <name>HasMessageBox</name>
         <username>Has Message Box</username>
         <userdescription>Does this CommunicationAddress support leaving messages even if the user is not available.</userdescription>
@@ -336,7 +336,7 @@
         <defaultvalue>FALSE</defaultvalue>
       </propertytype>
 
-      <propertytype ID="org.infogrid.model.VCard#CommunicationAddress/IsVoice">
+      <propertytype ID="org.infogrid.model.VCard/CommunicationAddress_IsVoice">
         <name>IsVoice</name>
         <username>Is voice</username>
         <datatype>
@@ -346,7 +346,7 @@
       </propertytype>
     </entitytype>
 
-    <relationshiptype ID="org.infogrid.model.VCard#VCard_Shows_Address">
+    <relationshiptype ID="org.infogrid.model.VCard/VCard_Shows_Address">
       <name>VCard_Shows_Address</name>
       <username>shows</username>
       <src>

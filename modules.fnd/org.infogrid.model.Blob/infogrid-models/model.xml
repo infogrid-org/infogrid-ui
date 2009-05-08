@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -24,14 +24,14 @@
        <name>org.infogrid.model.Common</name>
      </subjectareareference>
     </dependson>
-    <entitytype ID="org.infogrid.model.Blob#BlobObject">
+    <entitytype ID="org.infogrid.model.Blob/BlobObject">
       <name>BlobObject</name>
       <username>Document</username>
       <userdescription>A document such as a file.</userdescription>
       <icon path="org/infogrid/model/Blob/BlobObject.gif"/>
-      <supertype>org.infogrid.model.Common#DefinitionObject</supertype>
+      <supertype>org.infogrid.model.Common/DefinitionObject</supertype>
       <issignificant/>
-      <propertytype ID="org.infogrid.model.Blob#BlobObject/Content">
+      <propertytype ID="org.infogrid.model.Blob/BlobObject_Content">
         <name>Content</name>
         <username>Content</username>
         <userdescription>The content of the Document</userdescription>
@@ -41,7 +41,7 @@
         <isoptional/>
         <sequencenumber>10.0</sequencenumber>
       </propertytype>
-      <propertytype ID="org.infogrid.model.Blob#BlobObject/CodeBase">
+      <propertytype ID="org.infogrid.model.Blob/BlobObject_CodeBase">
         <name>CodeBase</name>
         <username>Loaded from</username>
         <userdescription>The URL from which this BlobObject was loaded.</userdescription>
@@ -53,31 +53,31 @@
       </propertytype>
     </entitytype>
 
-    <entitytype ID="org.infogrid.model.Blob#File">
+    <entitytype ID="org.infogrid.model.Blob/File">
       <name>File</name>
       <userdescription>A named reference to a file, but not the file itself.
 Multiple instances of this object can reference the actual file content
 (what certain operating systems call &quot;hard link&quot;.</userdescription>
-      <supertype>org.infogrid.model.Common#ComponentObject</supertype>
+      <supertype>org.infogrid.model.Common/ComponentObject</supertype>
       <issignificant/>
     </entitytype>
 
-    <entitytype ID="org.infogrid.model.Blob#Directory">
+    <entitytype ID="org.infogrid.model.Blob/Directory">
       <name>Directory</name>
       <username>Directory</username>
       <userdescription>A directory in a file system.</userdescription>
-      <supertype>org.infogrid.model.Common#DefinitionObject</supertype>
+      <supertype>org.infogrid.model.Common/DefinitionObject</supertype>
       <issignificant/>
     </entitytype>
     
-    <entitytype ID="org.infogrid.model.Blob#Image">
+    <entitytype ID="org.infogrid.model.Blob/Image">
       <name>Image</name>
       <username>Image</username>
       <userdescription>An image in a format such as PNG.</userdescription>
-      <supertype>org.infogrid.model.Common#DefinitionObject</supertype>
+      <supertype>org.infogrid.model.Common/DefinitionObject</supertype>
       <issignificant/>
 
-      <propertytype ID="org.infogrid.model.Blob#Image/Content">
+      <propertytype ID="org.infogrid.model.Blob/Image_Content">
         <name>Content</name>
         <username>Content</username>
         <userdescription>The content of the Image</userdescription>

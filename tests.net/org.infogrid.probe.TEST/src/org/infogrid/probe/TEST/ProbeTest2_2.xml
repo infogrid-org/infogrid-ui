@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -17,6 +17,6 @@
 <MeshObjectSet>
   <MeshObject ID="#abc" created="20070102T030405.0607"/>
   <MeshObject ID="#def" created="11112233T445500">
-    <MeshType>org.infogrid.model.Test#AA</MeshType>
+    <MeshType>org.infogrid.model.Test/AA</MeshType>
   </MeshObject>
 </MeshObjectSet>

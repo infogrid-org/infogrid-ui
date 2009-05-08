@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -20,7 +20,7 @@
         <username>Probe Subject Area</username>
         <userdescription>Captures the information necessary for the management of Probes.</userdescription>
 
-        <entitytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification">
+        <entitytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification">
             <name>ProbeUpdateSpecification</name>
             <username>A Probe's update specification</username>
             <userdescription>A Home Object of a Probe is blessed with a subtype of this ProbeUpdateSpecification.
@@ -90,7 +90,7 @@ Subtypes may implement different algorithms to determine the respective data.</u
     public abstract void stopUpdating();
          ]]></declaresMethod>
 
-            <propertytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification/NextProbeRun">
+            <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_NextProbeRun">
                 <name>NextProbeRun</name>
                 <username>Time of next Probe run</username>
                 <userdescription>The time at which to run this Probe next. If this is not given, this indicates
@@ -102,7 +102,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
                 <isoptional/>
             </propertytype>
 
-            <propertytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification/LastProbeRun">
+            <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_LastProbeRun">
                 <name>LastProbeRun</name>
                 <username>Time the Probe was run last</username>
                 <userdescription>The time that the last Probe run was attempted (successful or unsuccessful).
@@ -114,7 +114,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
                 <isoptional/>
             </propertytype>
 
-            <propertytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification/ProbeRunCounter">
+            <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_ProbeRunCounter">
                 <name>ProbeRunCounter</name>
                 <username>Probe-run counter</username>
                 <userdescription>This value is incremented every time the Probe is run.</userdescription>
@@ -124,7 +124,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
                 <defaultvalue>0</defaultvalue>
             </propertytype>
 
-            <propertytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification/LastRunUsedWritableProbe">
+            <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_LastRunUsedWritableProbe">
                 <name>LastRunUsedWritableProbe</name>
                 <username>Last run used writable Probe</username>
                 <userdescription>If this is true, the last Probe run used a WritableProbe.</userdescription>
@@ -134,7 +134,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
                 <isoptional/>
             </propertytype>
 
-            <propertytype ID="org.infogrid.model.Probe#ProbeUpdateSpecification/WaitForOngoingResynchronization">
+            <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_WaitForOngoingResynchronization">
                 <name>WaitForOngoingResynchronization</name>
                 <username>Wait for ongoing resynchronization</username>
                 <userdescription>If this is true, delay calling threads until triggered resynchronization requests have completed.</userdescription>
@@ -145,10 +145,10 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
             </propertytype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Probe#OneTimeOnlyProbeUpdateSpecification">
+        <entitytype ID="org.infogrid.model.Probe/OneTimeOnlyProbeUpdateSpecification">
             <name>OneTimeOnlyProbeUpdateSpecification</name>
             <username>A Probe's update specification that updates once only</username>
-            <supertype>org.infogrid.model.Probe#ProbeUpdateSpecification</supertype>
+            <supertype>org.infogrid.model.Probe/ProbeUpdateSpecification</supertype>
 
             <implementsMethod><![CDATA[
     /**
@@ -247,10 +247,10 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
          ]]></implementsMethod>
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Probe#PeriodicProbeUpdateSpecification">
+        <entitytype ID="org.infogrid.model.Probe/PeriodicProbeUpdateSpecification">
             <name>PeriodicProbeUpdateSpecification</name>
             <username>A Probe's update specification that updates periodically</username>
-            <supertype>org.infogrid.model.Probe#ProbeUpdateSpecification</supertype>
+            <supertype>org.infogrid.model.Probe/ProbeUpdateSpecification</supertype>
 
             <implementsMethod><![CDATA[
     /**
@@ -361,7 +361,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
     }
          ]]></implementsMethod>
 
-            <propertytype ID="org.infogrid.model.Probe#PeriodicProbeUpdateSpecification/Delay">
+            <propertytype ID="org.infogrid.model.Probe/PeriodicProbeUpdateSpecification_Delay">
                 <name>Delay</name>
                 <username>Delay between Probe runs</username>
                 <userdescription>Delay between the end of a Probe run and the start of the next Probe run.</userdescription>
@@ -372,10 +372,10 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
             </propertytype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.model.Probe#AdaptivePeriodicProbeUpdateSpecification">
+        <entitytype ID="org.infogrid.model.Probe/AdaptivePeriodicProbeUpdateSpecification">
             <name>AdaptivePeriodicProbeUpdateSpecification</name>
             <username>A Probe's update specification that updates periodically with an adaptive period</username>
-            <supertype>org.infogrid.model.Probe#ProbeUpdateSpecification</supertype>
+            <supertype>org.infogrid.model.Probe/ProbeUpdateSpecification</supertype>
 
             <implementsMethod><![CDATA[
     /**
@@ -486,7 +486,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
     }
          ]]></implementsMethod>
 
-            <propertytype ID="org.infogrid.model.Probe#PeriodicProbeUpdateSpecification/CurrentDelay">
+            <propertytype ID="org.infogrid.model.Probe/PeriodicProbeUpdateSpecification_CurrentDelay">
                 <name>CurrentDelay</name>
                 <username>Current delay between Probe runs</username>
                 <userdescription>The current delay between the end of a Probe run and the start of the next Probe run.
@@ -497,7 +497,7 @@ FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
                 <defaultvalue>3600000</defaultvalue><!-- one hour -->
             </propertytype>
 
-            <propertytype ID="org.infogrid.model.Probe#PeriodicProbeUpdateSpecification/MaxDelay">
+            <propertytype ID="org.infogrid.model.Probe/PeriodicProbeUpdateSpecification_MaxDelay">
                 <name>MaxDelay</name>
                 <username>Maximum delay between Probe runs</username>
                 <userdescription>The maximum delay between the end of a Probe run and the start of the next Probe run.
@@ -509,7 +509,7 @@ FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
                 <defaultvalue>604800000</defaultvalue><!-- one week -->
             </propertytype>
 
-            <propertytype ID="org.infogrid.model.Probe#PeriodicProbeUpdateSpecification/FallbackDelay">
+            <propertytype ID="org.infogrid.model.Probe/PeriodicProbeUpdateSpecification_FallbackDelay">
                 <name>FallbackDelay</name>
                 <username>Fallback delay between Probe runs</username>
                 <userdescription>The fallback delay between the end of a Probe run and the start of the next Probe run.
@@ -521,7 +521,7 @@ FIXME: this should use TimePeriodValue not IntegerValue.</userdescription>
                 <defaultvalue>600000</defaultvalue><!-- 10 minutes -->
             </propertytype>
 
-            <propertytype ID="org.infogrid.model.Probe#PeriodicProbeUpdateSpecification/AdaptiveFactor">
+            <propertytype ID="org.infogrid.model.Probe/PeriodicProbeUpdateSpecification_AdaptiveFactor">
                 <name>AdaptiveFactor</name>
                 <username>Adaptive Factor</username>
                 <userdescription>The factor by which the delay increases for each Probe run that was successful and did not produce changed data.</userdescription>

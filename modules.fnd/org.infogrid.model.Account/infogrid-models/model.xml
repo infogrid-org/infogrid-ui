@@ -21,18 +21,18 @@
         <userdescription>This Subject Area defines the concept of an account on a system
         as well as different categories of accounts.</userdescription>
 
-        <entitytype ID="org.infogrid.model.Account#AccountCategory">
+        <entitytype ID="org.infogrid.model.Account/AccountCategory">
             <name>AccountCategory</name>
             <username>Account Category</username>
             <userdescription>Categorizes accounts on a system3.</userdescription>
         </entitytype>
 
-        <relationshiptype ID="org.infogrid.model.Account#AccountCategory_CategorizesAccount_MeshObject">
+        <relationshiptype ID="org.infogrid.model.Account/AccountCategory_CategorizesAccount_MeshObject">
             <name>AccountCategory_Categorizes_MeshObject</name>
             <username>Categorizes</username>
             <userdescription>Collects MeshObjects that act as Accounts into AccountCategories.</userdescription>
             <src>
-              <e>org.infogrid.model.Account#AccountCategory</e>
+              <e>org.infogrid.model.Account/AccountCategory</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
@@ -40,18 +40,18 @@
             </dest>
         </relationshiptype>
 
-        <relationshiptype ID="org.infogrid.model.Account#AccountCategory_Implies_AccountCategory">
+        <relationshiptype ID="org.infogrid.model.Account/AccountCategory_Implies_AccountCategory">
             <name>AccountCategory_Implies_AccountCategory</name>
             <username>Implies</username>
             <userdescription>Enables the creation of inheritance hierarchies for AccountCategories.
             Expresses that members of one AccountCategory are also considered members of the
             implied AccountCategories.</userdescription>
             <src>
-              <e>org.infogrid.model.Account#AccountCategory</e>
+              <e>org.infogrid.model.Account/AccountCategory</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </src>
             <dest>
-              <e>org.infogrid.model.Account#AccountCategory</e>
+              <e>org.infogrid.model.Account/AccountCategory</e>
               <MultiplicityValue>0:N</MultiplicityValue>
             </dest>
         </relationshiptype>

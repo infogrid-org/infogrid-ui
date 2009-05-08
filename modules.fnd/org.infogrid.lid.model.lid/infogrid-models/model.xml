@@ -29,14 +29,14 @@
             </modulereference>
         </dependson>
 
-        <entitytype ID="org.infogrid.lid.model.lid#IdentityProvider">
+        <entitytype ID="org.infogrid.lid.model.lid/IdentityProvider">
             <name>IdentityProvider</name>
             <username>Identity Provider</username>
             <userdescription>A MeshObject that is an Identity Provider. It generally offers one or more
 Authentication Services.</userdescription>
-            <supertype>org.infogrid.model.Web#WebResource</supertype>
+            <supertype>org.infogrid.model.Web/WebResource</supertype>
 
-            <propertytype ID="org.infogrid.lid.model.lid#IdentityProvider/RequiresUserSpecificSecret">
+            <propertytype ID="org.infogrid.lid.model.lid/IdentityProvider_RequiresUserSpecificSecret">
                 <name>RequiresUserSpecificSecret</name>
                 <username>RequiresUserSpecificSecret</username>
                 <userdescription>True if this Identity Provider requires a user-specific secret to authenticate users.
@@ -47,7 +47,7 @@ This could be a password, or a hardware token, but not a client certificate.</us
                 <isoptional/>
             </propertytype>
 
-            <propertytype ID="org.infogrid.lid.model.lid#IdentityProvider/RequiresHardwareToken">
+            <propertytype ID="org.infogrid.lid.model.lid/IdentityProvider_RequiresHardwareToken">
                 <name>RequiresHardwareToken</name>
                 <username>RequiresHardwareToken</username>
                 <userdescription>True if this Identity Provider requires a hardware token to authenticate users.</userdescription>
@@ -57,7 +57,7 @@ This could be a password, or a hardware token, but not a client certificate.</us
                 <isoptional/>
             </propertytype>
 
-            <propertytype ID="org.infogrid.lid.model.lid#IdentityProvider/RequiresEncryptedCommunications">
+            <propertytype ID="org.infogrid.lid.model.lid/IdentityProvider_RequiresEncryptedCommunications">
                 <name>RequiresEncryptedCommunications</name>
                 <username>RequiresEncryptedCommunications</username>
                 <userdescription>True if this Identity Provider requires that all secrets are exchanged in encrypted form
@@ -69,14 +69,14 @@ This could be a password, or a hardware token, but not a client certificate.</us
             </propertytype>
          </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#RelyingParty">
+        <entitytype ID="org.infogrid.lid.model.lid/RelyingParty">
             <name>RelyingParty</name>
             <username>Relying Party</username>
             <userdescription>A MeshObject that can accept externally provided identities. It generally provides one or
 more RelyingPartyServices.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
+            <supertype>org.infogrid.lid.model.yadis/XrdsService</supertype>
             
-            <propertytype ID="org.infogrid.lid.model.lid#RelyingParty/RequiresUserSpecificSecret">
+            <propertytype ID="org.infogrid.lid.model.lid/RelyingParty_RequiresUserSpecificSecret">
                 <name>RequiresUserSpecificSecret</name>
                 <username>RequiresUserSpecificSecret</username>
                 <userdescription>True if this Relying Party only trusts Identity Providers that require a
@@ -88,7 +88,7 @@ This could be a password, or a hardware token, but not a client certificate.</us
                 <isoptional/>
             </propertytype>
 
-            <propertytype ID="org.infogrid.lid.model.lid#RelyingParty/RequiresHardwareToken">
+            <propertytype ID="org.infogrid.lid.model.lid/RelyingParty_RequiresHardwareToken">
                 <name>RequiresHardwareToken</name>
                 <username>RequiresHardwareToken</username>
                 <userdescription>True if this Relying Party only trusts Identity Providers that require
@@ -99,7 +99,7 @@ a hardware token to authenticate users.</userdescription>
                 <isoptional/>
             </propertytype>
 
-            <propertytype ID="org.infogrid.lid.model.lid#RelyingParty/RequiresEncryptedCommunications">
+            <propertytype ID="org.infogrid.lid.model.lid/RelyingParty_RequiresEncryptedCommunications">
                 <name>RequiresEncryptedCommunications</name>
                 <username>RequiresEncryptedCommunications</username>
                 <userdescription>True if this Relying Party only trusts Identity Providers that require that
@@ -112,11 +112,11 @@ all secrets are exchanged in encrypted form.</userdescription>
         </entitytype>
 
 <!--
-        <entitytype ID="org.infogrid.lid.model.lid#Principal">
+        <entitytype ID="org.infogrid.lid.model.lid/Principal">
             <name>Principal</name>
             <userdescription>A MeshObject that represents an pricipal, such as a user. It generally makes use of
 one or more Yadis Services.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
+            <supertype>org.infogrid.lid.model.yadis/XrdsService</supertype>
             <additionalinterface>org.infogrid.lid.LidPersona</additionalinterface>
             <implementsMethod><![CDATA[
     /**
@@ -245,20 +245,20 @@ one or more Yadis Services.</userdescription>
           ]]></implementsMethod>
         </entitytype>
     -->
-        <entitytype ID="org.infogrid.lid.model.lid#AuthenticationService">
+        <entitytype ID="org.infogrid.lid.model.lid/AuthenticationService">
             <name>AuthenticationService</name>
             <userdescription>A Yadis Service that is able to authenticate a principal. More specific subclasses
 are provided for specific authentication protocols.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
+            <supertype>org.infogrid.lid.model.yadis/XrdsService</supertype>
             <isabstract/>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#WebAuthenticationService">
+        <entitytype ID="org.infogrid.lid.model.lid/WebAuthenticationService">
             <name>WebAuthenticationService</name>
             <userdescription>An AuthenticationService that uses a standard web browser as the client device,
 and thus implements the redirect dance. More specific subclasses
 are provided for specific authentication protocols.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#AuthenticationService</supertype>
+            <supertype>org.infogrid.lid.model.lid/AuthenticationService</supertype>
             <isabstract/>
             <declaresMethod>
     public abstract String determineRedirectUrl(
@@ -272,20 +272,20 @@ are provided for specific authentication protocols.</userdescription>
             </declaresMethod>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#LidGpgSso">
+        <entitytype ID="org.infogrid.lid.model.lid/LidGpgSso">
             <name>LidGpgSso</name>
             <username>LID's GPG-based Authentication Service</username>
             <userdescription>This represents a LID GPG-based Authentication Service in any version.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#WebAuthenticationService</supertype>
+            <supertype>org.infogrid.lid.model.lid/WebAuthenticationService</supertype>
             <isabstract/>
             <synonym>http://lid.netmesh.org/sso</synonym>
         </entitytype>        
 
-        <entitytype ID="org.infogrid.lid.model.lid#LidGpgSso2">
+        <entitytype ID="org.infogrid.lid.model.lid/LidGpgSso2">
             <name>LidGpgSso2</name>
             <username>LID's GPG-based Authentication Service (version 2)</username>
             <userdescription>An Authentication Service based on the LID GPG SSO service, version 2.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#LidGpgSso</supertype>
+            <supertype>org.infogrid.lid.model.lid/LidGpgSso</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
             MeshObject                        principal,
@@ -314,49 +314,49 @@ are provided for specific authentication protocols.</userdescription>
           <synonym>http://lid.netmesh.org/sso/2.0</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#MinimumLid2">
+        <entitytype ID="org.infogrid.lid.model.lid/MinimumLid2">
             <name>MinimumLid2</name>
             <username>Minimum LID (version 2)</username>
-            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
+            <supertype>org.infogrid.lid.model.yadis/XrdsService</supertype>
             <synonym>http://lid.netmesh.org/minimum-lid/2.0</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#RelyingPartyService">
+        <entitytype ID="org.infogrid.lid.model.lid/RelyingPartyService">
             <name>RelyingPartyService</name>
             <userdescription>A Yadis Service that is able to accept authentication assertions. More specific subclasses
 are provided for specific protocols.</userdescription>
-            <supertype>org.infogrid.lid.model.yadis#XrdsService</supertype>
+            <supertype>org.infogrid.lid.model.yadis/XrdsService</supertype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#LidGpgRelyingParty">
+        <entitytype ID="org.infogrid.lid.model.lid/LidGpgRelyingParty">
             <name>LidGpgRelyingParty</name>
             <username>LID's GPG-based Relying Party Service</username>
             <userdescription>This represents a LID GPG-based Relying Party Service in any version.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model.lid/RelyingPartyService</supertype>
             <isabstract/>
             <synonym>http://lid.netmesh.org/relying-party</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#LidGpgRelyingParty2">
+        <entitytype ID="org.infogrid.lid.model.lid/LidGpgRelyingParty2">
             <name>LidGpgRelyingParty2</name>
             <username>LID's GPG-based Relying Party Service (version 2)</username>
             <userdescription>A LID GPG-based Relying Party Service based on the LID GPG SSO service, version 2.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#LidGpgRelyingParty</supertype>
+            <supertype>org.infogrid.lid.model.lid/LidGpgRelyingParty</supertype>
             <synonym>http://lid.netmesh.org/relying-party/2.0</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#HardwareTokenRelyingParty">
+        <entitytype ID="org.infogrid.lid.model.lid/HardwareTokenRelyingParty">
             <name>HardwareTokenRelyingParty</name>
             <username>Hardware token-based Relying Party</username>
             <userdescription>This represents a Relying Party that accepts hardware tokens.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model.lid/RelyingPartyService</supertype>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.lid#SimpleUserPasswordRelyingParty">
+        <entitytype ID="org.infogrid.lid.model.lid/SimpleUserPasswordRelyingParty">
             <name>SimpleUserPasswordRelyingParty</name>
             <username>Username/password-based Relying Party</username>
             <userdescription>This represents a Relying Party that accepts usernames and passwords.</userdescription>
-            <supertype>org.infogrid.lid.model.lid#RelyingPartyService</supertype>
+            <supertype>org.infogrid.lid.model.lid/RelyingPartyService</supertype>
         </entitytype>
     </subjectarea>
 </model>
