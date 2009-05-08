@@ -287,7 +287,7 @@ public class YadisServiceFactory
                             base.getMeshObjectIdentifierFactory().fromExternalForm( "YadisService-0" ),
                             YadisSubjectArea.XRDSSERVICE );
 
-                    serviceMeshObject.bless( AuthSubjectArea.AUTHENTICATION1_0SERVICE ); // FIXME? OpenIDAuthentication.TYPE );
+                    serviceMeshObject.bless( AuthSubjectArea.AUTHENTICATION1DOT0SERVICE ); // FIXME? OpenIDAuthentication.TYPE );
 
                     if( delegateIdentifier != null ) {
                         serviceMeshObject.setPropertyValue(

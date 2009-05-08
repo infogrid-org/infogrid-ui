@@ -188,7 +188,7 @@ public abstract class AbstractYadisTest
             }
             if( ArrayHelper.isIn( LidSubjectArea.MINIMUMLID2, service.getTypes(), false )) {
                 // good
-            } else if( ArrayHelper.isIn( AuthSubjectArea.AUTHENTICATION1_0SERVICE, service.getTypes(), false )) {
+            } else if( ArrayHelper.isIn( AuthSubjectArea.AUTHENTICATION1DOT0SERVICE, service.getTypes(), false )) {
                 // good
             } else {
                 // not good

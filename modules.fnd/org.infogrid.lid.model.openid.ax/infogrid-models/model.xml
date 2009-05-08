@@ -34,8 +34,8 @@
             <synonym>http://openid.net/srv/ax</synonym>
         </entitytype>
 
-        <entitytype ID="org.infogrid.lid.model.openid.ax/AttributeExchange1_0Service">
-            <name>AttributeExchange1_0Service</name>
+        <entitytype ID="org.infogrid.lid.model.openid.ax/AttributeExchange1dot0Service">
+            <name>AttributeExchange1dot0Service</name>
             <username>OpenID Attribute Exchange Service (version 1.0)</username>
             <userdescription>This service is provided by OpenID Providers offering Attribute Exchange (version 1.0)</userdescription>
             <supertype>org.infogrid.lid.model.openid.ax/AttributeExchangeService</supertype>

@@ -73,7 +73,7 @@ public class MeshOpenId2CredentialType
 
         ArrayList<String> almost = new ArrayList<String>();
 
-        OrderedMeshObjectSet services = YadisUtil.determineServicesFor( realSubject, AuthSubjectArea.AUTHENTICATION2_0SERVICE );
+        OrderedMeshObjectSet services = YadisUtil.determineServicesFor( realSubject, AuthSubjectArea.AUTHENTICATION2DOT0SERVICE );
         for( MeshObject service : services ) {
             OrderedMeshObjectSet endpoints = YadisUtil.determineOrderedEndpointWebResources( service );
             for( MeshObject ep : endpoints ) {
