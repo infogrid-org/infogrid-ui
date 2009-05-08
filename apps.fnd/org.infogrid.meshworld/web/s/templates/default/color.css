@@ -11,7 +11,7 @@ h1 {
     border-color: rgb(0,80,144);
 }
 .footnote {
-    color: #808080;
+    color: #606060;
 }
 
 #canvas-app-row > div.canvas-main {
@@ -41,8 +41,8 @@ div.errors > h2 {
 }
 
 div.viewlet {
-    border-color: rgb(0,80,144);
-    background: #fafaff;
+    border-color: #d0d0d0;
+    background: #f4f4f4;
 }
 
 div.org-infogrid-jee-taglib-candy-OverlayTag {
@@ -51,9 +51,8 @@ div.org-infogrid-jee-taglib-candy-OverlayTag {
 div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
     background: #808080;
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > div.audit {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet div.audit {
     border-color: #808080;
-    background: #ffffff;
 }
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table {
     border: 1px solid #808080;
@@ -67,9 +66,14 @@ div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > tbody > tr > th.entityType {
     background: rgb(239,239,255);
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td,
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td > div.audit {
     border-width: 1px;
     background: white;
+}
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td.title,
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td.audit {
+    background-color: inherit;
 }
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > * {
     padding: 5px;

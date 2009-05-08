@@ -16,9 +16,9 @@
 <v:viewlet formId="viewlet">
  <table class="audit"> <!-- IE is unable to render float:right correctly, so here is a table for you -->
   <tr>
-   <td>
+   <td class="title">
     <v:ifState viewletState="edit">
-     <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/trash.png" alt="Delete"/></a></div>
+     <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete"/></a></div>
     </v:ifState>
     <h1>Property Sheet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Html" maxLength="30"/></h1>
    </td>
@@ -36,8 +36,8 @@
   <input id="shell.submit" type="hidden" name="shell.submit" value="" />
   <table class="dialog-buttons">
    <tr>
-    <td><button type="button" name="ViewletStateTransition" value="do-cancel" onclick="document.getElementById( 'shell.submit' ).value='cancel'; document.getElementById('viewlet').submit()">Cancel Editing</button></td>
-    <td><button type="button" name="ViewletStateTransition" value="do-commit" onclick="document.getElementById( 'shell.submit' ).value='commit'; document.getElementById('viewlet').submit()">Save</button></td>
+    <td><button type="button" name="ViewletStateTransition" value="do-cancel" class="cancel" onclick="document.getElementById( 'shell.submit' ).value='cancel'; document.getElementById('viewlet').submit()">Discard</button></td>
+    <td><button type="button" name="ViewletStateTransition" value="do-commit" class="commit" onclick="document.getElementById( 'shell.submit' ).value='commit'; document.getElementById('viewlet').submit()">Save</button></td>
    </tr>
   </table>
  </v:ifState>

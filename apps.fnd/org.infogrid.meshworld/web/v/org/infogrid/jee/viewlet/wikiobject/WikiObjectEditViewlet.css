@@ -10,15 +10,6 @@ div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.content {
     margin: 0;
     padding: 0 2px 0 0 ;
 }
-div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet > div.viewlet-state {
-    float: right;
-    background: #e0e0ff;
-    -moz-border-radius: 8px;
-    padding: 10px;
-    font-size: 0.7em;
-    margin: 0 0 10px 10px;
-    padding: 5px;
-}
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet input {
     min-height: 200px;
     width: 600px;

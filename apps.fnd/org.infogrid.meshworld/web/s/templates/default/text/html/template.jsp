@@ -42,8 +42,10 @@
   </div>
   <div id="canvas-bottom">
    <div class="canvas-main footnote">
-    &copy; 2001-2009 NetMesh Inc. All rights reserved. NetMesh and InfoGrid are trademarks or registered
-    trademarks of NetMesh Inc. Learn more about <a href="http://infogrid.org/">InfoGrid&trade;</a>.
+    <p>&copy; 2001-2009 NetMesh Inc. All rights reserved. NetMesh and InfoGrid are trademarks or registered
+       trademarks of NetMesh Inc.</p>
+    <p>Silk Icons from <a href="http://www.famfamfam.com/lab/icons/silk/">famfamfam.com</a> using Creative Commons license.
+       <a href="http://infogrid.org/">Learn more</a> about InfoGrid&trade;.</p>
    </div>
   </div>
  </body>

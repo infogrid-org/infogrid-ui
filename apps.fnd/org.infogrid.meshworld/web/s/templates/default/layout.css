@@ -56,7 +56,7 @@ img#app-logo {
 }
 
 div.viewlet {
-    border: 2px solid;
+    border: 1px solid;
     padding: 10px 10px 10px 20px;
     -moz-border-radius: 20px;
     clear: right;
@@ -90,6 +90,10 @@ a.infogrid {
     float: right;
     margin-left: 10px;
     margin-top: 12px;
+}
+div.footnote > p {
+    margin: 0;
+    padding: 0;
 }
 
 div.org-infogrid-model-primitives-BlobValue a,
@@ -130,4 +134,18 @@ table.dialog-buttons > tbody > tr > td {
 div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show input,
 div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show textarea {
     width: 330px;
+}
+
+div.viewlet-state {
+    float: right;
+    background-color: white;
+    background-image: url(../../../../../../s/images/white-shift-vertical-short.png);
+    background-position: top;
+    background-repeat: repeat-x;
+    border: 1px solid rgb(0,80,144);
+    -moz-border-radius: 8px;
+    padding: 10px;
+    font-size: 0.7em;
+    margin: 0 0 10px 10px;
+    padding: 5px;
 }
