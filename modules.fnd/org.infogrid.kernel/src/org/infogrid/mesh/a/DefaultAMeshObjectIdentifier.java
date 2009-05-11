@@ -221,6 +221,7 @@ public class DefaultAMeshObjectIdentifier
      *
      * @param additionalArguments additional arguments for URLs, if any
      * @param target the HTML target, if any
+     * @param title title of the HTML link, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @throws StringifierException thrown if there was a problem when attempting to stringify
@@ -229,6 +230,7 @@ public class DefaultAMeshObjectIdentifier
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
+            String                      title,
             StringRepresentation        rep,
             StringRepresentationContext context )
         throws
@@ -274,11 +276,12 @@ public class DefaultAMeshObjectIdentifier
                 getClass(), // dispatch to the right subtype
                 key,
                 null,
-                meshObjectExternalForm,
-                contextPath,
-                meshBaseExternalForm,
-                additionalArguments,
-                target );
+        /* 0 */ meshObjectExternalForm,
+        /* 1 */ contextPath,
+        /* 2 */ meshBaseExternalForm,
+        /* 3 */ additionalArguments,
+        /* 4 */ target,
+        /* 5 */ title );
 
         return ret;
     }

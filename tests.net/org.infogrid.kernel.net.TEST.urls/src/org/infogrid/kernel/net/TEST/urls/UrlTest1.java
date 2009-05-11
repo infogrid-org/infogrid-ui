@@ -101,16 +101,27 @@ public class UrlTest1
         SimpleMeshStringRepresentationContext obj2_mb2Context = SimpleMeshStringRepresentationContext.create( obj2_mb2Map );
         
         String target = "foo";
+        String title  = "bar";
 
-        String obj1_mb1_different_default_target      = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, rep, obj1_mb1Context );
-        String obj1_mb1_different_nonDefault_target   = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, rep, obj1_mb2Context );
-        String obj1_mb1_different_default_notarget    = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, null, rep, obj1_mb1Context );
-        String obj1_mb1_different_nonDefault_notarget = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, null, rep, obj1_mb2Context );
-        
-        String obj2_mb1_different_default_target      = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, rep, obj2_mb1Context );
-        String obj2_mb1_different_nonDefault_target   = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, rep, obj2_mb2Context );
-        String obj2_mb1_different_default_notarget    = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, null, rep, obj2_mb1Context );
-        String obj2_mb1_different_nonDefault_notarget = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, null, rep, obj2_mb2Context );
+        String obj1_mb1_different_default_target      = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, null, rep, obj1_mb1Context );
+        String obj1_mb1_different_nonDefault_target   = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, null, rep, obj1_mb2Context );
+        String obj1_mb1_different_default_notarget    = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, null,   null, rep, obj1_mb1Context );
+        String obj1_mb1_different_nonDefault_notarget = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, null,   null, rep, obj1_mb2Context );
+
+        String obj1_mb1_different_default_target_title      = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, title, rep, obj1_mb1Context );
+        String obj1_mb1_different_nonDefault_target_title   = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, title, rep, obj1_mb2Context );
+        String obj1_mb1_different_default_notarget_title    = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, null,   title, rep, obj1_mb1Context );
+        String obj1_mb1_different_nonDefault_notarget_title = obj1_mb1.getIdentifier().toStringRepresentationLinkStart( null, null,   title, rep, obj1_mb2Context );
+
+        String obj2_mb1_different_default_target      = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, null, rep, obj2_mb1Context );
+        String obj2_mb1_different_nonDefault_target   = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, null, rep, obj2_mb2Context );
+        String obj2_mb1_different_default_notarget    = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, null,   null, rep, obj2_mb1Context );
+        String obj2_mb1_different_nonDefault_notarget = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, null,   null, rep, obj2_mb2Context );
+
+        String obj2_mb1_different_default_target_title      = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, title, rep, obj2_mb1Context );
+        String obj2_mb1_different_nonDefault_target_title   = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, target, title, rep, obj2_mb2Context );
+        String obj2_mb1_different_default_notarget_title    = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, null,   title, rep, obj2_mb1Context );
+        String obj2_mb1_different_nonDefault_notarget_title = obj2_mb1.getIdentifier().toStringRepresentationLinkStart( null, null,   title, rep, obj2_mb2Context );
 
         checkEquals(
                 obj1_mb1_different_default_target,
@@ -119,6 +130,7 @@ public class UrlTest1
                         + "/%23xxx"
                         + "\" target=\""
                         + target
+                        + "\" title=\""
                         + "\">",
                 "obj1_mb1_different_default_target is wrong" );
         checkEquals(
@@ -131,6 +143,7 @@ public class UrlTest1
                         + "%23xxx"
                         + "\" target=\""
                         + target
+                        + "\" title=\""
                         + "\">",
                 "obj1_mb1_different_nonDefault_target is wrong" );
         checkEquals(
@@ -138,7 +151,9 @@ public class UrlTest1
                 "<a href=\""
                         + contextUrl
                         + "/%23xxx"
-                        + "\" target=\"_self\">",
+                        + "\" target=\"_self"
+                        + "\" title=\""
+                        + "\">",
                 "obj1_mb1_different_default_notarget is wrong" );
         checkEquals(
                 obj1_mb1_different_nonDefault_notarget,
@@ -148,8 +163,61 @@ public class UrlTest1
                         + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
                         + "]"
                         + "%23xxx"
-                        + "\" target=\"_self\">",
+                        + "\" target=\"_self"
+                        + "\" title=\""
+                        + "\">",
                 "obj1_mb1_different_nonDefault_notarget is wrong" );
+
+        checkEquals(
+                obj1_mb1_different_default_target_title,
+                "<a href=\""
+                        + contextUrl
+                        + "/%23xxx"
+                        + "\" target=\""
+                        + target
+                        + "\" title=\""
+                        + title
+                        + "\">",
+                "obj1_mb1_different_default_target is wrong" );
+        checkEquals(
+                obj1_mb1_different_nonDefault_target_title,
+                "<a href=\""
+                        + contextUrl
+                        + "/[meshbase="
+                        + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
+                        + "]"
+                        + "%23xxx"
+                        + "\" target=\""
+                        + target
+                        + "\" title=\""
+                        + title
+                        + "\">",
+                "obj1_mb1_different_nonDefault_target is wrong" );
+        checkEquals(
+                obj1_mb1_different_default_notarget_title,
+                "<a href=\""
+                        + contextUrl
+                        + "/%23xxx"
+                        + "\" target=\"_self"
+                        + "\" title=\""
+                        + title
+                        + "\">",
+                "obj1_mb1_different_default_notarget is wrong" );
+        checkEquals(
+                obj1_mb1_different_nonDefault_notarget_title,
+                "<a href=\""
+                        + contextUrl
+                        + "/[meshbase="
+                        + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
+                        + "]"
+                        + "%23xxx"
+                        + "\" target=\"_self"
+                        + "\" title=\""
+                        + title
+                        + "\">",
+                "obj1_mb1_different_nonDefault_notarget is wrong" );
+
+
 
         checkEquals(
                 obj2_mb1_different_default_target,
@@ -159,6 +227,7 @@ public class UrlTest1
                         + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
                         + "\" target=\""
                         + target
+                        + "\" title=\""
                         + "\">",
                 "obj2_mb1_different_default_target is wrong" );
         checkEquals(
@@ -171,6 +240,7 @@ public class UrlTest1
                         + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
                         + "\" target=\""
                         + target
+                        + "\" title=\""
                         + "\">",
                 "obj2_mb1_different_nonDefault_target is wrong" );
         checkEquals(
@@ -179,7 +249,9 @@ public class UrlTest1
                         + contextUrl
                         + "/"
                         + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
-                        + "\" target=\"_self\">",
+                        + "\" target=\"_self"
+                        + "\" title=\""
+                        + "\">",
                 "obj2_mb1_different_default_notarget is wrong" );
         checkEquals(
                 obj2_mb1_different_nonDefault_notarget,
@@ -189,9 +261,62 @@ public class UrlTest1
                         + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
                         + "]"
                         + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
-                        + "\" target=\"_self\">",
+                        + "\" target=\"_self"
+                        + "\" title=\""
+                        + "\">",
                 "obj2_mb1_different_nonDefault_notarget is wrong" );
-    }
+
+        checkEquals(
+                obj2_mb1_different_default_target_title,
+                "<a href=\""
+                        + contextUrl
+                        + "/"
+                        + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\" target=\""
+                        + target
+                        + "\" title=\""
+                        + title
+                        + "\">",
+                "obj2_mb1_different_default_target is wrong" );
+        checkEquals(
+                obj2_mb1_different_nonDefault_target_title,
+                "<a href=\""
+                        + contextUrl
+                        + "/[meshbase="
+                        + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
+                        + "]"
+                        + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\" target=\""
+                        + target
+                        + "\" title=\""
+                        + title
+                        + "\">",
+                "obj2_mb1_different_nonDefault_target is wrong" );
+        checkEquals(
+                obj2_mb1_different_default_notarget_title,
+                "<a href=\""
+                        + contextUrl
+                        + "/"
+                        + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\" target=\"_self"
+                        + "\" title=\""
+                        + title
+                        + "\">",
+                "obj2_mb1_different_default_notarget is wrong" );
+        checkEquals(
+                obj2_mb1_different_nonDefault_notarget_title,
+                "<a href=\""
+                        + contextUrl
+                        + "/[meshbase="
+                        + mb1.getIdentifier().toExternalForm().replaceAll( ":", "%3A")
+                        + "]"
+                        + obj2_mb1.getIdentifier().toExternalForm().replaceAll( "#", "%23" )
+                        + "\" target=\"_self"
+                        + "\" title=\""
+                        + title
+                        + "\">",
+                "obj2_mb1_different_nonDefault_notarget is wrong" );
+     }
 
     /**
      * Main program.

@@ -108,6 +108,7 @@ public abstract class AbstractDelegatingLocalizedException
      *
      * @param additionalArguments additional arguments for URLs, if any
      * @param target the HTML target, if any
+     * @param title title of the HTML link, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
@@ -117,6 +118,7 @@ public abstract class AbstractDelegatingLocalizedException
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
+            String                      title,
             StringRepresentation        rep,
             StringRepresentationContext context )
         throws
@@ -124,9 +126,9 @@ public abstract class AbstractDelegatingLocalizedException
     {
         Throwable cause = getCause();
         if( cause instanceof LocalizedException ) {
-            return ((LocalizedException)cause).toStringRepresentationLinkStart( additionalArguments, target, rep, context );
+            return ((LocalizedException)cause).toStringRepresentationLinkStart( additionalArguments, target, title, rep, context );
         } else {
-            return super.toStringRepresentationLinkStart( additionalArguments, target, rep, context );
+            return super.toStringRepresentationLinkStart( additionalArguments, target, title, rep, context );
         }
     }
 

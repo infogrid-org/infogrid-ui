@@ -307,6 +307,7 @@ public abstract class AbstractProxy
      *
      * @param additionalArguments additional arguments for URLs, if any
      * @param target the HTML target, if any
+     * @param title title of the HTML link, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
@@ -315,6 +316,7 @@ public abstract class AbstractProxy
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
+            String                      title,
             StringRepresentation        rep,
             StringRepresentationContext context )
         throws
@@ -337,11 +339,12 @@ public abstract class AbstractProxy
                 getClass(),
                 key,
                 null,
-                contextPath,
-                proxyExternalForm,
-                meshBaseExternalForm,
-                additionalArguments,
-                target );
+        /* 0 */ contextPath,
+        /* 1 */ proxyExternalForm,
+        /* 2 */ meshBaseExternalForm,
+        /* 3 */ additionalArguments,
+        /* 4 */ target,
+        /* 5 */ title );
 
         return ret;
     }

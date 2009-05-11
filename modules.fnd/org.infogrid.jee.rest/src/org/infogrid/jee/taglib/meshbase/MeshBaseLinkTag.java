@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -49,6 +49,7 @@ public class MeshBaseLinkTag
         theRootPath             = null;
         theAddArguments         = null;
         theTarget               = null;
+        theTitle                = null;
         theStringRepresentation = null;
 
         super.initializeToDefaults();
@@ -147,6 +148,29 @@ public class MeshBaseLinkTag
     }
 
     /**
+     * Obtain value of the title property.
+     *
+     * @return value of the title property
+     * @see #setTitle
+     */
+    public String getTitle()
+    {
+        return theTitle;
+    }
+
+    /**
+     * Set value of the title property.
+     *
+     * @param newValue new value of the title property
+     * @see #getTitle
+     */
+    public void setTitle(
+            String newValue )
+    {
+        theTitle = newValue;
+    }
+
+    /**
      * Obtain value of the stringRepresentation property.
      *
      * @return value of the stringRepresentation property
@@ -184,7 +208,7 @@ public class MeshBaseLinkTag
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkStart( pageContext, mb, theRootPath, theAddArguments, theTarget, theStringRepresentation );
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkStart( pageContext, mb, theRootPath, theAddArguments, theTarget, theTitle, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -239,6 +263,11 @@ public class MeshBaseLinkTag
      * The HTML frame to target, if any.
      */
     protected String theTarget;
+
+    /**
+     * The HTML link title, if any.
+     */
+    protected String theTitle;
 
     /**
      * Name of the String representation.

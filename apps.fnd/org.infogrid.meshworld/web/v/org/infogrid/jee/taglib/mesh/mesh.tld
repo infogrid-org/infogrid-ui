@@ -211,6 +211,10 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>title</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>stringRepresentation</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

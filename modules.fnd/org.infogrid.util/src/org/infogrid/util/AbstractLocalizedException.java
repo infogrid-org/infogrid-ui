@@ -136,6 +136,7 @@ public abstract class AbstractLocalizedException
      *
      * @param additionalArguments additional arguments for URLs, if any
      * @param target the HTML target, if any
+     * @param title title of the HTML link, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @return String representation
@@ -143,6 +144,7 @@ public abstract class AbstractLocalizedException
     public String toStringRepresentationLinkStart(
             String                      additionalArguments,
             String                      target,
+            String                      title,
             StringRepresentation        rep,
             StringRepresentationContext context )
         throws
@@ -150,6 +152,9 @@ public abstract class AbstractLocalizedException
     {
         return constructStringRepresentationLinkStart(
                 this,
+                additionalArguments,
+                target,
+                title,
                 rep,
                 context,
                 findResourceHelperForLocalizedMessage(),
@@ -211,6 +216,9 @@ public abstract class AbstractLocalizedException
      * Factored out creation of the link start of a string representation, so several classes can reference the same code.
      *
      * @param ex the LocalizedException to be converted
+     * @param additionalArguments additional arguments for URLs, if any
+     * @param target the HTML target, if any
+     * @param title title of the HTML link, if any
      * @param rep the StringRepresentation
      * @param context the StringRepresentationContext of this object
      * @param theHelper the ResourceHelper to use
@@ -221,6 +229,9 @@ public abstract class AbstractLocalizedException
      */
     public static String constructStringRepresentationLinkStart(
             LocalizedException          ex,
+            String                      additionalArguments,
+            String                      target,
+            String                      title,
             StringRepresentation        rep,
             StringRepresentationContext context,
             ResourceHelper              theHelper,

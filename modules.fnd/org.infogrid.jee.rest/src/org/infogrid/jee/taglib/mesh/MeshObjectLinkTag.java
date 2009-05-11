@@ -49,6 +49,7 @@ public class MeshObjectLinkTag
         theRootPath             = null;
         theAddArguments         = null;
         theTarget               = null;
+        theTitle                = null;
         theStringRepresentation = null;
 
         super.initializeToDefaults();
@@ -147,6 +148,29 @@ public class MeshObjectLinkTag
     }
 
     /**
+     * Obtain value of the title property.
+     *
+     * @return value of the title property
+     * @see #setTitle
+     */
+    public String getTitle()
+    {
+        return theTitle;
+    }
+
+    /**
+     * Set value of the title property.
+     *
+     * @param newValue new value of the title property
+     * @see #getTitle
+     */
+    public void setTitle(
+            String newValue )
+    {
+        theTitle = newValue;
+    }
+
+    /**
      * Obtain value of the stringRepresentation property.
      *
      * @return value of the stringRepresentation property
@@ -184,7 +208,7 @@ public class MeshObjectLinkTag
         MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, theAddArguments, theTarget, theStringRepresentation );
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, theAddArguments, theTarget, theTitle, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -239,6 +263,11 @@ public class MeshObjectLinkTag
      * The HTML frame to target, if any.
      */
     protected String theTarget;
+
+    /**
+     * The title of the link, if any.
+     */
+    protected String theTitle;
 
     /**
      * Name of the String representation.

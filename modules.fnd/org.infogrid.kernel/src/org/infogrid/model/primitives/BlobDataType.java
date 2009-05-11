@@ -270,8 +270,14 @@ public final class BlobDataType
             throw new IllegalArgumentException( "null value" );
         }
         if( mimeType == null ) {
-            mimeType = BlobValue.TEXT_PLAIN_MIME_TYPE;
+            for( String candidate : theMimeTypes ) {
+                if( candidate.startsWith( "text/" )) {
+                    mimeType = candidate;
+                    break;
+                }
+            }
         }
+
         if( !isAllowedMimeType( mimeType )) {
             throw new MimeTypeNotInDomainException( this, mimeType );
         }

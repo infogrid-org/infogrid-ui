@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -48,6 +48,7 @@ public class ProxyLinkTag
         theRootPath             = null;
         theAddArguments         = null;
         theTarget               = null;
+        theTitle                = null;
         theStringRepresentation = null;
 
         super.initializeToDefaults();
@@ -146,6 +147,29 @@ public class ProxyLinkTag
     }
 
     /**
+     * Obtain value of the title property.
+     *
+     * @return value of the title property
+     * @see #setTitle
+     */
+    public String getTitle()
+    {
+        return theTitle;
+    }
+
+    /**
+     * Set value of the title property.
+     *
+     * @param newValue new value of the title property
+     * @see #getTitle
+     */
+    public void setTitle(
+            String newValue )
+    {
+        theTitle = newValue;
+    }
+
+    /**
      * Obtain value of the stringRepresentation property.
      *
      * @return value of the stringRepresentation property
@@ -183,7 +207,7 @@ public class ProxyLinkTag
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
 
         try {
-            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkStart( pageContext, p, theRootPath, theAddArguments, theTarget, theStringRepresentation );
+            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkStart( pageContext, p, theRootPath, theAddArguments, theTarget, theTitle, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -238,6 +262,11 @@ public class ProxyLinkTag
      * The HTML target, if any.
      */
     protected String theTarget;
+
+    /**
+     * The HTML link title, if any.
+     */
+    protected String theTitle;
 
     /**
      * Name of the String representation.

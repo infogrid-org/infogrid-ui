@@ -559,6 +559,7 @@ public class RestfulJeeFormatter
      * @param rootPath alternate root path to use, if any
      * @param addArguments additional arguments to the URL, if any
      * @param target the HTML target, if any
+     * @param title the HTML title attribute, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
@@ -569,6 +570,7 @@ public class RestfulJeeFormatter
             String             rootPath,
             String             addArguments,
             String             target,
+            String             title,
             String             stringRepresentation )
         throws
             StringifierException
@@ -584,7 +586,7 @@ public class RestfulJeeFormatter
         SimpleMeshStringRepresentationContext delegateContext
                 = SimpleMeshStringRepresentationContext.create( localMap, context );
 
-        String ret = mesh.getIdentifier().toStringRepresentationLinkStart( addArguments, target, rep, delegateContext );
+        String ret = mesh.getIdentifier().toStringRepresentationLinkStart( addArguments, target, title, rep, delegateContext );
         return ret;
     }
 
@@ -698,6 +700,7 @@ public class RestfulJeeFormatter
      * @param rootPath alternate root path to use, if any
      * @param addArguments additional arguments to the URL, if any
      * @param target the HTML target, if any
+     * @param title title of the HTML link, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
@@ -708,6 +711,7 @@ public class RestfulJeeFormatter
             String             rootPath,
             String             addArguments,
             String             target,
+            String             title,
             String             stringRepresentation )
         throws
             StringifierException
@@ -717,7 +721,7 @@ public class RestfulJeeFormatter
 
         addArguments = potentiallyAddAppContext( (HttpServletRequest) pageContext.getRequest(), addArguments );
 
-        String ret = base.toStringRepresentationLinkStart( addArguments, target, rep, context );
+        String ret = base.toStringRepresentationLinkStart( addArguments, target, title, rep, context );
         return ret;
     }
 
