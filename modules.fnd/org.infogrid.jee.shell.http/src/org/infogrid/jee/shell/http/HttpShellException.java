@@ -15,6 +15,8 @@
 package org.infogrid.jee.shell.http;
 
 import org.infogrid.util.AbstractDelegatingLocalizedException;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * Thrown when something went wrong in the
@@ -24,6 +26,8 @@ import org.infogrid.util.AbstractDelegatingLocalizedException;
 public final class HttpShellException
     extends
         AbstractDelegatingLocalizedException
+    implements
+        CanBeDumped
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -37,5 +41,18 @@ public final class HttpShellException
             Throwable cause )
     {
         super( null, cause ); // use this constructor, in order to avoid that Throwable calls cause.toString().
+    }
+
+    /**
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
+    {
+        d.dump( this,
+                new String[] { "cause" },
+                new Object[] { getCause() } );
     }
 }

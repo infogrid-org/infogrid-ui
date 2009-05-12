@@ -419,6 +419,10 @@
     <tag>
         <name>refresh</name>
         <tag-class>org.infogrid.jee.taglib.mesh.RefreshTag</tag-class>
+        <attribute>
+            <name>target</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>

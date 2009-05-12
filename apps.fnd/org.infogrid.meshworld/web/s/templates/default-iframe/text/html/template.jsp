@@ -18,6 +18,7 @@
    <div class="canvas-main">
     <tmpl:ifErrors>
      <div class="errors">
+      <h2>Errors:</h2>
       <tmpl:inlineErrors stringRepresentation="Html"/>
      </div>
     </tmpl:ifErrors>

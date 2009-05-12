@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -174,7 +174,7 @@ public class FormToken
      */
     public static final long DEFAULT_EXPIRES = theResourceHelper.getResourceLongOrDefault(
             "Expires",
-            1000L * 60L * 3L ); // 3 minutes
+            1000L * 60L * 60L ); // 1 hour
     
     /**
      * The Random generator we use.

@@ -79,6 +79,12 @@ public enum HttpShellRelationshipVerb
                     TransactionException,
                     NotPermittedException
             {
+                if( source == null ) {
+                    return; // be lenient
+                }
+                if( destination == null ) {
+                    return; // be lenient
+                }
                 if( !source.isRelated( destination )) {
                     Transaction tx2 = tx.obtain();
 
@@ -135,6 +141,12 @@ public enum HttpShellRelationshipVerb
                     TransactionException,
                     NotPermittedException
             {
+                if( source == null ) {
+                    return; // be lenient
+                }
+                if( destination == null ) {
+                    return; // be lenient
+                }
                 if( source.isRelated( destination )) {
                     Transaction tx2 = tx.obtain();
 

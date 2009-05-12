@@ -301,14 +301,17 @@ public class HttpShellFilter
                         MeshObject found2   = variables.get( var2Name );
                         MeshObject found1   = variables.get( var1Name );
 
-                        String [] values = lidRequest.getMultivaluedPostArgument( arg );
-                        if( values != null ) {
-                            OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
+                        if( found1 != null && found2 != null ) {
+                            // be lenient
+                            String [] values = lidRequest.getMultivaluedPostArgument( arg );
+                            if( values != null ) {
+                                OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
-                            for( String v : values ) {
-                                RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
-                                Transaction tx2 = tx.obtain();
-                                found1.blessRelationship( toBless, found2 );
+                                for( String v : values ) {
+                                    RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                    Transaction tx2 = tx.obtain();
+                                    found1.blessRelationship( toBless, found2 );
+                                }
                             }
                         }
                     }

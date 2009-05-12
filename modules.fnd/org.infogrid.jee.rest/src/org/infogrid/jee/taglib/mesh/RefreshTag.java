@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -48,6 +48,31 @@ public class RefreshTag
     protected void initializeToDefaults()
     {
         super.initializeToDefaults();
+
+        theTarget = null;
+    }
+
+    /**
+     * Set the target property.
+     *
+     * @param newValue the new value
+     * @see #getTarget
+     */
+    public void setTarget(
+            String newValue )
+    {
+        theTarget = newValue;
+    }
+
+    /**
+     * Obtain the target property.
+     *
+     * @return the value
+     * @see #setTarget
+     */
+    public String getTarget()
+    {
+        return theTarget;
     }
 
     /**
@@ -71,7 +96,11 @@ public class RefreshTag
         
         StringBuilder buf = new StringBuilder();
         buf.append( "<div class=\"" ).append( getClass().getName().replace( '.', '-' )).append( "\">" );
-        buf.append( "<a href=\"" ).append( href ).append( "\">" );
+        buf.append( "<a href=\"" ).append( href );
+        if( theTarget != null ) {
+            buf.append( "\" target=\"" ).append( theTarget );
+        }
+        buf.append( "\">" );
 
         print( buf.toString() );
 
@@ -106,4 +135,9 @@ public class RefreshTag
 
         return EVAL_PAGE;
     }
+
+    /**
+     * The target, if any.
+     */
+    protected String theTarget;
 }

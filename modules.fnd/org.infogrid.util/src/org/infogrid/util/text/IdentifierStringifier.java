@@ -74,6 +74,10 @@ public class IdentifierStringifier
             Identifier                     arg,
             StringRepresentationParameters pars )
     {
+        if( arg == null ) {
+            return "null";
+        }
+
         String ext = escape( arg.toExternalForm() );
 
         if( thePrefix == null && thePostfix == null ) {
