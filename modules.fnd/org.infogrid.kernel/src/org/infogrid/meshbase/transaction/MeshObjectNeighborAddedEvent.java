@@ -234,6 +234,55 @@ public class MeshObjectNeighborAddedEvent
     }
     
     /**
+     * <p>Assuming that this Change was applied to a MeshObject in this MeshBase before,
+     *    unapply (undo) this Change.
+     * <p>This method will attempt to create a Transaction if none is present on the
+     * current Thread.</p>
+     *
+     * @param base the MeshBase in which to unapply the Change
+     * @return the MeshObject to which the Change was unapplied
+     * @throws CannotUnapplyChangeException thrown if the Change could not be unapplied
+     * @throws TransactionException thrown if a Transaction didn't exist on this Thread and
+     *         could not be created
+     */
+    public MeshObject unapplyFrom(
+            MeshBase base )
+        throws
+            CannotUnapplyChangeException,
+            TransactionException
+    {
+        setResolver( base );
+
+        Transaction tx = null;
+
+        MeshObject    otherObject; // declaring this out here makes debugging much easier
+        MeshObject [] relatedOtherObjects;
+
+        try {
+            tx = base.createTransactionNowIfNeeded();
+
+            otherObject         = getSource();
+            relatedOtherObjects = getDeltaValue();
+
+            for( int i=0 ; i<relatedOtherObjects.length ; ++i ) {
+                otherObject.unrelate( relatedOtherObjects[i] );
+            }
+            return otherObject;
+
+        } catch( TransactionException ex ) {
+            throw ex;
+
+        } catch( Throwable ex ) {
+            throw new CannotUnapplyChangeException.ExceptionOccurred( base, ex );
+
+        } finally {
+            if( tx != null ) {
+                tx.commitTransaction();
+            }
+        }
+    }
+
+    /**
      * Determine equality.
      *
      * @param other the Object to compare with

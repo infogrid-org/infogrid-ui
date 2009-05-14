@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -14,17 +14,16 @@
 
 package org.infogrid.meshbase.transaction;
 
-import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 
 /**
- * Thrown if a Change could not be applied. Inner classes provide
+ * Thrown if a Change could not be unapplied. Inner classes provide
  * more detail.
  */
-public abstract class CannotApplyChangeException
+public abstract class CannotUnapplyChangeException
         extends
             Exception
         implements
@@ -36,12 +35,12 @@ public abstract class CannotApplyChangeException
      * @param mb the MeshBase to which the Change could not be applied
      * @param cause the cause for this Exception
      */
-    protected CannotApplyChangeException(
+    protected CannotUnapplyChangeException(
             MeshBase  mb,
             Throwable cause )
     {
         super( cause );
-        
+
         theMeshBase           = mb;
         theMeshBaseIdentifier = mb.getIdentifier();
     }
@@ -67,19 +66,19 @@ public abstract class CannotApplyChangeException
      * The MeshBase to which the Change could not be applied.
      */
     protected transient MeshBase theMeshBase;
-    
+
     /**
      * The identifier of the MeshBase to which the Change could not be applied.
      */
     protected MeshBaseIdentifier theMeshBaseIdentifier;
-    
+
     /**
      * This subclass indicates that an unexpected Exception occurred during the
      * operation.
      */
     public static class ExceptionOccurred
             extends
-                CannotApplyChangeException
+                CannotUnapplyChangeException
     {
         private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -95,56 +94,5 @@ public abstract class CannotApplyChangeException
         {
             super( mb, cause );
         }
-    }
-    
-    /**
-     * This subclass indicates that the MeshObject to which the Change was supposed
-     * to be applied could not be found.
-     */
-    public static class MeshObjectNotFound
-            extends
-                CannotApplyChangeException
-    {
-        private static final long serialVersionUID = 1L; // helps with serialization
-
-        /**
-         * Constructor.
-         * 
-         * @param objectIdentifier the Identifier of the MeshObject that could not be found.
-         * @param mb the MeshBase in which the MeshObject could not be found
-         */
-        public MeshObjectNotFound(
-                MeshObjectIdentifier objectIdentifier,
-                MeshBase             mb )
-        {
-            super( mb, null );
-            
-            theObjectIdentifier = objectIdentifier;
-        }
-
-        /**
-         * Dump this object.
-         *
-         * @param d the Dumper to dump to
-         */
-        @Override
-        public void dump(
-                Dumper d )
-        {
-            d.dump( this,
-                    new String[] {
-                        "meshBaseIdentifier",
-                        "objectIdentifier"
-                    },
-                    new Object[] {
-                        theMeshBaseIdentifier,
-                        theObjectIdentifier
-                    } );
-        }
-
-        /**
-         * The Identifier of the MeshObject that could not be found.
-         */
-        protected MeshObjectIdentifier theObjectIdentifier;
     }
 }

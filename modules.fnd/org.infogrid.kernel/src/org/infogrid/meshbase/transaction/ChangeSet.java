@@ -16,8 +16,9 @@ package org.infogrid.meshbase.transaction;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.ArrayListCursorIterator;
+import org.infogrid.util.CursorIterator;
 
 /**
   * <p>A ChangeSet is the set of {@link Change Changes} (createCopy, update, delete)
@@ -109,9 +110,9 @@ public class ChangeSet
      *
      * @return Iterator over the Changes in this ChangeSet
      */
-    public Iterator<Change> iterator()
+    public CursorIterator<Change> iterator()
     {
-        return theChanges.iterator();
+        return ArrayListCursorIterator.create( theChanges, Change.class );
     }
 
     /**

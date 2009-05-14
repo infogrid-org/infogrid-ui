@@ -15,6 +15,7 @@
 package org.infogrid.meshbase.transaction;
 
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.util.CursorIterator;
 import org.infogrid.util.FlexibleListenerSet;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
@@ -100,11 +101,34 @@ public abstract class Transaction
     }
 
     /**
-      * Currently not implemented.
-      */
-    public void rollbackTransaction()
+     * Currently not implemented.
+     *
+     * @param thrown the Throwable that caused us to attempt to rollback the Transaction
+     */
+    public void rollbackTransaction(
+            Throwable thrown )
     {
-        throw new UnsupportedOperationException();
+        if( log.isInfoEnabled() ) {
+            log.info(  "rollbackTransaction", thrown );
+        }
+
+        // go backwards in the change set
+        CursorIterator<Change> iter = theChangeSet.iterator();
+        while( iter.hasPrevious() ) {
+            Change current = iter.previous();
+
+            try {
+                current.unapplyFrom( theTransactable );
+
+            } catch( CannotUnapplyChangeException ex ) {
+                log.error( ex );
+                // that's the best we can do
+
+            } catch( TransactionException ex ) {
+                log.error( ex );
+                // that's the best we can do
+            }
+        }
     }
 
     /**

@@ -853,6 +853,8 @@ public abstract class AbstractMeshBase
     {
         T ret = null;
         for( int counter = 0 ; counter < MAX_COMMIT_RETRIES ; ++counter ) {
+
+            Throwable thrown = null;
             try {
                 ret = act.execute( tx );
 
@@ -865,6 +867,7 @@ public abstract class AbstractMeshBase
                 return null;
 
             } catch( TransactionActionException.Retry ex ) {
+                thrown = ex;
                 // do nothing, stay in the loop
 
             } catch( TransactionActionException.Error ex ) {
@@ -875,6 +878,7 @@ public abstract class AbstractMeshBase
                 throw new RuntimeException( ex );
 
             } catch( MeshObjectGraphModificationException ex ) {
+                thrown = ex;
                 if( act.getAllOrNothing() ) {
                     log.error( "Rolling back Transaction", ex );
                     return null; // rollback
@@ -884,6 +888,7 @@ public abstract class AbstractMeshBase
                 }
 
             } catch( RuntimeException ex ) {
+                thrown = ex;
                 log.error( ex );
                 if( act.getAllOrNothing() ) {
                     log.error( "Rolling back Transaction", ex );
@@ -895,7 +900,7 @@ public abstract class AbstractMeshBase
 
             } finally {
                 if( tx != null ) {
-                    tx.rollbackTransaction();
+                    tx.rollbackTransaction( thrown );
                 }
             }
         }

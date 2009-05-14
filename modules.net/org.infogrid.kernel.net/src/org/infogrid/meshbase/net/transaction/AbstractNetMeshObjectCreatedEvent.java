@@ -167,7 +167,7 @@ public abstract class AbstractNetMeshObjectCreatedEvent
         setResolver( base );
 
         ModelBase modelBase = base.getModelBase();
-        resolveEntityTypes();
+        resolveEntityTypes( this, theExternalizedMeshObject, theResolver );
         
         PropertyType [] thePropertyTypes = new PropertyType[ theExternalizedMeshObject.getPropertyTypes().length ];
         for( int i=0 ; i<thePropertyTypes.length ; ++i ) {

@@ -24,6 +24,7 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
+import org.infogrid.util.event.ExternalizableEvent;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.event.OtherUnresolvedException;
 import org.infogrid.util.logging.Dumper;
@@ -104,7 +105,7 @@ public class MeshObjectCreatedEvent
     public synchronized EntityType [] getEntityTypes()
     {
         if( theEntityTypes == null ) {
-            theEntityTypes = resolveEntityTypes();
+            theEntityTypes = resolveEntityTypes( this, theExternalizedMeshObject, theResolver );
         }
         return theEntityTypes;
     }
@@ -112,26 +113,32 @@ public class MeshObjectCreatedEvent
     /**
      * Resolve the EntityTypes.
      *
+     * @param event the event on whose behalf the method is executed
+     * @param externalized the ExternalizedMeshObject containing the externalized EntityType references in question
+     * @param resolver the resolver to use
      * @return the resolved EntityTypes
      */
-    protected EntityType [] resolveEntityTypes()
+    protected static EntityType [] resolveEntityTypes(
+            ExternalizableEvent    event,
+            ExternalizedMeshObject externalized,
+            MeshBase               resolver )
     {
-        MeshTypeIdentifier [] typeNames = theExternalizedMeshObject.getExternalTypeIdentifiers();
+        MeshTypeIdentifier [] typeNames = externalized.getExternalTypeIdentifiers();
         if( typeNames == null || typeNames.length == 0 ) {
             return new EntityType[0];
         }
         EntityType [] ret = new EntityType[ typeNames.length ];
-        if( theResolver == null ) {
-            throw new OtherUnresolvedException( this );
+        if( resolver == null ) {
+            throw new OtherUnresolvedException( event );
         }
 
-        ModelBase modelBase = theResolver.getModelBase();
+        ModelBase modelBase = resolver.getModelBase();
         for( int i=0 ; i<typeNames.length ; ++i ) {
             try {
                 ret[i] = modelBase.findEntityTypeByIdentifier( typeNames[i] );
 
             } catch( MeshTypeWithIdentifierNotFoundException ex ) {
-                throw new OtherUnresolvedException( this, ex );
+                throw new OtherUnresolvedException( event, ex );
             }
         }
         return ret;
@@ -165,7 +172,7 @@ public class MeshObjectCreatedEvent
 
         ModelBase modelBase = base.getModelBase();
 
-        resolveEntityTypes();
+        resolveEntityTypes( this, theExternalizedMeshObject, theResolver );
 
         try {
             tx = base.createTransactionNowIfNeeded();
@@ -216,6 +223,45 @@ public class MeshObjectCreatedEvent
         return null; // I don't think this can happen, but let's make the compiler happy.
     }
     
+    /**
+     * <p>Assuming that this Change was applied to a MeshObject in this MeshBase before,
+     *    unapply (undo) this Change.
+     * <p>This method will attempt to create a Transaction if none is present on the
+     * current Thread.</p>
+     *
+     * @param base the MeshBase in which to unapply the Change
+     * @return the MeshObject to which the Change was unapplied
+     * @throws CannotUnapplyChangeException thrown if the Change could not be unapplied
+     * @throws TransactionException thrown if a Transaction didn't exist on this Thread and
+     *         could not be created
+     */
+    public MeshObject unapplyFrom(
+            MeshBase base )
+        throws
+            CannotUnapplyChangeException,
+            TransactionException
+    {
+        setResolver( base );
+
+        Transaction tx = null;
+
+        try {
+            tx = base.createTransactionNowIfNeeded();
+
+            MeshObject otherObject = getDeltaValue();
+
+            base.getMeshBaseLifecycleManager().deleteMeshObject( otherObject );
+
+            return null;
+
+        } catch( TransactionException ex ) {
+            throw ex;
+
+        } catch( Throwable ex ) {
+            throw new CannotUnapplyChangeException.ExceptionOccurred( base, ex );
+        }
+    }
+
     /**
      * Clear cached objects to force a re-resolve.
      */

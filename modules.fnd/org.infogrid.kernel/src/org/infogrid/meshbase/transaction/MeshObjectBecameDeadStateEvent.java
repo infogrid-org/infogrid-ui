@@ -124,6 +124,27 @@ public class MeshObjectBecameDeadStateEvent
     }
     
     /**
+     * <p>Assuming that this Change was applied to a MeshObject in this MeshBase before,
+     *    unapply (undo) this Change.
+     * <p>This method will attempt to create a Transaction if none is present on the
+     * current Thread.</p>
+     *
+     * @param base the MeshBase in which to unapply the Change
+     * @return the MeshObject to which the Change was unapplied
+     * @throws CannotUnapplyChangeException thrown if the Change could not be unapplied
+     * @throws TransactionException thrown if a Transaction didn't exist on this Thread and
+     *         could not be created
+     */
+    public MeshObject unapplyFrom(
+            MeshBase base )
+        throws
+            CannotUnapplyChangeException,
+            TransactionException
+    {
+        throw new UnsupportedOperationException(); // FIXME
+    }
+
+    /**
      * Determine equality.
      *
      * @param other the Object to compare with

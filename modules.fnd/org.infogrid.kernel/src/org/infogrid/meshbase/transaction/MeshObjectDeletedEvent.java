@@ -19,6 +19,11 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.primitives.PropertyType;
+import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.modelbase.ModelBase;
+import org.infogrid.util.logging.Log;
 
 /**
  * This event indicates that a MeshObject was semantically deleted.
@@ -27,7 +32,8 @@ public class MeshObjectDeletedEvent
         extends
             AbstractMeshObjectLifecycleEvent
 {
-    private static final long serialVersionUID = 1L; // helps with serialization
+    private static final long serialVersionUID = 1l; // helps with serialization
+    private static final Log  log              = Log.getLogInstance( MeshObjectDeletedEvent.class ); // our own, private logger
 
     /**
      * Constructor.
@@ -65,6 +71,19 @@ public class MeshObjectDeletedEvent
     public ExternalizedMeshObject getExternalizedMeshObject()
     {
         return theExternalizedMeshObject;
+    }
+
+    /**
+     * Obtain the EntityTypes with which the created MeshObject was blessed upon creation.
+     *
+     * @return the MeshTypes
+     */
+    public synchronized EntityType [] getEntityTypes()
+    {
+        if( theEntityTypes == null ) {
+            theEntityTypes = MeshObjectCreatedEvent.resolveEntityTypes( this, theExternalizedMeshObject, theResolver );
+        }
+        return theEntityTypes;
     }
 
     /**
@@ -115,6 +134,82 @@ public class MeshObjectDeletedEvent
     }
     
     /**
+     * <p>Assuming that this Change was applied to a MeshObject in this MeshBase before,
+     *    unapply (undo) this Change.
+     * <p>This method will attempt to create a Transaction if none is present on the
+     * current Thread.</p>
+     *
+     * @param base the MeshBase in which to unapply the Change
+     * @return the MeshObject to which the Change was unapplied
+     * @throws CannotUnapplyChangeException thrown if the Change could not be unapplied
+     * @throws TransactionException thrown if a Transaction didn't exist on this Thread and
+     *         could not be created
+     */
+    public MeshObject unapplyFrom(
+            MeshBase base )
+        throws
+            CannotUnapplyChangeException,
+            TransactionException
+    {
+        setResolver( base );
+
+        Transaction tx = null;
+        Throwable   t = null;
+
+        ModelBase modelBase = base.getModelBase();
+
+        MeshObjectCreatedEvent.resolveEntityTypes( this, theExternalizedMeshObject, theResolver );
+
+        try {
+            tx = base.createTransactionNowIfNeeded();
+
+            MeshObject newObject = base.getMeshBaseLifecycleManager().createMeshObject(
+                        getDeltaValueIdentifier(),
+                        getEntityTypes(),
+                        theExternalizedMeshObject.getTimeCreated(),
+                        theExternalizedMeshObject.getTimeUpdated(),
+                        theExternalizedMeshObject.getTimeRead(),
+                        theExternalizedMeshObject.getTimeExpires() );
+
+            for( int i=0 ; i<theExternalizedMeshObject.getPropertyTypes().length ; ++i ) {
+                try {
+                    PropertyType  propertyType  = modelBase.findPropertyTypeByIdentifier( theExternalizedMeshObject.getPropertyTypes()[i] );
+                    PropertyValue propertyValue = theExternalizedMeshObject.getPropertyValues()[i];
+
+                    newObject.setPropertyValue( propertyType, propertyValue );
+
+                } catch( Throwable ex ) {
+                    if( t == null ) {
+                        t = ex;
+                    } else {
+                        log.warn( "Second or later Exception", ex );
+                    }
+                }
+            }
+            return newObject;
+
+        } catch( TransactionException ex ) {
+            throw ex;
+
+        } catch( Throwable ex ) {
+            if( t == null ) {
+                t = ex;
+            } else {
+                log.warn( "Second or later Exception", ex );
+            }
+
+        } finally {
+            if( tx != null ) {
+                tx.commitTransaction();
+            }
+        }
+        if( t != null ) {
+            throw new CannotUnapplyChangeException.ExceptionOccurred( base, t );
+        }
+        return null; // I don't think this can happen, but let's make the compiler happy.
+    }
+
+    /**
      * Determine equality.
      *
      * @param other the Object to compare with
@@ -152,4 +247,9 @@ public class MeshObjectDeletedEvent
      * The deleted MeshObject in externalized form, as it was just before the deletion.
      */
     protected ExternalizedMeshObject theExternalizedMeshObject;
+
+    /**
+     * The EntityTypes, once resolved.
+     */
+    protected transient EntityType [] theEntityTypes;
 }

@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.transaction.AbstractMeshObjectRoleChangeEvent;
 import org.infogrid.meshbase.transaction.CannotApplyChangeException;
+import org.infogrid.meshbase.transaction.CannotUnapplyChangeException;
 import org.infogrid.meshbase.transaction.MeshObjectRoleAddedEvent;
 import org.infogrid.meshbase.transaction.MeshObjectRoleRemovedEvent;
 import org.infogrid.meshbase.transaction.TransactionException;
@@ -78,6 +79,51 @@ public abstract class TraversalPathDelegatedRoleChangeEvent
     public AbstractMeshObjectRoleChangeEvent getOriginalEvent()
     {
         return theOriginalEvent;
+    }
+
+    /**
+     * Apply this Change to a MeshObject in this MeshBase. This method
+     * is intended to make it easy to reproduce Changes that were made in
+     * one MeshBase to MeshObjects in another MeshBase.
+     *
+     * This method will attempt to create a Transaction if none is present on the
+     * current Thread.
+     *
+     * @param base the other MeshBase in which to apply the change
+     * @throws CannotApplyChangeException thrown if the Change could not be applied, e.g because
+     *         the affected MeshObject did not exist in the other MeshBase
+     * @throws TransactionException thrown if a Transaction didn't exist on this Thread and could not be created
+     */
+    public MeshObject applyTo(
+            MeshBase base )
+        throws
+            CannotApplyChangeException,
+            TransactionException
+    {
+        MeshObject ret = theOriginalEvent.applyTo( base );
+        return ret;
+    }
+
+    /**
+     * <p>Assuming that this Change was applied to a MeshObject in this MeshBase before,
+     *    unapply (undo) this Change.
+     * <p>This method will attempt to create a Transaction if none is present on the
+     * current Thread.</p>
+     *
+     * @param base the MeshBase in which to unapply the Change
+     * @return the MeshObject to which the Change was unapplied
+     * @throws CannotUnapplyChangeException thrown if the Change could not be unapplied
+     * @throws TransactionException thrown if a Transaction didn't exist on this Thread and
+     *         could not be created
+     */
+    public MeshObject unapplyFrom(
+            MeshBase base )
+        throws
+            CannotUnapplyChangeException,
+            TransactionException
+    {
+        MeshObject ret = theOriginalEvent.unapplyFrom( base );
+        return ret;
     }
 
     /**
@@ -148,29 +194,6 @@ public abstract class TraversalPathDelegatedRoleChangeEvent
         public boolean isAdditionalRoleUpdate()
         {
             return true;
-        }
-
-        /**
-         * Apply this Change to a MeshObject in this MeshBase. This method
-         * is intended to make it easy to reproduce Changes that were made in
-         * one MeshBase to MeshObjects in another MeshBase.
-         *
-         * This method will attempt to create a Transaction if none is present on the
-         * current Thread.
-         *
-         * @param otherMeshBase the other MeshBase in which to apply the change
-         * @throws CannotApplyChangeException thrown if the Change could not be applied, e.g because
-         *         the affected MeshObject did not exist in the other MeshBase
-         * @throws TransactionException thrown if a Transaction didn't exist on this Thread and could not be created
-         */
-        public MeshObject applyTo(
-                MeshBase otherMeshBase )
-            throws
-                CannotApplyChangeException,
-                TransactionException
-        {
-            MeshObject ret = theOriginalEvent.applyTo( otherMeshBase );
-            return ret;
         }
 
         /**
@@ -251,28 +274,6 @@ public abstract class TraversalPathDelegatedRoleChangeEvent
             return false;
         }
 
-        /**
-         * Apply this Change to a MeshObject in this MeshBase. This method
-         * is intended to make it easy to reproduce Changes that were made in
-         * one MeshBase to MeshObjects in another MeshBase.
-         *
-         * This method will attempt to create a Transaction if none is present on the
-         * current Thread.
-         *
-         * @param otherMeshBase the other MeshBase in which to apply the change
-         * @throws CannotApplyChangeException thrown if the Change could not be applied, e.g because
-         *         the affected MeshObject did not exist in the other MeshBase
-         * @throws TransactionException thrown if a Transaction didn't exist on this Thread and could not be created
-         */
-        public MeshObject applyTo(
-                MeshBase otherMeshBase )
-            throws
-                CannotApplyChangeException,
-                TransactionException
-        {
-            MeshObject ret = theOriginalEvent.applyTo( otherMeshBase );
-            return ret;
-        }
         /**
          * Determine equality.
          * 
