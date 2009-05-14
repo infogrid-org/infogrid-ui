@@ -26,7 +26,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.mesh.NotBlessedException;
+import org.infogrid.mesh.MeshObjectGraphModificationException;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -178,33 +178,19 @@ public abstract class ScheduledExecutorProbeManager
 
         try {
             shadow.executeAsap( new TransactionAction<ProbeUpdateSpecification>() {
-                    /**
-                     * Execute the action. This will be invoked within valid Transaction
-                     * boundaries.
-                     *
-                     * @param tx the Transaction within which the code is invoked
-                     * @return a return object, if any
-                     * @throws TransactionActionException a problem occurred during execution of the TransactionAction
-                     * @throws TransactionException should never be thrown
-                     */
                     public ProbeUpdateSpecification execute(
                             Transaction tx )
                         throws
+                            MeshObjectGraphModificationException,
                             TransactionActionException,
                             TransactionException
                     {
-                        try {
-                            MeshObject               home = shadow.getHomeObject();
-                            ProbeUpdateSpecification spec = (ProbeUpdateSpecification) home.getTypedFacadeFor( ProbeSubjectArea.PROBEUPDATESPECIFICATION );
+                        MeshObject               home = shadow.getHomeObject();
+                        ProbeUpdateSpecification spec = (ProbeUpdateSpecification) home.getTypedFacadeFor( ProbeSubjectArea.PROBEUPDATESPECIFICATION );
 
-                            spec.stopUpdating();
-                            return spec;
-
-                        } catch( NotBlessedException ex ) {
-                            throw new TransactionActionException.Error( ex );
-                        }
+                        spec.stopUpdating();
+                        return spec;
                     }
-
             });
 
         } catch( TransactionException ex ) {

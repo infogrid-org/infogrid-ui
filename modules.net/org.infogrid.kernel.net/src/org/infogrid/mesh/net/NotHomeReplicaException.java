@@ -14,7 +14,7 @@
 
 package org.infogrid.mesh.net;
 
-import org.infogrid.mesh.AbstractMeshException;
+import org.infogrid.mesh.MeshObjectGraphModificationException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshBase;
@@ -29,7 +29,7 @@ import org.infogrid.util.logging.Dumper;
  */
 public class NotHomeReplicaException
         extends
-            AbstractMeshException
+            MeshObjectGraphModificationException
         implements
             CanBeDumped
 {

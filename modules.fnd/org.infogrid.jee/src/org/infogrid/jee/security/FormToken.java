@@ -14,8 +14,8 @@
 
 package org.infogrid.jee.security;
 
-import java.util.Random;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.UniqueStringGenerator;
 
 /**
  * Captures all information in a form token.
@@ -41,15 +41,7 @@ public class FormToken
     public static FormToken createNew(
             long relativeTimeExpires )
     {
-        char [] buf  = new char[ TOKEN_LENGTH ];
-
-        for( int i=0 ; i<TOKEN_LENGTH ; ++i ) {
-            int  value = theGenerator.nextInt( ALLOWED_CHARS.length );
-            char c     = ALLOWED_CHARS[ value ];
-            
-            buf[i]  = c;
-        }
-        String key = new String( buf );
+        String key = theGenerator.createUniqueToken();
         long   now = System.currentTimeMillis();
 
         FormToken ret = new FormToken( key, now, now + relativeTimeExpires );
@@ -163,21 +155,14 @@ public class FormToken
             64 );
     
     /**
-     * The characters that are allowed in the token.
-     */
-    protected static final char [] ALLOWED_CHARS = theResourceHelper.getResourceStringOrDefault(
-            "AllowedChars",
-            "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_" ).toCharArray();
-    
-    /**
      * The time, in milliseconds, from the time the token was created until the token expires.
      */
     public static final long DEFAULT_EXPIRES = theResourceHelper.getResourceLongOrDefault(
             "Expires",
             1000L * 60L * 60L ); // 1 hour
-    
+
     /**
-     * The Random generator we use.
+     * The underlying generator.
      */
-    protected static final Random theGenerator = new Random();
+    protected static final UniqueStringGenerator theGenerator = UniqueStringGenerator.create( TOKEN_LENGTH );
 }

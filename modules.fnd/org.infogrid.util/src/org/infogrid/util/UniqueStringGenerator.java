@@ -45,7 +45,7 @@ public class UniqueStringGenerator
     {
         theLength = length;
 
-        theRandom = new Random(theSeedGenerator.createUniqueToken() );
+        theRandom = new Random( theSeedGenerator.createUniqueToken() );
     }
 
     /**
@@ -56,39 +56,14 @@ public class UniqueStringGenerator
     public synchronized String createUniqueToken()
     {
         char [] buf = new char[ theLength ];
+
         for( int i=0 ; i<theLength ; ++i ) {
-            int n = theRandom.nextInt( 64 );
-            buf[i] = toChar( n );
+            int  value = theRandom.nextInt( ALLOWED_CHARS.length );
+            char c     = ALLOWED_CHARS[ value ];
+
+            buf[i]  = c;
         }
         return new String( buf );
-    }
-
-    /**
-     * Convert a 6-bit number to a printable character.
-     *
-     * @param n the number
-     * @return the character
-     */
-    protected char toChar(
-            int n )
-    {
-        if( n < 0 || n >= 64 ) {
-            throw new IllegalArgumentException( "Cannot convert " + n );
-        }
-        if( n < 26 ) {
-            return (char)( 'A' + n );
-        }
-        if( n < 52 ) {
-            return (char) ( 'a' + ( n-26 ));
-        }
-        if( n < 62 ) {
-            return (char) ( '0' + (n-52 ));
-        }
-        if( n == 63 ) {
-            return '-';
-        } else {
-            return '_';
-        }
     }
 
     /**
@@ -104,6 +79,17 @@ public class UniqueStringGenerator
     /**
      * The generator of seeds.
      */
-    protected static UniqueTokenGenerator<Long> theSeedGenerator
-            = SimpleTimeBasedUniqueLongGenerator.create();
+    protected static UniqueTokenGenerator<Long> theSeedGenerator = SimpleTimeBasedUniqueLongGenerator.create();
+
+    /**
+     * Our ResourceHelper.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( UniqueStringGenerator.class );
+
+    /**
+     * The characters that are allowed in the token.
+     */
+    protected static final char [] ALLOWED_CHARS = theResourceHelper.getResourceStringOrDefault(
+            "AllowedChars",
+            "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-~" ).toCharArray();
 }

@@ -14,25 +14,63 @@
 
 package org.infogrid.meshbase.transaction;
 
+import org.infogrid.mesh.MeshObjectGraphModificationException;
+
 /**
  * An action that is performed within Transaction boundaries.
  *
  * @param <T> the return type of the action
  */
-public interface TransactionAction<T>
+public abstract class TransactionAction<T>
 {
+    /**
+     * Constructor.
+     */
+    public TransactionAction()
+    {
+        theAllOrNothing = false;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param allOrNothing if true, rollback the entire transaction upon an Exception; if false, abort at the location of the Exception
+     */
+    public TransactionAction(
+            boolean allOrNothing )
+    {
+        theAllOrNothing = allOrNothing;
+    }
+
+    /**
+     * Obtain the allOrNothing property.
+     * 
+     * @return the property
+     */
+    public final boolean getAllOrNothing()
+    {
+        return theAllOrNothing;
+    }
+
     /**
      * Execute the action. This will be invoked within valid Transaction
      * boundaries.
      *
      * @param tx the Transaction within which the code is invoked
      * @return a return object, if any
+     * @throws MeshObjectGraphModificationException for API simplicity, this method may throw any MeshObjectGraphModificationException
      * @throws TransactionActionException a problem occurred during execution of the TransactionAction
      * @throws TransactionException should never be thrown
      */
     public abstract T execute(
             Transaction tx )
         throws
+            MeshObjectGraphModificationException,
             TransactionActionException,
             TransactionException;
+
+    /**
+     * If true, rollback the entire transaction upon an Exception; if false, abort at the location of the Exception.
+     */
+    protected boolean theAllOrNothing;
 }

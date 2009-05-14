@@ -15,8 +15,7 @@
 package org.infogrid.kernel.net.TEST.xpriso;
 
 import java.util.concurrent.ScheduledExecutorService;
-import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
-import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.mesh.MeshObjectGraphModificationException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -55,17 +54,15 @@ public class XprisoTest15
                     public NetMeshObject execute(
                             Transaction tx )
                         throws
+                            MeshObjectGraphModificationException,
                             TransactionException,
                             TransactionActionException
                     {
                         try {
                             return ((NetMeshBase)tx.getMeshBase()).getMeshBaseLifecycleManager().createMeshObject(
                                     tx.getMeshBase().getMeshObjectIdentifierFactory().fromExternalForm( "#obj" ));
-                        } catch( MeshObjectIdentifierNotUniqueException ex ) {
-                            throw new TransactionActionException.Error( ex );
+
                         } catch( StringRepresentationParseException ex ) {
-                            throw new TransactionActionException.Error( ex );
-                        } catch( NotPermittedException ex ) {
                             throw new TransactionActionException.Error( ex );
                         }
                     }

@@ -17,6 +17,7 @@ package org.infogrid.meshbase;
 import java.beans.PropertyChangeListener;
 import org.infogrid.mesh.AbstractMeshObject;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectGraphModificationException;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
@@ -851,7 +852,7 @@ public abstract class AbstractMeshBase
             TransactionActionException.Error
     {
         T ret = null;
-        while( true ) {
+        for( int counter = 0 ; counter < MAX_COMMIT_RETRIES ; ++counter ) {
             try {
                 ret = act.execute( tx );
 
@@ -873,12 +874,32 @@ public abstract class AbstractMeshBase
                 log.error( "This should not be possible", ex );
                 throw new RuntimeException( ex );
 
+            } catch( MeshObjectGraphModificationException ex ) {
+                if( act.getAllOrNothing() ) {
+                    log.error( "Rolling back Transaction", ex );
+                    return null; // rollback
+                } else {
+                    // else stay in the loop
+                    log.warn( "Attempting to retry Transaction", ex );
+                }
+
+            } catch( RuntimeException ex ) {
+                log.error( ex );
+                if( act.getAllOrNothing() ) {
+                    log.error( "Rolling back Transaction", ex );
+                    return null; // rollback
+                } else {
+                    // else stay in the loop
+                    log.warn( "Attempting to retry Transaction", ex );
+                }
+
             } finally {
                 if( tx != null ) {
                     tx.rollbackTransaction();
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -1568,4 +1589,9 @@ public abstract class AbstractMeshBase
      * Entry in the resource files, prefixed by the StringRepresentation's prefix.
      */
     public static final String NON_DEFAULT_MESH_BASE_LINK_END_ENTRY = "NonDefaultMeshBaseLinkEndString";
+
+    /**
+     * The maximum number of retries for a Transaction.
+     */
+    public static final int MAX_COMMIT_RETRIES = theResourceHelper.getResourceIntegerOrDefault( "MaxCommitRetries", 5 );
 }

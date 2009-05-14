@@ -32,7 +32,7 @@ import org.infogrid.util.logging.Dumper;
  */
 public class MultiplicityException
         extends
-            AbstractMeshException
+            MeshObjectGraphModificationException
         implements
             CanBeDumped
 {

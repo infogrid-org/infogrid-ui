@@ -23,10 +23,11 @@ import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.util.AbstractLocalizedException;
 
 /**
- * Collects functionality common to Exceptions in this class that allows Exceptions
- * to be more easily serialized and deserialized.
+ * Superclass of all Exceptions that occur when unsuccessfully manipulating the
+ * graph of MeshObjects, or individual MeshObjects. It also collects functionality
+ * that allows subclasses to be more easily serialized and deserialized.
  */
-public abstract class AbstractMeshException
+public abstract class MeshObjectGraphModificationException
         extends
             AbstractLocalizedException
 {
@@ -36,7 +37,7 @@ public abstract class AbstractMeshException
      * @param mb the MeshBase in which this Exception was created
      * @param originatingMeshBaseIdentifier the MeshBaseIdentifier of the MeshBase in which this Exception was created
      */
-    protected AbstractMeshException(
+    protected MeshObjectGraphModificationException(
             MeshBase           mb,
             MeshBaseIdentifier originatingMeshBaseIdentifier )
     {
@@ -51,7 +52,7 @@ public abstract class AbstractMeshException
      * @param originatingMeshBaseIdentifier the MeshBaseIdentifier of the MeshBase in which this Exception was created
      * @param msg the message
      */
-    public AbstractMeshException(
+    public MeshObjectGraphModificationException(
             MeshBase           mb,
             MeshBaseIdentifier originatingMeshBaseIdentifier,
             String             msg )
@@ -69,7 +70,7 @@ public abstract class AbstractMeshException
      * @param originatingMeshBaseIdentifier the MeshBaseIdentifier of the MeshBase in which this Exception was created
      * @param cause the Throwable that caused this Exception
      */
-    public AbstractMeshException(
+    public MeshObjectGraphModificationException(
             MeshBase           mb,
             MeshBaseIdentifier originatingMeshBaseIdentifier,
             Throwable          cause )
@@ -88,7 +89,7 @@ public abstract class AbstractMeshException
      * @param msg the message
      * @param cause the Exception that caused this Exception
      */
-    public AbstractMeshException(
+    public MeshObjectGraphModificationException(
             MeshBase           mb,
             MeshBaseIdentifier originatingMeshBaseIdentifier,
             String             msg,
