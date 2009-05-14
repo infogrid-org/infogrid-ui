@@ -26,6 +26,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyContent;
 import org.infogrid.jee.servlet.InitializationFilter;
+import org.infogrid.util.LocalizedException;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
@@ -1026,8 +1027,15 @@ public class JeeFormatter
 
         if( candidate instanceof ServletException && cause == null ) {
             ret = ((ServletException)candidate).getRootCause(); // stupid inconsistent API
+
+        } else if( candidate instanceof LocalizedException ) {
+            ret = candidate; // it's our's, it will know what to do
+
+        } else if( cause != null ) {
+            ret = determineThrowableToFormat( cause ); // not our's, let's see what we can find
+
         } else {
-            ret = candidate;
+            ret = candidate; // this is the best we can do
         }
         return ret;
     }
