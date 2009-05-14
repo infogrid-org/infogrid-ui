@@ -117,7 +117,7 @@ public class ReturnSynchronizer<K,R>
      * @param thread the Thread
      * @throws ReturnSynchronizerException.TransactionOpenAlready thrown if a transaction is already active on this Thread.
      */
-    public synchronized void beginTransaction(
+    public void beginTransaction(
             Thread thread )
         throws
             ReturnSynchronizerException.TransactionOpenAlready
@@ -126,12 +126,14 @@ public class ReturnSynchronizer<K,R>
             log.traceMethodCallEntry( this, "beginTransaction", thread );
         }
 
-        CS<K,R> found = threadToMonitorTable.get( thread );
-        if( found != null ) {
-            throw new ReturnSynchronizerException.TransactionOpenAlready( this, thread );
+        synchronized( this ) {
+            CS<K,R> found = threadToMonitorTable.get( thread );
+            if( found != null ) {
+                throw new ReturnSynchronizerException.TransactionOpenAlready( this, thread );
+            }
+            CS<K,R> created = new CS<K,R>();
+            threadToMonitorTable.put( thread, created );
         }
-        CS<K,R> created = new CS<K,R>();
-        threadToMonitorTable.put( thread, created );
     }
 
     /**
@@ -154,7 +156,7 @@ public class ReturnSynchronizer<K,R>
      * @param thread the Thread
      * @throws ReturnSynchronizerException.NoTransactionOpen thrown if no transaction is active on this Thread
      */
-    public synchronized void endTransaction(
+    public void endTransaction(
             Thread thread )
         throws
             ReturnSynchronizerException.NoTransactionOpen
@@ -163,9 +165,11 @@ public class ReturnSynchronizer<K,R>
             log.traceMethodCallEntry( this, "endTransaction", thread );
         }
 
-        CS<K,R> found = threadToMonitorTable.remove( thread );
-        if( found == null ) {
-            throw new ReturnSynchronizerException.NoTransactionOpen( this, thread );
+        synchronized( this ) {
+            CS<K,R> found = threadToMonitorTable.remove( thread );
+            if( found == null ) {
+                throw new ReturnSynchronizerException.NoTransactionOpen( this, thread );
+            }
         }
     }
 
@@ -206,17 +210,19 @@ public class ReturnSynchronizer<K,R>
             log.traceMethodCallEntry( this, "addOpenQuery", keyForQuery, thread );
         }
 
-        CS<K,R> semaphore = threadToMonitorTable.get( thread );
-        if( semaphore == null ) {
-            throw new ReturnSynchronizerException.NoTransactionOpen( this, thread );
-        }
-        // out of an abundance of caution we do the following check:
-        for( CS<K,R> current : threadToMonitorTable.values() ) {
-            if( current.hasQuery( keyForQuery ) != null ) {
-                throw new ReturnSynchronizerException.DuplicateKey( this, keyForQuery );
+        synchronized( this ) {
+            CS<K,R> semaphore = threadToMonitorTable.get( thread );
+            if( semaphore == null ) {
+                throw new ReturnSynchronizerException.NoTransactionOpen( this, thread );
             }
+            // out of an abundance of caution we do the following check:
+            for( CS<K,R> current : threadToMonitorTable.values() ) {
+                if( current.hasQuery( keyForQuery ) != null ) {
+                    throw new ReturnSynchronizerException.DuplicateKey( this, keyForQuery );
+                }
+            }
+            semaphore.addOpenQuery( keyForQuery );
         }
-        semaphore.addOpenQuery( keyForQuery );
     }
 
     /**
@@ -240,9 +246,11 @@ public class ReturnSynchronizer<K,R>
             log.traceMethodCallEntry( this, "addFurtherOpenQueryToOpenQuery", existingKeyForQuery, newKeyForQuery );
         }
 
-        for( CS<K,R> current : threadToMonitorTable.values() ) {
-            if( current.hasQuery( existingKeyForQuery ) != null ) {
-                current.addOpenQuery( newKeyForQuery ); // may throw
+        synchronized( this ) {
+            for( CS<K,R> current : threadToMonitorTable.values() ) {
+                if( current.hasQuery( existingKeyForQuery ) != null ) {
+                    current.addOpenQuery( newKeyForQuery ); // may throw
+                }
             }
         }
     }
@@ -259,7 +267,7 @@ public class ReturnSynchronizer<K,R>
      * @return true if the query is known and open, false otherwise
      * @throws ReturnSynchronizerException.DuplicateResult thrown if a result was already deposited for the query
      */
-    public synchronized boolean depositQueryResult(
+    public boolean depositQueryResult(
             K keyForQuery,
             R result )
         throws
@@ -269,13 +277,15 @@ public class ReturnSynchronizer<K,R>
             log.traceMethodCallEntry( this, "queryHasCompleted", keyForQuery, result );
         }
 
-        boolean ret = false;
-        for( CS<K,R> current : threadToMonitorTable.values() ) {
-            if( current.hasQuery( keyForQuery ) != null ) {
-                current.depositQueryResult( keyForQuery, result );
+        synchronized( this ) {
+            boolean ret = false;
+            for( CS<K,R> current : threadToMonitorTable.values() ) {
+                if( current.hasQuery( keyForQuery ) != null ) {
+                    current.depositQueryResult( keyForQuery, result );
+                }
             }
+            return ret;
         }
-        return ret;
     }
 
     /**
@@ -287,7 +297,7 @@ public class ReturnSynchronizer<K,R>
      * @throws ReturnSynchronizerException.UnknownKey thrown if the key was not known for this query
      */
     @SuppressWarnings("unchecked")
-    public synchronized R getResultFor(
+    public R getResultFor(
             K keyForQuery )
         throws
             ReturnSynchronizerException.QueryIncomplete,
@@ -297,15 +307,17 @@ public class ReturnSynchronizer<K,R>
             log.traceMethodCallEntry( this, "getResultFor", keyForQuery );
         }
 
-        for( CS<K,R> current : threadToMonitorTable.values() ) {
-            Object found = current.hasQuery( keyForQuery );
-            if( found == null ) {
-                continue; // perhaps another semaphore has it
-            }
-            if( found == current ) {
-                throw new ReturnSynchronizerException.QueryIncomplete( this, keyForQuery );
-            } else {
-                return (R) found;
+        synchronized( this ) {
+            for( CS<K,R> current : threadToMonitorTable.values() ) {
+                Object found = current.hasQuery( keyForQuery );
+                if( found == null ) {
+                    continue; // perhaps another semaphore has it
+                }
+                if( found == current ) {
+                    throw new ReturnSynchronizerException.QueryIncomplete( this, keyForQuery );
+                } else {
+                    return (R) found;
+                }
             }
         }
         throw new ReturnSynchronizerException.UnknownKey( this, keyForQuery );
@@ -327,18 +339,20 @@ public class ReturnSynchronizer<K,R>
             log.traceMethodCallEntry( this, "isQueryComplete", keyForQuery );
         }
 
-        for( CS<K,R> current : threadToMonitorTable.values() ) {
-            if( current.theResults == null ) {
-                continue;
-            }
-            Object found = current.theResults.get( keyForQuery );
-            if( found == null ) {
-                continue;
-            }
-            if( found != current ) {
-                return true;
-            } else {
-                return false;
+        synchronized( this ) {
+            for( CS<K,R> current : threadToMonitorTable.values() ) {
+                if( current.theResults == null ) {
+                    continue;
+                }
+                Object found = current.theResults.get( keyForQuery );
+                if( found == null ) {
+                    continue;
+                }
+                if( found != current ) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
         throw new ReturnSynchronizerException.UnknownKey( this, keyForQuery );
@@ -357,18 +371,20 @@ public class ReturnSynchronizer<K,R>
             log.traceMethodCallEntry( this, "hasOpenQuery", keyForQuery );
         }
 
-        for( CS<K,R> current : threadToMonitorTable.values() ) {
-            if( current.theResults == null ) {
-                continue;
-            }
-            Object found = current.theResults.get( keyForQuery );
-            if( found == null ) {
-                continue;
-            }
-            if( found == current ) {
-                return true;
-            } else {
-                return false;
+        synchronized( this ) {
+            for( CS<K,R> current : threadToMonitorTable.values() ) {
+                if( current.theResults == null ) {
+                    continue;
+                }
+                Object found = current.theResults.get( keyForQuery );
+                if( found == null ) {
+                    continue;
+                }
+                if( found == current ) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
         return false;
@@ -392,15 +408,17 @@ public class ReturnSynchronizer<K,R>
      * @param t the Thread
      * @return true if all queries for a given Thread are complete
      */
-    public synchronized boolean areAllQueriesCompleteForThread(
+    public boolean areAllQueriesCompleteForThread(
             Thread t )
     {
         if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "areAllQueriesCompleteForThread", t );
         }
 
-        CS<K,R> found = threadToMonitorTable.get( t );
-        return found == null;
+        synchronized( this ) {
+            CS<K,R> found = threadToMonitorTable.get( t );
+            return found == null;
+        }
     }
 
     /**
@@ -408,15 +426,17 @@ public class ReturnSynchronizer<K,R>
      *
      * @return true if all queries are complete
      */
-    public synchronized boolean areAllQueriesComplete()
+    public boolean areAllQueriesComplete()
     {
         if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "areAllQueriesComplete" );
         }
 
-        for( CS<K,R> current : threadToMonitorTable.values() ) {
-            if( current != null ) {
-                return false;
+        synchronized( this ) {
+            for( CS<K,R> current : threadToMonitorTable.values() ) {
+                if( current != null ) {
+                    return false;
+                }
             }
         }
         return true;
@@ -493,8 +513,10 @@ public class ReturnSynchronizer<K,R>
         if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "disablingError", ex );
         }
-        for( CS<K,R> current : threadToMonitorTable.values() ) {
-            current.abandon();
+        synchronized( this ) {
+            for( CS<K,R> current : threadToMonitorTable.values() ) {
+                current.abandon();
+            }
         }
     }
 
