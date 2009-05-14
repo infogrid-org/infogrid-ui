@@ -42,9 +42,12 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.meshbase.transaction.TransactionListener;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.ModelBase;
+import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.AbstractLiveDeadObject;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.CannotFindHasIdentifierException;
+import org.infogrid.util.Factory;
+import org.infogrid.util.FactoryException;
 import org.infogrid.util.FlexibleListenerSet;
 import org.infogrid.util.FlexiblePropertyChangeListenerSet;
 import org.infogrid.util.Identifier;
@@ -806,9 +809,22 @@ public abstract class AbstractMeshBase
             TransactionException,
             TransactionActionException.Error
     {
-        Transaction tx = createTransactionNowIfNeeded();
+        Factory<Void,Transaction,Void> txFactory = new AbstractFactory<Void,Transaction,Void>() {
+                public Transaction obtainFor(
+                        Void key,
+                        Void argument )
+                    throws
+                        FactoryException
+                {
+                    try {
+                        return createTransactionNowIfNeeded();
+                    } catch( TransactionException ex ) {
+                        throw new FactoryException( this, ex );
+                    }
+                }
+        };
 
-        T ret = executeTransactionAction( tx, act );
+        T ret = executeTransactionAction( txFactory, act );
         return ret;
     }
 
@@ -828,16 +844,30 @@ public abstract class AbstractMeshBase
             TransactionException,
             TransactionActionException.Error
     {
-        Transaction tx = createTransactionAsapIfNeeded();
+        Factory<Void,Transaction,Void> txFactory = new AbstractFactory<Void,Transaction,Void>() {
+                public Transaction obtainFor(
+                        Void key,
+                        Void argument )
+                    throws
+                        FactoryException
+                {
+                    try {
+                        return createTransactionAsapIfNeeded();
 
-        T ret = executeTransactionAction( tx, act );
+                    } catch( TransactionException ex ) {
+                        throw new FactoryException( this, ex );
+                    }
+                }
+        };
+
+        T ret = executeTransactionAction( txFactory, act );
         return ret;
     }
 
     /**
      * Helper method to execute a TransactionAction.
      *
-     * @param tx the Transaction
+     * @param txFactory create the Transaction when needed
      * @param act the TransactionAction
      * @return a TransactionAction-specific return value
      * @throws TransactionException thrown if the TransactionAction's implementation contained a programming error
@@ -845,23 +875,33 @@ public abstract class AbstractMeshBase
      * @param <T> the type of return value
      */
     protected <T> T executeTransactionAction(
-            Transaction          tx,
-            TransactionAction<T> act )
+            Factory<Void,Transaction,Void> txFactory,
+            TransactionAction<T>           act )
         throws
             TransactionException,
             TransactionActionException.Error
     {
-        T ret = null;
+        T         ret         = null;
+        Throwable firstThrown = null;
+
         for( int counter = 0 ; counter < MAX_COMMIT_RETRIES ; ++counter ) {
 
-            Throwable thrown = null;
+            Transaction tx     = null;
+            Throwable   thrown = null;
             try {
+                tx = txFactory.obtainFor( null, null );
+
                 ret = act.execute( tx );
 
                 tx.commitTransaction();
                 tx = null;
 
                 return ret;
+
+            } catch( FactoryException ex ) {
+                thrown = ex;
+                log.error( ex );
+                return null;
 
             } catch( TransactionActionException.Rollback ex ) {
                 return null;
@@ -903,8 +943,22 @@ public abstract class AbstractMeshBase
                     tx.rollbackTransaction( thrown );
                 }
             }
+            if( firstThrown == null ) {
+                firstThrown = thrown;
+            }
         }
-        return null;
+        if( firstThrown == null ) {
+            return null;
+
+        } else if( firstThrown instanceof TransactionException ) {
+            throw (TransactionException) firstThrown;
+
+        } else if( firstThrown instanceof TransactionActionException.Error ) {
+            throw (TransactionActionException.Error) firstThrown;
+
+        } else {
+            throw new TransactionActionException.Error( firstThrown );
+        }
     }
 
     /**
@@ -1204,8 +1258,10 @@ public abstract class AbstractMeshBase
                 {
                     if( flag.intValue() == 0 ) {
                         listener.transactionStarted( tx );
-                    } else {
+                    } else if( flag.intValue() == 1 ) {
                         listener.transactionCommitted( tx );
+                    } else {
+                        listener.transactionRolledback( tx );
                     }
                 }
             };
@@ -1262,12 +1318,51 @@ public abstract class AbstractMeshBase
     }
 
     /**
+     * Indicate that a Transaction on this MeshBase has been rolled back.
+     * This is only called by a Transaction itself, and not the application programmer.
+     *
+     * @param thrown the Throwable that caused us to attempt to rollback the Transaction
+     */
+    public final void transactionRolledback(
+            Throwable thrown )
+    {
+        if( log.isTraceEnabled() ) {
+            log.traceMethodCallEntry( this, "transactionRolledback", thrown );
+        }
+
+        Transaction oldTransaction;
+        synchronized( this ) {
+            oldTransaction = theCurrentTransaction;
+
+            log.assertLog( oldTransaction, "cannot roll back empty transaction" );
+
+            theCurrentTransaction = null;
+        }
+
+        transactionRolledbackHook( oldTransaction );
+
+        fireTransactionRolledbackEvent( oldTransaction );
+    }
+
+    /**
      * This method may be overridden by subclasses to perform suitable actions when a
      * Transaction was committed.
      *
      * @param tx Transaction the Transaction that was committed
      */
     protected void transactionCommittedHook(
+            Transaction tx )
+    {
+        // noop
+    }
+
+    /**
+     * This method may be overridden by subclasses to perform suitable actions when a
+     * Transaction was rolled back.
+     *
+     * @param tx Transaction the Transaction that was rolled back
+     */
+    protected void transactionRolledbackHook(
             Transaction tx )
     {
         // noop
@@ -1422,6 +1517,21 @@ public abstract class AbstractMeshBase
         FlexibleListenerSet<TransactionListener,Transaction,Integer> listeners = theTransactionListeners;
         if( listeners != null ) {
             listeners.fireEvent( theTransaction, 1 );
+        }
+    }
+
+    /**
+      * Notify TransactionListeners that a Transaction has been rolled back.
+      * This shall not be invoked by the application programmer.
+      *
+      * @param theTransaction the Transaction that has been rolled back
+      */
+    public void fireTransactionRolledbackEvent(
+            Transaction theTransaction )
+    {
+        FlexibleListenerSet<TransactionListener,Transaction,Integer> listeners = theTransactionListeners;
+        if( listeners != null ) {
+            listeners.fireEvent( theTransaction, 2 );
         }
     }
 

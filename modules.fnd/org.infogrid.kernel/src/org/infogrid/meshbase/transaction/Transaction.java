@@ -101,7 +101,7 @@ public abstract class Transaction
     }
 
     /**
-     * Currently not implemented.
+     * Roll back all changes performed within this Transaction so far.
      *
      * @param thrown the Throwable that caused us to attempt to rollback the Transaction
      */
@@ -113,7 +113,7 @@ public abstract class Transaction
         }
 
         // go backwards in the change set
-        CursorIterator<Change> iter = theChangeSet.iterator();
+        CursorIterator<Change> iter = ChangeSet.createCopy( theChangeSet ).iterator();
         while( iter.hasPrevious() ) {
             Change current = iter.previous();
 

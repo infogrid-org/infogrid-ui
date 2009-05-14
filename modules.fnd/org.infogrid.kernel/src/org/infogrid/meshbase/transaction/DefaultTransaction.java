@@ -55,6 +55,19 @@ public class DefaultTransaction
     }
 
     /**
+     * Roll back all changes performed within this Transaction so far.
+     *
+     * @param thrown the Throwable that caused us to attempt to rollback the Transaction
+     */
+    @Override
+    public synchronized void rollbackTransaction(
+            Throwable thrown )
+    {
+        super.rollbackTransaction( thrown );
+        ((AbstractMeshBase)theTransactable).transactionRolledback( thrown );
+    }
+
+    /**
      * This hook is invoked just prior to committing the Transaction. This allows subclasses to hook
      * in before the commit actually happens.
      */

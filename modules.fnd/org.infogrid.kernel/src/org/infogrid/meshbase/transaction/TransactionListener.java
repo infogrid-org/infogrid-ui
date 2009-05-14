@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,16 +22,24 @@ public interface TransactionListener
     /**
       * Indicates that a Transaction has been started.
       *
-      * @param theTransaction the Transaction that was started
+      * @param tx the Transaction that was started
       */
     public abstract void transactionStarted(
-            Transaction theTransaction );
+            Transaction tx );
 
     /**
       * Indicates that a Transaction has been committed.
       *
-      * @param theTransaction the Transaction that was committed
+      * @param tx the Transaction that was committed
       */
     public abstract void transactionCommitted(
-            Transaction theTransaction );
+            Transaction tx );
+
+    /**
+     * Indicates that a Transaction has been rolled back.
+     *
+     * @param tx the Transaction that was rolled back
+     */
+    public abstract void transactionRolledback(
+            Transaction tx );
 };
