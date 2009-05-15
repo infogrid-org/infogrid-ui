@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 
 /**
@@ -170,12 +171,14 @@ public interface JeeViewlet
      * Process the incoming RestfulRequest.
      * 
      * @param request the incoming RestfulRequest
+     * @param toView the MeshObjectsToView, mostly for error reporting
      * @param response the StructuredResponse into which to write the result
      * @throws ServletException thrown if an error occurred
      * @throws IOException thrown if writing the output failed
      */
     public void processRequest(
             RestfulRequest     request,
+            MeshObjectsToView  toView,
             StructuredResponse response )
         throws
             ServletException,

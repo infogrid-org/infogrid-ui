@@ -173,7 +173,7 @@ public class ViewletDispatcherServlet
                     viewlet.performBeforeGet( restfulRequest, structured );
                 }
 
-                viewlet.processRequest( restfulRequest, structured );
+                viewlet.processRequest( restfulRequest, toView, structured );
 
             } catch( RuntimeException t ) {
                 thrown = t;

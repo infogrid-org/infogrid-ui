@@ -400,6 +400,23 @@ public abstract class CannotViewException
         }
 
         /**
+         * Constructor.
+         *
+         * @param v which Viewlet could not view
+         * @param o which MeshObjectsToView it could not view
+         * @param message a message, if any
+         * @param cause the underlying internal Exception, if any
+         */
+        public InternalError(
+                Viewlet           v,
+                MeshObjectsToView o,
+                String            message,
+                Throwable         cause )
+        {
+            super( v, o, message, cause );
+        }
+
+        /**
          * Obtain a String representation of this instance that can be shown to the user.
          *
          * @param rep the StringRepresentation
@@ -416,15 +433,23 @@ public abstract class CannotViewException
             throws
                 StringifierException
         {
+            String msg = getMessage();
+            if( msg == null ) {
+                msg = "";
+            } else if( msg.length() > 0 ) {
+                msg = " " + msg;
+            }
+
             return rep.formatEntry(
                     getClass(),
                     "InternalErrorString",
                     pars,
-                    theViewlet.getName(),
-                    theViewlet.getUserVisibleName(),
-                    theObjectsToView.getSubject(),
-                    theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
+            /* 0 */ theViewlet.getName(),
+            /* 1 */ theViewlet.getUserVisibleName(),
+            /* 2 */ theObjectsToView.getSubject(),
+            /* 3 */ theObjectsToView.getSubject().getIdentifier(),
+            /* 4 */ IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ),
+            /* 5 */ msg );
         }
     }
 }

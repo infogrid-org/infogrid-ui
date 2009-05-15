@@ -96,6 +96,7 @@ public class ProxyViewlet
      * Override processing the incoming RestfulRequest.
      * 
      * @param restful the incoming RestfulRequest
+     * @param toView the MeshObjectsToView, mostly for error reporting
      * @param structured the StructuredResponse into which to write the result
      * @throws javax.servlet.ServletException processing failed
      * @throws java.io.IOException I/O error
@@ -103,6 +104,7 @@ public class ProxyViewlet
     @Override
     public void processRequest(
             RestfulRequest     restful,
+            MeshObjectsToView  toView,
             StructuredResponse structured )
         throws
             ServletException,
@@ -122,6 +124,6 @@ public class ProxyViewlet
             throw new ServletException( ex );
         }
         
-        super.processRequest( restful, structured );
+        super.processRequest( restful, toView, structured );
     }
 }

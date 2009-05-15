@@ -304,12 +304,14 @@ public abstract class AbstractJeeViewlet
      * overridden by subclasses.
      * 
      * @param restful the incoming RestfulRequest
+     * @param toView the MeshObjectsToView, mostly for error reporting
      * @param structured the StructuredResponse into which to write the result
      * @throws javax.servlet.ServletException processing failed
      * @throws java.io.IOException I/O error
      */
     public void processRequest(
             RestfulRequest     restful,
+            MeshObjectsToView  toView,
             StructuredResponse structured )
         throws
             ServletException,
@@ -335,7 +337,15 @@ public abstract class AbstractJeeViewlet
 
                 if( dispatcher != null ) {
                     JeeTemplateUtils.runRequestDispatcher( dispatcher, restful.getSaneRequest(), structured );
-                } // FIXME? Should there be an else here, throwing an Exception?
+
+                } else {
+                    throw new ServletException(
+                            new CannotViewException.InternalError(
+                                    this,
+                                    toView,
+                                    "Cannot find RequestDispatcher at " + servletPath,
+                                    null ));
+                }
             }
 
         } finally {
