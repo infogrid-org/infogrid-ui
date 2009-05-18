@@ -12,7 +12,6 @@ div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet tr.satitle > td {
     border-width: 2px 1px 1px 1px;
 }
 
-
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.amo tr.amotitle span.label,
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.sa tr.satitle span.label,
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.property tr.propertytitle span.label {
@@ -50,9 +49,6 @@ div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.relationshipcon
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.amo {
     margin-top: 20px;
 }
-div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.relationshipcontent span.multiplicity {
-    font-size: 0.7em;
-}
 
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.amoinheritance ul {
     margin: 0;
@@ -68,7 +64,8 @@ div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.entitycontent t
 }
 
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.roletypes {
-    border: 1px solid rgb(0,80,144);
+    border-width: 1px;
+    border-style: solid;
 }
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.roletypes .left {
     text-align: left !important;

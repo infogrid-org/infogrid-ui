@@ -3,15 +3,24 @@
 body {
     background: #dadada;
 }
-div.canvas-main {
-    background: #ffffff;
-}
 
 h1 {
     border-color: rgb(0,80,144);
 }
+h2 {
+    color: rgb(0,80,144);
+}
+textarea {
+    border-color: #808080;
+}
+
+
 .footnote {
     color: #606060;
+}
+
+div.canvas-main {
+    background: #ffffff;
 }
 
 #canvas-app-row > div.canvas-main {
@@ -42,7 +51,19 @@ div.errors > h2 {
 
 div.viewlet {
     border-color: #d0d0d0;
-    background: #f4f4f4;
+}
+button.commit {
+    border-color: #404040;
+    background-image: url(../../images/tick.png);
+}
+div.viewlet-state {
+    background-color: white;
+    background-image: url(../../../../../../s/images/white-shift-vertical-short.png);
+    border-color: rgb(0,80,144);
+}
+button.cancel {
+    border-color: #404040;
+    background-image: url(../../images/cancel.png);
 }
 
 div.org-infogrid-jee-taglib-candy-OverlayTag {
@@ -85,7 +106,6 @@ div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr
     border-bottom: 0px;
 }
 
-
 div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag {
     background: white;
     border-color: #808080;
@@ -99,10 +119,14 @@ div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet table.set > tbody > 
     background: #f6f6ff;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr > td {
-    border-color: #a0a0a0;
+    border-color: #d0d0d0;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr > td > ul > li > p {
     border-color: #d0d0d0 !important;
+}
+div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > thead > tr > * {
+    border-color: #d0d0d0 #d0d0d0 rgb(0,80,144) #d0d0d0;
+    background: url(../../../../../../s/images/white-shift-vertical-short.png) top repeat-x;
 }
 
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet tr.satitle,
@@ -134,3 +158,25 @@ div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.content {
     border-color: #808080;
     background: white;
 }
+td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar {
+    background: #f0f0f0;
+    border-color: #e0e0e0;
+}
+td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content {
+    background: #ffffff;
+    border-color: #e0e0e0;
+}
+table.dialog-buttons {
+    border-top-color: #808080;
+}
+
+div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
+    background: #808080;
+}
+div.org-infogrid-jee-taglib-candy-OverlayTag {
+    background: #ffffff;
+}
+div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.roletypes {
+    border-color: rgb(0,80,144);
+}
+
