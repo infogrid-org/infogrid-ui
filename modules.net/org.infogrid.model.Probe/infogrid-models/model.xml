@@ -22,7 +22,7 @@
 
         <entitytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification">
             <name>ProbeUpdateSpecification</name>
-            <username>A Probe's update specification</username>
+            <username>Probe Update Specification</username>
             <userdescription>A Home Object of a Probe is blessed with a subtype of this ProbeUpdateSpecification.
 It expresses meta-data such as when the Probe was last run, when it should be run next etc.
 Subtypes may implement different algorithms to determine the respective data.</userdescription>
@@ -104,7 +104,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
 
             <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_LastProbeRun">
                 <name>LastProbeRun</name>
-                <username>Time the Probe was run last</username>
+                <username>Time of most recent Probe run</username>
                 <userdescription>The time that the last Probe run was attempted (successful or unsuccessful).
                   If this is not given, it means that the Probe was never run. This value
                   is given in Java's System.currentTimeMillis() format.</userdescription>
@@ -126,7 +126,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
 
             <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_LastRunUsedWritableProbe">
                 <name>LastRunUsedWritableProbe</name>
-                <username>Last run used writable Probe</username>
+                <username>Runs as Writable Probe</username>
                 <userdescription>If this is true, the last Probe run used a WritableProbe.</userdescription>
                 <datatype>
                     <BooleanDataType/>
@@ -147,7 +147,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
 
         <entitytype ID="org.infogrid.model.Probe/OneTimeOnlyProbeUpdateSpecification">
             <name>OneTimeOnlyProbeUpdateSpecification</name>
-            <username>A Probe's update specification that updates once only</username>
+            <username>Once-ever Probe Update Specification</username>
             <supertype>org.infogrid.model.Probe/ProbeUpdateSpecification</supertype>
 
             <implementsMethod><![CDATA[
@@ -249,7 +249,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
 
         <entitytype ID="org.infogrid.model.Probe/PeriodicProbeUpdateSpecification">
             <name>PeriodicProbeUpdateSpecification</name>
-            <username>A Probe's update specification that updates periodically</username>
+            <username>Periodic Probe Update Specification</username>
             <supertype>org.infogrid.model.Probe/ProbeUpdateSpecification</supertype>
 
             <implementsMethod><![CDATA[
@@ -374,7 +374,7 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
 
         <entitytype ID="org.infogrid.model.Probe/AdaptivePeriodicProbeUpdateSpecification">
             <name>AdaptivePeriodicProbeUpdateSpecification</name>
-            <username>A Probe's update specification that updates periodically with an adaptive period</username>
+            <username>Adaptive Period Probe Update Specification</username>
             <supertype>org.infogrid.model.Probe/ProbeUpdateSpecification</supertype>
 
             <implementsMethod><![CDATA[
