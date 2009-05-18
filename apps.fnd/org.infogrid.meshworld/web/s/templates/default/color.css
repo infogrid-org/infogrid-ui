@@ -52,18 +52,18 @@ div.errors > h2 {
 div.viewlet {
     border-color: #d0d0d0;
 }
+
 button.commit {
     border-color: #404040;
-    background-image: url(../../images/tick.png);
 }
+button.cancel {
+    border-color: #404040;
+}
+
 div.viewlet-state {
     background-color: white;
     background-image: url(../../../../../../s/images/white-shift-vertical-short.png);
     border-color: rgb(0,80,144);
-}
-button.cancel {
-    border-color: #404040;
-    background-image: url(../../images/cancel.png);
 }
 
 div.org-infogrid-jee-taglib-candy-OverlayTag {
@@ -179,4 +179,3 @@ div.org-infogrid-jee-taglib-candy-OverlayTag {
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.roletypes {
     border-color: rgb(0,80,144);
 }
-

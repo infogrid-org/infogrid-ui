@@ -46,33 +46,26 @@ div.org-infogrid-jee-taglib-candy-OverlayTag {
 div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
     background: #808080;
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > div.audit,
-div.org-infogrid-jee-viewlet-propertysheet-net-NetPropertySheetViewlet > div.audit {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > div.audit {
     border-color: #808080;
     background: #ffffff;
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table,
-div.org-infogrid-jee-viewlet-propertysheet-net-NetPropertySheetViewlet > table {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table {
     border: 1px solid #808080;
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > thead > tr > th,
-div.org-infogrid-jee-viewlet-propertysheet-net-NetPropertySheetViewlet > table > thead > tr > th {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > thead > tr > th {
     border: #808080 1px solid;
     background-image: url(../../images/white-shift-vertical-short.png);
     background-repeat: repeat-x;
 }
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > .type,
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > tbody > tr > th.entityType,
-div.org-infogrid-jee-viewlet-propertysheet-net-NetPropertySheetViewlet > table > * > tr > .type,
-div.org-infogrid-jee-viewlet-propertysheet-net-NetPropertySheetViewlet > table > tbody > tr > th.entityType {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > tbody > tr > th.entityType {
     background: rgb(239,239,255);
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td,
-div.org-infogrid-jee-viewlet-propertysheet-net-NetPropertySheetViewlet > table > * > tr > td {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td {
     background: white;
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > *,
-div.org-infogrid-jee-viewlet-propertysheet-net-NetPropertySheetViewlet > table > * > tr > * {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > * {
     border-color: #808080;
 }
 div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag {

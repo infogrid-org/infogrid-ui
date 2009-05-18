@@ -8,6 +8,94 @@ div.canvas-main {
     margin: 0 auto;
     padding: 0 20px;
 }
+div.audit {
+    font-size: 0.7em;
+}
+textarea {
+    width: 100%;
+    min-height: 200px;
+    border-width: 1px;
+    border-style: solid;
+    margin: 0;
+    padding: 0;
+}
+
+span.multiplicity {
+    font-size: 0.7em;
+}
+button.cancel,
+button.commit {
+    width: 80px;
+    padding: 2px 2px 2px 18px;
+    -moz-border-radius: 4px;
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+table.dialog-buttons {
+    border-top-width: 1px;
+    border-top-style: dotted;
+    width: 100%;
+    margin-top: 20px;
+    }
+table.dialog-buttons > * > tr > td {
+    border-width: 0;
+    text-align: center;
+    padding: 15px 0 5px 0;
+    width: 33.3%
+}
+
+div.viewlet {
+    border: 1px solid;
+    padding: 10px 10px 10px 20px;
+    -moz-border-radius: 20px;
+    clear: right;
+    margin: 0px;
+}
+div.viewlet-state {
+    float: right;
+    background-position: top;
+    background-repeat: repeat-x;
+    border-width: 1px;
+    border-style: solid;
+    -moz-border-radius: 8px;
+    padding: 10px;
+    font-size: 0.7em;
+    margin: 0 0 10px 10px;
+    padding: 5px;
+}
+
+div.slide-in-button {
+    float: right;
+    padding: 4px;
+    font-style: italic;
+    line-height: 12px;
+}
+
+div.errors {
+    width: 90%;
+    margin: 10px auto;
+    padding: 10px;
+    border: 1px solid;
+}
+div.errors .stacktrace {
+    font-size: 12px;
+    overflow-x: scroll;
+}
+div.errors > h2 {
+    margin: 0;
+}
+div.error {
+    margin: 10px 10px 10px 20px;
+}
+a.infogrid {
+    float: right;
+    margin-left: 10px;
+    margin-top: 12px;
+}
+div.footnote > p {
+    margin: 0;
+    padding: 0;
+}
 
 #canvas-top-row {
     margin: 0;
@@ -55,47 +143,6 @@ img#app-logo {
     border-width: 1px 0 0 0;
 }
 
-div.viewlet {
-    border: 1px solid;
-    padding: 10px 10px 10px 20px;
-    -moz-border-radius: 20px;
-    clear: right;
-    margin: 0px;
-}
-
-div.slide-in-button {
-    float: right;
-    padding: 4px;
-    font-style: italic;
-    line-height: 12px;
-}
-
-div.errors {
-    width: 90%;
-    margin: 10px auto;
-    padding: 10px;
-    border: 1px solid;
-}
-div.errors .stacktrace {
-    font-size: 12px;
-    overflow-x: scroll;
-}
-div.errors > h2 {
-    margin: 0;
-}
-div.error {
-    margin: 10px 10px 10px 20px;
-}
-a.infogrid {
-    float: right;
-    margin-left: 10px;
-    margin-top: 12px;
-}
-div.footnote > p {
-    margin: 0;
-    padding: 0;
-}
-
 div.org-infogrid-model-primitives-BlobValue a,
 div.org-infogrid-model-primitives-BooleanValue a,
 div.org-infogrid-model-primitives-ColorValue a,
@@ -119,33 +166,30 @@ span.org-infogrid-model-primitives-ColorValue {
     padding: 0 1em;
 }
 
-table.dialog-buttons {
-    border: dotted #808080 !important;
-    border-width: 1px 0 0 0 !important;
-    width: 100%;
-    margin-top: 20px;
-}
-table.dialog-buttons > tbody > tr > td {
-    border: 0 !important;
-    text-align: center;
-    padding: 15px 0 5px 0;
-    width: 33.3%
-}
 div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show input,
 div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show textarea {
     width: 330px;
 }
 
-div.viewlet-state {
-    float: right;
-    background-color: white;
-    background-image: url(../../../../../../s/images/white-shift-vertical-short.png);
-    background-position: top;
-    background-repeat: repeat-x;
-    border: 1px solid rgb(0,80,144);
-    -moz-border-radius: 8px;
-    padding: 10px;
+div.org-infogrid-jee-taglib-mesh-RefreshTag {
     font-size: 0.7em;
-    margin: 0 0 10px 10px;
-    padding: 5px;
+}
+div.org-infogrid-jee-taglib-viewlet-ChangeViewletStateTag {
+    font-size: 0.7em;
+}
+div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag,
+div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag-expanded {
+    font-size: 0.7em;
+}
+div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag > h3,
+div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag-expanded > h3 {
+    font-size: 1em;
+}
+
+span.org-infogrid-util-MeshTypeIdentifier {
+    font-family: Courier;
+    font-size: 70%;
+}
+div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr > td {
+    font-size: 0.7em;
 }
