@@ -277,18 +277,19 @@ public class DefaultAnetMeshObjectIdentifier
             for( int i=0 ; i<meshObjectExternalForm.length() ; ++i ) {
                 char c = meshObjectExternalForm.charAt( i );
                 switch( c ) {
+                    case '.':
+                    case ':':
+                    case '/':
                     case '#':
-                        buf.append( "%23" );
-                        break;
                     case '?':
-                        buf.append( "%3F" );
-                        break;
                     case '&':
-                        buf.append( "%26" );
-                        break;
                     case ';':
-                        buf.append( "%3B" );
+                    case '%':
+                        buf.append( '%' );
+                        buf.append( Integer.toHexString( ((int)c) / 16 ));
+                        buf.append( Integer.toHexString( ((int)c) % 16 ));
                         break;
+
                     default:
                         buf.append( c );
                         break;

@@ -31,6 +31,7 @@
   <requires name="org.infogrid.net.local"/>
   <requires name="org.infogrid.model.Feeds"/>
   <requires name="org.infogrid.model.Probe"/>
+  <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.probe"/>
   <requires name="org.infogrid.probe.feeds"/>
   <requires name="org.infogrid.util"/>

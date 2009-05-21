@@ -32,7 +32,7 @@
                 <datatype>
                     <BlobDataType default="theTextHtmlType"/>
                 </datatype>
-                <defaultvalue><![CDATA[mime:text/html <p>(Wiki Object Placeholder)</p>]]></defaultvalue>
+                <defaultvalue><![CDATA[<p>(Wiki Object Placeholder)</p>]]></defaultvalue>
             </propertytype>
         </entitytype>
     </subjectarea>

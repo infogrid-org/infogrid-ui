@@ -200,7 +200,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
     }
 
     /**
-     * Overridable method to create and populate a ProbeDirectory apporpriate for this
+     * Overridable method to create and populate a ProbeDirectory appropriate for this
      * application.
      *
      * @param meshBaseIdentifierFactory the NetMeshBaseIdentifierFactory to us

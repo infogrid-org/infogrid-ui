@@ -166,6 +166,8 @@ public class AtomProbe
             if( entryGuid == null ) {
                 entryGuid = String.valueOf( j ); // FIXME? Is this a good default?
             }
+            entryGuid = ensureLocalGuid( entryGuid );
+
             if( entryContentMime == null || entryContentMime.length() == 0 ) {
                 entryContentMime = "text/plain";
             } else if( "text".equals( entryContentMime )) {

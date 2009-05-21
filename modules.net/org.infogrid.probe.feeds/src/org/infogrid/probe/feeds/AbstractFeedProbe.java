@@ -53,6 +53,7 @@ import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.xml.MeshObjectSetProbeTags;
 import org.infogrid.probe.xml.XmlDOMProbe;
+import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationParseException;
 import org.w3c.dom.Document;
@@ -578,5 +579,40 @@ public abstract class AbstractFeedProbe
             }
         }
         return null;
+    }
+
+    /**
+     * Make sure a GUID is not accidentially interpreted as an external NetMeshObjectIdentifier.
+     *
+     * @param raw the raw form, in the feed
+     * @return the escaped form
+     */
+    protected String ensureLocalGuid(
+            String raw )
+    {
+        StringBuilder ret = new StringBuilder( raw.length() * 5 / 4 ); // fudge
+        for( int i=0 ; i<raw.length() ; ++i ) {
+            char c = raw.charAt( i );
+
+            switch( c ) {
+                case '.':
+                case ':':
+                case '/':
+                case '#':
+                case '?':
+                case '&':
+                case ';':
+                case '%':
+                    ret.append( '%' );
+                    ret.append( Integer.toHexString( ((int)c) / 16 ));
+                    ret.append( Integer.toHexString( ((int)c) % 16 ));
+                    break;
+
+                default:
+                    ret.append( c );
+                    break;
+            }
+        }
+        return ret.toString();
     }
 }

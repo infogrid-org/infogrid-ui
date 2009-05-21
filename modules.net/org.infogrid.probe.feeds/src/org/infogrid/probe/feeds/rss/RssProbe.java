@@ -179,6 +179,7 @@ public class RssProbe
                 if( itemGuid == null || itemGuid.length() == 0 ) {
                     itemGuid = String.valueOf( i ) + "-" + String.valueOf( j ); // FIXME? Is this a good default?
                 }
+                itemGuid = ensureLocalGuid( itemGuid );
 
                 NetMeshObject item = createExtendedInfoGridFeedEntryObject(
                         dataSourceIdentifier,
