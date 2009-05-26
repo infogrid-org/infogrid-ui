@@ -21,22 +21,22 @@
   <link>http://alternate-feed.no.where.example.com</link>
   <generator>The test file generator</generator>
   <ig:MeshType>org.infogrid.model.Test/C</ig:MeshType>
-  <ig:Relationship ID="#def"/>
+  <ig:Relationship ID="def"/>
 
   <item>
-   <guid>#abc</guid>
+   <guid>abc</guid>
    <ig:MeshType>org.infogrid.model.Test/B</ig:MeshType>
    <ig:Property type="org.infogrid.model.Test/B_Z"><ig:EnumeratedValue>Value3</ig:EnumeratedValue></ig:Property>
-   <ig:Relationship ID="#def">
+   <ig:Relationship ID="def">
     <ig:Role type="org.infogrid.model.Test/RR-D"/>
    </ig:Relationship>
   </item>
 
   <item>
-   <guid>#def</guid>
+   <guid>def</guid>
    <ig:MeshType>org.infogrid.model.Test/AA</ig:MeshType>
    <ig:MeshType>org.infogrid.model.Test/B</ig:MeshType>
-   <ig:Relationship ID="#abc">
+   <ig:Relationship ID="abc">
     <ig:Role type="org.infogrid.model.Test/RR-S"/>
    </ig:Relationship>
    <ig:Relationship ID=""/>

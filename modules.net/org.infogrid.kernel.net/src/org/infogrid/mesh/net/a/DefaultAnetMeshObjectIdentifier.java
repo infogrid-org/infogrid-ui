@@ -265,15 +265,30 @@ public class DefaultAnetMeshObjectIdentifier
         String meshObjectExternalForm;
         String meshBaseExternalForm;
         if( meshBase != null ) {
-            meshBaseExternalForm = meshBase.getIdentifier().toExternalForm();
-
-            if( getNetMeshBaseIdentifier().equals( meshBase.getIdentifier() )) {
-                meshObjectExternalForm = toLocalExternalForm();
-            } else {
-                meshObjectExternalForm = toExternalForm();
-            }
+            meshBaseExternalForm   = meshBase.getIdentifier().toExternalForm();
+            meshObjectExternalForm = toLocalExternalForm(); // only escape localIds
 
             StringBuffer buf = new StringBuffer();
+
+            if( !getNetMeshBaseIdentifier().equals( meshBase.getIdentifier() )) {
+                String there = getNetMeshBaseIdentifier().toExternalForm();
+                for( int i=0 ; i<there.length() ; ++i ) {
+                    char c = there.charAt( i );
+                    switch( c ) {
+                        case '?':
+                        case '&':
+                            buf.append( '%' );
+                            buf.append( Integer.toHexString( ((int)c) / 16 ));
+                            buf.append( Integer.toHexString( ((int)c) % 16 ));
+                            break;
+
+                        default:
+                            buf.append( c );
+                            break;
+                    }
+                }
+            }
+
             for( int i=0 ; i<meshObjectExternalForm.length() ; ++i ) {
                 char c = meshObjectExternalForm.charAt( i );
                 switch( c ) {

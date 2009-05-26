@@ -19,21 +19,21 @@
  <title type="text/plain">This title is plain text</title>
 
  <ig:MeshType>org.infogrid.model.Test/C</ig:MeshType>
- <ig:Relationship ID="#def"/>
+ <ig:Relationship ID="def"/>
 
  <entry>
-  <id>#abc</id>
+  <id>abc</id>
   <ig:MeshType>org.infogrid.model.Test/B</ig:MeshType>
   <ig:Property type="org.infogrid.model.Test/B_Z"><ig:EnumeratedValue>Value3</ig:EnumeratedValue></ig:Property>
-  <ig:Relationship ID="#def">
+  <ig:Relationship ID="def">
    <ig:Role type="org.infogrid.model.Test/RR-D"/>
   </ig:Relationship>
  </entry>
  <entry>
-  <id>#def</id>
+  <id>def</id>
   <ig:MeshType>org.infogrid.model.Test/AA</ig:MeshType>
   <ig:MeshType>org.infogrid.model.Test/B</ig:MeshType>
-  <ig:Relationship ID="#abc">
+  <ig:Relationship ID="abc">
    <ig:Role type="org.infogrid.model.Test/RR-S"/>
   </ig:Relationship>
   <ig:Relationship ID=""/>
