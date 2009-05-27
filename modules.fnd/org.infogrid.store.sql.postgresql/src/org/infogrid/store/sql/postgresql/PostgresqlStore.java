@@ -1270,7 +1270,7 @@ public class PostgresqlStore
      * The SQL to detect whether or not the tables exist in the database.
      */
     protected static final String HAS_TABLES_SQL
-            = "SELECT COUNT(*) from TABLE {0} WHERE id = '';";
+            = "SELECT COUNT(*) FROM {0} WHERE id = '''';"; // need double-double quotes for MessageFormat
 
     /**
      * The SQL to put data into the Store.
