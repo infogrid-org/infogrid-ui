@@ -459,9 +459,19 @@ public abstract class AbstractMeshBase
         if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "die" );
         }
-        if( theCurrentTransaction != null ) {
-            throw new IllegalStateException( "Transaction currently active: " + theCurrentTransaction );
+
+        // let current transaction finish for no more than 5 seconds
+        int count = 25;
+        while( count> 0 && theCurrentTransaction != null ) {
+            try {
+                Thread.sleep( asapRetryInterval );
+
+            } catch( InterruptedException ex ) {
+                // ignore
+            }
         }
+
+        // let's die even if the transaction is not done yet
 
         makeDead();
          
