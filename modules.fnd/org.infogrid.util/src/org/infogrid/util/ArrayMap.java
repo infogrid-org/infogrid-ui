@@ -421,6 +421,7 @@ public class ArrayMap<K,V>
          * Set a new value for this key.
          * 
          * @param value the new value
+         * @return the old value, if any
          */
         public V setValue(
                 V value )

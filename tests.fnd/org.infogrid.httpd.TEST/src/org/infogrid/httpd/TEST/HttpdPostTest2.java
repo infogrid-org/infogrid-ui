@@ -14,8 +14,8 @@
 
 package org.infogrid.httpd.TEST;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import org.infogrid.util.ArrayMap;
 import org.infogrid.util.http.HTTP;
 
 /**
@@ -126,7 +126,7 @@ public class HttpdPostTest2
         {
             String url = "http://localhost:" + SERVER_PORT + "/";
 
-            HashMap<String,String> pars = new HashMap<String,String>();
+            ArrayMap<String,String> pars = new ArrayMap<String,String>();
             pars.put( "abc", "def" );
 
             int MAX = 100;

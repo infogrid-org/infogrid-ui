@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,7 +22,6 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -267,7 +266,7 @@ public class ModuleClassLoader
         try {
             StringBuffer urlSpec = new StringBuffer();
             urlSpec.append( "jar:" );
-            urlSpec.append( foundFile.toURL() );
+            urlSpec.append( foundFile.toURI().toURL() );
             urlSpec.append( "!/" );
             return new URL( new URL( urlSpec.toString() ), foundEntry.getName() );
 

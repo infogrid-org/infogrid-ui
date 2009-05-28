@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -91,7 +91,7 @@ public class StandardModule
                 // invoke
                 loader = getClassLoader();
 
-                Class configurationClass = Class.forName( configurationClassName, true, loader );
+                Class<?> configurationClass = Class.forName( configurationClassName, true, loader );
 
                 Method configurationMethod = configurationClass.getMethod(
                         configurationMethodName,
@@ -176,7 +176,8 @@ public class StandardModule
 
             // invoke
             loader = getClassLoader();
-            Class runClass = Class.forName( runClassName, true, loader );
+
+            Class<?> runClass = Class.forName( runClassName, true, loader );
 
             Method runMethod = runClass.getMethod(
                     runMethodName,

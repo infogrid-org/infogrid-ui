@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -580,7 +580,7 @@ public class CommandlineSoftwareInstallation
         if( getPlatform().equals( MAC_OSX_PLATFORM )) {
             // we are on the Mac
             try {
-                Class mrjFileUtilsClass = Class.forName( "com.apple.mrj.MRJFileUtils" );
+                Class<?> mrjFileUtilsClass = Class.forName( "com.apple.mrj.MRJFileUtils" );
                 Method openUrlMethod = mrjFileUtilsClass.getDeclaredMethod(
                         "openURL",
                         new Class[] { String.class } );

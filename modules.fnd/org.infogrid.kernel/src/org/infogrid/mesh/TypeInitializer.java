@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -51,8 +51,8 @@ public class TypeInitializer
             long timeUpdated )
     {
         try {
-            Class  implClass = theMeshObject.getMeshBase().getMeshBaseLifecycleManager().getImplementationClass( theType );
-            Method initializer = implClass.getDeclaredMethod( "initializeDefaultValues", TypeInitializer.class, Long.TYPE );
+            Class<?> implClass   = theMeshObject.getMeshBase().getMeshBaseLifecycleManager().getImplementationClass( theType );
+            Method   initializer = implClass.getDeclaredMethod( "initializeDefaultValues", TypeInitializer.class, Long.TYPE );
             initializer.invoke( null, this, timeUpdated );
 
         } catch( Exception ex ) {

@@ -186,8 +186,8 @@ public class InitializationFilter
             }
 
             try {                
-                Class  appClass      = Class.forName( className );
-                Method factoryMethod = appClass.getMethod( "create", String.class);
+                Class<?> appClass      = Class.forName( className );
+                Method   factoryMethod = appClass.getMethod( "create", String.class );
 
                 theApp = (InfoGridWebApp) factoryMethod.invoke( null, theDefaultMeshBaseIdentifier );
 

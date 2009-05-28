@@ -8,14 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.module;
 
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Instances supporting this interfaces know how to activate a ModelModule.
@@ -71,7 +72,7 @@ public abstract class ModelModuleActivator
             // FIXME? I think this does not distinguish between ClassNotFoundExceptions that are triggered
             // by not finding the activationClass, and those triggered by those not finding a class while
             // running it.
-            Class activationClass = Class.forName( activationClassName, true, loader );
+            Class<?> activationClass = Class.forName( activationClassName, true, loader );
 
             Method activationMethod = activationClass.getMethod(
                     activationMethodName,
@@ -131,7 +132,7 @@ public abstract class ModelModuleActivator
 
         // XML fallback
         try {
-            Class  modelBaseSingleton = Class.forName( MODEL_BASE_SINGLETON_CLASS, true, loader );
+            Class<?> modelBaseSingleton = Class.forName( MODEL_BASE_SINGLETON_CLASS, true, loader );
             Method loadModelModuleMethod = modelBaseSingleton.getMethod(
                     MODEL_BASE_SINGLETON_METHOD,
                     new Class[] {

@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -19,6 +19,9 @@
  <userdescription>Testing the minimalistic HTTP server</userdescription>
  <runclass>org.infogrid.httpd.TEST.AllTests</runclass>
  <dependencies>
+  <requires name="org.infogrid.util.logging.log4j">
+   <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/httpd/TEST/Log.properties"/>
+  </requires>
   <requires name="org.infogrid.httpd"/>
   <requires name="org.infogrid.testharness"/>
   <requires name="org.infogrid.util"/>

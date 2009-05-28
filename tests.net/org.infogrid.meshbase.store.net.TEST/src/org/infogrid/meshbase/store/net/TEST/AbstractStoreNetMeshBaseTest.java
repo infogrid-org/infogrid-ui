@@ -278,7 +278,7 @@ public abstract class AbstractStoreNetMeshBaseTest
      * Expected duration within which at least one ping-pong round trip can be completed.
      * Milliseconds.
      */
-    protected static final long PINGPONG_ROUNDTRIP_DURATION = 100L;
+    protected static final long PINGPONG_ROUNDTRIP_DURATION = 500L;
 
     /**
      * Holds the SQL driver.

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -696,7 +696,7 @@ public abstract class ModuleErrorHandler
                         }
                     }
 
-                    for( Class c = ex.getClass() ; c != Object.class ; c = c.getSuperclass() ) {
+                    for( Class<?> c = ex.getClass() ; c != Object.class ; c = c.getSuperclass() ) {
 
                         Method m = null;
 
@@ -758,7 +758,7 @@ public abstract class ModuleErrorHandler
         if( theInstallation != null && ! theInstallation.isErrorTextOnly() ) {
             // try Swing first, then AWT
             try {
-                Class optionPaneClass = Class.forName( "javax.swing.JOptionPane" );
+                Class<?> optionPaneClass = Class.forName( "javax.swing.JOptionPane" );
                 Method showMessageDialogMessage = optionPaneClass.getMethod(
                         "showMessageDialog",
                         new Class[] {

@@ -8,13 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.module;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Instances supporting this interfaces know how to activate a StandardModule.
@@ -67,8 +68,8 @@ public abstract class StandardModuleActivator
     {
         ModuleErrorHandler.informModuleActivateStart( theModule );
 
-        Class  activationClass  = null; // make compiler happy
-        Method activationMethod = null;
+        Class<?> activationClass  = null; // make compiler happy
+        Method   activationMethod = null;
         try {
             // FIXME? I think this does not distinguish between ClassNotFoundExceptions that are triggered
             // by not finding the activationClass, and those triggered by those not finding a class while
@@ -133,7 +134,7 @@ public abstract class StandardModuleActivator
         ModuleErrorHandler.informModuleDeactivateStart( theModule );
 
         try {
-            Class deactivationClass = Class.forName( deactivationClassName, true, loader );
+            Class<?> deactivationClass = Class.forName( deactivationClassName, true, loader );
         
             Method deactivationMethod = deactivationClass.getMethod(
                     deactivationMethodName,
