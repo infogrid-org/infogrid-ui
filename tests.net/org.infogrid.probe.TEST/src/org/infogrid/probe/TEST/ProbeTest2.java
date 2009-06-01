@@ -57,8 +57,10 @@ public class ProbeTest2
             meshBaseA.addWeakShadowListener( listenerA );
             dumpMeshBase( meshBaseA, "meshBaseA", log );
 
+        sleepFor( 1001L ); // make sure time advances even on virtualized machines
+
         //
-        
+
         log.info( "accessing test file 1 with meshBaseB" );
         
         ShadowMeshBase meshBaseB = theProbeManagerB.obtainFor( testFile0Id, CoherenceSpecification.ONE_TIME_ONLY );
@@ -85,6 +87,8 @@ public class ProbeTest2
                 dumpChangeSet( firstChangeSet, log );
             }
 
+        sleepFor( 1001L ); // make sure time advances even on virtualized machines
+
         //
 
         copyFile( testFile2, testFile0 );
@@ -105,6 +109,8 @@ public class ProbeTest2
             if( secondChangeSet.size() > 0 ) {
                 dumpChangeSet( secondChangeSet, log );
             }
+
+        sleepFor( 1001L ); // make sure time advances even on virtualized machines
 
         //
 
