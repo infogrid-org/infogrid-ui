@@ -57,6 +57,8 @@ public class ProbeTest3
             meshBaseA.addWeakShadowListener( listenerA );
             dumpMeshBase( meshBaseA, "meshBaseA", log );
 
+        sleepFor( 1001L ); // make sure time advances even on virtualized machines
+
         //
         
         log.info( "accessing test file 1 with meshBaseB" );
@@ -84,6 +86,8 @@ public class ProbeTest3
             if( firstChangeSet.size() > 1 ) {
                 dumpChangeSet( firstChangeSet, log );
             }
+
+        sleepFor( 1001L ); // make sure time advances even on virtualized machines
 
         //
 
@@ -117,6 +121,8 @@ public class ProbeTest3
             if( secondChangeSet.size() > 0 ) {
                 dumpChangeSet( secondChangeSet, log );
             }
+
+        sleepFor( 1001L ); // make sure time advances even on virtualized machines
 
         //
 
