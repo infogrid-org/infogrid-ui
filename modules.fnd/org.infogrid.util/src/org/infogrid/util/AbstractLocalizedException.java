@@ -96,7 +96,7 @@ public abstract class AbstractLocalizedException
             return super.getLocalizedMessage();
         }
     }
-    
+
     /**
      * Obtain resource parameters for the internationalization.
      *

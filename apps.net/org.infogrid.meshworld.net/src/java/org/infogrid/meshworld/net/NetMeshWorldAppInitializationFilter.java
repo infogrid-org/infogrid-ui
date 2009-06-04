@@ -22,7 +22,10 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.net.local.defaultapp.store.AbstractStoreNetLocalRestfulAppInitializationFilter;
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
+import org.infogrid.jee.templates.defaultapp.AppInitializationException;
+import org.infogrid.store.m.MStore;
 import org.infogrid.store.sql.mysql.MysqlStore;
+import org.infogrid.util.CompoundException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
@@ -49,14 +52,18 @@ public class NetMeshWorldAppInitializationFilter
      *
      * @throws NamingException thrown if a data source could not be found or accessed
      * @throws IOException thrown if an I/O problem occurred
+     * @throws AppInitializationException thrown if the application could not be initialized
      */
     protected void initializeDataSources()
             throws
                 NamingException,
-                IOException
+                IOException,
+                AppInitializationException
     {
-        String         name = "java:comp/env/jdbc/netmeshworldDB";
-        InitialContext ctx  = null;
+        String         name    = "java:comp/env/jdbc/netmeshworldDB";
+        InitialContext ctx     = null;
+        Throwable      toThrow = null;
+
         try {
             // Database access via JNDI
             ResourceHelper rh = ResourceHelper.getInstance( NetMeshWorldAppInitializationFilter.class );
@@ -77,7 +84,32 @@ public class NetMeshWorldAppInitializationFilter
             theFormTokenStore.initializeIfNecessary();
 
         } catch( NamingException ex ) {
-            throw new NamingReportingException( name, ctx, ex );
+            toThrow = new NamingReportingException( name, ctx, ex );
+
+        } catch( IOException ex ) {
+            toThrow = ex;
+        }
+
+        if( toThrow != null ) {
+            theMeshStore = MStore.create();
+            theMeshStore.initializeIfNecessary();
+
+            theProxyStore = MStore.create();
+            theProxyStore.initializeIfNecessary();
+
+            theShadowStore = MStore.create();
+            theShadowStore.initializeIfNecessary();
+
+            theShadowProxyStore = MStore.create();
+            theShadowProxyStore.initializeIfNecessary();
+
+            theFormTokenStore = MStore.create();
+            theFormTokenStore.initializeIfNecessary();
+
+            throw new AppInitializationException(
+                    new CompoundException(
+                            new InMemoryOnlyException(),
+                            toThrow ));
         }
     }
 

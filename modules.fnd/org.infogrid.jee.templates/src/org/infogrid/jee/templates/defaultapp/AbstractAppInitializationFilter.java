@@ -25,6 +25,8 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.security.FormTokenService;
 import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.util.CompoundException;
+import org.infogrid.util.CompoundRuntimeException;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
@@ -100,7 +102,18 @@ public abstract class AbstractAppInitializationFilter
 
                     StructuredResponse structured = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
                     if( structured != null ) {
-                        structured.reportProblem( t );
+                        if( t instanceof AppInitializationException ) {
+                            t = ((AppInitializationException)t).getCause();
+                        }
+                        if( t instanceof CompoundException ) {
+                            structured.reportProblems( ((CompoundException)t).getThrowables() );
+
+                        } else if( t instanceof CompoundRuntimeException ) {
+                            structured.reportProblems( ((CompoundRuntimeException)t).getThrowables() );
+
+                        } else {
+                            structured.reportProblem( t );
+                        }
                     } else {
                         throw new ServletException( t );
                     }

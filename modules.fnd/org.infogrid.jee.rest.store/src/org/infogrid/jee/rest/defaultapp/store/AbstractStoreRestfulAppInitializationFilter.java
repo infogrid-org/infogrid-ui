@@ -22,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.jee.security.store.StoreFormTokenService;
+import org.infogrid.jee.templates.defaultapp.AppInitializationException;
 import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
@@ -70,8 +72,6 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         
         InfoGridWebApp app        = InfoGridWebApp.getSingleton();
         Context        appContext = app.getApplicationContext();
-        
-        initializeDataSources();
 
         // ModelBase
         ModelBase modelBase = ModelBaseSingleton.getSingleton();
@@ -94,24 +94,36 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
             throw new RuntimeException( ex );
         }
 
-        // AccessManager
-        AccessManager accessMgr = null;
+        try {
+            initializeDataSources();
 
-        IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, appContext );
-        populateMeshBase( meshBase );
-        appContext.addContextObject( meshBase );
-        // MeshBase adds itself to QuitManager
+        } finally {
 
-        // Name Server
-        MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
-        nameServer.put( mbId, meshBase );
-        appContext.addContextObject( nameServer );
+            if( theMeshStore != null ) {
+                AccessManager accessMgr = createAccessManager();
 
-        // FormTokenService
-        StoreFormTokenService formTokenService = StoreFormTokenService.create( theFormTokenStore );
-        appContext.addContextObject( formTokenService );
+                IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, appContext );
+                populateMeshBase( meshBase );
+                appContext.addContextObject( meshBase );
+                // MeshBase adds itself to QuitManager
 
-        initializeContextObjects( appContext );
+                // Name Server
+                MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
+                nameServer.put( mbId, meshBase );
+                appContext.addContextObject( nameServer );
+            }
+
+            if( theFormTokenStore != null ) {
+                // FormTokenService
+                StoreFormTokenService formTokenService = StoreFormTokenService.create( theFormTokenStore );
+                appContext.addContextObject( formTokenService );
+
+            } else {
+                MFormTokenService formTokenService = MFormTokenService.create();
+                appContext.addContextObject( formTokenService );
+            }
+            initializeContextObjects( appContext );
+        }
     }
 
     /**
@@ -119,11 +131,23 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
      *
      * @throws NamingException thrown if a data source could not be found or accessed
      * @throws IOException thrown if an I/O problem occurred
+     * @throws AppInitializationException thrown if the application could not be initialized
      */
     protected abstract void initializeDataSources()
             throws
                 NamingException,
-                IOException;
+                IOException,
+                AppInitializationException;
+
+    /**
+     * Overridable method to create the AccessManager to use.
+     *
+     * @return the created AccessManager, or null
+     */
+    protected AccessManager createAccessManager()
+    {
+        return null;
+    }
 
     /**
      * The Store for MeshObjects. This must be set by a subclass.

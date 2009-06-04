@@ -381,6 +381,19 @@ public class StructuredResponse
     }
 
     /**
+     * Convenience method to report several problems that should be shown to the user.
+     *
+     * @param ts [] the Throwables indicating the problems
+     */
+    public void reportProblems(
+            Throwable [] ts )
+    {
+        for( int i=0 ; i<ts.length ; ++i ) {
+            reportProblem( ts[i] );
+        }
+    }
+    
+    /**
      * Determine whether problems have been reported.
      * 
      * @return true if at least one problem has been reported
