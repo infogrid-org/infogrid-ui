@@ -59,6 +59,39 @@ public abstract class ProbeException
     }
 
     /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the key
+     */
+    @Override
+    protected String findStringRepresentationParameter()
+    {
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_KEY );
+    }
+
+    /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the key
+     */
+    @Override
+    protected String findStringRepresentationLinkStartParameter()
+    {
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_LINK_START_KEY );
+    }
+
+    /**
+     * All subclasses have a common ResourceHelper for all inner classes.
+     *
+     * @return the key
+     */
+    @Override
+    protected String findStringRepresentationLinkEndParameter()
+    {
+        return findParameterViaEnclosingClass( STRING_REPRESENTATION_LINK_END_KEY );
+    }
+
+    /**
      * Same ResourceHelper for all inner classes.
      *
      * @return the ResourceHelper to use
@@ -66,7 +99,7 @@ public abstract class ProbeException
     @Override
     protected ResourceHelper findResourceHelperForLocalizedMessage()
     {
-        return ResourceHelper.getInstance( ProbeException.class );
+        return findResourceHelperForLocalizedMessageViaEnclosingClass();
     }
     
     /**
