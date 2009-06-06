@@ -133,7 +133,7 @@ if [ "${CONFIG}" != '' ]; then
 		echo ERROR: Configuration file "${CONFIG}" cannot be read.
 		exit 1;
 	fi
-	ANTFLAGS="${ANTFLAGS} -Dbuild-properties=../../${CONFIG}"
+	ANTFLAGS="${ANTFLAGS} -Dbuild.properties=../../${CONFIG}"
 fi
 
 if [ "${do_all}" = 0 ]; then

@@ -246,10 +246,10 @@
   <target name="-pre-init" depends="read-build-properties,set-build-properties" />
   <target name="set-build-properties"/>
 
-  <target name="read-build-properties" if="build-properties">
-    <available file="${build-properties}" property="build-properties-present"/>
-    <fail unless="build-properties-present" message="Build property file ${build-properties} not found."/>
-    <property file="${build-properties}"/>
+  <target name="read-build-properties" if="build.properties">
+    <available file="${build.properties}" property="build-properties-present"/>
+    <fail unless="build-properties-present" message="Build property file ${build.properties} not found."/>
+    <property file="${build.properties}"/>
   </target>
 
 <!-- Debian target -->

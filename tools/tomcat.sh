@@ -97,7 +97,7 @@ if [ ! -r "${CONFIG}" ]; then
 	echo ERROR: Configuration file "${CONFIG}" cannot be read.
 	exit 1;
 fi
-ANTFLAGS="${ANTFLAGS} -Dbuild-properties=../../${CONFIG}"
+ANTFLAGS="${ANTFLAGS} -Dbuild.properties=../../${CONFIG}"
 
 if [ "${do_deploy}" != 0 -a "${do_undeploy}" != 0 ]; then
 	echo ERROR: Must either -deploy or -undeploy.
