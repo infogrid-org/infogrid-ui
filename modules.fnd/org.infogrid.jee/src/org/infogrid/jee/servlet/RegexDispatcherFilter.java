@@ -165,13 +165,13 @@ public class RegexDispatcherFilter
     {
         theFilterConfig = filterConfig;
         
-        String restRegex = filterConfig.getInitParameter( REGEX_PARAMETER  );
+        String restRegex = filterConfig.getInitParameter( REGEX_PARAMETER );
         if( restRegex == null || restRegex.length() == 0 ) {
             restRegex = REGEX_DEFAULT;
         }
         thePattern = Pattern.compile( restRegex );
 
-        theServletName = filterConfig.getInitParameter( SERVLET_NAME_PARAMETER  );
+        theServletName = filterConfig.getInitParameter( SERVLET_NAME_PARAMETER );
         if( theServletName == null || theServletName.length() == 0 ) {
             theServletName = SERVLET_NAME_DEFAULT;
         }
