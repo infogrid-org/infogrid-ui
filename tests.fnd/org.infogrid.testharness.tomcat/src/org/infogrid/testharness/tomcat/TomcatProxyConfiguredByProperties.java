@@ -113,30 +113,30 @@ public class TomcatProxyConfiguredByProperties
     /**
      * Name of the property containing Tomcat's top-level, server URL.
      */
-    public static final String SERVER_URL_PROPERTY_NAME = "ServerUrl";
+    public static final String SERVER_URL_PROPERTY_NAME = "tomcat.server.url";
 
     /**
      * Name of the property containing Tomcat's manager application URL.
      */
-    public static final String MANAGER_URL_PROPERTY_NAME = "ManagerUrl";
+    public static final String MANAGER_URL_PROPERTY_NAME = "tomcat.manager.url";
     
     /**
      * Name of the property containing the path for the to-be-tested application.
      */
-    public static final String APPLICATION_PATH_PROPERTY_NAME = "ApplicationPath";
+    public static final String APPLICATION_PATH_PROPERTY_NAME = "webapp.path";
     
     /**
      * Name of the property containing the name of Tomcat's admin user.
      */
-    public static final String ADMIN_USER_PROPERTY_NAME = "AdminUser";
+    public static final String ADMIN_USER_PROPERTY_NAME = "tomcat.manager.user";
     
     /**
      * Name of the property containing the password of Tomcat's admin user.
      */
-    public static final String ADMIN_PASSWORD_PROPERTY_NAME = "AdminPassword";
+    public static final String ADMIN_PASSWORD_PROPERTY_NAME = "tomcat.manager.password";
     
     /**
      * Name of the property containing the timeout for connection attempts.
      */
-    public static final String TIMEOUT_PROPERTY_NAME = "Timeout";
+    public static final String TIMEOUT_PROPERTY_NAME = "tomcat.manager.timeout";
 }
