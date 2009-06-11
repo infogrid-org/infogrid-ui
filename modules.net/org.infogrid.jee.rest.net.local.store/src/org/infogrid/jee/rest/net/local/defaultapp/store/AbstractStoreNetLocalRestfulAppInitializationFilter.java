@@ -104,8 +104,13 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             throw new RuntimeException( ex );
         }
 
+        Throwable thrown = null; // set if data source initialization failed
         try {
             initializeDataSources();
+
+        } catch( Throwable t ) {
+            thrown = t;
+            throw thrown;
 
         } finally {
 
@@ -158,7 +163,16 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
                 MFormTokenService formTokenService = MFormTokenService.create();
                 appContext.addContextObject( formTokenService );
             }
-            initializeContextObjects( appContext );
+
+            if( thrown == null ) {
+                initializeContextObjects( appContext );
+            } else {
+                try {
+                    initializeContextObjects( appContext );
+                } catch( Throwable t ) {
+                    // ignore
+                }
+            }
         } 
     }
 

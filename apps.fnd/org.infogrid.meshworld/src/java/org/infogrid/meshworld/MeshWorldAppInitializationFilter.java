@@ -82,6 +82,9 @@ public class MeshWorldAppInitializationFilter
 
         } catch( IOException ex ) {
             toThrow = ex;
+
+        } catch( Throwable ex ) {
+            toThrow = ex;
         }
 
         if( toThrow != null ) {
