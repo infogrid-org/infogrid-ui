@@ -87,7 +87,7 @@ public class TestAppInitializationFilter
         MProbeDirectory ret = MProbeDirectory.create();
         toAccess = new NetMeshBaseIdentifier[] {
             meshBaseIdentifierFactory.fromExternalForm( "custom://example.com/" ),
-            meshBaseIdentifierFactory.fromExternalForm( "custom://example.org/a/?foo=bar&argl=brgl" ),
+            meshBaseIdentifierFactory.fromExternalForm( "custom://example.org/?foo=bar&argl=brgl" ),
         };
 
         for( NetMeshBaseIdentifier current : toAccess ) {

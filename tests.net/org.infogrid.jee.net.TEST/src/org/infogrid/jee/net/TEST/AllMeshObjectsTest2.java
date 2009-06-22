@@ -38,15 +38,15 @@ public class AllMeshObjectsTest2
     {
         log.info( "Looking at all the MeshObjectIdentifiers" );
         
-        HTTP.Response r = HTTP.http_get( theApplicationUrl + "/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]" );
+        HTTP.Response r = HTTP.http_get( theApplicationUrl + "/[meshbase=custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl]" );
         checkRegex( r.getResponseCode(), "200",       "wrong response code" );
         checkRegex( r.getContentType(),  "text/html", "wrong mime type" );
 
         String content = r.getContentAsString();
         
         String [] objects = {
-            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">&lt;HOME&gt;</span> in NetMeshBase custom://example.org/a/?foo=bar&amp;argl=brgl</a>",
-            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/a/%3Ffoo%3Dbar%26argl%3Dbrgl]%23xxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">#xxx</span> in NetMeshBase custom://example.org/a/?foo=bar&amp;argl=brgl</a>"
+            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl]\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">&lt;HOME&gt;</span> in NetMeshBase custom://example.org/?foo=bar&amp;argl=brgl</a>",
+            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl]%23xxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">#xxx</span> in NetMeshBase custom://example.org/?foo=bar&amp;argl=brgl</a>"
 
         };
         for( int i=0 ; i<objects.length ; ++i ) {
