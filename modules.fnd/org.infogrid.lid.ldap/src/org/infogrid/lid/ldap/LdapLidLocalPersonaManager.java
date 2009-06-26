@@ -14,6 +14,7 @@
 
 package org.infogrid.lid.ldap;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Properties;
 import javax.naming.directory.Attribute;
@@ -62,17 +63,19 @@ public class LdapLidLocalPersonaManager
      * @param managerDn the distinguished name of the LDAP manager
      * @param managerPassword the password of the LDAP manager
      * @param props Properties to use when creating LDAP/JNDI InitialContext
+     * @param ldapContextName name of the LDAP context object in which to search
      * @return the created LdapLidLocalPersonaManager
      * @throws NamingException something went wrong when attempting to bind to
      */
     public static LdapLidLocalPersonaManager create(
             String     managerDn,
             String     managerPassword,
-            Properties props )
+            Properties props,
+            String     ldapContextName )
         throws
             NamingException
     {
-        return create( managerDn, managerPassword, props, null, null );
+        return create( managerDn, managerPassword, props, ldapContextName, null, null );
     }
 
     /**
@@ -81,6 +84,7 @@ public class LdapLidLocalPersonaManager
      * @param managerDn the distinguished name of the LDAP manager
      * @param managerPassword the password of the LDAP manager
      * @param props Properties to use when creating LDAP/JNDI InitialContext
+     * @param ldapContextName name of the LDAP context object in which to search
      * @param filter the LDAP filter expression
      * @param controls the SearchControls to use for queries
      * @return the created LdapLidLocalPersonaManager
@@ -90,6 +94,7 @@ public class LdapLidLocalPersonaManager
             String         managerDn,
             String         managerPassword,
             Properties     props,
+            String         ldapContextName,
             String         filter,
             SearchControls controls )
         throws
@@ -102,7 +107,7 @@ public class LdapLidLocalPersonaManager
 
         DirContext dir = new InitialDirContext( managerProps );
 
-        LdapLidLocalPersonaManager ret = new LdapLidLocalPersonaManager( dir, filter, controls );
+        LdapLidLocalPersonaManager ret = new LdapLidLocalPersonaManager( dir, ldapContextName, filter, controls );
         return ret;
     }
 
@@ -110,15 +115,18 @@ public class LdapLidLocalPersonaManager
      * Constructor for subclasses only, use factory method.
      * 
      * @param managerDir the DirContext, accessed by the LDAP manager, in which to find the identities
+     * @param ldapContextName name of the LDAP context object in which to search
      * @param filter the LDAP filter expression
      * @param controls the SearchControls to use for queries
      */
     protected LdapLidLocalPersonaManager(
             DirContext     managerDir,
+            String         ldapContextName,
             String         filter,
             SearchControls controls )
     {
         theManagerDir       = managerDir;
+        theLdapContextName  = ldapContextName;
         theFilter           = filter;
         theControls         = controls;
     }
@@ -137,8 +145,11 @@ public class LdapLidLocalPersonaManager
     {
         NamingEnumeration found = null;
         String            s     = identifier.toExternalForm();
+
+        String filter = MessageFormat.format( theFilter, s );
+
         try {
-            found = theManagerDir.search( s, theFilter, theControls );
+            found = theManagerDir.search( theLdapContextName, filter, theControls );
 
             if( found.hasMore() ) {
                 SearchResult current = (SearchResult) found.next();
@@ -179,6 +190,11 @@ public class LdapLidLocalPersonaManager
      * The DirContext in which to find the identities.
      */
     protected DirContext theManagerDir;
+
+    /**
+     * Name of the LDAP context to search.
+     */
+    protected String theLdapContextName;
 
     /**
      * The LDAP filter expression to use.
