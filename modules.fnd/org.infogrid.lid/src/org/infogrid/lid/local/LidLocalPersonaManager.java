@@ -18,6 +18,7 @@ import java.util.Map;
 import org.infogrid.lid.LidHasIdentifierFinder;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.util.Identifier;
+import org.infogrid.util.InvalidIdentifierException;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -85,23 +86,27 @@ public interface LidLocalPersonaManager
      * @param identifier the identifier for which the LidLocalPersona will be retrieved
      * @return the found LidLocalPersona
      * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws InvalidIdentifierException thrown if an invalid Identifier was provided
      */
     public abstract LidLocalPersona find(
             Identifier identifier )
         throws
-            LidLocalPersonaUnknownException;
+            LidLocalPersonaUnknownException,
+            InvalidIdentifierException;
 
     /**
      * Find the LidResource, or null, which in this case is a LidLocalPersona.
      * 
      * @param request the incoming request
      * @return the found LidResource, or null
-     * @throws LidLocalPersonaUnknownException thrown if the resource could not be found
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws InvalidIdentifierException thrown if an invalid Identifier was provided
      */
     public LidLocalPersona findFromRequest(
             SaneRequest request )
         throws
-            LidLocalPersonaUnknownException;
+            LidLocalPersonaUnknownException,
+            InvalidIdentifierException;
 
     /**
      * Delete a LidLocalPersona, given its identifier.

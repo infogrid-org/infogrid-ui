@@ -19,6 +19,7 @@ import java.util.Set;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.util.AbstractHasIdentifier;
 import org.infogrid.util.Identifier;
+import org.infogrid.util.InvalidIdentifierException;
 
 /**
  * Implements the LidLocalPersonaManager interface by delegating to another LidLocalPersonaManager
@@ -85,11 +86,13 @@ public abstract class TranslatingLidLocalPersonaManager
      * @param identifier the identifier for which the LidLocalPersona will be retrieved
      * @return the found LidLocalPersona
      * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws InvalidIdentifierException thrown if an invalid Identifier was provided
      */
     public LidLocalPersona find(
             Identifier identifier )
         throws
-            LidLocalPersonaUnknownException
+            LidLocalPersonaUnknownException,
+            InvalidIdentifierException
     {
         if( identifier == null ) {
             throw new NullPointerException( "identifier must not be null" );

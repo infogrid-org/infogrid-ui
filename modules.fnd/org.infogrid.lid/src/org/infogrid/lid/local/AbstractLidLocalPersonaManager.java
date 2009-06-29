@@ -15,6 +15,7 @@
 package org.infogrid.lid.local;
 
 import org.infogrid.util.Identifier;
+import org.infogrid.util.InvalidIdentifierException;
 import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.http.SaneRequest;
 
@@ -30,12 +31,14 @@ public abstract class AbstractLidLocalPersonaManager
      * 
      * @param request the incoming request
      * @return the found LidResource, or null
-     * @throws LidLocalPersonaUnknownException thrown if the resource could not be found
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws InvalidIdentifierException thrown if an invalid Identifier was provided
      */
     public LidLocalPersona findFromRequest(
             SaneRequest request )
         throws
-            LidLocalPersonaUnknownException
+            LidLocalPersonaUnknownException,
+            InvalidIdentifierException
     {
         String          identifier = request.getAbsoluteBaseUri();
         Identifier      realId     = SimpleStringIdentifier.create( identifier );

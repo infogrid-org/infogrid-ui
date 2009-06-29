@@ -8,15 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid;
 
-import org.infogrid.util.CannotFindHasIdentifierException;
+import org.infogrid.lid.local.LidLocalPersonaUnknownException;
 import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.HasIdentifierFinder;
+import org.infogrid.util.InvalidIdentifierException;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -32,10 +33,12 @@ public interface LidHasIdentifierFinder
      * 
      * @param request the incoming request
      * @return the found LidResource, or null
-     * @throws CannotFindHasIdentifierException thrown if the resource could not be found
+     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
+     * @throws InvalidIdentifierException thrown if an invalid Identifier was provided
      */
     public HasIdentifier findFromRequest(
             SaneRequest request )
         throws
-            CannotFindHasIdentifierException;
+            LidLocalPersonaUnknownException,
+            InvalidIdentifierException;
 }

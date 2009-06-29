@@ -25,9 +25,11 @@ public interface HasIdentifierFinder
      * @param identifier the Identifier
      * @return the found HasIdentifier
      * @throws CannotFindHasIdentifierException thrown if the HasIdentifier cannot be found
+     * @throws InvalidIdentifierException thrown if the provided Identifier was invalid for this HasIdentifierFinder
      */
     public HasIdentifier find(
             Identifier identifier )
         throws
-            CannotFindHasIdentifierException;
+            CannotFindHasIdentifierException,
+            InvalidIdentifierException;
 }

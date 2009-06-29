@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,7 +21,6 @@ import org.infogrid.lid.LidClientAuthenticationStatus;
 import org.infogrid.lid.LidProcessingPipeline;
 import org.infogrid.lid.LidHasIdentifierFinder;
 import org.infogrid.lid.yadis.YadisPipelineProcessingStage;
-import org.infogrid.util.CannotFindHasIdentifierException;
 import org.infogrid.util.HasIdentifier;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
@@ -103,7 +102,7 @@ public class DefaultOpenIdLidProcessingPipeline
         if( theResourceFinder != null ) {
             try {
                 requestedResource = theResourceFinder.findFromRequest( lidRequest );
-            } catch( CannotFindHasIdentifierException ex ) {
+            } catch( Exception ex ) {
                 if( log.isInfoEnabled() ) {
                     log.info( ex );
                 }

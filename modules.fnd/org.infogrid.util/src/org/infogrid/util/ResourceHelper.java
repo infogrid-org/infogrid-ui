@@ -20,6 +20,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
@@ -713,7 +714,28 @@ public final class ResourceHelper
         }
         return ret;
     }
-    
+
+    /**
+     * Obtain an iterator over all keys in this ResourceHelper. This will not return keys of
+     * any parent ResourceHelper.
+     *
+     * @return Iterator over the keys
+     */
+    public Iterator<String> keyIterator()
+    {
+        ResourceBundle bundle = getResourceBundle();
+
+        Enumeration<String> keys = bundle.getKeys();
+
+        return new TranslatingEnumeration<String,String>( keys ) {
+            public String translate(
+                    String org )
+            {
+                return org;
+            }
+        };
+    }
+
     /**
      * This is invoked when we cannot find a resource.
      *
