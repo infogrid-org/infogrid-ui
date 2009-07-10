@@ -46,8 +46,6 @@ do_tests_fnd=1;
 do_tests_net=1;
 do_dist_fnd=1;
 do_dist_net=1;
-do_debian_fnd=1;
-do_debian_net=1;
 do_nothing=1;
 do_all=1;
 verbose=1;
@@ -96,10 +94,6 @@ for arg in $*; do
 		do_dist_fnd=0;
 	elif [ "$arg" = 'dist.net' ]; then
 		do_dist_net=0;
-	elif [ "$arg" = 'debian.fnd' ]; then
-		do_debian_fnd=0;
-	elif [ "$arg" = 'debian.net' ]; then
-		do_debian_net=0;
 	else
 		echo "ERROR: Unknown argument: $arg"
 		exit 1;
@@ -107,7 +101,7 @@ for arg in $*; do
 	shift;
 done
 
-# echo args ${do_clean} ${do_build} ${do_doc} ${do_run} ${do_modules_fnd} ${do_modules_net} ${do_apps_fnd} ${do_apps_net} ${do_tests_fnd} ${do_tests_net} ${do_dist_fnd} ${do_dist_net} ${do_debian_fnd} ${do_debian_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
+# echo args ${do_clean} ${do_build} ${do_doc} ${do_run} ${do_modules_fnd} ${do_modules_net} ${do_apps_fnd} ${do_apps_net} ${do_tests_fnd} ${do_tests_net} ${do_dist_fnd} ${do_dist_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
 # exit 0;
 
 if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' -o "${CONFIG}" = 'CONFIG' ]; then
@@ -116,7 +110,7 @@ if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' -o "${CONFIG}" = 'CONFIG' ]; th
 	echo "        -v: verbose output"
 	echo "        -h: this help"
 	echo "        -n: do not execute, only print"
-	echo "        -a: complete rebuild, equivalent to -clean -build -doc -run modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net dist.fnd dist.net debian.fnd debian.net"
+	echo "        -a: complete rebuild, equivalent to -clean -build -doc -run modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net dist.fnd dist.net"
 	echo "        -clean: remove old build artifacts"
 	echo "        -build: build"
 	echo "        -doc: document"
@@ -124,7 +118,7 @@ if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' -o "${CONFIG}" = 'CONFIG' ]; th
 	echo "            (more than one of -clean,-build,-doc,-run may be given. Default is -build,-doc,-run)"
 	echo "        -antflags <flags>: pass flags to ant invocation"
 	echo "        -c <configfile>: use configuration file"
-	echo "        <category>: one or more of modules.fnd, modules.net, apps.fnd, apps.net, tests.fnd, tests.net, dist.fnd, dist.net, debian.fnd, debian.net"
+	echo "        <category>: one or more of modules.fnd, modules.net, apps.fnd, apps.net, tests.fnd, tests.net, dist.fnd, dist.net"
 	exit 1;
 fi
 
@@ -149,8 +143,6 @@ if [ "${do_all}" = 0 ]; then
 	do_tests_net=0;
 	do_dist_fnd=0;
 	do_dist_net=0;
-	do_debian_fnd=0;
-	do_debian_net=0;
 else
 	if [ "${do_clean}" = 1 -a "${do_build}" = 1 -a "${do_doc}" = 1 -a "${do_run}" = 1 ]; then
 		do_clean=1;
@@ -158,7 +150,7 @@ else
 		do_doc=0;
 		do_run=0;
 	fi
-	if [ "${do_modules_fnd}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps_fnd}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests_fnd}" = 1 -a "${do_tests_net}" = 1 -a "${do_dist_fnd}" = 1 -a "${do_dist_net}" = 1 -a "${do_debian_fnd}" = 1 -a "${do_debian_net}" = 1 ]; then
+	if [ "${do_modules_fnd}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps_fnd}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests_fnd}" = 1 -a "${do_tests_net}" = 1 -a "${do_dist_fnd}" = 1 -a "${do_dist_net}" = 1 ]; then
 		do_modules_fnd=0;
 		do_modules_net=0;
 		do_apps_fnd=0;
@@ -167,8 +159,6 @@ else
 		do_tests_net=0;
 		do_dist_fnd=0;
 		do_dist_net=0;
-		do_debian_fnd=0;
-		do_debian_net=0;
 	fi
 fi
 
@@ -210,12 +200,6 @@ if [ "${do_nothing}" = 0 ]; then
 	fi
 	if [ "${do_dist_net}" = 0 ]; then
 		/bin/echo -n " dist.net"
-	fi
-	if [ "${do_debian_fnd}" = 0 ]; then
-		/bin/echo -n " debian.fnd"
-	fi
-	if [ "${do_debian_net}" = 0 ]; then
-		/bin/echo -n " debian.net"
 	fi
 	if [ "${verbose}" = 0 ]; then
 		/bin/echo -n " (verbose)"
@@ -281,12 +265,6 @@ doc_module()
 run_module()
 {
 	run_command $1 ant ${ANTFLAGS} -f $1/build.xml ${RUNFLAGS} run
-	return "${?}";
-}
-
-build_debian()
-{
-	run_command $1 ant ${ANTFLAGS} -f $1/build.xml ${DEBIANFLAGS} debian-package-war
 	return "${?}";
 }
 
@@ -357,21 +335,6 @@ if [ "${do_clean}" = 0 ]; then
 		fi
 		/bin/rm -rf build.net dist.net
 	fi
-
-	if [ "${do_debian_fnd}" = 0 ]; then
-		echo '**** Cleaning debian.fnd ****'
-		if [ "${verbose}" = 0 ]; then
-			echo /bin/rm -rf debian.fnd
-		fi
-		/bin/rm -rf debian.fnd
-	fi
-	if [ "${do_debian_net}" = 0 ]; then
-		echo '**** Cleaning debian.net ****'
-		if [ "${verbose}" = 0 ]; then
-			echo rm -rf debian.net
-		fi
-		/bin/rm -rf debian.net
-	fi
 fi
 
 if [ "${do_build}" = 0 ]; then
@@ -437,19 +400,6 @@ if [ "${do_build}" = 0 ]; then
 			echo jar cf dist.net/infogrid-net.jar 'build.net/*'
 		fi
 		( cd build.net; jar cf ../dist.net/infogrid-net.jar * )
-	fi
-
-	if [ "${do_debian_fnd}" = 0 ]; then
-		echo '**** Building debian.fnd ****'
-		for f in `filter_modules apps.fnd/ALLAPPS '\[nodebian\]'`; do
-			build_debian apps.fnd/$f jar || exit 1;
-		done;
-	fi
-	if [ "${do_debian_net}" = 0 ]; then
-		echo '**** Building debian.net ****'
-		for f in `filter_modules apps.net/ALLAPPS '\[nodebian\]'`; do
-			build_debian apps.net/$f jar || exit 1;
-		done;
 	fi
 fi
 
