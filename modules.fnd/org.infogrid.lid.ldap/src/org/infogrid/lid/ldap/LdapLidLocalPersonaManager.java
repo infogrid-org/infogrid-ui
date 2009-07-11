@@ -164,6 +164,9 @@ public class LdapLidLocalPersonaManager
         if( s.contains( "?" ) || s.contains( "*" )) {
             throw new InvalidIdentifierException( identifier );
         }
+        if( s.length() == 0 ) {
+            throw new LidLocalPersonaUnknownException( identifier );
+        }
 
         String filter = MessageFormat.format( theFilter, s );
 
