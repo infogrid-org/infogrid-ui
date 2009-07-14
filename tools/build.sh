@@ -33,19 +33,19 @@ DOCFLAGS=;
 RUNFLAGS=-Dno.deps=1;
 DEBIANFLAGS=-Dno.deps=1;
 TMPFILE=`mktemp /tmp/infogrid-build-temp.XXXX`;
+JAVADOC_OVERVIEW=dist/javadoc-overview.html;
 
 do_clean=1;
 do_build=1;
-do_doc=1;
 do_run=1;
+do_doc=1;
+do_dist=1;
 do_modules_fnd=1;
 do_modules_net=1;
 do_apps_fnd=1;
 do_apps_net=1;
 do_tests_fnd=1;
 do_tests_net=1;
-do_dist_fnd=1;
-do_dist_net=1;
 do_nothing=1;
 do_all=1;
 verbose=1;
@@ -62,10 +62,12 @@ for arg in $*; do
 		do_clean=0;
 	elif [ "$arg" = '-build' ]; then
 		do_build=0;
-	elif [ "$arg" = '-doc' ]; then
-		do_doc=0;
 	elif [ "$arg" = '-run' ]; then
 		do_run=0;
+	elif [ "$arg" = '-doc' ]; then
+		do_doc=0;
+	elif [ "$arg" = '-dist' ]; then
+		do_dist=0;
 	elif [ "$arg" = '-n' ]; then
 		do_nothing=0;
 	elif [ "$arg" = '-v' ]; then
@@ -90,10 +92,6 @@ for arg in $*; do
 		do_tests_fnd=0;
 	elif [ "$arg" = 'tests.net' ]; then
 		do_tests_net=0;
-	elif [ "$arg" = 'dist.fnd' ]; then
-		do_dist_fnd=0;
-	elif [ "$arg" = 'dist.net' ]; then
-		do_dist_net=0;
 	else
 		echo "ERROR: Unknown argument: $arg"
 		exit 1;
@@ -101,7 +99,7 @@ for arg in $*; do
 	shift;
 done
 
-# echo args ${do_clean} ${do_build} ${do_doc} ${do_run} ${do_modules_fnd} ${do_modules_net} ${do_apps_fnd} ${do_apps_net} ${do_tests_fnd} ${do_tests_net} ${do_dist_fnd} ${do_dist_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
+# echo args ${do_clean} ${do_build} ${do_run} ${do_doc} ${do_dist} ${do_modules_fnd} ${do_modules_net} ${do_apps_fnd} ${do_apps_net} ${do_tests_fnd} ${do_tests_net} ${do_nothing} ${do_all} ${verbose} ${ANTFLAGS}
 # exit 0;
 
 if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' -o "${CONFIG}" = 'CONFIG' ]; then
@@ -110,15 +108,15 @@ if [ "${help}" = 0 -o "${ANTFLAGS}" = 'ANTFLAGS' -o "${CONFIG}" = 'CONFIG' ]; th
 	echo "        -v: verbose output"
 	echo "        -h: this help"
 	echo "        -n: do not execute, only print"
-	echo "        -a: complete rebuild, equivalent to -clean -build -doc -run modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net dist.fnd dist.net"
+	echo "        -a: complete rebuild, equivalent to -clean -build -run -doc -dist modules.fnd modules.net apps.fnd apps.net tests.fnd tests.net"
 	echo "        -clean: remove old build artifacts"
 	echo "        -build: build"
 	echo "        -doc: document"
 	echo "        -run: run"
-	echo "            (more than one of -clean,-build,-doc,-run may be given. Default is -build,-doc,-run)"
+	echo "            (more than one of -clean,-build,-run,-doc,-dist may be given. Default is -build,-run,-doc,-dist)"
 	echo "        -antflags <flags>: pass flags to ant invocation"
 	echo "        -c <configfile>: use configuration file"
-	echo "        <category>: one or more of modules.fnd, modules.net, apps.fnd, apps.net, tests.fnd, tests.net, dist.fnd, dist.net"
+	echo "        <category>: one or more of modules.fnd, modules.net, apps.fnd, apps.net, tests.fnd, tests.net"
 	exit 1;
 fi
 
@@ -133,32 +131,30 @@ fi
 if [ "${do_all}" = 0 ]; then
 	do_clean=0;
 	do_build=0;
-	do_doc=0;
 	do_run=0;
+	do_doc=0;
+	do_dist=0;
 	do_modules_fnd=0;
 	do_modules_net=0;
 	do_apps_fnd=0;
 	do_apps_net=0;
 	do_tests_fnd=0;
 	do_tests_net=0;
-	do_dist_fnd=0;
-	do_dist_net=0;
 else
-	if [ "${do_clean}" = 1 -a "${do_build}" = 1 -a "${do_doc}" = 1 -a "${do_run}" = 1 ]; then
+	if [ "${do_clean}" = 1 -a "${do_build}" = 1 -a "${do_doc}" = 1 -a "${do_run}" = 1 -a "${do_dist}" = 1 ]; then
 		do_clean=1;
 		do_build=0;
-		do_doc=0;
 		do_run=0;
+		do_doc=0;
+		do_dist=0;
 	fi
-	if [ "${do_modules_fnd}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps_fnd}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests_fnd}" = 1 -a "${do_tests_net}" = 1 -a "${do_dist_fnd}" = 1 -a "${do_dist_net}" = 1 ]; then
+	if [ "${do_modules_fnd}" = 1 -a "${do_modules_net}" = 1 -a "${do_apps_fnd}" = 1 -a "${do_apps_net}" = 1 -a "${do_tests_fnd}" = 1 -a "${do_tests_net}" = 1 ]; then
 		do_modules_fnd=0;
 		do_modules_net=0;
 		do_apps_fnd=0;
 		do_apps_net=0;
 		do_tests_fnd=0;
 		do_tests_net=0;
-		do_dist_fnd=0;
-		do_dist_net=0;
 	fi
 fi
 
@@ -170,11 +166,14 @@ if [ "${do_nothing}" = 0 ]; then
 	if [ "${do_build}" = 0 ]; then
 		/bin/echo -n " build"
 	fi
+	if [ "${do_run}" = 0 ]; then
+		/bin/echo -n " run"
+	fi
 	if [ "${do_doc}" = 0 ]; then
 		/bin/echo -n " doc"
 	fi
-	if [ "${do_run}" = 0 ]; then
-		/bin/echo -n " run"
+	if [ "${do_dist}" = 0 ]; then
+		/bin/echo -n " dist"
 	fi
 	/bin/echo -n :
 	if [ "${do_modules_fnd}" = 0 ]; then
@@ -194,12 +193,6 @@ if [ "${do_nothing}" = 0 ]; then
 	fi
 	if [ "${do_tests_net}" = 0 ]; then
 		/bin/echo -n " tests.net"
-	fi
-	if [ "${do_dist_fnd}" = 0 ]; then
-		/bin/echo -n " dist.fnd"
-	fi
-	if [ "${do_dist_net}" = 0 ]; then
-		/bin/echo -n " dist.net"
 	fi
 	if [ "${verbose}" = 0 ]; then
 		/bin/echo -n " (verbose)"
@@ -256,28 +249,36 @@ build_module()
 	return "${?}";
 }
 
-doc_module()
-{
-	run_command $1 ant ${ANTFLAGS} -f $1/build.xml ${DOCFLAGS} javadoc
-	return "${?}";
-}
-
 run_module()
 {
 	run_command $1 ant ${ANTFLAGS} -f $1/build.xml ${RUNFLAGS} run
 	return "${?}";
 }
 
-expand_module()
+doc_module()
 {
-	local cmd;
-	pushd $3 > /dev/null
-	cmd="jar xf ../$2/$1/dist/$1.jar"
-	if [ "${verbose}" = 0 ]; then
-		echo $cmd
+	run_command $1 ant ${ANTFLAGS} -f $1/build.xml ${DOCFLAGS} javadoc
+	return "${?}";
+}
+
+dist_module()
+{
+	local ext;
+	local f;
+	for ext in jar war ser adv; do
+		# No double-quotes here, need to expand wildcard
+		for f in $1/dist/*.$ext; do
+			if [ -f $f ]; then
+				if [[ $f =~ /dist/org\.infogrid\. ]]; then
+					run_command "$1 - copy $f" cp $f dist/$2/
+				fi
+			fi
+		done;
+	done
+
+	if [ -d $1/dist/javadoc ]; then
+		run_command "$1 - copy javadoc" cp -r $1/dist/javadoc dist/$1.docs
 	fi
-	$cmd
-	popd > /dev/null
 	return "${?}";
 }
 
@@ -321,20 +322,11 @@ if [ "${do_clean}" = 0 ]; then
 		done;
 	fi
 
-	if [ "${do_dist_fnd}" = 0 ]; then
-		echo '**** Cleaning dist.fnd ****'
-		if [ "${verbose}" = 0 ]; then
-			echo /bin/rm -rf build.fnd dist.fnd
-		fi
-		/bin/rm -rf build.fnd dist.fnd
+	echo '**** Cleaning dist ****'
+	if [ "${verbose}" = 0 ]; then
+		echo /bin/rm -rf dist
 	fi
-	if [ "${do_dist_net}" = 0 ]; then
-		echo '**** Cleaning dist.net ****'
-		if [ "${verbose}" = 0 ]; then
-			echo rm -rf build.net dist.net
-		fi
-		/bin/rm -rf build.net dist.net
-	fi
+	/bin/rm -rf dist
 fi
 
 if [ "${do_build}" = 0 ]; then
@@ -375,31 +367,6 @@ if [ "${do_build}" = 0 ]; then
 		for f in `filter_modules tests.net/ALLTESTS '\[nobuild\]'`; do
 			build_module tests.net/$f jar || exit 1;
 		done;
-	fi
-
-	if [ "${do_dist_fnd}" = 0 ]; then
-		echo '**** Building dist.fnd ****'
-		/bin/mkdir -p dist.fnd
-		/bin/mkdir -p build.fnd
-		for f in `filter_modules modules.fnd/ALLMODULES '\[nodist\]'`; do
-			expand_module $f modules.fnd build.fnd || exit 1;
-		done;
-		if [ "${verbose}" = 0 ]; then
-			echo jar cf dist.fnd/infogrid-fnd.jar 'build.fnd/*'
-		fi
-		( cd build.fnd; jar cf ../dist.fnd/infogrid-fnd.jar * )
-	fi
-	if [ "${do_dist_net}" = 0 ]; then
-		echo '**** Building dist.net ****'
-		/bin/mkdir -p dist.net
-		/bin/mkdir -p build.net
-		for f in `filter_modules modules.net/ALLMODULES '\[nodist\]'`; do
-			expand_module $f modules.net build.net || exit 1;
-		done;
-		if [ "${verbose}" = 0 ]; then
-			echo jar cf dist.net/infogrid-net.jar 'build.net/*'
-		fi
-		( cd build.net; jar cf ../dist.net/infogrid-net.jar * )
 	fi
 fi
 
@@ -457,6 +424,73 @@ if [ "${do_doc}" = 0 ]; then
 			doc_module tests.net/$f || exit 1;
 		done;
 	fi
+fi
+
+if [ "${do_dist}" = 0 ]; then
+	mkdir -p dist
+	cp LICENSE.InfoGrid.txt LICENSE.agplv3.txt dist/
+	echo '<html><head><title>InfoGrid JavaDoc Overview</title>' > $JAVADOC_OVERVIEW;
+	echo '<style>' >> $JAVADOC_OVERVIEW;
+	echo 'table { border-collapse: collapse; }' >> $JAVADOC_OVERVIEW;
+	echo 'td { vertical-align: top; border: #f0f0f0 solid 1px; width: 25%; padding: 5px; }' >> $JAVADOC_OVERVIEW;
+	echo '</style></head>' >> $JAVADOC_OVERVIEW;
+
+	echo '<body><h1>InfoGrid<sup style="font-size:60%">TM</sup> JavaDoc Overview</h1>' >> $JAVADOC_OVERVIEW;
+	echo '<table><tr>' >> $JAVADOC_OVERVIEW;
+        if [ "${do_modules_fnd}" = 0 ]; then
+		echo '**** Creating dist for modules.fnd ****'
+		mkdir -p dist/modules.fnd
+		echo '<td>' >> $JAVADOC_OVERVIEW;
+		echo '<h2>modules.fnd</h2>' >> $JAVADOC_OVERVIEW;
+		echo '<ul>' >> $JAVADOC_OVERVIEW;
+		for f in `filter_modules modules.fnd/ALLMODULES '\[nodist\]' | sort`; do
+			dist_module modules.fnd/$f modules.fnd || exit 1;
+			echo "<li><a href=\"modules.fnd/$f.docs/index.html\">$f</a></li>" >> $JAVADOC_OVERVIEW;
+		done;
+		echo '</ul>' >> $JAVADOC_OVERVIEW;
+		echo '</td>' >> $JAVADOC_OVERVIEW;
+	fi
+        if [ "${do_modules_net}" = 0 ]; then
+                echo '**** Creating dist for modules.net ****'
+                mkdir -p dist/modules.net
+                echo '<td>' >> $JAVADOC_OVERVIEW;
+                echo '<h2>modules.net</h2>' >> $JAVADOC_OVERVIEW;
+                echo '<ul>' >> $JAVADOC_OVERVIEW;
+                for f in `filter_modules modules.net/ALLMODULES '\[nodist\]' | sort`; do
+                        dist_module modules.net/$f modules.net || exit 1;
+                        echo "<li><a href=\"modules.net/$f.docs/index.html\">$f</a></li>" >> $JAVADOC_OVERVIEW;
+                done;
+                echo '</ul>' >> $JAVADOC_OVERVIEW;
+                echo '</td>' >> $JAVADOC_OVERVIEW;
+        fi
+        if [ "${do_apps_fnd}" = 0 ]; then
+                echo '**** Creating dist for apps.fnd ****'
+                mkdir -p dist/apps.fnd
+                echo '<td>' >> $JAVADOC_OVERVIEW;
+                echo '<h2>apps.fnd</h2>' >> $JAVADOC_OVERVIEW;
+                echo '<ul>' >> $JAVADOC_OVERVIEW;
+                for f in `filter_modules apps.fnd/ALLAPPS '\[nodist\]' | sort`; do
+                        dist_module apps.fnd/$f apps.fnd || exit 1;
+                        echo "<li><a href=\"apps.fnd/$f.docs/index.html\">$f</a></li>" >> $JAVADOC_OVERVIEW;
+                done;
+                echo '</ul>' >> $JAVADOC_OVERVIEW;
+                echo '</td>' >> $JAVADOC_OVERVIEW;
+        fi
+        if [ "${do_apps_net}" = 0 ]; then
+                echo '**** Creating dist for apps.net ****'
+                mkdir -p dist/apps.net
+                echo '<td>' >> $JAVADOC_OVERVIEW;
+                echo '<h2>apps.net</h2>' >> $JAVADOC_OVERVIEW;
+                echo '<ul>' >> $JAVADOC_OVERVIEW;
+                for f in `filter_modules apps.net/ALLAPPS '\[nodist\]' | sort`; do
+                        dist_module apps.net/$f apps.net || exit 1;
+                        echo "<li><a href=\"apps.net/$f.docs/index.html\">$f</a></li>" >> $JAVADOC_OVERVIEW;
+                done;
+                echo '</ul>' >> $JAVADOC_OVERVIEW;
+                echo '</td>' >> $JAVADOC_OVERVIEW;
+        fi
+	echo '</td></table>' >> $JAVADOC_OVERVIEW;
+	echo '</body></html>' >> $JAVADOC_OVERVIEW;
 fi
 
 echo '** DONE **'

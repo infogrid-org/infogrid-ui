@@ -1,0 +1,30 @@
+All files in this repository are part of InfoGrid, with the exception of the files
+in the "vendor" directory/ies, which are copies of other open-source software
+included in this repository to make builds easier. Vendor software has their
+own license.
+
+InfoGrid is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License version 3 as published by the
+Free Software Foundation.
+
+InfoGrid IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING,
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ANY OR ALL COPYRIGHT HOLDERS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+See the GNU Affero General Public License version 3 for more details.
+
+You should have received a copy of the GNU Affero General Public License
+version 3 along with InfoGrid.  If not, see <http://www.gnu.org/licenses/>.
+
+If you are unable or unwilling to abide by the terms of the GNU Affero General
+Public License version 3, feel free to contact the copyright holder(s) for a
+commercial license. See http://InfoGrid.org/ .
+
+Copyright 1998-2009, R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+
