@@ -1,7 +1,0 @@
-2008-07-05 09:02:36,780 INFO org.apache.hadoop.metrics.jvm.JvmMetrics: Initializing JVM Metrics with processName=MAP, sessionId=
-2008-07-05 09:02:36,791 WARN org.apache.hadoop.fs.FileSystem: "localhost:9000" is a deprecated filesystem name. Use "hdfs://localhost:9000/" instead.
-2008-07-05 09:02:36,883 INFO org.apache.hadoop.mapred.MapTask: numReduceTasks: 1
-2008-07-05 09:02:36,899 WARN org.apache.hadoop.fs.FileSystem: "localhost:9000" is a deprecated filesystem name. Use "hdfs://localhost:9000/" instead.
-2008-07-05 09:02:37,214 WARN org.apache.hadoop.fs.FileSystem: "localhost:9000" is a deprecated filesystem name. Use "hdfs://localhost:9000/" instead.
-2008-07-05 09:02:37,216 WARN org.apache.hadoop.fs.FileSystem: "localhost:9000" is a deprecated filesystem name. Use "hdfs://localhost:9000/" instead.
-2008-07-05 09:02:37,325 INFO org.apache.hadoop.mapred.TaskRunner: Task 'task_200807050858_0003_m_000005_0' done.
