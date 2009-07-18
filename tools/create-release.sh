@@ -52,13 +52,14 @@ echo "Creating InfoGrid version $filename.";
 
 mkdir -p $upload;
 mv dist $filename;
-tar -c -z -f $upload/$filename-all.tgz $filename;
-tar --exclude '*/apps.*' --exclude '*.docs*' --exclude '*javadoc-overview.html' -c -z -f $upload/$filename-modules-nodocs.tgz $filename;
-tar --exclude '*/apps.*' -c -z -f $upload/$filename-modules-docs.tgz $filename;
+tar -c -j -f $upload/$filename-all.tar.bzip2 $filename;
+tar --exclude '*/apps.*' --exclude '*.docs*' --exclude '*javadoc-overview.html' -c -j -f $upload/$filename-modules-nodocs.tar.bzip2 $filename;
+tar --exclude '*/apps.*' -c -j -f $upload/$filename-modules-docs.tar.bzip2 $filename;
 cp $filename/apps.fnd/org.infogrid.meshworld.war $upload/org.infogrid.meshworld-$version.war;
 cp $filename/apps.net/org.infogrid.meshworld.net.war $upload/org.infogrid.meshworld.net-$version.war;
 mkdir -p $upload/$filename-javadoc
 cp $filename/javadoc-overview.html $upload/$filename-javadoc/
 ( cd $filename ; tar -c -f - */*.docs | ( cd ../$upload/$filename-javadoc; tar xf - ))
+tar -c -j -f $upload/$filename-javadoc.tar.bzip2 $upload/$filename-javadoc
 exit 0;
 
