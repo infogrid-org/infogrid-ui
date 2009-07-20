@@ -244,7 +244,7 @@
             <propertytype ID="org.infogrid.model.Test/SimpleBlobTest_AnyOptional">
                 <name>AnyOptional</name>
                 <datatype>
-                    <BlobDataType default="theAnyType"/>
+                    <BlobDataType typefield="theAnyType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -257,7 +257,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_AnyOptional">
                 <name>AnyOptional</name>
                 <datatype>
-                    <BlobDataType default="theAnyType"/>
+                    <BlobDataType typefield="theAnyType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -265,7 +265,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_AnyMandatory">
                 <name>AnyMandatory</name>
                 <datatype>
-                    <BlobDataType default="theAnyType"/>
+                    <BlobDataType typefield="theAnyType"/>
                 </datatype>
                 <defaultvalue>Default value for AnyMandatory</defaultvalue>
             </propertytype>
@@ -273,7 +273,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_TextPlainOrHtmlOptional">
                 <name>TextPlainOrHtmlOptional</name>
                 <datatype>
-                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                    <BlobDataType typefield="theTextPlainOrHtmlType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -281,7 +281,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_TextPlainOrHtmlMandatory">
                 <name>TextPlainOrHtmlMandatory</name>
                 <datatype>
-                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                    <BlobDataType typefield="theTextPlainOrHtmlType"/>
                 </datatype>
                 <defaultvalue>Default value for TextPlainOrHtmlMandatory</defaultvalue>
             </propertytype>
@@ -289,7 +289,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_TextPlainOptional">
                 <name>TextPlainOptional</name>
                 <datatype>
-                    <BlobDataType default="theTextPlainType"/>
+                    <BlobDataType typefield="theTextPlainType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -297,7 +297,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_TextPlainMandatory">
                 <name>TextPlainMandatory</name>
                 <datatype>
-                    <BlobDataType default="theTextPlainType"/>
+                    <BlobDataType typefield="theTextPlainType"/>
                 </datatype>
                 <defaultvalue>Default value for TextPlainMandatory</defaultvalue>
             </propertytype>
@@ -305,7 +305,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_TextHtmlOptional">
                 <name>TextHtmlOptional</name>
                 <datatype>
-                    <BlobDataType default="theTextHtmlType"/>
+                    <BlobDataType typefield="theTextHtmlType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -313,7 +313,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_TextHtmlMandatory">
                 <name>TextHtmlMandatory</name>
                 <datatype>
-                    <BlobDataType default="theTextHtmlType"/>
+                    <BlobDataType typefield="theTextHtmlType"/>
                 </datatype>
                 <defaultvalue>Default value for TextHtmlMandatory</defaultvalue>
             </propertytype>
@@ -321,7 +321,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_GifOptional">
                 <name>GifOptional</name>
                 <datatype>
-                    <BlobDataType default="theGifType"/>
+                    <BlobDataType typefield="theGifType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -329,7 +329,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_GifMandatory">
                 <name>GifMandatory</name>
                 <datatype>
-                    <BlobDataType default="theGifType"/>
+                    <BlobDataType typefield="theGifType"/>
                 </datatype>
                 <defaultvalue>FIXME</defaultvalue>
             </propertytype>
@@ -337,7 +337,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_JpgOptional">
                 <name>JpgOptional</name>
                 <datatype>
-                    <BlobDataType default="theJpgType"/>
+                    <BlobDataType typefield="theJpgType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -345,7 +345,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_JpgMandatory">
                 <name>JpgMandatory</name>
                 <datatype>
-                    <BlobDataType default="theJpgType"/>
+                    <BlobDataType typefield="theJpgType"/>
                 </datatype>
                 <defaultvalue>FIXME</defaultvalue>
             </propertytype>
@@ -353,7 +353,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_PngOptional">
                 <name>PngOptional</name>
                 <datatype>
-                    <BlobDataType default="thePngType"/>
+                    <BlobDataType typefield="thePngType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -361,7 +361,7 @@
             <propertytype ID="org.infogrid.model.Test/BlobTest_PngMandatory">
                 <name>PngMandatory</name>
                 <datatype>
-                    <BlobDataType default="thePngType"/>
+                    <BlobDataType typefield="thePngType"/>
                 </datatype>
                 <defaultvalue>FIXME</defaultvalue>
             </propertytype>

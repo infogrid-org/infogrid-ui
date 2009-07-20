@@ -1443,7 +1443,7 @@ public class XmlModelExporter
                     if( "theDefault".equals( fieldName )) {
                         return null;
                     } else {
-                        return " " + XmlModelTokens.DEFAULT_KEYWORD + "=\"" + fieldName + "\"";
+                        return " " + XmlModelTokens.TYPEFIELD_KEYWORD + "=\"" + fieldName + "\"";
                     }
                 }
             } catch( IllegalAccessException ex ) {

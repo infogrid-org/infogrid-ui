@@ -253,7 +253,7 @@ abstract class XmlModelTokens
     /**
      * This is the list of keywords for attribute names.
      */
-    static final String DEFAULT_KEYWORD         = "default";
+    static final String TYPEFIELD_KEYWORD       = "typefield";
     static final String IDENTIFIER_KEYWORD      = "ID";
     static final String IMPLEMENTATION_KEYWORD  = "implementation";
     static final String INTERFACE_KEYWORD       = "interface";

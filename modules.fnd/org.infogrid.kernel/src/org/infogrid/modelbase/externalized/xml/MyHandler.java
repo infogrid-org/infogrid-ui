@@ -937,7 +937,7 @@ public class MyHandler
                     break;
                 case XmlModelTokens.BLOB_DATATYPE_TOKEN:
                     theAttributes = (ExternalizedAttributes) theStack.pop();
-                    theStack.push( determineDataType( BlobDataType.class, theAttributes, XmlModelTokens.DEFAULT_KEYWORD, BlobDataType.theDefault ));
+                    theStack.push( determineDataType( BlobDataType.class, theAttributes, XmlModelTokens.TYPEFIELD_KEYWORD, BlobDataType.theDefault ));
                     break;
                 case XmlModelTokens.BOOLEAN_DATATYPE_TOKEN:
                     theAttributes = (ExternalizedAttributes) theStack.pop();
@@ -973,11 +973,11 @@ public class MyHandler
                     break;
                 case XmlModelTokens.FLOAT_DATATYPE_TOKEN:
                     theAttributes = (ExternalizedAttributes) theStack.pop();
-                    theStack.push( determineDataType( FloatDataType.class, theAttributes, XmlModelTokens.DEFAULT_KEYWORD, FloatDataType.theDefault ));
+                    theStack.push( determineDataType( FloatDataType.class, theAttributes, XmlModelTokens.TYPEFIELD_KEYWORD, FloatDataType.theDefault ));
                     break;
                 case XmlModelTokens.INTEGER_DATATYPE_TOKEN:
                     theAttributes = (ExternalizedAttributes) theStack.pop();
-                    theStack.push( determineDataType( IntegerDataType.class, theAttributes, XmlModelTokens.DEFAULT_KEYWORD, IntegerDataType.theDefault ));
+                    theStack.push( determineDataType( IntegerDataType.class, theAttributes, XmlModelTokens.TYPEFIELD_KEYWORD, IntegerDataType.theDefault ));
                     break;
                 case XmlModelTokens.MULTIPLICITY_DATATYPE_TOKEN:
                     theAttributes = (ExternalizedAttributes) theStack.pop();

@@ -30,7 +30,7 @@
                 <username>Content</username>
                 <userdescription>Current official content of the Wiki Object.</userdescription>
                 <datatype>
-                    <BlobDataType default="theTextHtmlType"/>
+                    <BlobDataType typefield="theTextHtmlType"/>
                 </datatype>
                 <defaultvalue><![CDATA[<p>(Wiki Object Placeholder)</p>]]></defaultvalue>
             </propertytype>

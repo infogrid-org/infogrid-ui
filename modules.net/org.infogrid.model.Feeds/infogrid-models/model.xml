@@ -35,7 +35,7 @@
                 <username>Title</username>
                 <userdescription>The feed's title</userdescription>
                 <datatype>
-                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                    <BlobDataType typefield="theTextPlainOrHtmlType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -44,7 +44,7 @@
                 <username>Description</username>
                 <userdescription>The feed's description</userdescription>
                 <datatype>
-                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                    <BlobDataType typefield="theTextPlainOrHtmlType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -78,7 +78,7 @@
                 <username>Subtitle</username>
                 <userdescription>The feed's subtitle</userdescription>
                 <datatype>
-                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                    <BlobDataType typefield="theTextPlainOrHtmlType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -106,7 +106,7 @@
                 <username>Title</username>
                 <userdescription>The feed item's title</userdescription>
                 <datatype>
-                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                    <BlobDataType typefield="theTextPlainOrHtmlType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -116,7 +116,7 @@
                 <userdescription>The feed item's content.</userdescription>
                 <!-- This item is called Description in RSS -->
                 <datatype>
-                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                    <BlobDataType typefield="theTextPlainOrHtmlType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
@@ -145,7 +145,7 @@
                 <username>Summary</username>
                 <userdescription>The feed item's summary</userdescription>
                 <datatype>
-                    <BlobDataType default="theTextPlainOrHtmlType"/>
+                    <BlobDataType typefield="theTextPlainOrHtmlType"/>
                 </datatype>
                 <isoptional/>
             </propertytype>
