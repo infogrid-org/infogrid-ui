@@ -156,6 +156,13 @@ public abstract class StandardModuleActivator
             
             return;
 
+        } catch( NoSuchMethodException ex ) {
+            // this fine. Developer only provided activation method.
+
+            ModuleErrorHandler.informModuleDeactivateSucceeded( theModule );
+
+            return;
+
         } catch( InvocationTargetException ex ) {
             ModuleErrorHandler.informModuleDeactivateFailed( theModule, ex.getTargetException() );
 

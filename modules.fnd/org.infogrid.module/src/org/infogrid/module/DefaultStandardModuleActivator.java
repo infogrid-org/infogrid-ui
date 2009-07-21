@@ -86,6 +86,12 @@ public class DefaultStandardModuleActivator
         String activationClassName    = theModule.getModuleAdvertisement().getActivationClassName();
         String deactivationMethodName = theModule.getModuleAdvertisement().getDeactivationMethodName();
 
+        if( activationClassName == null || activationClassName.length() == 0 ) {
+            return;
+        }
+        if( deactivationMethodName == null || deactivationMethodName.length() == 0 ) {
+            return;
+        }
         try {
             super.deactivate(
                     dependentModules,

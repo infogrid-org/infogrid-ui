@@ -151,6 +151,8 @@ public class CommandlineBootLoader
 
             theRootModule.run( runClassName, runMethodName, remainingArgs );
 
+            theRootModule.deactivateRecursively();
+
         } catch( Throwable ex ) {
 //            StringBuffer buf = new StringBuffer();
 //            if( theInstallation != null && theModuleRegistry != null && theInstallation.useModuleClassLoaders() /* && theInstallation.isShowModuleRegistry() */ ) {
