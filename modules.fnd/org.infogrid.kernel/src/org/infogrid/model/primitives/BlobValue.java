@@ -595,6 +595,7 @@ public abstract class BlobValue
         /**
          * Construct one.
          *
+         * @param type the BlobDataType to which this BlobDataType belongs
          * @param value the content of the BlobValue
          * @param mimeType the MIME type of the BlobValue in "abc/def" form
          */
