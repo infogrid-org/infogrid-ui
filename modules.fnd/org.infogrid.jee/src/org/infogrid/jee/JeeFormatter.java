@@ -1028,6 +1028,9 @@ public class JeeFormatter
         if( candidate instanceof ServletException && cause == null ) {
             ret = ((ServletException)candidate).getRootCause(); // stupid inconsistent API
 
+            if( ret == null ) {
+                ret = candidate;
+            }
         } else if( candidate instanceof LocalizedException ) {
             ret = candidate; // it's our's, it will know what to do
 
