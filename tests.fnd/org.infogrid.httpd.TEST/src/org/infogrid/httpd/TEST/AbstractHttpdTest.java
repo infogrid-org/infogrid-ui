@@ -67,6 +67,13 @@ public abstract class AbstractHttpdTest
     {
         if( theServer != null ) {
             theServer.stop();
+
+            // wait for a little bit so the ServerSocket can go away
+            try {
+                sleepFor( 1000L );
+            } catch( InterruptedException ex ) {
+                // ignore
+            }
         }
     }
 
