@@ -116,10 +116,22 @@ public class DefaultStructuredResponseTemplateFactory
         }
         
         if( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME.equals( requestedTemplateName )) {
-            ret = NoContentStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured, c );
+            ret = NoContentStructuredResponseTemplate.create(
+                    request,
+                    requestedTemplateName,
+                    userRequestedTemplateName,
+                    structured,
+                    mime,
+                    c );
 
         } else if( VerbatimStructuredResponseTemplate.VERBATIM_TEXT_TEMPLATE_NAME.equals( requestedTemplateName )) {
-            ret = VerbatimStructuredResponseTemplate.create( request, requestedTemplateName, userRequestedTemplateName, structured, c );
+            ret = VerbatimStructuredResponseTemplate.create(
+                    request,
+                    requestedTemplateName,
+                    userRequestedTemplateName,
+                    structured,
+                    mime,
+                    c );
 
         } else {
             RequestDispatcher dispatcher = null;
@@ -150,11 +162,16 @@ public class DefaultStructuredResponseTemplateFactory
                         requestedTemplateName,
                         userRequestedTemplateName,
                         structured,
+                        mime,
                         c );
 
             } else if( mime != null && !mime.startsWith( "text/" )) {
                 // binary content
-                ret = BinaryPassThruStructuredResponseTemplate.create( request, structured, c );
+                ret = BinaryPassThruStructuredResponseTemplate.create(
+                        request,
+                        structured,
+                        mime,
+                        c );
                 
             } else {
                 // all hope is lost, we have to stream verbatim whatever it is that is in structured
@@ -163,6 +180,7 @@ public class DefaultStructuredResponseTemplateFactory
                         requestedTemplateName,
                         userRequestedTemplateName,
                         structured,
+                        mime,
                         c );
             }
         }

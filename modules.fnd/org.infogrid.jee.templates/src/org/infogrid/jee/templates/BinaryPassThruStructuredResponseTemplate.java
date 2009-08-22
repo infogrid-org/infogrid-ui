@@ -32,17 +32,20 @@ public class BinaryPassThruStructuredResponseTemplate
      *
      * @param request the incoming HTTP request
      * @param structured the StructuredResponse that contains the response
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
      * @return the created JspStructuredResponseTemplate
      */
     public static BinaryPassThruStructuredResponseTemplate create(
             SaneRequest        request,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
         BinaryPassThruStructuredResponseTemplate ret = new BinaryPassThruStructuredResponseTemplate(
                 request,
                 structured,
+                defaultMime,
                 c );
         return ret;
     }
@@ -52,14 +55,16 @@ public class BinaryPassThruStructuredResponseTemplate
      * 
      * @param request the incoming HTTP request
      * @param structured the StructuredResponse that contains the response
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
      */
     protected BinaryPassThruStructuredResponseTemplate(
             SaneRequest        request,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
-        super( request, null, null, structured, c );
+        super( request, null, null, structured, defaultMime, c );
     }
 
     /**

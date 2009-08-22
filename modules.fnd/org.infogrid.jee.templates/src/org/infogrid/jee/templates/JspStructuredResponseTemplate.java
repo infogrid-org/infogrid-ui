@@ -39,6 +39,7 @@ public class JspStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
      * @return the created JspStructuredResponseTemplate
      */
@@ -48,6 +49,7 @@ public class JspStructuredResponseTemplate
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
         JspStructuredResponseTemplate ret = new JspStructuredResponseTemplate(
@@ -56,6 +58,7 @@ public class JspStructuredResponseTemplate
                 requestedTemplate,
                 userRequestedTemplate,
                 structured,
+                defaultMime,
                 c );
         return ret;
     }
@@ -68,6 +71,7 @@ public class JspStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
      */
     protected JspStructuredResponseTemplate(
@@ -76,9 +80,10 @@ public class JspStructuredResponseTemplate
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
-        super( request, requestedTemplate, userRequestedTemplate, structured, c );
+        super( request, requestedTemplate, userRequestedTemplate, structured, defaultMime, c );
 
         theRequestDispatcher = dispatcher;
     }

@@ -44,6 +44,7 @@ public abstract class AbstractStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
      */
     protected AbstractStructuredResponseTemplate(
@@ -51,14 +52,16 @@ public abstract class AbstractStructuredResponseTemplate
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
         super( c );
 
         theRequest               = request;
-        theStructured            = structured;
         theRequestedTemplate     = requestedTemplate;
         theUserRequestedTemplate = userRequestedTemplate;
+        theStructured            = structured;
+        theDefaultMime           = defaultMime;
     }
     
     /**
@@ -195,10 +198,15 @@ public abstract class AbstractStructuredResponseTemplate
         for( HasHeaderPreferences current : toConsider( structured ) ) {
             mime = current.getMimeType();
             if( mime != null ) {
-                delegate.setContentType( mime );
                 break;
             }
         }
+        if( mime == null ) {
+            // in the case of an error and otherwise empty page (no sections in the page),
+            // we use the default MIME type from the template
+            mime = theDefaultMime;
+        }
+        delegate.setContentType( mime );
     }
 
     /**
@@ -257,13 +265,15 @@ public abstract class AbstractStructuredResponseTemplate
                     "theRequest",
                     "theStructured",
                     "theRequestedTemplate",
-                    "theUserRequestedTemplate"
+                    "theUserRequestedTemplate",
+                    "theDefaultMime"
                 },
                 new Object[] {
                     theRequest,
                     theStructured,
                     theRequestedTemplate,
-                    theUserRequestedTemplate
+                    theUserRequestedTemplate,
+                    theDefaultMime
                 });
     }
 
@@ -286,4 +296,10 @@ public abstract class AbstractStructuredResponseTemplate
      * The formatting template requested by the user, if any.
      */
     protected String theUserRequestedTemplate;
+
+    /**
+     * The default MIME type for the response.
+     */
+    protected String theDefaultMime;
+;
 }

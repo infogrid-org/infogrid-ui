@@ -33,14 +33,16 @@ public class NoContentStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
-     * @return the created JspStructuredResponseTemplate
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
+     * @return the created JspStructuredResponseTemplate
      */
     public static NoContentStructuredResponseTemplate create(
             SaneRequest        request,
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
         NoContentStructuredResponseTemplate ret = new NoContentStructuredResponseTemplate(
@@ -48,6 +50,7 @@ public class NoContentStructuredResponseTemplate
                 requestedTemplate,
                 userRequestedTemplate,
                 structured,
+                defaultMime,
                 c );
 
         return ret;
@@ -60,6 +63,7 @@ public class NoContentStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
      */
     protected NoContentStructuredResponseTemplate(
@@ -67,9 +71,10 @@ public class NoContentStructuredResponseTemplate
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
-        super( request, requestedTemplate, userRequestedTemplate, structured, c );
+        super( request, requestedTemplate, userRequestedTemplate, structured, defaultMime, c );
     }
 
     /**

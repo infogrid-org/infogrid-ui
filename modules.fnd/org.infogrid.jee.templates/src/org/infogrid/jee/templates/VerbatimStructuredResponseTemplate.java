@@ -43,6 +43,7 @@ public class VerbatimStructuredResponseTemplate
      * @param structured the StructuredResponse that contains the response
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
      * @return the created JspStructuredResponseTemplate
      */
@@ -51,6 +52,7 @@ public class VerbatimStructuredResponseTemplate
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
         VerbatimStructuredResponseTemplate ret = new VerbatimStructuredResponseTemplate(
@@ -58,6 +60,7 @@ public class VerbatimStructuredResponseTemplate
                 requestedTemplate,
                 userRequestedTemplate,
                 structured,
+                defaultMime,
                 c );
         return ret;
     }
@@ -69,6 +72,7 @@ public class VerbatimStructuredResponseTemplate
      * @param requestedTemplate the requested ResponseTemplate that will be used, if any
      * @param userRequestedTemplate the ResponseTemplate requested by the user, if any
      * @param structured the StructuredResponse that contains the response
+     * @param defaultMime the default MIME type for the response
      * @param c the Context to use
      */
     protected VerbatimStructuredResponseTemplate(
@@ -76,9 +80,10 @@ public class VerbatimStructuredResponseTemplate
             String             requestedTemplate,
             String             userRequestedTemplate,
             StructuredResponse structured,
+            String             defaultMime,
             Context            c )
     {
-        super( request, requestedTemplate, userRequestedTemplate, structured, c );
+        super( request, requestedTemplate, userRequestedTemplate, structured, defaultMime, c );
     }
 
     /**
