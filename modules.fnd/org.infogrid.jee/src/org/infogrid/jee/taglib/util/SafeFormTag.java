@@ -45,7 +45,7 @@ public class SafeFormTag
     @Override
     protected void initializeToDefaults()
     {
-        theId            = null;
+        id               = null; // inherited
         theStyle         = null;
         theTitle         = null;
         theLang          = null;
@@ -549,7 +549,7 @@ public class SafeFormTag
             IgnoreException
     {
         print( "<form" );
-        appendIfNeeded( "id",             theId );
+        appendIfNeeded( "id",             id );
         appendIfNeeded( "style",          theStyle );
         appendIfNeeded( "title",          theTitle );
         appendIfNeeded( "lang",           theLang );
@@ -600,11 +600,6 @@ public class SafeFormTag
 
         return EVAL_PAGE;
     }
-    
-    /**
-     * The id attribute.
-     */
-    protected String theId;
     
     /**
      * The style attribute.
