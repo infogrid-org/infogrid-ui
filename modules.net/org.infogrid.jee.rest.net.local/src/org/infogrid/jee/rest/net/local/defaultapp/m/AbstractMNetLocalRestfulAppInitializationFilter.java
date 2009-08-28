@@ -75,8 +75,9 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
         throws
             ServletException
     {
-        HttpServletRequest realRequest = (HttpServletRequest) request;
-        SaneRequest        saneRequest = SaneServletRequest.create( realRequest );
+        HttpServletRequest realRequest     = (HttpServletRequest) request;
+        SaneRequest        saneRequest     = SaneServletRequest.create( realRequest );
+        SaneRequest        originalRequest = saneRequest.getOriginalSaneRequest();
 
         InfoGridWebApp app        = InfoGridWebApp.getSingleton();
         Context        appContext = app.getApplicationContext();
@@ -92,7 +93,7 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
             appContext.addContextObject( meshBaseIdentifierFactory );
 
             if( theDefaultMeshBaseIdentifier == null ) {
-                theDefaultMeshBaseIdentifier = saneRequest.getAbsoluteBaseUri();
+                theDefaultMeshBaseIdentifier = originalRequest.getAbsoluteBaseUri();
             }
 
             // Only one MeshBase

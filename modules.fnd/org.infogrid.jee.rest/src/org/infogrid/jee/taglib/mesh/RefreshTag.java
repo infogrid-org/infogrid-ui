@@ -87,9 +87,8 @@ public class RefreshTag
             JspException,
             IgnoreException
     {
-        StructuredResponse theResponse = (StructuredResponse) lookupOrThrow(
-                StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-        SaneRequest saneRequest = (SaneRequest) lookupOrThrow( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
+        StructuredResponse theResponse = (StructuredResponse) lookupOrThrow( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
+        SaneRequest        saneRequest = (SaneRequest)        lookupOrThrow( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
 
         String href = saneRequest.getAbsoluteFullUri();
         href = theFormatter.filter( href );

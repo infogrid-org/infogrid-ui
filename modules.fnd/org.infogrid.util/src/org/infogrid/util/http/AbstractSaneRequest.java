@@ -32,10 +32,40 @@ public abstract class AbstractSaneRequest
 
     /**
      * Private constructor, for subclasses only.
+     *
+     * @param requestAtProxy the SaneRequest received by the reverse proxy, if any
      */
-    protected AbstractSaneRequest()
+    protected AbstractSaneRequest(
+            SaneRequest requestAtProxy )
     {
-        // nothing
+        theRequestAtProxy = requestAtProxy;
+    }
+
+    /**
+     * If this request was obtained by way of a reverse proxy, return the SaneRequest
+     * that the reverse proxy received. Returns null if no reverse proxy was involved.
+     *
+     * @return the SaneRequest at the reverse proxy, or null if none
+     */
+    public SaneRequest getSaneRequestAtProxy()
+    {
+        return theRequestAtProxy;
+    }
+
+    /**
+     * Obtain the original request as originally issued by the HTTP client. If a reverse
+     * proxy was involved, return the SaneRequest that the reverse proxy received. If
+     * no reverse proxy was involved, return this SaneRequest.
+     *
+     * @return the ultimate SaneRequest
+     */
+    public SaneRequest getOriginalSaneRequest()
+    {
+        if( theRequestAtProxy == null ) {
+            return this;
+        } else {
+            return theRequestAtProxy.getOriginalSaneRequest();
+        }
     }
 
     /**
@@ -497,6 +527,11 @@ public abstract class AbstractSaneRequest
      * The absolute full URI of the Request.
      */
     private String theAbsoluteFullUri;
+
+    /**
+     * The request as it was received by the reverse proxy, if any.
+     */
+    protected SaneRequest theRequestAtProxy;
 
     /**
      * Name of the cookie that might contain Accept-Language information.

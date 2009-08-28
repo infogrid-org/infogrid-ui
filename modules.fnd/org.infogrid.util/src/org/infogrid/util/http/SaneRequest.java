@@ -26,6 +26,23 @@ import org.infogrid.util.CursorIterator;
 public interface SaneRequest
 {
     /**
+     * If this request was obtained by way of a reverse proxy, return the SaneRequest
+     * that the reverse proxy received. Returns null if no reverse proxy was involved.
+     *
+     * @return the SaneRequest at the reverse proxy, or null if none
+     */
+    public abstract SaneRequest getSaneRequestAtProxy();
+
+    /**
+     * Obtain the original request as originally issued by the HTTP client. If a reverse
+     * proxy was involved, return the SaneRequest that the reverse proxy received. If
+     * no reverse proxy was involved, return this SaneRequest.
+     *
+     * @return the ultimate SaneRequest
+     */
+    public abstract SaneRequest getOriginalSaneRequest();
+
+    /**
      * Determine the HTTP method (such as GET).
      *
      * @return the HTTP method

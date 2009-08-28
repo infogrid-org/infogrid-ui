@@ -488,24 +488,6 @@ public abstract class Log
         logTrace( message, t );
     }
 
-//    /**
-//     * Logs a trace message that represents a static method invocation.
-//     *
-//     * @param subject the Class on which the method was invoked
-//     * @param method the name of the method being invoked
-//     * @param args the arguments to the method call
-//     */
-//    public final void traceMethodCallEntry(
-//            Class      subject,
-//            String     method,
-//            Object ... args )
-//    {
-//        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
-//        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
-//
-//        logTrace( message, t );
-//    }
-
     /**
      * Logs a trace message that represents a return from a method.
      *
@@ -520,19 +502,21 @@ public abstract class Log
         logTrace( message, null );
     }
 
-//    /**
-//     * Logs a trace message that represents a return from a static method.
-//     *
-//     * @param subject the Class on which the method was invoked
-//     * @param method the name of the method being invoked
-//     */
-//    public final void traceMethodCallExit(
-//            Class      subject,
-//            String     method )
-//    {
-//        String message = determineMethodCallExitMessage( subject, method );
-//        logTrace( message, null );
-//    }
+    /**
+     * Logs a trace message that represents a return from a method.
+     *
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param ret the return value
+     */
+    public final void traceMethodCallExit(
+            Object     subject,
+            String     method,
+            Object     ret )
+    {
+        String message = determineMethodCallExitMessage( subject, method, ret );
+        logTrace( message, null );
+    }
 
     /**
      * Logs a trace message that represents a constructor invocation.
@@ -679,6 +663,42 @@ public abstract class Log
         buf.append( method );
 
         return buf.toString();
+    }
+
+    /**
+     * Given information about a call return, determine the message.
+     *
+     * @param subject the object on which the method was invoked
+     * @param method the name of the method being invoked
+     * @param ret the return valkuye
+     * @return the message
+     */
+    protected String determineMethodCallExitMessage(
+            Object    subject,
+            String    method,
+            Object    ret )
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Exited " );
+        buf.append( subject );
+        buf.append( " ." );
+        buf.append( method );
+        buf.append( ", returning " );
+
+        try {
+            BufferingDumper dumper = theDumperFactory.obtainFor( this );
+            if( dumper == null ) {
+                return "Cannot find Dumper";
+            }
+            dumper.dump( ret );
+            buf.append( dumper.getBuffer() );
+
+            return buf.toString();
+
+        } catch( FactoryException ex ) {
+            error( ex );
+            return "Cannot create Dumper";
+        }
     }
 
     /**
