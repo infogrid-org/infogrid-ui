@@ -53,13 +53,11 @@ public interface LidProcessingPipeline
      * Name of the LidPersona instance representing the client, and found in the request after the
      * pipeline has been processed.
      */
-    public static final String CLIENT_PERSONA_ATTRIBUTE_NAME
-            = SaneRequestUtils.classToAttributeName( HasIdentifier.class, "RequestingClient" );
+    public static final String CLIENT_PERSONA_ATTRIBUTE_NAME = "org_infogrid_lid_RequestingClient";
 
     /**
      * Name of the HasIdentifier instance found in the request after the pipeline has
      * been processed.
      */
-    public static final String REQUESTED_RESOURCE_ATTRIBUTE_NAME
-            = SaneRequestUtils.classToAttributeName( HasIdentifier.class, "RequestedResource" );
+    public static final String REQUESTED_RESOURCE_ATTRIBUTE_NAME = "org_infogrid_lid_RequestedResource";
 }
