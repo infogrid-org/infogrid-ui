@@ -60,7 +60,7 @@ public class MeshWorldAppInitializationFilter
                 IOException,
                 AppInitializationException
     {
-        String         name    = "java:comp/env/jdbc/meshworldDB";
+        String         name    = "java:comp/env/jdbc/meshworlddb";
         InitialContext ctx     = null;
         Throwable      toThrow = null;
 

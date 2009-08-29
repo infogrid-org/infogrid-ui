@@ -60,7 +60,7 @@ public class NetMeshWorldAppInitializationFilter
                 IOException,
                 AppInitializationException
     {
-        String         name    = "java:comp/env/jdbc/netmeshworldDB";
+        String         name    = "java:comp/env/jdbc/netmeshworlddb";
         InitialContext ctx     = null;
         Throwable      toThrow = null;
 

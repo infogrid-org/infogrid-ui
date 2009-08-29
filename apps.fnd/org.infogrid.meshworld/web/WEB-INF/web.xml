@@ -19,8 +19,8 @@
  <display-name>MeshWorld</display-name>
 
  <resource-ref>
-  <description>jdbc:mysql://localhost:3306/meshworldDB</description>
-  <res-ref-name>jdbc/meshworldDB</res-ref-name>
+  <description>jdbc:mysql://localhost:3306/meshworlddb</description>
+  <res-ref-name>jdbc/meshworlddb</res-ref-name>
   <res-type>javax.sql.DataSource</res-type>
   <res-auth>Container</res-auth>
   <res-sharing-scope>Shareable</res-sharing-scope>

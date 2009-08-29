@@ -19,8 +19,8 @@
  <display-name>NetMeshWorld</display-name>
 
  <resource-ref>
-  <description>jdbc:mysql://localhost:3306/netmeshworldDB</description>
-  <res-ref-name>jdbc/netmeshworldDB</res-ref-name>
+  <description>jdbc:mysql://localhost:3306/netmeshworlddb</description>
+  <res-ref-name>jdbc/netmeshworlddb</res-ref-name>
   <res-type>javax.sql.DataSource</res-type>
   <res-auth>Container</res-auth>
   <res-sharing-scope>Shareable</res-sharing-scope>
