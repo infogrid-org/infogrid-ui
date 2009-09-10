@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,6 +23,7 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.CursorIterable;
 import org.infogrid.util.CursorIterator;
+import org.infogrid.util.NotSingleMemberException;
 
 /**
   * An unordered collection of MeshObject without duplicates (set semantics).
@@ -86,11 +87,11 @@ public interface MeshObjectSet
      * than one member will throw an IllegalStateException.
      *
      * @return the one element of the set, or null if the set is empty
-     * @throws IllegalStateException thrown if the set contains more than one element
+     * @throws NotSingleMemberException thrown if the set contains more than one element
      */
     public abstract MeshObject getSingleMember()
         throws
-            IllegalStateException;
+            NotSingleMemberException;
 
     /**
      * Convenience method to return the content of this MeshObjectSet as an

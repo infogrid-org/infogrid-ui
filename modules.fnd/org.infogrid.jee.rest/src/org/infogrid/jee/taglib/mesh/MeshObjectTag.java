@@ -46,6 +46,7 @@ public class MeshObjectTag
     protected void initializeToDefaults()
     {
         theMeshObjectName       = null;
+        theMeshObject           = null;
         theStringRepresentation = null;
         theMaxLength            = -1;
         theColloquial           = false;
@@ -65,7 +66,7 @@ public class MeshObjectTag
     }
 
     /**
-     * Set value of the meshObjectBean property.
+     * Set value of the meshObjectName property.
      *
      * @param newValue new value of the meshObjectName property
      * @see #getMeshObjectName
@@ -74,6 +75,29 @@ public class MeshObjectTag
             String newValue )
     {
         theMeshObjectName = newValue;
+    }
+
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public MeshObject getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public void setMeshObject(
+            MeshObject newValue )
+    {
+        theMeshObject = newValue;
     }
 
     /**
@@ -155,7 +179,12 @@ public class MeshObjectTag
             JspException,
             IgnoreException
     {
-        MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject obj;
+        if( theMeshObject != null ) {
+            obj = theMeshObject;
+        } else {
+            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        }
 
         try {
             String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectStart( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
@@ -181,7 +210,12 @@ public class MeshObjectTag
             JspException,
             IgnoreException
     {
-        MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject obj;
+        if( theMeshObject != null ) {
+            obj = theMeshObject;
+        } else {
+            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        }
 
         try {
             String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectEnd( pageContext, obj, theStringRepresentation );
@@ -195,9 +229,14 @@ public class MeshObjectTag
     }
 
     /**
-     * Name of the bean that holds the MeshObject (mutually exclusive with theIdentifier).
+     * Name of the bean that holds the MeshObject (mutually exclusive with theMeshObject).
      */
     protected String theMeshObjectName;
+
+    /**
+     * The MeshObject (mutually exclusive with theMeshObjectName).
+     */
+    protected MeshObject theMeshObject;
 
     /**
      * Name of the String representation.

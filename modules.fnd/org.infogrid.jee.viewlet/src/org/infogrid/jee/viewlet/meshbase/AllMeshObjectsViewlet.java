@@ -8,16 +8,18 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.viewlet.meshbase;
 
-import org.infogrid.jee.viewlet.AbstractCursorIterableViewlet;
+import org.infogrid.jee.viewlet.AbstractPagingCursorIterableViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.util.CursorIterator;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
@@ -32,18 +34,20 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
  */ 
 public class AllMeshObjectsViewlet
         extends
-            AbstractCursorIterableViewlet<MeshObject>
+            AbstractPagingCursorIterableViewlet
 {
     /**
      * Factory method.
      *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static AllMeshObjectsViewlet create(
-            Context c )
+            MeshBase mb,
+            Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
         AllMeshObjectsViewlet    ret    = new AllMeshObjectsViewlet( viewed, c );
 
         viewed.setViewlet( ret );
@@ -67,7 +71,7 @@ public class AllMeshObjectsViewlet
                     throws
                         CannotViewException
                 {
-                    return create( c );
+                    return create( toView.getMeshBase(), c );
                 }
         };
     }
@@ -82,19 +86,27 @@ public class AllMeshObjectsViewlet
             AbstractViewedMeshObjects viewed,
             Context                   c )
     {
-        super( viewed, c );
+        super( viewed, DEFAULT_PAGE_SIZE, c );
     }
 
     /**
-     * Obtain the MeshObjectSet to display
+     * Detemine the correct CursorIterator. Default implementation can be
+     * overridden by subclasses.
      *
-     * @return the MeshObjectSet
+     * @return the CursorIterator
      */
     @Override
-    public CursorIterator<MeshObject> getCursorIterator()
+    protected CursorIterator<MeshObject> determineCursorIterator()
     {
         IterableMeshBase meshBase = (IterableMeshBase) getSubject().getMeshBase(); // derive from the subject, so we can do any MeshBase
         
         return meshBase.iterator();
     }
+
+    /**
+     * Default page size.
+     */
+    public static final int DEFAULT_PAGE_SIZE = ResourceHelper.getInstance( AllMeshObjectsViewlet.class ).getResourceIntegerOrDefault(
+            "DefaultPageSize",
+            20 );
 }

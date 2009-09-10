@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,7 +23,7 @@ import org.infogrid.util.logging.Log;
  */
 public class FilteringCursorIteratorTest1
         extends
-            AbstractCursorIteratorTest
+            AbstractCursorIteratorTest1
 {
     /**
      * Run the test.

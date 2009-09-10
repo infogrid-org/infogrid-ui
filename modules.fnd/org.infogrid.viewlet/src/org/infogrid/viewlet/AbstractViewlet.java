@@ -8,17 +8,22 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.viewlet;
 
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factors out commonly used functionality for Viewlets.
@@ -134,7 +139,30 @@ public abstract class AbstractViewlet
     {
         return theViewedMeshObjects;
     }
-    
+
+    /**
+     * Helper method to resolve a MeshObject from a MeshObjectIdentifier in String form.
+     *
+     * @param identifier the MeshObjectIdentifier in String form
+     * @return the found MeshObject, or null if not found
+     * @throws StringRepresentationParseException the String was malformed
+     * @throws MeshObjectAccessException accessing the MeshObject failed
+     * @throws NotPermittedException the caller does not have sufficient permissions to access the MeshObject
+     */
+    protected MeshObject resolveMeshObject(
+            String identifier )
+        throws
+            StringRepresentationParseException,
+            MeshObjectAccessException,
+            NotPermittedException
+    {
+        MeshBase             mb  = theViewedMeshObjects.getMeshBase();
+        MeshObjectIdentifier id  = mb.getMeshObjectIdentifierFactory().fromExternalForm( identifier );
+        MeshObject           ret = mb.accessLocally( id );
+
+        return ret;
+    }
+
     /**
      * The objects being viewed.
      */

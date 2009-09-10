@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -26,14 +26,33 @@ public class SubsettingCursorIterator<E>
             AbstractCursorIterator<E>
 {
     /**
-     * Constructor.
+     * Factory method.
+     *
+     * @param min the minimum index in the array that we return (inclusive).
+     * @param max the maximum index in the array that we return (exclusive).
+     * @param delegate the underlying iterator
+     * @param arrayComponentType the component type for to-be-created arrays
+     * @param <E> the type of element to iterate over
+     * @return the created SubsettingCursorIterator
+     */
+    public static <E> SubsettingCursorIterator<E> create(
+            E                 min,
+            E                 max,
+            CursorIterator<E> delegate,
+            Class<E>          arrayComponentType )
+    {
+        return new SubsettingCursorIterator<E>( min, max, delegate, arrayComponentType );
+    }
+
+    /**
+     * Constructor for subclasses only, use factory method.
      *
      * @param min the minimum index in the array that we return (inclusive).
      * @param max the maximum index in the array that we return (exclusive).
      * @param delegate the underlying iterator
      * @param arrayComponentType the component type for to-be-created arrays
      */
-    public SubsettingCursorIterator(
+    protected SubsettingCursorIterator(
             E                 min,
             E                 max,
             CursorIterator<E> delegate,
@@ -44,6 +63,32 @@ public class SubsettingCursorIterator<E>
         theMin                = min;
         theMax                = max;
         theDelegate           = delegate;
+
+        if( theMin != null ) {
+            theDelegate.moveToBefore( theMin );
+        } else {
+            theDelegate.moveToBeforeFirst();
+        }
+    }
+
+    /**
+     * Obtain the minimum index that we return (inclusive).
+     *
+     * @return the minimum index, or null
+     */
+    public E getMin()
+    {
+        return theMin;
+    }
+
+    /**
+     * Obtain the maximum index that we return (exclusive).
+     *
+     * @return the maximum index, or null
+     */
+    public E getMax()
+    {
+        return theMax;
     }
 
     /**
@@ -78,34 +123,6 @@ public class SubsettingCursorIterator<E>
         } else {
             throw new NoSuchElementException();
         }
-    }
-
-    /**
-     * Returns <tt>true</tt> if the iteration has more elements in the forward direction.
-     *
-     * @return <tt>true</tt> if the iterator has more elements in the forward direction.
-     * @see #hasPrevious()
-     * @see #hasPrevious(int)
-     * @see #hasNext(int)
-     */
-    @Override
-    public boolean hasNext()
-    {
-        return hasNext( 1 );
-    }
-
-    /**
-     * Returns <tt>true</tt> if the iteration has more elements in the backwards direction.
-     *
-     * @return <tt>true</tt> if the iterator has more elements in the backwards direction.
-     * @see #hasNext()
-     * @see #hasPrevious(int)
-     * @see #hasNext(int)
-     */
-    @Override
-    public boolean hasPrevious()
-    {
-        return hasPrevious( 1 );
     }
 
     /**
@@ -257,11 +274,11 @@ public class SubsettingCursorIterator<E>
 
     /**
      * Move the cursor by N positions. Positive numbers indicate forward movemement;
-     * negative numbers indicate backwards movement.
-     * Throws NoSuchElementException if the position does not exist.
+     * negative numbers indicate backward movement. This can move all the way forward
+     * to the position "past last" and all the way backward to the position "before first".
      *
      * @param n the number of positions to move
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException thrown if the position does not exist
      */
     @Override
     public void moveBy(
@@ -275,7 +292,7 @@ public class SubsettingCursorIterator<E>
             try {
                 E found = delegateTrial.next();
 
-                if( found == theMax ) {
+                if( found == theMax ) { // FIXME?
                     // not enough elements in subset
                     throw new NoSuchElementException();
                 }

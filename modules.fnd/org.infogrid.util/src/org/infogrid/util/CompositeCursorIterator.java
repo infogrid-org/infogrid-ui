@@ -257,6 +257,7 @@ public class CompositeCursorIterator<E>
      */
     public int moveToBeforeFirst()
     {
+        // need to traverse to construct return value
         int ret = 0;
         while( theDelegateIndex >= 0 ) {
             if( theDelegateIndex == theDelegates.size() ) {
@@ -264,6 +265,7 @@ public class CompositeCursorIterator<E>
                 theDelegates.get( theDelegateIndex ).moveToAfterLast();
             }
             ret += theDelegates.get( theDelegateIndex ).moveToBeforeFirst();
+            --theDelegateIndex;
         }
         theDelegateIndex = 0;
         return ret;
@@ -278,6 +280,7 @@ public class CompositeCursorIterator<E>
      */
     public int moveToAfterLast()
     {
+        // need to traverse to construct return value
         int ret = 0;
         while( theDelegateIndex < theDelegates.size() ) {
             ret += theDelegates.get( theDelegateIndex ).moveToAfterLast();

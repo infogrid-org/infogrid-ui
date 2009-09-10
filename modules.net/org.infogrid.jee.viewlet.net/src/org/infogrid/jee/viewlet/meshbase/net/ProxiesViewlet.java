@@ -8,14 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.viewlet.meshbase.net;
 
-import org.infogrid.jee.viewlet.AbstractCursorIterableViewlet;
-import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.jee.viewlet.AbstractJeeViewlet;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
@@ -30,18 +30,20 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
  */ 
 public class ProxiesViewlet
         extends
-            AbstractCursorIterableViewlet<Proxy>
+            AbstractJeeViewlet
 {
     /**
      * Factory method.
      *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static ProxiesViewlet create(
-            Context c )
+            MeshBase mb,
+            Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
         ProxiesViewlet           ret    = new ProxiesViewlet( viewed, c );
 
         viewed.setViewlet( ret );
@@ -65,7 +67,7 @@ public class ProxiesViewlet
                     throws
                         CannotViewException
                 {
-                    return create( c );
+                    return create( toView.getMeshBase(), c );
                 }
         };
     }

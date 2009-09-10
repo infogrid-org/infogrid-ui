@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.store.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.text.MessageFormat;
@@ -55,7 +56,10 @@ public class SqlStorePreparedStatement
     {
         if( conn != theConnection || thePreparedStatement == null ) {
             theConnection        = conn;
-            thePreparedStatement = theConnection.prepareStatement( theSql ); 
+            thePreparedStatement = theConnection.prepareStatement(
+                    theSql,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY );
         }
         return thePreparedStatement;
     }

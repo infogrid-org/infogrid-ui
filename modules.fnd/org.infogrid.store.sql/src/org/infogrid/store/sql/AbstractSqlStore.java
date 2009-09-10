@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.NoSuchElementException;
 import javax.sql.DataSource;
 import org.infogrid.store.AbstractIterableStore;
 import org.infogrid.store.IterableStoreCursor;
@@ -193,15 +194,28 @@ public abstract class AbstractSqlStore
     }
 
     /**
+     * Find the very first key.
+     *
+     * @return the first key
+     * @throws NoSuchElementException thrown if the Store is empty
+     */
+    protected abstract String findFirstKey()
+        throws
+            NoSuchElementException;
+
+    /**
      * Find the key N rows up or down from the current key.
      *
      * @param key the current key
      * @param delta the number of rows up (positive) or down (negative)
      * @return the found key, or null
+     * @throws NoSuchElementException thrown if the delta went beyond the "after last" or "before first" element
      */
     protected abstract String findKeyAt(
             String key,
-            int    delta );
+            int    delta )
+        throws
+            NoSuchElementException;
 
     /**
      * Find the next n keys, including key. This method

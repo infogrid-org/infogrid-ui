@@ -27,6 +27,7 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.FlexiblePropertyChangeListenerSet;
+import org.infogrid.util.NotSingleMemberException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
@@ -124,11 +125,11 @@ public abstract class AbstractMeshObjectSet
      * than one member will throw an Exception.
      *
      * @return the one element of the set, or null if the set is empty
-     * @throws IllegalStateException thrown if the set contains more than one element
+     * @throws NotSingleMemberException thrown if the set contains more than one element
      */
     public MeshObject getSingleMember()
         throws
-            IllegalStateException
+            NotSingleMemberException
     {
         int size = getSize();
         switch( size ) {
@@ -139,7 +140,7 @@ public abstract class AbstractMeshObjectSet
                 return get( 0 );
 
             default:
-                throw new IllegalStateException( "MeshObjectSet has " + size + " members, not one" );
+                throw new NotSingleMemberException( "MeshObjectSet has wrong size", size );
         }
     }
 

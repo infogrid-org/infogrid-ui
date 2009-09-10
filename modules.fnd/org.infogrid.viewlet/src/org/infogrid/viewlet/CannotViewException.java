@@ -272,7 +272,7 @@ public abstract class CannotViewException
          * Constructor.
          *
          * @param v which Viewlet could not view
-         * @param name the name of the Parameter that was missing
+         * @param name the name of the parameter that was missing
          * @param o which MeshObjectsToView it could not view
          */
         public ParameterMissing(
@@ -318,6 +318,76 @@ public abstract class CannotViewException
          * Name of the missing parameter.
          */
         protected String theName;
+    }
+
+    /**
+     * An invalid parameter has been specified in the invocation of this Viewlet.
+     */
+    public static class InvalidParameter
+            extends
+                CannotViewException
+    {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
+        /**
+         * Constructor.
+         *
+         * @param v which Viewlet could not view
+         * @param name the name of the parameter that was invalid
+         * @param value the value of the parameter that was invalid
+         * @param o which MeshObjectsToView it could not view
+         */
+        public InvalidParameter(
+                Viewlet           v,
+                String            name,
+                Object            value,
+                MeshObjectsToView o )
+        {
+            super( v, o, "Invalid parameter: " + name, null );
+
+            theName  = name;
+            theValue = value;
+        }
+
+        /**
+         * Obtain a String representation of this instance that can be shown to the user.
+         *
+         * @param rep the StringRepresentation
+         * @param context the StringRepresentationContext of this object
+         * @param pars collects parameters that may influence the String representation
+         * @return String representation
+         * @throws StringifierException thrown if there was a problem when attempting to stringify
+         */
+        @Override
+        public String toStringRepresentation(
+                StringRepresentation           rep,
+                StringRepresentationContext    context,
+                StringRepresentationParameters pars )
+            throws
+                StringifierException
+        {
+            return rep.formatEntry(
+                    getClass(),
+                    "InvalidParameterString",
+                    pars,
+                    theViewlet.getName(),
+                    theViewlet.getUserVisibleName(),
+                    theObjectsToView.getSubject(),
+                    theObjectsToView.getSubject().getIdentifier(),
+                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ),
+                    theName,
+                    theValue );
+        }
+
+        /**
+         * Name of the invalid parameter.
+         */
+        protected String theName;
+
+        /*
+         * Value of the invalid parameter.
+         */
+        protected Object theValue;
     }
 
     /**

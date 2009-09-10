@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -33,7 +33,9 @@ public abstract class AllTests
     {
         TestSpec [] tests = {
                 new TestSpec( FilesystemStoreTest1.class ),
-                new TestSpec( FilesystemStoreTest2.class ),
+                new TestSpec( FilesystemStoreIteratorTest1.class ),
+                new TestSpec( FilesystemStoreIteratorTest2.class ),
+                new TestSpec( FilesystemStoreIteratorTest3.class ),
         };
 
         runTests( tests );

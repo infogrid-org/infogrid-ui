@@ -16,7 +16,6 @@ package org.infogrid.store.sql.TEST;
 
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreValue;
-import org.infogrid.store.sql.SqlStoreIOException;
 import org.infogrid.util.logging.Log;
 
 /**

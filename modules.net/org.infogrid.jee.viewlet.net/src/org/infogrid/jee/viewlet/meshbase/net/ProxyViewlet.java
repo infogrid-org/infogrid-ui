@@ -21,6 +21,7 @@ import org.infogrid.jee.rest.net.NetRestfulRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.util.context.Context;
@@ -44,13 +45,15 @@ public class ProxyViewlet
     /**
      * Factory method.
      *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static ProxyViewlet create(
-            Context c )
+            MeshBase mb,
+            Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
         ProxyViewlet             ret    = new ProxyViewlet( viewed, c );
 
         viewed.setViewlet( ret );
@@ -74,7 +77,7 @@ public class ProxyViewlet
                     throws
                         CannotViewException
                 {
-                    return create( c );
+                    return create( toView.getMeshBase(), c );
                 }
         };
     }

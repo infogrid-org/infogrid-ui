@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -28,6 +28,7 @@
   <requires name="org.infogrid.store.sql.mysql"/>
   <requires name="org.infogrid.store.sql.postgresql"/>
   <requires name="org.infogrid.store.keystore"/>
+  <requires name="org.infogrid.store.TEST"/>
   <requires name="org.infogrid.testharness"/>
   <requires name="org.infogrid.vendors.com.mysql.jdbc"/>
   <requires name="org.infogrid.vendors.org.postgresql.jdbc"/>

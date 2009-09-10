@@ -21,9 +21,10 @@ import org.infogrid.util.logging.Log;
 import java.util.NoSuchElementException;
 
 /**
- * All CursorIterators are run through the same test data, which is factored out here.
+ * Tests regular, several-element CursorIterators.
+ * All CursorIterators are run through the same test sequence, which is factored out here.
  */
-public abstract class AbstractCursorIteratorTest
+public abstract class AbstractCursorIteratorTest1
         extends
             AbstractTest
 {
@@ -67,6 +68,7 @@ public abstract class AbstractCursorIteratorTest
         checkCondition( !iter.hasNext(), "has next at the end" );
         checkCondition( iter.hasPrevious( testData.length ), "Does not have enough previous" );
         checkCondition( !iter.hasPrevious( testData.length + 1 ), "Has too many previous" );
+        checkEquals( iter.peekPrevious(), testData[testData.length-1], "wrong last element" );
 
         try {
             Object found = iter.peekNext();
@@ -147,7 +149,7 @@ public abstract class AbstractCursorIteratorTest
 
         checkEquals( before.length, 3, "wrong number of elements before" );
         for( int i=0 ; i<3 ; ++i ) {
-            checkEquals( testData[i], before[ before.length - 1 - i ], "wrong data at index " + i );
+            checkEquals( testData[i], before[ before.length-1-i ], "wrong data at index " + i );
         }
 
         //
@@ -160,6 +162,84 @@ public abstract class AbstractCursorIteratorTest
         for( int i=3 ; i<testData.length ; ++i ) {
             checkEquals( testData[i], after[ i-3 ], "wrong data at index " + i );
         }
+
+        //
+
+        log.info( "Go to past last" );
+
+        iter.moveToAfterLast();
+
+        checkCondition( !iter.hasNext(), "has next at the end" );
+        checkCondition( iter.hasPrevious( testData.length ), "Does not have enough previous" );
+        checkCondition( !iter.hasPrevious( testData.length + 1 ), "Has too many previous" );
+        checkEquals( iter.peekPrevious(), testData[testData.length-1], "wrong last element" );
+
+        try {
+            Object found = iter.peekNext();
+            reportError( "Found element after end", found );
+        } catch( NoSuchElementException t ) {
+            log.debug( "Correctly received exception" );
+        }
+
+        //
+
+        log.info( "Go before first" );
+
+        iter.moveToBeforeFirst();
+        
+        checkCondition( !iter.hasPrevious(), "has previous at the beginning" );
+        checkCondition( iter.hasNext( testData.length ), "Does not have enough nexts" );
+        checkCondition( !iter.hasNext( testData.length + 1 ), "Has too many nexts" );
+        checkEquals( iter.peekNext(), testData[0], "wrong current element" );
+
+        try {
+            Object found = iter.peekPrevious();
+            reportError( "Found element before beginning", found );
+        } catch( NoSuchElementException t ) {
+            log.debug( "Correctly received exception" );
+        }
+
+        //
+
+        log.info( "Go to the middle, and get all next elements" );
+
+        iter.moveToBeforeFirst();
+        iter.moveBy( 2 );
+        checkCondition( iter.hasNext( testData.length - 2 ), "not enough elements left" );
+        checkCondition( !iter.hasNext( testData.length - 1 ), "too many elements left" );
+        checkEquals( iter.next( testData.length - 2 ).length, testData.length - 2, "elements not found" );
+
+        //
+
+        log.info( "Go to the middle, and get all previous elements" );
+
+        iter.moveToBeforeFirst();
+        iter.moveBy( 2 );
+        checkCondition( iter.hasPrevious( 2 ), "not enough elements left" );
+        checkCondition( !iter.hasPrevious( 3 ), "too many elements left" );
+        checkEquals( iter.previous( 2 ).length, 2, "elements not found" );
+
+        //
+
+        log.info( "Go to the middle, and move to the end" );
+
+        iter.moveToBeforeFirst();
+        iter.moveBy( 2 );
+        checkCondition( iter.hasNext( testData.length - 2 ), "not enough elements left" ); // tested earlier
+        iter.moveBy( testData.length - 2 );
+        checkCondition( !iter.hasNext(), "has next at the end" );
+        checkCondition( iter.hasPrevious(), "Does not have previous" );
+
+        //
+
+        log.info( "Go to the middle, and move to the start" );
+
+        iter.moveToBeforeFirst();
+        iter.moveBy( 2 );
+        checkCondition( iter.hasPrevious( 2 ), "not enough elements left" ); // tested earlier
+        iter.moveBy( -2 );
+        checkCondition( iter.hasNext(), "Does not have next at the beginning" );
+        checkCondition( !iter.hasPrevious(), "Has previous at the beginning" );
     }
 
     /**
@@ -167,7 +247,7 @@ public abstract class AbstractCursorIteratorTest
      *
      * @throws Exception all kinds of things may go wrong in a test
      */
-    protected AbstractCursorIteratorTest()
+    protected AbstractCursorIteratorTest1()
         throws
             Exception
     {

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.viewlet.modelbase;
 
 import java.util.Iterator;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.context.Context;
@@ -37,13 +38,15 @@ public class AllMeshTypesViewlet
     /**
      * Factory method.
      *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static AllMeshTypesViewlet create(
-            Context c )
+            MeshBase mb,
+            Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
         AllMeshTypesViewlet      ret    = new AllMeshTypesViewlet( viewed, c );
 
         viewed.setViewlet( ret );
@@ -67,7 +70,7 @@ public class AllMeshTypesViewlet
                     throws
                         CannotViewException
                 {
-                    return create( c );
+                    return create( toView.getMeshBase(), c );
                 }
         };
     }

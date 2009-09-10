@@ -14,6 +14,9 @@
 
 package org.infogrid.store.sql.TEST;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import org.infogrid.store.IterableStoreCursor;
 import org.infogrid.store.Store;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreListener;
@@ -21,9 +24,6 @@ import org.infogrid.store.StoreValue;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.StreamUtils;
 import org.infogrid.util.logging.Log;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Tests the basic SqlStore functions. See also FilesystemStoreTest1.
@@ -96,7 +96,10 @@ public class SqlStoreTest1
         log.info( "Iterating over what's in the Store" );
         
         int count = 0;
-        for( StoreValue current : theTestStore ) {
+        IterableStoreCursor iter = theTestStore.iterator();
+        while( iter.hasNext() ) {
+            StoreValue current = iter.next();
+
             log.debug( "Found " + count + ": " + current.getKey() );
             ++count;
             TestData found = null;

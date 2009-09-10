@@ -157,6 +157,76 @@ public class StoreValue
     }
 
     /**
+     * Determine equality.
+     *
+     * @param other the Object to compare to
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( !( other instanceof StoreValue )) {
+            return false;
+        }
+        StoreValue realOther = (StoreValue) other;
+
+        if( !theKey.equals( realOther.theKey )) {
+            return false;
+        }
+        if( !theEncodingId.equals( realOther.theEncodingId )) {
+            return false;
+        }
+        if( theTimeCreated != realOther.theTimeCreated ) {
+            return false;
+        }
+        if( theTimeUpdated != realOther.theTimeUpdated ) {
+            return false;
+        }
+        if( theTimeRead != realOther.theTimeRead ) {
+            return false;
+        }
+        if( theTimeExpires != realOther.theTimeExpires ) {
+            return false;
+        }
+        if( theData.length != realOther.theData.length ) {
+            return false;
+        }
+        for( int i=0 ; i<theData.length ; ++i ) {
+            if( theData[i] != realOther.theData[i] ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        return theKey.hashCode();
+    }
+
+    /**
+     * Convert to String representation, for debugging.
+     *
+     * @return String representation
+     */
+    public String toString()
+    {
+        StringBuilder almost = new StringBuilder();
+        almost.append( getClass().getName() );
+        almost.append( "{ key: " );
+        almost.append( theKey );
+        almost.append( " }" );
+        return almost.toString();
+    }
+
+    /**
      * Dump this object.
      *
      * @param d the Dumper to dump to

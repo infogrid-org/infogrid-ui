@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -60,7 +60,7 @@ public class SubdirectoryKeyFileMapper
     public File keyToFile(
             String key )
     {
-        String subdirString = theSubDir.getAbsolutePath();
+        String subdirString = theSubDir.getPath();
         File ret = new File( subdirString + "/" + key + FILE_SUFFIX );
         return ret;
     }
@@ -77,8 +77,8 @@ public class SubdirectoryKeyFileMapper
         throws
             IllegalArgumentException
     {
-        String pathString   = path.getAbsolutePath();
-        String subdirString = theSubDir.getAbsolutePath();
+        String pathString   = path.getPath();
+        String subdirString = theSubDir.getPath();
         
         if( pathString.startsWith(  subdirString ) && pathString.endsWith( FILE_SUFFIX)) {
             String ret = pathString.substring(  subdirString.length(), pathString.length() - FILE_SUFFIX.length() );

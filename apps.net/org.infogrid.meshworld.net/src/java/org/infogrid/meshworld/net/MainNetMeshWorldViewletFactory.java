@@ -76,7 +76,7 @@ public class MainNetMeshWorldViewletFactory
             ret.add( ProxiesViewlet.choice(                 ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ShadowAwareAllMeshBasesViewlet.choice( ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 
-            Proxy p = theObjectsToView.getViewletParameters() != null ? (Proxy) theObjectsToView.getViewletParameters().get( NetViewletDispatcherServlet.PROXY_NAME ) : null;
+            Proxy p = (Proxy) theObjectsToView.getViewletParameter( NetViewletDispatcherServlet.PROXY_NAME );
             if( p != null ) {
                 ret.add( ProxyViewlet.choice( ViewletFactoryChoice.PERFECT_MATCH_QUALITY+1.d )); // not quite perfect
             }

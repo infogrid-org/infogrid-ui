@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.rest;
 
+import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -106,6 +107,13 @@ public interface RestfulRequest
      * @return the requuested MIME type, if any
      */
     public String getRequestedMimeType();
+
+    /**
+     * Obtain the parameters for the Viewlet, if any. They can be multi-valued.
+     * 
+     * @return the parameters, if any
+     */
+    public Map<String,String[]> getViewletParameters();
 
     /**
      * Name of the request attribute that contains an instance of this type.

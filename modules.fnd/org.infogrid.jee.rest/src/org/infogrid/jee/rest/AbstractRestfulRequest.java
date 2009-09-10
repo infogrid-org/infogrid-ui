@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.rest;
 
+import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -241,6 +242,16 @@ public abstract class AbstractRestfulRequest
             calculate();
         }
         return theRequestedMeshObject;
+    }
+
+    /**
+     * Obtain the parameters for the Viewlet, if any.
+     *
+     * @return the parameters, if any
+     */
+    public Map<String,String[]> getViewletParameters()
+    {
+        return theSaneRequest.getArguments();
     }
 
     /**

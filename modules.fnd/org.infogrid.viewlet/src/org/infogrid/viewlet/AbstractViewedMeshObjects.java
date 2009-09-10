@@ -17,7 +17,9 @@ package org.infogrid.viewlet;
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.util.NotSingleMemberException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 
@@ -33,10 +35,13 @@ public abstract class AbstractViewedMeshObjects
      * Constructor. Initializes to empty content. After the constructor has
      * been called, the setViewlet method has to be invoked to tell the ViewedMeshObjects
      * about its Viewlet.
+     *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken.
      */
-    public AbstractViewedMeshObjects()
+    public AbstractViewedMeshObjects(
+            MeshBase mb )
     {
-        // noop 
+        theMeshBase = mb;
     }
 
     /**
@@ -60,8 +65,8 @@ public abstract class AbstractViewedMeshObjects
      */
     public void update(
             MeshObject             subject,
-            Map<String,Object>     subjectParameters,
-            Map<String,Object>     viewletParameters,
+            Map<String,Object[]>   subjectParameters,
+            Map<String,Object[]>   viewletParameters,
             TraversalSpecification traversal )
     {
         theSubject                = subject;
@@ -96,11 +101,60 @@ public abstract class AbstractViewedMeshObjects
     }
 
     /**
+     * Obtain the value of a named subject parameter.
+     *
+     * @param name the name of the subject parameter
+     * @return the value, if any
+     * @throws NotSingleMemberException if a Viewlet parameter had more than one value
+     */
+    public Object getSubjectParameter(
+            String name )
+        throws
+            NotSingleMemberException
+    {
+        if( theSubjectParameters == null ) {
+            return null;
+        }
+
+        Object [] ret = theSubjectParameters.get( name );
+        if( ret == null ) {
+            return null;
+        }
+        switch( ret.length ) {
+            case 0:
+                return null;
+
+            case 1:
+                return ret[0];
+
+            default:
+                throw new NotSingleMemberException( "Parameter name has more than one value", ret.length );
+        }
+    }
+
+    /**
+     * Obtain all values of a multi-valued subject parameter.
+     *
+     * @param name the name of the subject parameter
+     * @return the values, if any
+     */
+    public Object [] getMultivaluedSubjectParameter(
+            String name )
+    {
+        if( theSubjectParameters == null ) {
+            return null;
+        }
+
+        Object [] ret = theSubjectParameters.get( name );
+        return ret;
+    }
+
+    /**
      * Obtain the parameters for the subject.
      *
      * @return the parameters for the subject, if any.
      */
-    public final Map<String,Object> getSubjectParameters()
+    public final Map<String,Object[]> getSubjectParameters()
     {
         return theSubjectParameters;
     }
@@ -116,11 +170,60 @@ public abstract class AbstractViewedMeshObjects
     }
 
     /**
+     * Obtain the value of a named Viewlet parameter.
+     *
+     * @param name the name of the Viewlet parameter
+     * @return the value, if any
+     * @throws NotSingleMemberException if a Viewlet parameter had more than one value
+     */
+    public Object getViewletParameter(
+            String name )
+        throws
+            NotSingleMemberException
+    {
+        if( theViewletParameters == null ) {
+            return null;
+        }
+
+        Object [] ret = theViewletParameters.get( name );
+        if( ret == null ) {
+            return null;
+        }
+        switch( ret.length ) {
+            case 0:
+                return null;
+
+            case 1:
+                return ret[0];
+
+            default:
+                throw new NotSingleMemberException( "Parameter name has more than one value", ret.length );
+        }
+    }
+
+    /**
+     * Obtain all values of a multi-valued Viewlet parameter.
+     *
+     * @param name the name of the Viewlet parameter
+     * @return the values, if any
+     */
+    public Object [] getMultivaluedViewletParameter(
+            String name )
+    {
+        if( theViewletParameters == null ) {
+            return null;
+        }
+
+        Object [] ret = theViewletParameters.get( name );
+        return ret;
+    }
+
+    /**
      * Obtain the parameters of the viewing Viewlet.
      *
      * @return the parameters of the viewing Viewlet, if any.
      */
-    public final Map<String,Object> getViewletParameters()
+    public final Map<String,Object[]> getViewletParameters()
     {
         return theViewletParameters;
     }
@@ -152,7 +255,17 @@ public abstract class AbstractViewedMeshObjects
         }
         return theObjects;
     }
-    
+
+    /**
+     * Obtain the MeshBase from which the viewed MeshObjects are taken.
+     *
+     * @return the MeshBase
+     */
+    public MeshBase getMeshBase()
+    {
+        return theMeshBase;
+    }
+
     /**
      * Dump this object.
      *
@@ -163,13 +276,17 @@ public abstract class AbstractViewedMeshObjects
     {
         d.dump( this,
                 new String [] {
-                    "subject",
-                    "viewlet",
-                    "onjects" },
+                        "subject",
+                        "viewlet",
+                        "objects",
+                        "meshBase"
+                },
                 new Object [] {
-                    theSubject,
-                    theViewlet,
-                    theObjects} );
+                        theSubject,
+                        theViewlet,
+                        theObjects,
+                        theMeshBase
+        } );
     }
 
     /**
@@ -185,12 +302,12 @@ public abstract class AbstractViewedMeshObjects
     /**
      * The parameters for the subject, if any.
      */
-    protected Map<String,Object> theSubjectParameters;
+    protected Map<String,Object[]> theSubjectParameters;
 
     /**
      * The Viewlet parameters, if any.
      */
-    protected Map<String,Object> theViewletParameters;
+    protected Map<String,Object[]> theViewletParameters;
     
     /**
      * The TraversalSpecification, if any.
@@ -198,7 +315,12 @@ public abstract class AbstractViewedMeshObjects
     protected TraversalSpecification theTraversalSpecification;
 
     /**
-     * The set of Objects.
+     * The set of MeshObjects.
      */
     protected MeshObjectSet theObjects;
+
+    /**
+     * The MeshBase from which the viewed MeshObjects are taken.
+     */
+    protected MeshBase theMeshBase;
 }

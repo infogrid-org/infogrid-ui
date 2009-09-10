@@ -15,7 +15,6 @@
 package org.infogrid.jee.viewlet.meshbase;
 
 import java.util.Iterator;
-import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
@@ -41,13 +40,15 @@ public class AllMeshBasesViewlet
     /**
      * Factory method.
      *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static AllMeshBasesViewlet create(
-            Context c )
+            MeshBase mb,
+            Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
         AllMeshBasesViewlet      ret    = new AllMeshBasesViewlet( viewed, c );
 
         viewed.setViewlet( ret );
@@ -71,7 +72,7 @@ public class AllMeshBasesViewlet
                     throws
                         CannotViewException
                 {
-                    return create( c );
+                    return create( toView.getMeshBase(), c );
                 }
         };
     }
@@ -96,9 +97,6 @@ public class AllMeshBasesViewlet
      */
     public Iterator<MeshBase> iterator()
     {
-        InfoGridWebApp app = InfoGridWebApp.getSingleton();
-
-        // Context c = app.getApplicationContext();
         Context c = getContext();
 
         @SuppressWarnings( "unchecked" )

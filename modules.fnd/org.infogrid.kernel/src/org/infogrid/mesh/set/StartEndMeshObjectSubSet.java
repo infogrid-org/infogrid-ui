@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -162,7 +162,7 @@ public class StartEndMeshObjectSubSet
         MeshObject startObject = theDelegate.get( theStartIndex );
         MeshObject endObject   = theDelegate.get( theEndIndex );
 
-        return new SubsettingCursorIterator<MeshObject>( startObject, endObject, theDelegate.iterator(), MeshObject.class );
+        return SubsettingCursorIterator.<MeshObject>create( startObject, endObject, theDelegate.iterator(), MeshObject.class );
     }
 
     /**

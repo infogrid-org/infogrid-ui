@@ -26,7 +26,6 @@ import org.infogrid.jee.templates.utils.JeeTemplateUtils;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.AbstractViewlet;
 import org.infogrid.viewlet.CannotViewException;
@@ -41,8 +40,6 @@ public abstract class AbstractJeeViewlet
         implements
             JeeViewlet
 {
-    private static final Log log = Log.getLogInstance( AbstractJeeViewlet.class ); // our own, private loger
-
     /**
      * Constructor, for subclasses only.
      * 

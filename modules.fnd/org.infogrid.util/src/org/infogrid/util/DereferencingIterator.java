@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,12 +16,13 @@ package org.infogrid.util;
 
 import java.lang.ref.Reference;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * An Iterator that returns the values obtained from an Iterator over references.
  * It also "clears up" expired references, but does not support remove().
  * 
- * @param E the type of element to iterate over
+ * @param <E> the type of element to iterate over
  */
 public class DereferencingIterator<E>
         implements

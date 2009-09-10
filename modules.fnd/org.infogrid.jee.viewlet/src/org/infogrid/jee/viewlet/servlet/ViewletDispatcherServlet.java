@@ -257,7 +257,7 @@ public class ViewletDispatcherServlet
             throw new CannotViewException.NoSubject( subjectIdentifier );
         }
 
-        Map<String,Object> viewletPars = determineViewletParameters( restful, traversalDict );
+        Map<String,Object[]> viewletPars = determineViewletParameters( restful, traversalDict );
 
         MeshObjectsToView ret = MeshObjectsToView.create(
                 subject,
@@ -279,7 +279,7 @@ public class ViewletDispatcherServlet
      * @throws StringRepresentationParseException thrown if a URI parsing error occurred
      * @throws NotPermittedException thrown if an attempted operation was not permitted
      */
-    protected Map<String,Object> determineViewletParameters(
+    protected Map<String,Object[]> determineViewletParameters(
             RestfulRequest       restful,
             TraversalDictionary  traversalDict )
         throws
@@ -287,14 +287,14 @@ public class ViewletDispatcherServlet
             StringRepresentationParseException,
             NotPermittedException
     {
-        Map<String,Object> viewletPars = null;
+        HashMap<String,Object[]> viewletPars = null;
 
         JeeViewletStateTransition transition = determineViewletStateTransition( restful );
         if( transition != null ) {
             if( viewletPars == null ) {
-                viewletPars = new HashMap<String,Object>();
+                viewletPars = new HashMap<String,Object[]>();
             }
-            viewletPars.put( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition );
+            viewletPars.put( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, new JeeViewletStateTransition[] { transition } );
         }
 
         // if there is a transition, it determines the state. If there is none, we try if we can tell the current state.
@@ -307,9 +307,17 @@ public class ViewletDispatcherServlet
         }
         if( state != null ) {
             if( viewletPars == null ) {
-                viewletPars = new HashMap<String,Object>();
+                viewletPars = new HashMap<String,Object[]>();
             }
-            viewletPars.put( JeeViewlet.VIEWLET_STATE_NAME, state );
+            viewletPars.put( JeeViewlet.VIEWLET_STATE_NAME, new JeeViewletState[] { state } );
+        }
+
+        Map<String,String[]> otherPars = restful.getViewletParameters();
+        if( otherPars != null ) {
+            if( viewletPars == null ) {
+                viewletPars = new HashMap<String,Object[]>();
+            }
+            viewletPars.putAll( otherPars );
         }
 
         return viewletPars;

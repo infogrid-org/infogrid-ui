@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,11 +17,8 @@ package org.infogrid.jee.net.testapp;
 import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
-import org.infogrid.jee.viewlet.meshbase.AllMeshBasesViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
-import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
-import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
 import org.infogrid.jee.viewlet.servlet.net.NetViewletDispatcherServlet;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.NetMeshBase;
@@ -70,7 +67,7 @@ public class TestAppViewletFactory
 //            ret.add( ProxiesViewlet.choice(        ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 //            ret.add( AllMeshBasesViewlet.choice(   ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 
-            Proxy p = theObjectsToView.getViewletParameters() != null ? (Proxy) theObjectsToView.getViewletParameters().get( NetViewletDispatcherServlet.PROXY_NAME ) : null;
+            Proxy p = (Proxy) theObjectsToView.getViewletParameter( NetViewletDispatcherServlet.PROXY_NAME );
             if( p != null ) {
                 ret.add( ProxyViewlet.choice( ViewletFactoryChoice.PERFECT_MATCH_QUALITY+1.d )); // not quite perfect
             }

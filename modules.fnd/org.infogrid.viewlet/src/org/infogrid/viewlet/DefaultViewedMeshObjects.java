@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.viewlet;
 
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.traversal.TraversalSpecification;
 
 /**
@@ -27,25 +28,30 @@ public class DefaultViewedMeshObjects
             AbstractViewedMeshObjects
 {
     /**
-      * Constructor, specifying a default TraversalSpecification.
-      *
-      * @param traversal the default TraversalSpecification
-      */
+     * Constructor, specifying a default TraversalSpecification.
+     *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
+     * @param traversal the default TraversalSpecification
+     */
     public DefaultViewedMeshObjects(
+            MeshBase               mb,
             TraversalSpecification traversal )
     {
-        super();
+        super( mb );
         
         theDefaultTraversalSpecification = traversal;
         theTraversalSpecification        = traversal;
     }
 
     /**
-      * Constructor. Initializes to empty content.
-      */
-    public DefaultViewedMeshObjects()
+     * Constructor. Initializes to empty content.
+     *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
+     */
+    public DefaultViewedMeshObjects(
+            MeshBase mb )
     {
-        super();
+        super( mb );
     }
     
     /**
@@ -59,8 +65,8 @@ public class DefaultViewedMeshObjects
     @Override
     public void update(
             MeshObject             subject,
-            Map<String,Object>     subjectParameters,
-            Map<String,Object>     viewletParameters,
+            Map<String,Object[]>   subjectParameters,
+            Map<String,Object[]>   viewletParameters,
             TraversalSpecification traversal )
     {
         super.update( subject, subjectParameters, viewletParameters, traversal );

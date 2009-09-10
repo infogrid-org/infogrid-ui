@@ -36,11 +36,36 @@ public class AllTests
                 new TestSpec( ArrayHelperTest1.class ),
 
                 new TestSpec( DereferencingIteratorTest1.class ),
+
                 new TestSpec( ArrayCursorIteratorTest1.class ),
+                new TestSpec( ArrayCursorIteratorTest2.class ),
+                new TestSpec( ArrayCursorIteratorTest3.class ),
+
                 new TestSpec( ArrayListCursorIteratorTest1.class ),
+                new TestSpec( ArrayListCursorIteratorTest2.class ),
+                new TestSpec( ArrayListCursorIteratorTest3.class ),
+
                 new TestSpec( FileTreeFacadeCursorIteratorTest1.class ),
+                new TestSpec( FileTreeFacadeCursorIteratorTest2.class ),
+                // no FileTreeFacadeCursorIteratorTest3.class: can't have an empty FileTreeFacade
+
                 new TestSpec( FilteringCursorIteratorTest1.class ),
+                new TestSpec( FilteringCursorIteratorTest2a.class ),
+                new TestSpec( FilteringCursorIteratorTest2b.class ),
+                new TestSpec( FilteringCursorIteratorTest3a.class ),
+                new TestSpec( FilteringCursorIteratorTest3b.class ),
+
+                new TestSpec( PagingCursorIteratorTest1.class ),
+                new TestSpec( PagingCursorIteratorTest2a.class ),
+                new TestSpec( PagingCursorIteratorTest2b.class ),
+                new TestSpec( PagingCursorIteratorTest2c.class ),
+                // 3a case does not exist
+                new TestSpec( PagingCursorIteratorTest3b.class ),
+                // 3c case does not exist
+
                 new TestSpec( CompositeCursorIteratorTest1.class ),
+                new TestSpec( CompositeCursorIteratorTest2.class ),
+                new TestSpec( CompositeCursorIteratorTest3.class ),
 
                 new TestSpec( ReturnSynchronizerTest1.class ),
 

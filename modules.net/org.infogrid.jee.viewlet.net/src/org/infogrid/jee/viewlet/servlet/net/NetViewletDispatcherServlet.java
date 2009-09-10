@@ -22,6 +22,8 @@ import org.infogrid.jee.rest.net.NetRestfulRequest;
 import org.infogrid.jee.viewlet.servlet.ViewletDispatcherServlet;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.traversal.TraversalDictionary;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.StringRepresentationParseException;
@@ -69,7 +71,7 @@ public class NetViewletDispatcherServlet
      * @throws NotPermittedException thrown if an attempted operation was not permitted
      */
     @Override
-    protected Map<String,Object> determineViewletParameters(
+    protected Map<String,Object[]> determineViewletParameters(
             RestfulRequest       restful,
             TraversalDictionary  traversalDict )
         throws
@@ -77,16 +79,16 @@ public class NetViewletDispatcherServlet
             StringRepresentationParseException,
             NotPermittedException
     {
-        Map<String,Object> viewletPars = super.determineViewletParameters( restful, traversalDict );
+        Map<String,Object[]> viewletPars = super.determineViewletParameters( restful, traversalDict );
 
         NetRestfulRequest realRestful = (NetRestfulRequest) restful;
 
         if( realRestful.determineRequestedProxyIdentifier() != null ) {
             if( viewletPars == null ) {
-                viewletPars = new HashMap<String,Object>();
+                viewletPars = new HashMap<String,Object[]>();
             }
-            viewletPars.put( PROXY_IDENTIFIER_NAME, realRestful.determineRequestedProxyIdentifier() );
-            viewletPars.put( PROXY_NAME,            realRestful.determineRequestedProxy() );
+            viewletPars.put( PROXY_IDENTIFIER_NAME, new NetMeshBaseIdentifier[] { realRestful.determineRequestedProxyIdentifier() } );
+            viewletPars.put( PROXY_NAME,            new Proxy[] {                 realRestful.determineRequestedProxy() } );
         }
         return viewletPars;
     }

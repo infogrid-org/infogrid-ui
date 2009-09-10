@@ -17,7 +17,9 @@ package org.infogrid.viewlet;
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.util.NotSingleMemberException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 
@@ -44,7 +46,8 @@ public class MeshObjectsToView
                 null,
                 null,
                 null,
-                null );
+                null,
+                subject.getMeshBase() );
     }
 
     /**
@@ -64,7 +67,8 @@ public class MeshObjectsToView
                 null,
                 viewletTypeName,
                 null,
-                null );
+                null,
+                subject.getMeshBase() );
     }
 
 
@@ -80,9 +84,9 @@ public class MeshObjectsToView
      */
     public static MeshObjectsToView create(
             MeshObject             subject,
-            Map<String,Object>     subjectParameters,
+            Map<String,Object[]>   subjectParameters,
             String                 viewletTypeName,
-            Map<String,Object>     viewletParameters,
+            Map<String,Object[]>   viewletParameters,
             TraversalSpecification traversalSpecification )
     {
         return new MeshObjectsToView(
@@ -91,7 +95,8 @@ public class MeshObjectsToView
                 subjectParameters,
                 viewletTypeName,
                 viewletParameters,
-                traversalSpecification );
+                traversalSpecification,
+                subject.getMeshBase() );
     }
 
     /**
@@ -103,20 +108,23 @@ public class MeshObjectsToView
      * @param viewletTypeName the type of Viewlet to use
      * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
      * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
      */
     protected MeshObjectsToView(
             MeshObject             subject,
             MeshObjectIdentifier   subjectIdentifier,
-            Map<String,Object>     subjectParameters,
+            Map<String,Object[]>   subjectParameters,
             String                 viewletTypeName,
-            Map<String,Object>     viewletParameters,
-            TraversalSpecification traversalSpecification )
+            Map<String,Object[]>   viewletParameters,
+            TraversalSpecification traversalSpecification,
+            MeshBase               mb )
     {
         theSubject                = subject;
         theSubjectParameters      = subjectParameters;
         theViewletTypeName        = viewletTypeName;
         theViewletParameters      = viewletParameters;
         theTraversalSpecification = traversalSpecification;
+        theMeshBase               = mb;
     }
 
     /**
@@ -140,11 +148,60 @@ public class MeshObjectsToView
     }
 
     /**
+     * Obtain the value of a named subject parameter.
+     *
+     * @param name the name of the subject parameter
+     * @return the value, if any
+     * @throws NotSingleMemberException if a Viewlet parameter had more than one value
+     */
+    public Object getSubjectParameter(
+            String name )
+        throws
+            NotSingleMemberException
+    {
+        if( theSubjectParameters == null ) {
+            return null;
+        }
+
+        Object [] ret = theSubjectParameters.get( name );
+        if( ret == null ) {
+            return null;
+        }
+        switch( ret.length ) {
+            case 0:
+                return null;
+
+            case 1:
+                return ret[0];
+
+            default:
+                throw new NotSingleMemberException( "Parameter name has more than one value", ret.length );
+        }
+    }
+
+    /**
+     * Obtain all values of a multi-valued subject parameter.
+     *
+     * @param name the name of the subject parameter
+     * @return the values, if any
+     */
+    public Object [] getMultivaluedSubjectParameter(
+            String name )
+    {
+        if( theSubjectParameters == null ) {
+            return null;
+        }
+
+        Object [] ret = theSubjectParameters.get( name );
+        return ret;
+    }
+
+    /**
      * Obtain the parameters for the subject.
      *
      * @return the parameters for the subject, if any
      */
-    public Map<String,Object> getSubjectParameters()
+    public Map<String,Object[]> getSubjectParameters()
     {
         return theSubjectParameters;
     }
@@ -164,15 +221,48 @@ public class MeshObjectsToView
      *
      * @param name the name of the Viewlet parameter
      * @return the value, if any
+     * @throws NotSingleMemberException if a Viewlet parameter had more than one value
      */
     public Object getViewletParameter(
             String name )
+        throws
+            NotSingleMemberException
     {
-        if( theViewletParameters != null ) {
-            Object ret = theViewletParameters.get( name );
-            return ret;
+        if( theViewletParameters == null ) {
+            return null;
         }
-        return null;
+
+        Object [] ret = theViewletParameters.get( name );
+        if( ret == null ) {
+            return null;
+        }
+        switch( ret.length ) {
+            case 0:
+                return null;
+
+            case 1:
+                return ret[0];
+
+            default:
+                throw new NotSingleMemberException( "Parameter name has more than one value", ret.length );
+        }
+    }
+
+    /**
+     * Obtain all values of a multi-valued Viewlet parameter.
+     *
+     * @param name the name of the Viewlet parameter
+     * @return the values, if any
+     */
+    public Object [] getMultivaluedViewletParameter(
+            String name )
+    {
+        if( theViewletParameters == null ) {
+            return null;
+        }
+
+        Object [] ret = theViewletParameters.get( name );
+        return ret;
     }
 
     /**
@@ -180,7 +270,7 @@ public class MeshObjectsToView
      *
      * @return the parameters that the Viewlet is supposed to use
      */
-    public Map<String,Object> getViewletParameters()
+    public Map<String,Object[]> getViewletParameters()
     {
         return theViewletParameters;
     }
@@ -193,6 +283,16 @@ public class MeshObjectsToView
     public TraversalSpecification getTraversalSpecification()
     {
         return theTraversalSpecification;
+    }
+
+    /**
+     * Obtain the MeshBase from which the MeshObjects are taken.
+     *
+     * @return the MeshBase
+     */
+    public MeshBase getMeshBase()
+    {
+        return theMeshBase;
     }
 
     /**
@@ -235,7 +335,7 @@ public class MeshObjectsToView
     /**
      * The parameters for the subject, if any.
      */
-    protected Map<String,Object> theSubjectParameters;
+    protected Map<String,Object[]> theSubjectParameters;
 
     /**
      * The type of Viewlet we would like to view the subject.
@@ -244,11 +344,17 @@ public class MeshObjectsToView
 
     /**
      * The parameters that we would like the Viewlet to use when viewing the selected objects.
+     * This is multi-valued.
      */
-    protected Map<String,Object> theViewletParameters;
+    protected Map<String,Object[]> theViewletParameters;
     
     /**
      * The TraversalSpecification from the subject, if any.
      */
     protected TraversalSpecification theTraversalSpecification;
+
+    /**
+     * The MeshBase from which the viewed MeshObjects are taken.
+     */
+    protected transient MeshBase theMeshBase;
 }

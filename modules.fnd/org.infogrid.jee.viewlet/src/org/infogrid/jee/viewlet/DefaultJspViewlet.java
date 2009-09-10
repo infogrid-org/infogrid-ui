@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.viewlet;
 
+import org.infogrid.meshbase.MeshBase;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
@@ -34,14 +35,16 @@ public class DefaultJspViewlet
      * Factory method.
      *
      * @param pseudoClassName the fully-qualified class name of the class that will be impersonated
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
      * @param c the application context
      * @return the created Viewlet
      */
     public static DefaultJspViewlet create(
-            String  pseudoClassName,
-            Context c )
+            String   pseudoClassName,
+            MeshBase mb,
+            Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
         DefaultJspViewlet        ret    = new DefaultJspViewlet( pseudoClassName, viewed, c );
 
         viewed.setViewlet( ret );
@@ -67,7 +70,7 @@ public class DefaultJspViewlet
                     throws
                         CannotViewException
                 {
-                    return create( pseudoClassName, c );
+                    return create( pseudoClassName, toView.getMeshBase(), c );
                 }
         };
     }

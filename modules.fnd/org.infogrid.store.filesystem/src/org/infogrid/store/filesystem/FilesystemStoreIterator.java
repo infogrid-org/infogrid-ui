@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -269,7 +269,8 @@ public class FilesystemStoreIterator
 
     /**
      * Move the cursor by N positions. Positive numbers indicate forward movemement;
-     * negative numbers indicate backward movement.
+     * negative numbers indicate backward movement. This can move all the way forward
+     * to the position "past last" and all the way backward to the position "before first".
      *
      * @param n the number of positions to move
      * @throws NoSuchElementException thrown if the position does not exist

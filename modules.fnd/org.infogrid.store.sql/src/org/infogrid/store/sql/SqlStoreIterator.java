@@ -8,12 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.store.sql;
 
+import java.util.NoSuchElementException;
 import org.infogrid.store.AbstractKeyBasedIterableStoreCursor;
 import org.infogrid.store.StoreValue;
 import org.infogrid.util.logging.Log;
@@ -148,10 +149,13 @@ class SqlStoreIterator
      * @param key the current key
      * @param delta the number of elements up (positive) or down (negative)
      * @return the found key, or null
+     * @throws NoSuchElementException thrown if the delta went beyond the "after last" or "before first" element
      */
     protected String findKeyAt(
             String key,
             int    delta )
+        throws
+            NoSuchElementException
     {
         String ret = ((AbstractSqlStore)theStore).findKeyAt( key, delta );
         return ret;
@@ -176,10 +180,14 @@ class SqlStoreIterator
      * Determine the key at the very beginning.
      * 
      * @return the key
+     * @throws NoSuchElementException thrown if the Store is empty
      */
     protected String getBeforeFirstPosition()
+        throws
+            NoSuchElementException
     {
-        return "";
+        String ret = ((AbstractSqlStore)theStore).findFirstKey();
+        return ret;
     }
     
     /**

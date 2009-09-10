@@ -1,3 +1,4 @@
+//
 // This file is part of InfoGrid(tm). You may not use this file except in
 // compliance with the InfoGrid license. The InfoGrid license and important
 // disclaimers are contained in the file LICENSE.InfoGrid.txt that you should
@@ -7,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,7 +24,7 @@ import org.infogrid.util.logging.Log;
  */
 public class ArrayListCursorIteratorTest1
         extends
-            AbstractCursorIteratorTest
+            AbstractCursorIteratorTest1
 {
     /**
      * Run the test.

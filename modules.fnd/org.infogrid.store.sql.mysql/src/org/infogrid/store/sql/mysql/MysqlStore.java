@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.NoSuchElementException;
 import javax.sql.DataSource;
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreKeyExistsAlreadyException;
@@ -67,29 +68,31 @@ public class MysqlStore
     {
         super( ds, tableName, null );
         
-        theCreateTablesPreparedStatement          = new SqlStorePreparedStatement( this, CREATE_TABLES_SQL,           tableName );
-        theDropTablesPreparedStatement            = new SqlStorePreparedStatement( this, DROP_TABLES_SQL,             tableName );
-        theHasTablesPreparedStatement             = new SqlStorePreparedStatement( this, HAS_TABLES_SQL,              tableName );
-        thePutPreparedStatement                   = new SqlStorePreparedStatement( this, PUT_SQL,                     tableName );
-        theUpdatePreparedStatement                = new SqlStorePreparedStatement( this, UPDATE_SQL,                  tableName );
-        thePutOrUpdatePreparedStatement           = new SqlStorePreparedStatement( this, PUT_OR_UPDATE_SQL,           tableName );
-        theGetPreparedStatement                   = new SqlStorePreparedStatement( this, GET_SQL,                     tableName );
-        theDeletePreparedStatement                = new SqlStorePreparedStatement( this, DELETE_SQL,                  tableName );
-        theDeleteAllPreparedStatement             = new SqlStorePreparedStatement( this, DELETE_ALL_SQL,              tableName );
-        theSizePreparedStatement                  = new SqlStorePreparedStatement( this, SIZE_SQL,                    tableName );
+        theCreateTablesPreparedStatement           = new SqlStorePreparedStatement( this, CREATE_TABLES_SQL,             tableName );
+        theDropTablesPreparedStatement             = new SqlStorePreparedStatement( this, DROP_TABLES_SQL,               tableName );
+        theHasTablesPreparedStatement              = new SqlStorePreparedStatement( this, HAS_TABLES_SQL,                tableName );
+        thePutPreparedStatement                    = new SqlStorePreparedStatement( this, PUT_SQL,                       tableName );
+        theUpdatePreparedStatement                 = new SqlStorePreparedStatement( this, UPDATE_SQL,                    tableName );
+        thePutOrUpdatePreparedStatement            = new SqlStorePreparedStatement( this, PUT_OR_UPDATE_SQL,             tableName );
+        theGetPreparedStatement                    = new SqlStorePreparedStatement( this, GET_SQL,                       tableName );
+        theDeletePreparedStatement                 = new SqlStorePreparedStatement( this, DELETE_SQL,                    tableName );
+        theDeleteAllPreparedStatement              = new SqlStorePreparedStatement( this, DELETE_ALL_SQL,                tableName );
+        theSizePreparedStatement                   = new SqlStorePreparedStatement( this, SIZE_SQL,                      tableName );
 
-        theFindNextIncludingPreparedStatement     = new SqlStorePreparedStatement( this, FIND_NEXT_INCLUDING_SQL,     tableName );
-        theFindPreviousExcludingPreparedStatement = new SqlStorePreparedStatement( this, FIND_PREVIOUS_EXCLUDING_SQL, tableName );
-        theFindLastValuesPreparedStatement        = new SqlStorePreparedStatement( this, FIND_LAST_VALUES_SQL,        tableName );
-        theHasNextIncludingPreparedStatement      = new SqlStorePreparedStatement( this, HAS_NEXT_INCLUDING_SQL,      tableName );
-        theHasPreviousExcludingPreparedStatement  = new SqlStorePreparedStatement( this, HAS_PREVIOUS_EXCLUDING_SQL,  tableName );
-        theFindKeyAtPositivePreparedStatement     = new SqlStorePreparedStatement( this, FIND_KEY_AT_POSITIVE_SQL,    tableName );
-        theFindKeyAtNegativePreparedStatement     = new SqlStorePreparedStatement( this, FIND_KEY_AT_NEGATIVE_SQL,    tableName );
-        theFindKeyAtEndPreparedStatement          = new SqlStorePreparedStatement( this, FIND_KEY_AT_END_SQL,         tableName );
-        theDetermineDistancePreparedStatement     = new SqlStorePreparedStatement( this, DETERMINE_DISTANCE_SQL,      tableName );
+        theFindNextIncludingPreparedStatement      = new SqlStorePreparedStatement( this, FIND_NEXT_INCLUDING_SQL,       tableName );
+        theFindPreviousExcludingPreparedStatement  = new SqlStorePreparedStatement( this, FIND_PREVIOUS_EXCLUDING_SQL,   tableName );
+        theFindLastValuesPreparedStatement         = new SqlStorePreparedStatement( this, FIND_LAST_VALUES_SQL,          tableName );
+        theHasNextIncludingPreparedStatement       = new SqlStorePreparedStatement( this, HAS_NEXT_INCLUDING_SQL,        tableName );
+        theHasPreviousExcludingPreparedStatement   = new SqlStorePreparedStatement( this, HAS_PREVIOUS_EXCLUDING_SQL,    tableName );
+        theFindFirstKeyPreparedStatement           = new SqlStorePreparedStatement( this, FIND_FIRST_KEY_SQL,            tableName );
+        theFindKeyAtPositivePreparedStatement      = new SqlStorePreparedStatement( this, FIND_KEY_AT_POSITIVE_SQL,      tableName );
+        theFindKeyAtNegativePreparedStatement      = new SqlStorePreparedStatement( this, FIND_KEY_AT_NEGATIVE_SQL,      tableName );
+        theFindKeyAtEndPreparedStatement           = new SqlStorePreparedStatement( this, FIND_KEY_AT_END_SQL,           tableName );
+        theDetermineDistancePreparedStatement      = new SqlStorePreparedStatement( this, DETERMINE_DISTANCE_SQL,        tableName );
+        theDetermineDistanceToEndPreparedStatement = new SqlStorePreparedStatement( this, DETERMINE_DISTANCE_TO_END_SQL, tableName );
         
         if( log.isTraceEnabled() ) {
-            log.traceMethodCallEntry( this, "constructor" );
+            log.traceConstructor( this );
         }
     }
 
@@ -508,7 +511,7 @@ public class MysqlStore
 
                     stm.execute();
 
-                    boolean ret = stm.getUpdateCount() == 2; // the "duplicate key" seems to trigger two, instead of one
+                    boolean ret = stm.getUpdateCount() > 1; // the "duplicate key" seems to trigger two, instead of one
 
                     return ret;
                 }
@@ -936,15 +939,62 @@ public class MysqlStore
     }
 
     /**
+     * Find the very first key.
+     *
+     * @return the first key
+     * @throws NoSuchElementException thrown if the Store is empty
+     */
+    protected String findFirstKey()
+        throws
+            NoSuchElementException
+    {
+        try {
+            String ret = new SqlExecutionAction<String>( theFindFirstKeyPreparedStatement ) {
+                protected String perform(
+                        PreparedStatement stm,
+                        Connection        conn )
+                    throws
+                        SQLException
+                {
+                    stm.execute();
+
+                    ResultSet set = stm.getResultSet();
+                    String ret;
+                    if( set.next() ) {
+                        ret = set.getString( 1 );
+                    } else {
+                        ret = null;
+                    }
+                    set.close();
+                    return ret;
+                }
+            }.execute();
+
+            if( ret != null ) {
+                return ret;
+            } else {
+                throw new NoSuchElementException();
+            }
+
+        } catch( SQLException ex ) {
+            log.error( ex );
+        }
+        return null;
+    }
+
+    /**
      * Find the key N rows up or down from the current key.
      *
      * @param key the current key
      * @param delta the number of rows up (positive) or down (negative)
      * @return the found key, or null
+     * @throws NoSuchElementException thrown if the delta went beyond the "after last" or "before first" element
      */
     protected String findKeyAt(
             final String key,
             final int    delta )
+        throws
+            NoSuchElementException
     {
         if( key != null ) {
 
@@ -958,6 +1008,8 @@ public class MysqlStore
                 distance = -delta;
             }
             try {
+                final String TOO_FAR_MARKER = "";
+
                 String ret = new SqlExecutionAction<String>( stm ) {
                     protected String perform(
                             PreparedStatement stm,
@@ -972,7 +1024,13 @@ public class MysqlStore
                         ResultSet set = stm.getResultSet();
                         String ret;
                         if( set.last() ) {
-                            ret = set.getString( 1 );
+                            if( set.getRow() == distance ) {
+                                ret = set.getString( 1 );
+                            } else if( set.getRow() == distance-1 ) {
+                                ret = null;
+                            } else {
+                                ret = TOO_FAR_MARKER;
+                            }
                         } else {
                             ret = null;
                         }
@@ -981,7 +1039,11 @@ public class MysqlStore
                     }
                 }.execute();
 
-                return ret;
+                if( (Object) ret != TOO_FAR_MARKER ) {
+                    return ret;
+                } else {
+                    throw new NoSuchElementException();
+                }
 
             } catch( SQLException ex ) {
                 log.error( ex );
@@ -1036,28 +1098,54 @@ public class MysqlStore
             final String to )
     {
         try {
-            int ret = new SqlExecutionAction<Integer>( theDetermineDistancePreparedStatement ) {
-                protected Integer perform(
-                        PreparedStatement stm,
-                        Connection        conn )
-                    throws
-                        SQLException
-                {
-                    stm.setString( 1, from );
-                    stm.setString( 2, to );
-                    stm.execute();
-                    
-                    ResultSet set = stm.getResultSet();
-                    int ret;
-                    if( set.next() ) {
-                        ret = set.getInt( 1 );
-                    } else {
-                        ret = 0;
+            int ret;
+
+            if( to != null ) {
+                ret = new SqlExecutionAction<Integer>( theDetermineDistancePreparedStatement ) {
+                    protected Integer perform(
+                            PreparedStatement stm,
+                            Connection        conn )
+                        throws
+                            SQLException
+                    {
+                        stm.setString( 1, from );
+                        stm.setString( 2, to );
+                        stm.execute();
+
+                        ResultSet set = stm.getResultSet();
+                        int ret;
+                        if( set.next() ) {
+                            ret = set.getInt( 1 );
+                        } else {
+                            ret = 0;
+                        }
+                        set.close();
+                        return ret;
                     }
-                    set.close();
-                    return ret;
-                }
-            }.execute();
+                }.execute();
+            } else {
+                ret = new SqlExecutionAction<Integer>( theDetermineDistanceToEndPreparedStatement ) {
+                    protected Integer perform(
+                            PreparedStatement stm,
+                            Connection        conn )
+                        throws
+                            SQLException
+                    {
+                        stm.setString( 1, from );
+                        stm.execute();
+
+                        ResultSet set = stm.getResultSet();
+                        int ret;
+                        if( set.next() ) {
+                            ret = set.getInt( 1 );
+                        } else {
+                            ret = 0;
+                        }
+                        set.close();
+                        return ret;
+                    }
+                }.execute();
+            }
 
             return ret;
 
@@ -1186,7 +1274,12 @@ public class MysqlStore
      * The PreparedStatement to obtain the number of rows excluding and before this key.
      */
     protected SqlStorePreparedStatement theHasPreviousExcludingPreparedStatement;
-    
+
+    /**
+     * The PreparedStatement to find the first key.
+     */
+    protected SqlStorePreparedStatement theFindFirstKeyPreparedStatement;
+
     /**
      * The PreparedStatement to find the key of N rows ahead.
      */
@@ -1206,7 +1299,12 @@ public class MysqlStore
      * The PreparedStatement to find the number of rows between two keys.
      */
     protected SqlStorePreparedStatement theDetermineDistancePreparedStatement;
-    
+
+    /**
+     * The PreparedStatement to find the number of rows from a key to the end of the table.
+     */
+    protected SqlStorePreparedStatement theDetermineDistanceToEndPreparedStatement;
+
     /**
      * The SQL to create the tables in the database.
      */
@@ -1364,12 +1462,18 @@ public class MysqlStore
      */
     protected static final String HAS_PREVIOUS_EXCLUDING_SQL
             = "SELECT COUNT(*) from {0} WHERE id < ?;";
-            
+
+    /**
+     * The SQL to find the first key in the Store.
+     */
+    protected static final String FIND_FIRST_KEY_SQL
+            = "SELECT id from {0} ORDER BY id LIMIT 1";
+
     /**
      * The SQL to find the key N rows ahead.
      */
     protected static final String FIND_KEY_AT_POSITIVE_SQL
-            = "SELECT id from {0} WHERE id >= ? ORDER BY id LIMIT ?";
+            = "SELECT id from {0} WHERE id > ? ORDER BY id LIMIT ?";
 
     /**
      * The SQL to find the key N rows back.
@@ -1387,7 +1491,13 @@ public class MysqlStore
      * The SQL to determine the distance, in rows, between a first and a second key.
      */
     protected static final String DETERMINE_DISTANCE_SQL
-            = "SELECT COUNT(*) from {0} WHERE id > ? AND id <= ?";
+            = "SELECT COUNT(*) from {0} WHERE id >= ? AND id < ?";
+
+    /**
+     * The SQL to determine the distance, in rows, between a key and the end of the table.
+     */
+    protected static final String DETERMINE_DISTANCE_TO_END_SQL
+            = "SELECT COUNT(*) from {0} WHERE id >= ?";
 
     /**
      * The SQL to delete ALL data in the Store.

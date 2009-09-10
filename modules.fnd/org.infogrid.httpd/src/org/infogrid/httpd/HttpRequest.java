@@ -17,8 +17,6 @@ package org.infogrid.httpd;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -97,7 +95,6 @@ public class HttpRequest
 
             parameters.add( key.toLowerCase(), value ); // this doesn't imply that existing keys are replaced
         }
-        String server = ourServerName;
         String host   = parameters.get( "Host".toLowerCase() );
 
         byte [] postData = null;
@@ -109,7 +106,7 @@ public class HttpRequest
                 postData = StreamUtils.slurp( theBufferedInStream ); // slurp through end of stream
             }
         }
-        return new HttpRequest( protocol, method, server, host, port, relativeFullUri, httpVersion, parameters, postData );
+        return new HttpRequest( protocol, method, host, port, relativeFullUri, httpVersion, parameters, postData );
     }
 
     /**
@@ -117,7 +114,6 @@ public class HttpRequest
       *
       * @param protocol the protocol, such as http or https
       * @param method the HTTP method of the Request
-      * @param server the name of the server on which we run
       * @param host the HTTP Host value from HTTP 1.1
       * @param port the port at which the Request has arrived
       * @param relativeFullUri the Uri of the Request relative to the web server's document root
@@ -128,7 +124,6 @@ public class HttpRequest
     protected HttpRequest(
             String        protocol,
             String        method,
-            String        server,
             String        host,
             int           port,
             String        relativeFullUri,
@@ -138,7 +133,6 @@ public class HttpRequest
     {
         theProtocol        = protocol;
         theMethod          = method;
-        theServer          = server;
         theHttpHost        = host;
         thePort            = port;
         theRelativeFullUri = relativeFullUri;
@@ -522,16 +516,6 @@ public class HttpRequest
     }
 
     /**
-     * Get the name of the server.
-     *
-     * @return the name of the server
-     */
-    public String getServer()
-    {
-        return theServer;
-    }
-
-    /**
      * Get the value of the HTTP 1.1 host name field, which may include the port.
      *
      * @return the HTTP 1.1 Host name field
@@ -757,11 +741,6 @@ public class HttpRequest
     protected String theMethod;
 
     /**
-     * The http server.
-     */
-    protected String theServer;
-
-    /**
      * The http host, potentially with port.
      */
     protected String theHttpHost;
@@ -840,21 +819,6 @@ public class HttpRequest
      * The tag with which the Basic authorization mechanism starts.
      */
     private static final String BASIC_AUTHENTICATION_TAG = "Basic ";
-
-    /**
-     * Our server name.
-     */
-    private static final String ourServerName;
-    static {
-        String serverName;
-        try {
-            serverName = InetAddress.getLocalHost().getCanonicalHostName();
-        } catch( UnknownHostException ex ) {
-            log.error( ex );
-            serverName = "<unknown>";
-        }
-        ourServerName = serverName;
-    }
 }
 
 

@@ -50,13 +50,15 @@ public class ShadowAwareAllMeshBasesViewlet
     /**
      * Factory method.
      *
+     * @param mb the MeshBase from which the viewed MeshObjects are taken
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static AllMeshBasesViewlet create(
-            Context c )
+            MeshBase mb,
+            Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
         AllMeshBasesViewlet      ret    = new ShadowAwareAllMeshBasesViewlet( viewed, c );
 
         viewed.setViewlet( ret );
@@ -80,7 +82,7 @@ public class ShadowAwareAllMeshBasesViewlet
                     throws
                         CannotViewException
                 {
-                    return create( c );
+                    return create( toView.getMeshBase(), c );
                 }
         };
     }

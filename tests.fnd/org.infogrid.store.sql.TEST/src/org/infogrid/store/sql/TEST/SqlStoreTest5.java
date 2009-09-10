@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.store.sql.TEST;
 
 import org.infogrid.store.StoreKeyDoesNotExistException;
 import org.infogrid.store.StoreValue;
-import org.infogrid.store.sql.SqlStoreIOException;
 import org.infogrid.store.util.DynamicLoadFromStoreMap;
 import org.infogrid.util.logging.Log;
 

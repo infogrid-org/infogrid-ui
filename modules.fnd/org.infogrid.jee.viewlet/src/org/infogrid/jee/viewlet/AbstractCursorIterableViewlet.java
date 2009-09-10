@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,14 +16,16 @@ package org.infogrid.jee.viewlet;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.util.CursorIterator;
+import org.infogrid.util.SubsettingCursorIterator;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
+import org.infogrid.viewlet.CannotViewException;
 
 /**
  * Factors out common functionality for Viewlets that display sets through
  * use of a CursorIterator.
  */
-public abstract class AbstractCursorIterableViewlet<T>
+public abstract class AbstractCursorIterableViewlet
         extends
             AbstractJeeViewlet
 {
@@ -41,12 +43,109 @@ public abstract class AbstractCursorIterableViewlet<T>
     }
 
     /**
+     * Ensure that the iterator is initialized.
+     *
+     * @throws CannotViewException.InvalidParameter thrown if a windowing parameter was invalid
+     */
+    protected void ensureInitialized()
+        throws
+            CannotViewException.InvalidParameter
+    {
+        if( theIterator == null ) {
+            CursorIterator<MeshObject> found = determineCursorIterator();
+            theIterator = subsetCursorIterator( found );
+        }
+    }
+
+    /**
      * Obtain the CursorIterator.
      *
-     * @return the CursorIterator.
+     * @return the CursorIterator
+     * @throws CannotViewException.InvalidParameter thrown if a windowing parameter was invalid
      */
     public CursorIterator<MeshObject> getCursorIterator()
+        throws
+            CannotViewException.InvalidParameter
+    {
+        ensureInitialized();
+        return theIterator;
+    }
+
+    /**
+     * Detemine the correct CursorIterator. Default implementation can be
+     * overridden by subclasses.
+     *
+     * @return the CursorIterator
+     */
+    protected CursorIterator<MeshObject> determineCursorIterator()
     {
         return getObjects().iterator();
     }
+
+    /**
+     * Subset the CursorIterator, if needed.
+     *
+     * @param iter the to-be-clipped CursorIterator
+     * @return the subsetted CursorIterator
+     * @throws CannotViewException.InvalidParameter thrown if a subsetting parameter was invalid
+     */
+    protected CursorIterator<MeshObject> subsetCursorIterator(
+            CursorIterator<MeshObject> iter )
+        throws
+            CannotViewException.InvalidParameter
+    {
+        String minName    = (String) getViewedObjects().getViewletParameter( MIN_NAME );
+        String maxName    = (String) getViewedObjects().getViewletParameter( MAX_NAME );
+
+        CursorIterator<MeshObject> ret = iter; // default
+
+        if( minName != null || maxName != null ) {
+            MeshObject min;
+            MeshObject max;
+            int        page;
+
+            if( minName != null ) {
+                try {
+                    min = resolveMeshObject( minName );
+                } catch( Throwable t ) {
+                    throw new CannotViewException.InvalidParameter( this, MIN_NAME, minName, null );
+                }
+            } else {
+                min = null;
+            }
+            if( maxName != null ) {
+                try {
+                    max = resolveMeshObject( maxName );
+                } catch( Throwable t ) {
+                    throw new CannotViewException.InvalidParameter( this, MAX_NAME, maxName, null );
+                }
+            } else {
+                max = null;
+            }
+
+            if( min != null || max != null ) {
+                ret = SubsettingCursorIterator.create( min, max, iter, MeshObject.class );
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * The CursorIterator to be returned.
+     */
+    protected CursorIterator<MeshObject> theIterator;
+
+    /**
+     * Name of the Viewlet parameter indicating the start index.
+     *
+     * @return parameter name
+     */
+    public static final String MIN_NAME = "start-index";
+
+    /**
+     * Name of the Viewlet parameter indicating the end index.
+     *
+     * @return parameter name
+     */
+    public static final String MAX_NAME = "end-index";
 }

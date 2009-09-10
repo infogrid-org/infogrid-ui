@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -221,14 +221,16 @@ public abstract class AbstractKeyBasedIterableStoreCursor
     public StoreValue [] next(
             int n )
     {
+        // we have to go forward by one more, so we can set the new position right after what's returned here
         StoreValue [] found = findNextIncluding( thePosition, n+1 );
+        StoreValue [] ret   = ArrayHelper.copyIntoNewArray( found, 0, Math.min( n, found.length ), StoreValue.class );
+
         if( found.length == n+1 ) {
             thePosition = found[found.length-1].getKey();
-            found = ArrayHelper.copyIntoNewArray( found, 0, n, StoreValue.class );
         } else {
-            thePosition = null;
+            moveToAfterLast();
         }
-        return found;
+        return ret;
     }
 
     /**
@@ -242,14 +244,16 @@ public abstract class AbstractKeyBasedIterableStoreCursor
     public String [] nextKey(
             int n )
     {
+        // we have to go forward by one more, so we can set the new position right after what's returned here
         String [] found = findNextKeyIncluding( thePosition, n+1 );
+        String [] ret   = ArrayHelper.copyIntoNewArray( found, 0, Math.min( n, found.length ), String.class );
+
         if( found.length == n+1 ) {
             thePosition = found[found.length-1];
-            found = ArrayHelper.copyIntoNewArray( found, 0, n, String.class );
         } else {
-            thePosition = null;
+            moveToAfterLast();
         }
-        return found;
+        return ret;
     }
 
     /**
@@ -303,6 +307,8 @@ public abstract class AbstractKeyBasedIterableStoreCursor
         StoreValue [] found = findPreviousExcluding( thePosition, n );
         if( found.length > 0 ) {
             thePosition = found[found.length-1].getKey();
+        } else{
+            moveToBeforeFirst();
         }
         return found;
     }
@@ -326,17 +332,19 @@ public abstract class AbstractKeyBasedIterableStoreCursor
         String [] found = findPreviousKeyExcluding( thePosition, n );
         if( found.length > 0 ) {
             thePosition = found[found.length-1];
+        } else{
+            moveToBeforeFirst();
         }
         return found;
     }
 
     /**
      * Move the cursor by N positions. Positive numbers indicate forward movemement;
-     * negative numbers indicate backwards movement.
-     * Throws NoSuchElementException if the position does not exist.
+     * negative numbers indicate backward movement. This can move all the way forward
+     * to the position "past last" and all the way backward to the position "before first".
      *
      * @param n the number of positions to move
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException thrown if the position does not exist
      */
     public void moveBy(
             int n )
@@ -347,11 +355,7 @@ public abstract class AbstractKeyBasedIterableStoreCursor
             return;
         }
         String newPosition = findKeyAt( thePosition, n );
-        if( newPosition != null ) {
-            thePosition = newPosition;
-        } else {
-            throw new NoSuchElementException();
-        }
+        thePosition = newPosition;
     }
     
     /**
@@ -399,16 +403,21 @@ public abstract class AbstractKeyBasedIterableStoreCursor
         throws
             NoSuchElementException
     {
+        if( thePosition.equals( key )) {
+            return 0;
+        }
+
         // FIXME this does not look right
         int distance = determineDistance( thePosition, key );
-        if( distance >= 0 ) {
-            return distance;
+        if( distance < 0 ) {
+            distance = -determineDistance( key, thePosition );
+            if( distance > 0 ) {
+                throw new NoSuchElementException();
+            }
         }
-        distance = determineDistance( key, thePosition );
-        if( distance >= 0 ) {
-            return -distance;
-        }
-        throw new NoSuchElementException();
+        thePosition = key;
+
+        return distance;
     }
 
     /**
@@ -424,16 +433,9 @@ public abstract class AbstractKeyBasedIterableStoreCursor
         throws
             NoSuchElementException
     {
-        // FIXME this does not look right
-        int distance = determineDistance( thePosition, key );
-        if( distance >= 0 ) {
-            return distance;
-        }
-        distance = determineDistance( key, thePosition );
-        if( distance >= 0 ) {
-            return -distance;
-        }
-        throw new NoSuchElementException();
+        int ret = moveToBefore( key );
+        next();
+        return ret;
     }
 
     /**
@@ -445,10 +447,18 @@ public abstract class AbstractKeyBasedIterableStoreCursor
      */
     public int moveToBeforeFirst()
     {
-        String newPosition = getBeforeFirstPosition();
-        int    ret         = determineDistance( thePosition, newPosition );
-        
-        thePosition = newPosition;
+        int ret;
+
+        try {
+            String newPosition = getBeforeFirstPosition();
+
+            ret         = determineDistance( thePosition, newPosition );
+            thePosition = newPosition;
+
+        } catch( NoSuchElementException ex ) {
+            // empty store
+            ret = 0;
+        }
         return ret;
     }
 
@@ -632,10 +642,13 @@ public abstract class AbstractKeyBasedIterableStoreCursor
      * @param key the current key
      * @param delta the number of elements up (positive) or down (negative)
      * @return the found key, or null
+     * @throws NoSuchElementException thrown if the delta went beyond the "after last" or "before first" element
      */
     protected abstract String findKeyAt(
             String key,
-            int    delta );
+            int    delta )
+       throws
+            NoSuchElementException;
 
     /**
      * Helper method to determine the number of elements between two keys.

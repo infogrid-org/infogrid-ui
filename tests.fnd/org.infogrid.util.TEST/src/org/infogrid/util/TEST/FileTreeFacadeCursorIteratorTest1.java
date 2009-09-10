@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,7 +24,7 @@ import org.infogrid.util.tree.FileTreeFacade;
  */
 public class FileTreeFacadeCursorIteratorTest1
         extends
-            AbstractCursorIteratorTest
+            AbstractCursorIteratorTest1
 {
     /**
      * Run the test.
@@ -38,6 +38,7 @@ public class FileTreeFacadeCursorIteratorTest1
         log.info( "create a test hierarchy, out of order" );
         
         File top = new File( "build/top" );
+        deleteFile( top ); // cleanup
 
         top.mkdirs();
         

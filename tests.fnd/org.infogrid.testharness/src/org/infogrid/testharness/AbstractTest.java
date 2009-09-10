@@ -1243,6 +1243,26 @@ public abstract class AbstractTest
     }
 
     /**
+     * Recursively delete a directory or file.
+     *
+     * @param f the file
+     */
+    public static void deleteFile(
+            File f )
+    {
+        if( !f.exists() ) {
+            return;
+        }
+        if( f.isDirectory() ) {
+            File [] contained = f.listFiles();
+            for( int i=0 ; i<contained.length ; ++i ) {
+                deleteFile( contained[i] );
+            }
+        }
+        f.delete();
+    }
+
+    /**
      * This checks whether the content of these two files is the same.
      *
      * @param one the first file to compare

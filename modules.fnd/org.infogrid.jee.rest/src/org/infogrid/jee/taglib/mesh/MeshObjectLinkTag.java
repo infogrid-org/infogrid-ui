@@ -46,6 +46,7 @@ public class MeshObjectLinkTag
     protected void initializeToDefaults()
     {
         theMeshObjectName       = null;
+        theMeshObject           = null;
         theRootPath             = null;
         theAddArguments         = null;
         theTarget               = null;
@@ -67,7 +68,7 @@ public class MeshObjectLinkTag
     }
 
     /**
-     * Set value of the meshObjectBean property.
+     * Set value of the meshObjectName property.
      *
      * @param newValue new value of the meshObjectName property
      * @see #getMeshObjectName
@@ -76,6 +77,29 @@ public class MeshObjectLinkTag
             String newValue )
     {
         theMeshObjectName = newValue;
+    }
+
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public MeshObject getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public void setMeshObject(
+            MeshObject newValue )
+    {
+        theMeshObject = newValue;
     }
 
     /**
@@ -205,7 +229,12 @@ public class MeshObjectLinkTag
             JspException,
             IgnoreException
     {
-        MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject obj;
+        if( theMeshObject != null ) {
+            obj = theMeshObject;
+        } else {
+            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        }
 
         try {
             String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, theAddArguments, theTarget, theTitle, theStringRepresentation );
@@ -231,7 +260,12 @@ public class MeshObjectLinkTag
             JspException,
             IgnoreException
     {
-        MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject obj;
+        if( theMeshObject != null ) {
+            obj = theMeshObject;
+        } else {
+            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        }
 
         try {
             String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, theRootPath, theStringRepresentation );
@@ -243,12 +277,17 @@ public class MeshObjectLinkTag
 
         return EVAL_PAGE;
     }
-    
+
     /**
-     * Name of the bean that holds the MeshObject (mutually exclusive with theIdentifier).
+     * Name of the bean that holds the MeshObject (mutually exclusive with theMeshObject).
      */
     protected String theMeshObjectName;
-    
+
+    /**
+     * The MeshObject (mutually exclusive with theMeshObjectName).
+     */
+    protected MeshObject theMeshObject;
+
     /**
      * The HTTP path prepended to the HREF, e.g. http://example.com/foo/bar/?obj=
      */

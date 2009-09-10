@@ -12,13 +12,60 @@
 <v:viewlet>
  <div class="slide-in-button">
   <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Create"/></a>
-  <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-accessLocally', {} )" title="Open a MeshObject"><img src="${CONTEXT}/s/images/world_add.png" alt="Open"/></a>
  </div>
  <h1>All MeshObjects in the MeshBase</h1>
+
+ <div class="nav">
+  <div class="left">
+   <c:if test="${Viewlet.navigationStartMeshObject != null}">
+    <v:navigateToPage meshObject="${Viewlet.navigationStartMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}">
+     <img src="${CONTEXT}/s/images/control_start_blue.png" alt="Go to start" />
+    </v:navigateToPage>
+   </c:if>
+   <c:if test="${Viewlet.navigationStartMeshObject == null}">
+    <img src="${CONTEXT}/s/images/control_start.png" alt="Go to start (disabled)" />
+   </c:if>
+  </div>
+
+  <div class="left">
+   <c:if test="${Viewlet.navigationBackMeshObject != null}">
+    <v:navigateToPage meshObject="${Viewlet.navigationBackMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}">
+     <img src="${CONTEXT}/s/images/control_rewind_blue.png" alt="start" />
+    </v:navigateToPage>
+   </c:if>
+   <c:if test="${Viewlet.navigationBackMeshObject == null}">
+    <img src="${CONTEXT}/s/images/control_rewind.png" alt="start" />
+   </c:if>
+  </div>
+
+  <div class="right">
+   <c:if test="${Viewlet.navigationEndMeshObject != null}">
+    <v:navigateToPage meshObject="${Viewlet.navigationEndMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}">
+     <img src="${CONTEXT}/s/images/control_end_blue.png" alt="start" />
+    </v:navigateToPage>
+   </c:if>
+   <c:if test="${Viewlet.navigationEndMeshObject == null}">
+    <img src="${CONTEXT}/s/images/control_end.png" alt="start" />
+   </c:if>
+  </div>
+
+  <div class="right">
+   <c:if test="${Viewlet.navigationForwardMeshObject != null}">
+    <v:navigateToPage meshObject="${Viewlet.navigationForwardMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}">
+     <img src="${CONTEXT}/s/images/control_fastforward_blue.png" alt="start" />
+    </v:navigateToPage>
+   </c:if>
+   <c:if test="${Viewlet.navigationForwardMeshObject == null}">
+    <img src="${CONTEXT}/s/images/control_fastforward.png" alt="start" />
+   </c:if>
+  </div>
+ </div>
+
  <table class="set">
   <thead>
    <tr>
     <th>Identifier</th>
+    <th>Neighbors</th>
     <th>Types and Attributes</th>
     <th>Audit</th>
    </tr>
@@ -29,6 +76,11 @@
      <td>
       <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete"/></a></div>
       <mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current" maxLength="30"/></mesh:meshObjectLink>
+     </td>
+     <td>
+      <mesh:neighborIterate meshObjectName="current" neighborLoopVar="neighbor">
+       <mesh:meshObjectLink meshObjectName="neighbor"><mesh:meshObjectId meshObjectName="neighbor" maxLength="30"/></mesh:meshObjectLink><br />
+      </mesh:neighborIterate>
      </td>
      <td>
       <ul class="types">

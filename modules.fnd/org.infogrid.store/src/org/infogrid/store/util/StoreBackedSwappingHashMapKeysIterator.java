@@ -99,7 +99,7 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
     public K peekPrevious()
     {
         try {
-            StoreValue value = theDelegate.peekNext();
+            StoreValue value = theDelegate.peekPrevious();
             K          ret   = theMapper.stringToKey( value.getKey() );
 
             return ret;
@@ -200,9 +200,9 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
             int n )
     {
         StoreValue [] values  = theDelegate.next( n );
-        K          [] ret     = ArrayHelper.createArray( theArrayComponentType, n );
+        K          [] ret     = ArrayHelper.createArray( theArrayComponentType, Math.min( values.length, n ));
         
-        for( int i=0 ; i<values.length ; ++i ) {
+        for( int i=0 ; i<ret.length ; ++i ) {
             try {
                 ret[i] = theMapper.stringToKey( values[i].getKey() );
 
@@ -269,11 +269,11 @@ public class StoreBackedSwappingHashMapKeysIterator<K,V>
 
     /**
      * Move the cursor by N positions. Positive numbers indicate forward movemement;
-     * negative numbers indicate backwards movement.
-     * Throws NoSuchElementException if the position does not exist.
+     * negative numbers indicate backward movement. This can move all the way forward
+     * to the position "past last" and all the way backward to the position "before first".
      *
      * @param n the number of positions to move
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException thrown if the position does not exist
      */
     @Override
     public void moveBy(

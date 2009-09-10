@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -50,13 +50,15 @@ public class BulkLoaderViewlet
     /**
      * Factory method.
      *
+     * @param mb the MeshBase from which the MeshObjects are taken
      * @param c the application context
      * @return the created Viewlet
      */
     public static BulkLoaderViewlet create(
-            Context c )
+            MeshBase mb,
+            Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects();
+        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
         BulkLoaderViewlet        ret    = new BulkLoaderViewlet( viewed, c );
 
         viewed.setViewlet( ret );
@@ -79,7 +81,7 @@ public class BulkLoaderViewlet
                     throws
                         CannotViewException
                 {
-                    return create( c );
+                    return create( toView.getMeshBase(), c );
                 }
         };
     }
