@@ -493,4 +493,4 @@ if [ "${do_dist}" = 0 ]; then
 	echo '</body></html>' >> $JAVADOC_OVERVIEW;
 fi
 
-echo '** DONE **'
+echo '** DONE at' `date` '**'
