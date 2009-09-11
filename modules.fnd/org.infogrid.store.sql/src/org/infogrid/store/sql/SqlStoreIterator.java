@@ -30,25 +30,14 @@ class SqlStoreIterator
     private static final Log log = Log.getLogInstance( SqlStoreIterator.class ); // our own, private logger
 
     /**
-     * Constructor. Start at the beginning.
-     *
-     * @param store the AbstractSqlStore to iterate over
-     */
-    protected SqlStoreIterator(
-            AbstractSqlStore store )
-    {
-        this( store, "" );
-    }
-    
-    /**
      * Constructor. Start at a defined place.
      *
      * @param store the AbstractSqlStore to iterate over
      * @param position the key of the current position
      */
     protected SqlStoreIterator(
-            AbstractSqlStore   store,
-            String     position )
+            AbstractSqlStore store,
+            String           position )
     {
         super( store, position );
     }

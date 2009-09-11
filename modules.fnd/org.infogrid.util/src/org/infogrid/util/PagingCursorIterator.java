@@ -151,8 +151,9 @@ public class PagingCursorIterator<E>
             NoSuchElementException
     {
         if( thePosition > 0 ) {
-            --thePosition;
-            return theDelegate.previous();
+            E ret = theDelegate.previous();
+            --thePosition; // only change position after previous succeeded
+            return ret;
         }
         throw new NoSuchElementException();
     }

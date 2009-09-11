@@ -27,6 +27,7 @@ import org.infogrid.store.StoreKeyExistsAlreadyException;
 import org.infogrid.store.StoreValue;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
+import org.infogrid.util.logging.Log;
 
 /**
  * SQL implementation of the Store interface.
@@ -37,6 +38,8 @@ public abstract class AbstractSqlStore
         implements
             CanBeDumped
 {
+    private final static Log log = Log.getLogInstance( AbstractSqlStore.class ); // our own, private logger
+
     /**
      * Constructor for subclasses only.
      *
@@ -190,7 +193,16 @@ public abstract class AbstractSqlStore
      */
     public IterableStoreCursor iterator()
     {
-        return new SqlStoreIterator( this );
+        try {
+            if( isEmpty() ) {
+                return new SqlStoreIterator( this, null ); // past last position
+            } else {
+                return new SqlStoreIterator( this, findFirstKey() );
+            }
+        } catch( IOException ex ) {
+            log.error( ex );
+            return new SqlStoreIterator( this, null ); // gotta be somewhere
+        }
     }
 
     /**
