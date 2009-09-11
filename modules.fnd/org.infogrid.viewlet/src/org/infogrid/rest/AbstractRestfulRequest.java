@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.rest;
+package org.infogrid.rest;
 
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
@@ -38,10 +38,12 @@ public abstract class AbstractRestfulRequest
      * 
      * @param lidRequest the underlying incoming SaneRequest
      * @param contextPath the context path of the JEE application
+     * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
      */
     protected AbstractRestfulRequest(
             SaneRequest lidRequest,
-            String      contextPath )
+            String      contextPath,
+            String      defaultMeshBaseIdentifier )
     {
         theSaneRequest = lidRequest;
         theContextPath = contextPath;
@@ -50,6 +52,8 @@ public abstract class AbstractRestfulRequest
         buf.append( lidRequest.getRootUri() );
         buf.append( contextPath );
         theAbsoluteContextPath = buf.toString();
+
+        theDefaultMeshBaseIdentifier = defaultMeshBaseIdentifier;
     }
 
     /**
@@ -298,6 +302,11 @@ public abstract class AbstractRestfulRequest
      * The MeshObject found by accessing the right MeshBase with the MeshObjectIdentifier.
      */
     protected MeshObject theRequestedMeshObject;
+
+    /**
+     * The identifier of the default MeshBase.
+     */
+    protected String theDefaultMeshBaseIdentifier;
 
     /**
      * Buffered values are set to this String to express "we did the parsing, but did not

@@ -14,7 +14,7 @@
 
 package org.infogrid.jee.viewlet;
 
-import org.infogrid.jee.rest.RestfulRequest;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;

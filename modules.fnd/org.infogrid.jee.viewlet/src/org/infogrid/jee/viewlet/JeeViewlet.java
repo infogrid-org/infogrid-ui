@@ -16,9 +16,9 @@ package org.infogrid.jee.viewlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 

@@ -12,13 +12,13 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.rest.net;
+package org.infogrid.rest.net;
 
-import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.text.StringRepresentationParseException;
 
 /**

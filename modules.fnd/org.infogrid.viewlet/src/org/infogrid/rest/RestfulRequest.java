@@ -12,7 +12,7 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.rest;
+package org.infogrid.rest;
 
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;

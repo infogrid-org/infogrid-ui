@@ -12,12 +12,10 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.rest.net;
+package org.infogrid.rest.net;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.rest.AbstractRestfulRequest;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
@@ -26,6 +24,7 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.rest.AbstractRestfulRequest;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.StringRepresentationParseException;
@@ -41,24 +40,43 @@ public class DefaultNetRestfulRequest
 {
     /**
      * Factory method.
-     * 
-     * @param lidRequest the incoming request
-     * @param contextPath the application's JEE context path
+     *
+     * @param lidRequest the underlying incoming SaneRequest
+     * @param contextPath the context path of the JEE application
      * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
+     * @param meshBaseNameServer the name server with which to look up MeshBases
      * @return the created DefaultNetRestfulRequest
      */
     public static DefaultNetRestfulRequest create(
-            SaneRequest lidRequest,
-            String      contextPath,
-            String      defaultMeshBaseIdentifier )
+            SaneRequest                                              lidRequest,
+            String                                                   contextPath,
+            String                                                   defaultMeshBaseIdentifier,
+            NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer )
     {
-        NetMeshBaseIdentifierFactory meshBaseIdentifierFactory
-                = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( NetMeshBaseIdentifierFactory.class );
-        
+        return create( lidRequest, contextPath, defaultMeshBaseIdentifier, null, meshBaseNameServer );
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param lidRequest the underlying incoming SaneRequest
+     * @param contextPath the context path of the JEE application
+     * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
+     * @param meshBaseIdentifierFactory the factory to use to create MeshBaseIdentifiers
+     * @param meshBaseNameServer the name server with which to look up MeshBases
+     * @return the created DefaultNetRestfulRequest
+     */
+    public static DefaultNetRestfulRequest create(
+            SaneRequest                                              lidRequest,
+            String                                                   contextPath,
+            String                                                   defaultMeshBaseIdentifier,
+            NetMeshBaseIdentifierFactory                             meshBaseIdentifierFactory,
+            NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer )
+    {
         if( meshBaseIdentifierFactory == null ) {
             meshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
         }
-        return new DefaultNetRestfulRequest( lidRequest, contextPath, defaultMeshBaseIdentifier, meshBaseIdentifierFactory );
+        return new DefaultNetRestfulRequest( lidRequest, contextPath, defaultMeshBaseIdentifier, meshBaseIdentifierFactory, meshBaseNameServer );
     }
 
     /**
@@ -68,17 +86,19 @@ public class DefaultNetRestfulRequest
      * @param contextPath the application's JEE context path
      * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
      * @param meshBaseIdentifierFactory the factory for MeshBaseIdentifiers if any are specified in the request
+     * @param meshBaseNameServer the name server with which to look up MeshBases
      */
     protected DefaultNetRestfulRequest(
-            SaneRequest                  lidRequest,
-            String                       contextPath,
-            String                       defaultMeshBaseIdentifier,
-            NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
+            SaneRequest                                              lidRequest,
+            String                                                   contextPath,
+            String                                                   defaultMeshBaseIdentifier,
+            NetMeshBaseIdentifierFactory                             meshBaseIdentifierFactory,
+            NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer )
     {
-        super( lidRequest, contextPath );
-        
-        theDefaultMeshBaseIdentifier = defaultMeshBaseIdentifier;
+        super( lidRequest, contextPath, defaultMeshBaseIdentifier );
+
         theMeshBaseIdentifierFactory = meshBaseIdentifierFactory;
+        theMeshBaseNameServer        = meshBaseNameServer;
     }
 
     /**
@@ -125,12 +145,7 @@ public class DefaultNetRestfulRequest
             }
             theRequestedMeshBaseIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( meshBaseIdentifierString );
 
-            @SuppressWarnings( "unchecked" )
-            NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer
-                    = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( 
-                            NetMeshBaseNameServer.class );
-
-            NetMeshBase mb = meshBaseNameServer.get( (NetMeshBaseIdentifier) theRequestedMeshBaseIdentifier );
+            NetMeshBase mb = theMeshBaseNameServer.get( (NetMeshBaseIdentifier) theRequestedMeshBaseIdentifier );
 
             if( mb == null ) {
                 throw new StringRepresentationParseException( meshBaseIdentifierString, null, null );
@@ -190,19 +205,19 @@ public class DefaultNetRestfulRequest
     }
     
     /**
-     * The identifier of the default MeshBase.
+     * The factory for MeshBaseIdentifiers.
      */
-    protected String theDefaultMeshBaseIdentifier;
+    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory;
+
+    /**
+     * The name server with which to look up MeshBases.
+     */
+    protected NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> theMeshBaseNameServer;
 
     /**
      * The identifier of the requested Proxy, if any.
      */
     protected NetMeshBaseIdentifier theRequestedProxyIdentifier;
-
-    /**
-     * The factory for MeshBaseIdentifiers.
-     */
-    protected NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory;
 
     /**
      * The requested Proxy, if any.

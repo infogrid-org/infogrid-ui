@@ -22,6 +22,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.ArrayCursorIterator;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
@@ -115,7 +116,8 @@ public class ViewletAlternativesIterateTag
             JspException,
             IgnoreException
     {
-        Viewlet currentViewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+        Viewlet        currentViewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+        RestfulRequest restful        = (RestfulRequest) lookupOrThrow( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
 
         if( theSubjectName != null && theSubjectName.length() > 0 ) {
             theSubject = (MeshObject) lookupOrThrow( theSubjectName );
@@ -127,7 +129,7 @@ public class ViewletAlternativesIterateTag
         Context c = currentViewlet.getContext();
 
         ViewletFactory    factory = c.findContextObjectOrThrow( ViewletFactory.class );
-        MeshObjectsToView toView  = MeshObjectsToView.create( theSubject );
+        MeshObjectsToView toView  = MeshObjectsToView.create( theSubject, restful );
 
         ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
 

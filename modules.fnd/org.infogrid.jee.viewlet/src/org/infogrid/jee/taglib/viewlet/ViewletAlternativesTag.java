@@ -16,13 +16,13 @@ package org.infogrid.jee.taglib.viewlet;
 
 import javax.servlet.jsp.JspException;
 import java.util.HashMap;
-import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactory;
@@ -80,7 +80,7 @@ public class ViewletAlternativesTag
         
         ViewletFactory factory = c.findContextObjectOrThrow( ViewletFactory.class );
         
-        MeshObjectsToView       toView     = MeshObjectsToView.create( subject );
+        MeshObjectsToView       toView     = MeshObjectsToView.create( subject, restful );
         ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
 
         if( candidates.length > 0 ) {

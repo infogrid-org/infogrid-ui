@@ -16,7 +16,6 @@ package org.infogrid.jee.viewlet.blob;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.templates.BinaryStructuredResponseSection;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
@@ -31,6 +30,7 @@ import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;

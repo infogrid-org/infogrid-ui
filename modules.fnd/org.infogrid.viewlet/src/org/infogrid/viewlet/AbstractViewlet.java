@@ -89,13 +89,14 @@ public abstract class AbstractViewlet
       *
       * @param toView the MeshObject to view
       * @throws CannotViewException thrown if this Viewlet cannot view this MeshObject
+      * @deprecated for consistency, only <code>view( MeshObjectsToView )</code> should be used
       */
     public void setSubject(
             MeshObject toView )
         throws
             CannotViewException
     {
-        view( MeshObjectsToView.create( toView ));
+        view( MeshObjectsToView.create( toView, null ));
     }
     
     /**

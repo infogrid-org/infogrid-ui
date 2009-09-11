@@ -15,12 +15,12 @@
 package org.infogrid.jee.taglib.viewlet;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.viewlet.DefaultJeeViewletStateEnum;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.JeeViewletState;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.text.StringifierException;

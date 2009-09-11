@@ -25,8 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.ServletExceptionWithHttpStatusCode;
 import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.rest.DefaultRestfulRequest;
-import org.infogrid.jee.rest.RestfulRequest;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.security.UnsafePostException;
@@ -41,9 +39,14 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.model.traversal.TraversalDictionary;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.rest.DefaultRestfulRequest;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
@@ -97,10 +100,12 @@ public class ViewletDispatcherServlet
             throw new ContextMeshBaseNotFoundException();
         }
 
+        @SuppressWarnings("unchecked")
         RestfulRequest restfulRequest = createRestfulRequest(
                 saneRequest,
                 servletRequest.getContextPath(),
-                mb.getIdentifier().toExternalForm() );
+                mb.getIdentifier().toExternalForm(),
+                c );
 
         servletRequest.setAttribute( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME, restfulRequest );
 
@@ -212,17 +217,22 @@ public class ViewletDispatcherServlet
      * @param lidRequest the incoming request
      * @param context the context path of the application
      * @param defaultMeshBaseIdentifier String form of the identifier of the default MeshBase
+     * @param c the Context
      * @return the created RestfulRequest
      */
     protected RestfulRequest createRestfulRequest(
             SaneRequest lidRequest,
             String      context,
-            String      defaultMeshBaseIdentifier )
+            String      defaultMeshBaseIdentifier,
+            Context     c )
     {
+        @SuppressWarnings("unchecked")
         DefaultRestfulRequest ret = DefaultRestfulRequest.create(
                 lidRequest,
                 context,
-                defaultMeshBaseIdentifier );
+                defaultMeshBaseIdentifier,
+                c.findContextObjectOrThrow( MeshBaseIdentifierFactory.class ),
+                (MeshBaseNameServer<MeshBaseIdentifier,MeshBase>) c.findContextObjectOrThrow( MeshBaseNameServer.class ));
         return ret;
     }
 
@@ -264,7 +274,8 @@ public class ViewletDispatcherServlet
                 null,
                 viewletClassName,
                 viewletPars,
-                traversal );
+                traversal,
+                restful );
         return ret;
     }
 

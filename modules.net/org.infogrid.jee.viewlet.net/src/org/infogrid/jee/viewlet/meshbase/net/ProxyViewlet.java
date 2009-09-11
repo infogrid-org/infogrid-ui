@@ -16,14 +16,14 @@ package org.infogrid.jee.viewlet.meshbase.net;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import org.infogrid.jee.rest.RestfulRequest;
-import org.infogrid.jee.rest.net.NetRestfulRequest;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.rest.RestfulRequest;
+import org.infogrid.rest.net.NetRestfulRequest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;

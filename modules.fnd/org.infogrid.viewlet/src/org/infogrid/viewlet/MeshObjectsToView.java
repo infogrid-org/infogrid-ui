@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.NotSingleMemberException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
@@ -35,10 +36,12 @@ public class MeshObjectsToView
      * Factory method. Used when only the subject shall be specified
      * 
      * @param subject the subject for the Viewlet
+     * @param request the incoming RestfulRequest
      * @return the created MeshObjectsToView
      */
     public static MeshObjectsToView create(
-            MeshObject subject )
+            MeshObject     subject,
+            RestfulRequest request )
     {
         return new MeshObjectsToView(
                 subject,
@@ -47,6 +50,7 @@ public class MeshObjectsToView
                 null,
                 null,
                 null,
+                request,
                 subject.getMeshBase() );
     }
 
@@ -55,19 +59,22 @@ public class MeshObjectsToView
      * 
      * @param subject the subject for the Viewlet
      * @param viewletTypeName the type of Viewlet to use
+     * @param request the incoming RestfulRequest
      * @return the created MeshObjectsToView
      */
     public static MeshObjectsToView create(
             MeshObject         subject,
-            String             viewletTypeName )
+            String             viewletTypeName,
+            RestfulRequest     request )
     {
         return new MeshObjectsToView(
                 subject,
-                subject != null ? subject.getIdentifier() : null,
+                subject.getIdentifier(),
                 null,
                 viewletTypeName,
                 null,
                 null,
+                request,
                 subject.getMeshBase() );
     }
 
@@ -80,6 +87,7 @@ public class MeshObjectsToView
      * @param viewletTypeName the type of Viewlet to use
      * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
      * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
+     * @param request the incoming RestfulRequest
      * @return the created MeshObjectsToView
      */
     public static MeshObjectsToView create(
@@ -87,7 +95,8 @@ public class MeshObjectsToView
             Map<String,Object[]>   subjectParameters,
             String                 viewletTypeName,
             Map<String,Object[]>   viewletParameters,
-            TraversalSpecification traversalSpecification )
+            TraversalSpecification traversalSpecification,
+            RestfulRequest         request )
     {
         return new MeshObjectsToView(
                 subject,
@@ -96,6 +105,7 @@ public class MeshObjectsToView
                 viewletTypeName,
                 viewletParameters,
                 traversalSpecification,
+                request,
                 subject.getMeshBase() );
     }
 
@@ -108,6 +118,7 @@ public class MeshObjectsToView
      * @param viewletTypeName the type of Viewlet to use
      * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
      * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
+     * @param request the incoming RestfulRequest
      * @param mb the MeshBase from which the viewed MeshObjects are taken
      */
     protected MeshObjectsToView(
@@ -117,6 +128,7 @@ public class MeshObjectsToView
             String                 viewletTypeName,
             Map<String,Object[]>   viewletParameters,
             TraversalSpecification traversalSpecification,
+            RestfulRequest         request,
             MeshBase               mb )
     {
         theSubject                = subject;
@@ -124,6 +136,7 @@ public class MeshObjectsToView
         theViewletTypeName        = viewletTypeName;
         theViewletParameters      = viewletParameters;
         theTraversalSpecification = traversalSpecification;
+        theRequest                = request;
         theMeshBase               = mb;
     }
 
@@ -286,6 +299,17 @@ public class MeshObjectsToView
     }
 
     /**
+     * Obtain the incoming RestfulRequest as a result of which this MeshObjectsToView
+     * was created.
+     *
+     * @return the incoming request
+     */
+    public RestfulRequest getIncomingRequest()
+    {
+        return theRequest;
+    }
+
+    /**
      * Obtain the MeshBase from which the MeshObjects are taken.
      *
      * @return the MeshBase
@@ -352,6 +376,12 @@ public class MeshObjectsToView
      * The TraversalSpecification from the subject, if any.
      */
     protected TraversalSpecification theTraversalSpecification;
+
+    /**
+     * The incoming Restful request, as a result of which this MeshObjectsToView instance
+     * was assembled.
+     */
+    protected RestfulRequest theRequest;
 
     /**
      * The MeshBase from which the viewed MeshObjects are taken.
