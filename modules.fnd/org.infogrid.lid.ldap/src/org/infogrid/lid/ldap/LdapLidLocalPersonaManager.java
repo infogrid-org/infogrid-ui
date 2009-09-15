@@ -17,6 +17,7 @@ package org.infogrid.lid.ldap;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Properties;
+import javax.naming.CommunicationException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
@@ -104,8 +105,6 @@ public class LdapLidLocalPersonaManager
         throws
             NamingException
     {
-        DirContext dir = new InitialDirContext( props );
-
         if( ldapContextName == null ) {
             ldapContextName = props.getProperty( javax.naming.Context.PROVIDER_URL );
         }
@@ -117,27 +116,28 @@ public class LdapLidLocalPersonaManager
             controls.setSearchScope( SearchControls.SUBTREE_SCOPE );
         }
 
-        LdapLidLocalPersonaManager ret = new LdapLidLocalPersonaManager( dir, ldapContextName, filter, controls, attributeList );
+        LdapLidLocalPersonaManager ret = new LdapLidLocalPersonaManager( props, ldapContextName, filter, controls, attributeList );
         return ret;
     }
 
     /**
      * Constructor for subclasses only, use factory method.
      * 
-     * @param managerDir the DirContext, accessed by the LDAP manager, in which to find the identities
+     * @param props Properties to use to connect to the directory
      * @param ldapContextName name of the LDAP context object in which to search
      * @param filter the LDAP filter expression
      * @param controls the SearchControls to use for queries
      * @param attributeList the list of attributes to pull out of LDAP. If null, pull out all attributes.
      */
     protected LdapLidLocalPersonaManager(
-            DirContext     managerDir,
+            Properties     props,
             String         ldapContextName,
             String         filter,
             SearchControls controls,
             String []      attributeList )
     {
-        theManagerDir       = managerDir;
+        theLdapProperties   = props;
+        theManagerDir       = null;
         theLdapContextName  = ldapContextName;
         theFilter           = filter;
         theControls         = controls;
@@ -167,66 +167,81 @@ public class LdapLidLocalPersonaManager
         if( s.length() == 0 ) {
             throw new LidLocalPersonaUnknownException( identifier );
         }
-
         String filter = MessageFormat.format( theFilter, s );
 
-        try {
-            found = theManagerDir.search( theLdapContextName, filter, theControls );
-
-            if( found.hasMore() ) {
-                SearchResult current = (SearchResult) found.next();
-
-                HashMap<String,String> attributes = new HashMap<String,String>();
-
-                if( theAttributeList != null ) {
-                    for( int i=0 ; i<theAttributeList.length ; ++i ) {
-                        Object value = current.getAttributes().get( theAttributeList[i] );
-                        if( value != null ) {
-                            attributes.put( theAttributeList[i], value.toString() );
-                        } else {
-                            attributes.put( theAttributeList[i], null );
-                        }
-                    }
-                } else {
-                    NamingEnumeration<? extends Attribute> currentAttributes = current.getAttributes().getAll();
-                    while( currentAttributes.hasMore() ) {
-                        Attribute att = currentAttributes.next();
-
-                        Object value = att.get();
-                        if( value != null ) {
-                            attributes.put( att.getID(), value.toString() );
-                        } else {
-                            attributes.put( att.getID(), null );
-                        }
-                    }
+        for( int n=0 ; n<N_CONNECTION_TRIES ; ++n ) {
+            try {
+                if( theManagerDir == null ) {
+                    theManagerDir = new InitialDirContext( theLdapProperties );
                 }
-                LidLocalPersona ret = SimpleLidLocalPersona.create( identifier, attributes );
+                found = theManagerDir.search( theLdapContextName, filter, theControls );
 
                 if( found.hasMore() ) {
-                    SearchResult current2 = (SearchResult) found.next();
-                    log.error( "More than one result found: ", current, current2 );
-                }
-                return ret;
-            }
-            throw new LidLocalPersonaUnknownException( identifier );
+                    SearchResult current = (SearchResult) found.next();
 
-        } catch( NamingException ex ) {
-            log.error( ex );
-            throw new LidLocalPersonaUnknownException( identifier );
-            
-        } finally {
-            if( found != null ) {
-                try {
-                    found.close();
-                } catch( Throwable ex2 ) {
-                    // nothing
+                    HashMap<String,String> attributes = new HashMap<String,String>();
+
+                    if( theAttributeList != null ) {
+                        for( int i=0 ; i<theAttributeList.length ; ++i ) {
+                            Object value = current.getAttributes().get( theAttributeList[i] );
+                            if( value != null ) {
+                                attributes.put( theAttributeList[i], value.toString() );
+                            } else {
+                                attributes.put( theAttributeList[i], null );
+                            }
+                        }
+                    } else {
+                        NamingEnumeration<? extends Attribute> currentAttributes = current.getAttributes().getAll();
+                        while( currentAttributes.hasMore() ) {
+                            Attribute att = currentAttributes.next();
+
+                            Object value = att.get();
+                            if( value != null ) {
+                                attributes.put( att.getID(), value.toString() );
+                            } else {
+                                attributes.put( att.getID(), null );
+                            }
+                        }
+                    }
+                    LidLocalPersona ret = SimpleLidLocalPersona.create( identifier, attributes );
+
+                    if( found.hasMore() ) {
+                        SearchResult current2 = (SearchResult) found.next();
+                        log.error( "More than one result found: ", current, current2 );
+                    }
+                    return ret;
+                }
+                throw new LidLocalPersonaUnknownException( identifier );
+
+            } catch( CommunicationException ex ) {
+                // connection to directory may have timed out
+                theManagerDir = null; // abandon old one
+
+            } catch( NamingException ex ) {
+                log.error( ex );
+                throw new LidLocalPersonaUnknownException( identifier );
+
+            } finally {
+                if( found != null ) {
+                    try {
+                        found.close();
+                    } catch( Throwable ex2 ) {
+                        // nothing
+                    }
                 }
             }
         }
+        log.error( "Could not connect to LDAP: " + theLdapProperties );
+        throw new LidLocalPersonaUnknownException( identifier );
     }
 
     /**
-     * The DirContext in which to find the identities.
+     * The properties for the initial NamingContext.
+     */
+    protected Properties theLdapProperties;
+
+    /**
+     * The DirContext in which to find the identities. This is allocated when needed.
      */
     protected DirContext theManagerDir;
 
@@ -254,4 +269,9 @@ public class LdapLidLocalPersonaManager
      * The default filter.
      */
     protected static final String DEFAULT_FILTER = "(sAMAccountName={0})";
+
+    /**
+     * The number of times to attempt to connect.
+     */
+    public static final int N_CONNECTION_TRIES = 2;
 }
