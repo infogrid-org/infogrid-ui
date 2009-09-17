@@ -183,11 +183,17 @@ public class LdapLidLocalPersonaManager
 
                     if( theAttributeList != null ) {
                         for( int i=0 ; i<theAttributeList.length ; ++i ) {
-                            Object value = current.getAttributes().get( theAttributeList[i] );
-                            if( value != null ) {
-                                attributes.put( theAttributeList[i], value.toString() );
+                            Attribute att = current.getAttributes().get( theAttributeList[i] );
+                            if( att != null ) {
+
+                                Object value = att.get();
+                                if( value != null && value instanceof String ) {
+                                    attributes.put( att.getID(), (String) value );
+                                } else {
+                                    attributes.put( att.getID(), null );
+                                }
                             } else {
-                                attributes.put( theAttributeList[i], null );
+                                log.error( "Returned null attribute", theAttributeList[i] );
                             }
                         }
                     } else {
@@ -196,8 +202,8 @@ public class LdapLidLocalPersonaManager
                             Attribute att = currentAttributes.next();
 
                             Object value = att.get();
-                            if( value != null ) {
-                                attributes.put( att.getID(), value.toString() );
+                            if( value != null && value instanceof String ) {
+                                attributes.put( att.getID(), (String) value );
                             } else {
                                 attributes.put( att.getID(), null );
                             }
