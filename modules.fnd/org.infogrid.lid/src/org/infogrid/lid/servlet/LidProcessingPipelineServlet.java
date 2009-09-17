@@ -138,9 +138,10 @@ public class LidProcessingPipelineServlet
             StructuredResponse lidResponse,
             Throwable          t )
     {
-        if( log.isDebugEnabled() ) {
-            log.debug( t );
-        }
+//        if( log.isDebugEnabled() ) {
+//            log.debug( t );
+//        }
+        log.error( t );
     }
 
     /**
