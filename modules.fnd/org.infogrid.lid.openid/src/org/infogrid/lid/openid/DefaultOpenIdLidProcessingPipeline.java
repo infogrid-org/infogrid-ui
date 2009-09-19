@@ -26,7 +26,6 @@ import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Processes LID and OpenID requests in the default manner.
@@ -78,14 +77,12 @@ public class DefaultOpenIdLidProcessingPipeline
      * @return the authentication status of the client
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
-     * @throws StringRepresentationParseException thrown if the specified client identifier could not be interpreted
      */
     public LidClientAuthenticationStatus processPipeline(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
-            LidAbortProcessingPipelineException,
-            StringRepresentationParseException
+            LidAbortProcessingPipelineException
     {
         HasIdentifier                 requestedResource = null;
         LidClientAuthenticationStatus clientAuthStatus  = null;

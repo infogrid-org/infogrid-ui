@@ -16,7 +16,6 @@ package org.infogrid.lid;
 
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Knows how to determine the authentication status of the client from an incoming request.
@@ -33,12 +32,10 @@ public interface LidClientAuthenticationPipelineStage
      * @return the LidClientAuthenticationStatus
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
-     * @throws StringRepresentationParseException thrown if the specified client identifier could not be interpreted
      */
     public LidClientAuthenticationStatus determineAuthenticationStatus(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
-            LidAbortProcessingPipelineException,
-            StringRepresentationParseException;
+            LidAbortProcessingPipelineException;
 }
