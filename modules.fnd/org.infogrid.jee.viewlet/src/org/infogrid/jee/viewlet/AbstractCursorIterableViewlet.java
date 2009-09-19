@@ -137,15 +137,11 @@ public abstract class AbstractCursorIterableViewlet
 
     /**
      * Name of the Viewlet parameter indicating the start index.
-     *
-     * @return parameter name
      */
     public static final String MIN_NAME = "start-index";
 
     /**
      * Name of the Viewlet parameter indicating the end index.
-     *
-     * @return parameter name
      */
     public static final String MAX_NAME = "end-index";
 }

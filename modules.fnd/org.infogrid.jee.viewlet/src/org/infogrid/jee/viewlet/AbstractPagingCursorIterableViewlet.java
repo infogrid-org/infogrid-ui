@@ -115,22 +115,6 @@ public abstract class AbstractPagingCursorIterableViewlet
         return ret;
     }
 
-//    /**
-//     * If true, show the navigation pane for this Viewlet.
-//     *
-//     * @return true or false
-//     */
-//    public boolean getShowNavigationPane()
-//    {
-//        try {
-//            return getCursorIterator() != null;
-//
-//        } catch( CannotViewException.InvalidParameter ex ) {
-//            // what else to do?
-//            return false;
-//        }
-//    }
-//
     /**
      * Obtain the MeshObject that is the minimum MeshObject on the first page of the results, or null.
      *
@@ -319,15 +303,11 @@ public abstract class AbstractPagingCursorIterableViewlet
 
     /**
      * Name of the Viewlet parameter indicating the MeshObject with which the current page starts.
-     *
-     * @return parameter name
      */
     public static final String PAGE_START_NAME = "page-start";
 
     /**
      * Name of the Viewlet parameter indicating the page length.
-     *
-     * @return parameter name
      */
     public static final String PAGE_LENGTH_NAME = "page-length";
 

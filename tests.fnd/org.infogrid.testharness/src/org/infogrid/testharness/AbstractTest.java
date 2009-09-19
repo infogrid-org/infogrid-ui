@@ -571,6 +571,26 @@ public abstract class AbstractTest
     }
 
     /**
+     * Report error if the condition is false.
+     *
+     * @param condition the condition
+     * @param msg message to print when the condition is false
+     * @return true if check passed
+     */
+    public final boolean checkCondition(
+            Boolean condition,
+            String  msg )
+    {
+        if( condition == null ) {
+            reportError( msg, "null" );
+
+        } else if( ! condition ) {
+            reportError( msg );
+        }
+        return condition;
+    }
+
+    /**
      * Report error if the tested number is outside of a certain range.
      *
      * @param test the number to test
