@@ -86,6 +86,15 @@
     </tag>
 
     <tag>
+        <name>requestedTemplate</name>
+        <tag-class>org.infogrid.jee.taglib.templates.RequestedTemplateTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>script</name>
         <tag-class>org.infogrid.jee.taglib.templates.ScriptTag</tag-class>
         <attribute>

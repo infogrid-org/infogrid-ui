@@ -9,6 +9,7 @@
  %>
 [
 <objectset:iterate meshObjectSetName="Viewlet.Objects" meshObjectLoopVar="current">
+ <objectset:iteratecontentrow>
   {
     "Identifier" : <mesh:meshObjectId meshObjectName="current" stringRepresentation="Java"/>,
     "Types"      : [
@@ -23,5 +24,6 @@
     </mesh:propertyIterate>
   </mesh:blessedByIterate>
   }<u:ifIterationHasNext>,</u:ifIterationHasNext>
+ </objectset:iteratecontentrow>
 </objectset:iterate>
 ]

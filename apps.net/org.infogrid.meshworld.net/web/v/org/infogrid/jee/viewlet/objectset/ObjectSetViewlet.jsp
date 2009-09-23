@@ -14,27 +14,36 @@
  <table class="objects">
   <tbody>
    <objectset:iterate meshObjectSetName="Viewlet.Objects" meshObjectLoopVar="current">
-    <tr class="identifier">
-     <th class="identifier">Identifier:</th>
-     <td class="type" colspan="2"><mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" maxLength="35" /></mesh:meshObjectLink></td>
-    </tr>
-    <mesh:blessedByIterate meshObjectName="current" blessedByLoopVar="blessedBy">
-     <tr>
-      <th></th>
-      <th class="type" colspan="2">
-       <mesh:type meshTypeName="blessedBy"/>
-      </th>
+    <objectset:iteratecontentrow>
+     <tr class="identifier">
+      <th class="identifier">Identifier:</th>
+      <td class="type" colspan="2"><mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" maxLength="35" /></mesh:meshObjectLink></td>
      </tr>
-     <mesh:propertyIterate meshObjectName="current" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue" skipNullProperty="false">
+     <mesh:blessedByIterate meshObjectName="current" blessedByLoopVar="blessedBy">
       <tr>
        <th></th>
-       <td class="type"><mesh:type meshTypeName="propertyType" /></td>
-       <td class="value">
-        <mesh:propertyValue propertyValueName="propertyValue" ignore="true"/>
-       </td>
+       <th class="type" colspan="2">
+        <mesh:type meshTypeName="blessedBy"/>
+       </th>
       </tr>
-     </mesh:propertyIterate>
-    </mesh:blessedByIterate>
+      <mesh:propertyIterate meshObjectName="current" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue" skipNullProperty="false">
+       <tr>
+        <th></th>
+        <td class="type"><mesh:type meshTypeName="propertyType" /></td>
+        <td class="value">
+         <mesh:propertyValue propertyValueName="propertyValue" ignore="true"/>
+        </td>
+       </tr>
+      </mesh:propertyIterate>
+     </mesh:blessedByIterate>
+    </objectset:iteratecontentrow>
+    <objectset:iteratenocontent>
+     <tr>
+      <td>
+       Empty set.
+      </td>
+     </tr>
+    </objectset:iteratenocontent>
    </objectset:iterate>
   </tbody>
  </table> 

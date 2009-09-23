@@ -7,6 +7,7 @@
  %><%@ taglib prefix="tmpl"      uri="/v/org/infogrid/jee/taglib/templates/templates.tld"
  %><%@ taglib prefix="c"         uri="http://java.sun.com/jsp/jstl/core"
  %>
+<tmpl:requestedTemplate name="verbatim" />
 <feed version="0.3"
       xmlns:ig="http://infogrid.org/xmlns/1"
       id="${Viewlet.fullRequestURI}">
@@ -22,14 +23,16 @@
  </mesh:blessedByIterate>
 
  <objectset:iterate meshObjectSetName="Viewlet.Objects" meshObjectLoopVar="current">
-  <entry>
-   <id><mesh:meshObjectId meshObjectName="current" /></id>
-   <mesh:blessedByIterate meshObjectName="current" blessedByLoopVar="blessedBy">
-    <ig:MeshType><mesh:meshTypeId meshTypeName="blessedBy" stringRepresentation="Plain" /></ig:MeshType>
-    <mesh:propertyIterate meshObjectName="current" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue" skipNullProperty="false">
-      <ig:Property type="<mesh:meshTypeId meshTypeName="propertyType" stringRepresentation="Plain" />">${propertyValue}</ig:Property>
-    </mesh:propertyIterate>
-   </mesh:blessedByIterate>
-  </entry>
+  <objectset:iteratecontentrow>
+   <entry>
+    <id><mesh:meshObjectId meshObjectName="current" /></id>
+    <mesh:blessedByIterate meshObjectName="current" blessedByLoopVar="blessedBy">
+     <ig:MeshType><mesh:meshTypeId meshTypeName="blessedBy" stringRepresentation="Plain" /></ig:MeshType>
+     <mesh:propertyIterate meshObjectName="current" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue" skipNullProperty="false">
+       <ig:Property type="<mesh:meshTypeId meshTypeName="propertyType" stringRepresentation="Plain" />">${propertyValue}</ig:Property>
+     </mesh:propertyIterate>
+    </mesh:blessedByIterate>
+   </entry>
+  </objectset:iteratecontentrow>
  </objectset:iterate>
 </feed>
