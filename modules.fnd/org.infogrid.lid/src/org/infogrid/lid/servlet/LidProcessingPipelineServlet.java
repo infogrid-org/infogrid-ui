@@ -27,6 +27,7 @@ import org.infogrid.jee.servlet.AbstractServletInvokingServlet;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
 import org.infogrid.lid.DefaultLidProcessingPipeline;
+import org.infogrid.lid.LidAbortProcessingPipelineException;
 import org.infogrid.lid.LidProcessingPipeline;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
@@ -138,10 +139,11 @@ public class LidProcessingPipelineServlet
             StructuredResponse lidResponse,
             Throwable          t )
     {
-//        if( log.isDebugEnabled() ) {
-//            log.debug( t );
-//        }
-        log.error( t );
+        if( t instanceof LidAbortProcessingPipelineException ) {
+            // do nothing, this is fine
+        } else {
+            log.error( t );
+        }
     }
 
     /**

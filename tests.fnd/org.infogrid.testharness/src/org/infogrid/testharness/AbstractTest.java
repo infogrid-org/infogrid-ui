@@ -436,28 +436,28 @@ public abstract class AbstractTest
     /**
      * Report error if the first argument does not start with the second argument String.
      *
-     * @param one first argument to compare
-     * @param two second argument to compare
+     * @param haystack argument in which to look for the needle
+     * @param needle the String to look for
      * @param msg message to print when test fails
      * @return true if check passed
      */
     public final boolean checkStartsWith(
-            String one,
-            String two,
+            String haystack,
+            String needle,
             String msg )
     {
-        if( one == null ) {
-            if( two == null ) {
+        if( haystack == null ) {
+            if( needle == null ) {
                 return true;
             } else {
-                reportError( msg, "null vs. \"" + two + "\" (class: " + two.getClass().getName() + ")" );
+                reportError( msg, "null vs. \"" + needle + "\" (class: " + needle.getClass().getName() + ")" );
                 return false;
             }
         }
-        if( one.startsWith( two )) {
+        if( haystack.startsWith( needle )) {
             return true;
         } else {
-            reportError( msg, "\"" + one + "\" (class: " + one.getClass().getName() + ") vs. " + ( (two==null) ? "null" : ( "\"" + two + "\" (class: " + two.getClass().getName() + ")" )) );
+            reportError( msg, "\"" + haystack + "\" (class: " + haystack.getClass().getName() + ") vs. " + ( (needle==null) ? "null" : ( "\"" + needle + "\" (class: " + needle.getClass().getName() + ")" )) );
             return false;
         }
     }
