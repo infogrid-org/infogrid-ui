@@ -31,7 +31,7 @@ for f in `svn status | egrep -v '^D|^\?' | cut -c 8-`; do
 done
 
 echo '** Checking for empty directories. **'
-for f in `find modules* apps* tests* tools* -type d -and -not -path '*.svn*' -and -not -name src -print`; do
+for f in `find modules* apps* tests* tools* -type d -and -not -path '*.svn*' -and -not -name src -and -not -path '*/build*' -and -not -path '*/dist*' -print`; do
 	if [ 0 == `ls -1 "$f/" | wc -l` ]; then
 		echo $f
 	fi
