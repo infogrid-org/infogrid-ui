@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -19,26 +19,26 @@ import org.infogrid.util.OneElementIterator;
 import org.infogrid.util.ZeroElementCursorIterator;
 
 /**
- * Stringifies a single Double.
+ * Stringifies a single Float.
  */
-public class DoubleStringifier
+public class FloatStringifier
         extends
-            AbstractStringifier<Double>
+            AbstractStringifier<Float>
 {
     /**
      * Factory method.
      *
      * @return the created DoubleStringifier
      */
-    public static DoubleStringifier create()
+    public static FloatStringifier create()
     {
-        return new DoubleStringifier();
+        return new FloatStringifier();
     }
 
     /**
      * Constructor. Use factory method.
      */
-    protected DoubleStringifier()
+    protected FloatStringifier()
     {
         // noop
     }
@@ -53,7 +53,7 @@ public class DoubleStringifier
      */
     public String format(
             String                         soFar,
-            Double                         arg,
+            Float                          arg,
             StringRepresentationParameters pars )
     {
         String ret = String.valueOf( arg );
@@ -78,13 +78,13 @@ public class DoubleStringifier
         throws
             ClassCastException
     {
-        if( arg instanceof Double ) {
-            return format( soFar, (Double) arg, pars );
+        if( arg instanceof Float ) {
+            return format( soFar, ((Float)arg), pars );
         } else {
-            return format( soFar, ((Number) arg).doubleValue(), pars );
+            return format( soFar, ((Number) arg).floatValue(), pars );
         }
     }
-    
+
     /**
      * Parse out the Object in rawString that were inserted using this Stringifier.
      *
@@ -94,14 +94,14 @@ public class DoubleStringifier
      * @throws StringifierParseException thrown if a parsing problem occurred
      */
     @Override
-    public Double unformat(
+    public Float unformat(
             String                     rawString,
             StringifierUnformatFactory factory )
         throws
             StringifierParseException
     {
         try {
-            Double ret = Double.parseDouble( rawString );
+            Float ret = Float.parseFloat( rawString );
 
             return ret;
 
@@ -125,7 +125,7 @@ public class DoubleStringifier
      * @return the Iterator
      */
     @Override
-    public Iterator<StringifierParsingChoice<Double>> parsingChoiceIterator(
+    public Iterator<StringifierParsingChoice<Float>> parsingChoiceIterator(
             final String               rawString,
             final int                  startIndex,
             final int                  endIndex,
@@ -135,41 +135,41 @@ public class DoubleStringifier
     {
         if( matchAll ) {
             try {
-                Double found = Double.parseDouble( rawString.substring( startIndex, endIndex ));
+                Float found = Float.parseFloat( rawString.substring( startIndex, endIndex ));
 
-                return OneElementIterator.<StringifierParsingChoice<Double>>create(
-                        new StringifierValueParsingChoice<Double>( startIndex, endIndex, found ));
-                
+                return OneElementIterator.<StringifierParsingChoice<Float>>create(
+                        new StringifierValueParsingChoice<Float>( startIndex, endIndex, found ));
+
             } catch( NumberFormatException ex ) {
-                return ZeroElementCursorIterator.<StringifierParsingChoice<Double>>create();
+                return ZeroElementCursorIterator.<StringifierParsingChoice<Float>>create();
             }
-            
+
         } else if( startIndex == endIndex ) {
-            return ZeroElementCursorIterator.<StringifierParsingChoice<Double>>create();
-            
+            return ZeroElementCursorIterator.<StringifierParsingChoice<Float>>create();
+
         } else {
             char first = rawString.charAt( startIndex );
             int  startIndex2 = startIndex;
             if( first == '+' || first == '-' ) {
                 if( startIndex + 1 == endIndex ) {
-                    return ZeroElementCursorIterator.<StringifierParsingChoice<Double>>create();
+                    return ZeroElementCursorIterator.<StringifierParsingChoice<Float>>create();
                 }
                 ++startIndex2;
             }
             return new MyIterator( this, rawString, startIndex, startIndex2, endIndex, max, matchAll );
         }
     }
-    
+
     /**
      * Iterator implementation for the DoubleStringifier.
      */
     static class MyIterator
             implements
-                Iterator<StringifierParsingChoice<Double>>
+                Iterator<StringifierParsingChoice<Float>>
     {
         /**
          * Constructor.
-         * 
+         *
          * @param stringifier the DoubleStringifier we belong to
          * @param rawString the String to parse
          * @param startIndex the start index
@@ -179,13 +179,13 @@ public class DoubleStringifier
          * @param matchAll if true, match all chars between start and end
          */
         public MyIterator(
-                DoubleStringifier stringifier,
-                String            rawString,
-                int               startIndex,
-                int               currentEnd,
-                int               endIndex,
-                int               max,
-                boolean           matchAll )
+                FloatStringifier stringifier,
+                String           rawString,
+                int              startIndex,
+                int              currentEnd,
+                int              endIndex,
+                int              max,
+                boolean          matchAll )
         {
             theStringifier = stringifier;
             theRawString   = rawString;
@@ -194,7 +194,7 @@ public class DoubleStringifier
             theEndIndex    = endIndex;
             theMax         = max;
             theMatchAll    = matchAll;
-            
+
             goNext();
         }
 
@@ -211,7 +211,7 @@ public class DoubleStringifier
                 return false;
             }
         }
-        
+
         /**
          * Go to the next position.
          */
@@ -226,7 +226,7 @@ public class DoubleStringifier
                 return;
             }
             try {
-                theNext = Double.parseDouble( theRawString.substring( theStartIndex, theCurrentEnd ));
+                theNext = Float.parseFloat( theRawString.substring( theStartIndex, theCurrentEnd ));
 
             } catch( NumberFormatException ex ) {
                 theNext = null;
@@ -238,14 +238,14 @@ public class DoubleStringifier
          *
          * @return the next element
          */
-        public StringifierParsingChoice<Double> next()
+        public StringifierParsingChoice<Float> next()
         {
-            Double ret         = theNext;
+            Float  ret         = theNext;
             int    previousEnd = theCurrentEnd;
-            
+
             goNext();
-            
-            return new StringifierValueParsingChoice<Double>( theStartIndex, previousEnd, ret );
+
+            return new StringifierValueParsingChoice<Float>( theStartIndex, previousEnd, ret );
         }
 
         /**
@@ -263,33 +263,33 @@ public class DoubleStringifier
         /**
          * The Stringifier this iterator belongs to.
          */
-        protected DoubleStringifier theStringifier;
-        
+        protected FloatStringifier theStringifier;
+
         /**
          * The String to parse.
          */
         protected String theRawString;
-        
+
         /**
          * Where to start.
          */
         protected int theStartIndex;
-        
+
         /**
          * The current end, incremented every iteration.
          */
         protected int theCurrentEnd;
-        
+
         /**
          * Where to end.
          */
         protected int theEndIndex;
-        
+
         /**
          * The maximum number of iterations to return.
          */
         protected int theMax;
-        
+
         /**
          * Should all chars between start and end be matched?
          */
@@ -299,10 +299,10 @@ public class DoubleStringifier
          * Counts the number of iterations returned already.
          */
         protected int theCounter = 0;
-        
+
         /**
-         * The next double to return.
+         * The next float to return.
          */
-        protected Double theNext;
+        protected Float theNext;
     }
 }

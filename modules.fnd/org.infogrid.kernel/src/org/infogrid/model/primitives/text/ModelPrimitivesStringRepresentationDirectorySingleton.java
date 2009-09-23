@@ -76,6 +76,10 @@ public class ModelPrimitivesStringRepresentationDirectorySingleton
         // javadoc: same as html
         // java: same as plain
 
+        // float
+        // javadoc: same as html
+        javaMap.put(      "float",            JavaFloatStringifier.create() );
+
         // double
         // javadoc: same as html
         javaMap.put(      "double",           JavaDoubleStringifier.create() );

@@ -93,6 +93,10 @@ public class StringRepresentationDirectorySingleton
         // html: same as plain
         // url:  same as plain
 
+        plainMap.put(   "float",          FloatStringifier.create() );
+        // html: same as plain
+        // url:  same as plain
+
         plainMap.put(   "double",         DoubleStringifier.create() );
         // html: same as plain
         // url:  same as plain
