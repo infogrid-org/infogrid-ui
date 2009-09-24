@@ -24,7 +24,7 @@
         <entitytype ID="org.infogrid.model.Account/AccountCategory">
             <name>AccountCategory</name>
             <username>Account Category</username>
-            <userdescription>Categorizes accounts on a system3.</userdescription>
+            <userdescription>Categorizes accounts on a system.</userdescription>
         </entitytype>
 
         <relationshiptype ID="org.infogrid.model.Account/AccountCategory_CategorizesAccount_MeshObject">
