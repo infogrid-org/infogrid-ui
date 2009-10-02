@@ -747,7 +747,7 @@ public class MMeshTypeLifecycleManager
         }
         ret.setIsOptional( isOptional );
 
-        if( ! isOptional.value() && theDefaultValue == null ) {
+        if( ! isOptional.value() && theDefaultValue == null && theDefaultValueCode == null ) {
             throw new IllegalArgumentException(
                     "Default value must be given if PropertyType is mandatory: PropertyType "
                     + ret
@@ -911,7 +911,7 @@ public class MMeshTypeLifecycleManager
             ret.setDefaultValueCode( theDefaultValueCode );
         }
         ret.setIsOptional( isOptional );
-        if( ! isOptional.value() && theDefaultValue == null ) {
+        if( ! isOptional.value() && theDefaultValue == null && theDefaultValueCode == null ) {
             throw new IllegalArgumentException(
                     "Default value must be given if PropertyType is mandatory: PropertyType "
                     + ret
