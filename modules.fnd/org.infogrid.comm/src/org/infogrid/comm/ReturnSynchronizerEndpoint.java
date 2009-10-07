@@ -17,7 +17,9 @@ package org.infogrid.comm;
 import java.util.List;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.ReturnSynchronizer;
-import org.infogrid.util.ReturnSynchronizerException;
+import org.infogrid.util.ReturnSynchronizerException.DuplicateKey;
+import org.infogrid.util.ReturnSynchronizerException.DuplicateResult;
+import org.infogrid.util.ReturnSynchronizerException.NoTransactionOpen;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.logging.Log;
@@ -84,12 +86,12 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
      * Invoke the front leg of the remote procedure call.
      *
      * @param message the message that represents the argument to the call
-     * @throws ReturnSynchronizerException.NoTransactionOpen thrown if a ReturnSynchronizer transaction had not been opened previously
+     * @throws NoTransactionOpen thrown if a ReturnSynchronizer transaction had not been opened previously
      */
     public void call(
             T message )
         throws
-            ReturnSynchronizerException.NoTransactionOpen
+            NoTransactionOpen
     {
         call( message, null, defaultTimeout );
     }
@@ -101,14 +103,14 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
      * @param existingKeyForQuery non-null if this call is made to fulfill an existing query only
      *        partially performed so far. This is the key for that existig query.
      * @param timeout the timeout, in milliseconds, until the call times out
-     * @throws ReturnSynchronizerException.NoTransactionOpen thrown if a ReturnSynchronizer transaction had not been opened previously
+     * @throws NoTransactionOpen thrown if a ReturnSynchronizer transaction had not been opened previously
      */
     public void call(
             T    message,
             Long existingKeyForQuery,
             long timeout )
         throws
-            ReturnSynchronizerException.NoTransactionOpen
+            NoTransactionOpen
     {
         long invocationId = createInvocationId();
 
@@ -126,7 +128,7 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
             }
             theMessageEndpoint.sendMessageAsap( message );
 
-        } catch( ReturnSynchronizerException.DuplicateKey ex ) {
+        } catch( DuplicateKey ex ) {
             log.error( ex );
         }
     }
@@ -164,7 +166,7 @@ public class ReturnSynchronizerEndpoint<T extends CarriesInvocationId>
             if( theSynchronizer.depositQueryResult( responseId, msg )) {
                 otherMessageReceived( endpoint, msg );
             }
-        } catch( ReturnSynchronizerException.DuplicateResult ex ) {
+        } catch( DuplicateResult ex ) {
             log.error( ex );
         }
     }

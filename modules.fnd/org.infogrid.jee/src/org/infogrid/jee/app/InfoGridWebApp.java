@@ -324,7 +324,11 @@ public abstract class InfoGridWebApp
         if( qm == null ) {
             return;
         }
-        qm.initiateQuit();
+        try {
+            qm.initiateQuit();
+        } catch( NoClassDefFoundError ex ) {
+            // can happen in Tomcat5.5 -- no idea why, but it's not a problem so we swallow it
+        }
     }
 
     /**
