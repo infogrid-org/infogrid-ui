@@ -262,12 +262,7 @@ public class ProbeTest8
     }
 
     /**
-     * our naming scheme
-     */
-    protected String scheme;
-
-    /**
-     * The ModelObjectRepository that we use to test.
+     * The MeshBase that we use to test.
      */
     protected LocalNetMMeshBase theMeshBase;
 
@@ -330,22 +325,22 @@ public class ProbeTest8
     private static Breakpoint location3 = new Breakpoint( "location3", 60000L );
 
     /**
-     * the result delivered by Probe1
+     * The result delivered by Probe1.
      */
     MeshObject foundObject1 = null;
 
     /**
-     * the result delivered by Probe2
+     * The result delivered by Probe2.
      */
     MeshObject foundObject2 = null;
 
     /**
-     * the result delivered by Probe3
+     * The result delivered by Probe3.
      */
     MeshObject foundObject3 = null;
 
     /**
-     * the result delivered by Probe4
+     * The result delivered by Probe4.
      */
     MeshObject foundObject4 = null;
 

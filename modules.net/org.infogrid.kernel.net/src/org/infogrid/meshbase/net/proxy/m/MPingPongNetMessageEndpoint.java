@@ -254,6 +254,24 @@ public class MPingPongNetMessageEndpoint
         }
         super.sendMessage( token, content );
     }
+
+    /**
+     * Convert to String, for debugging only.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( super.toString() );
+        buf.append( "{ " );
+        buf.append( theMyIdentifier.toExternalForm() );
+        buf.append( " -> " );
+        buf.append( thePartnerIdentifier.toExternalForm() );
+        buf.append( " {" );
+        return buf.toString();
+    }
     
     /**
      * Identifier of the local MeshBase.
