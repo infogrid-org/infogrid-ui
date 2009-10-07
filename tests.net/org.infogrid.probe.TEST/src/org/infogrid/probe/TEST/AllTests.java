@@ -58,7 +58,7 @@ public class AllTests
                 new TestSpec(
                         ProbeTest5.class ),
 
-//                new TestSpec( // FAILS (minor). Requires memory debugger to make progress. See also ProbeTest6
+//                new TestSpec( // FAILS: not implemented. See also XprisoTest11.
 //                        ProbeTest6.class,
 //                        AbstractTest.fileSystemFileName( ProbeTest6.class, "ProbeTest6.xml" )),
 //
@@ -67,9 +67,14 @@ public class AllTests
 
 // FIXME: ProbeTest8 seems to work, but spits out way too many warnings (but only when run in this test suite,
 // not when run standalone). It may be related to failure to clean up Proxies to expired Shadows, and perhaps
-// ProbeTest6. This needs more investigation but does not appear to be critical.
-//                new TestSpec(
+// ProbeTest6. This needs more investigation but does not appear to be critical.\
+//               new TestSpec(
 //                        ProbeTest8.class ),
+
+               new TestSpec(
+                       ProbeTest9a.class ),
+               new TestSpec(
+                       ProbeTest9b.class )
         };
 
 
@@ -116,7 +121,7 @@ public class AllTests
                         AbstractTest.fileSystemFileName( YadisTest5.class, "YadisTest5.xml" ),
                         "2000"),
 
-              new TestSpec(
+                new TestSpec(
                         YadisTest6.class.getName() + " (delay 0)",
                         YadisTest6.class,
                         AbstractTest.fileSystemFileName( YadisTest6.class, "YadisTest6.xml" ),
@@ -128,7 +133,7 @@ public class AllTests
                         AbstractTest.fileSystemFileName( YadisTest6.class, "YadisTest6.xml" ),
                         "2000" ),
 
-              new TestSpec(
+                new TestSpec(
                         YadisTest7.class.getName() + " (delay 0)",
                         YadisTest7.class,
                         AbstractTest.fileSystemFileName( YadisTest7.class, "YadisTest7.xml" ),

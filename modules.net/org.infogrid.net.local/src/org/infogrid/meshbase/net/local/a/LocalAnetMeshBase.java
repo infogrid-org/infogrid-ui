@@ -109,7 +109,16 @@ public abstract class LocalAnetMeshBase
     {
         if( theProbeManager != null ) { // die() might have been invoked
             // first create the shadow -- if it throws an exception, we won't create the Proxy
+            //
+            // Should that be a different FactoryException than the passed-on one? FIXME?
+
             ShadowMeshBase shadow = theProbeManager.obtainFor( networkIdentifier, coherence );
+            if( shadow == null ) {
+                // This happens if a second thread gets here while the first thread is creating the shadow, but
+                // an exception is thrown. The first thread gets the exception. The second only gets a null result.
+                // (by virtue of the SmartFactory)
+                throw new FactoryException( theProbeManager, "Shadow could not be created" );
+            }
 
             Proxy ret = theProxyManager.obtainFor( networkIdentifier, coherence );
 

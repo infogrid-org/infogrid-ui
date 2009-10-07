@@ -89,7 +89,11 @@ public abstract class AbstractProbeTest
         }
 
         if( mylog != null ) {
-            mylog.info( "found " + ret + " elements:\n" + buf );
+            if( buf.length() > 0 ) {
+                mylog.info( "found " + ret + " elements:\n" + buf );
+            } else {
+                mylog.info( "found " + ret + " elements" );
+            }
         }
         return ret;
     }

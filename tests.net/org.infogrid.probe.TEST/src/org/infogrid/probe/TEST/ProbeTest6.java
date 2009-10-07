@@ -63,7 +63,7 @@ public class ProbeTest6
         NetMeshObject  shadowObject = shadow.findMeshObjectByIdentifier( firstObject.getIdentifier() );
 
         checkEquals( theMeshBase.getIdentifier(),   shadow.proxies().next().getPartnerMeshBaseIdentifier(), "shadow proxy not pointing to base" );
-        checkEquals( shadow.getIdentifier(), theMeshBase.proxies().next().getPartnerMeshBaseIdentifier(),   "base proxy not pointing to shadow" );
+        checkEquals( shadow.getIdentifier(),   theMeshBase.proxies().next().getPartnerMeshBaseIdentifier(),   "base proxy not pointing to shadow" );
 
         checkEquals( firstObject.getProxyTowardsHomeReplica().getPartnerMeshBaseIdentifier(), shadow.getIdentifier(), "firstObject proxyTowardsHome wrong" );
         checkEquals( firstObject.getProxyTowardsLockReplica().getPartnerMeshBaseIdentifier(), shadow.getIdentifier(), "firstObject proxyTowardsLock wrong" );
@@ -72,7 +72,7 @@ public class ProbeTest6
         
         checkEquals( firstObject.getAllProxies().length,  1, "wrong number of proxies for firstObject" );
         checkEquals( shadowObject.getAllProxies().length, 1, "wrong number of proxies for shadowObject" );
-        
+
         //
         
         log.info( "adding listener and sweeping" ); // to make sure we don't have a sub-optimal sequence
