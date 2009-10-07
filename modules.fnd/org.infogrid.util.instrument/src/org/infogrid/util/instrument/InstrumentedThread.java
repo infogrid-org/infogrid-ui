@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -71,6 +71,7 @@ public class InstrumentedThread
 
     /**
      * Advance this InstrumentedThread to a provided {@link Breakpoint}, and suspend it there.
+     * Return from this call when the InstrumentedThread has arrived.
      *
      * @param bp the Breakpoint to which the InstrumentedThread will advance
      * @throws java.lang.InterruptedException thrown if the Thread got interrupted
@@ -80,6 +81,26 @@ public class InstrumentedThread
         throws
             InterruptedException
     {
+        advanceTo( bp, 0L );
+    }
+
+    /**
+     * Advance this InstrumentedThread to a provided {@link Breakpoint}, and suspend it there.
+     * Return from this call from the earlier of: the InstrumentedThread has arrived, or
+     * the specified amount of time has passed.
+     *
+     * @param bp the Breakpoint to which the InstrumentedThread will advance
+     * @param delay the maximum time to wait until the breakpoint is reached, in milliseconds. 0 means forever
+     * @return true if the Breakpoint was reached, false if the call timed out
+     * @throws java.lang.InterruptedException thrown if the Thread got interrupted
+     */
+    public boolean advanceTo(
+            Breakpoint bp,
+            long       delay )
+        throws
+            InterruptedException
+    {
+        long now1 = System.currentTimeMillis(); // unfortunately we have to determine ourselves whether it timed out or reached the Breakpoint
         synchronized( bp ) {
             synchronized( this ) {
                 if( ! isAlive() ) {
@@ -89,7 +110,16 @@ public class InstrumentedThread
 
                 runToBreakpoint = bp;
             }
-            bp.wait();
+            bp.wait( delay );
+        }
+        long now2 = System.currentTimeMillis();
+        if( delay == 0 ) {
+            return true;
+        }
+        if( now2-now1 < delay ) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -124,6 +154,10 @@ public class InstrumentedThread
         throws
             InterruptedException
     {
+        if( isDead ) {
+            return;
+        }
+
         advanceNormally();
 
         synchronized( this ) {
