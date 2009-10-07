@@ -1531,8 +1531,9 @@ public class AnetMeshObject
 
         NetMeshObjectIdentifier identifier = getIdentifier();
         
-        theMeshBase = null; // this needs to happen rather late so the other code still works
-        theProxies  = null;
+        theMeshBase            = null; // this needs to happen rather late so the other code still works
+        theProxies             = null;
+        theRelationshipProxies = null;
         
         firePurged( oldMeshBase, identifier, System.currentTimeMillis() );
     }
