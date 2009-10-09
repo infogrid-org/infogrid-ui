@@ -330,15 +330,13 @@ public interface MeshBase
      *
      * @param act the TransactionAction
      * @return a TransactionAction-specific return value
-     * @throws TransactionException a TransactionException has occurred
-     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @throws TransactionActionException a problem occurred when executing the TransactionAction
      * @param <T> the type of return value
      */
     public abstract <T> T executeNow(
             TransactionAction<T> act )
         throws
-            TransactionException,
-            TransactionActionException.Error;
+            TransactionActionException;
 
     /**
      * Perform this TransactionAction within an automatically generated Transaction
@@ -346,15 +344,13 @@ public interface MeshBase
      *
      * @param act the TransactionAction
      * @return a TransactionAction-specific return value
-     * @throws TransactionException a TransactionException has occurred
-     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @throws TransactionActionException a problem occurred when executing the TransactionAction
      * @param <T> the type of return value
      */
     public abstract <T> T executeAsap(
             TransactionAction<T> act )
         throws
-            TransactionException,
-            TransactionActionException.Error;
+            TransactionActionException;
 
     /**
      * Clear the in-memory cache, if this MeshBase has one. This method only makes any sense

@@ -19,10 +19,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.logging.CanBeDumped;
@@ -556,24 +558,42 @@ public class StructuredResponse
     }
 
     /**
-     * Set the Yadis header.
-     * 
-     * @param value the value of the Yadis header.
+     * Add an additional header.
+     *
+     * @param name name of the header to add
+     * @param value value of the header to add
      */
-    public void setYadisHeader(
+    public void addHeader(
+            String name,
             String value )
     {
-        theYadisHeader = value;
+        addHeader( name, new String[] { value } );
     }
 
     /**
-     * Obtain the Yadis header, if any.
-     * 
-     * @return the Yadis header
+     * Add an additional header.
+     *
+     * @param name name of the header to add
+     * @param value value of the header to add
      */
-    public String getYadisHeader()
+    public void addHeader(
+            String    name,
+            String [] value )
     {
-        return theYadisHeader;
+        String [] already = theOutgoingHeaders.put( name, value );
+        if( already != null && already.length > 0 ) {
+            theOutgoingHeaders.put( name, ArrayHelper.append( already, value, String.class ));
+        }
+    }
+
+    /**
+     * Obtain the additional headers.
+     *
+     * @return the headers, as Map
+     */
+    public Map<String,String[]> getHeaders()
+    {
+        return theOutgoingHeaders;
     }
 
     /**
@@ -622,7 +642,7 @@ public class StructuredResponse
                     "theHttpResponseCode",
                     "theLocale",
                     "theCharacterEncoding",
-                    "theYadisHeader"
+                    "theOutgoingHeaders"
                 },
                 new Object [] {
                     theRequestedTemplateName,
@@ -633,7 +653,7 @@ public class StructuredResponse
                     theHttpResponseCode,
                     theLocale,
                     theCharacterEncoding,
-                    theYadisHeader
+                    theOutgoingHeaders
                 });
     }
 
@@ -705,10 +725,10 @@ public class StructuredResponse
     protected String theCharacterEncoding;
 
     /**
-     * The Yadis header content, if any.
+     * The outgoing headers.
      */
-    protected String theYadisHeader;
-    
+    protected HashMap<String,String[]> theOutgoingHeaders = new HashMap<String,String[]>();
+
     /**
      * Name of the request attribute that contains the StructuredResponse. Make sure
      * this constant does not contain any characters that might make some processor

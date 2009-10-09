@@ -23,7 +23,7 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.TypeInitializer;
-import org.infogrid.mesh.TypedMeshObjectFacade;
+import org.infogrid.mesh.TypedMeshObjectFacadeImpl;
 import org.infogrid.mesh.a.AMeshObject;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.security.MustNotDeleteHomeObjectException;
@@ -257,15 +257,15 @@ public class AMeshBaseLifecycleManager
     }
 
     /**
-     * Create a typed {@link TypedMeshObjectFacade} for a MeshObject. This should generally
+     * Create a typed {@link TypedMeshObjectFacadeImpl} for a MeshObject. This should generally
      * not be invoked by the application programmer. Use
      * {@link MeshObject#getTypedFacadeFor MeshObject.getTypedFacadeFor}.
      *
-     * @param object the MeshObject for which to create a TypedMeshObjectFacade
-     * @param type the EntityType for the TypedMeshObjectFacade
-     * @return the created TypedMeshObjectFacade
+     * @param object the MeshObject for which to create a TypedMeshObjectFacadeImpl
+     * @param type the EntityType for the TypedMeshObjectFacadeImpl
+     * @return the created TypedMeshObjectFacadeImpl
      */
-    public TypedMeshObjectFacade createTypedMeshObjectFacade(
+    public TypedMeshObjectFacadeImpl createTypedMeshObjectFacade(
             MeshObject object,
             EntityType type )
     {
@@ -290,7 +290,7 @@ public class AMeshBaseLifecycleManager
                                 MeshObject.class
                         } );
 
-            TypedMeshObjectFacade ret = (TypedMeshObjectFacade) theConstructor.newInstance(
+            TypedMeshObjectFacadeImpl ret = (TypedMeshObjectFacadeImpl) theConstructor.newInstance(
                     new Object [] {
                             object
                     } );
@@ -320,7 +320,7 @@ public class AMeshBaseLifecycleManager
     }
     
     /**
-      * Determine the implementation class for an TypedMeshObjectFacade for an EntityType.
+      * Determine the implementation class for an TypedMeshObjectFacadeImpl for an EntityType.
       * As an application developer, you should not usually have any reason to invoke this.
       *
       * @param theObjectType the type object
@@ -328,7 +328,7 @@ public class AMeshBaseLifecycleManager
       * @throws ClassNotFoundException thrown if for some reason, this Class could not be found
       */
     @SuppressWarnings( "unchecked" )
-    public Class<? extends TypedMeshObjectFacade> getImplementationClass(
+    public Class<? extends TypedMeshObjectFacadeImpl> getImplementationClass(
             EntityType theObjectType )
         throws
             ClassNotFoundException
@@ -345,7 +345,7 @@ public class AMeshBaseLifecycleManager
         className.append( theObjectType.getName().value() );
 
         Class ret = Class.forName( className.toString(), true, theObjectType.getClassLoader() );
-        return (Class<? extends TypedMeshObjectFacade>) ret;
+        return (Class<? extends TypedMeshObjectFacadeImpl>) ret;
         // this cast is correct by construction
     }
 

@@ -15,27 +15,54 @@
 package org.infogrid.util.http;
 
 /**
- * <p>Interface to HTTP Cookies. This is an interface so we can implement a delegation
- * model to the Java servlet cookies. Subtypes distinguish between incoming
- * and outgoing cookies.</p>
- * <p>Making this a subtype of CharSequence allows us to also treat it as a String,
- * which is its value. This simplifies the API.</p>
+ * Common functionality for IncomingSimpleSaneCookie and OutgoingSimpleSaneCookie.
  */
-public interface SaneCookie
+public abstract class AbstractSimpleSaneCookie
         extends
-            CharSequence
+            AbstractSaneCookie
 {
+    /**
+     * Constructor.
+     * 
+     * @param name the name of the cookie
+     * @param value the value of the cookie
+     */
+    protected AbstractSimpleSaneCookie(
+            String name,
+            String value )
+    {
+        theName    = name;
+        theValue   = value;
+    }
+    
     /**
      * Obtain the name of the Cookie.
      *
      * @return the name of the Cookie
      */
-    public String getName();
+    public String getName()
+    {
+        return theName;
+    }
 
     /**
      * Obtain the value of the Cookie.
      *
      * @return the value of the Cookie
      */
-    public String getValue();
+    public String getValue()
+    {
+        return theValue;
+    }
+
+    /**
+     * Name of the cookie.
+     */
+    protected String theName;
+    
+    /**
+     * Value of the cookie.
+     */
+    protected String theValue;
 }
+

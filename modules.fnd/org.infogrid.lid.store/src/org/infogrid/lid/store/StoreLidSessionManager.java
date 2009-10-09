@@ -8,26 +8,27 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid.store;
 
-import org.infogrid.lid.AbstractLidSessionManager;
+import org.infogrid.lid.AbstractSimpleLidSessionManager;
 import org.infogrid.lid.LidSession;
 import org.infogrid.lid.LidSessionManager;
+import org.infogrid.lid.LidSessionManagerArguments;
 import org.infogrid.store.Store;
 import org.infogrid.store.util.StoreBackedSwappingHashMap;
 import org.infogrid.util.Factory;
-import org.infogrid.util.Identifier;
+import org.infogrid.util.IdentifierFactory;
 
 /**
  * Implements LidSessionManager using the Store abstraction.
  */
 public class StoreLidSessionManager
         extends
-            AbstractLidSessionManager
+            AbstractSimpleLidSessionManager
         implements
             LidSessionManager
 {
@@ -35,28 +36,32 @@ public class StoreLidSessionManager
      * Factory method.
      * 
      * @param store the Store to use
+     * @param idFact the IdentifierFactory for client and site identifiers
      * @return the created StoreLidSessionManager
      */
     public static StoreLidSessionManager create(
-            Store store )
+            Store             store,
+            IdentifierFactory idFact )
     {
-        return create( store, DEFAULT_SESSION_DURATION );
+        return create( store, idFact, DEFAULT_SESSION_DURATION );
     }
 
     /**
      * Factory method.
      * 
      * @param store the Store to use
+     * @param idFact the IdentifierFactory for client and site identifiers
      * @param sessionDuration the duration of the session, in milliseconds
      * @return the created StoreLidSessionManager
      */
     public static StoreLidSessionManager create(
-            Store store,
-            long  sessionDuration )
+            Store             store,
+            IdentifierFactory idFact,
+            long              sessionDuration )
     {
-        StoreLidSessionMapper mapper = new StoreLidSessionMapper();
+        StoreLidSessionMapper mapper = new StoreLidSessionMapper( idFact );
         
-        StoreBackedSwappingHashMap<Identifier,LidSession> storage = StoreBackedSwappingHashMap.createWeak(
+        StoreBackedSwappingHashMap<String,LidSession> storage = StoreBackedSwappingHashMap.createWeak(
                 mapper,
                 store );
         
@@ -76,9 +81,9 @@ public class StoreLidSessionManager
      * @param sessionDuration the duration of new or renewed sessions in milli-seconds
      */
     protected StoreLidSessionManager(
-            Factory<Identifier,LidSession,String>             delegateFactory,
-            StoreBackedSwappingHashMap<Identifier,LidSession> storage,
-            long                                              sessionDuration )
+            Factory<String,LidSession,LidSessionManagerArguments> delegateFactory,
+            StoreBackedSwappingHashMap<String,LidSession>         storage,
+            long                                                  sessionDuration )
     {
         super( delegateFactory, storage, sessionDuration );
     }    

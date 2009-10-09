@@ -108,7 +108,7 @@ public class JspStructuredResponseTemplate
         outputCookies(     delegate, structured );
         outputMimeType(    delegate, structured );
         outputLocation(    delegate, structured );
-        outputYadisHeader( delegate, structured );
+        outputAdditionalHeaders( delegate, structured );
 
         Object oldStructured = theRequest.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
         try {

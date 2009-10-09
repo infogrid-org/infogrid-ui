@@ -1318,37 +1318,32 @@ public class MyHandler
             }
 
         } else if( type instanceof TimeStampDataType ) {
-            if( "NOW".equalsIgnoreCase( raw )) {
-                ret = TimeStampValue.now();
-                
-            } else {
-                try {
-                    int [] values = new int[6];
-                    int oldSlash = 0;
-                    int slash;
-                    int index;
+            try {
+                int [] values = new int[6];
+                int oldSlash = 0;
+                int slash;
+                int index;
 
-                    for( index=0 ; index<values.length ; ++index ) {
-                        slash = raw.indexOf( '/', oldSlash );
-                        if( slash < 0 ) {
-                            values[index] = Integer.parseInt( raw.substring( oldSlash ));
-                            break;
-                        }
-                        values[index] = Integer.parseInt( raw.substring( oldSlash, slash ));
-                        oldSlash = slash+1;
+                for( index=0 ; index<values.length ; ++index ) {
+                    slash = raw.indexOf( '/', oldSlash );
+                    if( slash < 0 ) {
+                        values[index] = Integer.parseInt( raw.substring( oldSlash ));
+                        break;
                     }
-                    // FIXME -- using integer for float seconds
-                    ret = TimeStampValue.create(
-                            (short) ((index >=5 ) ? values[ index-5 ] : 0 ),
-                            (short) ((index >=4 ) ? values[ index-4 ] : 0 ),
-                            (short) ((index >=3 ) ? values[ index-3 ] : 0 ),
-                            (short) ((index >=2 ) ? values[ index-2 ] : 0 ),
-                            (short) ((index >=1 ) ? values[ index-1 ] : 0 ),
-                            (float) ((index >=0 ) ? values[ index ] : 0 ) );
-
-                } catch( NumberFormatException ex ) {
-                    throw new NumberFormatException( "Error when attempting to parse TimeStampDataType '" + raw + "'" );
+                    values[index] = Integer.parseInt( raw.substring( oldSlash, slash ));
+                    oldSlash = slash+1;
                 }
+                // FIXME -- using integer for float seconds
+                ret = TimeStampValue.create(
+                        (short) ((index >=5 ) ? values[ index-5 ] : 0 ),
+                        (short) ((index >=4 ) ? values[ index-4 ] : 0 ),
+                        (short) ((index >=3 ) ? values[ index-3 ] : 0 ),
+                        (short) ((index >=2 ) ? values[ index-2 ] : 0 ),
+                        (short) ((index >=1 ) ? values[ index-1 ] : 0 ),
+                        (float) ((index >=0 ) ? values[ index ] : 0 ) );
+
+            } catch( NumberFormatException ex ) {
+                throw new NumberFormatException( "Error when attempting to parse TimeStampDataType '" + raw + "'" );
             }
 
         } else {

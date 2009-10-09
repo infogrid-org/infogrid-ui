@@ -8,13 +8,12 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid;
 
-import java.util.Date;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.util.HasIdentifier;
@@ -26,11 +25,25 @@ import org.infogrid.util.Identifier;
 public interface LidClientAuthenticationStatus
 {
     /**
+     * Determine the Identifier of the site to which this LidClientAuthenticationStatus belongs.
+     *
+     * @return the Identifier of the site
+     */
+    public abstract Identifier getSiteIdentifier();
+
+    /**
      * <p>Returns true if the client of this request did not present any kind of identification.</p>
      * 
      * @return true if the client of this request did not present any kind of identification
      */
     public abstract boolean isAnonymous();
+
+    /**
+     * <p>Returns true of the client of this request claimed an identifier that could not be resolved.</p>
+     *
+     * @return true if the client claimed an identifier as part of this request that could not be resolved
+     */
+    public abstract boolean isInvalidIdentity();
 
     /**
      * <p>Returns true if the client of this request merely claimed an identifier, but offered no valid credential
@@ -45,15 +58,6 @@ public interface LidClientAuthenticationStatus
      * @return true if client merely claimed an identifier as part of this request and no credential was offered
      */
     public abstract boolean isClaimedOnly();
-    
-    /**
-     * <p>Returns true of the client of this request claimed an identifier that could not be resolved into
-     *    a valid LidPersona.</p>
-     * 
-     * @return true if the client claimed an identifier as part of this request that could not be resolved into
-     *         a valid LidPersona
-     */
-    public abstract boolean isInvalidIdentity();
     
     /**
      * <p>Returns true if the client of this request merely presented an identifier and an expired session id (e.g.
@@ -131,42 +135,6 @@ public interface LidClientAuthenticationStatus
     public abstract LidInvalidCredentialException [] getInvalidCredentialExceptions();
     
     /**
-     * Obtain the time this session with this client was last validated with a proof stronger
-     * than a session id (e.g. a cookie).
-     * 
-     * @return the time, or null if never
-     */
-    public abstract Date getSessionLastValidated();
-
-    /**
-     * Obtain the time this session with this client was last validated with a particular credential type.
-     * 
-     * @param type the credential type
-     * @return the time, or null if never
-     */
-    // FIXME? Not yet
-    // public abstract Date getSessionLastValidatedWith(
-    //         LidCredentialType type );
-
-    /**
-     * Obtain the time this session with this client last interacted with this application while being valid.
-     * 
-     * @return the time, or null if never
-     */
-    public abstract Date getSessionLastUsedAndValid();
-
-    // FIXME: we probably also want to know the authentication history with a particular credential type. For
-    // example, I might want to know what while the client authenticated with username and password, there were
-    // 10,000 attempts from the same IP address before that failed.
-
-    /**
-     * Obtain the time this session expired. If there is no session, or the session is still valid, this returns null.
-     * 
-     * @return thed time, or null if never
-     */
-    public abstract Date getSessionExpired();
-
-    /**
      * Obtain the identifier provided by the client. To determine whether to trust that the client indeed
      * owns this identifier, other methods need to be consulted. This method makes no statement 
      * about trustworthiness. If this returns a non-null value, and {@link #getClientPersona} returns
@@ -188,31 +156,42 @@ public interface LidClientAuthenticationStatus
     
     /**
      * Determine whether the client has indicated its desire to cancel the active session, if any.
-     * This does not mean the client wishes to become anonymous (that would be expressed as getClientPersona()==null
-     * with a non-null getSessionBelongsToPersona()) but that the client wishes to move from authenticated
+     * This does not mean the client wishes to become anonymous but that the client wishes to move from authenticated
      * status to claimed only.
      * 
      * @return true if the client wishes to cancel the active session.
      */
-    public abstract boolean clientWishesCancelSession();
-    
-    /**
-     * Determine the client of any authenticated session that was brought into this request. This may be
-     * null in case the client just now authenticated. It may identify a different client if the client
-     * logged off, or changed personas, with this request.
-     * 
-     * @return LidPersona representing the client identified by the session going into this request, if any
-     * @see #getSessionBelongsToIdentifier() 
-     */
-    public abstract HasIdentifier getSessionBelongsToPersona();
+    public abstract boolean clientWishesToCancelSession();
 
     /**
-     * Determine the identifier of the client of any authenticated session that was brought into this request.
-     * This may be null in case the client just now authenticated. It may identify a different client if the
-     * client logged off, or changed personas, with this request.
-     * 
-     * @return the identifier of the valid session going into this request, if any
-     * @see #getSessionBelongsToPersona() 
+     * Determine whether the client just logged on.
+     *
+     * @return true if the client just logged on
      */
-    public abstract Identifier getSessionBelongsToIdentifier();
+    public abstract boolean clientLoggedOn();
+
+    /**
+     * Determine whether the client has indicated its desire to log out if the active session, if any.
+     * This means the client wishes to become anonymous.
+     *
+     * @return true of the client wishes to become anonymous again
+     */
+    public abstract boolean clientWishesToLogout();
+
+    /**
+     * Get the pre-existing client session, if any. This is only set if the session is owned by a client other than
+     * the current client (e.g. if a new user uses a browser with an existing valid session cookie). The
+     * session may be valid or expired. It may be null.
+     *
+     * @return the pre-existing client session, if any
+     */
+    public abstract LidSession getPreexistingClientSession();
+
+    /**
+     * Obtain the authentication services available for this client, if any.
+     * This will return recommended authentication services first.
+     *
+     * @return the authentication services
+     */
+    public abstract LidAuthenticationService [] getAuthenticationServices();
 }

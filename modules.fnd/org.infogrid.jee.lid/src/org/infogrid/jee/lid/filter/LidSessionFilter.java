@@ -71,10 +71,11 @@ public class LidSessionFilter
 
         try {
             try {
-                lid = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( lidString );
+                lid  = theMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( lidString );
 
-                LidSession userSession = theSessionManager.get( lid );
-                if( userSession != null && userSession.isStillValid() && userSession.getCookieValue().equals( session )) {
+                LidSession userSession = theSessionManager.get( session );
+
+                if( userSession != null && userSession.isStillValid() && userSession.getSessionToken().equals( session )) {
 
                     request.setAttribute( "lid", lid.toExternalForm() );
                             // clean version of the identifier

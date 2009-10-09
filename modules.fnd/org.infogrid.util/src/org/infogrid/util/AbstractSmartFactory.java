@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -44,5 +44,15 @@ public abstract class AbstractSmartFactory<K,V,A>
             FactoryException
     {
         return obtainNewFor( key, null );
+    }
+
+    /**
+     * Determine whether the number of key-value pairs in this SmartFactory is zero.
+     *
+     * @return true if there are no key-value paris in this SmartFactory
+     */
+    public boolean isEmpty()
+    {
+        return size() == 0;
     }
 }

@@ -14,14 +14,14 @@
 
 package org.infogrid.meshbase.transaction;
 
-import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.AbstractLocalizedRuntimeException;
 
 /**
  * Thrown if a problem occurred during the execution of a TransactionAction.
  */
 public abstract class TransactionActionException
     extends
-        AbstractLocalizedException
+        AbstractLocalizedRuntimeException
 {
     /**
      * Constructor, for subclasses defined in this file only.
@@ -113,4 +113,26 @@ public abstract class TransactionActionException
             super( null, cause );
         }
     }
+
+    /**
+     * Indicates that a Transaction could not be created, in spite of trying.
+     */
+    public static class FailedToCreateTransaction
+            extends
+                TransactionActionException
+    {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
+        /**
+         * Constructor.
+         *
+         * @param cause the cause
+         */
+        public FailedToCreateTransaction(
+                TransactionException cause )
+        {
+            super( null, cause );
+        }
+    }
+
 }

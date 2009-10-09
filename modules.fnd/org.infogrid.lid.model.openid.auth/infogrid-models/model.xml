@@ -63,12 +63,11 @@
             <supertype>org.infogrid.lid.model.openid.auth/Authentication1Service</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
-            MeshObject                        principal,
-            String                            return_to,
+            String                            clientIdentifier,
+            String                            returnToUrl,
             String                            realm,
             org.infogrid.util.context.Context context )
         throws
-            org.infogrid.mesh.NotPermittedException,
             org.infogrid.util.FactoryException
     {
         org.infogrid.lid.openid.OpenIdRpSideAssociationManager assocMgr
@@ -85,11 +84,20 @@
         MeshObject selectedEndpoint = endpoints.get(0);
         String     endpointUrl      = selectedEndpoint.getIdentifier().toExternalForm();
 
-        String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
-        String     theUrl           = principal.getIdentifier().toExternalForm();
+        String theDelegate = null;
+        try {
+            StringValue temp = getDelegate();
+            if( temp != null ) {
+                theDelegate = temp.value();
+            }
+
+        } catch( Throwable t ) {
+            log.error( t );
+            return null;
+        }
 
         if( realm == null ) {
-            realm = return_to;
+            realm = returnToUrl;
         }
 
         StringBuilder ret = new StringBuilder();
@@ -98,15 +106,15 @@
         if( theDelegate != null ) {
             org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", theDelegate );
         } else {
-            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", theUrl );
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", clientIdentifier );
         }
 
         // add a nonce to the return-to URL
         String nonce = nonceMgr.generateNewNonce();
 
-        return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
+        returnToUrl = org.infogrid.util.http.HTTP.appendArgumentToUrl( returnToUrl, "lid-nonce", nonce );
 
-        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  returnToUrl );
         org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", realm );
 
         org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
@@ -128,12 +136,11 @@
             <supertype>org.infogrid.lid.model.openid.auth/Authentication1Service</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
-            MeshObject                        principal,
-            String                            return_to,
+            String                            clientIdentifier,
+            String                            returnToUrl,
             String                            realm,
             org.infogrid.util.context.Context context )
         throws
-            org.infogrid.mesh.NotPermittedException,
             org.infogrid.util.FactoryException
     {
         org.infogrid.lid.openid.OpenIdRpSideAssociationManager assocMgr
@@ -150,11 +157,20 @@
         MeshObject selectedEndpoint = endpoints.get(0);
         String     endpointUrl      = selectedEndpoint.getIdentifier().toExternalForm();
 
-        String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
-        String     theUrl           = principal.getIdentifier().toExternalForm();
+        String theDelegate = null;
+        try {
+            StringValue temp = getDelegate();
+            if( temp != null ) {
+                theDelegate = temp.value();
+            }
+
+        } catch( Throwable t ) {
+            log.error( t );
+            return null;
+        }
 
         if( realm == null ) {
-            realm = return_to;
+            realm = returnToUrl;
         }
 
         StringBuilder ret = new StringBuilder();
@@ -163,15 +179,15 @@
         if( theDelegate != null ) {
             org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", theDelegate );
         } else {
-            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", theUrl );
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity", clientIdentifier );
         }
 
         // add a nonce to the return-to URL
         String nonce = nonceMgr.generateNewNonce();
             
-        return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
+        returnToUrl = org.infogrid.util.http.HTTP.appendArgumentToUrl( returnToUrl, "lid-nonce", nonce );
 
-        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  returnToUrl );
         org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", realm );
 
         org.infogrid.lid.openid.OpenIdRpSideAssociation association = assocMgr.obtainFor( endpointUrl );
@@ -193,12 +209,11 @@
             <supertype>org.infogrid.lid.model.openid.auth/AuthenticationService</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
-            MeshObject                        principal,
-            String                            return_to,
+            String                            clientIdentifier,
+            String                            returnToUrl,
             String                            realm,
             org.infogrid.util.context.Context context )
         throws
-            org.infogrid.mesh.NotPermittedException,
             org.infogrid.util.FactoryException
     {
         org.infogrid.lid.openid.OpenIdRpSideAssociationManager assocMgr
@@ -216,11 +231,20 @@
         MeshObject selectedEndpoint = endpoints.get(0);
         String     endpointUrl      = selectedEndpoint.getIdentifier().toExternalForm();
 
-        String     theDelegate      = getDelegate() != null ? getDelegate().value() : null;
-        String     theUrl           = principal.getIdentifier().toExternalForm();
+        String theDelegate = null;
+        try {
+            StringValue temp = getDelegate();
+            if( temp != null ) {
+                theDelegate = temp.value();
+            }
+
+        } catch( Throwable t ) {
+            log.error( t );
+            return null;
+        }
 
         if( realm == null ) {
-            realm = return_to;
+            realm = returnToUrl;
         }
 
         StringBuilder ret = new StringBuilder();
@@ -231,16 +255,16 @@
             org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.claimed_id", theDelegate );
             org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity",   theDelegate );
         } else {
-            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.claimed_id", theUrl );
-            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity",   theUrl );
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.claimed_id", clientIdentifier );
+            org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.identity",   clientIdentifier );
         }
 
         // add a nonce to the return-to URL
         String nonce = nonceMgr.generateNewNonce();
 
-        return_to = org.infogrid.util.http.HTTP.appendArgumentToUrl( return_to, "lid-nonce", nonce );
+        returnToUrl = org.infogrid.util.http.HTTP.appendArgumentToUrl( returnToUrl, "lid-nonce", nonce );
 
-        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  return_to );
+        org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.return_to",  returnToUrl );
         org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.trust_root", realm );
         org.infogrid.util.http.HTTP.appendArgumentToUrl( ret, "openid.realm",      realm );
 

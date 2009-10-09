@@ -309,10 +309,14 @@ public class MPingPongMessageEndpoint<T>
      */
     protected void sendGrabTokenMessage()
     {
-        TimedTask t = thePartner.theFutureTask;
+        MPingPongMessageEndpoint p = thePartner;
+        if( p == null ) {
+            return;
+        }
+        TimedTask t = p.theFutureTask;
         if( t instanceof RespondTask ) {
             t.cancel();
-            thePartner.schedule( t, theDeltaRespondWithMessage );
+            p.schedule( t, theDeltaRespondWithMessage );
         }
     }
 

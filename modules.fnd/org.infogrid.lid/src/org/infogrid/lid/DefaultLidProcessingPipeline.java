@@ -17,6 +17,7 @@ package org.infogrid.lid;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.lid.yadis.YadisPipelineProcessingStage;
 import org.infogrid.util.HasIdentifier;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
@@ -56,9 +57,10 @@ public class DefaultLidProcessingPipeline
     {
         super( c );
         
-        theResourceFinder      = c.findContextObject( LidHasIdentifierFinder.class );
-        theYadisStage          = c.findContextObject( YadisPipelineProcessingStage.class );
-        theAuthenticationStage = c.findContextObject( LidClientAuthenticationPipelineStage.class );
+        theResourceFinder         = c.findContextObject( LidHasIdentifierFinder.class );
+        theYadisStage             = c.findContextObject( YadisPipelineProcessingStage.class );
+        theAuthenticationStage    = c.findContextObject( LidClientAuthenticationPipelineStage.class );
+        theSessionManagementStage = c.findContextObject( LidSessionManagementStage.class );
     }
     
     /**
@@ -66,19 +68,21 @@ public class DefaultLidProcessingPipeline
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
-     * @return the authentication status of the client
+     * @param siteIdentifier identifies this site
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
      */
-    public LidClientAuthenticationStatus processPipeline(
+    public void processPipeline(
             SaneRequest        lidRequest,
-            StructuredResponse lidResponse )
+            StructuredResponse lidResponse,
+            Identifier         siteIdentifier )
         throws
             LidAbortProcessingPipelineException
     {
-        HasIdentifier                 requestedResource = null;
-        LidClientAuthenticationStatus clientAuthStatus  = null;
-        HasIdentifier                 clientPersona     = null;
+        HasIdentifier                    requestedResource = null;
+        LidClientAuthenticationStatus    clientAuthStatus  = null;
+        HasIdentifier                    clientPersona     = null;
+        LidSessionManagementInstructions sessionMgmtInstructions = null;
 
         if( theResourceFinder != null ) {
             try {
@@ -98,7 +102,7 @@ public class DefaultLidProcessingPipeline
         }
         
         if( theAuthenticationStage != null ) {
-            clientAuthStatus = theAuthenticationStage.determineAuthenticationStatus( lidRequest, lidResponse );
+            clientAuthStatus = theAuthenticationStage.determineAuthenticationStatus( lidRequest, lidResponse, siteIdentifier );
         }
         lidRequest.setAttribute( CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME, clientAuthStatus );
         
@@ -107,7 +111,10 @@ public class DefaultLidProcessingPipeline
         }
         lidRequest.setAttribute( CLIENT_PERSONA_ATTRIBUTE_NAME, clientPersona );
 
-        return clientAuthStatus;
+        if( theSessionManagementStage != null ) {
+            sessionMgmtInstructions = theSessionManagementStage.processSession( lidRequest, lidResponse, clientAuthStatus );
+        }
+        lidRequest.setAttribute( SESSION_MANAGEMENT_INSTRUCTIONS_ATTRIBUTE_NAME, sessionMgmtInstructions );
     }
     
     /**
@@ -124,4 +131,9 @@ public class DefaultLidProcessingPipeline
      * The service that knows how to determine the authentication status of the client.
      */
     protected LidClientAuthenticationPipelineStage theAuthenticationStage;
+
+    /**
+     * The service that knows how to manage sessions.
+     */
+    protected LidSessionManagementStage theSessionManagementStage;
 }

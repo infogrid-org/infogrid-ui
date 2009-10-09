@@ -8,31 +8,45 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid;
 
-import org.infogrid.util.Identifier;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.SmartFactory;
 
 /**
  * Defines the concept of a session manager. The arguments are as follows:
  * <ul>
- *  <li>String: the identifier of the user whose session we look for</li>
- *  <li>LidSession: the session</li>
- *  <li>String: IP address of the user at the time the session was created</li>
+ *  <li><code>String</code>;: the session token</li>
+ *  <li><code>LidSession</code>: the session</li>
+ *  <li><code>LidSessionManagerArguments</code>: other information related to the session, such as site and client</li>
  * </ul>
  */
 public interface LidSessionManager
         extends
-            SmartFactory<Identifier,LidSession,String>
+            SmartFactory<String,LidSession,LidSessionManagerArguments>
 {
     /**
-     * Obtain the session duration for newly created or renewed sessions.
-     * 
-     * @return the session duration, in milliseconds
+     * Generate a new session token.
+     *
+     * @return the new session token
      */
-    public long getSessionDuration();
+    public String createNewSessionToken();
+
+    /**
+     * Obtain the default session duration for newly created or renewed sessions.
+     *
+     * @return the default session duration, in milliseconds
+     */
+    public long getDefaultSessionDuration();
+
+    /**
+     * The default session duration.
+     */
+    public static final long DEFAULT_SESSION_DURATION = ResourceHelper.getInstance( LidSessionManager.class ).getResourceLongOrDefault(
+            "DefaultSessionDuration",
+            8 * 60 * 60 * 1000L );
 }

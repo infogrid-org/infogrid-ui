@@ -14,7 +14,6 @@
 
 package org.infogrid.lid;
 
-import java.util.Date;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.lid.credential.LidInvalidCredentialException;
 import org.infogrid.util.HasIdentifier;
@@ -36,37 +35,55 @@ public abstract class AbstractLidClientAuthenticationStatus
      * 
      * @param clientIdentifier the normalized identifier provided by the client, if any
      * @param clientPersona the client LidPersona that was found, if any
-     * @param session the client LidSession that was found, if any
+     * @param preexistingClientSession the LidSession that existed prior to this request, if any
      * @param carriedValidCredentialTypes the credential types carried as part of this request that validated successfully, if any
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
-     * @param sessionClientIdentifier the normalized identifier of the client according to a currently valid session
-     * @param sessionClientPersona the client LidPersona according to the currently valid session
-     * @param wishesCancelSession the client wishes to cancel the session
+     * @param clientLoggedOn the client just logged on
+     * @param clientWishesToCancelSession the client wishes to cancel the session
+     * @param clientWishesToLogout the client wishes to log out
+     * @param authenticationServices the authentication services available to this client, if any
+     * @param siteIdentifier identifies the site at which this status applies
      */
     protected AbstractLidClientAuthenticationStatus(
             Identifier                       clientIdentifier,
             HasIdentifier                    clientPersona,
-            LidSession                       session,
+            LidSession                       preexistingClientSession,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
-            Identifier                       sessionClientIdentifier,
-            HasIdentifier                    sessionClientPersona,
-            boolean                          wishesCancelSession )
+            boolean                          clientLoggedOn,
+            boolean                          clientWishesToCancelSession,
+            boolean                          clientWishesToLogout,
+            LidAuthenticationService []      authenticationServices,
+            Identifier                       siteIdentifier )
     {
         theClientIdentifier = clientIdentifier;
         theClientPersona    = clientPersona;
-        theClientSession    = session;
+
+        thePreexistingClientSession = preexistingClientSession;
         
         theCarriedValidCredentialTypes   = carriedValidCredentialTypes;
         theCarriedInvalidCredentialTypes = carriedInvalidCredentialTypes;
         theInvalidCredentialExceptions   = invalidCredentialExceptions;
-        
-        theSessionClientIdentifier = sessionClientIdentifier;
-        theSessionClientPersona    = sessionClientPersona;
-        
-        theWishesCancelSession = wishesCancelSession;
+
+        theClientLoggedOn              = clientLoggedOn;
+        theClientWishesToCancelSession = clientWishesToCancelSession;
+        theClientWishesToLogout        = clientWishesToLogout;
+
+        theSiteIdentifier = siteIdentifier;
+
+        theAuthenticationServices = authenticationServices;
+    }
+
+    /**
+     * Determine the Identifier of the site to which this LidClientAuthenticationStatus belongs.
+     *
+     * @return the Identifier of the site
+     */
+    public Identifier getSiteIdentifier()
+    {
+        return theSiteIdentifier;
     }
 
     /**
@@ -77,6 +94,25 @@ public abstract class AbstractLidClientAuthenticationStatus
     public boolean isAnonymous()
     {
         return theClientIdentifier == null;
+    }
+
+    /**
+     * <p>Returns true of the client of this request claimed an identifier that could not be resolved into
+     *    a valid LidPersona.</p>
+     *
+     * @return true if the client claimed an identifier as part of this request that could not be resolved into
+     *         a valid LidPersona
+     */
+    public boolean isInvalidIdentity()
+    {
+        boolean ret;
+
+        if( theClientIdentifier != null && theClientPersona == null ) {
+            ret = true;
+        } else {
+            ret = false;
+        }
+        return ret;
     }
 
     /**
@@ -97,33 +133,23 @@ public abstract class AbstractLidClientAuthenticationStatus
         
         if( theClientIdentifier == null ) {
             ret = false;
-        } else if( theClientSession != null && theClientSession.isStillValid() ) {
+
+        } else if(    theCarriedValidCredentialTypes != null
+                   && theCarriedValidCredentialTypes.length > 0
+                   && ( theCarriedInvalidCredentialTypes == null || theCarriedInvalidCredentialTypes.length == 0 ) )
+        {
+            // if we carry a valid credential and no invalid one
             ret = false;
+
+        } else if( thePreexistingClientSession != null && thePreexistingClientSession.isStillValid() ) {
+            ret = false;
+
         } else {
             ret = true;
         }
         return ret;
     }
     
-    /**
-     * <p>Returns true of the client of this request claimed an identifier that could not be resolved into
-     *    a valid LidPersona.</p>
-     * 
-     * @return true if the client claimed an identifier as part of this request that could not be resolved into
-     *         a valid LidPersona
-     */
-    public boolean isInvalidIdentity()
-    {
-        boolean ret;
-        
-        if( theClientIdentifier != null && theClientPersona == null ) {
-            ret = true;
-        } else {
-            ret = false;
-        }
-        return ret;
-    }
-
     /**
      * <p>Returns true if the client of this request merely presented an identifier and an expired session id (e.g.
      *    via a cookie) as  credential to back up the claim.</p>
@@ -138,9 +164,9 @@ public abstract class AbstractLidClientAuthenticationStatus
         
         if( theClientIdentifier == null ) {
             ret = false;
-        } else if( theClientSession == null ) {
+        } else if( thePreexistingClientSession == null ) {
             ret = false;
-        } else if( theClientSession.isStillValid() ) {
+        } else if( thePreexistingClientSession.isStillValid() ) {
             ret = false;
         } else {
             ret = true;
@@ -163,9 +189,9 @@ public abstract class AbstractLidClientAuthenticationStatus
         
         if( theClientIdentifier == null ) {
             ret = false;
-        } else if( theClientSession == null ) {
+        } else if( thePreexistingClientSession == null ) {
             ret = false;
-        } else if( !theClientSession.isStillValid() ) {
+        } else if( !thePreexistingClientSession.isStillValid() ) {
             ret = false;
         } else {
             ret = true;
@@ -243,60 +269,6 @@ public abstract class AbstractLidClientAuthenticationStatus
     {
         return theInvalidCredentialExceptions;
     }
-    
-    /**
-     * Obtain the time this session with this client was last validated with a proof stronger
-     * than a session id (e.g. a cookie).
-     * 
-     * @return the time, or null if never
-     */
-    public Date getSessionLastValidated()
-    {
-        Date ret;
-        
-        if( theClientSession != null ) {
-            ret = new Date( theClientSession.getTimeCreated() );
-        } else {
-            ret = null;
-        }
-        return ret;
-    }
-
-    /**
-     * Obtain the time this session with this client last interacted with this application while being valid.
-     * 
-     * @return the time, or null if never
-     */
-    public Date getSessionLastUsedAndValid()
-    {
-        Date ret;
-        
-        if( theClientSession != null ) {
-            ret = new Date( theClientSession.getTimeRead() );
-        } else {
-            ret = null;
-        }
-        return ret;
-    }
-
-    /**
-     * Obtain the time this session expired. If there is no session, or the session is still valid, this returns null.
-     * 
-     * @return thed time, or null if never
-     */
-    public Date getSessionExpired()
-    {
-        Date ret;
-        
-        if( theClientSession == null ) {
-            ret = null;
-        } else if( theClientSession.isStillValid() ) {
-            ret = null;
-        } else {
-            ret = new Date( theClientSession.getTimeExpires());
-        }
-        return ret;
-    }
 
     /**
      * Obtain the identifier of the client. To determine whether to trust that the client indeed
@@ -321,6 +293,16 @@ public abstract class AbstractLidClientAuthenticationStatus
     }
     
     /**
+     * Determine whether the client just logged on.
+     *
+     * @return true if the client just logged on
+     */
+    public boolean clientLoggedOn()
+    {
+        return theClientLoggedOn;
+    }
+
+    /**
      * Determine whether the client has indicated its desire to cancel the active session, if any.
      * This does not mean the client wishes to become anonymous (that would be expressed as getClientPersona()==null
      * with a non-null getSessionBelongsToPersona()) but that the client wishes to move from authenticated
@@ -328,35 +310,41 @@ public abstract class AbstractLidClientAuthenticationStatus
      * 
      * @return true if the client wishes to cancel the active session.
      */
-    public boolean clientWishesCancelSession()
+    public boolean clientWishesToCancelSession()
     {
-        return theWishesCancelSession;
-    }
-    
-    /**
-     * Determine the client of any authenticated session that was brought into this request. This may be
-     * null in case the client just now authenticated. It may identify a different client if the client
-     * logged off, or changed personas, with this request.
-     * 
-     * @return LidPersona representing the client identified by the session going into this request, if any
-     * @see #getSessionBelongsToIdentifier() 
-     */
-    public HasIdentifier getSessionBelongsToPersona()
-    {
-        return theSessionClientPersona;
+        return theClientWishesToCancelSession;
     }
 
     /**
-     * Determine the identifier of the client of any authenticated session that was brought into this request.
-     * This may be null in case the client just now authenticated. It may identify a different client if the
-     * client logged off, or changed personas, with this request.
-     * 
-     * @return the identifier of the valid session going into this request, if any
-     * @see #getSessionBelongsToPersona() 
+     * Determine whether the client has indicated its desire to log out if the active session, if any.
+     * This means the client wishes to become anonymous.
+     *
+     * @return true of the client wishes to become anonymous again
      */
-    public Identifier getSessionBelongsToIdentifier()
+    public boolean clientWishesToLogout()
     {
-        return theSessionClientIdentifier;
+        return theClientWishesToLogout;
+    }
+
+    /**
+     * Get the client session, if any.
+     *
+     * @return the client session, if any
+     */
+    public LidSession getPreexistingClientSession()
+    {
+        return thePreexistingClientSession;
+    }
+
+    /**
+     * Obtain the authentication services available for this client, if any.
+     * This will return recommended authentication services first.
+     *
+     * @return the authentication services
+     */
+    public LidAuthenticationService [] getAuthenticationServices()
+    {
+        return theAuthenticationServices;
     }
 
     /**
@@ -371,23 +359,25 @@ public abstract class AbstractLidClientAuthenticationStatus
                 new String[] {
                     "theClientIdentifier",
                     "theClientPersona",
-                    "theClientSession",
+                    "thePreexistingClientSession",
                     "theCarriedValidCredentialTypes",
                     "theCarriedInvalidCredentialTypes",
                     "theInvalidCredentialExceptions",
+                    "theClientLoggedOn",
                     "theWishesCancelSession",
-                    "theSessionClientIdentifier",
-                    "theSessionClientPersona"
+                    "theClientWishesToLogout",
+                    "theAuthenticationServices"
                 }, new Object[] {
                     theClientIdentifier,
                     theClientPersona,
-                    theClientSession,
+                    thePreexistingClientSession,
                     theCarriedValidCredentialTypes,
                     theCarriedInvalidCredentialTypes,
                     theInvalidCredentialExceptions,
-                    theWishesCancelSession,
-                    theSessionClientIdentifier,
-                    theSessionClientPersona
+                    theClientLoggedOn,
+                    theClientWishesToCancelSession,
+                    theClientWishesToLogout,
+                    theAuthenticationServices
                 });
     }
 
@@ -400,11 +390,6 @@ public abstract class AbstractLidClientAuthenticationStatus
      * The determined client HasIdentifier.
      */
     protected HasIdentifier theClientPersona;
-    
-    /**
-     * The current session of the client.
-     */
-    protected LidSession theClientSession;
     
     /**
      * The credential types that were provided by the client as part of this request and that
@@ -425,17 +410,32 @@ public abstract class AbstractLidClientAuthenticationStatus
     protected LidInvalidCredentialException [] theInvalidCredentialExceptions;
 
     /**
-     * Client has indicated that the session should be canceled.
+     * Client has just logged on.
      */
-    protected boolean theWishesCancelSession;
+    protected boolean theClientLoggedOn;
 
     /**
-     * The normalized client identifier associated with the session, if any.
+     * Client has indicated that the session should be canceled.
      */
-    protected Identifier theSessionClientIdentifier;
-    
+    protected boolean theClientWishesToCancelSession;
+
     /**
-     * The client HasIdentifier as determined from the session, if any.
+     * Client has indicated that a logout should be performed.
      */
-    protected HasIdentifier theSessionClientPersona;
+    protected boolean theClientWishesToLogout;
+
+    /**
+     * The pre-existing session, if any.
+     */
+    protected LidSession thePreexistingClientSession;
+
+    /**
+     * Identifies the site to which this status applies.
+     */
+    protected Identifier theSiteIdentifier;
+
+    /**
+     * The authentication services, if any.
+     */
+    protected LidAuthenticationService [] theAuthenticationServices;
 }

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -54,6 +54,65 @@ public class Pair<K,V>
     public V getValue()
     {
         return theValue;
+    }
+
+    /**
+     * Equality is determined by comparing the components.
+     *
+     * @param other the Object to compare with
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( !( other instanceof Pair )) {
+            return false;
+        }
+        Pair<?,?> realOther = (Pair<?,?>) other;
+
+        if( !areEqual( theName, realOther.getName() )) {
+            return false;
+        }
+        if( !areEqual( theValue, realOther.getValue() )) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Helper method to determine equality.
+     *
+     * @param one first argument
+     * @param two second argument
+     * @return true if the arguments are equal
+     */
+    protected static boolean areEqual(
+            Object one,
+            Object two )
+    {
+        if( one == null ) {
+            return two == null;
+        }
+        return one.equals( two );
+    }
+
+    /**
+     * Hash is determined from the components.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        int ret = 0;
+        if( theName != null ) {
+            ret ^= theName.hashCode();
+        }
+        if( theValue != null ) {
+            ret ^= theValue.hashCode();
+        }
+        return ret;
     }
 
     /**

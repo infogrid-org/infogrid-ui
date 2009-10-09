@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,8 +37,10 @@ import org.infogrid.util.OneElementIterator;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StreamUtils;
 import org.infogrid.util.ZeroElementCursorIterator;
+import org.infogrid.util.http.AbstractSaneCookie;
 import org.infogrid.util.http.AbstractSaneRequest;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.http.IncomingSaneCookie;
 import org.infogrid.util.http.SaneCookie;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.CanBeDumped;
@@ -108,16 +109,16 @@ public class SaneServletRequest
             relativeFullUri += "?" + queryString;
         }
 
-        Cookie []     servletCookies = sRequest.getCookies();
-        SaneCookie [] cookies;
+        Cookie []             servletCookies = sRequest.getCookies();
+        IncomingSaneCookie [] cookies;
 
         if( servletCookies != null ) {
-            cookies = new SaneCookie[ servletCookies.length ];
+            cookies = new IncomingCookieAdapter[ servletCookies.length ];
             for( int i=0 ; i<servletCookies.length ; ++i ) {
-                cookies[i] = new CookieAdapter( servletCookies[i] );
+                cookies[i] = new IncomingCookieAdapter( servletCookies[i] );
             }
         } else {
-            cookies = new SaneCookie[0];
+            cookies = new IncomingCookieAdapter[0];
         }
 
         String mimeType;
@@ -329,7 +330,7 @@ public class SaneServletRequest
             Map<String,String[]>   postArguments,
             Map<String,MimePart[]> mimeParts,
             String                 queryString,
-            SaneCookie []          cookies,
+            IncomingSaneCookie []  cookies,
             String                 mimeType,
             String                 clientIp,
             SaneRequest            requestAtProxy )
@@ -720,14 +721,14 @@ public class SaneServletRequest
      *
      * @return the cookies that were sent as part of this request.
      */
-    public synchronized SaneCookie[] getCookies()
+    public synchronized IncomingSaneCookie[] getCookies()
     {
         if( theCookies == null ) {
             Cookie [] delegateCookies = theDelegate.getCookies();
 
-            theCookies = new SaneCookie[ delegateCookies.length ];
+            theCookies = new IncomingCookieAdapter[ delegateCookies.length ];
             for( int i=0 ; i<delegateCookies.length ; ++i ) {
-                theCookies[i] = new CookieAdapter( delegateCookies[i] );
+                theCookies[i] = new IncomingCookieAdapter( delegateCookies[i] );
             }
         } 
         return theCookies;
@@ -1083,7 +1084,7 @@ public class SaneServletRequest
     /**
      * The cookies on this request. Allocated when needed.
      */
-    protected SaneCookie[] theCookies;
+    protected IncomingSaneCookie[] theCookies;
     
     /**
      * The http or https protocol.
@@ -1191,9 +1192,11 @@ public class SaneServletRequest
     /**
      * Bridges the SaneCookie interface into the servlet cookies.
      */
-    static class CookieAdapter
+    static class IncomingCookieAdapter
+        extends
+            AbstractSaneCookie
         implements
-            SaneCookie,
+            IncomingSaneCookie,
             CanBeDumped
     {
         /**
@@ -1201,7 +1204,7 @@ public class SaneServletRequest
          *
          * @param delegate the Servlet Cookie we delegate to
          */
-        public CookieAdapter(
+        public IncomingCookieAdapter(
                 javax.servlet.http.Cookie delegate )
         {
             theDelegate = delegate;
@@ -1230,107 +1233,11 @@ public class SaneServletRequest
         {
             if( theValue == null ) {
                 String delegateValue = theDelegate.getValue();
-                theValue = HTTP.decodeUrlArgument( delegateValue );
+                theValue = HTTP.decodeFromQuotedString( delegateValue );
             }
             return theValue;
         }
 
-        /**
-         * Get the Cookie domain.
-         *
-         * @return the Cookie domain
-         */
-        public String getDomain()
-        {
-            String ret = theDelegate.getDomain();
-            return ret;
-        }
-
-        /**
-         * Get the Cookie path.
-         *
-         * @return the Cookie path
-         */
-        public String getPath()
-        {
-            String ret = theDelegate.getPath();
-            return ret;
-        }
-
-        /**
-         * Get the Cookie expiration date.
-         *
-         * @return the Cookie expiration date
-         */
-        public Date getExpires()
-        {
-            return new Date( System.currentTimeMillis() + 1000L*theDelegate.getMaxAge() );
-        }
-
-        /**
-         * No op, here.
-         */
-        public void setRemoved()
-        {
-            // no op
-        }
-     
-        /**
-         * Determine whether this cookie is supposed to be removed.
-         * 
-         * @return true if this cookie is removed or expired
-         */
-        public boolean getIsRemovedOrExpired()
-        {
-            return false; // does not apply here
-        }
-       
-        /**
-         * Return character of value.
-         * 
-         * @param index of the character
-         * @return the character
-         */
-        public char charAt(
-                int index )
-        {
-            return getValue().charAt( index );
-        }
-
-        /**
-         * Length of value.
-         * 
-         * @return length
-         */
-        public int length()
-        {
-            return getValue().length();
-        }
-
-        /**
-         * Sub-sequence of value.
-         * 
-         * @param start start index
-         * @param end end index
-         * @return sub-sequence
-         */
-        public CharSequence subSequence(
-                int start,
-                int end )
-        {
-            return getValue().subSequence( start, end );
-        }
-
-        /**
-         * String form. Here, the value.
-         * 
-         * @return the value
-         */
-        @Override
-        public String toString()
-        {
-            return getValue();
-        }
         /**
          * Dump this object.
          *

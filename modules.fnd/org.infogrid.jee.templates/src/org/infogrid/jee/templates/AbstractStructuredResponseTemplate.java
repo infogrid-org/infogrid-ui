@@ -234,21 +234,25 @@ public abstract class AbstractStructuredResponseTemplate
     }
     
     /**
-     * Default implementation for how to emit a Yadis header.
+     * Default implementation for how to emit additional headers
      *
      * @param delegate the underlying HttpServletResponse
      * @param structured the StructuredResponse that contains the response
      * @throws IOException thrown if an I/O error occurred
      */
-    protected void outputYadisHeader(
+    protected void outputAdditionalHeaders(
             HttpServletResponse delegate,
             StructuredResponse  structured )
         throws
             IOException
     {
-        String yadisHeader = structured.getYadisHeader();
-        if( yadisHeader != null ) {
-            delegate.setHeader( "X-XRDS-Location", yadisHeader );
+        for( HasHeaderPreferences current : toConsider( structured ) ) {
+            for( String key : current.getHeaders().keySet() ) {
+                String [] values = current.getHeaders().get( key );
+                for( String current2 : values ) {
+                    delegate.addHeader( key, current2 );
+                }
+            }
         }
     }
 

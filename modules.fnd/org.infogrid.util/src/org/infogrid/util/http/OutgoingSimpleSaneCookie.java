@@ -5,10 +5,10 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,74 +17,56 @@ package org.infogrid.util.http;
 import java.util.Date;
 
 /**
- * A very simple SaneCookie implementation.
+ * A simple, outgoing cookie.
  */
-public class SimpleSaneCookie
+public class OutgoingSimpleSaneCookie
+        extends
+            AbstractSimpleSaneCookie
         implements
-            SaneCookie
+            OutgoingSaneCookie
 {
     /**
      * Factory method.
-     * 
+     *
      * @param name the name of the cookie
      * @param value the value of the cookie
      * @param domain the domain of the cookie
      * @param path the path of the cookie
      * @param expires expiration date of the cookie
-     * @return the created SimpleSaneCookie
+     * @return the created OutgoingSimpleSaneCookie
      */
-    public static SimpleSaneCookie create(
+    public static OutgoingSimpleSaneCookie create(
             String name,
             String value,
             String domain,
             String path,
             Date   expires )
     {
-        return new SimpleSaneCookie( name, value, domain, path, expires );
+        return new OutgoingSimpleSaneCookie( name, value, domain, path, expires );
     }
-    
+
     /**
      * Constructor.
-     * 
+     *
      * @param name the name of the cookie
      * @param value the value of the cookie
      * @param domain the domain of the cookie
      * @param path the path of the cookie
      * @param expires expiration date of the cookie
      */
-    public SimpleSaneCookie(
+    protected OutgoingSimpleSaneCookie(
             String name,
             String value,
             String domain,
             String path,
             Date   expires )
     {
-        theName    = name;
-        theValue   = value;
+        super( name, value );
+
         theDomain  = domain;
         thePath    = path;
         theExpires = expires;
         theRemoved = false;
-    }
-    
-    /**
-     * Obtain the name of the Cookie.
-     *
-     * @return the name of the Cookie
-     */
-    public String getName()
-    {
-        return theName;
-    }
-
-    /**
-     * Obtain the value of the Cookie.
-     *
-     * @return the value of the Cookie
-     */
-    public String getValue()
-    {
-        return theValue;
     }
 
     /**
@@ -118,16 +100,37 @@ public class SimpleSaneCookie
     }
 
     /**
+     * Set whether this Cookie should be sent only over a secure protocol.
+     * 
+     * @param newValue the new value
+     */
+    public void setSecure(
+            boolean newValue )
+    {
+        theSecure = newValue;
+    }
+
+    /**
+     * Determine whether this Cookie should be sent only over a secure protocol.
+     *
+     * @return true if the Cookie should only be sent over a secure protocol
+     */
+    public boolean getSecure()
+    {
+        return theSecure;
+    }
+
+    /**
      * Set this cookie to "please remove this cookie".
      */
     public void setRemoved()
     {
         theRemoved = true;
     }
-    
+
     /**
      * Determine whether this cookie is supposed to be removed.
-     * 
+     *
      * @return true if this cookie is removed or expired
      */
     public boolean getIsRemovedOrExpired()
@@ -143,81 +146,68 @@ public class SimpleSaneCookie
             return true;
         }
     }
-    /**
-     * Returns the character at the specified index. From CharSequence. 
-     * 
-     * @param index the index 
-     * @return the character
-     */
-    public char charAt(
-            int index )
-    {
-        return theValue.charAt( index );
-    }
-          
-    /**
-     * Returns the length of this character sequence. From CharSequence.
-     * 
-     * @return length
-     */
-    public int length()
-    {
-        return theValue.length();
-    }
-    
-    /**
-     * Returns a new character sequence that is a subsequence of this sequence.
-     * 
-     * @param start start index
-     * @param end end index
-     * @return substring
-     */
-    public CharSequence subSequence(
-            int start,
-            int end )
-    {
-        return theValue.subSequence( start, end );
-    }
-          
-    /**
-     * Return the value of the cookie. Note that this is not just for debugging.
-     * 
-     * @return the value of the cookie
-     */
-    @Override
-    public String toString()
-    {
-        return theValue;
-    }
+
 
     /**
-     * Name of the cookie.
+     * Convert into a String according to the HTTP spec.
+     *
+     * @return the String
      */
-    protected String theName;
-    
-    /**
-     * Value of the cookie.
-     */
-    protected String theValue;
-    
+    public String getAsHttpValue()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append( "Set-Cookie: " );
+        buf.append( HTTP.encodeToValidUrlArgument( theName ));
+        buf.append( '=' );
+        buf.append( HTTP.encodeToQuotedString( theValue ));
+        if( thePath != null ) {
+            buf.append(  "; path=" );
+            buf.append( thePath );
+        }
+        if( theDomain != null && !"localhost".equalsIgnoreCase( theDomain )) {
+            // can't mention "localhost", browser won't take it
+            buf.append( "; domain=" );
+            buf.append( theDomain );
+        }
+        if( theExpires != null ) {
+            buf.append( "; max-age=" );
+            long delta = theExpires.getTime() - System.currentTimeMillis();
+            if( delta > 0 ) {
+                buf.append( String.valueOf( delta / 1000L ));
+            } else {
+                buf.append( "0" );
+            }
+        }
+        if( theSecure ) {
+            buf.append( "; secure" );
+        }
+
+
+        return buf.toString();
+    }
+
     /**
      * Domain of the cookie.
      */
     protected String theDomain;
-    
+
     /**
      * Path of the cookie, if any.
      */
     protected String thePath;
-    
+
     /**
      * Date when the cookie expires.
      */
     protected Date theExpires;
-    
+
     /**
      * True if this Cookie is supposed to be, or already removed.
      */
     protected boolean theRemoved;
-}
 
+    /**
+     * True if this Cookie shall only be sent over a secure protocol.
+     */
+    protected boolean theSecure;
+}

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,7 +21,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.servlet.http.Cookie;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -258,6 +260,45 @@ public abstract class StructuredResponseSection
     }
 
     /**
+     * Add an additional header.
+     *
+     * @param name name of the header to add
+     * @param value value of the header to add
+     */
+    public void addHeader(
+            String name,
+            String value )
+    {
+        addHeader( name, new String[] { value } );
+    }
+
+    /**
+     * Add an additional header.
+     *
+     * @param name name of the header to add
+     * @param value value of the header to add
+     */
+    public void addHeader(
+            String    name,
+            String [] value )
+    {
+        String [] already = theOutgoingHeaders.put( name, value );
+        if( already != null && already.length > 0 ) {
+            theOutgoingHeaders.put( name, ArrayHelper.append( already, value, String.class ));
+        }
+    }
+
+    /**
+     * Obtain the additionla headers.
+     *
+     * @return the headers, as Map
+     */
+    public Map<String,String[]> getHeaders()
+    {
+        return theOutgoingHeaders;
+    }
+
+    /**
      * The StructuredResponseSectionTemplate that defines this section.
      */
     protected StructuredResponseSectionTemplate theSectionTemplate;
@@ -292,6 +333,11 @@ public abstract class StructuredResponseSection
      * The outgoing character encoding.
      */
     protected String theCharacterEncoding = null;
+
+    /**
+     * The outgoing headers.
+     */
+    protected HashMap<String,String[]> theOutgoingHeaders = new HashMap<String,String[]>();
 
     /**
      * The current problems, in sequence of occurrence.

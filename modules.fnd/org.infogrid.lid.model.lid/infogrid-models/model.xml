@@ -44,16 +44,7 @@ and thus implements the redirect dance. More specific subclasses
 are provided for specific authentication protocols.</userdescription>
             <supertype>org.infogrid.lid.model.lid/AuthenticationService</supertype>
             <isabstract/>
-            <declaresMethod>
-    public abstract String determineRedirectUrl(
-            MeshObject                        principal,
-            String                            return_to,
-            String                            realm,
-            org.infogrid.util.context.Context context )
-        throws
-            org.infogrid.mesh.NotPermittedException,
-            org.infogrid.util.FactoryException;
-            </declaresMethod>
+            <additionalinterface>org.infogrid.lid.LidAuthenticationService</additionalinterface>
         </entitytype>
 
         <entitytype ID="org.infogrid.lid.model.lid/LidGpgSso">
@@ -72,10 +63,12 @@ are provided for specific authentication protocols.</userdescription>
             <supertype>org.infogrid.lid.model.lid/LidGpgSso</supertype>
             <implementsMethod><![CDATA[
     public String determineRedirectUrl(
-            MeshObject                        principal,
-            String                            return_to,
+            String                            clientIdentifier,
+            String                            returnToUrl,
             String                            realm,
             org.infogrid.util.context.Context context )
+        throws
+            org.infogrid.util.FactoryException
     {
         org.infogrid.mesh.set.OrderedMeshObjectSet endpoints
                 = org.infogrid.lid.model.yadis.util.YadisUtil.determineOrderedEndpointWebResources( the_Delegate );
@@ -87,7 +80,7 @@ are provided for specific authentication protocols.</userdescription>
 
         String ret = endpointUrl;
 
-        String target = org.infogrid.util.http.HTTP.appendArgumentPairToUrl( return_to, "lid-credtype=gpg%20--clearsign" );
+        String target = org.infogrid.util.http.HTTP.appendArgumentPairToUrl( returnToUrl, "lid-credtype=gpg%20--clearsign" );
 
         ret = org.infogrid.util.http.HTTP.appendArgumentPairToUrl( ret, "lid-action=sso-approve" );
         ret = org.infogrid.util.http.HTTP.appendArgumentToUrl(     ret, "lid-target", target.toString() );

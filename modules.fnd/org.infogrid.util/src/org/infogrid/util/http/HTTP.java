@@ -288,9 +288,9 @@ public abstract class HTTP
             while( iter.hasNext() ) {
                 String       key   = iter.next();
                 CharSequence value = cookies.get( key );
-                cookieString.append( sep ).append( encodeToValidUrl( key ));
+                cookieString.append( sep ).append( key );
                 if( value != null ) {
-                    cookieString.append( "=" ).append( encodeToValidUrl( value.toString() ));
+                    cookieString.append( "=" ).append( encodeToQuotedString( value.toString() ));
                 }
                 sep = "; ";
             }
@@ -871,6 +871,78 @@ public abstract class HTTP
     }
 
     /**
+     * Encode a String a quoted String per the HTTP spec.
+     *
+     * @param raw the to-be-quoted String
+     * @return the quoted String
+     */
+    public static String encodeToQuotedString(
+            String raw )
+    {
+        StringBuilder buf = new StringBuilder( raw.length() + 4 ); // fudge
+
+        buf.append( '"' );
+        for( int i=0 ; i<raw.length() ; ++i ) {
+            char c = raw.charAt( i );
+            switch( c ) {
+                case '"':
+                    buf.append( "\\\"" );
+                    break;
+                default:
+                    buf.append( c );
+                    break;
+            }
+        }
+        buf.append( '"' );
+        return buf.toString();
+    }
+
+    /**
+     * Decode a quoted String per the HTTP spec. If this is not a quoted String,
+     * return the String unchanged.
+     *
+     * @param quoted the input String
+     * @return the de-quoted String
+     */
+    public static String decodeFromQuotedString(
+            String quoted )
+    {
+        if( quoted.length() < 2 ) {
+            return quoted;
+        }
+        if( !quoted.startsWith( "\"" )) {
+            return quoted;
+        }
+        if( !quoted.endsWith( "\"" )) {
+            return quoted;
+        }
+
+        StringBuilder buf = new StringBuilder( quoted.length()-2 );
+        for( int i=1 ; i<quoted.length()-1 ; ++i ) {
+            char c = quoted.charAt( i );
+            switch( c ) {
+                case '\\':
+                    if( i<quoted.length()-1 ) {
+                        // not last character
+                        if( quoted.charAt( i+1 ) == '"' ) {
+                            continue;
+                        } else {
+                            buf.append( c ); // something else
+                        }
+                    } else {
+                        // last char
+                        buf.append( c );
+                    }
+                    break;
+                default:
+                    buf.append( c );
+                    break;
+            }
+        }
+        return buf.toString();
+    }
+
+    /**
      * Helper method to parse a date/time format such as for the cookie expiration.
      * This is inspired by http://mail-archives.apache.org/mod_mbox/commons-dev/200304.mbox/%3C20030417030031.64641.qmail@icarus.apache.org%3E
      * 
@@ -935,12 +1007,12 @@ public abstract class HTTP
     /**
      * Timeout for establishing HTTP connections, in milliseconds.
      */
-    protected static final int HTTP_CONNECT_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpConnectTimeout", 5000 );
+    protected static final int HTTP_CONNECT_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpConnectTimeout", 10000 );
 
     /**
      * Timeout for reading from an established HTTP connection, in milliseconds.
      */
-    protected static final int HTTP_READ_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpReadTimeout", 5000 );
+    protected static final int HTTP_READ_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpReadTimeout", 10000 );
 
     /**
      * Encapsulates the response from an HTTP request.
@@ -976,7 +1048,7 @@ public abstract class HTTP
             // does not do that ... so we do it ourselves.
 
             theHeaderFields = new HashMap<String,List<String>>( headerFields.size() );
-            theCookies      = new HashSet<SaneCookie>();
+            theCookies      = new HashSet<OutgoingSaneCookie>();
             
             Iterator<String> iter = headerFields.keySet().iterator();
             while( iter.hasNext() ) {
@@ -1035,7 +1107,7 @@ public abstract class HTTP
                                 }
                             }
                         }
-                        SimpleSaneCookie newCookie = SimpleSaneCookie.create( cookieName, cookieValue, cookieDomain, cookiePath, cookieExpires );
+                        OutgoingSimpleSaneCookie newCookie = OutgoingSimpleSaneCookie.create( cookieName, cookieValue, cookieDomain, cookiePath, cookieExpires );
                         theCookies.add( newCookie );
                     }
                 }
@@ -1231,7 +1303,7 @@ public abstract class HTTP
          * 
          * @return the set of cookies
          */
-        public Set<SaneCookie> getCookies()
+        public Set<OutgoingSaneCookie> getCookies()
         {
             return theCookies;
         }
@@ -1242,14 +1314,14 @@ public abstract class HTTP
          * @param name the name of the Cookie
          * @return the Cookie, if any
          */
-        public SaneCookie getCookie(
+        public OutgoingSaneCookie getCookie(
                 String name )
         {
-            Set<SaneCookie> cookies = getCookies();
+            Set<OutgoingSaneCookie> cookies = getCookies();
             if( cookies == null || cookies.isEmpty() ) {
                 return null;
             }
-            for( SaneCookie current : cookies ) {
+            for( OutgoingSaneCookie current : cookies ) {
                 if( name.equals( current.getName() )) {
                     return current;
                 }
@@ -1266,7 +1338,7 @@ public abstract class HTTP
         public String getCookieValue(
                 String name )
         {
-            SaneCookie found = getCookie( name );
+            OutgoingSaneCookie found = getCookie( name );
             if( found != null ) {
                 return found.getValue();
             } else {
@@ -1341,6 +1413,6 @@ public abstract class HTTP
         /**
          * The Cookies.
          */
-        protected Set<SaneCookie> theCookies;
+        protected Set<OutgoingSaneCookie> theCookies;
     }
  }

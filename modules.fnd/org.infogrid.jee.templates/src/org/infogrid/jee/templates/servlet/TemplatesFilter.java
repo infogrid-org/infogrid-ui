@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,6 +23,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.app.InfoGridWebApp;
@@ -128,6 +129,16 @@ public class TemplatesFilter
             if( !bufferedResponse.isEmpty() ) {
                 getLog().warn( "Have both responses: " + structured + " vs. " + bufferedResponse );
                 // will ignore bufferedResponse and only process structuredResponse
+            }
+
+            for( String name : bufferedResponse.getHttpHeaderKeySet() ) {
+                String [] values = bufferedResponse.getHttpHeaderValues( name );
+                for( String current : values ) {
+                    realResponse.addHeader( name, current );
+                }
+            }
+            for( Cookie current : bufferedResponse.getCookies() ) {
+                realResponse.addCookie( current );
             }
 
             try {

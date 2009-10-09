@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -170,8 +170,10 @@ public abstract class JeeTemplateUtils
                 for( Cookie current : bufferedResponse.getCookies() ) {
                     section.addCookie( current );
                 }
-                // FIXME: we do not currently deal with additional headers that might have been written
-                // into the bufferedResponse. Most importantly, we don't pass on ETag etc.
+                for( String key : bufferedResponse.getHttpHeaderKeySet() ) {
+                    String [] values = bufferedResponse.getHttpHeaderValues( key );
+                    section.addHeader( key, values );
+                }
 
             } else {
                 log.info( "No StructuredResponseSection was written" + request );

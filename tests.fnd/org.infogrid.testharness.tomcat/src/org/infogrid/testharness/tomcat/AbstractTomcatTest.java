@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import org.infogrid.testharness.AbstractTest;
 import org.infogrid.util.http.HTTP;
-import org.infogrid.util.http.SaneCookie;
+import org.infogrid.util.http.OutgoingSaneCookie;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -183,7 +183,7 @@ public abstract class AbstractTomcatTest
             String        msg )
     {
         boolean ret = true;
-        Set<SaneCookie> cookies = r.getCookies();
+        Set<OutgoingSaneCookie> cookies = r.getCookies();
         if( cookies.size() != cookiesRegexes.length ) {
             ret &= reportError( msg + ": wrong number of cookies found", cookies, cookiesRegexes );
         }
@@ -191,7 +191,7 @@ public abstract class AbstractTomcatTest
             String name      = current[0];
             String cookRegex = current[1];
 
-            SaneCookie cook = r.getCookie( name );
+            OutgoingSaneCookie cook = r.getCookie( name );
             if( cook == null ) {
                 ret &= reportError( msg + ": cookie not found", name );
             } else {

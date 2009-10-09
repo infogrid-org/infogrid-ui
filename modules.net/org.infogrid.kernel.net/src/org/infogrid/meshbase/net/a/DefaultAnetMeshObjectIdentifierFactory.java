@@ -240,7 +240,7 @@ public class DefaultAnetMeshObjectIdentifierFactory
     public boolean treatAsGlobalIdentifier(
             String raw )
     {
-        if( raw.indexOf( '.' ) >= 0 ) {
+        if( raw.indexOf( '.' ) >= 0 || raw.indexOf( "localhost" ) >= 0 ) {
             return true;
         }
         try {

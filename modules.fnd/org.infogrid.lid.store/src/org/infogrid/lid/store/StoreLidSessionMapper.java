@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,20 +16,32 @@ package org.infogrid.lid.store;
 
 import java.io.UnsupportedEncodingException;
 import org.infogrid.lid.LidSession;
+import org.infogrid.lid.SimpleLidSession;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
 import org.infogrid.store.StoreValueEncodingException;
-import org.infogrid.util.Identifier;
-import org.infogrid.util.SimpleStringIdentifier;
+import org.infogrid.util.IdentifierFactory;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Maps session cookies into the Store.
  */
 public class StoreLidSessionMapper
         implements
-            StoreEntryMapper<Identifier,LidSession>
+            StoreEntryMapper<String,LidSession>
 {
+    /**
+     * Constructor.
+     *
+     * @param idFact the IdentifierFactory to use for client and site Identifiers
+     */
+    public StoreLidSessionMapper(
+            IdentifierFactory idFact )
+    {
+        theIdentifierFactory = idFact;
+    }
+
     /**
      * Map a key to a String value that can be used for the Store.
      *
@@ -37,9 +49,9 @@ public class StoreLidSessionMapper
      * @return the corresponding String value that can be used for the Store
      */
     public String keyToString(
-            Identifier key )
+            String key )
     {
-        return key.toExternalForm();
+        return key;
     }
 
     /**
@@ -48,10 +60,10 @@ public class StoreLidSessionMapper
      * @param stringKey the key in String form
      * @return the corresponding key object
      */
-    public Identifier stringToKey(
+    public String stringToKey(
             String stringKey )
     {
-        return SimpleStringIdentifier.create( stringKey );
+        return stringKey;
     }
 
     /**
@@ -63,7 +75,7 @@ public class StoreLidSessionMapper
      * @throws StoreValueDecodingException thrown if the StoreValue could not been decoded
      */
     public LidSession decodeValue(
-            Identifier key,
+            String     key,
             StoreValue value )
         throws
             StoreValueDecodingException
@@ -73,24 +85,69 @@ public class StoreLidSessionMapper
 
             String data = new String( bytes, CHARSET );
 
-            int sep = data.indexOf( SEPARATOR );
+            String [] components = data.split( SEPARATOR );
+            String sessionToken;
+            String clientIdentifier;
+            String siteIdentifier;
+            String creationClientIp;
+            long   timeLastAuthenticated;
+            long   timeLastUsedSuccessfully;
+            long   timeValidUntil;
+
+            if( components.length >= 1 ) {
+                sessionToken = components[0];
+            } else {
+                sessionToken = null;
+            }
+            if( components.length >= 2 ) {
+                clientIdentifier = components[1];
+            } else {
+                clientIdentifier = null;
+            }
+            if( components.length >= 3 ) {
+                siteIdentifier = components[2];
+            } else {
+                siteIdentifier = null;
+            }
+            if( components.length >= 4 ) {
+                creationClientIp = components[3];
+            } else {
+                creationClientIp = null;
+            }
+            if( components.length >= 5 ) {
+                timeLastAuthenticated = Long.parseLong( components[4] );
+            } else {
+                timeLastAuthenticated = -1L;
+            }
+            if( components.length >= 6 ) {
+                timeLastUsedSuccessfully = Long.parseLong( components[5] );
+            } else {
+                timeLastUsedSuccessfully = -1L;
+            }
+            if( components.length >= 7 ) {
+                timeValidUntil = Long.parseLong( components[6] );
+            } else {
+                timeValidUntil = -1L;
+            }
             
-            Identifier lid              = key;
-            String     cookieValue      = data.substring( 0, sep );
-            String     creationClientIp = data.substring( sep+1 );
-            
-            LidSession ret = LidSession.create(
-                    lid,
-                    cookieValue,
+            LidSession ret = SimpleLidSession.create(
+                    sessionToken,
+                    clientIdentifier != null ? theIdentifierFactory.fromExternalForm( clientIdentifier ) : null,
+                    siteIdentifier != null   ? theIdentifierFactory.fromExternalForm( siteIdentifier   ) : null,
                     value.getTimeCreated(),
                     value.getTimeUpdated(),
                     value.getTimeRead(),
                     value.getTimeExpires(),
+                    timeLastAuthenticated,
+                    timeLastUsedSuccessfully,
+                    timeValidUntil,
                     creationClientIp );
             
             return ret;
 
         } catch( UnsupportedEncodingException ex ) {
+            throw new StoreValueDecodingException( ex );
+        } catch( StringRepresentationParseException ex ) {
             throw new StoreValueDecodingException( ex );
         }
     }
@@ -167,9 +224,19 @@ public class StoreLidSessionMapper
     {
         try {
             StringBuilder buf = new StringBuilder();
-            buf.append( value.getCookieValue() );
+            buf.append( value.getSessionToken() );
+            buf.append( SEPARATOR );
+            buf.append( value.getClientIdentifier().toExternalForm() );
+            buf.append( SEPARATOR );
+            buf.append( value.getSiteIdentifier().toExternalForm() );
             buf.append( SEPARATOR );
             buf.append( value.getCreationClientIp() );
+            buf.append( SEPARATOR );
+            buf.append( value.getTimeLastAuthenticated() );
+            buf.append( SEPARATOR );
+            buf.append( value.getTimeLastUsedSuccessfully() );
+            buf.append( SEPARATOR );
+            buf.append( value.getTimeValidUntil() );
             
             byte [] ret = buf.toString().getBytes( CHARSET );
             return ret;
@@ -178,7 +245,12 @@ public class StoreLidSessionMapper
             throw new StoreValueEncodingException( ex );
         }
     }
-    
+
+    /**
+     * Identifier Factory to use for client and site identifiers.
+     */
+    protected IdentifierFactory theIdentifierFactory;
+
     /**
      * The encoding to use.
      */
@@ -192,5 +264,5 @@ public class StoreLidSessionMapper
     /**
      * The separator in the serialized value.
      */
-    protected static final String SEPARATOR = "|";
+    protected static final String SEPARATOR = " ";
 }

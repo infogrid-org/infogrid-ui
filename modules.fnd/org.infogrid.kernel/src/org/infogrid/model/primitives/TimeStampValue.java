@@ -504,6 +504,26 @@ public final class TimeStampValue
     }
 
     /**
+     * Determine whether this TimeStampValue is in the future.
+     *
+     * @return true if it is in the future
+     */
+    public boolean isInFuture()
+    {
+        return compare( this, now() ) > 0;
+    }
+
+    /**
+     * Determine whether this TimeStampValue is in the past.
+     *
+     * @return true if it is in the future
+     */
+    public boolean isInPast()
+    {
+        return compare( this, now() ) < 0;
+    }
+
+    /**
      * Obtain a String representation of this instance that can be shown to the user.
      *
      * @param rep the StringRepresentation

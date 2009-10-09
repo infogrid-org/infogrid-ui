@@ -202,6 +202,13 @@ public interface SaneRequest
     public abstract String getContextPath();
 
     /**
+     * Obtain the relative context Uri of this application with a trailing slash.
+     *
+     * @return the relative context URI with a trailing slash
+     */
+    public abstract String getContextPathWithSlash();
+
+    /**
      * Obtain the absolute context Uri of this application.
      *
      * @return the absolute context URI
@@ -209,11 +216,18 @@ public interface SaneRequest
     public abstract String getAbsoluteContextUri();
 
     /**
+     * Obtain the absolute context Uri of this application with a trailing slash.
+     *
+     * @return the absolute context URI with a trailing slash.
+     */
+    public abstract String getAbsoluteContextUriWithSlash();
+
+    /**
      * Obtain the cookies that were sent as part of this Request.
      *
      * @return the cookies that were sent as part of this Request.
      */
-    public abstract SaneCookie [] getCookies();
+    public abstract IncomingSaneCookie [] getCookies();
 
     /**
      * Obtain a named cookie, or null if not present.
@@ -221,7 +235,7 @@ public interface SaneRequest
      * @param name the name of the cookie
      * @return the named cookie, or null
      */
-    public abstract SaneCookie getCookie(
+    public abstract IncomingSaneCookie getCookie(
             String name );
 
     /**

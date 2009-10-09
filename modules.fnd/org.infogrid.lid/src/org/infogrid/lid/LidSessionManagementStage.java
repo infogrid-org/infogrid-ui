@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -15,30 +15,30 @@
 package org.infogrid.lid;
 
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.util.Identifier;
 import org.infogrid.util.http.SaneRequest;
 
 /**
- * Knows how to determine the authentication status of the client from an incoming request.
+ * Knows how to manage the session.
  */
-public interface LidClientAuthenticationPipelineStage
+public interface LidSessionManagementStage
         extends
             LidProcessingPipelineStage
 {
     /**
-     * Determine the authentication status of the client. This acts as a factory method for LidClientAuthenticationStatus.
-     * 
+     * Determine what operations should be performed to manage the client's session.
+     * This acts as a factory method for LidSessionManagementInstructions.
+     *
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
-     * @param siteIdentifier identifies this site
-     * @return the LidClientAuthenticationStatus
+     * @param clientAuthStatus authentication status of the client
+     * @return LidSessionManagementInstructions the instructions, if any
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
      */
-    public LidClientAuthenticationStatus determineAuthenticationStatus(
-            SaneRequest        lidRequest,
-            StructuredResponse lidResponse,
-            Identifier         siteIdentifier )
+    public LidSessionManagementInstructions processSession(
+            SaneRequest                   lidRequest,
+            StructuredResponse            lidResponse,
+            LidClientAuthenticationStatus clientAuthStatus )
         throws
             LidAbortProcessingPipelineException;
 }

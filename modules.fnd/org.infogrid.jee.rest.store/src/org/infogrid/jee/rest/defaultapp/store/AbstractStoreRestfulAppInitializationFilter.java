@@ -82,14 +82,14 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         MeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
         appContext.addContextObject( meshBaseIdentifierFactory );
 
-        if( theDefaultMeshBaseIdentifier == null ) {
-            theDefaultMeshBaseIdentifier = originalRequest.getAbsoluteBaseUri();
-        }
-
         // Only one MeshBase
         MeshBaseIdentifier mbId;
         try {
-            mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
+            if( theDefaultMeshBaseIdentifier != null ) {
+                mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
+            } else {
+                mbId = meshBaseIdentifierFactory.fromExternalForm( originalRequest.getAbsoluteBaseUri());
+            }
 
         } catch( StringRepresentationParseException ex ) {
             throw new RuntimeException( ex );

@@ -43,7 +43,14 @@ public class InfoGridWebAppContextListener
     public void contextDestroyed(
             ServletContextEvent event )
     {
-        InfoGridWebApp app = InfoGridWebApp.getSingleton();
+        InfoGridWebApp app = null;
+        
+        try {
+            app = InfoGridWebApp.getSingleton();
+        } catch( Throwable t ) {
+            // swallow everything. Tomcat 5.5 sometimes throws NoClassDefFoundErrors here.
+        }
+
         if( app != null ) {
             // may be destroyed before it was accessed even once
             app.die();

@@ -809,15 +809,13 @@ public abstract class AbstractMeshBase
      *
      * @param act the TransactionAction
      * @return a TransactionAction-specific return value
-     * @throws TransactionException a TransactionException has occurred
-     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @throws TransactionActionException a problem occurred when executing the TransactionAction
      * @param <T> the type of return value
      */
     public <T> T executeNow(
             TransactionAction<T> act )
         throws
-            TransactionException,
-            TransactionActionException.Error
+            TransactionActionException
     {
         Factory<Void,Transaction,Void> txFactory = new AbstractFactory<Void,Transaction,Void>() {
                 public Transaction obtainFor(
@@ -844,15 +842,13 @@ public abstract class AbstractMeshBase
      *
      * @param act the TransactionAction
      * @return a TransactionAction-specific return value
-     * @throws TransactionException a TransactionException has occurred
-     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @throws TransactionActionException a problem occurred when executing the TransactionAction
      * @param <T> the type of return value
      */
     public <T> T executeAsap(
             TransactionAction<T> act )
         throws
-            TransactionException,
-            TransactionActionException.Error
+            TransactionActionException
     {
         Factory<Void,Transaction,Void> txFactory = new AbstractFactory<Void,Transaction,Void>() {
                 public Transaction obtainFor(
@@ -880,16 +876,14 @@ public abstract class AbstractMeshBase
      * @param txFactory create the Transaction when needed
      * @param act the TransactionAction
      * @return a TransactionAction-specific return value
-     * @throws TransactionException thrown if the TransactionAction's implementation contained a programming error
-     * @throws TransactionActionException.Error a problem occurred in the TransactionAction
+     * @throws TransactionActionException a problem occurred when executing the TransactionAction
      * @param <T> the type of return value
      */
     protected <T> T executeTransactionAction(
             Factory<Void,Transaction,Void> txFactory,
             TransactionAction<T>           act )
         throws
-            TransactionException,
-            TransactionActionException.Error
+            TransactionActionException
     {
         T         ret         = null;
         Throwable firstThrown = null;
@@ -920,6 +914,10 @@ public abstract class AbstractMeshBase
                 thrown = ex;
                 // do nothing, stay in the loop
 
+            } catch( TransactionException ex ) {
+                thrown = ex;
+                // do nothing, stay in the loop
+
             } catch( TransactionActionException.Error ex ) {
                 throw ex;
 
@@ -937,7 +935,7 @@ public abstract class AbstractMeshBase
                     log.warn( "Attempting to retry Transaction", ex );
                 }
 
-            } catch( RuntimeException ex ) {
+            } catch( Throwable ex ) {
                 thrown = ex;
                 log.error( ex );
                 if( act.getAllOrNothing() ) {
@@ -961,10 +959,10 @@ public abstract class AbstractMeshBase
             return null;
 
         } else if( firstThrown instanceof TransactionException ) {
-            throw (TransactionException) firstThrown;
+            throw new TransactionActionException.FailedToCreateTransaction( (TransactionException) firstThrown );
 
-        } else if( firstThrown instanceof TransactionActionException.Error ) {
-            throw (TransactionActionException.Error) firstThrown;
+        } else if( firstThrown instanceof TransactionActionException ) {
+            throw (TransactionActionException) firstThrown;
 
         } else {
             throw new TransactionActionException.Error( firstThrown );

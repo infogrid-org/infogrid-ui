@@ -5,19 +5,21 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
-package org.infogrid.lid;
+package org.infogrid.util.http;
 
 /**
- * A stage in the LidProcessingPipeline.
+ * An incoming SaneCookie.
  */
-public interface LidProcessingPipelineStage
+public interface IncomingSaneCookie
+    extends
+        SaneCookie
 {
-    // nothing right now
+    // nothing
 }

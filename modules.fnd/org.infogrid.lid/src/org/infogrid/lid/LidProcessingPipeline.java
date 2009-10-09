@@ -15,6 +15,7 @@
 package org.infogrid.lid;
 
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.util.Identifier;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.http.SaneRequestUtils;
 
@@ -28,13 +29,14 @@ public interface LidProcessingPipeline
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
-     * @return the authentication status of the client
+     * @param siteIdentifier identifies this site
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
      */
-    public LidClientAuthenticationStatus processPipeline(
+    public void processPipeline(
             SaneRequest        lidRequest,
-            StructuredResponse lidResponse )
+            StructuredResponse lidResponse,
+            Identifier         siteIdentifier )
         throws
             LidAbortProcessingPipelineException;
 
@@ -44,6 +46,13 @@ public interface LidProcessingPipeline
      */
     public static final String CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME
             = SaneRequestUtils.classToAttributeName( LidClientAuthenticationStatus.class );
+
+    /**
+     * Name of the LidSessionManagementInstructions instance found in the request after the
+     * pipeline has been processed.
+     */
+    public static final String SESSION_MANAGEMENT_INSTRUCTIONS_ATTRIBUTE_NAME
+            = SaneRequestUtils.classToAttributeName( LidSessionManagementInstructions.class );
 
     /**
      * Name of the LidPersona instance representing the client, and found in the request after the

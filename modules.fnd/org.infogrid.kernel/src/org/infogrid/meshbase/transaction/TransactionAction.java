@@ -14,8 +14,6 @@
 
 package org.infogrid.meshbase.transaction;
 
-import org.infogrid.mesh.MeshObjectGraphModificationException;
-
 /**
  * An action that is performed within Transaction boundaries.
  *
@@ -58,16 +56,12 @@ public abstract class TransactionAction<T>
      *
      * @param tx the Transaction within which the code is invoked
      * @return a return object, if any
-     * @throws MeshObjectGraphModificationException for API simplicity, this method may throw any MeshObjectGraphModificationException
-     * @throws TransactionActionException a problem occurred during execution of the TransactionAction
-     * @throws TransactionException should never be thrown
+     * @throws Throwable this declaration makes it easy to implement this method
      */
     public abstract T execute(
             Transaction tx )
         throws
-            MeshObjectGraphModificationException,
-            TransactionActionException,
-            TransactionException;
+            Throwable;
 
     /**
      * If true, rollback the entire transaction upon an Exception; if false, abort at the location of the Exception.

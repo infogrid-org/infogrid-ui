@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -33,36 +33,42 @@ public class SimpleLidClientAuthenticationStatus
      * 
      * @param clientIdentifier the normalized identifier provided by the client, if any
      * @param clientPersona the client LidPersona that was found, if any
-     * @param session the client LidSession that was found, if any
+     * @param preexistingClientSession the LidSession that existed prior to this request, if any
      * @param carriedValidCredentialTypes the credential types carried as part of this request that validated successfully, if any
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
-     * @param sessionClientIdentifier the normalized identifier of the client according to a currently valid session
-     * @param sessionClientPersona the client LidPersona according to the currently valid session
+     * @param clientLoggedOn the client just logged on
      * @param wishesCancelSession the client wishes to cancel the session
+     * @param clientWishesToLogout the client wishes to log out
+     * @param authenticationServices the authentication services available to this client, if any
+     * @param siteIdentifier identifies the site at which this status applies
      * @return the created SimpleLidClientAuthenticationStatus
      */
     public static SimpleLidClientAuthenticationStatus create(
             Identifier                       clientIdentifier,
             HasIdentifier                    clientPersona,
-            LidSession                       session,
+            LidSession                       preexistingClientSession,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
-            Identifier                       sessionClientIdentifier,
-            HasIdentifier                    sessionClientPersona,
-            boolean                          wishesCancelSession )
+            boolean                          clientLoggedOn,
+            boolean                          wishesCancelSession,
+            boolean                          clientWishesToLogout,
+            LidAuthenticationService []      authenticationServices,
+            Identifier                       siteIdentifier )
     {
         SimpleLidClientAuthenticationStatus ret = new SimpleLidClientAuthenticationStatus(
                 clientIdentifier,
                 clientPersona,
-                session,
+                preexistingClientSession,
                 carriedValidCredentialTypes,
                 carriedInvalidCredentialTypes,
                 invalidCredentialExceptions,
-                sessionClientIdentifier,
-                sessionClientPersona,
-                wishesCancelSession );
+                clientLoggedOn,
+                wishesCancelSession,
+                clientWishesToLogout,
+                authenticationServices,
+                siteIdentifier );
         
         return ret;
     }
@@ -72,30 +78,34 @@ public class SimpleLidClientAuthenticationStatus
      *
      * @param clientIdentifier the normalized identifier provided by the client, if any
      * @param clientPersona the client LidPersona that was found, if any
-     * @param session the client LidSession that was found, if any
+     * @param preexistingClientSession the LidSession that existed prior to this request, if any
      * @param carriedValidCredentialTypes the credential types carried as part of this request that validated successfully, if any
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
-     * @param sessionClientIdentifier the normalized identifier of the client according to a currently valid session
-     * @param sessionClientPersona the client LidPersona according to the currently valid session
+     * @param clientLoggedOn the client just logged on
      * @param wishesCancelSession the client wishes to cancel the session
+     * @param clientWishesToLogout the client wishes to log out
+     * @param authenticationServices the authentication services available to this client, if any
+     * @param siteIdentifier identifies the site at which this status applies
      * @return the created SimpleLidClientAuthenticationStatus
      */
     public static SimpleLidClientAuthenticationStatus create(
             Identifier                                clientIdentifier,
             HasIdentifier                             clientPersona,
-            LidSession                                session,
+            LidSession                                preexistingClientSession,
             Collection<LidCredentialType>             carriedValidCredentialTypes,
             Collection<LidCredentialType>             carriedInvalidCredentialTypes,
             Collection<LidInvalidCredentialException> invalidCredentialExceptions,
-            Identifier                                sessionClientIdentifier,
-            HasIdentifier                             sessionClientPersona,
-            boolean                                   wishesCancelSession )
+            boolean                                   clientLoggedOn,
+            boolean                                   wishesCancelSession,
+            boolean                                   clientWishesToLogout,
+            LidAuthenticationService []               authenticationServices,
+            Identifier                                siteIdentifier )
     {
         SimpleLidClientAuthenticationStatus ret = SimpleLidClientAuthenticationStatus.create(
                 clientIdentifier,
                 clientPersona,
-                session,
+                preexistingClientSession,
                 carriedValidCredentialTypes != null
                         ? ArrayHelper.copyIntoNewArray( carriedValidCredentialTypes,   LidCredentialType.class )
                         : null,
@@ -105,9 +115,11 @@ public class SimpleLidClientAuthenticationStatus
                 invalidCredentialExceptions != null
                         ? ArrayHelper.copyIntoNewArray( invalidCredentialExceptions,   LidInvalidCredentialException.class )
                         : null,
-                sessionClientIdentifier,
-                sessionClientPersona,
-                wishesCancelSession );
+                clientLoggedOn,
+                wishesCancelSession,
+                clientWishesToLogout,
+                authenticationServices,
+                siteIdentifier );
 
         return ret;
     }
@@ -117,33 +129,39 @@ public class SimpleLidClientAuthenticationStatus
      * 
      * @param clientIdentifier the normalized identifier provided by the client, if any
      * @param clientPersona the client LidPersona that was found, if any
-     * @param session the client LidSession that was found, if any
+     * @param preexistingClientSession the LidSession that existed prior to this request, if any
      * @param carriedValidCredentialTypes the credential types carried as part of this request that validated successfully, if any
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
-     * @param sessionClientIdentifier the normalized identifier of the client according to a currently valid session
-     * @param sessionClientPersona the client LidPersona according to the currently valid session
+     * @param clientLoggedOn the client just logged on
      * @param wishesCancelSession the client wishes to cancel the session
+     * @param clientWishesToLogout the client wishes to log out
+     * @param authenticationServices the authentication services available to this client, if any
+     * @param siteIdentifier identifies the site at which this status applies
      */
     protected SimpleLidClientAuthenticationStatus(
             Identifier                       clientIdentifier,
             HasIdentifier                    clientPersona,
-            LidSession                       session,
+            LidSession                       preexistingClientSession,
             LidCredentialType []             carriedValidCredentialTypes,
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
-            Identifier                       sessionClientIdentifier,
-            HasIdentifier                    sessionClientPersona,
-            boolean                          wishesCancelSession )
+            boolean                          clientLoggedOn,
+            boolean                          wishesCancelSession,
+            boolean                          clientWishesToLogout,
+            LidAuthenticationService []      authenticationServices,
+            Identifier                       siteIdentifier )
     {
         super(  clientIdentifier,
                 clientPersona,
-                session,
+                preexistingClientSession,
                 carriedValidCredentialTypes,
                 carriedInvalidCredentialTypes,
                 invalidCredentialExceptions,
-                sessionClientIdentifier,
-                sessionClientPersona,
-                wishesCancelSession );
+                clientLoggedOn,
+                wishesCancelSession,
+                clientWishesToLogout,
+                authenticationServices,
+                siteIdentifier );
     }
 }

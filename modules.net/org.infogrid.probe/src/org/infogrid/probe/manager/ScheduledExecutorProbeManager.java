@@ -26,13 +26,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.mesh.MeshObjectGraphModificationException;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionAction;
 import org.infogrid.meshbase.transaction.TransactionActionException;
-import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Probe.ProbeSubjectArea;
 import org.infogrid.model.Probe.ProbeUpdateSpecification;
 import org.infogrid.probe.ProbeException;
@@ -181,9 +179,7 @@ public abstract class ScheduledExecutorProbeManager
                     public ProbeUpdateSpecification execute(
                             Transaction tx )
                         throws
-                            MeshObjectGraphModificationException,
-                            TransactionActionException,
-                            TransactionException
+                            Throwable
                     {
                         MeshObject               home = shadow.getHomeObject();
                         ProbeUpdateSpecification spec = (ProbeUpdateSpecification) home.getTypedFacadeFor( ProbeSubjectArea.PROBEUPDATESPECIFICATION );
@@ -193,9 +189,7 @@ public abstract class ScheduledExecutorProbeManager
                     }
             });
 
-        } catch( TransactionException ex ) {
-            log.error( ex );
-        } catch( TransactionActionException.Error ex ) {
+        } catch( TransactionActionException ex ) {
             log.error( ex );
         }
     }

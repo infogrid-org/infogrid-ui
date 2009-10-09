@@ -275,7 +275,7 @@ public class ImplementationGenerator
         
         outStream.println( "public class " + getClassPrefix() + theMeshTypeName );
         outStream.println( "        extends" );
-        outStream.println( "            org.infogrid.mesh.TypedMeshObjectFacade" );
+        outStream.println( "            org.infogrid.mesh.TypedMeshObjectFacadeImpl" );
         outStream.println( "        implements" );
         outStream.println( "            "
                 + thePackageNameTranslatorWithoutVersion.translateSubjectArea( theMeshType.getSubjectArea())
@@ -359,7 +359,7 @@ public class ImplementationGenerator
             // this should (?) be "else if" but because they are mutually exclusive, we can
             // do this, which helps with debugging in case they are not indeed mutually exclusive ;-)
             if( defaultValueCode != null ) {
-                propTypesString.append(  "                    " + propertyTypeName );
+                propTypesString.append(  "                    " + propertyTypeName.toUpperCase() );
                 propTypesString.append( ",\n" );
                 
                 propValuesString.append( "                    " + defaultValueCode.getAsString() );

@@ -142,7 +142,7 @@ public class InterfaceGenerator
 
         AttributableMeshType [] supertypes = theMeshType.getDirectSupertypes();
 
-        String sep = "        extends ";
+        String sep = "        extends\n            ";
         if( supertypes.length >= 1 ) {
             String supertypeName
                     = thePackageNameTranslatorWithoutVersion.translateSubjectArea( supertypes[0].getSubjectArea() )
@@ -152,6 +152,10 @@ public class InterfaceGenerator
 
             outStream.print( sep );
             outStream.print( supertypeName );
+            sep = ",\n            ";
+        } else {
+            outStream.print( sep );
+            outStream.print( "org.infogrid.mesh.TypedMeshObjectFacade" );
             sep = ",\n            ";
         }
         for( int i=1 ; i<supertypes.length ; ++i ) {
@@ -175,9 +179,7 @@ public class InterfaceGenerator
             }
         }
 
-        if( supertypes.length >= 1 || ( additionalInterfaces != null && additionalInterfaces.length > 0 )) {
-            outStream.println();
-        }
+        outStream.println();
         outStream.println( "{" );
 
         outStream.println( "    /**" );

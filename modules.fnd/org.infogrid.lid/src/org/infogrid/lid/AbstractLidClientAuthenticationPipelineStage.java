@@ -25,7 +25,6 @@ import org.infogrid.util.HasIdentifierFinder;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationParseException;
@@ -58,29 +57,25 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
      *
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
+     * @param siteIdentifier identifies this site
      * @return the LidClientAuthenticationStatus
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
      */
     public LidClientAuthenticationStatus determineAuthenticationStatus(
             SaneRequest        lidRequest,
-            StructuredResponse lidResponse )
+            StructuredResponse lidResponse,
+            Identifier         siteIdentifier )
         throws
             LidAbortProcessingPipelineException
     {
-        boolean wishesCancelSession = false;
+        String sessionCookieString = lidRequest.getCookieValue( LidCookies.LID_SESSION_COOKIE_NAME );
+        String lidCookieString     = lidRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
+        String lidArgumentString   = lidRequest.getArgument( "lid" );
 
-        if( lidRequest.matchArgument( "lid-action", "cancel-session" )) {
-            wishesCancelSession = true;
-        }
-
-        String sessionId         = lidRequest.getCookieValue( LidCookies.LID_SESSION_COOKIE_NAME );
-        String lidCookieString   = lidRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
-        String lidArgumentString = lidRequest.getArgument( "lid" );
-
-        if( lidArgumentString == null ) {
-            lidArgumentString = lidRequest.getArgument( "lid" );
-        }
+//        if( lidArgumentString == null ) {
+//            lidArgumentString = lidRequest.getArgument( "lid" );
+//        }
         if( lidArgumentString == null ) {
             lidArgumentString = lidRequest.getArgument( "openid_identifier" );
         }
@@ -88,12 +83,12 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
             lidArgumentString = lidRequest.getArgument( "openid.identity" );
         }
 
-        if( sessionId != null ) {
-            sessionId = HTTP.decodeUrlArgument( sessionId );
-        }
-        if( lidCookieString != null ) {
-            lidCookieString = HTTP.decodeUrlArgument( lidCookieString );
-        }
+//        if( sessionCookieString != null ) {
+//            sessionCookieString = HTTP.decodeUrlArgument( sessionCookieString );
+//        }
+//        if( lidCookieString != null ) {
+//            lidCookieString = HTTP.decodeUrlArgument( lidCookieString );
+//        }
 
         Identifier lidCookieIdentifier   = null;
         Identifier lidArgumentIdentifier = null;
@@ -135,9 +130,7 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
             clientIdentifier = null;
         }
 
-        HasIdentifier client        = null;
-        HasIdentifier sessionClient = null;
-
+        HasIdentifier client = null;
         if( clientIdentifier != null ) {
             try {
                 client = thePersonaManager.find( clientIdentifier );
@@ -149,36 +142,39 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
                 }
             }
         }
-        if( sessionClientIdentifier != null ) {
-            if( sessionClientIdentifier.equals( clientIdentifier )) {
-                // save us a lookup
-                sessionClient = client;
-            } else {
-                try {
-                    sessionClient = thePersonaManager.find( sessionClientIdentifier );
 
-                } catch( Exception ex ) {
-                    // ignore
-                    if( log.isInfoEnabled() ) {
-                        log.info( ex );
+        boolean clientLoggedOn       = false;
+        boolean wishesCancelSession  = false;
+        boolean clientWishesToLogout = false;
+        if( lidRequest.matchArgument( "lid-action", "cancel-session" )) {
+            wishesCancelSession = true;
+        }
+        if( lidArgumentString != null && lidArgumentString.length() == 0 && sessionClientIdentifier != null ) {
+            clientWishesToLogout = true;
+        }
+
+        LidSession preexistingClientSession;
+        if( sessionClientIdentifier != null && sessionCookieString != null ) {
+            preexistingClientSession = theSessionManager.get( sessionCookieString );
+
+            if( preexistingClientSession != null ) {
+                if( clientIdentifier != null ) {
+                    if( !preexistingClientSession.getClientIdentifier().equals( clientIdentifier )) {
+                        preexistingClientSession = null; // this session does not belong to this client
+                    } else if ( !preexistingClientSession.getSiteIdentifier().equals( siteIdentifier )) {
+                        preexistingClientSession = null; // this session does not belong to this site
+                    }
+                } else if( sessionClientIdentifier != null ) {
+                    // want to log out, but we still have a session
+                    if( !preexistingClientSession.getClientIdentifier().equals( sessionClientIdentifier )) {
+                        preexistingClientSession = null; // wrong session
+                    } else if ( !preexistingClientSession.getSiteIdentifier().equals( siteIdentifier )) {
+                        preexistingClientSession = null; // wrong session
                     }
                 }
             }
-        }
-
-        LidSession session = null;
-        if( sessionClient != null ) {
-            try {
-                session = theSessionManager.obtainFor( sessionClientIdentifier, lidRequest.getClientIp()  );
-            } catch( FactoryException ex ) {
-                // ignore
-                if( log.isInfoEnabled() ) {
-                    log.info( ex );
-                }
-            }
-            if( wishesCancelSession && session != null && session.isStillValid() ) {
-                session.cancel();
-            }
+        } else {
+            preexistingClientSession = null;
         }
 
         ArrayList<LidCredentialType>             validCredentialTypes        = null;
@@ -207,22 +203,31 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
                             invalidCredentialExceptions.add( ex );
                         }
                     }
+                    if( !validCredentialTypes.isEmpty() && invalidCredentialTypes.isEmpty() ) {
+                        if( sessionClientIdentifier == null || !sessionClientIdentifier.equals( lidArgumentIdentifier )) {
+                            clientLoggedOn = true;
+                        }
+                    }
                 }
             } catch( FactoryException ex ) {
                 log.error( ex );
             }
         }
 
+        LidAuthenticationService [] authServices = determineAuthenticationServices( client );
+
         SimpleLidClientAuthenticationStatus ret = SimpleLidClientAuthenticationStatus.create(
                 clientIdentifier,
                 client,
-                session,
+                preexistingClientSession,
                 validCredentialTypes,
                 invalidCredentialTypes,
                 invalidCredentialExceptions,
-                sessionClientIdentifier,
-                sessionClient,
-                wishesCancelSession );
+                clientLoggedOn,
+                wishesCancelSession,
+                clientWishesToLogout,
+                authServices,
+                siteIdentifier );
         return ret;
     }
 
@@ -239,6 +244,18 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
             String candidate )
         throws
             StringRepresentationParseException;
+
+    /**
+     * Determine the available authentication services for this client.
+     *
+     * @param client the client
+     * @return the authentication services, in sequence of preference, if any
+     */
+    protected LidAuthenticationService [] determineAuthenticationServices(
+            HasIdentifier client )
+    {
+        return null;
+    }
 
     /**
      * The LidCredentialTypesFactory to use.

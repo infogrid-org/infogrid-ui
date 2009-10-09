@@ -104,7 +104,7 @@ public class VerbatimStructuredResponseTemplate
         outputCookies(     delegate, structured );
         outputMimeType(    delegate, structured );
         outputLocation(    delegate, structured );
-        outputYadisHeader( delegate, structured );
+        outputAdditionalHeaders( delegate, structured );
         
         // stream default section(s)
         
