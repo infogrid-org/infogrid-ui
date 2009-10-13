@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,6 +24,8 @@ import org.infogrid.httpd.HttpResponse;
 import org.infogrid.httpd.HttpResponseFactory;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.local.LocalNetMeshBase;
+import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -31,26 +33,116 @@ import org.infogrid.util.logging.Log;
  */
 public class YadisTest1
         extends
-            AbstractYadisTest
+            AbstractYadisDiscoveryTest
 {
     /**
-     * Run the test.
+     * Run one test scenario.
      *
+     * @param mb the NetMeshBase to use for this scenario
+     * @param mode the mode
      * @throws Exception all sorts of things may happen during a test
      */
-    public void run()
+    public void run(
+            LocalNetMeshBase mb,
+            boolean          mode )
         throws
             Exception
     {
-        log.info( "accessing test data source" );
+        log.info( "Accessing test data source (1) - " + mode );
 
-        NetMeshObject shadowHome = theMeshBase.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        theWithYadis = mode;
+
+        NetMeshObject  shadowHome = mb.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        ShadowMeshBase shadow     = mb.getShadowMeshBaseFor( theIdentityIdentifier );
         
-        // 
-        
-        log.info( "Checking for correct results" );
-        
+        if( mode ) {
+            checkYadisResultsDirect( shadowHome, 2 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
+
+        //
+
+        log.info(  "Accessing test data source (2) - " + mode );
+
+        theWithYadis = !mode;
+        shadow.doUpdateNow();
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        if( !mode ) {
+            checkYadisResultsDirect( shadowHome, 2 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
+
+        //
+
+        log.info( "Accessing test data source (3) - " + mode );
+
+        theWithYadis = mode;
+        shadow.doUpdateNow();
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        if( mode ) {
+            checkYadisResultsDirect( shadowHome, 2 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
+    }
+
+    /**
+     * Run the first test.
+     *
+     * @throws Exception all sorts of things may happen during a test
+     */
+    public void runWithoutWithWithout()
+        throws
+            Exception
+    {
+        RecordingTransactionListener listener = new RecordingTransactionListener();
+        theMeshBase2.addWeakTransactionListener( listener );
+
+        //
+
+        log.info( "Accessing test data source without Yadis" );
+
+        theWithYadis = false;
+
+        NetMeshObject  shadowHome = theMeshBase2.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        ShadowMeshBase shadow     = theMeshBase2.getShadowMeshBaseFor( theIdentityIdentifier );
+
+        checkEquals( listener.getCommittedTransactions().size(), 1, "Wrong number of Transactions" );
+
+        checkNoYadisResults( shadowHome );
+
+        //
+
+        log.info(  "Accessing test data source with Yadis" );
+
+        theWithYadis = true;
+        shadow.doUpdateNow();
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        checkEquals( listener.getCommittedTransactions().size(), 2, "Wrong number of Transactions" );
+
         checkYadisResultsDirect( shadowHome, 2 );
+
+        //
+
+        log.info( "Accessing test data source without Yadis again" );
+
+        theWithYadis = false;
+        shadow.doUpdateNow();
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        checkEquals( listener.getCommittedTransactions().size(), 3, "Wrong number of Transactions" );
+
+        checkNoYadisResults( shadowHome );
+
+        //
+
+        listener.clear();
+        listener = null;
     }
 
     /**
@@ -131,12 +223,14 @@ public class YadisTest1
         public HttpResponse createResponse(
                 HttpRequest request )
         {
+            log.debug( "Incoming request", request );
+            
             String accept = request.getHttpParameters().get( "Accept" );
 
             HttpResponse ret;
             if( "GET".equals( request.getMethod() ) && ("/" + IDENTITY_LOCAL_IDENTIFIER ).equals( request.getRelativeBaseUri() )) {
                 HttpEntity entity;
-                if( accept != null && accept.indexOf( "application/xrds+xml") >= 0 ) {
+                if( theWithYadis && accept != null && accept.indexOf( "application/xrds+xml") >= 0 ) {
                     entity = new HttpEntity() {
                             public boolean canRead() {
                                 return true;

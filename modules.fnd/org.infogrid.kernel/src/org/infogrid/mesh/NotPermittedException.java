@@ -127,7 +127,7 @@ public abstract class NotPermittedException
      */
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theMeshObjectIdentifier };
+        return new Object[] { theOriginatingMeshBaseIdentifier, theMeshObjectIdentifier };
     }
 
     /**

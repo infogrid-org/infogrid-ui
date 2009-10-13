@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,6 +24,8 @@ import org.infogrid.httpd.HttpResponse;
 import org.infogrid.httpd.HttpResponseFactory;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.local.LocalNetMeshBase;
+import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -31,26 +33,61 @@ import org.infogrid.util.logging.Log;
  */
 public class YadisTest2
         extends
-            AbstractYadisTest
+            AbstractYadisDiscoveryTest
 {
     /**
-     * Run the test.
+     * Run one test scenario.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @param mb the NetMeshBase to use for this scenario
+     * @param mode the mode
+     * @throws Exception all sorts of things may happen during a test
      */
-    public void run()
+    public void run(
+            LocalNetMeshBase mb,
+            boolean          mode )
         throws
             Exception
     {
-        log.info( "accessing test data source" );
+        log.info( "Accessing test data source (1) - " + mode );
 
-        NetMeshObject shadowHome = theMeshBase.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        theWithYadis = mode;
+
+        NetMeshObject  shadowHome = mb.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        ShadowMeshBase shadow     = mb.getShadowMeshBaseFor( theIdentityIdentifier );
+
+        if( mode ) {
+            checkYadisResultsIndirect( shadowHome, 2 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
 
         //
 
-        log.info( "Checking for correct results" );
+        log.info(  "Accessing test data source (2) - " + mode );
 
-        checkYadisResultsIndirect( shadowHome, 2 );
+        theWithYadis = !mode;
+        shadow.doUpdateNow();
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        if( !mode ) {
+            checkYadisResultsIndirect( shadowHome, 2 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
+
+        //
+
+        log.info( "Accessing test data source (3) - " + mode );
+
+        theWithYadis = mode;
+        shadow.doUpdateNow();
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        if( mode ) {
+            checkYadisResultsIndirect( shadowHome, 2 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
     }
 
     /**
@@ -131,8 +168,6 @@ public class YadisTest2
         public HttpResponse createResponse(
                 HttpRequest request )
         {
-            String accept = request.getHttpParameters().get( "Accept" );
-
             HttpResponse ret;
             if( "GET".equals( request.getMethod() ) && ( "/" + IDENTITY_LOCAL_IDENTIFIER ).equals( request.getRelativeBaseUri() )) {
                 HttpEntity entity = new HttpEntity() {
@@ -147,7 +182,9 @@ public class YadisTest2
                         }
                 };                
                 ret = HttpEntityResponse.create( request, true, entity );
-                ret.addHeader( "X-XRDS-Location", XRDS_IDENTIFIER );
+                if( theWithYadis ) {
+                    ret.addHeader( "X-XRDS-Location", XRDS_IDENTIFIER );
+                }
 
             } else if( "GET".equals( request.getMethod() ) && ( "/" + XRDS_LOCAL_IDENTIFIER ).equals( request.getRelativeBaseUri() )) {
                 HttpEntity entity = new HttpEntity() {
@@ -162,7 +199,9 @@ public class YadisTest2
                         }
                 };                
                 ret = HttpEntityResponse.create( request, true, entity );
-                ret.addHeader( "X-XRDS-Location", XRDS_IDENTIFIER );
+                if( theWithYadis ) {
+                    ret.addHeader( "X-XRDS-Location", XRDS_IDENTIFIER );
+                }
 
             } else {
                 ret = HttpErrorResponse.create( request, "500", null );

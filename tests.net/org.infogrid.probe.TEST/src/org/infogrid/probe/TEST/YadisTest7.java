@@ -52,9 +52,9 @@ public class YadisTest7
     {
         log.info( "accessing test data source" );
 
-        NetMeshBaseIdentifier netId = theMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( "http://localhost:" + SERVER_PORT + "/" );
+        NetMeshBaseIdentifier netId = theMeshBase1.getMeshBaseIdentifierFactory().fromExternalForm( "http://localhost:" + SERVER_PORT + "/" );
 
-        NetMeshObject shadowHome = theMeshBase.accessLocally( netId, CoherenceSpecification.ONE_TIME_ONLY );
+        NetMeshObject shadowHome = theMeshBase1.accessLocally( netId, CoherenceSpecification.ONE_TIME_ONLY );
 
         //
 

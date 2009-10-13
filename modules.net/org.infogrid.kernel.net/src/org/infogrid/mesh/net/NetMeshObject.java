@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -20,6 +20,7 @@ import org.infogrid.mesh.net.externalized.SimpleExternalizedNetMeshObject;
 import org.infogrid.mesh.net.proxy.ReplicaProxyInterface;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
+import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.RemoteQueryTimeoutException;
@@ -300,6 +301,13 @@ public interface NetMeshObject
         throws
             NotRelatedException;
 
+    /**
+     * Determine the path to the NetMeshObject's home replica, to the extent it is known here.
+     *
+     * @return the path to the NetMeshObject's home 4replica
+     */
+    public abstract NetMeshObjectAccessSpecification getPathToHomeReplica();
+    
     /**
      * Obtain the same NetMeshObject as SimpleExternalizedNetMeshObject so it can be easily serialized.
      * 

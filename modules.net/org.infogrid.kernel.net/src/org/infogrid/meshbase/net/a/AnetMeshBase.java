@@ -36,6 +36,7 @@ import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.proxy.ProxyManager;
 import org.infogrid.meshbase.net.security.NetAccessManager;
+import org.infogrid.meshbase.net.xpriso.logging.LogXprisoMessageLogger;
 import org.infogrid.meshbase.net.xpriso.logging.XprisoMessageLogger;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.modelbase.ModelBase;
@@ -105,6 +106,11 @@ public abstract class AnetMeshBase
         theNetMeshObjectAccessSpecificationFactory = netMeshObjectAccessSpecificationFactory;
         theProxyManager                            = proxyManager;
         theAccessLocallySynchronizer               = AccessLocallySynchronizer.create( this );
+
+        Log mostSpecificLog = Log.getLogInstance( getClass() );
+        if( mostSpecificLog.isInfoEnabled() ) {
+            theMessageLogger = LogXprisoMessageLogger.create( mostSpecificLog );
+        }
     }
 
     /**

@@ -46,7 +46,6 @@ import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
-import org.infogrid.meshbase.net.IterableNetMeshBaseDifferencer;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.a.AccessLocallySynchronizer;
@@ -62,6 +61,7 @@ import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.model.primitives.IntegerValue;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleCapability;
@@ -238,7 +238,7 @@ public class ProbeDispatcher
                         
                         forceLockRecovery( theShadowMeshBase );
 
-                        IterableNetMeshBaseDifferencer diff = new IterableNetMeshBaseDifferencer( theShadowMeshBase );
+                        ProbeDifferencer diff = new ProbeDifferencer( theShadowMeshBase );
 
                         if( newBase != theShadowMeshBase && tx2 == null ) {
                             tx2 = theShadowMeshBase.createTransactionAsap();
@@ -275,6 +275,10 @@ public class ProbeDispatcher
                             home.setPropertyValue(
                                     ProbeSubjectArea.PROBEUPDATESPECIFICATION_LASTRUNUSEDWRITABLEPROBE,
                                     BooleanValue.create( probeResult.getUsedWritableProbe() ));
+                            home.setPropertyValue(
+                                    ProbeSubjectArea.PROBEUPDATESPECIFICATION_LASTRUNUSEDPROBECLASS,
+                                    StringValue.createOrNull( probeResult.getUsedProbeClass() != null ? probeResult.getUsedProbeClass().getName() : null ));
+                            
                         } catch( IllegalPropertyTypeException ex3 ) {
                             log.error( ex3 );
                         } catch( IllegalPropertyValueException ex3 ) {
@@ -493,7 +497,7 @@ public class ProbeDispatcher
 
             HTTP.Response httpResponse = HTTP.http_get(
                     url,
-                    XRDS_MIME_TYPE + ", " + HTTP_GET_ACCEPT_HEADER );
+                    XRDS_MIME_TYPE + "," + HTTP_GET_ACCEPT_HEADER );
 
             if( httpResponse.isSuccess() && XRDS_MIME_TYPE.equals( httpResponse.getContentType() )) {
                 // found XRDS content via MIME type
@@ -647,7 +651,8 @@ public class ProbeDispatcher
         }
         return new ProbeResult(
                 updated, // we don't know, we always say we might have been updated because that's safer
-                probe instanceof WritableProbe );
+                probe instanceof WritableProbe,
+                probe != null ? probe.getClass() : null );
     }
 
     /**
@@ -821,7 +826,8 @@ public class ProbeDispatcher
 
         return new ProbeResult(
                 true, // we don't know, we always say we might have been updated because that's safer
-                probe instanceof WritableProbe );
+                probe instanceof WritableProbe,
+                probe.getClass() );
     }
     
     /**

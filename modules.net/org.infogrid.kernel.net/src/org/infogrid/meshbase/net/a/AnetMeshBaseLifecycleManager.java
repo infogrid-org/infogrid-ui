@@ -49,6 +49,7 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.meshbase.net.transaction.ForwardReferenceCreatedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
 import org.infogrid.meshbase.net.transaction.NetMeshObjectDeletedEvent;
 import org.infogrid.meshbase.net.transaction.ReplicaCreatedEvent;
@@ -1932,6 +1933,114 @@ public class AnetMeshBaseLifecycleManager
     }
 
     /**
+     * <p>Create a ForwardReference without a type.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @param timeCreated the time when this NetMeshObject was semantically created, in System.currentTimeMillis() format
+     * @param timeUpdated the time when this NetMeshObject was last updated, in System.currentTimeMillis() format
+     * @param timeRead the time when this NetMeshObject was last read, in System.currentTimeMillis() format
+     * @param timeExpires the time this NetMeshObject will expire, in System.currentTimeMillis() format
+     * @return the created NetMeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public NetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            long                             timeCreated,
+            long                             timeUpdated,
+            long                             timeRead,
+            long                             timeExpires )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        return createForwardReference(
+                pathToObject,
+                null,
+                timeCreated,
+                timeUpdated,
+                timeRead,
+                timeExpires,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock(),
+                -1L );
+    }
+
+    /**
+     * <p>Create a ForwardReference with a type. This type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @param type the EntityType with which the MeshObject will be blessed
+     * @param timeCreated the time when this NetMeshObject was semantically created, in System.currentTimeMillis() format
+     * @param timeUpdated the time when this NetMeshObject was last updated, in System.currentTimeMillis() format
+     * @param timeRead the time when this NetMeshObject was last read, in System.currentTimeMillis() format
+     * @param timeExpires the time this NetMeshObject will expire, in System.currentTimeMillis() format
+     * @return the created NetMeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public NetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            EntityType                       type,
+            long                             timeCreated,
+            long                             timeUpdated,
+            long                             timeRead,
+            long                             timeExpires )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        return createForwardReference(
+                pathToObject,
+                new EntityType[] { type },
+                timeCreated,
+                timeUpdated,
+                timeRead,
+                timeExpires,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock(),
+                -1L );
+    }
+
+    /**
+     * <p>Create a ForwardReference with zero or more types. Each type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @param types the EntityTypes with which the MeshObject will be blessed
+     * @param timeCreated the time when this NetMeshObject was semantically created, in System.currentTimeMillis() format
+     * @param timeUpdated the time when this NetMeshObject was last updated, in System.currentTimeMillis() format
+     * @param timeRead the time when this NetMeshObject was last read, in System.currentTimeMillis() format
+     * @param timeExpires the time this NetMeshObject will expire, in System.currentTimeMillis() format
+     * @return the created NetMeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public NetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            EntityType []                    types,
+            long                             timeCreated,
+            long                             timeUpdated,
+            long                             timeRead,
+            long                             timeExpires )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException
+    {
+        return createForwardReference(
+                pathToObject,
+                types,
+                timeCreated,
+                timeUpdated,
+                timeRead,
+                timeExpires,
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpHomeReplica(),
+                ((AnetMeshBase) theMeshBase).getDefaultWillGiveUpLock(),
+                -1L );
+    }
+
+    /**
      * <p>Create a ForwardReference with zero or more types. Each type may or may not be abstract: as this
      *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
      *
@@ -2236,9 +2345,10 @@ public class AnetMeshBaseLifecycleManager
 
             putIntoMeshBase(
                     ret[i],
-                    new NetMeshObjectCreatedEvent(
+                    new ForwardReferenceCreatedEvent(
                             realBase,
                             realBase.getIdentifier(),
+                            pathToObjects[i],
                             ret[i],
                             incomingProxyIdentifier ));
             // assignOwner( ret ); FIXME? Should this assign an owner?

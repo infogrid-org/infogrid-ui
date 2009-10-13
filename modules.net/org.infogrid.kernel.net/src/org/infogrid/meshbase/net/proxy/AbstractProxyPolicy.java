@@ -678,7 +678,7 @@ public abstract class AbstractProxyPolicy
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // requested first-time objects
-        if( arrayHasContent( incoming.getRequestedFirstTimeObjects() ) ) {
+        if( ArrayHelper.arrayHasContent( incoming.getRequestedFirstTimeObjects() ) ) {
             NetMeshObject[] firstTimeObjects = null;
             try {
                 firstTimeObjects = theMeshBase.accessLocally( incoming.getRequestedFirstTimeObjects() );
@@ -717,7 +717,7 @@ public abstract class AbstractProxyPolicy
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // requested resynchronized objects
-        if( arrayHasContent( incoming.getRequestedResynchronizeReplicas())) {
+        if( ArrayHelper.arrayHasContent( incoming.getRequestedResynchronizeReplicas())) {
             NetMeshObject [] resync = theMeshBase.findMeshObjectsByIdentifier( incoming.getRequestedResynchronizeReplicas() );
             
             for( int i=0 ; i<resync.length ; ++i ) {
@@ -761,7 +761,7 @@ public abstract class AbstractProxyPolicy
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // requested home replicas
-        if( arrayHasContent( incoming.getRequestedHomeReplicas())) {
+        if( ArrayHelper.arrayHasContent( incoming.getRequestedHomeReplicas())) {
             NetMeshObject [] homes = theMeshBase.findMeshObjectsByIdentifier( incoming.getRequestedHomeReplicas() );
 
             ArrayList<NetMeshObject>                toSurrender = new ArrayList<NetMeshObject>();
@@ -840,7 +840,7 @@ public abstract class AbstractProxyPolicy
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // requested locks
-        if( arrayHasContent( incoming.getRequestedLockObjects())) {
+        if( ArrayHelper.arrayHasContent( incoming.getRequestedLockObjects())) {
             NetMeshObject [] locks = theMeshBase.findMeshObjectsByIdentifier( incoming.getRequestedLockObjects() );
             
             ArrayList<NetMeshObject>                toSurrender = new ArrayList<NetMeshObject>();
@@ -918,7 +918,7 @@ public abstract class AbstractProxyPolicy
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
         // reclaimed locks
-        if( arrayHasContent( incoming.getReclaimedLockObjects())) {
+        if( ArrayHelper.arrayHasContent( incoming.getReclaimedLockObjects())) {
             NetMeshObject [] lost = theMeshBase.findMeshObjectsByIdentifier( incoming.getReclaimedLockObjects() );
             
             for( int i=0 ; i<lost.length ; ++i ) {
@@ -943,7 +943,7 @@ public abstract class AbstractProxyPolicy
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
         
     // canceled objects
-        if( arrayHasContent( incoming.getRequestedCanceledObjects())) {
+        if( ArrayHelper.arrayHasContent( incoming.getRequestedCanceledObjects())) {
             NetMeshObject [] cancel = theMeshBase.findMeshObjectsByIdentifier( incoming.getRequestedCanceledObjects() );
 
             for( int i=0 ; i<cancel.length ; ++i ) {
@@ -972,7 +972,7 @@ public abstract class AbstractProxyPolicy
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
     
     // conveyed objects
-        if( arrayHasContent( incoming.getConveyedMeshObjects())) {
+        if( ArrayHelper.arrayHasContent( incoming.getConveyedMeshObjects())) {
             for( ExternalizedNetMeshObject externalized : incoming.getConveyedMeshObjects() ) {
 
                 RippleInstructions ripple = RippleInstructions.create( externalized );
@@ -1204,7 +1204,7 @@ public abstract class AbstractProxyPolicy
         XprisoMessage incoming    = ret.getIncomingXprisoMessage();
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
         
-        if( arrayHasContent( incoming.getPushLockObjects())) {
+        if( ArrayHelper.arrayHasContent( incoming.getPushLockObjects())) {
             NetMeshObject [] locks = theMeshBase.findMeshObjectsByIdentifier( incoming.getPushLockObjects() );
             
             for( int i=0 ; i<locks.length ; ++i ) {
@@ -1230,7 +1230,7 @@ public abstract class AbstractProxyPolicy
         XprisoMessage incoming    = ret.getIncomingXprisoMessage();
         NetMeshBase   theMeshBase = incomingProxy.getNetMeshBase();
 
-        if( arrayHasContent( incoming.getPushHomeReplicas() )) {
+        if( ArrayHelper.arrayHasContent( incoming.getPushHomeReplicas() )) {
             NetMeshObject [] homes = theMeshBase.findMeshObjectsByIdentifier( incoming.getPushHomeReplicas() );
             
             for( int i=0 ; i<homes.length ; ++i ) {
@@ -1255,7 +1255,7 @@ public abstract class AbstractProxyPolicy
     {
         XprisoMessage incoming = ret.getIncomingXprisoMessage();
 
-        if( arrayHasContent( incoming.getPropertyChanges() )) {
+        if( ArrayHelper.arrayHasContent( incoming.getPropertyChanges() )) {
             NetMeshObjectPropertyChangeEvent [] events = incoming.getPropertyChanges();
             
             ret.setPropertyChanges( events );
@@ -1276,12 +1276,12 @@ public abstract class AbstractProxyPolicy
     {
         XprisoMessage incoming = ret.getIncomingXprisoMessage();
 
-        if( arrayHasContent( incoming.getTypeAdditions())) {
+        if( ArrayHelper.arrayHasContent( incoming.getTypeAdditions())) {
             NetMeshObjectTypeAddedEvent [] events = incoming.getTypeAdditions();
             
             ret.setTypeAdditions( events );
         }
-        if( arrayHasContent( incoming.getTypeRemovals())) {
+        if( ArrayHelper.arrayHasContent( incoming.getTypeRemovals())) {
             NetMeshObjectTypeRemovedEvent [] events = incoming.getTypeRemovals();
             
             ret.setTypeRemovals( events );
@@ -1302,7 +1302,7 @@ public abstract class AbstractProxyPolicy
     {
         XprisoMessage incoming = ret.getIncomingXprisoMessage();
 
-        if( arrayHasContent( incoming.getNeighborAdditions())) {
+        if( ArrayHelper.arrayHasContent( incoming.getNeighborAdditions())) {
             NetMeshObjectNeighborAddedEvent [] events = incoming.getNeighborAdditions();
 
             for( NetMeshObjectNeighborAddedEvent current : events ) {
@@ -1311,7 +1311,7 @@ public abstract class AbstractProxyPolicy
                 }
             }
         }
-        if( arrayHasContent( incoming.getNeighborRemovals())) {
+        if( ArrayHelper.arrayHasContent( incoming.getNeighborRemovals())) {
             NetMeshObjectNeighborRemovedEvent [] events = incoming.getNeighborRemovals();
             
             for( NetMeshObjectNeighborRemovedEvent current : events ) {
@@ -1321,7 +1321,7 @@ public abstract class AbstractProxyPolicy
             }
         }
         
-        if( arrayHasContent( incoming.getRoleAdditions())) {
+        if( ArrayHelper.arrayHasContent( incoming.getRoleAdditions())) {
             NetMeshObjectRoleAddedEvent [] events = incoming.getRoleAdditions();
             
             for( NetMeshObjectRoleAddedEvent current : events ) {
@@ -1330,7 +1330,7 @@ public abstract class AbstractProxyPolicy
                 }
             }
         }
-        if( arrayHasContent( incoming.getRoleRemovals())) {
+        if( ArrayHelper.arrayHasContent( incoming.getRoleRemovals())) {
             NetMeshObjectRoleRemovedEvent [] events = incoming.getRoleRemovals();
             
             for( NetMeshObjectRoleRemovedEvent current : events ) {
@@ -1355,7 +1355,7 @@ public abstract class AbstractProxyPolicy
     {
         XprisoMessage incoming = ret.getIncomingXprisoMessage();
 
-        if( arrayHasContent( incoming.getEquivalentsAdditions())) {
+        if( ArrayHelper.arrayHasContent( incoming.getEquivalentsAdditions())) {
             NetMeshObjectEquivalentsAddedEvent [] events = incoming.getEquivalentsAdditions();
             
             for( NetMeshObjectEquivalentsAddedEvent current : events ) {
@@ -1364,7 +1364,7 @@ public abstract class AbstractProxyPolicy
                 }
             }
         }
-        if( arrayHasContent( incoming.getEquivalentsRemovals())) {
+        if( ArrayHelper.arrayHasContent( incoming.getEquivalentsRemovals())) {
             NetMeshObjectEquivalentsRemovedEvent [] events = incoming.getEquivalentsRemovals();
             
             for( NetMeshObjectEquivalentsRemovedEvent current : events ) {
@@ -1389,31 +1389,13 @@ public abstract class AbstractProxyPolicy
     {
         XprisoMessage incoming = ret.getIncomingXprisoMessage();
 
-        if( arrayHasContent( incoming.getDeletions())) {
+        if( ArrayHelper.arrayHasContent( incoming.getDeletions())) {
             NetMeshObjectDeletedEvent [] events = incoming.getDeletions();
             
             ret.setDeletions( events );
         }
     }      
     
-    /**
-     * Helper method to determine whether the array has any content.
-     * 
-     * @param array the array
-     * @return true if the array is non-null and has a length other than 0
-     */
-    protected boolean arrayHasContent(
-            Object [] array )
-    {
-        if( array == null ) {
-            return false;
-        }
-        if( array.length == 0 ) {
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Helper method to add a NetMeshObject to an outgoing XprisoMessage to be conveyed, if needed.
      * 

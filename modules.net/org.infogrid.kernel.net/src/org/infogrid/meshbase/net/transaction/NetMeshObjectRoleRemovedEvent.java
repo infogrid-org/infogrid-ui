@@ -8,12 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net.transaction;
 
+import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.meshbase.net.NetMeshBase;
@@ -27,6 +28,7 @@ import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.MeshTypeUtils;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.util.CreateWhenNeeded;
+import org.infogrid.util.event.UnresolvedException;
 
 /**
  * <p>This event indicates that a relationship between the NetMeshObject and
@@ -230,8 +232,9 @@ public class NetMeshObjectRoleRemovedEvent
     {
         setResolver( base );
 
+        NetMeshObject otherObject = null;
         try {
-            NetMeshObject otherObject = (NetMeshObject) getSource();
+            otherObject = (NetMeshObject) getSource();
             if( otherObject != null ) { // don't check for the lock here -- relationships can be unblessed without having the lock
                 perhapsTx.obtain(); // can ignore return value
 
@@ -244,6 +247,14 @@ public class NetMeshObjectRoleRemovedEvent
 
         } catch( TransactionException ex ) {
             throw ex;
+
+        } catch ( UnresolvedException ex ) {
+            throw new CannotApplyChangeException.ExceptionOccurred( base, ex );
+
+        } catch( NotRelatedException ex ) {
+            // this is can be ignored: in case of a Shadow, for example, neither the neighbor nor the
+            // relationship may even be known here
+            return otherObject; // never null -- UnresolvedException caught earlier
 
         } catch( Throwable ex ) {
             throw new CannotApplyChangeException.ExceptionOccurred( base, ex );

@@ -126,6 +126,15 @@ public class XprisoMessageDumper
             for( ExternalizedNetMeshObject current : obj.getConveyedMeshObjects() ) {
                 emit( "\n        id: " );
                 emit( current.getIdentifier().toExternalForm() );
+                if( current.getNeighbors().length > 0 ) {
+                    emit( "\n            neighbors:" );
+                    String sep = " ";
+                    for( NetMeshObjectIdentifier current2 : current.getNeighbors() ) {
+                        emit( sep );
+                        emit( current2.toLocalExternalForm() );
+                        sep = ", ";
+                    }
+                }
                 if( current.getProxyIdentifiers().length > 0 ) {
                     emit( "\n            proxies:" );
                     String sep = " ";

@@ -231,13 +231,21 @@ public class HttpRequest
     {
         if( theRootUri == null ) {
             StringBuffer buf = new StringBuffer();
-            buf.append( getProtocol() );
+            buf.append( theProtocol );
             buf.append( "://" );
-            buf.append( getHttpHost() );
+            buf.append( getHttpHostOnly() );
+
             int port = getPort();
-            if( port != 80 ) {
-                buf.append( ':' ).append( port );
+            if( "http".equals( theProtocol )) {
+                if( port != 80 ) {
+                    buf.append( ':' ).append( port );
+                }
+            } else if( "https".equals( theProtocol )) {
+                if( port != 443 ) {
+                    buf.append( ':' ).append( port );
+                }
             }
+
             theRootUri = buf.toString();
         }
         return theRootUri;

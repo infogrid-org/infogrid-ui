@@ -8,15 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.httpd.util;
 
-import org.infogrid.util.ArrayCursorIterator;
-
 import java.util.Iterator;
+import org.infogrid.util.ArrayCursorIterator;
+import org.infogrid.util.logging.CanBeDumped;
+import org.infogrid.util.logging.Dumper;
 
 /**
  * A class to capture a list of name-value pairs in memory-efficient (but not
@@ -24,6 +25,8 @@ import java.util.Iterator;
  * expected to be invoked by more than one Thread.
  */
 public class NameValueList
+        implements
+            CanBeDumped
 {
     /**
      * Add a name-value pair to the list.
@@ -126,6 +129,27 @@ public class NameValueList
     public int getSize()
     {
         return mark;
+    }
+
+    /**
+     * Dump this object.
+     *
+     * @param d the Dumper to dump to
+     */
+    public void dump(
+            Dumper d )
+    {
+        d.dump( this,
+                new String[] {
+                    "theNames",
+                    "theValues",
+                    "mark"
+                },
+                new Object[] {
+                    theNames,
+                    theValues,
+                    mark
+                } );
     }
 
     /**

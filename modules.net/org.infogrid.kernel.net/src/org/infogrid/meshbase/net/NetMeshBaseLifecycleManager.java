@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -519,6 +519,78 @@ public interface NetMeshBaseLifecycleManager
     public abstract NetMeshObject createForwardReference(
             NetMeshObjectAccessSpecification pathToObject,
             EntityType []                    types )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException;
+
+    /**
+     * <p>Create a ForwardReference without a type.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @param timeCreated the time when this NetMeshObject was semantically created, in System.currentTimeMillis() format
+     * @param timeUpdated the time when this NetMeshObject was last updated, in System.currentTimeMillis() format
+     * @param timeRead the time when this NetMeshObject was last read, in System.currentTimeMillis() format
+     * @param timeExpires the time this NetMeshObject will expire, in System.currentTimeMillis() format
+     * @return the created NetMeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public abstract NetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            long                             timeCreated,
+            long                             timeUpdated,
+            long                             timeRead,
+            long                             timeExpires )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException;
+
+    /**
+     * <p>Create a ForwardReference with a type. This type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @param type the EntityType with which the MeshObject will be blessed
+     * @param timeCreated the time when this NetMeshObject was semantically created, in System.currentTimeMillis() format
+     * @param timeUpdated the time when this NetMeshObject was last updated, in System.currentTimeMillis() format
+     * @param timeRead the time when this NetMeshObject was last read, in System.currentTimeMillis() format
+     * @param timeExpires the time this NetMeshObject will expire, in System.currentTimeMillis() format
+     * @return the created NetMeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public abstract NetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            EntityType                       type,
+            long                             timeCreated,
+            long                             timeUpdated,
+            long                             timeRead,
+            long                             timeExpires )
+        throws
+            TransactionException,
+            MeshObjectIdentifierNotUniqueException;
+
+    /**
+     * <p>Create a ForwardReference with zero or more types. Each type may or may not be abstract: as this
+     *    creates a ForwardReference, it may resolve in a MeshObject blessed with a subtype.</p>
+     *
+     * @param pathToObject specifies where and how the MeshObject can be found
+     * @param types the EntityTypes with which the MeshObject will be blessed
+     * @param timeCreated the time when this NetMeshObject was semantically created, in System.currentTimeMillis() format
+     * @param timeUpdated the time when this NetMeshObject was last updated, in System.currentTimeMillis() format
+     * @param timeRead the time when this NetMeshObject was last read, in System.currentTimeMillis() format
+     * @param timeExpires the time this NetMeshObject will expire, in System.currentTimeMillis() format
+     * @return the created NetMeshObject
+     * @throws TransactionException thrown if this method is invoked outside of proper Transaction boundaries
+     * @throws MeshObjectIdentifierNotUniqueException thrown if the specified NetMeshBaseIdentifier was taken already
+     */
+    public abstract NetMeshObject createForwardReference(
+            NetMeshObjectAccessSpecification pathToObject,
+            EntityType []                    types,
+            long                             timeCreated,
+            long                             timeUpdated,
+            long                             timeRead,
+            long                             timeExpires )
         throws
             TransactionException,
             MeshObjectIdentifierNotUniqueException;

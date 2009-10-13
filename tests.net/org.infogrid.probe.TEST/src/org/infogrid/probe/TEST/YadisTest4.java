@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,6 +24,8 @@ import org.infogrid.httpd.HttpResponse;
 import org.infogrid.httpd.HttpResponseFactory;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.meshbase.net.CoherenceSpecification;
+import org.infogrid.meshbase.net.local.LocalNetMeshBase;
+import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -31,26 +33,61 @@ import org.infogrid.util.logging.Log;
  */
 public class YadisTest4
         extends
-            AbstractYadisTest
+            AbstractYadisDiscoveryTest
 {
     /**
-     * Run the test.
+     * Run one test scenario.
      *
-     * @throws Exception thrown if an Exception occurred during the test
+     * @param mb the NetMeshBase to use for this scenario
+     * @param mode the mode
+     * @throws Exception all sorts of things may happen during a test
      */
-    public void run()
+    public void run(
+            LocalNetMeshBase mb,
+            boolean          mode )
         throws
             Exception
     {
-        log.info( "accessing test data source" );
+        log.info( "Accessing test data source (1) - " + mode );
 
-        NetMeshObject shadowHome = theMeshBase.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        theWithYadis = mode;
+
+        NetMeshObject  shadowHome = mb.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        ShadowMeshBase shadow     = mb.getShadowMeshBaseFor( theIdentityIdentifier );
+
+        if( mode ) {
+            checkYadisResultsDirect( shadowHome, 1 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
 
         //
 
-        log.info( "Checking for correct results" );
+        log.info(  "Accessing test data source (2) - " + mode );
 
-        checkYadisResultsDirect( shadowHome, 1 );
+        theWithYadis = !mode;
+        shadow.doUpdateNow();
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        if( !mode ) {
+            checkYadisResultsDirect( shadowHome, 1 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
+
+        //
+
+        log.info( "Accessing test data source (3) - " + mode );
+
+        theWithYadis = mode;
+        shadow.doUpdateNow();
+        sleepFor( PINGPONG_ROUNDTRIP_DURATION );
+
+        if( mode ) {
+            checkYadisResultsDirect( shadowHome, 1 );
+        } else {
+            checkNoYadisResults( shadowHome );
+        }
     }
 
     /**
@@ -138,7 +175,11 @@ public class YadisTest4
                             return true;
                         }
                         public InputStream getAsStream() {
-                            return new ByteArrayInputStream( HTML_WITH_OPENID_LINK_REL.getBytes() );
+                            if( theWithYadis ) {
+                                return new ByteArrayInputStream( HTML_WITH_OPENID_LINK_REL.getBytes() );
+                            } else {
+                                return new ByteArrayInputStream( HTML.getBytes() );
+                            }
                         }
                         public String getMime() {
                             return "text/html";

@@ -1419,6 +1419,9 @@ public abstract class AbstractTest
             super( corePoolSize, threadFactory );
 
             theName = name;
+
+            setContinueExistingPeriodicTasksAfterShutdownPolicy( false );
+            setExecuteExistingDelayedTasksAfterShutdownPolicy( false );
         }
 
         /**

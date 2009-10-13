@@ -8,13 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net.transaction;
 
 import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObjectUtils;
@@ -311,7 +312,14 @@ public class NetMeshObjectNeighborRemovedEvent
                 relatedOtherObjects = getDeltaValueIdentifier();
 
                 for( int i=0 ; i<relatedOtherObjects.length ; ++i ) {
-                    otherObject.rippleUnrelate( (NetMeshObjectIdentifier) relatedOtherObjects[i], base, getTimeEventOccurred() );
+                    try {
+                        otherObject.rippleUnrelate( (NetMeshObjectIdentifier) relatedOtherObjects[i], base, getTimeEventOccurred() );
+
+                    } catch( NotRelatedException ex ) {
+                        // this is can be ignored: in case of a Shadow, for example, neither the neighbor nor the
+                        // relationship may even be known here
+
+                    }
                 }
             }
             

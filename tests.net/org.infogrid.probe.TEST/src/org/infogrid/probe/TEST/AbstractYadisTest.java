@@ -72,7 +72,8 @@ public abstract class AbstractYadisTest
         // MeshBase
         exec = createThreadPool( 1 );
 
-        theMeshBase = LocalNetMMeshBase.create( here, theModelBase, null, theProbeDirectory, exec, rootContext );
+        theMeshBase1 = LocalNetMMeshBase.create( here1, theModelBase, null, theProbeDirectory, exec, rootContext );
+        theMeshBase2 = LocalNetMMeshBase.create( here2, theModelBase, null, theProbeDirectory, exec, rootContext );
     }
 
     /**
@@ -87,8 +88,8 @@ public abstract class AbstractYadisTest
             log.error( t );
         }
         
-        theMeshBase.die();
-        theMeshBase = null;
+        theMeshBase1.die();
+        theMeshBase1 = null;
 
         if( theServer != null ) {
             theServer.stop();
@@ -223,6 +224,23 @@ public abstract class AbstractYadisTest
     }
 
     /**
+     * Check that there are no Yadis services.
+     *
+     * @param home the home MeshObject corresponding to the accessed URL
+     * @throws Exception all sorts of things may go wrong in tests
+     */
+    protected void checkNoYadisResults(
+            MeshObject home )
+        throws
+            Exception
+    {
+        checkCondition( !home.isBlessedBy( YadisSubjectArea.XRDSSERVICECOLLECTION ), "unexpectedly is a XrdsServiceCollection" );
+
+        MeshObjectSet xrdsCollection = home.traverse( YadisSubjectArea.WEBRESOURCE_HASXRDSLINKTO_WEBRESOURCE.getSource() );
+        checkEquals( xrdsCollection.size(), 0, "Unexpected associated Xrds WebResource" );
+    }
+
+    /**
      * Our HTTP Server.
      */
     protected HttpServer theServer;
@@ -249,25 +267,44 @@ public abstract class AbstractYadisTest
     protected MProbeDirectory theProbeDirectory = MProbeDirectory.create();
 
     /**
-     * The main NetMeshBase.
+     * The first test NetMeshBase.
      */
-    protected LocalNetMMeshBase theMeshBase;
+    protected LocalNetMMeshBase theMeshBase1;
 
     /**
-     * The identifier of the main NetMeshBase.
+     * The second test NetMeshBase.
      */
-    protected static final NetMeshBaseIdentifier here;
+    protected LocalNetMMeshBase theMeshBase2;
+
+    /**
+     * The identifier of the first test NetMeshBase.
+     */
+    protected static final NetMeshBaseIdentifier here1;
+
+    /**
+     * The identifier of the second test NetMeshBase.
+     */
+    protected static final NetMeshBaseIdentifier here2;
     static {
-        NetMeshBaseIdentifier temp;
+        NetMeshBaseIdentifier temp1;
+        NetMeshBaseIdentifier temp2;
         try {
-            temp = theMeshBaseIdentifierFactory.fromExternalForm( "http://here.local/" ); // this is not going to work for communications
+            temp1 = theMeshBaseIdentifierFactory.fromExternalForm( "http://here1.local/" ); // this is not going to work for communications
+            temp2 = theMeshBaseIdentifierFactory.fromExternalForm( "http://here2.local/" ); // this is not going to work for communications
         } catch( Exception ex ) {
             log.error( ex );
-            temp = null; // make compiler happy
+            temp1 = null; // make compiler happy
+            temp2 = null; // make compiler happy
         }
-        here = temp;
+        here1 = temp1;
+        here2 = temp2;
     }
 
+    /**
+     * Flag that enables us to switch between expecting Yadis information and not.
+     */
+    protected static boolean theWithYadis;
+    
     /**
      * Root identifier of the web server.
      */

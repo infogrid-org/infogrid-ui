@@ -50,7 +50,7 @@ public class YadisTest5
     {
         log.info( "accessing test data source" );
 
-        NetMeshObject shadowHome = theMeshBase.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
+        NetMeshObject shadowHome = theMeshBase1.accessLocally( theIdentityIdentifier, CoherenceSpecification.ONE_TIME_ONLY );
 
         //
 

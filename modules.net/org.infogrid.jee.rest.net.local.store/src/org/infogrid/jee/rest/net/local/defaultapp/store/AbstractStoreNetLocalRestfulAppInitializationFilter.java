@@ -98,7 +98,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             if( theDefaultMeshBaseIdentifier != null ) {
                 mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
             } else {
-                mbId = meshBaseIdentifierFactory.fromExternalForm( originalRequest.getAbsoluteBaseUri());
+                mbId = meshBaseIdentifierFactory.fromExternalForm( originalRequest.getAbsoluteContextUriWithSlash());
             }
 
         } catch( StringRepresentationParseException ex ) {

@@ -84,9 +84,9 @@ public class LogXprisoMessageLogger
             for( int i=0 ; i<args.length ; ++i ) {
                 realArgs[i+2] = args[i];
             }
-            theLog.debug( realArgs );
+            theLog.info( realArgs );
         } else {
-            theLog.debug( theMessageDumperFactory, msg );
+            theLog.info( theMessageDumperFactory, msg );
         }
     }
 

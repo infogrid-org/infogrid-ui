@@ -90,6 +90,25 @@ public abstract class ArrayHelper
     }
 
     /**
+     * Helper method to determine whether an array has any content.
+     *
+     * @param array the array
+     * @return true if the array is non-null and has a length other than 0
+     */
+    public static boolean arrayHasContent(
+            Object [] array )
+    {
+        if( array != null ) {
+            for( int i=0 ; i<array.length ; ++i ) {
+                if( array[i] != null ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Helper method to produce more comprehensible Exceptions when arrays are being
      * assigned. It basically does this:
      * <pre>

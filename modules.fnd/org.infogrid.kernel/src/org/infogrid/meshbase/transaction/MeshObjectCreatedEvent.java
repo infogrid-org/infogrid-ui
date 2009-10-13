@@ -14,7 +14,10 @@
 
 package org.infogrid.meshbase.transaction;
 
+import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
@@ -177,13 +180,7 @@ public class MeshObjectCreatedEvent
         try {
             tx = base.createTransactionNowIfNeeded();
 
-            MeshObject newObject = base.getMeshBaseLifecycleManager().createMeshObject(
-                        getDeltaValueIdentifier(),
-                        getEntityTypes(),
-                        theExternalizedMeshObject.getTimeCreated(),
-                        theExternalizedMeshObject.getTimeUpdated(),
-                        theExternalizedMeshObject.getTimeRead(),
-                        theExternalizedMeshObject.getTimeExpires() );
+            MeshObject newObject = instantiateMeshObject( base );
 
             for( int i=0 ; i<theExternalizedMeshObject.getPropertyTypes().length ; ++i ) {
                 try {
@@ -222,7 +219,40 @@ public class MeshObjectCreatedEvent
         }
         return null; // I don't think this can happen, but let's make the compiler happy.
     }
-    
+
+    /**
+     * Overridable helper method to actually instantiate the MeshObject.
+     *
+     * @param base the MeshBase in which to apply the Change
+     * @return the MeshObject to which the Change was applied
+     * @throws CannotApplyChangeException thrown if the Change could not be applied, e.g because
+     *         the affected MeshObject did not exist in MeshBase base
+     * @throws IsAbstractException thrown if at least one of the EntityTypes was abstract
+     * @throws MeshObjectIdentifierNotUniqueException thrown if a MeshObject with this identifier exists already
+     * @throws NotPermittedException thrown if the caller did not have sufficient permissions for this operation
+     * @throws TransactionException thrown if a Transaction didn't exist on this Thread and
+     *         could not be created
+     */
+    protected MeshObject instantiateMeshObject(
+            MeshBase base )
+        throws
+            CannotApplyChangeException,
+            IsAbstractException,
+            MeshObjectIdentifierNotUniqueException,
+            NotPermittedException,
+            TransactionException
+    {
+        MeshObject ret = base.getMeshBaseLifecycleManager().createMeshObject(
+                        getDeltaValueIdentifier(),
+                        getEntityTypes(),
+                        theExternalizedMeshObject.getTimeCreated(),
+                        theExternalizedMeshObject.getTimeUpdated(),
+                        theExternalizedMeshObject.getTimeRead(),
+                        theExternalizedMeshObject.getTimeExpires() );
+
+        return ret;
+    }
+
     /**
      * <p>Assuming that this Change was applied to a MeshObject in this MeshBase before,
      *    unapply (undo) this Change.

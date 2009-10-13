@@ -931,7 +931,7 @@ public class AMeshObject
                 MeshObjectIdentifier [] neighborIdentifiers      = nMgr.getNeighborIdentifiers( this );
                 MeshObjectIdentifier [] otherNeighborIdentifiers = realNeighbor != null ? nMgr.getNeighborIdentifiers( realNeighbor ) : null;
 
-                RoleType [] oldRoleTypesHere  = nMgr.getRoleTypesFor( this,            realNeighbor.getIdentifier() ); // will throw NotRelatedException
+                RoleType [] oldRoleTypesHere  = nMgr.getRoleTypesFor( this, realNeighbor.getIdentifier() ); // will throw NotRelatedException
                 RoleType [] oldRoleTypesThere = realNeighbor != null ? nMgr.getRoleTypesFor( realNeighbor, theIdentifier ) : null; // will throw NotRelatedException
 
                 RoleType [] roleTypesToRemoveThere = new RoleType[ roleTypesToRemoveHere.length ];

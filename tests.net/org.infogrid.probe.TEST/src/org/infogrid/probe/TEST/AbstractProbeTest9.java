@@ -81,6 +81,7 @@ public abstract class AbstractProbeTest9
                 getLog().info( "Skipping start of Thread with index " + i );
             }
         }
+        theThreadsToKill = ret;
         return ret;
     }
 
@@ -90,10 +91,16 @@ public abstract class AbstractProbeTest9
     @Override
     public void cleanup()
     {
+        if( theThreadsToKill != null ) {
+            for( int i=0 ; i<theThreadsToKill.length ; ++i ) {
+                theThreadsToKill[i].interrupt();
+            }
+        }
         if( theMeshBase != null ) {
             theMeshBase.die();
         }
         exec.shutdown();
+
     }
 
     /**
@@ -159,6 +166,10 @@ public abstract class AbstractProbeTest9
      */
     protected static int probeInvocationCounter;
 
+    /**
+     * The Threads we created and that we need to kill.
+     */
+    protected InstrumentedThread [] theThreadsToKill;
 
     /**
      * Code to be invoked by the threads.

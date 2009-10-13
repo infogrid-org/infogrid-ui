@@ -134,6 +134,16 @@ is given in Java's System.currentTimeMillis() format.</userdescription>
                 <isoptional/>
             </propertytype>
 
+            <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_LastRunUsedProbeClass">
+                <name>LastRunUsedProbeClass</name>
+                <username>Runs using Probe Class</username>
+                <userdescription>Name of the Probe Class that was used at the last run.</userdescription>
+                <datatype>
+                    <StringDataType/>
+                </datatype>
+                <isoptional/>
+            </propertytype>
+
             <propertytype ID="org.infogrid.model.Probe/ProbeUpdateSpecification_WaitForOngoingResynchronization">
                 <name>WaitForOngoingResynchronization</name>
                 <username>Wait for ongoing resynchronization</username>

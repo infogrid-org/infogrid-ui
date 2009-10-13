@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,13 +24,16 @@ public class ProbeResult
      * 
      * @param updated if true, the Shadow was updated during the probe run
      * @param usedWritableProbe if true, the probe run used a WritableProbe
+     * @param usedProbeClass the Probe class that was used, or null
      */
     public ProbeResult(
-            boolean updated,
-            boolean usedWritableProbe )
+            boolean                updated,
+            boolean                usedWritableProbe,
+            Class<? extends Probe> usedProbeClass )
     {
         theUpdated           = updated;
         theUsedWritableProbe = usedWritableProbe;
+        theUsedProbeClass    = usedProbeClass;
     }
     
     /**
@@ -44,7 +47,7 @@ public class ProbeResult
     }
     
     /**
-     * Determine whether the probe run used a WritableProbe.
+     * Determine whether the Probe run used a WritableProbe.
      * 
      * @return true or false
      */
@@ -54,12 +57,28 @@ public class ProbeResult
     }
 
     /**
-     * If true, the Shadow was updated during the probe run.
+     * Determine which Probe class was used. This may return null in case
+     * no Probe was found.
+     *
+     * @return the Probe class
+     */
+    public Class<? extends Probe> getUsedProbeClass()
+    {
+        return theUsedProbeClass;
+    }
+
+    /**
+     * If true, the Shadow was updated during the Probe run.
      */
     protected boolean theUpdated;
     
     /**
-     * If true, the probe run used a WritableProbe.
+     * If true, the Probe run used a WritableProbe.
      */
     protected boolean theUsedWritableProbe;
+
+    /**
+     * The Probe class that was used in this run.
+     */
+    protected Class<? extends Probe> theUsedProbeClass;
 }

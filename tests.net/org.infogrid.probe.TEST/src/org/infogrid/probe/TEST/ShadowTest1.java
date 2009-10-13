@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -88,15 +88,16 @@ public class ShadowTest1
         MeshObject baseHome   = base.getHomeObject();
         MeshObject shadowHome = shadow.getHomeObject();
         
-        checkEquals( changes.size(), 5, "wrong number of changes" );
+        checkEquals( changes.size(), 6, "wrong number of changes" );
         // These changes should be:
         // 1. Home Object created
         // 2. Home Object deleted
         // 3. ProbeUpdateSpecification#ProbeRunCounter changed
         // 4. ProbeUpdateSpecification#LastRunUsedWritableProbe changed
-        // LastProbeRun different
+        // 5. ProbeUpdateSpecification#LastProbeRun changed
+        // 6. ProbeUpdateSpecification#LastRunUsedProbeClass changed
 
-        if( changes.size() != 5 ) {
+        if( changes.size() != 6 ) {
             dumpChangeSet( changes, log );
         }
     }

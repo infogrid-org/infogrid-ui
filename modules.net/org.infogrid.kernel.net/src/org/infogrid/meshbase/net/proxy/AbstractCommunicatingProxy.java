@@ -378,6 +378,8 @@ public abstract class AbstractCommunicatingProxy
             msgLogger.messageArrived( theMeshBase, incoming );
         }
 
+        prepareMessageReceived( endpoint, incoming );
+
         try {
             theMeshBase.registerIncomingProxy( this );
 
@@ -397,6 +399,19 @@ public abstract class AbstractCommunicatingProxy
         } finally {
             theMeshBase.unregisterIncomingProxy();
         }
+    }
+
+    /**
+     * Prepare for receiving a message.
+     *
+     * @param endpoint the MessageEndpoint through which the message arrived
+     * @param incoming the incoming message
+     */
+    protected void prepareMessageReceived(
+            ReceivingMessageEndpoint<XprisoMessage> endpoint,
+            XprisoMessage                           incoming )
+    {
+        // do nothing on this level
     }
 
     /**

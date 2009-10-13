@@ -27,7 +27,7 @@ import org.infogrid.meshbase.net.NetMeshObjectAccessSpecification;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.meshbase.net.a.AnetMeshBase;
 import org.infogrid.meshbase.net.a.AnetMeshBaseLifecycleManager;
-import org.infogrid.meshbase.net.transaction.NetMeshObjectCreatedEvent;
+import org.infogrid.meshbase.net.transaction.ForwardReferenceCreatedEvent;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.EntityType;
@@ -189,9 +189,10 @@ public class AStagingMeshBaseLifecycleManager
 
             putIntoMeshBase(
                     ret[i],
-                    new NetMeshObjectCreatedEvent(
+                    new ForwardReferenceCreatedEvent(
                             realBase,
                             realBase.getIdentifier(),
+                            pathToObjects[i],
                             ret[i],
                             incomingProxyIdentifier ));
             // assignOwner( ret ); FIXME? Should this assign an owner?

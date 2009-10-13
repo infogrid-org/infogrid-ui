@@ -40,7 +40,7 @@ public abstract class CannotApplyChangeException
             MeshBase  mb,
             Throwable cause )
     {
-        super( cause );
+        super( null, cause );
         
         theMeshBase           = mb;
         theMeshBaseIdentifier = mb.getIdentifier();
@@ -95,6 +95,16 @@ public abstract class CannotApplyChangeException
         {
             super( mb, cause );
         }
+//
+//        /**
+//         * Obtain resource parameters for the internationalization.
+//         *
+//         * @return the resource parameters
+//         */
+//        public Object [] getLocalizationParameters()
+//        {
+//            return new Object[] { theMeshBase, theMeshBaseIdentifier };
+//        }
     }
     
     /**
@@ -122,6 +132,16 @@ public abstract class CannotApplyChangeException
             theObjectIdentifier = objectIdentifier;
         }
 
+//        /**
+//         * Obtain resource parameters for the internationalization.
+//         *
+//         * @return the resource parameters
+//         */
+//        public Object [] getLocalizationParameters()
+//        {
+//            return new Object[] { theMeshBase, theMeshBaseIdentifier, theObjectIdentifier };
+//        }
+//
         /**
          * Dump this object.
          *

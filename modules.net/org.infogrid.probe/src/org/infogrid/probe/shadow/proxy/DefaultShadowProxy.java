@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,7 +23,10 @@ import org.infogrid.meshbase.net.proxy.ProxyPolicy;
 import org.infogrid.meshbase.net.xpriso.XprisoMessage;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.net.proxy.ProxyMessageEndpoint;
+import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
+import org.infogrid.probe.shadow.ShadowMeshBase;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -50,8 +53,7 @@ public class DefaultShadowProxy
             ProxyPolicy           policy,
             NetMeshBaseIdentifier partnerIdentifier )
     {
-        // DefaultShadowProxyPolicy policy = DefaultShadowProxyPolicy.create(); // in the future, this should become configurable
-        DefaultShadowProxy       ret    = new DefaultShadowProxy( ep, mb, policy, partnerIdentifier );
+        DefaultShadowProxy ret = new DefaultShadowProxy( ep, mb, policy, partnerIdentifier );
 
         if( log.isDebugEnabled() ) {
             log.debug( "Created " + ret, new RuntimeException( "marker" ));
@@ -164,6 +166,28 @@ public class DefaultShadowProxy
         
         if( theMeshBaseIsDirty ) {
             ((StagingMeshBase)theMeshBase).flushMeshBase();
+        }
+    }
+
+    /**
+     * Prepare for receiving a message.
+     *
+     * @param endpoint the MessageEndpoint through which the message arrived
+     * @param incoming the incoming message
+     */
+    @Override
+    protected void prepareMessageReceived(
+            ReceivingMessageEndpoint<XprisoMessage> endpoint,
+            XprisoMessage                           incoming )
+    {
+        if( ArrayHelper.arrayHasContent( incoming.getRequestedFreshenReplicas() )) {
+            // Doesn't matter what replica was supposed to be freshened
+            ShadowMeshBase shadow = (ShadowMeshBase) theMeshBase;
+            try {
+                shadow.doUpdateNow();
+            } catch( ProbeException ex ) {
+                log.warn( ex );
+            }
         }
     }
 

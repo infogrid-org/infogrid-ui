@@ -267,6 +267,10 @@ public abstract class HTTP
         throws
             IOException
     {
+        if( log.isTraceEnabled() ) {
+            log.traceMethodCallEntry( HTTP.class.getName(), "http_get", url, acceptHeader, followRedirects, cookies, connectTimeout, readTimeout );
+        }
+
         URLConnection conn = url.openConnection();
         if( conn instanceof HttpURLConnection ) {
             HttpURLConnection realConn = (HttpURLConnection) conn;
@@ -316,6 +320,11 @@ public abstract class HTTP
         if( input != null ) {
             input.close();
         }
+
+        if( log.isTraceEnabled() ) {
+            log.traceMethodCallExit( HTTP.class.getName(), "http_get", ret );
+        }
+
         return ret;
     }
 
