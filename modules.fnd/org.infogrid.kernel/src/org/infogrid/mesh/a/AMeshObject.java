@@ -2046,7 +2046,7 @@ public class AMeshObject
             StringRepresentationContext delegateContext = SimpleMeshStringRepresentationContext.create( contextObjects, context );
             String identifierRep = theIdentifier.toStringRepresentation( rep, delegateContext, pars );
 
-            StringRepresentationParameters parsWithoutMax = pars.without( StringRepresentationParameters.MAX_LENGTH );
+            StringRepresentationParameters parsWithoutMax = pars != null ? pars.without( StringRepresentationParameters.MAX_LENGTH ) : null;
 
             ret = rep.formatEntry(
                     getClass(), // dispatch to the right subtype
