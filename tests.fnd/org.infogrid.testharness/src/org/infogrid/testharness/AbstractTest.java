@@ -964,7 +964,7 @@ public abstract class AbstractTest
      * @param delta the number of milliseconds to wait
      * @throws InterruptedException thrown when another thread interrupts this Thread while sleeping
      */
-    protected final void sleepFor(
+    protected final static void sleepFor(
             long delta )
         throws
             InterruptedException

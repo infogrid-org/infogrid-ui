@@ -128,6 +128,56 @@ public class SimpleStringRepresentationParameters
     }
 
     /**
+     * Create a copy of this instance, but without the named value.
+     *
+     * @param key the name of the value
+     * @return copy, without the named value
+     */
+    public SimpleStringRepresentationParameters without(
+            String key )
+    {
+        StringRepresentationParameters newDelegate = theDelegate != null ? theDelegate.without( key ) : null;
+
+        SimpleStringRepresentationParameters ret = new SimpleStringRepresentationParameters( newDelegate );
+        for( String current : theStorage.keySet() ) {
+            if( !current.equals( key )) {
+                ret.put( current, theStorage.get( current ));
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Create a copy of this instance, but without the named values.
+     *
+     * @param keys the names of the values
+     * @return copy, without the named values
+     */
+    public StringRepresentationParameters without(
+            String [] keys )
+    {
+        StringRepresentationParameters newDelegate = theDelegate != null ? theDelegate.without( keys ) : null;
+
+        SimpleStringRepresentationParameters ret = new SimpleStringRepresentationParameters( newDelegate );
+        for( String current : theStorage.keySet() ) {
+
+            boolean found = false;
+            for( int i=0 ; i<keys.length ; ++i ) {
+                if( current.equals( keys[i] )) {
+                    found = true;
+                    break;
+                }
+            }
+            if( !found ) {
+                ret.put( current, theStorage.get( current ));
+            }
+        }
+
+        return ret;
+    }
+
+    /**
      * The StringRepresentationParameters to ask if this object does not know of an entry.
      */
     protected StringRepresentationParameters theDelegate;

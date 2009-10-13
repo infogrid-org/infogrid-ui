@@ -43,6 +43,24 @@ public interface StringRepresentationParameters
             String key );
 
     /**
+     * Create a copy of this instance, but without the named value.
+     *
+     * @param key the name of the value
+     * @return copy, without the named value
+     */
+    public StringRepresentationParameters without(
+            String key );
+
+    /**
+     * Create a copy of this instance, but without the named values.
+     *
+     * @param keys the names of the values
+     * @return copy, without the named values
+     */
+    public StringRepresentationParameters without(
+            String [] keys );
+
+    /**
      * The key into this object that identifies the desired maximum length of the produced String.
      */
     public final String MAX_LENGTH = "maxLength";

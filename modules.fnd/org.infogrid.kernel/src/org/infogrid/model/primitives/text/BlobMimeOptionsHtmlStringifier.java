@@ -18,6 +18,7 @@ import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.util.text.AbstractStringifier;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentationParameters;
 
 /**
@@ -197,8 +198,7 @@ public class BlobMimeOptionsHtmlStringifier
             BlobDataType realArg = (BlobDataType) arg;
 
             if( realArg.getDefaultValue() != null ) {
-                SimpleModelPrimitivesStringRepresentationParameters realPars
-                        = SimpleModelPrimitivesStringRepresentationParameters.create( pars );
+                SimpleStringRepresentationParameters realPars = SimpleStringRepresentationParameters.create( pars );
                 realPars.put( CURRENT_VALUE, realArg.getDefaultValue() );
 
                 return format( soFar, realArg, realPars );
@@ -212,8 +212,7 @@ public class BlobMimeOptionsHtmlStringifier
             BlobDataType realType = (BlobDataType) realArg.getDataType();
 
             if( realArg.getDefaultValue() != null ) {
-                SimpleModelPrimitivesStringRepresentationParameters realPars
-                        = SimpleModelPrimitivesStringRepresentationParameters.create( pars );
+                SimpleStringRepresentationParameters realPars = SimpleStringRepresentationParameters.create( pars );
                 realPars.put( CURRENT_VALUE, realArg.getDefaultValue() );
 
                 return format( soFar, realType, realPars );
@@ -226,7 +225,7 @@ public class BlobMimeOptionsHtmlStringifier
             BlobValue    realArg  = (BlobValue) arg;
             BlobDataType realType = realArg.getDataType();
 
-            SimpleModelPrimitivesStringRepresentationParameters realPars = SimpleModelPrimitivesStringRepresentationParameters.create( pars );
+            SimpleStringRepresentationParameters realPars = SimpleStringRepresentationParameters.create( pars );
             realPars.put( CURRENT_VALUE, realArg );
 
             return format( soFar, realType, realPars );

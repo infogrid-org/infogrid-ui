@@ -23,8 +23,8 @@
        </tree:up>
        <tree:nodeBefore>
         <dt>
-         <mesh:meshObjectLink meshObjectName="current" addArguments="lid-appcontext=iframe" target="detail" >
-          <mesh:meshObject meshObjectName="current"/>
+         <mesh:meshObjectLink meshObjectName="current" addArguments="lid-appcontext=iframe" target="detail">
+          <mesh:meshObject meshObjectName="current" maxLength="20" />
          </mesh:meshObjectLink>
         </dt>
        </tree:nodeBefore>

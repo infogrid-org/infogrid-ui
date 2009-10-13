@@ -204,7 +204,7 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
                         }
                     }
                     if( !validCredentialTypes.isEmpty() && invalidCredentialTypes.isEmpty() ) {
-                        if( sessionClientIdentifier == null || !sessionClientIdentifier.equals( lidArgumentIdentifier )) {
+                        if( sessionClientIdentifier == null ) {
                             clientLoggedOn = true;
                         }
                     }

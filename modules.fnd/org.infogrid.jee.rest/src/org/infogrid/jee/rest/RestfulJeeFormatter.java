@@ -35,7 +35,6 @@ import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
-import org.infogrid.model.primitives.text.SimpleModelPrimitivesStringRepresentationParameters;
 import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
 import org.infogrid.model.traversal.StayRightHereTraversalSpecification;
 import org.infogrid.model.traversal.TraversalSpecification;
@@ -839,37 +838,37 @@ public class RestfulJeeFormatter
         SimpleStringRepresentationParameters ret = null;
         if( maxLength >= 0 ) {
             if( ret == null ) {
-                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+                ret = SimpleStringRepresentationParameters.create();
             }
             ret.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
         }
         if( colloquial ) {
             if( ret == null ) {
-                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+                ret = SimpleStringRepresentationParameters.create();
             }
             ret.put( StringRepresentationParameters.COLLOQUIAL, true );
         }
         if( owningMeshObject != null ) {
             if( ret == null ) {
-                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+                ret = SimpleStringRepresentationParameters.create();
             }
             ret.put( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT, owningMeshObject );
         }
         if( propertyType != null ) {
             if( ret == null ) {
-                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+                ret = SimpleStringRepresentationParameters.create();
             }
             ret.put( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE, propertyType );
         }
         if( nullString != null ) {
             if( ret == null ) {
-                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+                ret = SimpleStringRepresentationParameters.create();
             }
             ret.put( StringRepresentationParameters.NULL_STRING, nullString );
         }
         if( editVar != null ) {
             if( ret == null ) {
-                ret = SimpleModelPrimitivesStringRepresentationParameters.create();
+                ret = SimpleStringRepresentationParameters.create();
             }
             ret.put( StringRepresentationParameters.EDIT_VARIABLE, editVar );
         }

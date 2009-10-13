@@ -2046,10 +2046,12 @@ public class AMeshObject
             StringRepresentationContext delegateContext = SimpleMeshStringRepresentationContext.create( contextObjects, context );
             String identifierRep = theIdentifier.toStringRepresentation( rep, delegateContext, pars );
 
+            StringRepresentationParameters parsWithoutMax = pars.without( StringRepresentationParameters.MAX_LENGTH );
+
             ret = rep.formatEntry(
                     getClass(), // dispatch to the right subtype
                     NO_USER_VISIBLE_STRING_ENTRY,
-                    pars,
+                    parsWithoutMax,
                     identifierRep,
                     meshObjectExternalForm,
                     meshBaseExternalForm );
