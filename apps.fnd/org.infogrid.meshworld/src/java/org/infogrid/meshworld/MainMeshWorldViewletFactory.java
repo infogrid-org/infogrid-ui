@@ -19,6 +19,7 @@ import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
+import org.infogrid.jee.viewlet.log4j.Log4jConfigurationViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -65,9 +66,10 @@ public class MainMeshWorldViewletFactory
         
         MeshObject subject = theObjectsToView.getSubject();
         if( subject.getMeshBase().getHomeObject() == subject ) {
-            ret.add( AllMeshObjectsViewlet.choice( ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( AllMeshTypesViewlet.choice(   ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( BulkLoaderViewlet.choice(     ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( AllMeshObjectsViewlet.choice(     ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( AllMeshTypesViewlet.choice(       ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( Log4jConfigurationViewlet.choice( ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( BulkLoaderViewlet.choice(         ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         }
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
             ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));

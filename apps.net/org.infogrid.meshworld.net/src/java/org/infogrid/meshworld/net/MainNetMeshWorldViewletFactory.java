@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
+import org.infogrid.jee.viewlet.log4j.Log4jConfigurationViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
@@ -27,7 +28,6 @@ import org.infogrid.jee.viewlet.servlet.net.NetViewletDispatcherServlet;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.net.NetMeshObject;
-import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.Wiki.WikiSubjectArea;
 import org.infogrid.model.primitives.BlobDataType;
@@ -72,6 +72,7 @@ public class MainNetMeshWorldViewletFactory
         if( subject.getMeshBase().getHomeObject() == subject ) {
             ret.add( AllMeshObjectsViewlet.choice(          ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( AllMeshTypesViewlet.choice(            ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( Log4jConfigurationViewlet.choice(      ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( BulkLoaderViewlet.choice(              ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ProxiesViewlet.choice(                 ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ShadowAwareAllMeshBasesViewlet.choice( ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));

@@ -93,6 +93,18 @@ public class Log4jLog
     }
 
     /**
+     * Obtain the delegate logger.
+     *
+     * @return the delegate
+     */
+    public Logger getDelegate()
+    {
+        ensureDelegate();
+
+        return theDelegate;
+    }
+
+    /**
      * The method to log a fatal error.
      *
      * @param msg the message to log
