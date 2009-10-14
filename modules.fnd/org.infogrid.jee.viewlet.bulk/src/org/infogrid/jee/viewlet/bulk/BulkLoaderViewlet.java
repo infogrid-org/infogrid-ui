@@ -192,7 +192,7 @@ public class BulkLoaderViewlet
     }
 
     /**
-     * Obtaint the XML to show.
+     * Obtain the XML to show.
      *
      * @return the XML to show
      */

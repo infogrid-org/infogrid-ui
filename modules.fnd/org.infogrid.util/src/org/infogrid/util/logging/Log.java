@@ -360,24 +360,6 @@ public abstract class Log
         logInfo( message, t );
     }
 
-//    /**
-//     * Logs an info message that represents a static method invocation.
-//     *
-//     * @param subject the Class on which the method was invoked
-//     * @param method the name of the method being invoked
-//     * @param args the arguments to the method call
-//     */
-//    public final void infoMethodCallEntry(
-//            Class      subject,
-//            String     method,
-//            Object ... args )
-//    {
-//        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
-//        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
-//
-//        logInfo( message, t );
-//    }
-
     /**
      * Logs an info message that represents a return from a method.
      *
@@ -391,20 +373,6 @@ public abstract class Log
         String message = determineMethodCallExitMessage( subject, method );
         logInfo( message, null );
     }
-
-//    /**
-//     * Logs an info message that represents a return from a static method.
-//     *
-//     * @param subject the Class on which the method was invoked
-//     * @param method the name of the method being invoked
-//     */
-//    public final void infoMethodCallExit(
-//            Class      subject,
-//            String     method )
-//    {
-//        String message = determineMethodCallExitMessage( subject, method );
-//        logInfo( message, null );
-//    }
 
     /**
      * Logs a debug message that represents a method invocation.
@@ -424,24 +392,6 @@ public abstract class Log
         logDebug( message, t );
     }
 
-//    /**
-//     * Logs a debug message that represents a static method invocation.
-//     *
-//     * @param subject the Class on which the method was invoked
-//     * @param method the name of the method being invoked
-//     * @param args the arguments to the method call
-//     */
-//    public final void debugMethodCallEntry(
-//            Class      subject,
-//            String     method,
-//            Object ... args )
-//    {
-//        String    message = determineMethodCallEntryMessage( logStacktraceOnTraceCall, subject, method, args );
-//        Throwable t       = determineThrowable(              logStacktraceOnTraceCall, args );
-//
-//        logDebug( message, t );
-//    }
-
     /**
      * Logs a debug message that represents a return from a method.
      *
@@ -455,20 +405,6 @@ public abstract class Log
         String message = determineMethodCallExitMessage( subject, method );
         logDebug( message, null );
     }
-
-//    /**
-//     * Logs a debug message that represents a return from a static method.
-//     *
-//     * @param subject the Class on which the method was invoked
-//     * @param method the name of the method being invoked
-//     */
-//    public final void debugMethodCallExit(
-//            Class      subject,
-//            String     method )
-//    {
-//        String message = determineMethodCallExitMessage( subject, method );
-//        logDebug( message, null );
-//    }
 
     /**
      * Logs a trace message that represents a method invocation.
