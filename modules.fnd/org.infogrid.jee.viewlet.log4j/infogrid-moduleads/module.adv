@@ -22,6 +22,6 @@
  </provides>
  <dependencies>
   <requires name="org.infogrid.jee.viewlet"/>
-  <requires name="org.infogrid.util.log4j"/>
+  <requires name="org.infogrid.util.logging.log4j"/>
  </dependencies>
 </standardmodule>

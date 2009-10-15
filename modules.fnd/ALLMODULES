@@ -49,6 +49,7 @@ org.infogrid.jee.rest.store
 org.infogrid.jee.viewlet
 org.infogrid.jee.shell.http
 org.infogrid.jee.viewlet.bulk
+org.infogrid.jee.viewlet.log4j
 org.infogrid.lid
 org.infogrid.lid.ldap
 org.infogrid.lid.openid
