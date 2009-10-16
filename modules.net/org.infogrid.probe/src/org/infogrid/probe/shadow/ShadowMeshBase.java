@@ -14,6 +14,7 @@
 
 package org.infogrid.probe.shadow;
 
+import javax.net.ssl.HostnameVerifier;
 import org.infogrid.meshbase.net.CoherenceSpecification;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
@@ -195,6 +196,13 @@ public interface ShadowMeshBase
      * @return this MeshObject as ExternalizedMeshBase
      */
     public abstract ExternalizedShadowMeshBase asExternalized();
+
+    /**
+     * Obtain the ShadowMeshBase's non-standard verifier for SSL certificates.
+     *
+     * @return the verifier, if any
+     */
+    public abstract HostnameVerifier getHostnameVerifier();
 
     /**
      * The name of the CurrentProblem property.

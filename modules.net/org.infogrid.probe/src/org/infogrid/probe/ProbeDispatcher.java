@@ -497,7 +497,12 @@ public class ProbeDispatcher
 
             HTTP.Response httpResponse = HTTP.http_get(
                     url,
-                    XRDS_MIME_TYPE + "," + HTTP_GET_ACCEPT_HEADER );
+                    XRDS_MIME_TYPE + "," + HTTP_GET_ACCEPT_HEADER,
+                    true,
+                    null, // no cookies
+                    HTTP.HTTP_CONNECT_TIMEOUT,
+                    HTTP.HTTP_READ_TIMEOUT,
+                    theShadowMeshBase.getHostnameVerifier() );
 
             if( httpResponse.isSuccess() && XRDS_MIME_TYPE.equals( httpResponse.getContentType() )) {
                 // found XRDS content via MIME type
@@ -505,7 +510,14 @@ public class ProbeDispatcher
                 yadisServicesXml = httpResponse.getContentAsString();
 
                 // now ask again, without the XRDS mime type
-                httpResponse = HTTP.http_get( url, HTTP_GET_ACCEPT_HEADER );
+                httpResponse = HTTP.http_get(
+                        url,
+                        HTTP_GET_ACCEPT_HEADER,
+                        true,
+                        null, // no cookies
+                        HTTP.HTTP_CONNECT_TIMEOUT,
+                        HTTP.HTTP_READ_TIMEOUT,
+                        theShadowMeshBase.getHostnameVerifier() );
 
                 if( yadisServicesXml != null && yadisServicesXml.equals( httpResponse.getContentAsString() )) {
                     // directly served the XRDS, HTTP_GET_ACCEPT_HEADER made no difference

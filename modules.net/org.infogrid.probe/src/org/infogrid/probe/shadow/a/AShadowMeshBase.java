@@ -15,6 +15,7 @@
 package org.infogrid.probe.shadow.a;
 
 import java.util.Iterator;
+import javax.net.ssl.HostnameVerifier;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.net.NetMeshObject;
@@ -113,9 +114,11 @@ public abstract class AShadowMeshBase
                 proxyManager,
                 context );
         
+        theHostnameVerifier = context.findContextObject( HostnameVerifier.class );
+
         ModuleRegistry registry = context.findContextObject( ModuleRegistry.class );
-        
         theDispatcher = new ProbeDispatcher( this, directory, timeCreated, timeNotNeededTillExpires, registry );
+
     }
 
     /**
@@ -491,6 +494,16 @@ public abstract class AShadowMeshBase
     }
     
     /**
+     * Obtain the ShadowMeshBase's non-standard verifier for SSL certificates.
+     *
+     * @return the verifier, if any
+     */
+    public HostnameVerifier getHostnameVerifier()
+    {
+        return theHostnameVerifier;
+    }
+
+    /**
      * The ProbeManager that this ShadowMeshBase belongs to.
      */
     protected ProbeManager theProbeManager;
@@ -499,4 +512,9 @@ public abstract class AShadowMeshBase
      * The ProbeDispatcher to which we delegate most of the work.
      */
     protected final ProbeDispatcher theDispatcher;
+
+    /**
+     * Custom HostnameVerifier, if any, for custom SSL certificate checking.
+     */
+    protected HostnameVerifier theHostnameVerifier;
 }

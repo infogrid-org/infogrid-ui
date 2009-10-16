@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.CanBeDumped;
@@ -64,7 +66,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( url, null, true, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( url, null, true, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -79,7 +81,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( new URL( url ), null, true, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( new URL( url ), null, true, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -97,7 +99,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( url, acceptHeader, true, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( url, acceptHeader, true, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -115,7 +117,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( new URL( url ), acceptHeader, true, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( new URL( url ), acceptHeader, true, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -132,7 +134,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( url, null, followRedirects, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( url, null, followRedirects, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -149,7 +151,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( new URL( url ), null, followRedirects, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( new URL( url ), null, followRedirects, null, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -168,7 +170,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( url, null, followRedirects, cookies, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( url, null, followRedirects, cookies, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -187,7 +189,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( new URL( url ), null, followRedirects, cookies, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( new URL( url ), null, followRedirects, cookies, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -211,7 +213,7 @@ public abstract class HTTP
         throws
             IOException
     {
-        return http_get( new URL( url ), acceptHeader, followRedirects, cookies, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT );
+        return http_get( new URL( url ), acceptHeader, followRedirects, cookies, HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT, null );
     }
 
     /**
@@ -226,6 +228,7 @@ public abstract class HTTP
      * @param cookies map of cookies to send
      * @param connectTimeout the timeout, in milliseconds, for HTTP connect attempts
      * @param readTimeout the timeout, in milliseconds, for attempts to read from an HTTP connection
+     * @param hostnameVerifier a custom hostname verifier, if any, to deal with non-standard SSL certs
      * @return the Response obtained from that URL
      * @throws IOException thrown if the content could not be obtained
      */
@@ -235,11 +238,12 @@ public abstract class HTTP
             boolean                            followRedirects,
             Map<String,? extends CharSequence> cookies,
             int                                connectTimeout,
-            int                                readTimeout )
+            int                                readTimeout,
+            HostnameVerifier                   hostnameVerifier )
         throws
             IOException
     {
-        return http_get( new URL( url ), acceptHeader, followRedirects, cookies, connectTimeout, readTimeout );
+        return http_get( new URL( url ), acceptHeader, followRedirects, cookies, connectTimeout, readTimeout, null );
     }
 
     /**
@@ -254,6 +258,7 @@ public abstract class HTTP
      * @param cookies map of cookies to send
      * @param connectTimeout the timeout, in milliseconds, for HTTP connect attempts
      * @param readTimeout the timeout, in milliseconds, for attempts to read from an HTTP connection
+     * @param hostnameVerifier a custom hostname verifier, if any, to deal with non-standard SSL certs
      * @return the Response obtained from that URL
      * @throws IOException thrown if the content could not be obtained
      */
@@ -263,7 +268,8 @@ public abstract class HTTP
             boolean                            followRedirects,
             Map<String,? extends CharSequence> cookies,
             int                                connectTimeout,
-            int                                readTimeout )
+            int                                readTimeout,
+            HostnameVerifier                   hostnameVerifier )
         throws
             IOException
     {
@@ -282,6 +288,10 @@ public abstract class HTTP
             if( readTimeout >= 0 ) {
                 realConn.setReadTimeout( readTimeout );
             }
+        }
+        if( hostnameVerifier != null && conn instanceof HttpsURLConnection ) {
+            HttpsURLConnection realConn = (HttpsURLConnection) conn;
+            realConn.setHostnameVerifier( hostnameVerifier );
         }
 
         if( cookies != null && !cookies.isEmpty() ) {
@@ -1016,12 +1026,12 @@ public abstract class HTTP
     /**
      * Timeout for establishing HTTP connections, in milliseconds.
      */
-    protected static final int HTTP_CONNECT_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpConnectTimeout", 10000 );
+    public static final int HTTP_CONNECT_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpConnectTimeout", 10000 );
 
     /**
      * Timeout for reading from an established HTTP connection, in milliseconds.
      */
-    protected static final int HTTP_READ_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpReadTimeout", 10000 );
+    public static final int HTTP_READ_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpReadTimeout", 10000 );
 
     /**
      * Encapsulates the response from an HTTP request.
