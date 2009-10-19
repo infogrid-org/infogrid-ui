@@ -31,14 +31,14 @@ public interface LidCookies
      */
     public static final String LID_IDENTIFIER_COOKIE_NAME = theResourceHelper.getResourceStringOrDefault(
             "LidIdentifierCookieName",
-            "org.netmesh.lid.lid" );
+            "org-netmesh-lid-lid" );
 
     /**
      * Name of the LID session cookie.
      */
     public static final String LID_SESSION_COOKIE_NAME = theResourceHelper.getResourceStringOrDefault(
             "LidSessionCookieName",
-            "org.netmesh.lid.session" );
+            "org-netmesh-lid-session" );
 
     /**
      * Default maximum age, in seconds, for the LID identifier cookie.

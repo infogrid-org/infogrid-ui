@@ -71,24 +71,22 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
     {
         String sessionCookieString = lidRequest.getCookieValue( LidCookies.LID_SESSION_COOKIE_NAME );
         String lidCookieString     = lidRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
-        String lidArgumentString   = lidRequest.getArgument( "lid" );
 
-//        if( lidArgumentString == null ) {
-//            lidArgumentString = lidRequest.getArgument( "lid" );
-//        }
+        // cleanup cookie values first
+        if( sessionCookieString != null && sessionCookieString.startsWith( "\"" ) && sessionCookieString.endsWith( "\"" )) {
+            sessionCookieString = sessionCookieString.substring( 1, sessionCookieString.length()-1 );
+        }
+        if( lidCookieString != null && lidCookieString.startsWith( "\"" ) && lidCookieString.endsWith( "\"" )) {
+            lidCookieString = lidCookieString.substring( 1, lidCookieString.length()-1 );
+        }
+        String lidArgumentString = lidRequest.getArgument( "lid" );
+
         if( lidArgumentString == null ) {
             lidArgumentString = lidRequest.getArgument( "openid_identifier" );
         }
         if( lidArgumentString == null ) {
             lidArgumentString = lidRequest.getArgument( "openid.identity" );
         }
-
-//        if( sessionCookieString != null ) {
-//            sessionCookieString = HTTP.decodeUrlArgument( sessionCookieString );
-//        }
-//        if( lidCookieString != null ) {
-//            lidCookieString = HTTP.decodeUrlArgument( lidCookieString );
-//        }
 
         Identifier lidCookieIdentifier   = null;
         Identifier lidArgumentIdentifier = null;

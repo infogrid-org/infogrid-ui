@@ -171,9 +171,9 @@ public class SmtpSendingMessageEndpoint<T extends SmtpSendableMessage>
             stream.println( "Subject: " + msg.getSubject() );
         }
         // stream.println( "Reply-To: " + $from );
-        // stream.println( "X-org.netmesh.lid.lid: " + identityUrlString );
+        // stream.println( "X-org-netmesh-lid-lid: " + identityUrlString );
         // if( target != null ) {
-        //     stream.println( "X-org.netmesh.lid.target: " + target );
+        //     stream.println( "X-org-netmesh-lid-target: " + target );
         // }
         stream.println();
 
