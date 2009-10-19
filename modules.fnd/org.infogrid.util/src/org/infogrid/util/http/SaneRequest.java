@@ -130,41 +130,41 @@ public interface SaneRequest
     public abstract String getProtocol();    
     
     /**
-     * Obtain all values of a multi-valued argument
+     * Obtain all values of a multi-valued argument given in the URL.
      *
      * @param argName name of the argument
      * @return value.
      */
-    public abstract String [] getMultivaluedArgument(
+    public abstract String [] getMultivaluedUrlArgument(
             String argName );
 
     /**
-     * Obtain the value of a named argument, or null. This considers both URL arguments
-     * and POST arguments. If more than one argument is given by this name,
+     * Obtain the value of a named argument provided in the URL, or null.
+     * If more than one argument is given by this name,
      * this will throw an IllegalStateException.
      *
      * @param name the name of the argument
      * @return the value of the argument with name name
      */
-    public abstract String getArgument(
+    public abstract String getUrlArgument(
             String name );
     
     /**
-     * Obtain all arguments of this Request.
+     * Obtain all arguments of this Request provided in the URL.
      *
      * @return a Map of name to value mappings for all arguments
      */
-    public abstract Map<String,String[]> getArguments();
+    public abstract Map<String,String[]> getUrlArguments();
 
     /**
-     * Determine whether a named argument has the given value. This method is useful
-     * in case several arguments have been given with the same name.
+     * Determine whether a named argument provided in the URL  has the given value.
+     * This method is useful in case several arguments have been given with the same name.
      * 
      * @param name the name of the argument
      * @param value the desired value of the argument
      * @return true if the request contains an argument with this name and value
      */
-    public abstract boolean matchArgument(
+    public abstract boolean matchUrlArgument(
             String name,
             String value );
 
@@ -175,7 +175,7 @@ public interface SaneRequest
      * @param argName name of the argument
      * @return value.
      */
-    public abstract String getPostArgument(
+    public abstract String getPostedArgument(
             String argName );
 
     /**
@@ -184,7 +184,7 @@ public interface SaneRequest
      * @param argName name of the argument
      * @return value.
      */
-    public abstract String [] getMultivaluedPostArgument(
+    public abstract String [] getMultivaluedPostedArgument(
             String argName );
 
     /**
@@ -192,7 +192,19 @@ public interface SaneRequest
      *
      * @return a Map of name to value mappings for all POST'd arguments
      */
-    public abstract Map<String,String[]> getPostArguments();
+    public abstract Map<String,String[]> getPostedArguments();
+
+    /**
+     * Determine whether a named POST'd argument has the given value.
+     * This method is useful in case several arguments have been given with the same name.
+     *
+     * @param name the name of the argument
+     * @param value the desired value of the argument
+     * @return true if the request contains an argument with this name and value
+     */
+    public abstract boolean matchPostedArgument(
+            String name,
+            String value );
 
     /**
      * Obtain the relative context Uri of this application.

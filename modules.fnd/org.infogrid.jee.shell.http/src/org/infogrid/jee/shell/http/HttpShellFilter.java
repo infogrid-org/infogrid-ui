@@ -124,7 +124,7 @@ public class HttpShellFilter
                 if(    SafeUnsafePostFilter.isSafePost( lidRequest )
                     || SafeUnsafePostFilter.mayBeSafeOrUnsafePost( lidRequest ))
                 {
-                    String command = lidRequest.getPostArgument( FULL_SUBMIT_TAG );
+                    String command = lidRequest.getPostedArgument( FULL_SUBMIT_TAG );
                     if( command == null || command.equals( SUBMIT_COMMIT_VALUE )) {
                         performFactoryOperations( lidRequest );
                     }
@@ -169,7 +169,7 @@ public class HttpShellFilter
                 MCachingHashMap.<MeshBase,OnDemandTransaction>create() );
 
         try {
-            Map<String,String[]>       postArguments = lidRequest.getPostArguments();
+            Map<String,String[]>       postArguments = lidRequest.getPostedArguments();
             HashMap<String,MeshObject> variables     = new HashMap<String,MeshObject>();
 
             // first look for all arguments of the form <PREFIX>.<VARIABLE>
@@ -185,7 +185,7 @@ public class HttpShellFilter
                     continue; // skip all that aren't referring to the MeshObjects
                 }
                 String varName  = coreArg;
-                String varValue = lidRequest.getPostArgument( arg ); // use SaneRequest's error handling for multiple values
+                String varValue = lidRequest.getPostedArgument( arg ); // use SaneRequest's error handling for multiple values
 
                 MeshBase            base       = findMeshBaseFor( varName, lidRequest );
                 HttpShellAccessVerb accessVerb = HttpShellAccessVerb.findAccessFor( varName, lidRequest );
@@ -216,7 +216,7 @@ public class HttpShellFilter
                 }
                 String coreArg = arg.substring( PREFIX.length(), arg.length()-ACCESS_TAG.length() );
                 String varName = coreArg;
-                String varValue = lidRequest.getPostArgument( PREFIX + varName );
+                String varValue = lidRequest.getPostedArgument( PREFIX + varName );
                 if( varValue != null ) {
                     // dealt with this one already
                     continue;
@@ -250,7 +250,7 @@ public class HttpShellFilter
                         MeshObject found2   = variables.get( var2Name );
                         MeshObject found1   = variables.get( var1Name );
 
-                        String [] values = lidRequest.getMultivaluedPostArgument( arg );
+                        String [] values = lidRequest.getMultivaluedPostedArgument( arg );
                         if( values != null ) {
                             OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
@@ -303,7 +303,7 @@ public class HttpShellFilter
 
                         if( found1 != null && found2 != null ) {
                             // be lenient
-                            String [] values = lidRequest.getMultivaluedPostArgument( arg );
+                            String [] values = lidRequest.getMultivaluedPostedArgument( arg );
                             if( values != null ) {
                                 OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
@@ -331,12 +331,12 @@ public class HttpShellFilter
                         MeshObject found2   = variables.get( var2Name );
                         MeshObject found1   = variables.get( var1Name );
 
-                        String   value = lidRequest.getPostArgument( arg );
+                        String   value = lidRequest.getPostedArgument( arg );
                         RoleType rt    = (RoleType) findMeshType( value );
 
                         // now look for whether the checkbox argument has been POST'd or not
                         String arg2 = arg.substring( 0, arg.length()-CHECKBOX_ROLE_TAG.length() ) + CHECKBOX_TAG;
-                        String [] values = lidRequest.getMultivaluedPostArgument( arg2 );
+                        String [] values = lidRequest.getMultivaluedPostedArgument( arg2 );
 
                         OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
                         tx.obtain();
@@ -464,7 +464,7 @@ public class HttpShellFilter
         key.append( varName );
         key.append( MESH_BASE_TAG );
 
-        String value = request.getPostArgument( key.toString() );
+        String value = request.getPostedArgument( key.toString() );
         if( value == null || value.length() == 0 ) {
             return theMainMeshBase;
         }
@@ -542,7 +542,7 @@ public class HttpShellFilter
         buf.append( varName );
         buf.append( BLESS_TAG );
 
-        String [] values = request.getMultivaluedPostArgument( buf.toString() );
+        String [] values = request.getMultivaluedPostedArgument( buf.toString() );
         if( values != null ) {
             for( String v : values ) {
                 EntityType toBless = (EntityType) findMeshType( v ); // can thrown ClassCastException
@@ -587,7 +587,7 @@ public class HttpShellFilter
         buf.append( varName );
         buf.append( UNBLESS_TAG );
 
-        String [] values = request.getMultivaluedPostArgument( buf.toString() );
+        String [] values = request.getMultivaluedPostedArgument( buf.toString() );
         if( values != null ) {
             for( String v : values ) {
                 EntityType toUnbless = (EntityType) findMeshType( v ); // can thrown ClassCastException
@@ -629,7 +629,7 @@ public class HttpShellFilter
             TransactionException,
             NotPermittedException
     {
-        Map<String,String[]> postArguments = request.getPostArguments();
+        Map<String,String[]> postArguments = request.getPostedArguments();
 
         StringBuilder buf = new StringBuilder();
         buf.append( PREFIX );
@@ -651,9 +651,9 @@ public class HttpShellFilter
             buf.append( propVarName );
 
             String propValueKey     = buf.toString();
-            String propValueString  = request.getPostArgument( propValueKey );
-            String propMimeString   = request.getPostArgument( propValueKey + MIME_TAG );
-            String propTypeString   = request.getPostArgument( arg );
+            String propValueString  = request.getPostedArgument( propValueKey );
+            String propMimeString   = request.getPostedArgument( propValueKey + MIME_TAG );
+            String propTypeString   = request.getPostedArgument( arg );
             MimePart uploadPart     = request.getMimePart( propValueKey + UPLOAD_PROPERTY_VALUE_TAG );
 
             PropertyType propertyType = (PropertyType) findMeshType( propTypeString );
@@ -666,7 +666,7 @@ public class HttpShellFilter
             buf.append( NULL_PROPERTY_VALUE_TAG );
 
             String nullValueKey    = buf.toString();
-            String nullValueString = request.getPostArgument( nullValueKey );
+            String nullValueString = request.getPostedArgument( nullValueKey );
 
             PropertyValue value;
 

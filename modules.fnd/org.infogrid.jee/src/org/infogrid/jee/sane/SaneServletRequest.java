@@ -85,9 +85,9 @@ public class SaneServletRequest
     protected static SaneServletRequest internalCreate(
              HttpServletRequest sRequest )
     {
-        Map<String,String[]>   arguments     = new HashMap<String,String[]>();
-        Map<String,String[]>   postArguments = new HashMap<String,String[]>();
-        Map<String,MimePart[]> mimeParts     = new HashMap<String,MimePart[]>();
+        Map<String,String[]>   urlArguments    = new HashMap<String,String[]>();
+        Map<String,String[]>   postedArguments = new HashMap<String,String[]>();
+        Map<String,MimePart[]> mimeParts       = new HashMap<String,MimePart[]>();
 
         String postData = null;
 
@@ -134,10 +134,10 @@ public class SaneServletRequest
 
                     postData = new String( buf, "utf-8" );
 
-                    addUrlEncodedArguments( postData, true, arguments, postArguments );
+                    addUrlEncodedArguments( postData, postedArguments );
 
                 } else {
-                    addFormDataArguments( inStream, mimeType, arguments, postArguments, mimeParts );
+                    addFormDataArguments( inStream, mimeType, postedArguments, mimeParts );
                 }
 
             } catch( IOException ex ) {
@@ -147,7 +147,7 @@ public class SaneServletRequest
             mimeType = null;
         }
 
-        addUrlEncodedArguments( queryString, false, arguments, postArguments );
+        addUrlEncodedArguments( queryString, urlArguments );
 
         SaneRequest requestAtProxy = null;
         if( theDetermineRequestFromProxyOriginalRequest ) {
@@ -221,8 +221,8 @@ public class SaneServletRequest
                         relativeFullUriAtProxy,
                         contextPathAtProxy,
                         postData,
-                        arguments,
-                        postArguments,
+                        urlArguments,
+                        postedArguments,
                         mimeParts,
                         queryString,
                         cookies,
@@ -244,8 +244,8 @@ public class SaneServletRequest
                 relativeFullUri,
                 contextPath,
                 postData,
-                arguments,
-                postArguments,
+                urlArguments,
+                postedArguments,
                 mimeParts,
                 queryString,
                 cookies,
@@ -305,8 +305,8 @@ public class SaneServletRequest
      * @param relativeFullUri the relative full URI
      * @param contextPath the JEE context path
      * @param postData the data HTTP POST'd, if any
-     * @param arguments the arguments given, if any
-     * @param postArguments the arguments given via HTTP POST, if any
+     * @param urlArguments the arguments given in the URL, if any
+     * @param postedArguments the arguments given via HTTP POST, if any
      * @param mimeParts the MimeParts given via HTTP POST, if any
      * @param queryString the string past the ? in the URL
      * @param cookies the sent cookies
@@ -326,8 +326,8 @@ public class SaneServletRequest
             String                 relativeFullUri,
             String                 contextPath,
             String                 postData,
-            Map<String,String[]>   arguments,
-            Map<String,String[]>   postArguments,
+            Map<String,String[]>   urlArguments,
+            Map<String,String[]>   postedArguments,
             Map<String,MimePart[]> mimeParts,
             String                 queryString,
             IncomingSaneCookie []  cookies,
@@ -348,8 +348,8 @@ public class SaneServletRequest
         theRelativeFullUri  = relativeFullUri;
         theContextPath      = contextPath;
         thePostData         = postData;
-        theArguments        = arguments;
-        thePostArguments    = postArguments;
+        theUrlArguments     = urlArguments;
+        thePostedArguments  = postedArguments;
         theMimeParts        = mimeParts;
         theQueryString      = queryString;
         theCookies          = cookies;
@@ -358,28 +358,20 @@ public class SaneServletRequest
     }
 
     /**
-     * Helper to parse URL-encoded URL and POST data, and put them in the right places.
+     * Helper to parse URL-encoded name-value pairs, and put them in the right places.
      *
      * @param data the data to add
-     * @param isPost true of this argument was provided in an HTTP POST
      * @param arguments the URL arguments in the process of being assembled
-     * @param postArguments the URL POST arguments in the process of being assembled
      */
     protected static void addUrlEncodedArguments(
             String               data,
-            boolean              isPost,
-            Map<String,String[]> arguments,
-            Map<String,String[]> postArguments )
+            Map<String,String[]> arguments )
     {
         if( data == null || data.length() == 0 ) {
             return;
         }
         if( data.charAt( 0 ) == '?' ) {
             data = data.substring( 1 );
-        }
-
-        if( isPost && postArguments == null ) {
-            postArguments = new HashMap<String,String[]>();
         }
 
         StringTokenizer pairTokenizer = new StringTokenizer( data, "&" );
@@ -401,17 +393,6 @@ public class SaneServletRequest
                     newValue = ArrayHelper.append( haveAlready, value, String.class );
                 }
                 arguments.put( key, newValue );
-
-                if( isPost ) {
-                    haveAlready = postArguments.get( key );
-
-                    if( haveAlready == null ) {
-                        newValue = new String[] { value };
-                    } else {
-                        newValue = ArrayHelper.append( haveAlready, value, String.class );
-                    }
-                    postArguments.put( key, newValue );
-                }
             }
         }
     }
@@ -422,7 +403,6 @@ public class SaneServletRequest
      * @param inStream the incoming data
      * @param mime the MIME type of the incoming content
      * @param arguments the URL arguments in the process of being assembled
-     * @param postArguments the URL POST arguments in the process of being assembled
      * @param mimeParts the MIME parts in the process of being assembled
      * @throws IOException thrown if an I/O error occurred
      */
@@ -430,7 +410,6 @@ public class SaneServletRequest
             BufferedInputStream    inStream,
             String                 mime,
             Map<String,String[]>   arguments,
-            Map<String,String[]>   postArguments,
             Map<String,MimePart[]> mimeParts )
         throws
             IOException
@@ -544,7 +523,7 @@ public class SaneServletRequest
             // adding to post parameters too
             if( partName != null && "form-data".equals( partDisposition ) && partMime.startsWith( "text/" )) {
                 String    value   = new String( partData, partCharset );
-                String [] already = postArguments.get( partName );
+                String [] already = arguments.get( partName );
                 String [] toPut;
 
                 if( already != null ) {
@@ -552,7 +531,7 @@ public class SaneServletRequest
                 } else {
                     toPut = new String[] { value };
                 }
-                postArguments.put( partName, toPut );
+                arguments.put( partName, toPut );
             }
         }
     }
@@ -642,26 +621,26 @@ public class SaneServletRequest
     }
 
     /**
-     * Obtain all values of a multi-valued argument.
+     * Obtain all values of a multi-valued argument given in the URL.
      *
      * @param argName name of the argument
      * @return the values, or <code>null</code>
      */
-    public String [] getMultivaluedArgument(
+    public String [] getMultivaluedUrlArgument(
             String argName )
     {
-        String [] ret = theArguments.get( argName );
+        String [] ret = theUrlArguments.get( argName );
         return ret;
     }
 
     /**
-     * Obtain all arguments of this request.
+     * Obtain all arguments of this request given in the URL.
      *
      * @return a Map of name to value mappings for all arguments
      */
-    public Map<String,String[]> getArguments()
+    public Map<String,String[]> getUrlArguments()
     {
-        return theArguments;
+        return theUrlArguments;
     }
 
     /**
@@ -670,13 +649,13 @@ public class SaneServletRequest
      * @param argName name of the argument
      * @return the values, or <code>null</code>
      */
-    public String [] getMultivaluedPostArgument(
+    public String [] getMultivaluedPostedArgument(
             String argName )
     {
-        if( thePostArguments == null ) {
+        if( thePostedArguments == null ) {
             return null;
         }
-        String [] ret = thePostArguments.get( argName );
+        String [] ret = thePostedArguments.get( argName );
         return ret;
     }
 
@@ -685,9 +664,9 @@ public class SaneServletRequest
      *
      * @return a Map of name to value mappings for all POST'd arguments
      */
-    public Map<String,String[]> getPostArguments()
+    public Map<String,String[]> getPostedArguments()
     {
-        return thePostArguments;
+        return thePostedArguments;
     }    
 
     /**
@@ -1012,8 +991,8 @@ public class SaneServletRequest
                     "theQueryString",
                     "theAbsoluteContextUri",
                     "theContextPath",
-                    "theArguments",
-                    "thePostArguments",
+                    "theUrlArguments",
+                    "thePostedArguments",
                     "theRequestedMimeTypes",
                     "theClientIp",
                     "theRequestAtProxy"
@@ -1033,8 +1012,8 @@ public class SaneServletRequest
                     theQueryString,
                     theAbsoluteContextUri,
                     theContextPath,
-                    theArguments,
-                    thePostArguments,
+                    theUrlArguments,
+                    thePostedArguments,
                     theRequestedMimeTypes,
                     theClientIp,
                     theRequestAtProxy
@@ -1112,14 +1091,14 @@ public class SaneServletRequest
     protected String thePostData;
 
     /**
-     * The arguments to the Request, mapping from argument name to argument value.
+     * The arguments to the Request provided as part of the URL, mapping from argument name to argument value.
      */
-    protected Map<String,String[]> theArguments;
+    protected Map<String,String[]> theUrlArguments;
 
     /**
      * The arguments to the Request that were POST'd, if any.
      */
-    protected Map<String,String[]> thePostArguments;
+    protected Map<String,String[]> thePostedArguments;
 
     /**
      * The MIME type, if any.

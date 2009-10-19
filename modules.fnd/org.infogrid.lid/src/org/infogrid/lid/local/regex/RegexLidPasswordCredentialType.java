@@ -78,7 +78,7 @@ public class RegexLidPasswordCredentialType
         throws
             LidInvalidCredentialException
     {
-        String givenPassword = request.getArgument( "lid-credential" );
+        String givenPassword = request.getPostedArgument( "lid-credential" );
 
         if( thePasswordRegex.matcher( givenPassword ).matches()) {
             return;

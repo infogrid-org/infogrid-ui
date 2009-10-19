@@ -87,7 +87,7 @@ public class StoreLidNonceManager
         throws
             LidInvalidNonceException
     {
-        String nonce = request.getArgument( name );
+        String nonce = request.getUrlArgument( name );
 
         if( nonce == null || nonce.length() == 0 ) {
             throw new LidInvalidNonceException.Empty();

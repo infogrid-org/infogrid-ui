@@ -196,7 +196,7 @@ public class DefaultStructuredResponseTemplateFactory
     public String getUserRequestedTemplate(
             SaneRequest request )
     {
-        String ret = request.getArgument( StructuredResponseTemplate.LID_TEMPLATE_PARAMETER_NAME );
+        String ret = request.getUrlArgument( StructuredResponseTemplate.LID_TEMPLATE_PARAMETER_NAME );
 
         if( ret == null ) {
             ret = request.getCookieValue( StructuredResponseTemplate.LID_TEMPLATE_COOKIE_NAME );                

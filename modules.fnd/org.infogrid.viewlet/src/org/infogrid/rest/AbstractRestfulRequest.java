@@ -94,7 +94,7 @@ public abstract class AbstractRestfulRequest
     public String getRequestedTraversal()
     {
         if( theRequestedTraversal == null ) {
-            String format = theSaneRequest.getArgument( LID_TRAVERSAL_PARAMETER_NAME );
+            String format = theSaneRequest.getUrlArgument( LID_TRAVERSAL_PARAMETER_NAME );
 
             if( format != null ) {
                 theRequestedTraversal = format;
@@ -154,7 +154,7 @@ public abstract class AbstractRestfulRequest
             String argName,
             String prefix )
     {
-        String [] formats = theSaneRequest.getMultivaluedArgument( argName );
+        String [] formats = theSaneRequest.getMultivaluedUrlArgument( argName );
         String    ret     = NO_ANSWER_STRING;
 
         if( formats != null ) {
@@ -255,7 +255,7 @@ public abstract class AbstractRestfulRequest
      */
     public Map<String,String[]> getViewletParameters()
     {
-        return theSaneRequest.getArguments();
+        return theSaneRequest.getUrlArguments();
     }
 
     /**

@@ -123,9 +123,9 @@ public class ShadowAwareAllMeshBasesViewlet
     {
         SaneRequest sane = request.getSaneRequest();
 
-        String meshBaseName = sane.getArgument( FORM_MESHBASE_NAME );
-        String runNowAction = sane.getArgument( FORM_RUNNOWACTION_NAME );
-        String stopAction   = sane.getArgument( FORM_STOPACTION_NAME );
+        String meshBaseName = sane.getPostedArgument( FORM_MESHBASE_NAME );
+        String runNowAction = sane.getPostedArgument( FORM_RUNNOWACTION_NAME );
+        String stopAction   = sane.getPostedArgument( FORM_STOPACTION_NAME );
 
         boolean doRunNow = false;
         boolean doStop   = false;

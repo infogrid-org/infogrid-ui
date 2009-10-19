@@ -90,7 +90,10 @@ public class OpenIdSsoPipelineStage
         throws
             LidAbortProcessingPipelineException
     {
-        String mode = lidRequest.getArgument( "openid.mode" );
+        String mode = lidRequest.getUrlArgument( "openid.mode" );
+        if( mode == null ) {
+            mode = lidRequest.getPostedArgument( "openid.mode" );
+        }
         if( mode == null ) {
             return;
         }
@@ -141,10 +144,10 @@ public class OpenIdSsoPipelineStage
             return;
         }
         
-        String identifier   = lidRequest.getArgument( "openid.identity" );
-        String assoc_handle = lidRequest.getArgument( "openid.assoc_handle" );
-        String return_to    = lidRequest.getArgument( "openid.return_to" );
-        String trust_root   = lidRequest.getArgument( "openid.trust_root" );
+        String identifier   = lidRequest.getUrlArgument( "openid.identity" );
+        String assoc_handle = lidRequest.getUrlArgument( "openid.assoc_handle" );
+        String return_to    = lidRequest.getUrlArgument( "openid.return_to" );
+        String trust_root   = lidRequest.getUrlArgument( "openid.trust_root" );
 
         if( identifier == null || identifier.length() == 0 ) {
             throw new OpenIdSsoException( this, "openid.identifier must not be empty" );
@@ -261,14 +264,14 @@ public class OpenIdSsoPipelineStage
             return;
         }
 
-        Map<String,String[]> postPars = lidRequest.getPostArguments();
+        Map<String,String[]> postPars = lidRequest.getPostedArguments();
         if( postPars == null || postPars.isEmpty() ) {
             return;
         }
 
-        String assoc_handle = lidRequest.getPostArgument( "openid.assoc_handle" );
-        String sig          = lidRequest.getPostArgument( "openid.sig" );
-        String signed       = lidRequest.getPostArgument( "openid.signed" );
+        String assoc_handle = lidRequest.getPostedArgument( "openid.assoc_handle" );
+        String sig          = lidRequest.getPostedArgument( "openid.sig" );
+        String signed       = lidRequest.getPostedArgument( "openid.signed" );
 
         boolean valid = false;
         OpenIdIdpSideAssociation assoc = theDumbAssociationManager.get( assoc_handle );
@@ -281,7 +284,7 @@ public class OpenIdSsoPipelineStage
                 if( "mode".equals( field )) { // see http://lists.danga.com/pipermail/yadis/2005-June/000734.html
                     value = "id_res";
                 } else {
-                    value = lidRequest.getPostArgument( field );
+                    value = lidRequest.getPostedArgument( field );
                 }
                 if( value != null ) {
                     toSign.append( field ).append( ":" ).append( value );

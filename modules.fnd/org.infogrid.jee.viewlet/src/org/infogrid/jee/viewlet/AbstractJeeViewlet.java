@@ -364,17 +364,17 @@ public abstract class AbstractJeeViewlet
         SaneRequest sane = theCurrentRequest.getSaneRequest();
         
         // append lid-xpath
-        String xpath = sane.getArgument( RestfulRequest.XPATH_PREFIX );
+        String xpath = sane.getUrlArgument( RestfulRequest.XPATH_PREFIX );
         if( xpath != null ) {
             ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.XPATH_PREFIX, xpath );
         }
         // append lid-format
-        String format = sane.getArgument( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
+        String format = sane.getUrlArgument( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
         if( format != null ) {
             ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_FORMAT_PARAMETER_NAME, format );
         }
         // append lid-appcontext
-        String appContext = sane.getArgument( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+        String appContext = sane.getUrlArgument( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
         if( appContext != null ) {
             ret = HTTP.appendArgumentToUrl( ret, TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME, appContext );
         }

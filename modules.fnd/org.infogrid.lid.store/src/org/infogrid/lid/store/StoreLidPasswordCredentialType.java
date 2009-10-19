@@ -71,7 +71,7 @@ public class StoreLidPasswordCredentialType
 
         byte [] rawHashedCredential = HashedPasswordUtils.string2raw( storedHashedCredential );
 
-        String givenPassword = request.getArgument( "lid-credential" );
+        String givenPassword = request.getPostedArgument( "lid-credential" );
 
         if( !HashedPasswordUtils.isValid( givenPassword, rawHashedCredential )) {
             throw new LidInvalidCredentialException(

@@ -56,9 +56,9 @@ public abstract class AbstractYadisPipelineProcessingStage
         throws
             LidAbortProcessingPipelineException
     {
-        String meta = lidRequest.getArgument( "lid-meta" );
+        String meta = lidRequest.getUrlArgument( "lid-meta" );
         if( meta == null ) {
-            meta = lidRequest.getArgument( "meta" );
+            meta = lidRequest.getUrlArgument( "meta" );
         }
         String acceptHeader = lidRequest.getAcceptHeader();
 

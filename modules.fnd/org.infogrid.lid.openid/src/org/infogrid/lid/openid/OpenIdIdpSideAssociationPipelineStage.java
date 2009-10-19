@@ -85,16 +85,16 @@ public class OpenIdIdpSideAssociationPipelineStage
         if( !"POST".equals( lidRequest.getMethod())) {
             return ;
         }
-        String openIdMode = lidRequest.getPostArgument( "openid.mode" );
+        String openIdMode = lidRequest.getPostedArgument( "openid.mode" );
         if( !"associate".equals( openIdMode )) {
             return; // does not apply to us
         }
         
-        String assocType                 = lidRequest.getPostArgument( "openid.assoc_type" );
-        String sessionType               = lidRequest.getPostArgument( "openid.session_type" );
-        String dh_modulus_string         = lidRequest.getPostArgument( "openid.dh_modulus" );
-        String dh_gen_string             = lidRequest.getPostArgument( "openid.dh_gen" );
-        String dh_consumer_public_string = lidRequest.getPostArgument( "openid.dh_consumer_public" );
+        String assocType                 = lidRequest.getPostedArgument( "openid.assoc_type" );
+        String sessionType               = lidRequest.getPostedArgument( "openid.session_type" );
+        String dh_modulus_string         = lidRequest.getPostedArgument( "openid.dh_modulus" );
+        String dh_gen_string             = lidRequest.getPostedArgument( "openid.dh_gen" );
+        String dh_consumer_public_string = lidRequest.getPostedArgument( "openid.dh_consumer_public" );
         
         BigInteger dh_modulus         = null;
         BigInteger dh_gen             = null;

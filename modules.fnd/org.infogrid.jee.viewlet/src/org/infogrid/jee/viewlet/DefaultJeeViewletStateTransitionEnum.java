@@ -103,7 +103,7 @@ public enum DefaultJeeViewletStateTransitionEnum
     public static DefaultJeeViewletStateTransitionEnum fromRequest(
             RestfulRequest request )
     {
-        String value = request.getSaneRequest().getPostArgument( VIEWLET_STATE_TRANSITION_PAR_NAME );
+        String value = request.getSaneRequest().getPostedArgument( VIEWLET_STATE_TRANSITION_PAR_NAME );
         // this must be a post argument, while the state is determined from a regular argument
         if( value != null ) {
             for( DefaultJeeViewletStateTransitionEnum candidate : DefaultJeeViewletStateTransitionEnum.values() ) {

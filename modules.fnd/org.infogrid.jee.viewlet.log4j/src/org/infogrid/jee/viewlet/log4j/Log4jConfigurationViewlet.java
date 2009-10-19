@@ -191,13 +191,13 @@ public class Log4jConfigurationViewlet
     {
         SaneRequest theSaneRequest = request.getSaneRequest();
 
-        for( String key : theSaneRequest.getPostArguments().keySet() ) {
+        for( String key : theSaneRequest.getPostedArguments().keySet() ) {
 
             if( !key.startsWith( PREFIX )) {
                 continue; // only our arguments
             }
             String name  = key.substring( PREFIX.length() );
-            String value = theSaneRequest.getPostArgument( key );
+            String value = theSaneRequest.getPostedArgument( key );
 
             Log4jLog l = (Log4jLog) Log.getLogInstance( name );
 

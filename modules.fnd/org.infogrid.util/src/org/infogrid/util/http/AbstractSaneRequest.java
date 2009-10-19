@@ -178,26 +178,26 @@ public abstract class AbstractSaneRequest
     public abstract String getProtocol();
 
     /**
-     * Obtain all values of a multi-valued argument
+     * Obtain all values of a multi-valued argument given in the URL.
      *
      * @param argName name of the argument
      * @return value.
      */
-    public abstract String [] getMultivaluedArgument(
+    public abstract String [] getMultivaluedUrlArgument(
             String argName );
 
     /**
-     * Obtain the value of a named argument, or null. This considers both URL arguments
-     * and POST arguments. If more than one argument is given by this name,
+     * Obtain the value of a named argument given in the URL, or null.
+     * If more than one argument is given by this name,
      * this will throw an IllegalStateException.
      *
      * @param name the name of the argument
      * @return the value of the argument with name name
      */
-    public final String getArgument(
+    public final String getUrlArgument(
             String name )
     {
-        String [] almost = getMultivaluedArgument( name );
+        String [] almost = getMultivaluedUrlArgument( name );
         if( almost == null || almost.length == 0 ) {
             return null;
         } else if( almost.length == 1 ) {
@@ -227,25 +227,25 @@ public abstract class AbstractSaneRequest
     }
 
     /**
-     * Obtain all arguments of this Request.
+     * Obtain all arguments of this Request given in the URL.
      *
      * @return a Map of name to value mappings for all arguments
      */
-    public abstract Map<String,String[]> getArguments();
+    public abstract Map<String,String[]> getUrlArguments();
 
     /**
-     * Determine whether a named argument has the given value. This method is useful
-     * in case several arguments have been given with the same name.
+     * Determine whether a named argument provided in the URL  has the given value.
+     * This method is useful in case several arguments have been given with the same name.
      *
      * @param name the name of the argument
      * @param value the desired value of the argument
      * @return true if the request contains an argument with this name and value
      */
-    public boolean matchArgument(
+    public boolean matchUrlArgument(
             String name,
             String value )
     {
-        String [] found = getMultivaluedArgument( name );
+        String [] found = getMultivaluedUrlArgument( name );
         if( found == null ) {
             return false;
         }
@@ -264,10 +264,10 @@ public abstract class AbstractSaneRequest
      * @param argName name of the argument
      * @return value.
      */
-    public final String getPostArgument(
+    public final String getPostedArgument(
             String argName )
     {
-        String [] almost = getMultivaluedPostArgument( argName );
+        String [] almost = getMultivaluedPostedArgument( argName );
         if( almost == null || almost.length == 0 ) {
             return null;
         } else if( almost.length == 1 ) {
@@ -283,7 +283,7 @@ public abstract class AbstractSaneRequest
      * @param argName name of the argument
      * @return value.
      */
-    public abstract String [] getMultivaluedPostArgument(
+    public abstract String [] getMultivaluedPostedArgument(
             String argName );
 
     /**
@@ -291,7 +291,31 @@ public abstract class AbstractSaneRequest
      *
      * @return a Map of name to value mappings for all POST'd arguments
      */
-    public abstract Map<String,String[]> getPostArguments();
+    public abstract Map<String,String[]> getPostedArguments();
+
+    /**
+     * Determine whether a named POST'd argument has the given value.
+     * This method is useful in case several arguments have been given with the same name.
+     *
+     * @param name the name of the argument
+     * @param value the desired value of the argument
+     * @return true if the request contains an argument with this name and value
+     */
+    public boolean matchPostedArgument(
+            String name,
+            String value )
+    {
+        String [] found = getMultivaluedPostedArgument( name );
+        if( found == null ) {
+            return false;
+        }
+        for( String current : found ) {
+            if( value.equals( current )) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Obtain the relative context Uri of this application.

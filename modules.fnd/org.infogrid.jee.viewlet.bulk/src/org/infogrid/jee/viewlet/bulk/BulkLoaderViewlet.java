@@ -153,7 +153,7 @@ public class BulkLoaderViewlet
             ServletException
     {
         SaneRequest theSaneRequest = request.getSaneRequest();
-        String      bulkXml        = theSaneRequest.getPostArgument( LOAD_CONTENT_ARGUMENT_NAME );
+        String      bulkXml        = theSaneRequest.getPostedArgument( LOAD_CONTENT_ARGUMENT_NAME );
 
         MeshBase    base = getSubject().getMeshBase();
         Transaction tx   = null;

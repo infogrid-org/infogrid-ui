@@ -79,13 +79,23 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
         if( lidCookieString != null && lidCookieString.startsWith( "\"" ) && lidCookieString.endsWith( "\"" )) {
             lidCookieString = lidCookieString.substring( 1, lidCookieString.length()-1 );
         }
-        String lidArgumentString = lidRequest.getArgument( "lid" );
 
+        // LID argument: first consider POST'd, then URL arguments
+        String lidArgumentString = lidRequest.getPostedArgument( "lid" );
         if( lidArgumentString == null ) {
-            lidArgumentString = lidRequest.getArgument( "openid_identifier" );
+            lidArgumentString = lidRequest.getPostedArgument( "openid_identifier" );
         }
         if( lidArgumentString == null ) {
-            lidArgumentString = lidRequest.getArgument( "openid.identity" );
+            lidArgumentString = lidRequest.getPostedArgument( "openid.identity" );
+        }
+        if( lidArgumentString == null ) {
+            lidArgumentString = lidRequest.getUrlArgument( "lid" );
+        }
+        if( lidArgumentString == null ) {
+            lidArgumentString = lidRequest.getUrlArgument( "openid_identifier" );
+        }
+        if( lidArgumentString == null ) {
+            lidArgumentString = lidRequest.getUrlArgument( "openid.identity" );
         }
 
         Identifier lidCookieIdentifier   = null;
@@ -144,7 +154,9 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
         boolean clientLoggedOn       = false;
         boolean wishesCancelSession  = false;
         boolean clientWishesToLogout = false;
-        if( lidRequest.matchArgument( "lid-action", "cancel-session" )) {
+        if(    lidRequest.matchUrlArgument( "lid-action", "cancel-session" )
+            || lidRequest.matchPostedArgument( "lid-action", "cancel-session" ) )
+        {
             wishesCancelSession = true;
         }
         if( lidArgumentString != null && lidArgumentString.length() == 0 && sessionClientIdentifier != null ) {

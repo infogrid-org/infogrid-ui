@@ -784,7 +784,7 @@ public class RestfulJeeFormatter
             String             addArguments )
     {
         SaneRequest sane       = SaneServletRequest.create( request );
-        String      appContext = sane.getArgument( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+        String      appContext = sane.getUrlArgument( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
 
         String ret = addArguments; // by default, do nothing
         if( appContext != null ) {

@@ -76,7 +76,7 @@ public class LdapLidPasswordCredentialType
         throws
             LidInvalidCredentialException
     {
-        String givenPassword = request.getArgument( "lid-credential" );
+        String givenPassword = request.getPostedArgument( "lid-credential" );
 
         Properties props = (Properties) thePasswordDirProps.clone();
 

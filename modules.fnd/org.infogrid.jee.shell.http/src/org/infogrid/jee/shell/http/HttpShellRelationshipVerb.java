@@ -187,7 +187,7 @@ public enum HttpShellRelationshipVerb
         key.append( varName2 );
         key.append( PERFORM_TAG );
 
-        String value = request.getPostArgument( key.toString() );
+        String value = request.getPostedArgument( key.toString() );
         if( value == null ) {
             return null;
         }

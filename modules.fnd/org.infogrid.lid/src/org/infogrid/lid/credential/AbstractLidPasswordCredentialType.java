@@ -40,7 +40,7 @@ public abstract class AbstractLidPasswordCredentialType
     public boolean isContainedIn(
             SaneRequest request )
     {
-        if( request.matchArgument( "lid-credtype", "simple-password" )) {
+        if( request.matchPostedArgument( "lid-credtype", "simple-password" )) {
             return true;
         }
 

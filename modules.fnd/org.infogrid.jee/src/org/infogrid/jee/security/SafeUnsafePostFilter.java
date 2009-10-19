@@ -89,7 +89,7 @@ public class SafeUnsafePostFilter
 
                 if( process ) {
                     SaneRequest sane  = SaneServletRequest.create( realRequest );
-                    String      token = sane.getPostArgument( INPUT_FIELD_NAME );
+                    String      token = sane.getPostedArgument( INPUT_FIELD_NAME );
 
                     isSafe = theFormTokenService.validateToken( token );
                 }

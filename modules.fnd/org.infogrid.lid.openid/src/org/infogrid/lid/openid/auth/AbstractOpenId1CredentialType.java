@@ -58,10 +58,10 @@ public abstract class AbstractOpenId1CredentialType
     public boolean isContainedIn(
             SaneRequest request )
     {
-        if( request.getMultivaluedArgument( OPENID_NS_PARAMETER_NAME ) != null ) {
+        if( request.getMultivaluedUrlArgument( OPENID_NS_PARAMETER_NAME ) != null ) {
             return false;
         }
-        if( !request.matchArgument( OPENID_MODE_PARAMETER_NAME, OPENID_MODE_IDRES_PARAMETER_VALUE )) {
+        if( !request.matchUrlArgument( OPENID_MODE_PARAMETER_NAME, OPENID_MODE_IDRES_PARAMETER_VALUE )) {
             return false;
         }
 
@@ -82,9 +82,9 @@ public abstract class AbstractOpenId1CredentialType
         throws
             LidInvalidCredentialException
     {
-        String associationHandle = request.getArgument( OPENID_ASSOC_HANDLE_PARAMETER_NAME );
-        String signed            = request.getArgument( OPENID_SIGNED_PARAMETER_NAME );
-        String signature         = request.getArgument( OPENID_SIGNATURE_PARAMETER_NAME );
+        String associationHandle = request.getUrlArgument( OPENID_ASSOC_HANDLE_PARAMETER_NAME );
+        String signed            = request.getUrlArgument( OPENID_SIGNED_PARAMETER_NAME );
+        String signature         = request.getUrlArgument( OPENID_SIGNATURE_PARAMETER_NAME );
 
         if( associationHandle == null || associationHandle.length() == 0 ) {
             // we don't do dumb mode
@@ -125,7 +125,7 @@ public abstract class AbstractOpenId1CredentialType
         StringTokenizer tokenizer = new StringTokenizer( signed, "," );
         while( tokenizer.hasMoreTokens() ) {
             String field = tokenizer.nextToken();
-            String value = request.getArgument( "openid." + field );
+            String value = request.getUrlArgument( "openid." + field );
 
             toSign1.append( field ).append( ":" ).append( value );
             toSign1.append( "\n" );

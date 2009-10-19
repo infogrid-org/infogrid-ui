@@ -78,7 +78,7 @@ public class LidGpgClearSignCredentialType
     public boolean isContainedIn(
             SaneRequest request )
     {
-        if( request.matchArgument( LID_CREDTYPE_PARAMETER_NAME, LID_GPG_CLEARSIGN_PARAMETER_VALUE )) {
+        if( request.matchUrlArgument( LID_CREDTYPE_PARAMETER_NAME, LID_GPG_CLEARSIGN_PARAMETER_VALUE )) {
             return true;
         }
 
@@ -121,7 +121,7 @@ public class LidGpgClearSignCredentialType
             throw new LidInvalidCredentialException( subject.getIdentifier(), this, ex );
         }
 
-        String credential = originalRequest.getArgument( LID_CREDENTIAL_PARAMETER_NAME );
+        String credential = originalRequest.getUrlArgument( LID_CREDENTIAL_PARAMETER_NAME );
         if( credential == null || credential.length() == 0 ) {
             throw new LidInvalidCredentialException( subject.getIdentifier(), this );
         }

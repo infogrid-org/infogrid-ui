@@ -82,7 +82,7 @@ public class TemplatesFilter
         request.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
 
         Context c          = app.getApplicationContext();
-        String  reqContext = saneRequest.getArgument( LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+        String  reqContext = saneRequest.getUrlArgument( LID_APPLICATION_CONTEXT_PARAMETER_NAME );
 
         if( reqContext != null ) {
             ContextDirectory dir   = app.getContextDirectory();
