@@ -46,5 +46,5 @@ public interface StructuredResponseTemplate
     /**
      * Name of the cookie representing the LID template.
      */
-    public static final String LID_TEMPLATE_COOKIE_NAME = "org_netmesh_lid-template";
+    public static final String LID_TEMPLATE_COOKIE_NAME = "org-netmesh-lid-template";
 }
