@@ -173,7 +173,7 @@ public abstract class AbstractViewletFactory
      */
     public abstract ViewletFactoryChoice [] determineFactoryChoicesIgnoringType(
             MeshObjectsToView theObjectsToView );
-        
+
     /**
      * The name of the interface that indicates the implementation technology and that needs to
      * be supported by all Viewlets returned by this (implementation-specific) factory.

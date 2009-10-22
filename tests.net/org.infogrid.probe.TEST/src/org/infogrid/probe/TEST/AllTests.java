@@ -174,7 +174,7 @@ public class AllTests
 //                        WritableProbeTest8.class,
 //                        noArgs ),
 //                new TestSpec( // create object -- BROKEN: need new API call to "createAndPush" to avoid triggering the non-local NetMeshObjectIdentifier exception
-//                       .class,
+//                        WritableProbeTest9.class,
 //                        noArgs ),
 //                new TestSpec( // create and relate object
 //                        WritableProbeTest10.class,
