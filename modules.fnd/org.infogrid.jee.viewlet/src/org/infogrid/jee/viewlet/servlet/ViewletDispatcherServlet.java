@@ -35,6 +35,7 @@ import org.infogrid.jee.viewlet.DefaultJeeViewletStateTransitionEnum;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.JeeViewletState;
 import org.infogrid.jee.viewlet.JeeViewletStateTransition;
+import org.infogrid.jee.viewlet.lidmetaformats.LidMetaFormatsViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -87,14 +88,14 @@ public class ViewletDispatcherServlet
         SaneRequest        saneRequest    = SaneServletRequest.create( servletRequest );
         StructuredResponse structured     = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
-        InfoGridWebApp      app     = InfoGridWebApp.getSingleton();
-        Context             c       = (Context) saneRequest.getAttribute( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
-
+        InfoGridWebApp app = InfoGridWebApp.getSingleton();
+        Context        c   = (Context) saneRequest.getAttribute( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
         if( c == null ) {
             c = app.getApplicationContext();
         }
-        TraversalDictionary dict    = c.findContextObject( TraversalDictionary.class ); // optional
-        MeshBase            mb      = c.findContextObject( MeshBase.class );
+
+        TraversalDictionary dict = c.findContextObject( TraversalDictionary.class ); // optional
+        MeshBase            mb   = c.findContextObject( MeshBase.class );
 
         if( mb == null ) {
             throw new ContextMeshBaseNotFoundException();
@@ -109,9 +110,8 @@ public class ViewletDispatcherServlet
 
         servletRequest.setAttribute( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME, restfulRequest );
 
-        MeshObject          subject;
-        MeshObjectsToView   toView;
-
+        MeshObject        subject;
+        MeshObjectsToView toView;
         try {
             subject = restfulRequest.determineRequestedMeshObject();
             toView  = createMeshObjectsToView( restfulRequest, dict );
@@ -133,16 +133,20 @@ public class ViewletDispatcherServlet
         }
 
         JeeViewlet viewlet = null;
-
         if( subject != null ) {
             servletRequest.setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME, subject );
 
-            ViewletFactory viewletFact = c.findContextObjectOrThrow( ViewletFactory.class );
-            try {
-                viewlet = (JeeViewlet) viewletFact.obtainFor( toView, c );
+            if( saneRequest.matchUrlArgument( "lid-meta", "formats" )) {
+                viewlet = LidMetaFormatsViewlet.create( mb, c );
 
-            } catch( FactoryException ex ) {
-                throw new ServletException( ex ); // pass on
+            } else {
+                ViewletFactory viewletFact = c.findContextObjectOrThrow( ViewletFactory.class );
+                try {
+                    viewlet = (JeeViewlet) viewletFact.obtainFor( toView, c );
+
+                } catch( FactoryException ex ) {
+                    throw new ServletException( ex ); // pass on
+                }
             }
         }
         
