@@ -158,11 +158,11 @@ div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.content {
     border-color: #808080;
     background: white;
 }
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar {
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar {
     background: #f0f0f0;
     border-color: #e0e0e0;
 }
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content {
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content {
     background: #ffffff;
     border-color: #e0e0e0;
 }

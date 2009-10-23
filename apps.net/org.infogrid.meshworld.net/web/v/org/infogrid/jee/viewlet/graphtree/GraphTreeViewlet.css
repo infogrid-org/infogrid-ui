@@ -1,33 +1,34 @@
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar {
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar {
     width: 20%;
     border-width: 1px;
     border-style: solid;
-    vertical-align: top;
+    min-height: 600px;
+    overflow: auto;
 }
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level1 > dt {
-    font-weight: bold;
-    list-style: disc inside;
-}
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level2 > dt {
-    list-style: square inside;
-}
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level3 > dt {
-    list-style: circle inside;
-}
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dt {
-    display: list-item;
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dt {
+    list-style: none;
     margin-left: 5px;
+
 }
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dd {
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dt:before {
+    content: "\25aa";
+    margin-right: 5px;
+}
+
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level1 > dt {
+    font-weight: bold;
+}
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dd {
     margin-left: 20px;
 }
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content {
-    width: 100%;
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content {
+    float: right;
+    width: 80%;
     height: 100%;
     border-width: 1px;
     border-style: solid;
 }
-td.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content > iframe {
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content > iframe {
     width: 100%;
     height: 100%;
     min-height: 600px;
