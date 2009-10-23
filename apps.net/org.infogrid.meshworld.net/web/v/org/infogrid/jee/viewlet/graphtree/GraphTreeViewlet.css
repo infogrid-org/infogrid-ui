@@ -8,13 +8,11 @@ div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar {
 div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dt {
     list-style: none;
     margin-left: 5px;
-
 }
 div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dt:before {
     content: "\25aa";
     margin-right: 5px;
 }
-
 div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar dl.level1 > dt {
     font-weight: bold;
 }
