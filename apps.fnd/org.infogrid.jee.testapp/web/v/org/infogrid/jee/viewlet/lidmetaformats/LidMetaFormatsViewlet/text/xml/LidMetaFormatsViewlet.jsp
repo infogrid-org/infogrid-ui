@@ -1,5 +1,4 @@
 <%@    page contentType="text/xml"
- %><%@ taglib prefix="set"   uri="/v/org/infogrid/jee/taglib/mesh/set/set.tld"
  %><%@ taglib prefix="mesh"  uri="/v/org/infogrid/jee/taglib/mesh/mesh.tld"
  %><%@ taglib prefix="candy" uri="/v/org/infogrid/jee/taglib/candy/candy.tld"
  %><%@ taglib prefix="u"     uri="/v/org/infogrid/jee/taglib/util/util.tld"
