@@ -78,8 +78,7 @@ public class SafeFormHiddenInputTag
     public static String hiddenInputTagString(
             PageContext pageContext )
     {
-
-        String value = (String) pageContext.getAttribute( FORM_TOKEN_NAME );
+        String value = (String) pageContext.getRequest().getAttribute( FORM_TOKEN_NAME );
 
         if( value == null ) {
             FormTokenService service = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( FormTokenService.class );
