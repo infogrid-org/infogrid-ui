@@ -33,6 +33,16 @@ public interface NetMeshObjectIdentifierFactory
     public abstract NetMeshObjectIdentifier getHomeMeshObjectIdentifier();
 
     /**
+     * Determine the Identifier of the Home Object in a NetMeshBase with the given
+     * NetMeshBaseIdentifier.
+     *
+     * @param mbIdentifier the NetMeshBaseIdentifier of the NetMeshBase
+     * @return the Identifier
+     */
+    public abstract NetMeshObjectIdentifier getHomeMeshObjectIdentifierFor(
+            NetMeshBaseIdentifier mbIdentifier );
+
+    /**
      * Create a unique Identifier for a MeshObject that can be used to create a MeshObject
      * with the associated MeshBaseLifecycleManager.
      *

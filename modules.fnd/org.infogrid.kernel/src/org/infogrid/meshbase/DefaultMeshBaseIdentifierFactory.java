@@ -55,7 +55,7 @@ public class DefaultMeshBaseIdentifierFactory
         throws
             StringRepresentationParseException
     {
-        MeshBaseIdentifier ret = new MeshBaseIdentifier( raw );
+        MeshBaseIdentifier ret = new MeshBaseIdentifier( this, raw );
         return ret;
     }
 

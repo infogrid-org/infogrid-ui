@@ -245,7 +245,7 @@ public abstract class AbstractMeshBase
     {
         // this is not subject to the sweeper
 
-        MeshObject theHomeObject = theCache.get( theMeshObjectIdentifierFactory.getHomeMeshObjectIdentifier()  );
+        MeshObject theHomeObject = theCache.get( theMeshObjectIdentifierFactory.getHomeMeshObjectIdentifier() );
 
         return theHomeObject;
     }

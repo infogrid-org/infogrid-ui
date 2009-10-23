@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -43,8 +43,9 @@ public abstract class AbstractNetSerializerTest
      */
     protected static NetMeshBaseIdentifierFactory theMeshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create(
             new DefaultNetMeshBaseIdentifierFactory.Protocol [] {
-                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "http", true ),
-                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "test", false ),
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "http",  true ),
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "https", true ),
+                    new DefaultNetMeshBaseIdentifierFactory.Protocol( "test",  false ),
     });
 
     /**

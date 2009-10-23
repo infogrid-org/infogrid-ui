@@ -63,7 +63,7 @@ public class NetSerializerTest2
                 theMeshBaseIdentifierFactory.fromExternalForm( "@testing@abc" ),
         };
         NetMeshObjectIdentifier [] testIdentifiers = new NetMeshObjectIdentifier[] {
-                null,
+                mb.getMeshObjectIdentifierFactory().fromExternalForm( "#xyz" ),
                 mb.getMeshObjectIdentifierFactory().fromExternalForm( "test://def.org/" ),
                 mb.getMeshObjectIdentifierFactory().fromExternalForm( "http://abc.com/" ),
                 mb.getMeshObjectIdentifierFactory().fromExternalForm( "http://abc.com/#def" ),
@@ -102,17 +102,12 @@ public class NetSerializerTest2
 
                         NetMeshBaseAccessSpecification [] meshBaseAccess = new NetMeshBaseAccessSpecification[ test.length ];
                         for( int j=0 ; j<meshBaseAccess.length ; ++j ) {
-                            meshBaseAccess[j] = mb.getNetMeshObjectAccessSpecificationFactory().getNetMeshBaseAccessSpecificationFactory().obtain( test[j], coherence );
+                            meshBaseAccess[j] = mb.getNetMeshObjectAccessSpecificationFactory().getNetMeshBaseAccessSpecificationFactory().obtain( test[j], scope, coherence );
                         }
                         
-                        NetMeshObjectAccessSpecification original;
-                        if( identifier != null ) {
-                            original = mb.getNetMeshObjectAccessSpecificationFactory().obtain( meshBaseAccess, identifier, scope );
-                        } else {
-                            original = mb.getNetMeshObjectAccessSpecificationFactory().obtain( meshBaseAccess, scope );
-                        }
+                        NetMeshObjectAccessSpecification original = mb.getNetMeshObjectAccessSpecificationFactory().obtain( meshBaseAccess, identifier );
                         NetMeshObjectAccessSpecification decoded  = null;
-                        String      encoded  = null;
+                        String encoded  = null;
 
                         try {
                             encoded = original.toExternalForm();

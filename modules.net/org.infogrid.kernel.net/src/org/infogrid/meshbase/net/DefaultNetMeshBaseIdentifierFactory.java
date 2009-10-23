@@ -143,7 +143,7 @@ public class DefaultNetMeshBaseIdentifierFactory
 
         if( isXriGlobalContextSymbol( string.charAt( 0 ))) {
             try {
-                return new NetMeshBaseIdentifier( string, new URI( theXriResolverPrefix + string ), true );
+                return new NetMeshBaseIdentifier( this, string, new URI( theXriResolverPrefix + string ), true );
                 
             } catch( URISyntaxException ex ) {
                 throw new StringRepresentationParseException( string, null, ex );
@@ -152,7 +152,7 @@ public class DefaultNetMeshBaseIdentifierFactory
         if( string.startsWith( theXriResolverPrefix )) {
             string = string.substring( theXriResolverPrefix.length() );
             try {
-                return new NetMeshBaseIdentifier( string, new URI( theXriResolverPrefix + string ), true );
+                return new NetMeshBaseIdentifier( this, string, new URI( theXriResolverPrefix + string ), true );
 
             } catch( URISyntaxException ex ) {
                 throw new StringRepresentationParseException( string, null, ex );
@@ -186,7 +186,7 @@ public class DefaultNetMeshBaseIdentifierFactory
         for( Protocol p : theSupportedProtocols ) {
             if( lower.startsWith( p.getName() + ":" )) {
                 try {
-                    return new NetMeshBaseIdentifier( string, new URI( string ), p.getIsRestfullyResolvable() );
+                    return new NetMeshBaseIdentifier( this, string, new URI( string ), p.getIsRestfullyResolvable() );
 
                 } catch( URISyntaxException ex ) {
                     throw new StringRepresentationParseException( string, null, ex );

@@ -17,7 +17,7 @@ package org.infogrid.meshbase.net;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
-import org.infogrid.util.IdentifierFactory;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationParseException;
 
@@ -26,7 +26,7 @@ import org.infogrid.util.text.StringRepresentationParseException;
  */
 public interface NetMeshBaseIdentifierFactory
         extends
-            IdentifierFactory
+            MeshBaseIdentifierFactory
 {
     /**
      * Recreate a NetMeshBaseIdentifier from an external form. Be strict about syntax.

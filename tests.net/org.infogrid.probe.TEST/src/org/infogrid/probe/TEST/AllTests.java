@@ -295,7 +295,7 @@ public class AllTests
                         ForwardReferenceTest8.class.getName() + " slow",
                         ForwardReferenceTest8.class,
                         "slow"),
-       };
+        };
 
         runTests( probeTests );
         runTests( yadisTests );

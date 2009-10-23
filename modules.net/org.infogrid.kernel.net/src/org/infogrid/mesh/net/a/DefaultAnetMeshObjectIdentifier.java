@@ -94,6 +94,21 @@ public class DefaultAnetMeshObjectIdentifier
     }
 
     /**
+     * Determine whether this MeshObjectIdentifier identifies a Home Object.
+     *
+     * @return true if it identifies a Home Object
+     */
+    @Override
+    public boolean identifiesHomeObject()
+    {
+        if( theLocalId == null || theLocalId.length() == 0 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Obtain the identifier of the NetMeshBase in which this NetMeshObjectIdentifier was allocated.
      *
      * @return the dentifier of the NetMeshBase

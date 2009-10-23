@@ -16,7 +16,6 @@ package org.infogrid.meshbase.net;
 
 import java.net.URI;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
-import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationParseException;
 
@@ -77,84 +76,6 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
     }
 
     /**
-     * Convert a String into a NetMeshObjectAccessSpecification.
-     * 
-     * @param raw the String
-     * @return the created NetMeshObjectAccessSpecification
-     * @throws StringRepresentationParseException thrown if the String could not be parsed
-     */
-    public NetMeshObjectAccessSpecification fromExternalForm(
-            String raw )
-        throws
-            StringRepresentationParseException
-    {
-        if( raw == null ) {
-            return null;
-        }
-
-        int hash = raw.indexOf( '#' );
-        int q    = raw.indexOf( '?', hash >= 0 ? hash : 0 );
-
-        String beforeQ = q >= 0 ? raw.substring( 0, q ) : raw;
-
-        String pathString;
-        String objectString;
-        if( hash >= 0 ) {
-            pathString   = beforeQ.substring( 0, hash );
-            objectString = beforeQ.substring( hash+1 );
-        } else if( theMeshObjectIdentifierFactory.treatAsGlobalIdentifier( beforeQ )) {
-            pathString   = beforeQ;
-            objectString = null;
-        } else {
-            pathString   = null;
-            objectString = beforeQ;
-        }
-
-        NetMeshBaseAccessSpecification [] pathElements;
-        if( pathString != null && pathString.length() > 0 ) {
-            String [] pathElementStrings = pathString.split( "!" );
-
-            pathElements = new NetMeshBaseAccessSpecification[ pathElementStrings.length ];
-            for( int i=0 ; i<pathElements.length ; ++i ) {
-                pathElements[i] = theNetMeshBaseAccessSpecificationFactory.fromExternalForm( pathElementStrings[i] );
-            }
-        } else {
-            pathElements = new NetMeshBaseAccessSpecification[0];
-        }
-
-        NetMeshObjectIdentifier object;
-        if( objectString != null ) {
-            String realObjectString = objectString.replaceAll( "%23", "#" );
-            object = theMeshObjectIdentifierFactory.fromExternalForm( realObjectString );
-        } else {
-            object = null;
-        }
-        
-        // we need to comb through the URL
-
-        String scopeString = null;
-        if( q >= 0 ) {
-            String [] pairs       = raw.substring( q+1 ).split( "&" );
-
-            for( int i=0 ; i<pairs.length ; ++i ) {
-                if( scopeString == null && pairs[i].startsWith( NetMeshObjectAccessSpecification.SCOPE_KEYWORD + "=" )) {
-                    scopeString = pairs[i].substring( NetMeshObjectAccessSpecification.SCOPE_KEYWORD.length() + 1 );
-                    scopeString = HTTP.decodeUrlArgument( scopeString );
-                }
-            }
-        }
-        ScopeSpecification scope = scopeString != null ? ScopeSpecification.fromExternalForm( scopeString ) : NetMeshObjectAccessSpecification.DEFAULT_SCOPE;
-
-        NetMeshObjectAccessSpecification ret = new DefaultNetMeshObjectAccessSpecification(
-                this,
-                pathElements,
-                object,
-                scope );
-        return ret;
-
-    }
-
-    /**
      * Factory method to obtain a NetMeshObjectAccessSpecification to a locally available MeshObject. This
      * is a degenerate form of NetMeshObjectAccessSpecification, but useful for API consistency.
      * 
@@ -166,10 +87,8 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
     {
         return new DefaultNetMeshObjectAccessSpecification(
                 this,
-                new NetMeshBaseAccessSpecification[] {
-                        theNetMeshBaseAccessSpecificationFactory.obtain( remoteIdentifier.getNetMeshBaseIdentifier() ) },
-                remoteIdentifier,
-                NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
+                new NetMeshBaseAccessSpecification[0],
+                remoteIdentifier );
     }
 
     /**
@@ -186,9 +105,9 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             return new DefaultNetMeshObjectAccessSpecification(
                     this,
                     new NetMeshBaseAccessSpecification[] {
-                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName ) },
-                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ),
-                    NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
+                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName ),
+                    },
+                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ) );
 
         } catch( StringRepresentationParseException ex ) {
             log.error( ex );
@@ -212,8 +131,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                 this,
                 new NetMeshBaseAccessSpecification[] {
                         theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName ) },
-                remoteIdentifier,
-                NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
+                remoteIdentifier );
     }
 
     /**
@@ -233,9 +151,8 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             return new DefaultNetMeshObjectAccessSpecification(
                     this,
                     new NetMeshBaseAccessSpecification[] {
-                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName ) },
-                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ),
-                    scope );
+                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope ) },
+                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ));
 
         } catch( StringRepresentationParseException ex ) {
             log.error( ex );
@@ -261,8 +178,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     this,
                     new NetMeshBaseAccessSpecification[] {
                             theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, coherence ) },
-                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ),
-                    NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
+                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ));
 
         } catch( StringRepresentationParseException ex ) {
             log.error( ex );
@@ -288,9 +204,8 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
         return new DefaultNetMeshObjectAccessSpecification(
                 this,
                 new NetMeshBaseAccessSpecification[] {
-                        theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName ) },
-                remoteIdentifier,
-                scope );
+                        theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope ) },
+                remoteIdentifier );
     }
 
     /**
@@ -312,8 +227,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                 this,
                 new NetMeshBaseAccessSpecification[] {
                         theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, coherence ) },
-                remoteIdentifier,
-                NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
+                remoteIdentifier );
     }
 
     /**
@@ -335,9 +249,8 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             return new DefaultNetMeshObjectAccessSpecification(
                     this,
                     new NetMeshBaseAccessSpecification[] {
-                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, coherence ) },
-                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ),
-                    scope );
+                            theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope, coherence ) },
+                    theMeshObjectIdentifierFactory.fromExternalForm( oneElementName, null ));
 
         } catch( StringRepresentationParseException ex ) {
             log.error( ex );
@@ -365,9 +278,8 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
         return new DefaultNetMeshObjectAccessSpecification(
                 this,
                 new NetMeshBaseAccessSpecification[] {
-                        theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, coherence ) },
-                remoteIdentifier,
-                scope );
+                        theNetMeshBaseAccessSpecificationFactory.obtain( oneElementName, scope, coherence ) },
+                remoteIdentifier );
     }
 
     /**
@@ -384,8 +296,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             return new DefaultNetMeshObjectAccessSpecification(
                     this,
                     elements,
-                    theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ].getNetMeshBaseIdentifier(), null ),
-                    NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
+                    theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ].getNetMeshBaseIdentifier(), null ));
 
         } catch( StringRepresentationParseException ex ) {
             log.error( ex );
@@ -409,56 +320,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
         return new DefaultNetMeshObjectAccessSpecification(
                 this,
                 elements,
-                remoteIdentifier,
-                NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
-    }
-
-    /**
-     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
-     * requesting the home object at the NetMeshBaseIdentifier,
-     * specifying a non-default ScopeSpecification.
-     *
-     * @param elements the NetMeshBaseAccessSpecifications, in sequence
-     * @param scope the ScopeSpecification
-     * @return created NetMeshObjectAccessSpecification
-     */
-    public NetMeshObjectAccessSpecification obtain(
-            NetMeshBaseAccessSpecification [] elements,
-            ScopeSpecification                scope )
-    {
-        try {
-            return new DefaultNetMeshObjectAccessSpecification(
-                    this,
-                    elements,
-                    theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ].getNetMeshBaseIdentifier(), null ),
-                    scope );
-
-        } catch( StringRepresentationParseException ex ) {
-            log.error( ex );
-            return null;
-        }
-    }
-
-    /**
-     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
-     * requesting a non-default NetMeshObject,
-     * specifying a non-default ScopeSpecification.
-     *
-     * @param elements the NetMeshBaseAccessSpecifications, in sequence
-     * @param remoteIdentifier Identifier of the remote non-default NetMeshObject
-     * @param scope the ScopeSpecification
-     * @return created NetMeshObjectAccessSpecification
-     */
-    public NetMeshObjectAccessSpecification obtain(
-            NetMeshBaseAccessSpecification [] elements,
-            NetMeshObjectIdentifier           remoteIdentifier,
-            ScopeSpecification                scope )
-    {
-        return new DefaultNetMeshObjectAccessSpecification(
-                this,
-                elements,
-                remoteIdentifier,
-                scope );
+                remoteIdentifier );
     }
 
     /**
@@ -475,8 +337,7 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             return new DefaultNetMeshObjectAccessSpecification(
                     this,
                     createSeveral( elements ),
-                    theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ], null ),
-                    NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
+                    theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ], null ));
 
         } catch( StringRepresentationParseException ex ) {
             log.error( ex );
@@ -497,62 +358,20 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
             NetMeshBaseIdentifier [] elements,
             NetMeshObjectIdentifier  remoteIdentifier )
     {
-        return new DefaultNetMeshObjectAccessSpecification(
-                this,
-                createSeveral( elements ),
-                remoteIdentifier,
-                NetMeshObjectAccessSpecification.DEFAULT_SCOPE );
-    }
-    
+        if( remoteIdentifier == null ) {
+            return obtain( elements );
 
-    /**
-     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
-     * requesting the home object at the NetMeshBaseIdentifier,
-     * specifying a non-default ScopeSpecification.
-     *
-     * @param elements the NetMeshBaseIdentifiers, in sequence
-     * @param scope the ScopeSpecification
-     * @return created NetMeshObjectAccessSpecification
-     */
-    public NetMeshObjectAccessSpecification obtain(
-            NetMeshBaseIdentifier [] elements,
-            ScopeSpecification       scope )
-    {
-        try {
+        } else if( elements == null || elements.length == 0 ) {
+            return obtainToLocalObject( remoteIdentifier );
+
+        } else {
             return new DefaultNetMeshObjectAccessSpecification(
                     this,
                     createSeveral( elements ),
-                    theMeshObjectIdentifierFactory.fromExternalForm( elements[ elements.length-1 ], null ),
-                    scope );
-
-        } catch( StringRepresentationParseException ex ) {
-            log.error( ex );
-            return null;
+                    remoteIdentifier );
         }
     }
-
-    /**
-     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
-     * requesting a non-default NetMeshObject,
-     * specifying a non-default ScopeSpecification.
-     *
-     * @param elements the NetMeshBaseIdentifiers, in sequence
-     * @param remoteIdentifier Identifier of the remote non-default NetMeshObject
-     * @param scope the ScopeSpecification
-     * @return created NetMeshObjectAccessSpecification
-     */
-    public NetMeshObjectAccessSpecification obtain(
-            NetMeshBaseIdentifier [] elements,
-            NetMeshObjectIdentifier  remoteIdentifier,
-            ScopeSpecification       scope )
-    {
-        return new DefaultNetMeshObjectAccessSpecification(
-                this,
-                createSeveral( elements ),
-                remoteIdentifier,
-                scope );
-    }
-
+    
     /**
      * Convenience factory method to obtain a single-element NetMeshObjectAccessSpecification
      * by converting a URI into a NetMeshBaseIdentifier, requesting its home MeshObject.
@@ -650,6 +469,59 @@ public abstract class AbstractNetMeshObjectAccessSpecificationFactory
                     identifiers[i],
                     NetMeshBaseAccessSpecification.DEFAULT_COHERENCE );
         }
+        return ret;
+    }
+
+    /**
+     * Convert a String into a NetMeshObjectAccessSpecification.
+     *
+     * @param raw the String
+     * @return the created NetMeshObjectAccessSpecification
+     * @throws StringRepresentationParseException thrown if the String could not be parsed
+     */
+    public NetMeshObjectAccessSpecification fromExternalForm(
+            String raw )
+        throws
+            StringRepresentationParseException
+    {
+        if( raw == null ) {
+            return null;
+        }
+
+        // hash means it's the MeshObjectIdentifier's local part, so ignore that for a while.
+        int    hash = raw.indexOf( '#' );
+        String core = hash >= 0 ? raw.substring( 0, hash ) : raw;
+
+        String lastSegment;
+        NetMeshBaseAccessSpecification [] pathElements;
+        if( core != null && core.length() > 0 ) {
+            String [] pathElementStrings = core.split( "!" );
+
+            pathElements = new NetMeshBaseAccessSpecification[ pathElementStrings.length-1 ]; // treat last one different
+            for( int i=0 ; i<pathElements.length ; ++i ) {
+                pathElements[i] = theNetMeshBaseAccessSpecificationFactory.fromExternalForm( pathElementStrings[i] );
+            }
+            lastSegment = pathElementStrings[ pathElementStrings.length-1 ];
+
+        } else {
+            pathElements = new NetMeshBaseAccessSpecification[0];
+            lastSegment  = null;
+        }
+
+        if( lastSegment != null ) {
+            if( hash >= 0 ) {
+                lastSegment += raw.substring( hash );
+            }
+        } else {
+            lastSegment = raw.substring( hash );
+        }
+
+        NetMeshObjectIdentifier object = theMeshObjectIdentifierFactory.fromExternalForm( lastSegment );
+
+        NetMeshObjectAccessSpecification ret = new DefaultNetMeshObjectAccessSpecification(
+                this,
+                pathElements,
+                object );
         return ret;
     }
 

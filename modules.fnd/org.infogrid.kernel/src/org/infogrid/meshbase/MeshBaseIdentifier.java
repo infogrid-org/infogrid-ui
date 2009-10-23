@@ -14,6 +14,7 @@
 
 package org.infogrid.meshbase;
 
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.util.AbstractIdentifier;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.logging.CanBeDumped;
@@ -37,12 +38,25 @@ public class MeshBaseIdentifier
     /**
      * Constructor.
      * 
+     * @param fact the MeshBaseIdentifierFactory with which this MeshBaseIdentifier was created
      * @param canonicalForm the canonical representation of this identifier
      */
     protected MeshBaseIdentifier(
-            String canonicalForm )
+            MeshBaseIdentifierFactory fact,
+            String                    canonicalForm )
     {
+        theFactory       = fact;
         theCanonicalForm = canonicalForm;
+    }
+
+    /**
+     * Obtain the factory with which this MeshBaseIdentifier was created.
+     *
+     * @return the factory
+     */
+    public MeshBaseIdentifierFactory getFactory()
+    {
+        return theFactory;
     }
 
     /**
@@ -209,6 +223,11 @@ public class MeshBaseIdentifier
      * The canonical form.
      */
     protected String theCanonicalForm;
+
+    /**
+     * The factory with which this MeshBaseIdentifier was created.
+     */
+    protected MeshBaseIdentifierFactory theFactory;
 
     /**
      * Entry in the resource files, prefixed by the StringRepresentation's prefix.

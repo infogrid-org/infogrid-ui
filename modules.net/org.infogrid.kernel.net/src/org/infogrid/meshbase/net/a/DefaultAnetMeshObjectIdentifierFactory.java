@@ -327,7 +327,19 @@ public class DefaultAnetMeshObjectIdentifierFactory
     {
         return NET_HOME_OBJECT;
     }
-    
+
+    /**
+     * Determine the Identifier of the Home Object in a NetMeshBase with the given
+     * NetMeshBaseIdentifier.
+     *
+     * @param mbIdentifier the NetMeshBaseIdentifier of the NetMeshBase
+     * @return the Identifier
+     */
+    public NetMeshObjectIdentifier getHomeMeshObjectIdentifierFor(
+            NetMeshBaseIdentifier mbIdentifier )
+    {
+        return new HomeObject( this, mbIdentifier );
+    }
 
     /**
      * Identifies the NetMeshBase to which this factory belongs.

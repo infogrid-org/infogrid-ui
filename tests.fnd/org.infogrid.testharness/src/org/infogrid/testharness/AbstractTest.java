@@ -143,14 +143,14 @@ public abstract class AbstractTest
             if( two == null ) {
                 return true;
             } else {
-                reportError( msg, "null vs. \"" + two + "\" (class: " + two.getClass().getName() + ")" );
+                reportError( msg, one, two  );
                 return false;
             }
         }
         if( one.equals( two )) {
             return true;
         } else {
-            reportError( msg, "\"" + one + "\" (class: " + one.getClass().getName() + ") vs. " + ( (two==null) ? "null" : ( "\"" + two + "\" (class: " + two.getClass().getName() + ")" )) );
+            reportError( msg, one, two  );
             return false;
         }
     }
@@ -172,14 +172,14 @@ public abstract class AbstractTest
             if( two != null ) {
                 return true;
             } else {
-                reportError( msg, "null vs. \"" + two + "\" (class: " + two.getClass().getName() + ")" );
+                reportError( msg, one, two );
                 return false;
             }
         }
         if( !one.equals( two )) {
             return true;
         } else {
-            reportError( msg, "\"" + one + "\" (class: " + one.getClass().getName() + ") vs. " + ( (two==null) ? "null" : ( "\"" + two + "\" (class: " + two.getClass().getName() + ")" )) );
+            reportError( msg, one, two );
             return false;
         }
     }
@@ -198,7 +198,7 @@ public abstract class AbstractTest
             String msg )
     {
         if( one != two ) {
-            reportError( msg, "\"" + one + "\" vs. \"" + two + "\" " );
+            reportError( msg, one, two );
             return false;
         }
         return true;
@@ -218,7 +218,7 @@ public abstract class AbstractTest
             String msg )
     {
         if( one == two ) {
-            reportError( msg, "\"" + one + "\" vs. \"" + two + "\" " );
+            reportError( msg, one, two );
             return false;
         }
         return true;
@@ -238,7 +238,7 @@ public abstract class AbstractTest
             String msg )
     {
         if( one != two ) {
-            reportError( msg, "\"" + one + "\" vs. \"" + two + "\" " );
+            reportError( msg, one, two );
             return false;
         }
         return true;
@@ -259,13 +259,13 @@ public abstract class AbstractTest
     {
         if( one == null ) {
             if( two != null ) {
-                reportError( msg, "null vs. non-null" );
+                reportError( msg, one, two );
                 return false;
             } else {
                 return true;
             }
         } else if( two == null ) {
-            reportError( msg, "non-null vs. null" );
+            reportError( msg, one, two );
             return false;
         } else {
             int min = Math.min( one.length, two.length );
@@ -300,7 +300,7 @@ public abstract class AbstractTest
             String msg )
     {
         if( one == two ) {
-            reportError( msg, "\"" + one + "\" vs. \"" + two + "\" " );
+            reportError( msg, one, two );
             return false;
         }
         return true;
@@ -334,11 +334,11 @@ public abstract class AbstractTest
             if( one[i] == null ) {
                 if( two[i] != null ) {
                     ret = false;
-                    reportError( msg, "element at index " + i + " is different: null vs. " + two[i] );
+                    reportError( msg, "element at index " + i + " is different", one[i], two[i] );
                 }
             } else if( !one[i].equals( two[i] )) {
                 ret = false;
-                reportError( msg, "element at index " + i + " is different: " + one[i] + " vs. " + two[i] );
+                reportError( msg, "element at index " + i + " is different", one[i], two[i] );
             }
         }
         return ret;
@@ -361,17 +361,17 @@ public abstract class AbstractTest
 
         if( one == null ) {
             if( two != null ) {
-                reportError( msg, "null vs. non-null: null vs. " + two );
+                reportError( msg, one, two );
                 ret = false;
             }
         } else if( two == null ) {
-            reportError( msg, "non-null vs. null: " + one + " vs. null" );
+            reportError( msg, one, two );
             ret = false;
         } else {
             int length = one.size();
             if( length != two.length ) {
                 ret = false;
-                reportError( msg, "different length: " + one.size() + " vs. " + two.length );
+                reportError( msg, "different length", one.size(), two.length );
                 if( length > two.length ) {
                     length = two.length;
                 }
@@ -381,11 +381,11 @@ public abstract class AbstractTest
                 if( one.get( i ) == null ) {
                     if( two[ i ] != null ) {
                         ret = false;
-                        reportError( msg, "element at index " + i + " is different: null vs. " + two[i]);
+                        reportError( msg, "element at index " + i + " is different", one.get( i ), two[i] );
                     }
                 } else if( !one.get( i ).equals( two[i] )) {
                     ret = false;
-                    reportError( msg, "element at index " + i + " is different: " + one.get( i ) + " vs. " + two[i] );
+                    reportError( msg, "element at index " + i + " is different", one.get( i ), two[i] );
                 }
             }
         }
@@ -407,7 +407,7 @@ public abstract class AbstractTest
     {
         boolean ret = ArrayHelper.hasSameContentOutOfOrder( one, two, true );
         if( !ret ) {
-            reportError( msg, "not the same content: " + ArrayHelper.join( one ) + " vs. " + ArrayHelper.join( two ));
+            reportError( msg, one, two );
         }
         return ret;
     }
@@ -426,7 +426,7 @@ public abstract class AbstractTest
             String msg )
     {
         if( one != two ) {
-            reportError( msg, one + " vs. " + two );
+            reportError( msg, one, two );
             return false;
         }
 
@@ -450,14 +450,14 @@ public abstract class AbstractTest
             if( needle == null ) {
                 return true;
             } else {
-                reportError( msg, "null vs. \"" + needle + "\" (class: " + needle.getClass().getName() + ")" );
+                reportError( msg, haystack, needle );
                 return false;
             }
         }
         if( haystack.startsWith( needle )) {
             return true;
         } else {
-            reportError( msg, "\"" + haystack + "\" (class: " + haystack.getClass().getName() + ") vs. " + ( (needle==null) ? "null" : ( "\"" + needle + "\" (class: " + needle.getClass().getName() + ")" )) );
+            reportError( msg, haystack, needle );
             return false;
         }
     }
@@ -479,14 +479,14 @@ public abstract class AbstractTest
             if( two == null ) {
                 return true;
             } else {
-                reportError( msg, "null vs. \"" + two + "\" (class: " + two.getClass().getName() + ")" );
+                reportError( msg, one, two );
                 return false;
             }
         }
         if( !one.startsWith( two )) {
             return true;
         } else {
-            reportError( msg, "\"" + one + "\" (class: " + one.getClass().getName() + ") vs. " + ( (two==null) ? "null" : ( "\"" + two + "\" (class: " + two.getClass().getName() + ")" )) );
+            reportError( msg, one, two );
             return false;
         }
     }
@@ -582,7 +582,7 @@ public abstract class AbstractTest
             String  msg )
     {
         if( condition == null ) {
-            reportError( msg, "null" );
+            reportError( msg, condition );
 
         } else if( ! condition ) {
             reportError( msg );
@@ -753,12 +753,12 @@ public abstract class AbstractTest
                             return false;
                         }
                     } else if( currentFound.equals( current )) {
-                        reportError( msg, "Object " + current + " contained at least twice" );
+                        reportError( msg, "Object contained at least twice", current, currentFound );
                         return false;
                     }
                 } else {
                     if( currentFound == found ) {
-                        reportError( msg, "Object " + current + " contained at least twice" );
+                        reportError( msg, "Object contained at least twice", current );
                         return false;
                     }
                 }

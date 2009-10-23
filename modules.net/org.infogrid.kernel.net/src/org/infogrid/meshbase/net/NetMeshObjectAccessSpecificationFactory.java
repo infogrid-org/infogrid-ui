@@ -45,18 +45,6 @@ public interface NetMeshObjectAccessSpecificationFactory
     public NetMeshBaseAccessSpecificationFactory getNetMeshBaseAccessSpecificationFactory();
 
     /**
-     * Convert a String into a NetMeshObjectAccessSpecification.
-     * 
-     * @param raw the String
-     * @return the created NetMeshObjectAccessSpecification
-     * @throws StringRepresentationParseException thrown if the String could not be parsed
-     */
-    public NetMeshObjectAccessSpecification fromExternalForm(
-            String raw )
-        throws
-            StringRepresentationParseException;
-    
-    /**
      * Factory method to obtain a NetMeshObjectAccessSpecification to a locally available MeshObject. This
      * is a degenerate form of NetMeshObjectAccessSpecification, but useful for API consistency.
      * 
@@ -199,35 +187,6 @@ public interface NetMeshObjectAccessSpecificationFactory
             NetMeshBaseAccessSpecification [] elements,
             NetMeshObjectIdentifier           remoteIdentifier );
 
-
-    /**
-     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
-     * requesting the home object at the NetMeshBaseIdentifier,
-     * specifying a non-default ScopeSpecification.
-     *
-     * @param elements the NetMeshBaseAccessSpecifications, in sequence
-     * @param scope the ScopeSpecification
-     * @return created NetMeshObjectAccessSpecification
-     */
-    public NetMeshObjectAccessSpecification obtain(
-            NetMeshBaseAccessSpecification [] elements,
-            ScopeSpecification                scope );
-
-    /**
-     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
-     * requesting a non-default NetMeshObject,
-     * specifying a non-default ScopeSpecification.
-     *
-     * @param elements the NetMeshBaseAccessSpecifications, in sequence
-     * @param remoteIdentifier Identifier of the remote non-default NetMeshObject
-     * @param scope the ScopeSpecification
-     * @return created NetMeshObjectAccessSpecification
-     */
-    public NetMeshObjectAccessSpecification obtain(
-            NetMeshBaseAccessSpecification [] elements,
-            NetMeshObjectIdentifier           remoteIdentifier,
-            ScopeSpecification                scope );
-
     /**
      * Factory method to obtain a multi-element NetMeshObjectAccessSpecification
      * from a series of NetMeshBaseIdentifiers.
@@ -250,34 +209,6 @@ public interface NetMeshObjectAccessSpecificationFactory
     public NetMeshObjectAccessSpecification obtain(
             NetMeshBaseIdentifier [] elements,
             NetMeshObjectIdentifier  remoteIdentifier );
-
-    /**
-     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
-     * requesting the home object at the NetMeshBaseIdentifier,
-     * specifying a non-default ScopeSpecification.
-     *
-     * @param elements the NetMeshBaseIdentifiers, in sequence
-     * @param scope the ScopeSpecification
-     * @return created NetMeshObjectAccessSpecification
-     */
-    public NetMeshObjectAccessSpecification obtain(
-            NetMeshBaseIdentifier [] elements,
-            ScopeSpecification       scope );
-
-    /**
-     * Factory method to obtain a single-element NetMeshObjectAccessSpecification from a NetMeshBaseIdentifier,
-     * requesting a non-default NetMeshObject,
-     * specifying a non-default ScopeSpecification.
-     *
-     * @param elements the NetMeshBaseIdentifiers, in sequence
-     * @param remoteIdentifier Identifier of the remote non-default NetMeshObject
-     * @param scope the ScopeSpecification
-     * @return created NetMeshObjectAccessSpecification
-     */
-    public NetMeshObjectAccessSpecification obtain(
-            NetMeshBaseIdentifier [] elements,
-            NetMeshObjectIdentifier  remoteIdentifier,
-            ScopeSpecification       scope );
 
     /**
      * Convenience factory method to obtain a single-element NetMeshObjectAccessSpecification
@@ -339,6 +270,18 @@ public interface NetMeshObjectAccessSpecificationFactory
             URI                    remoteLocation,
             ScopeSpecification     scope,
             CoherenceSpecification coherence )
+        throws
+            StringRepresentationParseException;
+
+    /**
+     * Convert a String into a NetMeshObjectAccessSpecification.
+     *
+     * @param raw the String
+     * @return the created NetMeshObjectAccessSpecification
+     * @throws StringRepresentationParseException thrown if the String could not be parsed
+     */
+    public NetMeshObjectAccessSpecification fromExternalForm(
+            String raw )
         throws
             StringRepresentationParseException;
 }

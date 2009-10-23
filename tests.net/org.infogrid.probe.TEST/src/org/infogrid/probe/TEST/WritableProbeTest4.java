@@ -71,9 +71,10 @@ public class WritableProbeTest4
                         log.debug( "Attempting to delete OBJ2 in main NetMeshBase, should fail" );
 
                         NetMeshObject obj2 = mainBase.accessLocally(
+                                shadow.getIdentifier(),
                                 mainBase.getMeshObjectIdentifierFactory().fromExternalForm(
-                                    shadow.getIdentifier(),
-                                    OBJ2 ));
+                                        shadow.getIdentifier(),
+                                        OBJ2 ));
 
                         Transaction tx     = null;
                         Throwable   thrown = null;
@@ -120,9 +121,10 @@ public class WritableProbeTest4
                         log.debug( "Attempting to delete OBJ2 in main NetMeshBase, should work" );
 
                         NetMeshObject obj2 = mainBase.accessLocally(
+                                shadow.getIdentifier(),
                                 mainBase.getMeshObjectIdentifierFactory().fromExternalForm(
-                                    shadow.getIdentifier(),
-                                    OBJ2 ));
+                                        shadow.getIdentifier(),
+                                        OBJ2 ));
 
                         Transaction tx = null;
                         try {
@@ -158,9 +160,10 @@ public class WritableProbeTest4
                         Thread.sleep( PINGPONG_ROUNDTRIP_DURATION );
 
                         NetMeshObject obj2 = mainBase.accessLocally(
+                                shadow.getIdentifier(),
                                 mainBase.getMeshObjectIdentifierFactory().fromExternalForm(
-                                    shadow.getIdentifier(),
-                                    OBJ2 ));
+                                        shadow.getIdentifier(),
+                                        OBJ2 ));
 
                         checkObject( obj2, "OBJ2 not found" );
                         checkCondition( !obj2.getIsDead(), "OBJ2 is dead" );
@@ -177,9 +180,10 @@ public class WritableProbeTest4
                         log.debug( "Attempting to delete OBJ2 in main NetMeshBase, should work" );
 
                         NetMeshObject obj2 = mainBase.accessLocally(
+                                shadow.getIdentifier(),
                                 mainBase.getMeshObjectIdentifierFactory().fromExternalForm(
-                                    shadow.getIdentifier(),
-                                    OBJ2 ));
+                                        shadow.getIdentifier(),
+                                        OBJ2 ));
 
                         Transaction tx = null;
                         try {
@@ -217,8 +221,8 @@ public class WritableProbeTest4
 
                         NetMeshObject obj2 = mainBase.findMeshObjectByIdentifier(
                                 mainBase.getMeshObjectIdentifierFactory().fromExternalForm(
-                                    shadow.getIdentifier(),
-                                    OBJ2 ));
+                                        shadow.getIdentifier(),
+                                        OBJ2 ));
 
                         checkCondition( obj2 == null, "OBJ2 still here" );
                     }
@@ -234,9 +238,10 @@ public class WritableProbeTest4
                         log.debug( "Attempting to delete OBJ2 in main NetMeshBase, should fail" );
 
                         NetMeshObject obj2 = mainBase.accessLocally(
+                                shadow.getIdentifier(),
                                 mainBase.getMeshObjectIdentifierFactory().fromExternalForm(
-                                    shadow.getIdentifier(),
-                                    OBJ2 ));
+                                        shadow.getIdentifier(),
+                                        OBJ2 ));
 
                         Transaction tx     = null;
                         Throwable   thrown = null;

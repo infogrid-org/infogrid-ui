@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -35,21 +35,34 @@ public class NetMeshBaseIdentifier
 {
     /**
      * Constructor.
-     * 
+     *
+     * @param fact the NetMeshBaseIdentifierFactory with which this NetMeshBaseIdentifier was created
      * @param canonicalForm the canonical representation of this identifier
      * @param uri URI representation of this identifier
      * @param isRestful if true, this identifier is REST-fully resolvable
      */
     protected NetMeshBaseIdentifier(
-            String  canonicalForm,
-            URI     uri,
-            boolean isRestful  )
+            NetMeshBaseIdentifierFactory fact,
+            String                       canonicalForm,
+            URI                          uri,
+            boolean                      isRestful  )
     {
-        super( canonicalForm );
+        super( fact, canonicalForm );
 
         theUri       = uri;
         theUriString = theUri.toString(); // do this here, much better for debugging
         theIsRestful = isRestful;
+    }
+
+    /**
+     * Obtain the factory with which this NetMeshBaseIdentifierFactory was created.
+     *
+     * @return the factory
+     */
+    @Override
+    public NetMeshBaseIdentifierFactory getFactory()
+    {
+        return (NetMeshBaseIdentifierFactory) super.getFactory();
     }
 
     /**

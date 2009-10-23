@@ -38,6 +38,13 @@ public interface NetMeshBaseAccessSpecification
     public CoherenceSpecification getCoherenceSpecification();
 
     /**
+     * Obtain the ScopeSpecification, if any.
+     *
+     * @return the ScopeSpecification
+     */
+    public ScopeSpecification getScopeSpecification();
+
+    /**
      * The default coherence for the object graph that we want.
      */
     public static final CoherenceSpecification DEFAULT_COHERENCE = null;
@@ -46,4 +53,14 @@ public interface NetMeshBaseAccessSpecification
      * URL parameter keyword indicating the coherence parameter.
      */
     public static final String COHERENCE_KEYWORD = "lid-coherence";
- }
+
+    /**
+     * The default scope for the object graph that we want.
+     */
+    public static final ScopeSpecification DEFAULT_SCOPE = null;
+
+    /**
+     * URL parameter keyword indicating the scope parameter.
+     */
+    public static final String SCOPE_KEYWORD = "lid-scope";
+}

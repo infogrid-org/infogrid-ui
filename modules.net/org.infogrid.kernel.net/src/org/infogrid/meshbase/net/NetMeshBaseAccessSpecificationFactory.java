@@ -35,11 +35,35 @@ public interface NetMeshBaseAccessSpecificationFactory
      * Factory method.
      *
      * @param identifier identifies the NetMeshBase to access
+     * @param scope the ScopeSpecification for the access
+     * @return the created NetMeshBaseAccessSpecification
+     */
+    public NetMeshBaseAccessSpecification obtain(
+            NetMeshBaseIdentifier  identifier,
+            ScopeSpecification     scope );
+
+    /**
+     * Factory method.
+     *
+     * @param identifier identifies the NetMeshBase to access
      * @param coherence the CoherenceSpecification for the access
      * @return the created NetMeshBaseAccessSpecification
      */
     public NetMeshBaseAccessSpecification obtain(
             NetMeshBaseIdentifier  identifier,
+            CoherenceSpecification coherence );
+
+    /**
+     * Factory method.
+     *
+     * @param identifier identifies the NetMeshBase to access
+     * @param scope the ScopeSpecification for the access
+     * @param coherence the CoherenceSpecification for the access
+     * @return the created NetMeshBaseAccessSpecification
+     */
+    public NetMeshBaseAccessSpecification obtain(
+            NetMeshBaseIdentifier  identifier,
+            ScopeSpecification     scope,
             CoherenceSpecification coherence );
 
     /**

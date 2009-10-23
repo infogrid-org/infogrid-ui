@@ -36,7 +36,7 @@ public class NetSerializerTest3
             Exception
     {
         String [] testData = {
-            "https://foo.com/",
+            "ftp://foo.com/",
             "abc://bar.com"
         };
         

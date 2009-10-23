@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -45,13 +45,6 @@ public interface NetMeshObjectAccessSpecification
     public NetMeshObjectIdentifier getNetMeshObjectIdentifier();
 
     /**
-     * Obtain the ScopeSpecification, if any.
-     *
-     * @return the ScopeSpecification
-     */
-    public ScopeSpecification getScopeSpecification();
-
-    /**
      * Obtain an externalized version of this NetMeshObjectAccessSpecification.
      * 
      * @return external form of this NetMeshObjectAccessSpecification similar to URL.toExternalForm()
@@ -62,14 +55,4 @@ public interface NetMeshObjectAccessSpecification
      * To save memory, this constant is allocated here and used wherever appropriate.
      */
     public static final NetMeshObjectAccessSpecification [] EMPTY_ARRAY = {};
-
-    /**
-     * The default scope for the object graph that we want.
-     */
-    public static final ScopeSpecification DEFAULT_SCOPE = null;
-
-    /**
-     * URL parameter keyword indicating the scope parameter.
-     */
-    public static final String SCOPE_KEYWORD = "lid-scope";
 }
