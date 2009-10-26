@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.ParseException;
 import java.util.Stack;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -212,13 +213,9 @@ public class PropertyValueXmlEncoder
 
         } else if( value instanceof TimeStampValue ) {
             TimeStampValue realValue = (TimeStampValue) value;
-            buf.append( "<" ).append( TIME_STAMP_TAG );
-            buf.append( " " ).append( TIME_STAMP_YEAR_TAG   ).append( "=\"" ).append( realValue.getYear() ).append( "\"" );
-            buf.append( " " ).append( TIME_STAMP_MONTH_TAG  ).append( "=\"" ).append( realValue.getMonth() ).append( "\"" );
-            buf.append( " " ).append( TIME_STAMP_DAY_TAG    ).append( "=\"" ).append( realValue.getDay() ).append( "\"" );
-            buf.append( " " ).append( TIME_STAMP_HOUR_TAG   ).append( "=\"" ).append( realValue.getHour() ).append( "\"" );
-            buf.append( " " ).append( TIME_STAMP_MINUTE_TAG ).append( "=\"" ).append( realValue.getMinute() ).append( "\"" );
-            buf.append( " " ).append( TIME_STAMP_SECOND_TAG ).append( "=\"" ).append( realValue.getSecond() ).append( "\"/>" );
+            buf.append( "<" ).append( TIME_STAMP_TAG ).append( ">" );
+            buf.append( realValue.getAsRfc3339String() );
+            buf.append( "</" ).append( TIME_STAMP_TAG ).append( ">" );
 
         } else {
             buf.append( "?" );
@@ -427,32 +424,23 @@ public class PropertyValueXmlEncoder
             String min = attrs.getValue( TIME_STAMP_MINUTE_TAG );
             String sec = attrs.getValue( TIME_STAMP_SECOND_TAG );
 
-            if( yr == null || yr.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_YEAR_TAG + "' on '" + TIME_STAMP_TAG + "'" );
+            if(    yr  != null && yr.length()  > 0
+                && mon != null && mon.length() > 0
+                && day != null && day.length() > 0
+                && hr  != null && hr.length()  > 0
+                && min != null && min.length() > 0
+                && sec != null && sec.length() > 0 )
+            {
+                thePropertyValue = TimeStampValue.create(
+                        Short.parseShort( yr ),
+                        Short.parseShort( mon ),
+                        Short.parseShort( day ),
+                        Short.parseShort( hr ),
+                        Short.parseShort( min ),
+                        Float.parseFloat( sec ));
+            } else{
+                thePropertyValue = null; // flag for endElement that the String needs to be parsed
             }
-            if( mon == null || mon.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_MONTH_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            if( day == null || day.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_DAY_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            if( hr == null || hr.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_HOUR_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            if( min == null || min.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_MINUTE_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            if( sec == null || sec.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_SECOND_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            
-            thePropertyValue = TimeStampValue.create(
-                    Short.parseShort( yr ),
-                    Short.parseShort( mon ),
-                    Short.parseShort( day ),
-                    Short.parseShort( hr ),
-                    Short.parseShort( min ),
-                    Float.parseFloat( sec ));
 
         } else {
             startElement1( namespaceURI, localName, qName, attrs );
@@ -570,7 +558,13 @@ public class PropertyValueXmlEncoder
             // no op
 
         } else if( TIME_STAMP_TAG.equals( qName )) {
-            // no op
+            if( thePropertyValue == null ) {
+                try {
+                    thePropertyValue = TimeStampValue.create( theCharacters.toString().trim() );
+                } catch( ParseException ex ) {
+                    throw new SAXException( "Invalid RFC 3339 time stamp", ex );
+                }
+            }
 
         } else {
             endElement1( namespaceURI, localName, qName );

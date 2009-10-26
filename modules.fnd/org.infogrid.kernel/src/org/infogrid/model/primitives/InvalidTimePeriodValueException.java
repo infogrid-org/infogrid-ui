@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -101,7 +101,7 @@ public abstract class InvalidTimePeriodValueException
      */
     public static class Year
             extends
-                InvalidTimeStampValueException
+                InvalidTimePeriodValueException
     {
         private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -132,7 +132,7 @@ public abstract class InvalidTimePeriodValueException
      */
     public static class Month
             extends
-                InvalidTimeStampValueException
+                InvalidTimePeriodValueException
     {
         private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -163,7 +163,7 @@ public abstract class InvalidTimePeriodValueException
      */
     public static class Day
             extends
-                InvalidTimeStampValueException
+                InvalidTimePeriodValueException
     {
         private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -194,7 +194,7 @@ public abstract class InvalidTimePeriodValueException
      */
     public static class Hour
             extends
-                InvalidTimeStampValueException
+                InvalidTimePeriodValueException
     {
         private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -225,7 +225,7 @@ public abstract class InvalidTimePeriodValueException
      */
     public static class Minute
             extends
-                InvalidTimeStampValueException
+                InvalidTimePeriodValueException
     {
         private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -256,7 +256,7 @@ public abstract class InvalidTimePeriodValueException
      */
     public static class Second
             extends
-                InvalidTimeStampValueException
+                InvalidTimePeriodValueException
     {
         private static final long serialVersionUID = 1L; // helps with serialization
 

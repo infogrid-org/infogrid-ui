@@ -15,6 +15,7 @@
 package org.infogrid.probe.xml;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -344,33 +345,29 @@ public class DomMeshObjectSetProbe
                             String min = MeshObjectSetProbeUtils.getTextContent( grandAttrs, TIME_STAMP_MINUTE_TAG );
                             String sec = MeshObjectSetProbeUtils.getTextContent( grandAttrs, TIME_STAMP_SECOND_TAG );
 
-                            if( yr == null || yr.length() == 0 ) {
-                                throw new ProbeException.SyntaxError( dataSourceIdentifier,  "empty '" + TIME_STAMP_YEAR_TAG + "' on '" + TIME_STAMP_TAG + "'", null );
-                            }
-                            if( mon == null || mon.length() == 0 ) {
-                                throw new ProbeException.SyntaxError( dataSourceIdentifier,  "empty '" + TIME_STAMP_MONTH_TAG + "' on '" + TIME_STAMP_TAG + "'", null );
-                            }
-                            if( day == null || day.length() == 0 ) {
-                                throw new ProbeException.SyntaxError( dataSourceIdentifier,  "empty '" + TIME_STAMP_DAY_TAG + "' on '" + TIME_STAMP_TAG + "'", null );
-                            }
-                            if( hr == null || hr.length() == 0 ) {
-                                throw new ProbeException.SyntaxError( dataSourceIdentifier,  "empty '" + TIME_STAMP_HOUR_TAG + "' on '" + TIME_STAMP_TAG + "'", null );
-                            }
-                            if( min == null || min.length() == 0 ) {
-                                throw new ProbeException.SyntaxError( dataSourceIdentifier,  "empty '" + TIME_STAMP_MINUTE_TAG + "' on '" + TIME_STAMP_TAG + "'", null );
-                            }
-                            if( sec == null || sec.length() == 0 ) {
-                                throw new ProbeException.SyntaxError( dataSourceIdentifier,  "empty '" + TIME_STAMP_SECOND_TAG + "' on '" + TIME_STAMP_TAG + "'", null );
-                            }
-                            propValue = TimeStampValue.create(
-                                    Short.parseShort( yr ),
-                                    Short.parseShort( mon ),
-                                    Short.parseShort( day ),
-                                    Short.parseShort( hr ),
-                                    Short.parseShort( min ),
-                                    Float.parseFloat( sec ));
+                            if(    yr  != null && yr.length()  > 0
+                                && mon != null && mon.length() > 0
+                                && day != null && day.length() > 0
+                                && hr  != null && hr.length()  > 0
+                                && min != null && min.length() > 0
+                                && sec != null && sec.length() > 0 )
+                            {
+                                propValue = TimeStampValue.create(
+                                        Short.parseShort( yr ),
+                                        Short.parseShort( mon ),
+                                        Short.parseShort( day ),
+                                        Short.parseShort( hr ),
+                                        Short.parseShort( min ),
+                                        Float.parseFloat( sec ));
+                            } else {
+                                try {
+                                    propValue = TimeStampValue.create( content.trim() );
 
-            
+                                } catch( ParseException ex ) {
+                                    throw new ProbeException.SyntaxError( dataSourceIdentifier, ex );
+                                }
+                            }
+
                         } else {
                             throw new ProbeException.SyntaxError( dataSourceIdentifier,  "Unknown XML tag: " + grandNodeName, null );
                         }

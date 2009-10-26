@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -1356,17 +1356,7 @@ public class XmlModelExporter
             if( writeTag ) {
                 theWriter.write( "TimeStamp:" );
             }
-            theWriter.write( String.valueOf( realValue.getYear() ));
-            theWriter.write( '/' );
-            theWriter.write( String.valueOf( realValue.getMonth() ));
-            theWriter.write( '/' );
-            theWriter.write( String.valueOf( realValue.getDay() ));
-            theWriter.write( ' ' );
-            theWriter.write( String.valueOf( realValue.getHour() ));
-            theWriter.write( ':' );
-            theWriter.write( String.valueOf( realValue.getMinute() ));
-            theWriter.write( ':' );
-            theWriter.write( String.valueOf( realValue.getSecond() ));
+            theWriter.write( realValue.getAsRfc3339String() );
             return;
         }
 

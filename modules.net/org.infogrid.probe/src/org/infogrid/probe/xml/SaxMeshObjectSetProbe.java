@@ -17,6 +17,7 @@ package org.infogrid.probe.xml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -444,32 +445,23 @@ public class SaxMeshObjectSetProbe
             String min = attrs.getValue( TIME_STAMP_MINUTE_TAG );
             String sec = attrs.getValue( TIME_STAMP_SECOND_TAG );
 
-            if( yr == null || yr.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_YEAR_TAG + "' on '" + TIME_STAMP_TAG + "'" );
+            if(    yr  != null && yr.length()  > 0
+                && mon != null && mon.length() > 0
+                && day != null && day.length() > 0
+                && hr  != null && hr.length()  > 0
+                && min != null && min.length() > 0
+                && sec != null && sec.length() > 0 )
+            {
+                theObjectBeingParsed.setCurrentPropertyValue( TimeStampValue.create(
+                        Short.parseShort( yr ),
+                        Short.parseShort( mon ),
+                        Short.parseShort( day ),
+                        Short.parseShort( hr ),
+                        Short.parseShort( min ),
+                        Float.parseFloat( sec )));
+            } else{
+                theObjectBeingParsed.setCurrentPropertyValue(  null ); // flag for endElement that the String needs to be parsed
             }
-            if( mon == null || mon.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_MONTH_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            if( day == null || day.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_DAY_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            if( hr == null || hr.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_HOUR_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            if( min == null || min.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_MINUTE_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            if( sec == null || sec.length() == 0 ) {
-                log.error( "empty '" + TIME_STAMP_SECOND_TAG + "' on '" + TIME_STAMP_TAG + "'" );
-            }
-            
-            theObjectBeingParsed.setCurrentPropertyValue( TimeStampValue.create(
-                    Short.parseShort( yr ),
-                    Short.parseShort( mon ),
-                    Short.parseShort( day ),
-                    Short.parseShort( hr ),
-                    Short.parseShort( min ),
-                    Float.parseFloat( sec )));
 
         } else {
             throw new SAXParseException( "Unknown qname " + qName, theLocator );
@@ -568,7 +560,15 @@ public class SaxMeshObjectSetProbe
             theObjectBeingParsed.addPropertyValue( theObjectBeingParsed.getCurrentPropertyValue() );
 
         } else if( TIME_STAMP_TAG.equals( qName )) {
-            theObjectBeingParsed.addPropertyValue( theObjectBeingParsed.getCurrentPropertyValue() );
+            if( theObjectBeingParsed.getCurrentPropertyValue() != null ) {
+                theObjectBeingParsed.addPropertyValue( theObjectBeingParsed.getCurrentPropertyValue() );
+            } else {
+                try {
+                    theObjectBeingParsed.addPropertyValue( TimeStampValue.create( theCharacters.toString().trim() ) );
+                } catch( ParseException ex ) {
+                    throw new SAXParseException( "Cannot parse RFC 3339 String", theLocator, ex );
+                }
+            }
 
         } else {
             throw new SAXParseException( "Unknown qname " + qName, theLocator );

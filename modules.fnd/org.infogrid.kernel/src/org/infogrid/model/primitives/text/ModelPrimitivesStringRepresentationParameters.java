@@ -34,4 +34,10 @@ public interface ModelPrimitivesStringRepresentationParameters
      * an instance, if any.
      */
     public final String PROPERTY_TYPE = "propertyType";
+
+    /**
+     * The key into this object that identifies the TimeZone in which the rendered PropertyValue shall be
+     * shown, if any.
+     */
+    public final String TIME_ZONE = "tz";
 }

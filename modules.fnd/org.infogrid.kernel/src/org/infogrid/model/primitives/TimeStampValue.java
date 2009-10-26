@@ -14,24 +14,25 @@
 
 package org.infogrid.model.primitives;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
+import org.infogrid.util.Rfc3339Util;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
 /**
-  * This is a time stamp value for PropertyValues. Its values
-  * are represented in UTC.
+  * This is a time stamp value for PropertyValues.
   */
 public final class TimeStampValue
         extends
             PropertyValue
 {
-    private final static long serialVersionUID = 1L; // helps with serialization
+    private final static long serialVersionUID = 2L; // helps with serialization
 
     /**
      * Factory method.
@@ -45,14 +46,26 @@ public final class TimeStampValue
      * @return the created TimePeriodValue
      */
     public static TimeStampValue create(
-            short year,
-            short month,
-            short day,
-            short hour,
-            short minute,
+            int   year,
+            int   month,
+            int   day,
+            int   hour,
+            int   minute,
             float second )
     {
-        return new TimeStampValue( year, month, day, hour, minute, second );
+        Calendar cal = Calendar.getInstance( Rfc3339Util.UTC );
+        int      sec = (int) second;
+
+        cal.set(
+                year,
+                month-1, // counts from 0
+                day,
+                hour,
+                minute,
+                sec );
+        cal.set( Calendar.MILLISECOND, (int) ( ( second-sec ) * 1000 ));
+
+        return create( cal );
     }
 
     /**
@@ -64,11 +77,7 @@ public final class TimeStampValue
     public static TimeStampValue create(
             long value )
     {
-        Calendar theDate = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
-
-        theDate.setTime( new Date(value) ); // needed for JDK 1.3 compatibility
-
-        return create( theDate );
+        return new TimeStampValue( value );
     }
 
     /**
@@ -84,13 +93,7 @@ public final class TimeStampValue
             throw new IllegalArgumentException( "null value" );
         }
 
-        return new TimeStampValue(
-                (short) value.get( Calendar.YEAR ),
-                (short) ( value.get( Calendar.MONTH ) + 1 ), // Calendar counts from 0
-                (short) value.get( Calendar.DAY_OF_MONTH ), // Calendar counts from 1
-                (short) value.get( Calendar.HOUR_OF_DAY ),
-                (short) value.get( Calendar.MINUTE ),
-                value.get( Calendar.SECOND ) + (0.001f * value.get( Calendar.MILLISECOND )) );
+        return new TimeStampValue( value.getTimeInMillis() );
     }
 
     /**
@@ -106,13 +109,7 @@ public final class TimeStampValue
             return null;
         }
 
-        return new TimeStampValue(
-                (short) value.get( Calendar.YEAR ),
-                (short) value.get( Calendar.MONTH + 1 ), // Calendar counts from 0
-                (short) value.get( Calendar.DAY_OF_MONTH ), // Calendar counts from 1
-                (short) value.get( Calendar.HOUR_OF_DAY ),
-                (short) value.get( Calendar.MINUTE ),
-                value.get( Calendar.SECOND ) + (0.001f * value.get( Calendar.MILLISECOND )) );
+        return create( value );
     }
 
     /**
@@ -128,10 +125,7 @@ public final class TimeStampValue
             throw new IllegalArgumentException( "null value" );
         }
 
-        Calendar cal = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
-        cal.setTime( value );
-
-        return create( cal );
+        return new TimeStampValue( value.getTime() );
     }
 
     /**
@@ -147,122 +141,56 @@ public final class TimeStampValue
             return null;
         }
 
-        Calendar cal = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
-        cal.setTime( value );
+        return create( value );
+    }
 
-        return create( cal );
+    /**
+     * Factory method.
+     *
+     * @param rfc3339String value as an RFC 3339 String
+     * @return the created TimeStampValue
+     * @throws ParseException thrown if a syntax error occurred
+     */
+    public static TimeStampValue create(
+            String rfc3339String )
+        throws
+            ParseException
+    {
+        if( rfc3339String == null ) {
+            throw new IllegalArgumentException( "null value" );
+        }
+        Date d = Rfc3339Util.rfc3339ToDate( rfc3339String );
+        return new TimeStampValue( d.getTime() );
+    }
+
+    /**
+     * Factory method, or return null if the argument is null.
+     *
+     * @param rfc3339String value as an RFC 3339 String
+     * @return the created TimeStampValue, or null
+     * @throws ParseException thrown if a syntax error occurred
+     */
+    public static TimeStampValue createOrNull(
+            String rfc3339String )
+        throws
+            ParseException
+    {
+        if( rfc3339String == null ) {
+            return null;
+        }
+
+        return create( rfc3339String );
     }
 
     /**
       * Private constructor, use factory method.
       *
-      * @param year the number of years
-      * @param month the number of months
-      * @param day the number of days
-      * @param hour the number of hours
-      * @param minute the number of minutes
-      * @param second the snumber of seconds, plus fractions
+     * @param value time in the format returned by System.currentTimeMillis()
       */
     private TimeStampValue(
-            short year,
-            short month,
-            short day,
-            short hour,
-            short minute,
-            float second )
+            long value )
     {
-        if( month < 1 || month > 12 ) {
-            throw new InvalidTimeStampValueException.Month( year, month, day, hour, minute, second );
-        }
-        if( day < 1 || day > 31 ) {
-            throw new InvalidTimeStampValueException.Day( year, month, day, hour, minute, second );
-        }
-        if( hour < 0 || hour > 23 ) {
-            throw new InvalidTimeStampValueException.Hour( year, month, day, hour, minute, second );
-        }
-        if( minute < 0 || minute > 59 ) {
-            throw new InvalidTimeStampValueException.Minute( year, month, day, hour, minute, second );
-        }
-        if( second < 0. || second >= 60. ) {
-            throw new InvalidTimeStampValueException.Second( year, month, day, hour, minute, second );
-        }
-
-        this.theYear   = year;
-        this.theMonth  = month;
-        this.theDay    = day;
-        this.theHour   = hour;
-        this.theMinute = minute;
-        this.theSecond = second;
-    }
-
-    /**
-      * Determine year value.
-      *
-      * @return the years
-      */
-    public short getYear()
-    {
-        return theYear;
-    }
-
-    /**
-      * Determine month value.
-      *
-      * @return the months
-      */
-    public short getMonth()
-    {
-        return theMonth;
-    }
-
-    /**
-      * Determine day value.
-      *
-      * @return the days
-      */
-    public short getDay()
-    {
-        return theDay;
-    }
-
-    /**
-      * Determine hour value.
-      *
-      * @return the hours
-      */
-    public short getHour()
-    {
-        return theHour;
-    }
-
-    /**
-      * Determine minute value.
-      *
-      * @return the minutes
-      */
-    public short getMinute()
-    {
-        return theMinute;
-    }
-
-    /**
-      * Determine second value.
-      *
-      * @return the seconds plus fractions
-      */
-    public float getSecond()
-    {
-        return theSecond;
-    }
-
-    /**
-     * Obtain the underlying value.
-     *
-     * @return the underlying value
-     */
-    public String value()
-    {
-        return toString();
+        theValue = value;
     }
 
     /**
@@ -272,17 +200,7 @@ public final class TimeStampValue
      */
     public Date getAsDate()
     {
-        Calendar cal = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
-
-        cal.set( Calendar.YEAR,        theYear );
-        cal.set( Calendar.MONTH,       theMonth-1 ); // month counts from 0
-        cal.set( Calendar.DATE,        theDay );
-        cal.set( Calendar.HOUR_OF_DAY, theHour );
-        cal.set( Calendar.MINUTE,      theMinute );
-        cal.set( Calendar.SECOND,      (int) theSecond );
-        cal.set( Calendar.MILLISECOND, ((int) (theSecond * 1000f)) % 1000 );
-
-        return cal.getTime();
+        return new Date( theValue );
     }
 
     /**
@@ -292,17 +210,52 @@ public final class TimeStampValue
      */
     public long getAsMillis()
     {
-        Calendar cal = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
+        return theValue;
+    }
 
-        cal.set( Calendar.YEAR,        theYear );
-        cal.set( Calendar.MONTH,       theMonth-1 ); // month counts from 0
-        cal.set( Calendar.DATE,        theDay );
-        cal.set( Calendar.HOUR_OF_DAY, theHour );
-        cal.set( Calendar.MINUTE,      theMinute );
-        cal.set( Calendar.SECOND,      (int) theSecond );
-        cal.set( Calendar.MILLISECOND, ((int) (theSecond * 1000f)) % 1000 );
+    /**
+     * Obtain this as a Calendar in UTC format.
+     * 
+     * @return Calendar
+     */
+    public Calendar getAsUtcCalendar()
+    {
+        return getAsCalendar( Rfc3339Util.UTC );
+    }
 
-        return cal.getTimeInMillis();
+    /**
+     * Obtain this as a Calendar in a specified TimeZone.
+     *
+     * @param tz the TimeZone
+     * @return Calendar
+     */
+    public Calendar getAsCalendar(
+            TimeZone tz )
+    {
+        Calendar cal = Calendar.getInstance( tz );
+        cal.setTimeInMillis( theValue );
+
+        return cal;
+    }
+
+    /**
+     * Obtain this as an RFC 3339 String.
+     *
+     * @return the String
+     */
+    public String getAsRfc3339String()
+    {
+        return Rfc3339Util.dateToRfc3339( getAsDate() );
+    }
+
+    /**
+     * Obtain the underlying value.
+     *
+     * @return the underlying value
+     */
+    public String value()
+    {
+        return getAsRfc3339String();
     }
 
     /**
@@ -316,12 +269,9 @@ public final class TimeStampValue
             Object otherValue )
     {
         if( otherValue instanceof TimeStampValue ) {
-            return (theYear   == ((TimeStampValue)otherValue).theYear)
-                && (theMonth  == ((TimeStampValue)otherValue).theMonth)
-                && (theDay    == ((TimeStampValue)otherValue).theDay)
-                && (theHour   == ((TimeStampValue)otherValue).theHour)
-                && (theMinute == ((TimeStampValue)otherValue).theMinute)
-                && (theSecond == ((TimeStampValue)otherValue).theSecond);
+            TimeStampValue realOtherValue = (TimeStampValue) otherValue;
+            
+            return theValue == realOtherValue.theValue;
         }
         return false;
     }
@@ -334,34 +284,7 @@ public final class TimeStampValue
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
-        buf.append( theYear );
-        buf.append( "/" );
-        if( theMonth < 10 ) {
-            buf.append( "0" );
-        }
-        buf.append( theMonth );
-        buf.append( "/" );
-        if( theDay < 10 ) {
-            buf.append( "0" );
-        }
-        buf.append( theDay );
-        buf.append( " " );
-        if( theHour < 10 ) {
-            buf.append( "0" );
-        }
-        buf.append( theHour );
-        buf.append( ":" );
-        if( theMinute < 10 ) {
-            buf.append( "0" );
-        }
-        buf.append( theMinute );
-        buf.append( ":" );
-        if( theSecond < 10 ) {
-            buf.append( "0" );
-        }
-        buf.append( theSecond );
-        return buf.toString();
+        return getAsUtcCalendar().toString();
     }
 
     /**
@@ -377,18 +300,8 @@ public final class TimeStampValue
     {
         StringBuffer buf = new StringBuffer( 256 );
         buf.append( getClass().getName() );
-        buf.append( ".create( (short) " );
-        buf.append( theYear );
-        buf.append( ", (short) " );
-        buf.append( theMonth );
-        buf.append( ", (short) " );
-        buf.append( theDay );
-        buf.append( ", (short) " );
-        buf.append( theHour );
-        buf.append( ", (short) " );
-        buf.append( theMinute );
-        buf.append( ", (float) " );
-        buf.append( theSecond );
+        buf.append( ".create( " );
+        buf.append( theValue );
         buf.append( " )" );
         return buf.toString();
     }
@@ -416,17 +329,8 @@ public final class TimeStampValue
             throw new IllegalArgumentException( "offset out of range: " + offset );
             // it would be so great if the JDK had consistent APIs
         }
-        Calendar currentDate = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ));
-        currentDate.add( Calendar.MILLISECOND, (int) offset );
 
-        return new TimeStampValue(
-                (short) currentDate.get( Calendar.YEAR ),
-                (short) ( currentDate.get( Calendar.MONTH ) + 1 ),   // month counts from zero
-                (short) currentDate.get( Calendar.DAY_OF_MONTH ),
-                (short) currentDate.get( Calendar.HOUR_OF_DAY ),
-                (short) currentDate.get( Calendar.MINUTE ),
-                currentDate.get( Calendar.SECOND )
-                    + currentDate.get( Calendar.MILLISECOND )/1000.0f );
+        return new TimeStampValue( System.currentTimeMillis() + offset );
     }
 
     /**
@@ -470,35 +374,12 @@ public final class TimeStampValue
             if( valueTwo == null ) {
                 return -1;
             } else {
-                int delta;
-                delta = valueOne.theYear - valueTwo.theYear;
-                if( delta != 0 ) {
-                    return delta;
-                }
-                delta = valueOne.theMonth - valueTwo.theMonth;
-                if( delta != 0 ) {
-                    return delta;
-                }
-                delta = valueOne.theDay - valueTwo.theDay;
-                if( delta != 0 ) {
-                    return delta;
-                }
-                delta = valueOne.theHour - valueTwo.theHour;
-                if( delta != 0 ) {
-                    return delta;
-                }
-                delta = valueOne.theMinute - valueTwo.theMinute;
-                if( delta != 0 ) {
-                    return delta;
-                }
+                long delta = valueOne.theValue - valueTwo.theValue;
 
-                if( valueOne.theSecond < valueTwo.theSecond ) {
-                    return -1;
-                } else if( valueOne.theSecond == valueTwo.theSecond ) {
-                    return 0;
-                } else {
-                    return +1;
+                if( delta > Integer.MAX_VALUE || delta < Integer.MIN_VALUE ) {
+                    delta /= 1000L; // stupid API
                 }
+                return (int) delta;
             }
         }
     }
@@ -542,17 +423,29 @@ public final class TimeStampValue
         Object editVariable;
         Object meshObject;
         Object propertyType;
+        Object tz;
         if( pars != null ) {
             editVariable = pars.get( StringRepresentationParameters.EDIT_VARIABLE );
             meshObject   = pars.get( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT );
             propertyType = pars.get( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE );
+            tz           = pars.get( ModelPrimitivesStringRepresentationParameters.TIME_ZONE );
         } else {
             editVariable = null;
             meshObject   = null;
             propertyType = null;
+            tz           = Rfc3339Util.UTC;
         }
 
-        int millis = ((int) ( theSecond * 1000 )) % 1000;
+        Calendar cal = getAsCalendar( (TimeZone) tz );
+
+        int   year  = cal.get( Calendar.YEAR );
+        int   month = cal.get( Calendar.MONTH ) + 1; // Calendar counts from 0
+        int   day   = cal.get( Calendar.DAY_OF_MONTH ); // Calendar counts from 1
+        int   hour  = cal.get( Calendar.HOUR_OF_DAY );
+        int   min   = cal.get( Calendar.MINUTE );
+        float sec   = cal.get( Calendar.SECOND ) + (0.001f * cal.get( Calendar.MILLISECOND ));
+
+        int millis = cal.get( Calendar.MILLISECOND );
         StringBuilder paddedMillis = new StringBuilder();
         if( millis < 100 ) {
             paddedMillis.append( '0' );
@@ -570,44 +463,21 @@ public final class TimeStampValue
         /* 1 */ meshObject,
         /* 2 */ propertyType,
         /* 3 */ this,
-        /* 4 */ theYear,
-        /* 5 */ theMonth,
-        /* 6 */ theDay,
-        /* 7 */ theHour,
-        /* 8 */ theMinute,
-        /* 9 */ theSecond,
-        /* 10 */ (int) theSecond,
+        /* 4 */ year,
+        /* 5 */ month,
+        /* 6 */ day,
+        /* 7 */ hour,
+        /* 8 */ min,
+        /* 9 */ sec,
+        /* 10 */ (int) sec,
         /* 11 */ millis,
-        /* 12 */ paddedMillis );
+        /* 12 */ paddedMillis,
+        /* 13 */ tz.toString() );
+
     }
 
     /**
-      * The real year value.
-      */
-    protected short theYear;
-
-    /**
-      * The real month value.
-      */
-    protected short theMonth;
-
-    /**
-      * The real day value.
-      */
-    protected short theDay;
-
-    /**
-      * The real hour value.
-      */
-    protected short theHour;
-
-    /**
-      * The real minute value.
-      */
-    protected short theMinute;
-
-    /**
-      * The real second value.
-      */
-    protected float theSecond;
+     * The time, in System.currentTimeMillis() format.
+     */
+    protected long theValue;
 }

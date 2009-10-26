@@ -14,6 +14,7 @@
 
 package org.infogrid.probe.feeds;
 
+import java.text.ParseException;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -53,7 +54,6 @@ import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.xml.MeshObjectSetProbeTags;
 import org.infogrid.probe.xml.XmlDOMProbe;
-import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationParseException;
 import org.w3c.dom.Document;
@@ -418,14 +418,30 @@ public abstract class AbstractFeedProbe
                 String minute = realChild.getAttribute( MeshObjectSetProbeTags.TIME_STAMP_MINUTE_TAG );
                 String second = realChild.getAttribute( MeshObjectSetProbeTags.TIME_STAMP_SECOND_TAG );
 
-                PropertyValue ret = TimeStampValue.create(
-                        Short.parseShort( year ),
-                        Short.parseShort( month ),
-                        Short.parseShort( day ),
-                        Short.parseShort( hour ),
-                        Short.parseShort( minute ),
-                        Float.parseFloat( second ));
-                return ret;
+                if(    year   != null && year.length()   > 0
+                    && month  != null && month.length()  > 0
+                    && day    != null && day.length()    > 0
+                    && hour   != null && hour.length()   > 0
+                    && minute != null && minute.length() > 0
+                    && second != null && second.length() > 0 )
+                {
+                    PropertyValue ret = TimeStampValue.create(
+                            Short.parseShort( year ),
+                            Short.parseShort( month ),
+                            Short.parseShort( day ),
+                            Short.parseShort( hour ),
+                            Short.parseShort( minute ),
+                            Float.parseFloat( second ));
+                    return ret;
+                } else {
+                    String content = realChild.getTextContent();
+                    try {
+                        PropertyValue ret = TimeStampValue.create( content );
+                        return ret;
+                    } catch( ParseException ex ) {
+                        throw new ProbeException.SyntaxError( dataSourceIdentifier, "Invalid RFC 3339 date " + content, ex );
+                    }
+                }
 
             } else {
                 log.error( "Unexpected tag: " + localName );
