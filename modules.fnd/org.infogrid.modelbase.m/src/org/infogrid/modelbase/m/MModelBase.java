@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -83,14 +83,7 @@ public class MModelBase
             registry = null;
         }
 
-        MMeshTypeSynonymDictionary synonymDictionary         = MMeshTypeSynonymDictionary.create();
-        MMeshTypeIdentifierFactory meshTypeIdentifierFactory = MMeshTypeIdentifierFactory.create();
-        
-        MModelBase ret = new MModelBase( meshTypeIdentifierFactory, synonymDictionary, registry );
-
-        synonymDictionary.setModelBase( ret );
-
-        return ret;
+        return create( registry );
     }
 
     /**
@@ -102,33 +95,54 @@ public class MModelBase
     public static MModelBase create(
             ModuleRegistry registry )
     {
-        MMeshTypeSynonymDictionary synonymDictionary         = MMeshTypeSynonymDictionary.create();
+        MMeshTypeLifecycleManager  lifecycleManager          = MMeshTypeLifecycleManager.create();
         MMeshTypeIdentifierFactory meshTypeIdentifierFactory = MMeshTypeIdentifierFactory.create();
+        MMeshTypeSynonymDictionary synonymDictionary         = MMeshTypeSynonymDictionary.create();
         
-        MModelBase ret = new MModelBase( meshTypeIdentifierFactory, synonymDictionary, registry );
-
-        synonymDictionary.setModelBase( ret );
+        MModelBase ret = new MModelBase( lifecycleManager, meshTypeIdentifierFactory, synonymDictionary, registry );
 
         return ret;
     }
 
     /**
+     * Factory method.
+     *
+     * @param lifecycleManager allows the creation of MeshTypes
+     * @param meshTypeIdentifierFactory the factory for MeshTypeIdentifiers to use
+     * @param synonymDictionary the dictionary for MeshTypeIdentifier synonyms to use
+     * @param registry the ModuleRegistry in which we look for ModelModules
+     * @return the created MModelBase
+     */
+    public static MModelBase create(
+            MMeshTypeLifecycleManager  lifecycleManager,
+            MMeshTypeIdentifierFactory meshTypeIdentifierFactory,
+            MMeshTypeSynonymDictionary synonymDictionary,
+            ModuleRegistry             registry )
+    {
+        return new MModelBase( lifecycleManager, meshTypeIdentifierFactory, synonymDictionary, registry );
+    }
+
+    /**
      * Private constructor, use factory method.
      *
+     * @param lifecycleManager allows the creation of MeshTypes
      * @param meshTypeIdentifierFactory the factory for MeshTypeIdentifiers to use
      * @param synonymDictionary the dictionary for MeshTypeIdentifier synonyms to use
      * @param registry the ModuleRegistry in which we look for ModelModules
      */
     protected MModelBase(
+            MMeshTypeLifecycleManager  lifecycleManager,
             MMeshTypeIdentifierFactory meshTypeIdentifierFactory,
             MMeshTypeSynonymDictionary synonymDictionary,
             ModuleRegistry             registry )
     {
+        theLifecycleManager          = lifecycleManager;
         theMeshTypeIdentifierFactory = meshTypeIdentifierFactory;
         theSynonymDictionary         = synonymDictionary;
         theModuleRegistry            = registry;
 
-        theLifecycleManager = new MMeshTypeLifecycleManager( this );
+        theLifecycleManager.setModelBase( this );
+        theSynonymDictionary.setModelBase( this );
 
         if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "constructor" );

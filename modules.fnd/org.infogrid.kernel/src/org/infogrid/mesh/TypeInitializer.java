@@ -51,9 +51,12 @@ public class TypeInitializer
             long timeUpdated )
     {
         try {
-            Class<?> implClass   = theMeshObject.getMeshBase().getMeshBaseLifecycleManager().getImplementationClass( theType );
-            Method   initializer = implClass.getDeclaredMethod( "initializeDefaultValues", TypeInitializer.class, Long.TYPE );
-            initializer.invoke( null, this, timeUpdated );
+            Class<?> implClass = theMeshObject.getMeshBase().getMeshBaseLifecycleManager().getImplementationClass( theType );
+
+            if( implClass != null ) {
+                Method   initializer = implClass.getDeclaredMethod( "initializeDefaultValues", TypeInitializer.class, Long.TYPE );
+                initializer.invoke( null, this, timeUpdated );
+            }
 
         } catch( Exception ex ) {
             AbstractMeshObject.log.error( ex );

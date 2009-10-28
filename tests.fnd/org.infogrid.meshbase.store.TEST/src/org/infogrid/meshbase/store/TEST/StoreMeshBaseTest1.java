@@ -42,7 +42,6 @@ public class StoreMeshBaseTest1
      *
      * @throws Exception thrown if an Exception occurred during the test
      */
-    @SuppressWarnings(value={"unchecked"})
     public void run()
         throws
             Exception

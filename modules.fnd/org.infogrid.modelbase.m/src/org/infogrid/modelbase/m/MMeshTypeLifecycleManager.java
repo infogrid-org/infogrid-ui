@@ -59,11 +59,29 @@ public class MMeshTypeLifecycleManager
             MeshTypeLifecycleManager
 {
     /**
+     * Factory method.
+     *
+     * @return the created MMeshTypeLifecycleManager
+     */
+    public static MMeshTypeLifecycleManager create()
+    {
+        return new MMeshTypeLifecycleManager();
+    }
+
+    /**
       * Constructor.
+      */
+    protected MMeshTypeLifecycleManager()
+    {
+        // nothing
+    }
+
+    /**
+      * Set the ModelBase that this MeshTypeLifecycleManager belongs to.
       *
       * @param mb the ModelBase that this MeshTypeLifecycleManager belongs to
       */
-    MMeshTypeLifecycleManager(
+    public void setModelBase(
             MModelBase mb )
     {
         this.theModelBase = mb;
@@ -122,7 +140,10 @@ public class MMeshTypeLifecycleManager
             throw new IllegalArgumentException( "To-be-created EntityType with Identifier " + identifier + " cannot have null SubjectArea" );
         }
         if( supertypes == null ) {
-            throw new IllegalArgumentException( "To-be-created EntityType with Identifier " + identifier + " cannot have null supertypes" );
+            supertypes = new EntityType[0];
+        }
+        if( synonyms == null ) {
+            synonyms = new MeshTypeIdentifier[0];
         }
         if( isAbstract == null ) {
             throw new IllegalArgumentException( "To-be-created EntityType with Identifier " + identifier + " cannot have null IsAbstract" );
@@ -250,10 +271,10 @@ public class MMeshTypeLifecycleManager
 //            throw new IllegalArgumentException( "To-be-created RelationshipType with Identifier " + identifier + " cannot have null Destination" );
 //        }
         if( sourceSuperRoleTypes == null ) {
-            throw new IllegalArgumentException( "To-be-created RelationshipType with Identifier " + identifier + " cannot have null source super-RoleTypes" );
+            sourceSuperRoleTypes = new RoleType[0];
         }
         if( destinationSuperRoleTypes == null ) {
-            throw new IllegalArgumentException( "To-be-created RelationshipType with Identifier " + identifier + " cannot have null destination super-RoleTypes" );
+            destinationSuperRoleTypes = new RoleType[0];
         }
         if( sourceSuperRoleTypes.length != destinationSuperRoleTypes.length ) {
             throw new IllegalArgumentException( "To-be-created RelationshipType with Identifier " + identifier + " cannot have source super-RoleTypes and destination super-RoleTypes of different lengths" );
@@ -403,8 +424,8 @@ public class MMeshTypeLifecycleManager
                 destinationMultiplicity,
                 source,
                 destination,
-                new RoleType[] { sourceSuperRoleType },
-                new RoleType[] { destinationSuperRoleType },
+                sourceSuperRoleType      != null ? new RoleType[] { sourceSuperRoleType      } : new RoleType[0],
+                destinationSuperRoleType != null ? new RoleType[] { destinationSuperRoleType } : new RoleType[0],
                 sourceRoleConstraintClassNames,
                 destinationRoleConstraintClassNames,
                 isAbstract,
@@ -1326,10 +1347,10 @@ public class MMeshTypeLifecycleManager
             throw new IllegalArgumentException( "To-be-created SubjectArea with Identifier " + identifier + " cannot have empty UserNames" );
         }
         if( theSubjectAreaDependencies == null ) {
-            throw new IllegalArgumentException( "To-be-created SubjectArea with Identifier " + identifier + " cannot have null SubjectAreaDependencies" );
+            theSubjectAreaDependencies = new SubjectArea[0];
         }
         if( theModuleRequirements == null ) {
-            throw new IllegalArgumentException( "To-be-created SubjectArea with Identifier " + identifier + " cannot have null ModuleRequirements" );
+            theModuleRequirements = new ModuleRequirement[0];
         }
         try {
             MeshType already = theModelBase.findLoadedMeshTypeByIdentifier( identifier );

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -126,7 +126,7 @@ public class StoreMeshBase
      * @param setFactory the factory for MeshObjectSets appropriate for this MeshBase
      * @param modelBase the ModelBase containing type information
      * @param accessMgr the AccessManager that controls access to this MeshBase
-     * @param meshObjectStore the IterableStore in which to store the MeshObjects
+     * @param meshObjectStore the Store in which to store the MeshObjects
      * @param context the Context in which this MeshBase runs
      * @return the created StoreMeshBase
      */
