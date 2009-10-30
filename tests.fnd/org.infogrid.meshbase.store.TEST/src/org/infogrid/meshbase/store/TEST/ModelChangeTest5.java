@@ -18,13 +18,10 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.store.IterableStoreMeshBase;
 import org.infogrid.model.primitives.BooleanValue;
 import org.infogrid.model.primitives.EntityType;
-import org.infogrid.model.primitives.FloatValue;
 import org.infogrid.model.primitives.L10MapImpl;
 import org.infogrid.model.primitives.MultiplicityValue;
-import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.RelationshipType;
 import org.infogrid.model.primitives.RoleType;
-import org.infogrid.model.primitives.StringDataType;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
@@ -34,9 +31,9 @@ import org.infogrid.util.logging.Log;
 
 /**
  * Models are not supposed to change. But sometimes, they do, such as during development.
- * Tests that a mandatory PropertyType can be added without too bad consequences.
+ * Tests that a supertype can be removed without bad consequences.
  */
-public class ModelChangeTest2
+public class ModelChangeTest5
     extends
         AbstractModelChangeTest
 {
@@ -80,58 +77,13 @@ public class ModelChangeTest2
                 BooleanValue.TRUE,
                 BooleanValue.TRUE );
 
-        final EntityType ent1 = typeLife.createEntityType(
-                typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/Ent1" ),
-                StringValue.create( "Ent1" ),
-                L10MapImpl.create( StringValue.create( "Ent1") ),
-                null, null,
-                sa,
-                null, null, null, null, null, null, null,
-                BooleanValue.TRUE, // abstract
-                BooleanValue.TRUE,
-                BooleanValue.TRUE,
-                BooleanValue.TRUE,
-                BooleanValue.TRUE );
-
-        final PropertyType ent1_prop1 = typeLife.createPropertyType(
-                typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/Ent1_Prop1" ),
-                StringValue.create( "Ent1_Prop1" ),
-                L10MapImpl.create( StringValue.create( "Ent1_Prop1") ),
-                null,
-                ent1,
-                sa,
-                StringDataType.theDefault,
-                null, null, null,
-                BooleanValue.TRUE,
-                BooleanValue.FALSE,
-                BooleanValue.TRUE,
-                BooleanValue.TRUE,
-                FloatValue.create( 1. ) );
-
-        // added mandatory PropertyType
-        final PropertyType ent1_prop2 = typeLife.createPropertyType(
-                typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/Ent1_Prop2" ),
-                StringValue.create( "Ent1_Prop2" ),
-                L10MapImpl.create( StringValue.create( "Ent1_Prop2") ),
-                null,
-                ent1,
-                sa,
-                StringDataType.theDefault,
-                StringValue.create( "Default value of mandatory new PropertyType" ),
-                null, null,
-                BooleanValue.FALSE, // not optional
-                BooleanValue.FALSE,
-                BooleanValue.TRUE,
-                BooleanValue.TRUE,
-                FloatValue.create( 1. ) );
-
         final EntityType ent2 = typeLife.createEntityType(
                 typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/Ent2" ),
                 StringValue.create( "Ent2" ),
                 L10MapImpl.create( StringValue.create( "Ent2") ),
                 null, null,
                 sa,
-                new EntityType[] { ent1 },
+                new EntityType[] {}, // no supertype
                 null, null, null, null, null, null,
                 BooleanValue.TRUE, // abstract
                 BooleanValue.TRUE,
@@ -194,18 +146,11 @@ public class ModelChangeTest2
         // Read all elements
         log.info( "Traversing mb2" );
 
-        boolean found = false;
         for( MeshObject current : mb2 ) {
             if( log.isDebugEnabled() ) {
                 log.debug( "Found", current );
             }
-            if( current.getIdentifier().toExternalForm().equals( "#a" )) {
-                checkEquals( current.getPropertyValue( ent1_prop2 ), ent1_prop2.getDefaultValue(), "wrong value" );
-                found = true;
-            }
         }
-        if( !found ) {
-            reportError( "Could not find #a" );}
 
         mb2.die();
         mb2 = null;
@@ -219,7 +164,7 @@ public class ModelChangeTest2
     public static void main(
             String [] args )
     {
-        ModelChangeTest2 test = null;
+        ModelChangeTest5 test = null;
         try {
             if( args.length != 0 ) {
                 System.err.println( "Synopsis: <no arguments>" );
@@ -227,7 +172,7 @@ public class ModelChangeTest2
                 System.exit( 1 );
             }
 
-            test = new ModelChangeTest2( args );
+            test = new ModelChangeTest5( args );
             test.run();
 
         } catch( Throwable ex ) {
@@ -251,12 +196,12 @@ public class ModelChangeTest2
      * @param args command-line arguments
      * @throws Exception anything can go wrong in a test
      */
-    public ModelChangeTest2(
+    public ModelChangeTest5(
             String [] args )
         throws
             Exception
     {
-        super( ModelChangeTest2.class );
+        super( ModelChangeTest5.class );
     }
 
     /**
@@ -265,5 +210,5 @@ public class ModelChangeTest2
     protected int theTestSize;
 
     // Our Logger
-    private static Log log = Log.getLogInstance( ModelChangeTest2.class );
+    private static Log log = Log.getLogInstance( ModelChangeTest5.class );
 }

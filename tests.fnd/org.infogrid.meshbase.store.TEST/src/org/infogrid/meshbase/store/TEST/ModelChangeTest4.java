@@ -34,9 +34,9 @@ import org.infogrid.util.logging.Log;
 
 /**
  * Models are not supposed to change. But sometimes, they do, such as during development.
- * Tests that a mandatory PropertyType can be added without too bad consequences.
+ * Tests that a supertype can be added without bad consequences.
  */
-public class ModelChangeTest2
+public class ModelChangeTest4
     extends
         AbstractModelChangeTest
 {
@@ -108,23 +108,6 @@ public class ModelChangeTest2
                 BooleanValue.TRUE,
                 FloatValue.create( 1. ) );
 
-        // added mandatory PropertyType
-        final PropertyType ent1_prop2 = typeLife.createPropertyType(
-                typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/Ent1_Prop2" ),
-                StringValue.create( "Ent1_Prop2" ),
-                L10MapImpl.create( StringValue.create( "Ent1_Prop2") ),
-                null,
-                ent1,
-                sa,
-                StringDataType.theDefault,
-                StringValue.create( "Default value of mandatory new PropertyType" ),
-                null, null,
-                BooleanValue.FALSE, // not optional
-                BooleanValue.FALSE,
-                BooleanValue.TRUE,
-                BooleanValue.TRUE,
-                FloatValue.create( 1. ) );
-
         final EntityType ent2 = typeLife.createEntityType(
                 typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/Ent2" ),
                 StringValue.create( "Ent2" ),
@@ -139,13 +122,42 @@ public class ModelChangeTest2
                 BooleanValue.TRUE,
                 BooleanValue.TRUE );
 
+        final EntityType entNew = typeLife.createEntityType(
+                typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/EntNew" ),
+                StringValue.create( "EntNew" ),
+                L10MapImpl.create( StringValue.create( "EntNew") ),
+                null, null,
+                sa,
+                null, null, null, null, null, null, null,
+                BooleanValue.FALSE, // not abstract
+                BooleanValue.TRUE,
+                BooleanValue.TRUE,
+                BooleanValue.TRUE,
+                BooleanValue.TRUE );
+
+        final PropertyType entNew_prop1 = typeLife.createPropertyType(
+                typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/EntNew_Prop1" ),
+                StringValue.create( "EntNew_Prop1" ),
+                L10MapImpl.create( StringValue.create( "EntNew_Prop1") ),
+                null,
+                ent1,
+                sa,
+                StringDataType.theDefault,
+                StringValue.create( "Default value of EntNew_Prop1" ),
+                null, null,
+                BooleanValue.FALSE, // mandatory
+                BooleanValue.FALSE,
+                BooleanValue.TRUE,
+                BooleanValue.TRUE,
+                FloatValue.create( 2. ) );
+
         final EntityType ent3 = typeLife.createEntityType(
                 typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/Ent3" ),
                 StringValue.create( "Ent3" ),
                 L10MapImpl.create( StringValue.create( "Ent3") ),
                 null, null,
                 sa,
-                new EntityType[] { ent2 },
+                new EntityType[] { ent2, entNew },
                 null, null, null, null, null, null,
                 BooleanValue.FALSE, // not abstract
                 BooleanValue.TRUE,
@@ -200,12 +212,13 @@ public class ModelChangeTest2
                 log.debug( "Found", current );
             }
             if( current.getIdentifier().toExternalForm().equals( "#a" )) {
-                checkEquals( current.getPropertyValue( ent1_prop2 ), ent1_prop2.getDefaultValue(), "wrong value" );
+                checkEquals( current.getPropertyValue( entNew_prop1 ), entNew_prop1.getDefaultValue(), "wrong value" );
                 found = true;
             }
         }
         if( !found ) {
-            reportError( "Could not find #a" );}
+            reportError( "Could not find #a" );
+        }
 
         mb2.die();
         mb2 = null;
@@ -219,7 +232,7 @@ public class ModelChangeTest2
     public static void main(
             String [] args )
     {
-        ModelChangeTest2 test = null;
+        ModelChangeTest4 test = null;
         try {
             if( args.length != 0 ) {
                 System.err.println( "Synopsis: <no arguments>" );
@@ -227,7 +240,7 @@ public class ModelChangeTest2
                 System.exit( 1 );
             }
 
-            test = new ModelChangeTest2( args );
+            test = new ModelChangeTest4( args );
             test.run();
 
         } catch( Throwable ex ) {
@@ -251,12 +264,12 @@ public class ModelChangeTest2
      * @param args command-line arguments
      * @throws Exception anything can go wrong in a test
      */
-    public ModelChangeTest2(
+    public ModelChangeTest4(
             String [] args )
         throws
             Exception
     {
-        super( ModelChangeTest2.class );
+        super( ModelChangeTest4.class );
     }
 
     /**
@@ -265,5 +278,5 @@ public class ModelChangeTest2
     protected int theTestSize;
 
     // Our Logger
-    private static Log log = Log.getLogInstance( ModelChangeTest2.class );
+    private static Log log = Log.getLogInstance( ModelChangeTest4.class );
 }

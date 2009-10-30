@@ -95,8 +95,8 @@ public class ModelChangeTest3
 
         final PropertyType ent1_prop1 = typeLife.createPropertyType(
                 typeIdFact.fromExternalForm( "org.infogrid.meshbase.store.TEST.model/Ent1_Prop1" ),
-                StringValue.create( "Prop1" ),
-                L10MapImpl.create( StringValue.create( "Prop1") ),
+                StringValue.create( "Ent1_Prop1" ),
+                L10MapImpl.create( StringValue.create( "Ent1_Prop1") ),
                 null,
                 ent1,
                 sa,
