@@ -50,7 +50,7 @@ public abstract class AllTests
 
                 // FIXME: to be written
                 new TestSpec( ModelChangeTest2.class ), // added mandatory PropertyType
-//                new TestSpec( ModelChangeTest3.class ), // PropertyType turned read-only
+                new TestSpec( ModelChangeTest3.class ), // PropertyType turned read-only
 //                new TestSpec( ModelChangeTest4.class ), // supertype added
 //                new TestSpec( ModelChangeTest5.class ), // supertype removed
 //                new TestSpec( ModelChangeTest6.class ), // mandatory RelationshipType added
