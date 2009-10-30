@@ -407,6 +407,8 @@ public class AMeshBaseLifecycleManager
             types = ArrayHelper.copyIntoNewArray( types, 0, typeCounter, EntityType.class );
         }
 
+        // properties
+
         MeshTypeIdentifier [] propertyTypeNames = theObjectBeingParsed.getPropertyTypes();
         PropertyValue      [] propertyValues    = theObjectBeingParsed.getPropertyValues();
         
@@ -431,6 +433,25 @@ public class AMeshBaseLifecycleManager
             }
         }
 
+        // make sure all mandatory properties have values. This can happen if a mandatory PropertyType
+        // has been added to the model after the instance was written to disk. (not that one should change
+        // a model that radically, but it happens.)
+
+        for( EntityType current : types ) {
+            for( PropertyType current2 : current.getAllPropertyTypes() ) {
+                if( !current2.getIsOptional().value() ) {
+                    PropertyValue found = properties.get( current2 );
+                    if( found == null ) {
+                        properties.put( current2, current2.getDefaultValue() );
+                        // FIXME? DefaultValueCode?
+                    }
+                }
+            }
+        }
+
+
+        // relationships
+
         MeshObjectIdentifier [] otherSides = theObjectBeingParsed.getNeighbors();
         RoleType [][]           roleTypes  = new RoleType[ otherSides.length ][];
 
@@ -452,13 +473,17 @@ public class AMeshBaseLifecycleManager
                 roleTypes[i] = ArrayHelper.copyIntoNewArray( roleTypes[i], 0, typeCounter, RoleType.class );
             }
         }
-                
+
+        // equivalents
+
         MeshObjectIdentifier [] equivalents = theObjectBeingParsed.getEquivalents();
         
         MeshObjectIdentifier [] leftRight = AMeshObjectEquivalenceSetComparator.SINGLETON.findLeftAndRightEquivalents(
                 theObjectBeingParsed.getIdentifier(),
                 equivalents );
-        
+
+        // instantiate
+
         AMeshObject ret = instantiateRecreatedMeshObject(
                 theObjectBeingParsed.getIdentifier(),
                 theObjectBeingParsed.getTimeCreated(),
