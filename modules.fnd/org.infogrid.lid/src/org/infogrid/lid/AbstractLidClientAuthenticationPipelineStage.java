@@ -69,6 +69,10 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
         throws
             LidAbortProcessingPipelineException
     {
+        if( log.isTraceEnabled() ) {
+            log.traceMethodCallEntry( this, "determineAuthenticationStatus", lidRequest, lidResponse, siteIdentifier );
+        }
+
         String sessionCookieString = lidRequest.getCookieValue( LidCookies.LID_SESSION_COOKIE_NAME );
         String lidCookieString     = lidRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
 
@@ -238,6 +242,10 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
                 clientWishesToLogout,
                 authServices,
                 siteIdentifier );
+
+        if( log.isTraceEnabled() ) {
+            log.traceMethodCallExit( this, "determineAuthenticationStatus", ret );
+        }
         return ret;
     }
 

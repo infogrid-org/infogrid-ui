@@ -86,7 +86,11 @@ public class DefaultOpenIdLidProcessingPipeline
         LidClientAuthenticationStatus    clientAuthStatus  = null;
         HasIdentifier                    clientPersona     = null;
         LidSessionManagementInstructions sessionMgmtInstructions = null;
-        
+
+        if( log.isTraceEnabled() ) {
+            log.traceMethodCallEntry( this, "processPipeline", lidRequest, lidResponse, siteIdentifier );
+        }
+
         if( theOpenIdIdpSideAssociationStage != null ) {
             try {
                 theOpenIdIdpSideAssociationStage.processRequest( lidRequest, lidResponse );

@@ -28,7 +28,7 @@
   <requires name="org.infogrid.jee.rest.store"/>
   <requires name="org.infogrid.kernel"/>
   <requires name="org.infogrid.meshbase.store"/>
-  <requires name="org.infogrid.model.Test"/>
+  <requires name="org.infogrid.model.Tagging"/>
   <requires name="org.infogrid.model.Viewlet"/>
   <requires name="org.infogrid.model.Wiki"/>
   <requires name="org.infogrid.store.sql.mysql"/>

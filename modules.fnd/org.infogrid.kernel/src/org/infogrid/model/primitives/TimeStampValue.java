@@ -220,7 +220,7 @@ public final class TimeStampValue
      */
     public Calendar getAsUtcCalendar()
     {
-        return getAsCalendar( Rfc3339Util.UTC );
+        return getAsCalendar( null );
     }
 
     /**
@@ -232,6 +232,9 @@ public final class TimeStampValue
     public Calendar getAsCalendar(
             TimeZone tz )
     {
+        if( tz == null ) {
+            tz = Rfc3339Util.UTC;
+        }
         Calendar cal = Calendar.getInstance( tz );
         cal.setTimeInMillis( theValue );
 
@@ -433,9 +436,12 @@ public final class TimeStampValue
             editVariable = null;
             meshObject   = null;
             propertyType = null;
-            tz           = Rfc3339Util.UTC;
+            tz           = null;
         }
-
+        if( tz == null ) {
+            tz = Rfc3339Util.UTC;
+        }
+        
         Calendar cal = getAsCalendar( (TimeZone) tz );
 
         int   year  = cal.get( Calendar.YEAR );
@@ -472,7 +478,8 @@ public final class TimeStampValue
         /* 10 */ (int) sec,
         /* 11 */ millis,
         /* 12 */ paddedMillis,
-        /* 13 */ tz.toString() );
+        /* 13 */ ((TimeZone)tz).getID(),
+        /* 14 */ ((TimeZone)tz).getDisplayName() );
 
     }
 

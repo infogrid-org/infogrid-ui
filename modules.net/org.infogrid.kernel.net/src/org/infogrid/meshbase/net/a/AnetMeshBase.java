@@ -281,7 +281,8 @@ public abstract class AnetMeshBase
     {
         NetMeshObjectAccessSpecification [] specs = new NetMeshObjectAccessSpecification[ identifiers.length ];
         for( int i=0 ; i<identifiers.length ; ++i ) {
-            specs[i] = theNetMeshObjectAccessSpecificationFactory.obtainToLocalObject(
+            specs[i] = theNetMeshObjectAccessSpecificationFactory.obtain(
+                    ((NetMeshObjectIdentifier) identifiers[i]).getNetMeshBaseIdentifier(),
                     (NetMeshObjectIdentifier) identifiers[i] );
         }
         NetMeshObject [] ret = accessLocally( specs );
