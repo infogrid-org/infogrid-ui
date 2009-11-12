@@ -2026,7 +2026,7 @@ public class AMeshObject
     {
         String meshObjectExternalForm = IdentifierStringifier.defaultFormat( theIdentifier.toExternalForm(), pars );
         String meshBaseExternalForm   = IdentifierStringifier.defaultFormat( theMeshBase.getIdentifier().toExternalForm(), pars );
-        String userVisible            = getUserVisibleString( getTypes() );
+        String userVisible            = IdentifierStringifier.defaultFormat( getUserVisibleString( getTypes()), pars );
 
         String ret;
 

@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -101,45 +101,6 @@ public abstract class AbstractViewletFactoryChoice
             }
         }
     }
-
-//    /**
-//     * Helper method to instantiate a ViewletFactoryChoice into a Viewlet. The use of this
-//     * method is optional by implementations.
-//     *
-//     * @param toView the MeshObjectsToView; only used for error reporting
-//     * @param viewletClass the Viewlet Class to instantiate
-//     * @param c the Context to use
-//     * @return the instantiated Viewlet
-//     * @throws CannotViewException if, against expectations, the Viewlet corresponding
-//     *         to this ViewletFactoryChoice could not view the MeshObjectsToView after
-//     *         all. This usually indicates a programming error.
-//     */
-//    protected static Viewlet instantiateViewlet(
-//            MeshObjectsToView        toView,
-//            Class<? extends Viewlet> viewletClass,
-//            Context                  c )
-//        throws
-//            CannotViewException
-//    {
-//        try {
-//            Method factoryMethod = viewletClass.getMethod(
-//                    "create",
-//                    Context.class );
-//
-//            Object ret = factoryMethod.invoke(
-//                    null, // static method
-//                    c );
-//
-//            return (Viewlet) ret;
-//
-//        } catch( NoSuchMethodException ex ) {
-//            throw new CannotViewException.InternalError( null, toView, ex );
-//        } catch( IllegalAccessException ex ) {
-//            throw new CannotViewException.InternalError( null, toView, ex );
-//        } catch( InvocationTargetException ex ) {
-//            throw new CannotViewException.InternalError( null, toView, ex );
-//        }
-//    }
 
     /**
      * The match quality.

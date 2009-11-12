@@ -56,8 +56,9 @@ public class ViewletAlternativesIterateTag
     @Override
     protected void initializeToDefaults()
     {
-        theSubjectName = null;
-        theLoopVar     = null;
+        theSubjectName     = null;
+        theLoopVar         = null;
+        theWorstAcceptable = null;
         
         super.initializeToDefaults();
     }
@@ -105,6 +106,27 @@ public class ViewletAlternativesIterateTag
     }
 
     /**
+     * Set the WorstAcceptable property.
+     *
+     * @param newValue the new value
+     */
+    public void setWorstAcceptable(
+            String newValue )
+    {
+        theWorstAcceptable = newValue;
+    }
+
+    /**
+     * Obtain the WorstAcceptable property.
+     *
+     * @return the WorstAcceptable property
+     */
+    public String getWorstAcceptable()
+    {
+        return theWorstAcceptable;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -132,8 +154,20 @@ public class ViewletAlternativesIterateTag
         MeshObjectsToView toView  = MeshObjectsToView.create( theSubject, restful );
 
         ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
+        int max = candidates.length;
 
-        theIterator = ArrayCursorIterator.create( candidates );
+        if( theWorstAcceptable != null ) {
+            double worst = Double.parseDouble( theWorstAcceptable );
+
+            for( int i=0 ; i<candidates.length ; ++i ) {
+                if( candidates[i].getMatchQualityFor( toView ) > worst ) {
+                    max = i;
+                    break;
+                }
+            }
+        }
+
+        theIterator = ArrayCursorIterator.create( candidates, 0, 0, max );
 
         int ret = iterateOnce();
         return ret;
@@ -237,6 +271,11 @@ public class ViewletAlternativesIterateTag
      * String containing the name of the loop variable that contains the ViewletFactoryChoice.
      */
     protected String theLoopVar;
+
+    /**
+     * String containing a number that is the worst acceptable match quality.
+     */
+    protected String theWorstAcceptable;
 
     /**
      * Iterator over the set of ViewletFactoryChoice.

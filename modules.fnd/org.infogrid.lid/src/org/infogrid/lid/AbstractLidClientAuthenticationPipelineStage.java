@@ -77,12 +77,8 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
         String lidCookieString     = lidRequest.getCookieValue( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
 
         // cleanup cookie values first
-        if( sessionCookieString != null && sessionCookieString.startsWith( "\"" ) && sessionCookieString.endsWith( "\"" )) {
-            sessionCookieString = sessionCookieString.substring( 1, sessionCookieString.length()-1 );
-        }
-        if( lidCookieString != null && lidCookieString.startsWith( "\"" ) && lidCookieString.endsWith( "\"" )) {
-            lidCookieString = lidCookieString.substring( 1, lidCookieString.length()-1 );
-        }
+        sessionCookieString = cleanupCookieValue( sessionCookieString );
+        lidCookieString     = cleanupCookieValue( lidCookieString );
 
         // LID argument: first consider POST'd, then URL arguments
         String lidArgumentString = lidRequest.getPostedArgument( "lid" );
@@ -273,6 +269,27 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
             HasIdentifier client )
     {
         return null;
+    }
+
+    /**
+     * Overridable helper method to clean up cookie values.
+     *
+     * @param raw the raw cookie valkue
+     * @return the cleaned-up value
+     */
+    protected String cleanupCookieValue(
+            String raw )
+    {
+        String ret;
+
+        if( raw == null ) {
+            ret = null;
+        } else if( raw.startsWith( "\"" ) && raw.endsWith( "\"" )) {
+            ret = raw.substring( 1, raw.length()-1 );
+        } else {
+            ret = raw;
+        }
+        return ret;
     }
 
     /**
