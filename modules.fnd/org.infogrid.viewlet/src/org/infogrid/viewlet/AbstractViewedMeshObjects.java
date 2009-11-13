@@ -197,7 +197,7 @@ public abstract class AbstractViewedMeshObjects
                 return ret[0];
 
             default:
-                throw new NotSingleMemberException( "Parameter name has more than one value", ret.length );
+                throw new NotSingleMemberException( "Parameter '" + name + "' has more than one value", ret.length );
         }
     }
 
