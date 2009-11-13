@@ -37,7 +37,6 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.store.IterableStore;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are REST-ful and use a Store for MeshBase persistence.
@@ -67,9 +66,8 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         throws
             Throwable
     {
-        HttpServletRequest realRequest     = (HttpServletRequest) request;
-        SaneRequest        saneRequest     = SaneServletRequest.create( realRequest );
-        SaneRequest        originalRequest = saneRequest.getOriginalSaneRequest();
+        HttpServletRequest realRequest = (HttpServletRequest) request;
+        SaneRequest        saneRequest = SaneServletRequest.create( realRequest );
         
         InfoGridWebApp app        = InfoGridWebApp.getSingleton();
         Context        appContext = app.getApplicationContext();
@@ -82,18 +80,8 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         MeshBaseIdentifierFactory meshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
         appContext.addContextObject( meshBaseIdentifierFactory );
 
-        // Only one MeshBase
-        MeshBaseIdentifier mbId;
-        try {
-            if( theDefaultMeshBaseIdentifier != null ) {
-                mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
-            } else {
-                mbId = meshBaseIdentifierFactory.fromExternalForm( originalRequest.getAbsoluteContextUriWithSlash());
-            }
-
-        } catch( StringRepresentationParseException ex ) {
-            throw new RuntimeException( ex );
-        }
+        // Main MeshBase
+        MeshBaseIdentifier mbId = determineMainMeshBaseIdentifier( saneRequest, meshBaseIdentifierFactory );
 
         Throwable thrown = null; // set if data source initialization failed
         try {

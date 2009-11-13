@@ -46,7 +46,6 @@ import org.infogrid.util.AbstractQuitListener;
 import org.infogrid.util.QuitManager;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are net-enabled and REST-ful.
@@ -76,9 +75,8 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         throws
             Throwable
     {
-        HttpServletRequest realRequest     = (HttpServletRequest) request;
-        SaneRequest        saneRequest     = SaneServletRequest.create( realRequest );
-        SaneRequest        originalRequest = saneRequest.getOriginalSaneRequest();
+        HttpServletRequest realRequest = (HttpServletRequest) request;
+        SaneRequest        saneRequest = SaneServletRequest.create( realRequest );
         
         InfoGridWebApp app        = InfoGridWebApp.getSingleton();
         Context        appContext = app.getApplicationContext();
@@ -92,18 +90,8 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         NetMeshBaseIdentifierFactory meshBaseIdentifierFactory = createNetMeshBaseIdentifierFactory();
         appContext.addContextObject( meshBaseIdentifierFactory );
 
-        // Only one MeshBase
-        NetMeshBaseIdentifier mbId;
-        try {
-            if( theDefaultMeshBaseIdentifier != null ) {
-                mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
-            } else {
-                mbId = meshBaseIdentifierFactory.fromExternalForm( originalRequest.getAbsoluteContextUriWithSlash());
-            }
-
-        } catch( StringRepresentationParseException ex ) {
-            throw new RuntimeException( ex );
-        }
+        // Main MeshBase
+        NetMeshBaseIdentifier mbId = (NetMeshBaseIdentifier) determineMainMeshBaseIdentifier( saneRequest, meshBaseIdentifierFactory );
 
         Throwable thrown = null; // set if data source initialization failed
         try {

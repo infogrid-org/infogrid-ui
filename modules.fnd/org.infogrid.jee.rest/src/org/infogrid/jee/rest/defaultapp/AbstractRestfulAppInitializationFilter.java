@@ -25,8 +25,12 @@ import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.templates.defaultapp.AbstractAppInitializationFilter;
 import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.StringRepresentationContext;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are REST-ful.
@@ -114,6 +118,34 @@ public abstract class AbstractRestfulAppInitializationFilter
             Exception
     {
         // nothing on this level
+    }
+
+    /**
+     * Overridable method to determine the MeshBaseIdentifier of the main MeshBase.
+     *
+     * @param request the incoming request
+     * @param meshBaseIdentifierFactory the MeshBaseIdentifierFactory to use
+     * @return the determined MeshBaseIdentifier
+     * @throws RuntimeException thrown if a parsing problem occurred
+     */
+    protected MeshBaseIdentifier determineMainMeshBaseIdentifier(
+            SaneRequest               request,
+            MeshBaseIdentifierFactory meshBaseIdentifierFactory )
+    {
+        MeshBaseIdentifier mbId;
+
+        try {
+            if( theDefaultMeshBaseIdentifier != null ) {
+                mbId = meshBaseIdentifierFactory.fromExternalForm( theDefaultMeshBaseIdentifier );
+            } else {
+                SaneRequest originalRequest = request.getOriginalSaneRequest();
+                mbId = meshBaseIdentifierFactory.fromExternalForm( originalRequest.getAbsoluteContextUriWithSlash());
+            }
+            return mbId;
+
+        } catch( StringRepresentationParseException ex ) {
+            throw new RuntimeException( ex );
+        }
     }
 
     /**
