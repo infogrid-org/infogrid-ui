@@ -59,5 +59,5 @@ public interface LidPersona
     /**
      * Name of the attribute that contains the persona's identifier.
      */
-    public static final String IDENTIFIER_ATTRIBUTE_NAME = "identifier";
+    public static final String IDENTIFIER_ATTRIBUTE_NAME = "Identifier";
 }

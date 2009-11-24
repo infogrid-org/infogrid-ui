@@ -97,63 +97,6 @@ public class RegexLidLocalPersonaManager
         throw new UnsupportedOperationException();
     }
 
-//    /**
-//     * Determine whether a a credential is valid for a given identifier.
-//     *
-//     * @param identifier the identifier for which the credential will be checked
-//     * @param type the type of credential to be checked
-//     * @param credential the credential to be checked
-//     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
-//     * @throws LidInvalidCredentialException thrown if the credential was invalid
-//     */
-//    public void checkCredential(
-//            String            identifier,
-//            LidCredentialType type,
-//            String            credential )
-//        throws
-//            LidLocalPersonaUnknownException,
-//            LidInvalidCredentialException
-//    {
-//        LidLocalPersona persona = get( identifier );
-//
-//        if( persona == null ) {
-//            throw new LidLocalPersonaUnknownException( identifier );
-//        }
-//
-//        if( credential == null ) {
-//            // assume empty credential
-//            credential = "";
-//        }
-//        if( thePasswordRegex == null ) {
-//            throw new LidInvalidCredentialException( identifier, type ); // no parameter, always say no
-//        }
-//
-//        Matcher passwordMatcher = thePasswordRegex.matcher( credential );
-//        if( !passwordMatcher.matches() ) {
-//            throw new LidInvalidCredentialException( identifier, type );
-//        }
-//    }
-//
-//    /**
-//     * Change the credential associated with a given identifier.
-//     *
-//     * @param identifier the identifier for which the credential will be changed
-//     * @param type the type of credential to be changed
-//     * @param credential the new credential
-//     * @throws UnsupportedOperationException thrown if this LidIdentityManager does not permit the changing of passwords
-//     * @throws LidLocalPersonaUnknownException thrown if no LidLocalPersona exists with this identifier
-//     */
-//    public void changeCredential(
-//            String            identifier,
-//            LidCredentialType type,
-//            String            credential )
-//        throws
-//            UnsupportedOperationException,
-//            LidLocalPersonaUnknownException
-//    {
-//        throw new UnsupportedOperationException();
-//    }
-
     /**
      * Obtain a LidLocalPersona, given its identifier.
      *
@@ -169,6 +112,9 @@ public class RegexLidLocalPersonaManager
         if( isUser( identifier )) {
             HashMap<String,String> attributes  = new HashMap<String,String>();
             attributes.put( LidLocalPersona.IDENTIFIER_ATTRIBUTE_NAME, identifier.toExternalForm() );
+            attributes.put( "FirstName",  "John" );
+            attributes.put( "LastName",   "Doe" );
+            attributes.put( "Profession", "Mythical Man" );
             
             LidLocalPersona ret = SimpleLidLocalPersona.create( identifier, attributes );
         

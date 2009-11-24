@@ -67,6 +67,11 @@ public class OutgoingSimpleSaneCookie
         thePath    = path;
         theExpires = expires;
         theRemoved = false;
+
+        if( "localhost".equalsIgnoreCase( theDomain )) {
+            // weird special case rules for cookie settings, otherwise browser will ignore them
+            theDomain = null;
+        }
     }
 
     /**
