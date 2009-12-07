@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.Set;
 import org.infogrid.util.CachingMap;
 import org.infogrid.util.Invocable;
-import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -225,11 +224,6 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
         OpenIdIdpSideAssociation ret = theAssociations.remove( key, cleanupCode );
         return ret;
     }
-    
-    /**
-     * Our ResourceHelper.
-     */
-    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance(  AbstractOpenIdIdpSideAssociationManager.class  );
     
     /**
      * Default duration from the time a new association is created to the time it expires.

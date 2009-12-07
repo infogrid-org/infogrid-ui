@@ -335,7 +335,7 @@ public class ArrayStringifier<T>
     protected String theEnd;
     
     /**
-     * The String to emit if the array if empty. May be null, in which case it is assumed to the theStart+theEnd.
+     * The String to emit if the array if empty. May be null, in which case it is assumed to theStart+theEnd.
      */
     protected String theEmpty;
     

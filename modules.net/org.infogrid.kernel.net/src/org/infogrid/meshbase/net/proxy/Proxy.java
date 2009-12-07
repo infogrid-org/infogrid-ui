@@ -135,7 +135,7 @@ public interface Proxy
      * AccessLocallySynchronizer.</p>
      * 
      * @param localReplicas the local replicas for which the lock should be pushed
-     * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
+     * @param isNewProxy if true, the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @return the duration, in milliseconds, that the Proxy believes this operation will take
@@ -166,7 +166,7 @@ public interface Proxy
      * AccessLocallySynchronizer.</p>
      * 
      * @param localReplicas the local replicas for which the home replica status should be pushed
-     * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
+     * @param isNewProxy if true, the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @return the duration, in milliseconds, that the Proxy believes this operation will take

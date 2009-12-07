@@ -254,7 +254,7 @@ public class CommandlineSoftwareInstallation
      * @param productName the product name
      * @param productId the product id
      * @param useModuleClassLoaders if true, use ModuleClassLoaders to load the Modules
-     * @param allowDefaultClassPathForRootModule if true, allow the default ClassLoader for the the root Module (only)
+     * @param allowDefaultClassPathForRootModule if true, allow the default ClassLoader for the root Module (only)
      * @param showSplash if true, show splash screen
      * @param isDeveloper if true, run in developer mode
      * @param isDemo if true, run in demo mode

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,6 +19,8 @@ import java.beans.PropertyChangeEvent;
 /**
  * This subclasses <code>java.beans.PropertyChangeEvent</code> to make it easier
  * to process PropertyChangeEvents that deal with Array values for the changed properties.
+ *
+ * @param <T> the type of the Property
  */
 public abstract class ArrayPropertyChangeEvent<T>
         extends
@@ -31,7 +33,9 @@ public abstract class ArrayPropertyChangeEvent<T>
      * @param propertyName The programmatic name of the property that was changed.
      * @param oldValue the old Set prior to addition
      * @param addition the T that was added to the Set
-     * @param componentType the the actual underlying type
+     * @param componentType the actual underlying type
+     * @return the created ArrayProertyChangeEvent
+     * @param <T> the type of the Property
      */
     public static <T> ArrayPropertyChangeEvent<T> createAdded(
             Object        source,
@@ -50,7 +54,9 @@ public abstract class ArrayPropertyChangeEvent<T>
      * @param propertyName The programmatic name of the property that was changed.
      * @param addition the T that was added to the Set
      * @param newValue the new Set after addition
-     * @param componentType the the actual underlying type
+     * @param componentType the actual underlying type
+     * @return the created ArrayProertyChangeEvent
+     * @param <T> the type of the Property
      */
     public static <T> ArrayPropertyChangeEvent<T> createAdded(
             Object        source,
@@ -69,7 +75,9 @@ public abstract class ArrayPropertyChangeEvent<T>
      * @param propertyName The programmatic name of the property that was changed.
      * @param oldValue the old Set prior to removal
      * @param removal the T that was removed from the Set
-     * @param componentType the the actual underlying type
+     * @param componentType the actual underlying type
+     * @return the created ArrayProertyChangeEvent
+     * @param <T> the type of the Property
      */
     public static <T> ArrayPropertyChangeEvent<T> createRemoved(
             Object        source,
@@ -88,7 +96,9 @@ public abstract class ArrayPropertyChangeEvent<T>
      * @param propertyName The programmatic name of the property that was changed.
      * @param removal the T that was removed from the Set
      * @param newValue the new Set after removal
-     * @param componentType the the actual underlying type
+     * @param componentType the actual underlying type
+     * @return the created ArrayProertyChangeEvent
+     * @param <T> the type of the Property
      */
     public static <T> ArrayPropertyChangeEvent<T> createRemoved(
             Object        source,
@@ -108,7 +118,7 @@ public abstract class ArrayPropertyChangeEvent<T>
      * @param oldValue  The old value of the property.
      * @param delta The difference between the old value and the new value
      * @param newValue  The new value of the property.
-     * @param componentType the the actual underlying type
+     * @param componentType the actual underlying type
      */
     protected ArrayPropertyChangeEvent(
             Object        source,
@@ -168,18 +178,24 @@ public abstract class ArrayPropertyChangeEvent<T>
     
     /**
      * Subclass that reflects an addition to the Set.
+     *
+     * @param <T> the type of the Property
      */
     public static class Added<T>
             extends
                 ArrayPropertyChangeEvent<T>
     {
+        private static final long serialVersionUID = 1l; // helps with serialization
+
         /**
          * Constructor.
          *
          * @param source  The bean that fired the event.
          * @param propertyName  The programmatic name of the property that was changed.
          * @param oldValue  The old value of the property.
+         * @param addition The difference between the old value and the new value
          * @param newValue  The new value of the property.
+         * @param componentType the actual underlying type
          */
         protected Added(
                 Object        source,
@@ -225,18 +241,24 @@ public abstract class ArrayPropertyChangeEvent<T>
 
     /**
      * Subclass that reflects a removal from the Set.
+     *
+     * @param <T> the type of the Property
      */
     public static class Removed<T>
             extends
                 ArrayPropertyChangeEvent<T>
     {
+        private static final long serialVersionUID = 1l; // helps with serialization
+
         /**
          * Constructor.
          *
          * @param source  The bean that fired the event.
          * @param propertyName  The programmatic name of the property that was changed.
          * @param oldValue  The old value of the property.
+         * @param removal The difference between the old value and the new value
          * @param newValue  The new value of the property.
+         * @param componentType the actual underlying type
          */
         protected Removed(
                 Object        source,

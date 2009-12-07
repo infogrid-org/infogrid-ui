@@ -70,7 +70,7 @@ public interface ProxyPolicy
      * locks via this Proxy.
      * 
      * @param localReplicas the local replicas for which the lock should be obtained
-     * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
+     * @param isNewProxy if true, the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed
@@ -101,7 +101,7 @@ public interface ProxyPolicy
      * home replica statuses via this Proxy.
      * 
      * @param localReplicas the local replicas for which the home replica statuses should be obtained
-     * @param isNewProxy if true, the the NetMeshObject did not replicate via this Proxy prior to this call.
+     * @param isNewProxy if true, the NetMeshObject did not replicate via this Proxy prior to this call.
      *         The sequence in the array is the same sequence as in localReplicas.
      * @param duration the duration, in milliseconds, that the caller is willing to wait to perform the request. -1 means "use default".
      * @param proxy the Proxy on whose behalf the ProxyProcessingInstructions are constructed

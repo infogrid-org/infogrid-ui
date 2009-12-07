@@ -330,7 +330,7 @@ public interface MeshTypeLifecycleManager
      * @param theDefaultValueCode if this is given, this is code whose result is the default value for this ProjectedPropertyType.
      *        Given that this is a ProjectedPropertyType, this value is only used until the projection code is run
      *        for the first time.
-     * @param theInputProperties the path to the the set of properties in particular Entities that needs to
+     * @param theInputProperties the path to the set of properties in particular Entities that needs to
      *        be monitored in order to determine when to re-run the projection code in instances. The Entities are
      *        determined through the TraversalSpecifications referenced by the theInputProperties.
      * @param theProjectionCode a StringValue with a text mime type that contains the projection code for determining
@@ -373,7 +373,7 @@ public interface MeshTypeLifecycleManager
      * @param theDefaultValueCode if this is given, this is code whose result is the default value for this ProjectedPropertyType.
      *        Given that this is a ProjectedPropertyType, this value is only used until the projection code is run
      *        for the first time.
-     * @param theInputProperties the path to the the set of properties in particular Entities that needs to
+     * @param theInputProperties the path to the set of properties in particular Entities that needs to
      *        be monitored in order to determine when to re-run the projection code in instances. The Entities are
      *        determined through the TraversalSpecifications referenced by the theInputProperties.
      * @param theProjectionCode a StringValue with a text mime type that contains the projection code for determining

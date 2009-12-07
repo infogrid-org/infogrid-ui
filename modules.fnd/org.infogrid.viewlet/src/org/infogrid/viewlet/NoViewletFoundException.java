@@ -27,7 +27,7 @@ import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
 /**
- * No Viewlet could be found with the the required Viewlet type.
+ * No Viewlet could be found with the required Viewlet type.
  */
 public class NoViewletFoundException
         extends

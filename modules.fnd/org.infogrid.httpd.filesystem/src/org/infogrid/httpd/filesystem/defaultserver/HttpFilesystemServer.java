@@ -167,7 +167,7 @@ public class HttpFilesystemServer
     public static final String DOCUMENT_ROOT_PARAMETER_NAME = "org.infogrid.httpd.filesystem.defaultserver.DocumentRoot";
 
     /**
-     * Name of the Module configuration parameter that indicates the port at which the the web server
+     * Name of the Module configuration parameter that indicates the port at which the web server
      * shall be run. If not given, a DEFAULT_ACCEPT_PORT will be used. The type of this parameter
      * must be java.lang.Integer.
      */
