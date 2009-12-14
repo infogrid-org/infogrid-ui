@@ -68,8 +68,9 @@ public class CommandLineWrapperLidGpg
             File homeDir = new File( theGpgHomeDir );
             if( !homeDir.exists() ) {
                 homeDir.mkdirs();
-            } else if( !homeDir.isDirectory() ) {
-                throw new IOException( "Cannot create directory " + homeDir.getAbsolutePath() );
+            }
+            if( !homeDir.isDirectory() ) {
+                throw new IOException( "Cannot create GPG working directory: " + homeDir.getAbsolutePath() );
             }
         }
     }
