@@ -63,6 +63,5 @@ org.infogrid.lid.model.traversal
 org.infogrid.lid.model.formatnegotiation
 org.infogrid.lid.store
 org.infogrid.lid.openid.store
-org.infogrid.jee.lid
 org.infogrid.scene
 org.infogrid.util.instrument
