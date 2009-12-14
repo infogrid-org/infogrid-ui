@@ -227,7 +227,7 @@ public class DefaultLidSessionManagementStage
         String lidCookieName     = determineLidCookieName( realm );
         String sessionCookieName = determineSessionCookieName( realm );
 
-        if( deleteLidCookie && lidRequest.getCookie(lidCookieName ) != null ) {
+        if( deleteLidCookie && lidRequest.getCookie( lidCookieName ) != null ) {
             ret.addCookieToRemove( lidCookieName, cookieDomain, cookiePath );
         }
         if( deleteSessionCookie && lidRequest.getCookie( sessionCookieName ) != null ) {

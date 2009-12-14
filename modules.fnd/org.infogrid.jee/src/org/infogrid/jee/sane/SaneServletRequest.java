@@ -968,6 +968,17 @@ public class SaneServletRequest
     }
 
     /**
+     * Convert to String representation, for debugging reasons only.
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString()
+    {
+        return getAbsoluteFullUri();
+    }
+
+    /**
      * Dump this object.
      *
      * @param d the Dumper to dump to
