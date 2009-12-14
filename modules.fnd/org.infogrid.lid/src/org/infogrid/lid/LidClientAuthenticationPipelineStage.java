@@ -31,6 +31,7 @@ public interface LidClientAuthenticationPipelineStage
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
      * @param siteIdentifier identifies this site
+     * @param realm the authentication realm
      * @return the LidClientAuthenticationStatus
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
@@ -38,7 +39,8 @@ public interface LidClientAuthenticationPipelineStage
     public LidClientAuthenticationStatus determineAuthenticationStatus(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse,
-            Identifier         siteIdentifier )
+            Identifier         siteIdentifier,
+            String             realm )
         throws
             LidAbortProcessingPipelineException;
 }

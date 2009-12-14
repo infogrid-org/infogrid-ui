@@ -61,6 +61,7 @@ public class DefaultLidSessionManagementStage
      *
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
+     * @param realm the realm of the session
      * @param clientAuthStatus authentication status of the client
      * @return LidSessionManagementInstructions the instructions, if any
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
@@ -69,13 +70,14 @@ public class DefaultLidSessionManagementStage
     public LidSessionManagementInstructions processSession(
             SaneRequest                   lidRequest,
             StructuredResponse            lidResponse,
+            String                        realm,
             LidClientAuthenticationStatus clientAuthStatus )
         throws
             LidAbortProcessingPipelineException
     {
-        Boolean deleteLidCookie      = null; // using Boolean instead of boolean to detect if we don't catch a case
-        Boolean deleteSessionCookie  = null;
-        Boolean createNewSession     = null;
+        Boolean deleteLidCookie; // using Boolean instead of boolean to detect if we don't catch a case
+        Boolean deleteSessionCookie;
+        Boolean createNewSession;
 
         Identifier lidCookieIdentifierToSet = null;
         LidSession preexistingSession       = clientAuthStatus.getPreexistingClientSession();
@@ -129,6 +131,8 @@ public class DefaultLidSessionManagementStage
                 if( preexistingSession.getClientIdentifier().equals( clientAuthStatus.getClientIdentifier() )) {
                     // always renew, whether still valid or not
                     sessionsToRenew.add( preexistingSession );
+                    createNewSession = Boolean.FALSE;
+
                 } else {
                     sessionsToCancel.add( preexistingSession );
 
@@ -176,7 +180,11 @@ public class DefaultLidSessionManagementStage
             createNewSession    = Boolean.FALSE;
 
         } else {
-            log.error( "Not sure how we got here: " + clientAuthStatus );
+            log.error( "Not sure how we got here: ", clientAuthStatus );
+
+            deleteLidCookie     = Boolean.FALSE;
+            deleteSessionCookie = Boolean.FALSE;
+            createNewSession    = Boolean.FALSE;
         }
 
         SimpleLidSessionManagementInstructions ret;
@@ -216,16 +224,19 @@ public class DefaultLidSessionManagementStage
         }
 
         // delete cookies if needed, but only if they have been sent in the request
-        if( deleteLidCookie && lidRequest.getCookie( LidCookies.LID_IDENTIFIER_COOKIE_NAME ) != null ) {
-            ret.addCookieToRemove( LidCookies.LID_IDENTIFIER_COOKIE_NAME, cookieDomain, cookiePath );
+        String lidCookieName     = determineLidCookieName( realm );
+        String sessionCookieName = determineSessionCookieName( realm );
+
+        if( deleteLidCookie && lidRequest.getCookie(lidCookieName ) != null ) {
+            ret.addCookieToRemove( lidCookieName, cookieDomain, cookiePath );
         }
-        if( deleteSessionCookie && lidRequest.getCookie( LidCookies.LID_SESSION_COOKIE_NAME ) != null ) {
-            ret.addCookieToRemove( LidCookies.LID_SESSION_COOKIE_NAME, cookieDomain, cookiePath );
+        if( deleteSessionCookie && lidRequest.getCookie( sessionCookieName ) != null ) {
+            ret.addCookieToRemove( sessionCookieName, cookieDomain, cookiePath );
         }
 
         if( lidCookieIdentifierToSet != null ) {
             ret.addCookieToSet(
-                    LidCookies.LID_IDENTIFIER_COOKIE_NAME,
+                    lidCookieName,
                     lidCookieIdentifierToSet.toExternalForm(),
                     cookieDomain,
                     cookiePath,
@@ -233,13 +244,57 @@ public class DefaultLidSessionManagementStage
         }
         if( createNewSession ) {
             ret.addCookieToSet(
-                    LidCookies.LID_SESSION_COOKIE_NAME,
+                    sessionCookieName,
                     sessionCookieStringToSet,
                     cookieDomain,
                     cookiePath,
                     LidCookies.LID_SESSION_COOKIE_DEFAULT_MAX_AGE );
         }
         return ret;
+    }
+
+    /**
+     * Given a realm, determine the LID cookie's name.
+     *
+     * @param realm the name of the realm
+     * @return name of the LID cookie
+     * @see #determineSessionCookieName()
+     * @see AbstractLidClientAuthenticationPipelineStage#determineLidCookieName()
+     */
+    protected String determineLidCookieName(
+            String realm )
+    {
+        if( realm == null ) {
+            return LidCookies.LID_IDENTIFIER_COOKIE_NAME;
+        } else {
+            StringBuilder buf = new StringBuilder();
+            buf.append( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
+            buf.append( '-' );
+            buf.append( realm );
+            return buf.toString();
+        }
+    }
+
+    /**
+     * Given a realm, determine the LID session cookie's name.
+     *
+     * @param realm the name of the realm
+     * @return name of the LID session cookie
+     * @see #determineSessionCookieName()
+     * @see AbstractLidClientAuthenticationPipelineStage#determineSessionCookieName()
+     */
+    protected String determineSessionCookieName(
+            String realm )
+    {
+        if( realm == null ) {
+            return LidCookies.LID_SESSION_COOKIE_NAME;
+        } else {
+            StringBuilder buf = new StringBuilder();
+            buf.append( LidCookies.LID_SESSION_COOKIE_NAME );
+            buf.append( '-' );
+            buf.append( realm );
+            return buf.toString();
+        }
     }
 
     /**

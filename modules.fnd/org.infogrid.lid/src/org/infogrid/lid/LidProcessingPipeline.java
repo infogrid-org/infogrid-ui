@@ -30,13 +30,15 @@ public interface LidProcessingPipeline
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
      * @param siteIdentifier identifies this site
+     * @param realm the realm of the authentication
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
      */
     public void processPipeline(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse,
-            Identifier         siteIdentifier )
+            Identifier         siteIdentifier,
+            String             realm )
         throws
             LidAbortProcessingPipelineException;
 

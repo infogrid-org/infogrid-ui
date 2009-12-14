@@ -24,6 +24,7 @@ import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.Identifier;
+import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.OutgoingSaneCookie;
 import org.infogrid.util.http.OutgoingSimpleSaneCookie;
 import org.infogrid.util.logging.Log;
@@ -310,7 +311,7 @@ public class SimpleLidSessionManagementInstructions
 
         if( theCookiesToRemove != null ) {
             for( OutgoingSimpleSaneCookie current : theCookiesToRemove ) {
-                Cookie toAdd = new Cookie( current.getName(), current.getValue() );
+                Cookie toAdd = new Cookie( HTTP.encodeToValidUrlArgument( current.getName()), current.getValue() );
                 if( current.getDomain() != null ) {
                     toAdd.setDomain( current.getDomain() );
                 }
@@ -324,7 +325,7 @@ public class SimpleLidSessionManagementInstructions
         }
         if( theCookiesToSet != null ) {
             for( OutgoingSimpleSaneCookie current : theCookiesToSet ) {
-                Cookie toAdd = new Cookie( current.getName(), current.getValue() );
+                Cookie toAdd = new Cookie( HTTP.encodeToValidUrlArgument( current.getName()), current.getValue() );
                 if( current.getDomain() != null ) {
                     toAdd.setDomain( current.getDomain() );
                 }

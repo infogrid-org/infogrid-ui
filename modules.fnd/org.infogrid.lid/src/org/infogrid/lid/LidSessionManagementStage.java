@@ -30,6 +30,7 @@ public interface LidSessionManagementStage
      *
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
+     * @param realm the realm of the session
      * @param clientAuthStatus authentication status of the client
      * @return LidSessionManagementInstructions the instructions, if any
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
@@ -38,6 +39,7 @@ public interface LidSessionManagementStage
     public LidSessionManagementInstructions processSession(
             SaneRequest                   lidRequest,
             StructuredResponse            lidResponse,
+            String                        realm,
             LidClientAuthenticationStatus clientAuthStatus )
         throws
             LidAbortProcessingPipelineException;

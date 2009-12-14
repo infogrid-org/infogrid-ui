@@ -75,10 +75,11 @@ public class LidProcessingPipelineServlet
 
         LidProcessingPipeline pipe = obtainLidProcessingPipeline( appContext );
 
-        String site = lidRequest.getAbsoluteContextUri();
+        String site  = lidRequest.getAbsoluteContextUri();
+        String realm = site;
 
         try {
-            pipe.processPipeline( lidRequest, lidResponse, SimpleStringIdentifier.create( site ) );
+            pipe.processPipeline( lidRequest, lidResponse, SimpleStringIdentifier.create( site ), realm );
 
             invokeServlet( lidRequest, lidResponse );
 

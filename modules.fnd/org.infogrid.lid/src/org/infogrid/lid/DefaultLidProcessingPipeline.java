@@ -69,13 +69,15 @@ public class DefaultLidProcessingPipeline
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
      * @param siteIdentifier identifies this site
+     * @param realm the realm of the authentication
      * @throws LidAbortProcessingPipelineException thrown if the response has been found,
      *         and no further processing is necessary
      */
     public void processPipeline(
             SaneRequest        lidRequest,
             StructuredResponse lidResponse,
-            Identifier         siteIdentifier )
+            Identifier         siteIdentifier,
+            String             realm )
         throws
             LidAbortProcessingPipelineException
     {
@@ -102,7 +104,7 @@ public class DefaultLidProcessingPipeline
         }
         
         if( theAuthenticationStage != null ) {
-            clientAuthStatus = theAuthenticationStage.determineAuthenticationStatus( lidRequest, lidResponse, siteIdentifier );
+            clientAuthStatus = theAuthenticationStage.determineAuthenticationStatus( lidRequest, lidResponse, siteIdentifier, realm );
         }
         lidRequest.setAttribute( CLIENT_AUTHENTICATION_STATUS_ATTRIBUTE_NAME, clientAuthStatus );
         
@@ -112,7 +114,7 @@ public class DefaultLidProcessingPipeline
         lidRequest.setAttribute( CLIENT_PERSONA_ATTRIBUTE_NAME, clientPersona );
 
         if( theSessionManagementStage != null ) {
-            sessionMgmtInstructions = theSessionManagementStage.processSession( lidRequest, lidResponse, clientAuthStatus );
+            sessionMgmtInstructions = theSessionManagementStage.processSession( lidRequest, lidResponse, realm, clientAuthStatus );
         }
         lidRequest.setAttribute( SESSION_MANAGEMENT_INSTRUCTIONS_ATTRIBUTE_NAME, sessionMgmtInstructions );
     }
