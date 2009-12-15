@@ -1209,7 +1209,7 @@ public class SaneServletRequest
         {
             if( theName == null ) {
                 String delegateName = theDelegate.getName();
-                theName = HTTP.decodeUrlArgument( delegateName );
+                theName = HTTP.decodeCookieName( delegateName );
             }
             return theName;
         }
