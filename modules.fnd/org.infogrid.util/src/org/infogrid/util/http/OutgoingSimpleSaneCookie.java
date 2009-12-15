@@ -162,7 +162,7 @@ public class OutgoingSimpleSaneCookie
     {
         StringBuilder buf = new StringBuilder();
         buf.append( "Set-Cookie: " );
-        buf.append( HTTP.encodeToValidUrlArgument( theName ));
+        buf.append( HTTP.encodeCookieName( theName ));
         buf.append( '=' );
         buf.append( HTTP.encodeToQuotedString( theValue ));
         if( thePath != null ) {

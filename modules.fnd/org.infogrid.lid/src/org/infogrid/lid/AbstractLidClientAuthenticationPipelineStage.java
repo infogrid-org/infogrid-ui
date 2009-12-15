@@ -25,6 +25,7 @@ import org.infogrid.util.HasIdentifierFinder;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationParseException;
@@ -288,8 +289,8 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
      *
      * @param realm the name of the realm
      * @return name of the LID cookie
-     * @see #determineSessionCookieName()
-     * @see AbstractLidClientAuthenticationPipelineStage#determineLidCookieName()
+     * @see #determineSessionCookieName
+     * @see AbstractLidClientAuthenticationPipelineStage#determineLidCookieName
      */
     protected String determineLidCookieName(
             String realm )
@@ -310,8 +311,8 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
      *
      * @param realm the name of the realm
      * @return name of the LID session cookie
-     * @see #determineSessionCookieName()
-     * @see AbstractLidClientAuthenticationPipelineStage#determineSessionCookieName()
+     * @see #determineSessionCookieName
+     * @see AbstractLidClientAuthenticationPipelineStage#determineSessionCookieName
      */
     protected String determineSessionCookieName(
             String realm )

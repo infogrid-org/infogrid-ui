@@ -302,7 +302,7 @@ public abstract class HTTP
             while( iter.hasNext() ) {
                 String       key   = iter.next();
                 CharSequence value = cookies.get( key );
-                cookieString.append( sep ).append( key );
+                cookieString.append( sep ).append( encodeCookieName( key ));
                 if( value != null ) {
                     cookieString.append( "=" ).append( encodeToQuotedString( value.toString() ));
                 }
@@ -612,7 +612,7 @@ public abstract class HTTP
                             // ret = ret.replaceAll( "%2[Ff]", "/" );
                 } else {
                     // FIXME there must be something more efficient than this
-                    byte [] utf8 = new String( new char[] { c } ).getBytes( "UTF-8" );
+                    byte [] utf8 = new String( new char[] { c } ).getBytes( UTF8 );
                     for( int j=0 ; j<utf8.length ; ++j ) {
                         ret.append( "%" );
                         int positive = utf8[j] > 0 ? utf8[0] : ( 256 + utf8[j] );
@@ -654,7 +654,7 @@ public abstract class HTTP
             String s )
     {
         try {
-            String ret = URLDecoder.decode( s, "utf-8" );
+            String ret = URLDecoder.decode( s, UTF8 );
             return ret;
             
         } catch( UnsupportedEncodingException ex ) {
@@ -675,7 +675,7 @@ public abstract class HTTP
             String s )
     {
         try {
-            String ret = URLEncoder.encode( s, "utf-8" );
+            String ret = URLEncoder.encode( s, UTF8 );
             // but, given Tomcat and http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-0450,
             // we have to undo escaped slashes
             ret = ret.replaceAll( "%2[Ff]", "/" );
@@ -700,7 +700,7 @@ public abstract class HTTP
             String s )
     {
         try {
-            String ret = URLDecoder.decode( s, "utf-8" );
+            String ret = URLDecoder.decode( s, UTF8 );
             return ret;
             
         } catch( UnsupportedEncodingException ex ) {
@@ -962,6 +962,49 @@ public abstract class HTTP
     }
 
     /**
+     * Encode a cookie's name safely. Notably, PHP has this
+     * nastly habit of turning periods into underscores.
+     *
+     * @param name the to-be-encoded name
+     * @return the encoded name
+     */
+    public static String encodeCookieName(
+            String name )
+    {
+        try {
+            String temp = URLEncoder.encode( name, UTF8 );
+            String ret  = temp.replaceAll( "\\.", "!" );
+
+            return ret;
+
+        } catch( UnsupportedEncodingException ex ) {
+            log.error( ex );
+            return null;
+        }
+    }
+
+    /**
+     * Decode a cookie's name safely. Notably, PHP has this
+     * nastly habit of turning periods into underscores.
+     *
+     * @param encoded the encoded name
+     * @return the decoded name
+     */
+    public static String decodeCookieName(
+            String encoded )
+    {
+        try {
+            String temp = encoded.replaceAll( "!", "." );
+            String ret = URLDecoder.decode( temp, UTF8 );
+            return ret;
+
+        } catch( UnsupportedEncodingException ex ) {
+            log.error( ex );
+            return null;
+        }
+    }
+
+    /**
      * Helper method to parse a date/time format such as for the cookie expiration.
      * This is inspired by http://mail-archives.apache.org/mod_mbox/commons-dev/200304.mbox/%3C20030417030031.64641.qmail@icarus.apache.org%3E
      * 
@@ -1032,6 +1075,11 @@ public abstract class HTTP
      * Timeout for reading from an established HTTP connection, in milliseconds.
      */
     public static final int HTTP_READ_TIMEOUT = theResourceHelper.getResourceIntegerOrDefault( "HttpReadTimeout", 10000 );
+
+    /**
+     * Only allocate the charset once.
+     */
+    public static final String UTF8 = "utf-8";
 
     /**
      * Encapsulates the response from an HTTP request.
@@ -1117,7 +1165,7 @@ public abstract class HTTP
                                     int seconds = Integer.parseInt( value2 );
                                     cookieExpires = new Date( System.currentTimeMillis() + 1000L * seconds );
                                 } else {
-                                    cookieName  = key2;
+                                    cookieName = decodeCookieName( key2 );
                                     if( value2.startsWith( "\"" ) && value2.endsWith( "\"" )) {
                                         cookieValue = value2.substring( 1, value2.length()-1 );
                                     } else {

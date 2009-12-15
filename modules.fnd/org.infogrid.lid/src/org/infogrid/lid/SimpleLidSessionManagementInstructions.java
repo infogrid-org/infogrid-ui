@@ -311,7 +311,7 @@ public class SimpleLidSessionManagementInstructions
 
         if( theCookiesToRemove != null ) {
             for( OutgoingSimpleSaneCookie current : theCookiesToRemove ) {
-                Cookie toAdd = new Cookie( HTTP.encodeToValidUrlArgument( current.getName()), current.getValue() );
+                Cookie toAdd = new Cookie( HTTP.encodeCookieName( current.getName()), current.getValue() );
                 if( current.getDomain() != null ) {
                     toAdd.setDomain( current.getDomain() );
                 }
@@ -325,7 +325,7 @@ public class SimpleLidSessionManagementInstructions
         }
         if( theCookiesToSet != null ) {
             for( OutgoingSimpleSaneCookie current : theCookiesToSet ) {
-                Cookie toAdd = new Cookie( HTTP.encodeToValidUrlArgument( current.getName()), current.getValue() );
+                Cookie toAdd = new Cookie( HTTP.encodeCookieName( current.getName()), current.getValue() );
                 if( current.getDomain() != null ) {
                     toAdd.setDomain( current.getDomain() );
                 }

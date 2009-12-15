@@ -258,21 +258,24 @@ public class DefaultLidSessionManagementStage
      *
      * @param realm the name of the realm
      * @return name of the LID cookie
-     * @see #determineSessionCookieName()
-     * @see AbstractLidClientAuthenticationPipelineStage#determineLidCookieName()
+     * @see #determineSessionCookieName
+     * @see AbstractLidClientAuthenticationPipelineStage#determineLidCookieName
      */
     protected String determineLidCookieName(
             String realm )
     {
+        String ret;
         if( realm == null ) {
-            return LidCookies.LID_IDENTIFIER_COOKIE_NAME;
+            ret = LidCookies.LID_IDENTIFIER_COOKIE_NAME;
         } else {
             StringBuilder buf = new StringBuilder();
             buf.append( LidCookies.LID_IDENTIFIER_COOKIE_NAME );
             buf.append( '-' );
             buf.append( realm );
-            return buf.toString();
+            ret = buf.toString();
         }
+        ret = ret.toLowerCase();
+        return ret;
     }
 
     /**
@@ -280,21 +283,24 @@ public class DefaultLidSessionManagementStage
      *
      * @param realm the name of the realm
      * @return name of the LID session cookie
-     * @see #determineSessionCookieName()
-     * @see AbstractLidClientAuthenticationPipelineStage#determineSessionCookieName()
+     * @see #determineSessionCookieName
+     * @see AbstractLidClientAuthenticationPipelineStage#determineSessionCookieName
      */
     protected String determineSessionCookieName(
             String realm )
     {
+        String ret;
         if( realm == null ) {
-            return LidCookies.LID_SESSION_COOKIE_NAME;
+            ret = LidCookies.LID_SESSION_COOKIE_NAME;
         } else {
             StringBuilder buf = new StringBuilder();
             buf.append( LidCookies.LID_SESSION_COOKIE_NAME );
             buf.append( '-' );
             buf.append( realm );
-            return buf.toString();
+            ret = buf.toString();
         }
+        ret = ret.toLowerCase();
+        return ret;
     }
 
     /**
