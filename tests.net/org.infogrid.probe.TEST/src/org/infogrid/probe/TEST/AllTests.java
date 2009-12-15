@@ -89,7 +89,7 @@ public class AllTests
                         YadisTest1.class.getName() + " (delay 2000)",
                         YadisTest1.class, "2000" ),
 
-               new TestSpec(
+                new TestSpec(
                         YadisTest2.class.getName() + " (delay 0)",
                         YadisTest2.class, "0" ),
                 new TestSpec(

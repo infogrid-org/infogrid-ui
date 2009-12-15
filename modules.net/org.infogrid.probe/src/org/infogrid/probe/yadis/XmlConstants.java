@@ -45,4 +45,9 @@ public interface XmlConstants
      * Yadis type identifier for OpenID Authentication 1.0.
      */
     final static public StringValue OPENID1_0TYPEIDENTIFIER = StringValue.create( "http://openid.net/signon/1.0" );
+
+    /**
+     * Yadis type identifier for OpenID Authentication 2.0.
+     */
+    final static public StringValue OPENID2_0TYPEIDENTIFIER = StringValue.create( "http://specs.openid.net/auth/2.0/signon" );
 }

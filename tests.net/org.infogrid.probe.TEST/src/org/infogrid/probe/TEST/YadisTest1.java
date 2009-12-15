@@ -56,7 +56,7 @@ public class YadisTest1
         ShadowMeshBase shadow     = mb.getShadowMeshBaseFor( theIdentityIdentifier );
         
         if( mode ) {
-            checkYadisResultsDirect( shadowHome, 2 );
+            checkYadisResultsDirect( shadowHome, 3 );
         } else {
             checkNoYadisResults( shadowHome );
         }
@@ -70,7 +70,7 @@ public class YadisTest1
         sleepFor( PINGPONG_ROUNDTRIP_DURATION );
 
         if( !mode ) {
-            checkYadisResultsDirect( shadowHome, 2 );
+            checkYadisResultsDirect( shadowHome, 3 );
         } else {
             checkNoYadisResults( shadowHome );
         }
@@ -84,7 +84,7 @@ public class YadisTest1
         sleepFor( PINGPONG_ROUNDTRIP_DURATION );
 
         if( mode ) {
-            checkYadisResultsDirect( shadowHome, 2 );
+            checkYadisResultsDirect( shadowHome, 3 );
         } else {
             checkNoYadisResults( shadowHome );
         }

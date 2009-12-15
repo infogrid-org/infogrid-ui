@@ -173,6 +173,10 @@ public abstract class AbstractYadisTest
         
         checkEquals( services.size(), nServices, "Wrong number of services found" );
 
+        boolean foundMinimumLid = false;
+        boolean foundOpenId1    = false;
+        boolean foundOpenId2    = false;
+
         for( MeshObject service : services ) {
             
             getLog().debug( "Looking at Yadis service " + service );
@@ -187,15 +191,21 @@ public abstract class AbstractYadisTest
             if( !found ) {
                 reportError( "Service is not a XRDSSERVICE" );
             }
+
             if( ArrayHelper.isIn( LidSubjectArea.MINIMUMLID2, service.getTypes(), false )) {
                 // good
+                foundMinimumLid = true;
             } else if( ArrayHelper.isIn( AuthSubjectArea.AUTHENTICATION1DOT0SERVICE, service.getTypes(), false )) {
                 // good
+                foundOpenId1 = true;
+            } else if( ArrayHelper.isIn( AuthSubjectArea.AUTHENTICATION2DOT0SERVICE, service.getTypes(), false )) {
+                // good
+                foundOpenId2 = true;
             } else {
                 // not good
-                reportError( "Service is neither MinimumLid nor OpenID Auth", service );
+                reportError( "Service is neither MinimumLid nor OpenID Auth 1 nor OpenID Auth 2", service );
             }
-            
+
             MeshObjectSet endpoints = service.traverse( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource() );
             checkEquals( endpoints.size(), 1, "wrong number of endpoints" );
             
@@ -221,6 +231,11 @@ public abstract class AbstractYadisTest
                 }
             }
         }
+        if( nServices >= 3 ) { // bit of a hack
+            checkCondition( foundMinimumLid, "MinimumLid not found" );
+        }
+        checkCondition( foundOpenId1,    "OpenId1 not found" );
+        checkCondition( foundOpenId2,    "OpenId2 not found" );
     }
 
     /**
@@ -360,6 +375,10 @@ public abstract class AbstractYadisTest
             + "   <xrd:URI>" + IDENTITY_IDENTIFIER + "</xrd:URI>\n"
             + "   <openid:Delegate xmlns:openid=\"http://openid.net/xmlns/1.0\">" + IDENTITY_IDENTIFIER + "</openid:Delegate>\n"
             + "  </xrd:Service>\n"
+            + "  <xrd:Service priority=\"5\">\n"
+            + "   <xrd:Type>http://specs.openid.net/auth/2.0/signon</xrd:Type>\n"
+            + "   <xrd:URI>" + IDENTITY_IDENTIFIER + "</xrd:URI>\n"
+            + "  </xrd:Service>\n"
             + " </xrd:XRD>\n"
             + "</XRDS>\n";
     
@@ -398,6 +417,7 @@ public abstract class AbstractYadisTest
             + " <head>\n"
             + "  <title>Test file</title>\n"
             + "  <link rel=\"openid.server\" href=\"" + IDENTITY_IDENTIFIER + "\"\n"
+            + "  <link rel=\"openid2.provider\" href=\"" + IDENTITY_IDENTIFIER + "\"\n"
             + " </head>\n"
             + " <body>\n"
             + "  <h1>Test file</h1>\n"

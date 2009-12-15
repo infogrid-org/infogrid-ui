@@ -38,6 +38,7 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.Web.WebSubjectArea;
+import org.infogrid.model.primitives.EntityType;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.util.logging.Log;
@@ -227,125 +228,199 @@ public class YadisServiceFactory
                     log.warn( ex );
                 }
             }
-            
-            // look for OpenID tags
-            Matcher openIdServerMatcher1   = openIdServerPattern1.matcher( content );
-            Matcher openIdServerMatcher2   = openIdServerPattern2.matcher( content );
-            Matcher openIdDelegateMatcher1 = openIdDelegatePattern1.matcher( content );
-            Matcher openIdDelegateMatcher2 = openIdDelegatePattern2.matcher( content );
 
-            Matcher openIdServerMatcher = null;
-            if( openIdServerMatcher == null && openIdServerMatcher1.find() ) {
-                openIdServerMatcher = openIdServerMatcher1;
-            }
-            if( openIdServerMatcher == null && openIdServerMatcher2.find() ) {
-                openIdServerMatcher = openIdServerMatcher2;
-            }
-            // make sure it is in the right place
-            if( openIdServerMatcher != null ) {
-                int openIdServerStart = openIdServerMatcher.start( 1 );
+            addOpenIdYadisServicesFromHtml(
+                    content,
+                    startHeadStart,
+                    endHeadStart,
+                    subject,
+                    base,
+                    openId1ServerPattern1,
+                    openId1ServerPattern2,
+                    openId1DelegatePattern1,
+                    openId1DelegatePattern2,
+                    AuthSubjectArea.AUTHENTICATION1DOT0SERVICE,
+                    OPENID1_0TYPEIDENTIFIER,
+                    "openid1" );
 
-                // String identityServer = openIdServerMatcher.group( 1 );
-                NetMeshBaseIdentifier identityServerIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( openIdServerMatcher.group( 1 ) );
-                NetMeshBaseIdentifier delegateIdentifier = null;
+            addOpenIdYadisServicesFromHtml(
+                    content,
+                    startHeadStart,
+                    endHeadStart,
+                    subject,
+                    base,
+                    openId2ProviderPattern1,
+                    openId2ProviderPattern2,
+                    openId2Local_idPattern1,
+                    openId2Local_idPattern2,
+                    AuthSubjectArea.AUTHENTICATION2DOT0SERVICE,
+                    OPENID2_0TYPEIDENTIFIER,
+                    "openid2" );
+        }
+    }
 
-                try {
-                    if( startHeadStart < openIdServerStart && openIdServerStart < endHeadStart ) {
+    /**
+     * Add discovered OpenID services from Html for one version of OpenID.
+     *
+     * @param content the content of the HTML document
+     * @param startHeadStart index into content from where the head section starts
+     * @param endHeadStart index into content to where the head section ends
+     * @param subject the MeshObject that represents the resource being described by the HTML document
+     * @param base the MeshBase in which to instantiate
+     * @param serverPattern1 the first pattern describing how to find the server tag
+     * @param serverPattern2 the second pattern describing how to find the server tag
+     * @param delegatePattern1 the first pattern describing how to find the delegate tag
+     * @param delegatePattern2 the second pattern describing how to find the delegate tag
+     * @param serviceType the EntityType to bless the XRDS service object with
+     * @param serviceTypeIdentifier the PropertyValue for the XRDS service object
+     * @param uniqueIdComponent unique identifier to use in creating the instances
+     * @return true if a discovery was made
+     * @throws TransactionException thrown if invoked outside of proper Transaction boundaries. This should not happen.
+     * @throws NotPermittedException an operation was not permitted. This should not happen.
+     * @throws MeshObjectIdentifierNotUniqueException an identifier was not unique. This should not happen.
+     * @throws StringRepresentationParseException a syntax error occurred
+     */
+    protected boolean addOpenIdYadisServicesFromHtml(
+            String          content,
+            int             startHeadStart,
+            int             endHeadStart,
+            NetMeshObject   subject,
+            StagingMeshBase base,
+            Pattern         serverPattern1,
+            Pattern         serverPattern2,
+            Pattern         delegatePattern1,
+            Pattern         delegatePattern2,
+            EntityType      serviceType,
+            StringValue     serviceTypeIdentifier,
+            String          uniqueIdComponent )
+        throws
+            TransactionException,
+            NotPermittedException,
+            MeshObjectIdentifierNotUniqueException,
+            StringRepresentationParseException
+    {
+        // look for OpenID tags
+        Matcher openIdServerMatcher1   = serverPattern1.matcher( content );
+        Matcher openIdServerMatcher2   = serverPattern2.matcher( content );
+        Matcher openIdDelegateMatcher1 = delegatePattern1.matcher( content );
+        Matcher openIdDelegateMatcher2 = delegatePattern2.matcher( content );
 
-                        // look for optional delegate tag
-                        Matcher openIdDelegateMatcher = null;
-                        if( openIdServerMatcher == null && openIdDelegateMatcher1.find() ) {
-                            openIdDelegateMatcher = openIdDelegateMatcher1;
-                        }
-                        if( openIdServerMatcher == null && openIdDelegateMatcher2.find() ) {
-                            openIdDelegateMatcher = openIdDelegateMatcher2;
-                        }
-                        if( openIdDelegateMatcher != null && openIdDelegateMatcher.find() ) {
-                            int openIdDelegateStart = openIdDelegateMatcher.start();
-                            if( startHeadStart < openIdDelegateStart && openIdDelegateStart < endHeadStart ) {
-                                String delegateUrl = openIdDelegateMatcher.group( 1 );
+        Matcher openIdServerMatcher = null;
+        if( openIdServerMatcher == null && openIdServerMatcher1.find() ) {
+            openIdServerMatcher = openIdServerMatcher1;
+        }
+        if( openIdServerMatcher == null && openIdServerMatcher2.find() ) {
+            openIdServerMatcher = openIdServerMatcher2;
+        }
+        // make sure it is in the right place
+        if( openIdServerMatcher != null ) {
+            int openIdServerStart = openIdServerMatcher.start( 1 );
 
-                                delegateIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( delegateUrl );
-                            }
+            // String identityServer = openIdServerMatcher.group( 1 );
+            NetMeshBaseIdentifier identityServerIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( openIdServerMatcher.group( 1 ) );
+            NetMeshBaseIdentifier delegateIdentifier = null;
+
+            try {
+                if( startHeadStart < openIdServerStart && openIdServerStart < endHeadStart ) {
+
+                    // look for optional delegate tag
+                    Matcher openIdDelegateMatcher = null;
+                    if( openIdServerMatcher == null && openIdDelegateMatcher1.find() ) {
+                        openIdDelegateMatcher = openIdDelegateMatcher1;
+                    }
+                    if( openIdServerMatcher == null && openIdDelegateMatcher2.find() ) {
+                        openIdDelegateMatcher = openIdDelegateMatcher2;
+                    }
+                    if( openIdDelegateMatcher != null && openIdDelegateMatcher.find() ) {
+                        int openIdDelegateStart = openIdDelegateMatcher.start();
+                        if( startHeadStart < openIdDelegateStart && openIdDelegateStart < endHeadStart ) {
+                            String delegateUrl = openIdDelegateMatcher.group( 1 );
+
+                            delegateIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( delegateUrl );
                         }
                     }
-                } catch( StringRepresentationParseException ex ) {
-                    log.warn( ex );
+                }
+            } catch( StringRepresentationParseException ex ) {
+                log.warn( ex );
+            }
+
+            try {
+                subject.bless( YadisSubjectArea.XRDSSERVICECOLLECTION );
+
+            } catch( BlessedAlreadyException ex ) {
+                // happens if both OpenID V1 and V2 are supported
+                
+            } catch( IsAbstractException ex ) {
+                log.error( ex );
+            }
+
+            try {
+                NetMeshObject serviceMeshObject = base.getMeshBaseLifecycleManager().createMeshObject(
+                        base.getMeshObjectIdentifierFactory().fromExternalForm( "YadisService-" + uniqueIdComponent ),
+                        YadisSubjectArea.XRDSSERVICE );
+
+                serviceMeshObject.bless( serviceType );
+
+                if( delegateIdentifier != null ) {
+                    serviceMeshObject.setPropertyValue(
+                            AuthSubjectArea.AUTHENTICATIONSERVICE_DELEGATE,
+                            StringValue.create( delegateIdentifier.toExternalForm() ));
                 }
 
-                try {
-                    subject.bless( YadisSubjectArea.XRDSSERVICECOLLECTION );
+                NetMeshObject serviceMeshObjectType = base.getMeshBaseLifecycleManager().createMeshObject(
+                        base.getMeshObjectIdentifierFactory().fromExternalForm( "YadisService- " + uniqueIdComponent + "-type-0" ),
+                        YadisSubjectArea.XRDSSERVICETYPE );
+                serviceMeshObjectType.setPropertyValue( YadisSubjectArea.XRDSSERVICETYPE_SERVICETYPEIDENTIFIER, serviceTypeIdentifier );
 
-                } catch( BlessedAlreadyException ex ) {
-                    log.warn( ex );
-                } catch( IsAbstractException ex ) {
-                    log.error( ex );
+                serviceMeshObject.relateAndBless( YadisSubjectArea.XRDSSERVICE_HASTYPE_XRDSSERVICETYPE.getSource(), serviceMeshObjectType );
+
+                NetMeshObject endpoint = base.getMeshBaseLifecycleManager().createMeshObject(
+                        base.getMeshObjectIdentifierFactory().fromExternalForm( "Endpoint-" + uniqueIdComponent ),
+                        YadisSubjectArea.ENDPOINT );
+                // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( identityServer ));
+
+                serviceMeshObject.relateAndBless( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource(), endpoint );
+
+                NetMeshObject resource = findOrCreateForwardReferenceAndBless(
+                        base.getMeshObjectIdentifierFactory().fromExternalForm( identityServerIdentifier, null ),
+                        WebSubjectArea.WEBRESOURCE,
+                        base );
+
+                if( !endpoint.isRelated( resource )) {
+                    endpoint.relate( resource );
                 }
+                endpoint.blessRelationship(
+                        YadisSubjectArea.ENDPOINT_ISOPERATEDBY_WEBRESOURCE.getSource(),
+                        resource );
 
-                try {
-                    NetMeshObject serviceMeshObject = base.getMeshBaseLifecycleManager().createMeshObject(
-                            base.getMeshObjectIdentifierFactory().fromExternalForm( "YadisService-0" ),
-                            YadisSubjectArea.XRDSSERVICE );
-
-                    serviceMeshObject.bless( AuthSubjectArea.AUTHENTICATION1DOT0SERVICE ); // FIXME? OpenIDAuthentication.TYPE );
-
-                    if( delegateIdentifier != null ) {
-                        serviceMeshObject.setPropertyValue(
-                                AuthSubjectArea.AUTHENTICATIONSERVICE_DELEGATE,
-                                StringValue.create( delegateIdentifier.toExternalForm() ));
-                    }
-
-                    NetMeshObject serviceMeshObjectType = base.getMeshBaseLifecycleManager().createMeshObject(
-                            base.getMeshObjectIdentifierFactory().fromExternalForm( "YadisService-0-type-0" ),
-                            YadisSubjectArea.XRDSSERVICETYPE );
-                    serviceMeshObjectType.setPropertyValue( YadisSubjectArea.XRDSSERVICETYPE_SERVICETYPEIDENTIFIER, OPENID1_0TYPEIDENTIFIER );
-
-                    serviceMeshObject.relateAndBless( YadisSubjectArea.XRDSSERVICE_HASTYPE_XRDSSERVICETYPE.getSource(), serviceMeshObjectType );
-
-                    NetMeshObject endpoint = base.getMeshBaseLifecycleManager().createMeshObject(
-                            base.getMeshObjectIdentifierFactory().fromExternalForm( "Endpoint-0" ),
-                            YadisSubjectArea.ENDPOINT );
-                    // endpoint.setPropertyValue( ServiceEndPoint.URI_PROPERTYTYPE, StringValue.obtain( identityServer ));
-                    
-                    serviceMeshObject.relateAndBless( YadisSubjectArea.XRDSSERVICE_ISPROVIDEDAT_ENDPOINT.getSource(), endpoint );
-
-                    NetMeshObject resource = findOrCreateForwardReferenceAndBless(
-                            base.getMeshObjectIdentifierFactory().fromExternalForm( identityServerIdentifier, null ),
-                            WebSubjectArea.WEBRESOURCE,
-                            base );
-
-                    if( !endpoint.isRelated( resource )) {
-                        endpoint.relate( resource );
-                    }
-                    endpoint.blessRelationship(
-                            YadisSubjectArea.ENDPOINT_ISOPERATEDBY_WEBRESOURCE.getSource(),
-                            resource );
-
-                    if( !serviceMeshObject.isRelated( subject )) {
-                        serviceMeshObject.relate( subject );
-                    }
-                    serviceMeshObject.blessRelationship(
-                            YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getDestination(),
-                            subject );
-
-                } catch( IsAbstractException ex ) {
-                    log.error( ex );
-                } catch( EntityBlessedAlreadyException ex ) {
-                    log.error( ex );
-                } catch( EntityNotBlessedException ex ) {
-                    log.error( ex );
-                } catch( IllegalPropertyTypeException ex ) {
-                    log.error( ex );
-                } catch( IllegalPropertyValueException ex ) {
-                    log.error( ex );
-                } catch( RelatedAlreadyException ex ) {
-                    log.error( ex );
-                } catch( NotRelatedException ex ) {
-                    log.error( ex );
-                } catch( RoleTypeBlessedAlreadyException ex ) {
-                    log.error( ex );
+                if( !serviceMeshObject.isRelated( subject )) {
+                    serviceMeshObject.relate( subject );
                 }
+                serviceMeshObject.blessRelationship(
+                        YadisSubjectArea.XRDSSERVICECOLLECTION_COLLECTS_XRDSSERVICE.getDestination(),
+                        subject );
+
+            } catch( IsAbstractException ex ) {
+                log.error( ex );
+            } catch( EntityBlessedAlreadyException ex ) {
+                log.error( ex );
+            } catch( EntityNotBlessedException ex ) {
+                log.error( ex );
+            } catch( IllegalPropertyTypeException ex ) {
+                log.error( ex );
+            } catch( IllegalPropertyValueException ex ) {
+                log.error( ex );
+            } catch( RelatedAlreadyException ex ) {
+                log.error( ex );
+            } catch( NotRelatedException ex ) {
+                log.error( ex );
+            } catch( RoleTypeBlessedAlreadyException ex ) {
+                log.error( ex );
             }
+
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -374,23 +449,43 @@ public class YadisServiceFactory
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
 
     /**
-     * The pattern that helps us find the openid.server tag.
+     * The pattern that helps us find the openid.server tag for OpenID V1.
      */
-    private static final Pattern openIdServerPattern1 = Pattern.compile(
+    private static final Pattern openId1ServerPattern1 = Pattern.compile(
             "<link[^>]+rel=[\"']?openid.server[\"'\\s][^>]*href=[\"']?([^\\s\"']*)[\"'\\s>]",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
-    private static final Pattern openIdServerPattern2 = Pattern.compile(
+    private static final Pattern openId1ServerPattern2 = Pattern.compile(
             "<link[^>]+href=[\"']?([^\\s\"']*)[\"'\\s][^>]*rel=[\"']?openid.server[\"'\\s>]",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
 
     /**
-     * The pattern that helps us find the openid.delegate tag.
+     * The pattern that helps us find the openid2.provider tag for OpenID V2.
      */
-    private static final Pattern openIdDelegatePattern1 = Pattern.compile(
+    private static final Pattern openId2ProviderPattern1 = Pattern.compile(
+            "<link[^>]+rel=[\"']?openid2.provider[\"'\\s][^>]*href=[\"']?([^\\s\"']*)[\"'\\s>]",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
+    private static final Pattern openId2ProviderPattern2 = Pattern.compile(
+            "<link[^>]+href=[\"']?([^\\s\"']*)[\"'\\s][^>]*rel=[\"']?openid2.provider[\"'\\s>]",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
+
+    /**
+     * The pattern that helps us find the openid.delegate tag for OpenID V1.
+     */
+    private static final Pattern openId1DelegatePattern1 = Pattern.compile(
             "<link[^>]+rel=[\"']?openid.delegate[\"'\\s][^>]*href=[\"']?([^\\s\"']*)[\"'\\s>]",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
-    private static final Pattern openIdDelegatePattern2 = Pattern.compile(
+    private static final Pattern openId1DelegatePattern2 = Pattern.compile(
             "<link[^>]+href=[\"']?([^\\s\"']*)[\"'\\s][^>]*rel=[\"']?openid.delegate[\"'\\s>]",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
+
+    /**
+     * The pattern that helps us find the openid2.local_id tag for OpenID V1.
+     */
+    private static final Pattern openId2Local_idPattern1 = Pattern.compile(
+            "<link[^>]+rel=[\"']?openid2.local_id[\"'\\s][^>]*href=[\"']?([^\\s\"']*)[\"'\\s>]",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
+    private static final Pattern openId2Local_idPattern2 = Pattern.compile(
+            "<link[^>]+href=[\"']?([^\\s\"']*)[\"'\\s][^>]*rel=[\"']?openid2.local_id[\"'\\s>]",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL );
 
     /**
