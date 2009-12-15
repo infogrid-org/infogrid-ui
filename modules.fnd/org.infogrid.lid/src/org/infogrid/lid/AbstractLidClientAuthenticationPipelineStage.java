@@ -25,7 +25,6 @@ import org.infogrid.util.HasIdentifierFinder;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationParseException;
@@ -93,22 +92,25 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
         sessionCookieString = cleanupCookieValue( sessionCookieString );
         lidCookieString     = cleanupCookieValue( lidCookieString );
 
-        // LID argument: first consider POST'd, then URL arguments
-        String lidArgumentString = lidRequest.getPostedArgument( "lid" );
-        if( lidArgumentString == null ) {
-            lidArgumentString = lidRequest.getPostedArgument( "openid_identifier" );
-        }
-        if( lidArgumentString == null ) {
-            lidArgumentString = lidRequest.getPostedArgument( "openid.identity" );
-        }
-        if( lidArgumentString == null ) {
+        // LID argument: ignore URL arguments in case of a POST
+        String lidArgumentString;
+        if( "POST".equalsIgnoreCase( lidRequest.getMethod() )) {
+            lidArgumentString = lidRequest.getPostedArgument( "lid" );
+            if( lidArgumentString == null ) {
+                lidArgumentString = lidRequest.getPostedArgument( "openid_identifier" );
+            }
+            if( lidArgumentString == null ) {
+                lidArgumentString = lidRequest.getPostedArgument( "openid.identity" );
+            }
+        } else {
+
             lidArgumentString = lidRequest.getUrlArgument( "lid" );
-        }
-        if( lidArgumentString == null ) {
-            lidArgumentString = lidRequest.getUrlArgument( "openid_identifier" );
-        }
-        if( lidArgumentString == null ) {
-            lidArgumentString = lidRequest.getUrlArgument( "openid.identity" );
+            if( lidArgumentString == null ) {
+                lidArgumentString = lidRequest.getUrlArgument( "openid_identifier" );
+            }
+            if( lidArgumentString == null ) {
+                lidArgumentString = lidRequest.getUrlArgument( "openid.identity" );
+            }
         }
 
         Identifier lidCookieIdentifier   = null;
