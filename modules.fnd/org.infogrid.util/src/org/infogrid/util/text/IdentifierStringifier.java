@@ -151,6 +151,9 @@ public class IdentifierStringifier
             String                         input,
             StringRepresentationParameters pars )
     {
+        if( input == null ) {
+            return null;
+        }
         if( pars == null ) {
             return input;
         }
@@ -161,21 +164,18 @@ public class IdentifierStringifier
         if( !colloquial.booleanValue() ) {
             return input;
         }
-        if( input == null ) {
-            return null;
-        }
 
+        String ret;
         final String PREFIX = "http://";
         if( input.startsWith( PREFIX )) {
-            String ret = input.substring( PREFIX.length() );
-            int    slash = ret.indexOf( '/' );
-            if( slash == ret.length()-1 ) {
-                // the first found slash is the last character
-                ret = ret.substring( 0, slash );
-            }
-            return ret;
+            ret = input.substring( PREFIX.length() );
+        } else {
+            ret = input;
         }
-        return input;
+        if( ret.charAt( ret.length()-1 ) == '/' ) {
+            ret = ret.substring( 0, ret.length()-1 );
+        }
+        return ret;
     }
 
     /**
