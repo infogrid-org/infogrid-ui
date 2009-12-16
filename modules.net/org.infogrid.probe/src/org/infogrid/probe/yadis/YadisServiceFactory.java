@@ -39,6 +39,7 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.Web.WebSubjectArea;
 import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.primitives.IntegerValue;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
 import org.infogrid.util.logging.Log;
@@ -241,7 +242,8 @@ public class YadisServiceFactory
                     openId1DelegatePattern2,
                     AuthSubjectArea.AUTHENTICATION1DOT0SERVICE,
                     OPENID1_0TYPEIDENTIFIER,
-                    "openid1" );
+                    "openid1",
+                    IntegerValue.create( 20 ));
 
             addOpenIdYadisServicesFromHtml(
                     content,
@@ -255,7 +257,8 @@ public class YadisServiceFactory
                     openId2Local_idPattern2,
                     AuthSubjectArea.AUTHENTICATION2DOT0SERVICE,
                     OPENID2_0TYPEIDENTIFIER,
-                    "openid2" );
+                    "openid2",
+                    IntegerValue.create( 10 ));
         }
     }
 
@@ -274,6 +277,7 @@ public class YadisServiceFactory
      * @param serviceType the EntityType to bless the XRDS service object with
      * @param serviceTypeIdentifier the PropertyValue for the XRDS service object
      * @param uniqueIdComponent unique identifier to use in creating the instances
+     * @param priority the Xrds Service's priority
      * @return true if a discovery was made
      * @throws TransactionException thrown if invoked outside of proper Transaction boundaries. This should not happen.
      * @throws NotPermittedException an operation was not permitted. This should not happen.
@@ -292,7 +296,8 @@ public class YadisServiceFactory
             Pattern         delegatePattern2,
             EntityType      serviceType,
             StringValue     serviceTypeIdentifier,
-            String          uniqueIdComponent )
+            String          uniqueIdComponent,
+            IntegerValue    priority )
         throws
             TransactionException,
             NotPermittedException,
@@ -360,6 +365,7 @@ public class YadisServiceFactory
                         YadisSubjectArea.XRDSSERVICE );
 
                 serviceMeshObject.bless( serviceType );
+                serviceMeshObject.setPropertyValue( YadisSubjectArea.XRDSSERVICE_PRIORITY, priority );
 
                 if( delegateIdentifier != null ) {
                     serviceMeshObject.setPropertyValue(

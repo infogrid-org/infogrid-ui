@@ -93,6 +93,10 @@ public class DefaultOpenIdLidProcessingPipeline
             log.traceMethodCallEntry( this, "processPipeline", lidRequest, lidResponse, siteIdentifier );
         }
 
+        if( lidRequest.matchUrlArgument( "openid.mode", "cancel" )) {
+            throw new OpenIdModeCancelException();
+        }
+
         if( theOpenIdIdpSideAssociationStage != null ) {
             try {
                 theOpenIdIdpSideAssociationStage.processRequest( lidRequest, lidResponse );

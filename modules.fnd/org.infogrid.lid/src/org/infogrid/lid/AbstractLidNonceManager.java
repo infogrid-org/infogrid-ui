@@ -128,7 +128,14 @@ public abstract class AbstractLidNonceManager
         int hour   = Integer.parseInt( m.group( 4 ));
         int minute = Integer.parseInt( m.group( 5 ));
         int second = Integer.parseInt( m.group( 6 ));
-        double milli = Double.parseDouble( m.group( 7 ));
+        int milli;
+
+        String milliString = m.group( 7 );
+        if( milliString != null && milliString.length() > 0 ) {
+            milli = Integer.parseInt( milliString );
+        } else {
+            milli = 0;
+        }
 
         if(    year   < 2000 || month  < 1  || month > 12 || day    < 1  || day > 31
             || hour   < 0    || hour   > 23 || minute < 0 || minute > 59
@@ -140,6 +147,8 @@ public abstract class AbstractLidNonceManager
 
         Calendar cal = new GregorianCalendar( TimeZone.getTimeZone( "GMT" ));
         cal.set( year, month-1, day, hour, minute, second ); // month is 0-based
+        cal.set( Calendar.MILLISECOND, milli );
+
         long nonceTime = cal.getTimeInMillis();
 
         cal.clear();
@@ -163,10 +172,10 @@ public abstract class AbstractLidNonceManager
 
 
     /**
-     * The pattern for the LID V2 nonce.
+     * The pattern for the LID V2 nonce and the OpenID V2 nonce.
      */
     protected static final Pattern theLidNoncePattern = Pattern.compile(
-            "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})\\.(\\d{3})Z$" );
+            "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})\\.?(\\d{3})?Z(.*)$" );
 
     /**
      * Our ResourceHelper.
