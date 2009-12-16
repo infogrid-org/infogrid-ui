@@ -330,13 +330,13 @@ public class YadisServiceFactory
 
                     // look for optional delegate tag
                     Matcher openIdDelegateMatcher = null;
-                    if( openIdServerMatcher == null && openIdDelegateMatcher1.find() ) {
+                    if( openIdDelegateMatcher == null && openIdDelegateMatcher1.find() ) {
                         openIdDelegateMatcher = openIdDelegateMatcher1;
                     }
-                    if( openIdServerMatcher == null && openIdDelegateMatcher2.find() ) {
+                    if( openIdDelegateMatcher == null && openIdDelegateMatcher2.find() ) {
                         openIdDelegateMatcher = openIdDelegateMatcher2;
                     }
-                    if( openIdDelegateMatcher != null && openIdDelegateMatcher.find() ) {
+                    if( openIdDelegateMatcher != null ) {
                         int openIdDelegateStart = openIdDelegateMatcher.start();
                         if( startHeadStart < openIdDelegateStart && openIdDelegateStart < endHeadStart ) {
                             String delegateUrl = openIdDelegateMatcher.group( 1 );
