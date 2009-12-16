@@ -31,6 +31,7 @@ public class OpenIdIdpSideAssociation
      *
      * @param associationHandle the unique identifier for the association
      * @param sharedSecret the secret negotiated for the association
+     * @param sessionType the session type
      * @param issuedTime the time the association was created
      * @param expiryTime the time the association will expire
      * @return the created OpenIdRpSideAssociation
@@ -38,10 +39,11 @@ public class OpenIdIdpSideAssociation
     public static OpenIdIdpSideAssociation create(
             String  associationHandle,
             byte [] sharedSecret,
+            String  sessionType,
             long    issuedTime,
             long    expiryTime )
     {
-        return new OpenIdIdpSideAssociation( associationHandle, sharedSecret, issuedTime, expiryTime );
+        return new OpenIdIdpSideAssociation( associationHandle, sharedSecret, sessionType, issuedTime, expiryTime );
     }
 
     /**
@@ -49,16 +51,18 @@ public class OpenIdIdpSideAssociation
      * 
      * @param associationHandle the unique identifier for the association
      * @param sharedSecret the secret negotiated for the association
+     * @param sessionType the session type
      * @param issuedTime the time the association was created
      * @param expiryTime the time the association will expire
      */
     protected OpenIdIdpSideAssociation(
             String  associationHandle,
             byte [] sharedSecret,
+            String  sessionType,
             long    issuedTime,
             long    expiryTime )
     {
-        super( associationHandle, sharedSecret, issuedTime, expiryTime );
+        super( associationHandle, sharedSecret, sessionType, issuedTime, expiryTime );
     }
 
     /**

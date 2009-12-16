@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,17 +24,20 @@ public abstract class OpenIdEitherSideAssociation
      * 
      * @param associationHandle the unique identifier for the association
      * @param sharedSecret the secret negotiated for the association
+     * @param sessionType the session type
      * @param issuedTime the time the association was created
      * @param expiryTime the time the association will expire
      */
     protected OpenIdEitherSideAssociation(
             String  associationHandle,
             byte [] sharedSecret,
+            String  sessionType,
             long    issuedTime,
             long    expiryTime )
     {
         theAssociationHandle = associationHandle;
         theSharedSecret      = sharedSecret;
+        theSessionType       = sessionType;
         theIssuedTime        = issuedTime;
         theExpiryTime        = expiryTime;
     }
@@ -57,6 +60,16 @@ public abstract class OpenIdEitherSideAssociation
     public byte [] getSharedSecret()
     {
         return theSharedSecret;
+    }
+
+    /**
+     * Obtain the session type.
+     *
+     * @return the session type
+     */
+    public String getSessionType()
+    {
+        return theSessionType;
     }
 
     /**
@@ -115,6 +128,16 @@ public abstract class OpenIdEitherSideAssociation
      * The Association handle.
      */
     protected String theAssociationHandle;
+    
+    /**
+     * The shared secret.
+     */
+    protected byte [] theSharedSecret;
+
+    /**
+     * The session type.
+     */
+    protected String theSessionType;
 
     /**
      * The time the Association was issued.
@@ -125,9 +148,4 @@ public abstract class OpenIdEitherSideAssociation
      * The time the Association will expire.
      */
     protected long theExpiryTime;
-    
-    /**
-     * The shared secret.
-     */
-    protected byte [] theSharedSecret;
 }

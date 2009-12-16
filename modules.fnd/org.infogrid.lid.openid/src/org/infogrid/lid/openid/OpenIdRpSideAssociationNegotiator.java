@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -101,14 +101,15 @@ public class OpenIdRpSideAssociationNegotiator
 
         DiffieHellmanEndpoint localDh = DiffieHellmanEndpoint.create( theDhP, theDhG );
         
-        sentContentBuf.append(  "openid.mode="         ).append( "associate" );
+        sentContentBuf.append(  "openid.ns="           ).append( "http://specs.openid.net/auth/2.0" ); // ignored by OpenID V1
+        sentContentBuf.append( "&openid.mode="         ).append( "associate" );
         sentContentBuf.append( "&openid.assoc_type="   ).append( parameters.getWantedAssociationType() );
 
-        if( DH_SHA1.equals( parameters.getWantedSessionType() )) {
-            sentContentBuf.append( "&openid.session_type=" ).append( DH_SHA1 );
+        if( parameters.getWantedSessionType() != null ) {
+            sentContentBuf.append( "&openid.session_type=" ).append( parameters.getWantedSessionType() );
 
             if( !DEFAULT_P.equals( localDh.getP() )) {
-                sentContentBuf.append( "&openid.modulus=" );
+                sentContentBuf.append( "&openid.dh_modulus=" );
                 sentContentBuf.append( HTTP.encodeToValidUrlArgument( Base64.base64encodeNoCr( localDh.getP().toByteArray() )));
             }
             if( !DEFAULT_G.equals( localDh.getG() )) {
@@ -133,6 +134,7 @@ public class OpenIdRpSideAssociationNegotiator
             throw new FactoryException( this, thrownEx );
         }
 
+        String     theNs                    = null;
         String     theAssociationHandle     = null;
         String     theAssociationType       = null;
         String     theSessionType           = null;
@@ -141,6 +143,8 @@ public class OpenIdRpSideAssociationNegotiator
         byte []    theEncryptedSharedSecret = null;
         long       issuedTime               = -1L;
         long       expiryTime               = -1L;
+        String     errorCode               = null;
+        String     error                    = null;
 
         long expires_in = Long.MIN_VALUE; // The number of seconds for which this is valid.
                                           // In OpenID V1.1, incoming times are relative, we convert to absolute below.
@@ -160,7 +164,9 @@ public class OpenIdRpSideAssociationNegotiator
                     String key   = pair.substring( 0, colon );
                     String value = pair.substring( colon+1 );
 
-                    if( "assoc_type".equals( key )) {
+                    if( "ns".equals( key )) {
+                        theNs = value;
+                    } else if( "assoc_type".equals( key )) {
                         theAssociationType = value;
                     } else if( "assoc_handle".equals( key )) {
                         theAssociationHandle = value;
@@ -180,6 +186,10 @@ public class OpenIdRpSideAssociationNegotiator
                         theEncryptedSharedSecret = Base64.base64decode( value );
                     } else if( "mac_key".equals( key )) {
                         theSharedSecret = Base64.base64decode( value );
+                    } else if( "error_code".equals( key )) {
+                        errorCode = value;
+                    } else if( "error".equals( key )) {
+                        error = value;
                     } else {
                         log.warn( "When talking to " + serverUrl + ", received unknown key-value pair " + key + " -> " + value );
                     }
@@ -188,15 +198,31 @@ public class OpenIdRpSideAssociationNegotiator
                 throw new FactoryException( this, ex );
             }
         }
-        if( theAssociationType != null && !OpenIdRpSideAssociationNegotiationParameters.HMAC_SHA1.equals( theAssociationType )) {
+        if( errorCode != null || error != null ) {
+            throw new FactoryException(
+                    this,
+                    new OpenIdAssociationException.ErrorMessage( errorCode, error ));
+        }
+        if(    theAssociationType != null
+            && !OpenIdRpSideAssociationNegotiationParameters.HMAC_SHA1.equals( theAssociationType )
+            && !OpenIdRpSideAssociationNegotiationParameters.HMAC_SHA256.equals( theAssociationType ))
+        {
             throw new FactoryException(
                     this,
                     new OpenIdAssociationException.UnknownAssociationType( theAssociationType ));
         }
-        if( theSessionType != null && !OpenIdRpSideAssociationNegotiationParameters.DH_SHA1.equals( theSessionType )) {
+        if(    theSessionType != null
+            && !OpenIdRpSideAssociationNegotiationParameters.DH_SHA1.equals( theSessionType )
+            && !OpenIdRpSideAssociationNegotiationParameters.DH_SHA256.equals( theSessionType ))
+        {
             throw new FactoryException(
                     this,
                     new OpenIdAssociationException.UnknownSessionType( theSessionType ));
+        }
+        if( theSharedSecret == null && ( theServerPublicKey == null || theEncryptedSharedSecret == null )) {
+            throw new FactoryException(
+                    this,
+                    new OpenIdAssociationException.SyntaxError());
         }
         if( expires_in == Long.MIN_VALUE ) {
             if( replace_after != null ) {
@@ -228,9 +254,18 @@ public class OpenIdRpSideAssociationNegotiator
             theSharedSecret = CryptUtils.do160BitXor(
                     theEncryptedSharedSecret,
                     dhSharedSecretSha1 );
+
+        } else if( OpenIdRpSideAssociationNegotiationParameters.DH_SHA256.equals( theSessionType )) {
+            BigInteger dhSharedSecret = localDh.computeSharedSecret( theServerPublicKey );
+
+            byte [] dhSharedSecretSha256 = CryptUtils.calculateSha256( dhSharedSecret );
+
+            theSharedSecret = CryptUtils.do256BitXor(
+                    theEncryptedSharedSecret,
+                    dhSharedSecretSha256 );
         }
 
-        OpenIdRpSideAssociation ret = OpenIdRpSideAssociation.create( serverUrl, theAssociationHandle, theSharedSecret, issuedTime, expiryTime );
+        OpenIdRpSideAssociation ret = OpenIdRpSideAssociation.create( serverUrl, theAssociationHandle, theSharedSecret, theSessionType, issuedTime, expiryTime );
         ret.checkCompleteness();        
         return ret;
     }

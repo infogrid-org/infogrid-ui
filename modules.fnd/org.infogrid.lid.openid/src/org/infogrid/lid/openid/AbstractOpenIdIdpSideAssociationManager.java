@@ -49,15 +49,17 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
 
     /**
      * Create a new association.
-     * 
+     *
+     * @param sessionType the session type
      * @return the created association
      */
-    public OpenIdIdpSideAssociation create()
+    public OpenIdIdpSideAssociation create(
+            String sessionType )
     {
         long   now    = System.currentTimeMillis();
         String handle = createNewAssociationHandle( String.valueOf( now ));
         
-        OpenIdIdpSideAssociation ret = create( handle, now );
+        OpenIdIdpSideAssociation ret = create( handle, sessionType, now );
         return ret;
     }
 
@@ -65,11 +67,13 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
      * Create a new association.
      * 
      * @param handle the handle for the to-be-created association
+     * @param sessionType the session type
      * @param timeCreated the creation time for the association
      * @return the created association
      */
     public OpenIdIdpSideAssociation create(
             String handle, 
+            String sessionType,
             long   timeCreated )
     {
         long    timeExpires = timeCreated + theAssociationDuration;
@@ -78,6 +82,7 @@ public abstract class AbstractOpenIdIdpSideAssociationManager
         OpenIdIdpSideAssociation ret = OpenIdIdpSideAssociation.create(
                 handle,
                 secret,
+                sessionType,
                 timeCreated,
                 timeExpires );
         

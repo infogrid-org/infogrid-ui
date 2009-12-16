@@ -32,6 +32,7 @@ public class OpenIdRpSideAssociation
      * @param serverUrl URL of the identity server with which we have this Association
      * @param associationHandle the unique identifier for the association
      * @param sharedSecret the secret negotiated for the association
+     * @param sessionType the session type
      * @param issuedTime the time the association was created
      * @param expiryTime the time the association will expire
      * @return the created OpenIdRpSideAssociation
@@ -40,10 +41,11 @@ public class OpenIdRpSideAssociation
             String  serverUrl,
             String  associationHandle,
             byte [] sharedSecret,
+            String  sessionType,
             long    issuedTime,
             long    expiryTime )
     {
-        return new OpenIdRpSideAssociation( serverUrl, associationHandle, sharedSecret, issuedTime, expiryTime );
+        return new OpenIdRpSideAssociation( serverUrl, associationHandle, sharedSecret, sessionType, issuedTime, expiryTime );
     }
 
     /**
@@ -52,6 +54,7 @@ public class OpenIdRpSideAssociation
      * @param serverUrl URL of the identity server with which we have this Association
      * @param associationHandle the unique identifier for the association
      * @param sharedSecret the secret negotiated for the association
+     * @param sessionType the session type
      * @param issuedTime the time the association was created
      * @param expiryTime the time the association will expire
      */
@@ -59,10 +62,11 @@ public class OpenIdRpSideAssociation
             String  serverUrl,
             String  associationHandle,
             byte [] sharedSecret,
+            String  sessionType,
             long    issuedTime,
             long    expiryTime )
     {
-        super( associationHandle, sharedSecret, issuedTime, expiryTime );
+        super( associationHandle, sharedSecret, sessionType, issuedTime, expiryTime );
 
         theServerUrl = serverUrl;
     }

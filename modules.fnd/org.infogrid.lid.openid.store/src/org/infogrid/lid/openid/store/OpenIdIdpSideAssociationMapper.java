@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 import org.infogrid.lid.openid.CryptUtils;
 import org.infogrid.lid.openid.OpenIdIdpSideAssociation;
+import org.infogrid.lid.openid.OpenIdRpSideAssociationNegotiationParameters;
 import org.infogrid.store.StoreEntryMapper;
 import org.infogrid.store.StoreValue;
 import org.infogrid.store.StoreValueDecodingException;
@@ -91,6 +92,7 @@ public class OpenIdIdpSideAssociationMapper
 
             String associationHandle = null;
             String sharedSecretInHex = null;
+            String sessionType       = OpenIdRpSideAssociationNegotiationParameters.DH_SHA1; // default
 
             while( token.hasMoreTokens() ) {
                 String line = token.nextToken();
@@ -100,6 +102,9 @@ public class OpenIdIdpSideAssociationMapper
 
                 } else if( line.startsWith( SHARED_SECRET_TAG )) {
                     sharedSecretInHex = line.substring( SHARED_SECRET_TAG.length() );
+
+                } else if( line.startsWith( SESSION_TYPE_TAG )) {
+                    sessionType = line.substring( SESSION_TYPE_TAG.length() );
 
                 } else {
                     throw new StoreValueDecodingException( "Unknown token in line: " + line );
@@ -114,6 +119,7 @@ public class OpenIdIdpSideAssociationMapper
             OpenIdIdpSideAssociation ret = OpenIdIdpSideAssociation.create(
                     associationHandle,
                     sharedSecret,
+                    sessionType,
                     value.getTimeCreated(),
                     value.getTimeExpires() );
             ret.checkCompleteness();
@@ -216,6 +222,7 @@ public class OpenIdIdpSideAssociationMapper
      */
     protected static final String ASSOCIATION_HANDLE_TAG = "associationHandle:";
     protected static final String      SHARED_SECRET_TAG = "sharedSecret:";
+    protected static final String       SESSION_TYPE_TAG = "sessionType:";
     
     /**
      * The encoding to use.

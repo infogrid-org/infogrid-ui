@@ -179,6 +179,14 @@ public abstract class OpenIdAssociationException
 
         /**
          * Constructor.
+         */
+        public SyntaxError()
+        {
+            super( null );
+        }
+
+        /**
+         * Constructor.
          *
          * @param cause the cause of this Exception
          */
@@ -198,7 +206,7 @@ public abstract class OpenIdAssociationException
             return null;
         }
     }
-    
+
     /**
      * This Exception is thrown if there was an invalid public key.
      */
@@ -225,5 +233,51 @@ public abstract class OpenIdAssociationException
         {
             return null;
         }
+    }
+
+    /**
+     * This Exception is thrown if the response contained an error message.
+     */
+    public static class ErrorMessage
+        extends
+            OpenIdAssociationException
+    {
+        private static final long serialVersionUID = 1L; // helps with serialization
+
+        /**
+         * Constructor.
+         *
+         * @param errorCode the error code per specification
+         * @param errorMessage the error message per specification
+         */
+        public ErrorMessage(
+                String errorCode,
+                String errorMessage )
+        {
+            super( null );
+
+            theErrorCode    = errorCode;
+            theErrorMessage = errorMessage;
+        }
+
+        /**
+         * Obtain resource parameters for the internationalization.
+         *
+         * @return the resource parameters
+         */
+        public Object [] getLocalizationParameters()
+        {
+            return new Object[] { theErrorCode, theErrorMessage };
+        }
+
+        /**
+         * Error code.
+         */
+        protected String theErrorCode;
+
+        /**
+         * Error message.
+         */
+        protected String theErrorMessage;
     }
 }

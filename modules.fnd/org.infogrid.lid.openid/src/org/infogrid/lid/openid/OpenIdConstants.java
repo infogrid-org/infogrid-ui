@@ -8,16 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid.openid;
 
 import java.math.BigInteger;
-import org.infogrid.lid.LidProcessingPipelineStage;
-import org.infogrid.util.context.AbstractObjectInContext;
-import org.infogrid.util.context.Context;
 
 /**
  * Defines constants related to OpenID.
@@ -25,14 +22,24 @@ import org.infogrid.util.context.Context;
 public interface OpenIdConstants
 {
     /**
-     * The pre-defined association type.
+     * A pre-defined association type.
      */
     public static final String HMAC_SHA1 = "HMAC-SHA1";
 
     /**
-     * The pre-defined session type.
+     * A pre-defined session type.
      */
     public static final String DH_SHA1 = "DH-SHA1";
+
+    /**
+     * A pre-defined association type.
+     */
+    public static final String HMAC_SHA256 = "HMAC-SHA256";
+
+    /**
+     * A pre-defined session type.
+     */
+    public static final String DH_SHA256 = "DH-SHA256";
 
     /**
      * The default value for the Diffie-Helloman p parameter in OpenID.

@@ -133,7 +133,7 @@ public class OpenIdIdpSideAssociationPipelineStage
             throw new OpenIdAssociationException.InvalidPublicKey();
         }
         
-        OpenIdIdpSideAssociation assoc = theAssociationManager.create();
+        OpenIdIdpSideAssociation assoc = theAssociationManager.create( sessionType );
 
         byte [] mac_key     = null;
         byte [] enc_mac_key = null;

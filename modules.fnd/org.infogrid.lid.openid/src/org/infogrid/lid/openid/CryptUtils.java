@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -42,12 +42,40 @@ public abstract class CryptUtils
     {
         try {
             byte [] realData = data.toByteArray();
-            // insert leading zero if MSB set, to be compatible with the Jan Rain implementation
+            // insert leading zero if MSB set
             if( realData[0] > 127 ) {
                 realData = ArrayHelper.append( new byte[] { (byte) 0 }, realData );
             }
             
             MessageDigest md = MessageDigest.getInstance( "SHA1" );
+            md.update( realData );
+
+            byte [] ret = md.digest();
+            return ret;
+
+        } catch( NoSuchAlgorithmException ex ) {
+            log.error( ex );
+            return null;
+        }
+    }
+
+    /**
+     * Calculate the SHA-256 digest.
+     *
+     * @param data the data whose SHA-256 we calculate
+     * @return the SHA-256 of the data
+     */
+    public static byte [] calculateSha256(
+            BigInteger data )
+    {
+        try {
+            byte [] realData = data.toByteArray();
+            // insert leading zero if MSB set
+            if( realData[0] > 127 ) {
+                realData = ArrayHelper.append( new byte[] { (byte) 0 }, realData );
+            }
+
+            MessageDigest md = MessageDigest.getInstance( "SHA256" );
             md.update( realData );
 
             byte [] ret = md.digest();
@@ -84,6 +112,30 @@ public abstract class CryptUtils
     }
 
     /**
+     * Calculate the HMAC-SHA-256 message authentication code.
+     *
+     * @param key the secret key
+     * @param data the data
+     * @return the HMAC-SHA-256 message authentication code of the data, given key.
+     */
+    public static byte [] calculateHmacSha256(
+            final byte [] key,
+            final byte [] data )
+    {
+        try {
+            Mac mac = Mac.getInstance( HMACSHA256_ALGORITHM );
+            mac.init( new SecretKeySpec( key, HMACSHA256_ALGORITHM ));
+
+            byte [] result = mac.doFinal( data );
+            return result;
+
+        } catch( Exception ex ) {
+            log.error( ex );
+            return null;
+        }
+    }
+
+    /**
      * Create a random set of bits.
      * 
      * @param bits the number of bits for the random number
@@ -104,7 +156,7 @@ public abstract class CryptUtils
     }
 
     /**
-     * Calculate A xor B.
+     * Calculate A xor B for 160 bit values.
      *
      * @param one first argument
      * @param two second argument
@@ -121,6 +173,30 @@ public abstract class CryptUtils
             throw new IllegalArgumentException( "do160BitXor: Second parameter is not 20 bytes long, is " + two.length );
         }
         byte [] ret = new byte[20];
+        for( int i=0 ; i<ret.length ; ++i ) {
+            ret[i] = (byte) ( one[i] ^ two[i] );
+        }
+        return ret;
+    }
+
+    /**
+     * Calculate A xor B for 256 bit values
+     *
+     * @param one first argument
+     * @param two second argument
+     * @return the XOR of the two arguments
+     */
+    public static byte [] do256BitXor(
+            byte [] one,
+            byte [] two )
+    {
+        if( one.length != 32 ) {
+            throw new IllegalArgumentException( "do256BitXor: First parameter is not 32 bytes long, is " + one.length );
+        }
+        if( two.length != 32 ) {
+            throw new IllegalArgumentException( "do256BitXor: Second parameter is not 32 bytes long, is " + two.length );
+        }
+        byte [] ret = new byte[32];
         for( int i=0 ; i<ret.length ; ++i ) {
             ret[i] = (byte) ( one[i] ^ two[i] );
         }
@@ -198,6 +274,11 @@ public abstract class CryptUtils
      * Name of the algorithm.
      */
     static final String HMACSHA1_ALGORITHM = "HmacSha1";
+
+    /**
+     * Name of the algorithm.
+     */
+    static final String HMACSHA256_ALGORITHM = "HmacSha256";
 
     /**
      * Our Random number generator.

@@ -66,7 +66,7 @@ public class MeshOpenId2CredentialType
      * @param subject the subject
      * @return the endpoint URLs
      */
-    protected String [] determineOpenId2EndpointsFor(
+    protected String [] determineOpenIdEndpointsFor(
             HasIdentifier subject )
     {
         MeshObject realSubject = (MeshObject) subject;
