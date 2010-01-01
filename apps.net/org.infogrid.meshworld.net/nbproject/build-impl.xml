@@ -127,7 +127,10 @@
         <condition property="do.tmp.war.package.with.custom.manifest">
             <and>
                 <isset property="has.custom.manifest"/>
-                <isfalse value="${directory.deployment.supported}"/>
+                <or>
+                    <isfalse value="${directory.deployment.supported}"/>
+                    <isset property="dist.ear.dir"/>
+                </or>
             </and>
         </condition>
         <condition property="do.tmp.war.package.without.custom.manifest">
@@ -135,11 +138,17 @@
                 <not>
                     <isset property="has.custom.manifest"/>
                 </not>
-                <isfalse value="${directory.deployment.supported}"/>
+                <or>
+                    <isfalse value="${directory.deployment.supported}"/>
+                    <isset property="dist.ear.dir"/>
+                </or>
             </and>
         </condition>
         <condition property="do.tmp.war.package">
-            <isfalse value="${directory.deployment.supported}"/>
+            <or>
+                <isfalse value="${directory.deployment.supported}"/>
+                <isset property="dist.ear.dir"/>
+            </or>
         </condition>
         <property name="build.meta.inf.dir" value="${build.web.dir}/META-INF"/>
         <condition else="" property="application.args.param" value="${application.args}">
@@ -162,13 +171,11 @@
         <property name="javadoc.encoding.used" value="${source.encoding}"/>
         <property name="includes" value="**"/>
         <property name="excludes" value=""/>
-        <condition else="" property="javac.compilerargs.jaxws" value="-Djava.endorsed.dirs='${jaxws.endorsed.dir}'">
-            <and>
-                <isset property="jaxws.endorsed.dir"/>
-                <available file="nbproject/jaxws-build.xml"/>
-            </and>
-        </condition>
         <property name="runmain.jvmargs" value=""/>
+        <path id="endorsed.classpath.path" path="${endorsed.classpath}"/>
+        <condition else="" property="endorsed.classpath.cmd.line.arg" value="-Xbootclasspath/p:'${toString:endorsed.classpath.path}'">
+            <length length="0" string="${endorsed.classpath}" when="greater"/>
+        </condition>
     </target>
     <target depends="init" name="-init-cos" unless="deploy.on.save">
         <condition property="deploy.on.save" value="true">
@@ -232,7 +239,8 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                     <classpath>
                         <path path="@{classpath}"/>
                     </classpath>
-                    <compilerarg line="${javac.compilerargs} ${javac.compilerargs.jaxws}"/>
+                    <compilerarg line="${endorsed.classpath.cmd.line.arg}"/>
+                    <compilerarg line="${javac.compilerargs}"/>
                     <customize/>
                 </javac>
             </sequential>
@@ -244,14 +252,14 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
             <attribute default="${excludes}" name="excludes"/>
             <attribute default="**" name="testincludes"/>
             <sequential>
-                <junit dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" showoutput="true">
+                <junit dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" showoutput="true" tempdir="${java.io.tmpdir}">
                     <batchtest todir="${build.test.results.dir}">
                         <fileset dir="${test.src.dir}" excludes="@{excludes},${excludes}" includes="@{includes}">
                             <filename name="@{testincludes}"/>
                         </fileset>
                     </batchtest>
                     <classpath>
-                        <path path="${run.test.classpath}:${j2ee.platform.classpath}"/>
+                        <path path="${run.test.classpath}:${j2ee.platform.classpath}:${j2ee.platform.embeddableejb.classpath}"/>
                     </classpath>
                     <syspropertyset>
                         <propertyref prefix="test-sys-prop."/>
@@ -259,6 +267,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                     </syspropertyset>
                     <formatter type="brief" usefile="false"/>
                     <formatter type="xml"/>
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <jvmarg line="${runmain.jvmargs}"/>
                 </junit>
             </sequential>
@@ -271,6 +280,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
             <element name="customize" optional="true"/>
             <sequential>
                 <java classname="@{classname}" fork="true">
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <jvmarg line="${runmain.jvmargs}"/>
                     <classpath>
                         <path path="@{classpath}:${j2ee.platform.classpath}"/>
@@ -348,6 +358,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
             <element name="customize" optional="true"/>
             <sequential>
                 <java classname="@{classname}" fork="true">
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <jvmarg line="${debug-args-line}"/>
                     <jvmarg value="-Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
                     <jvmarg line="${runmain.jvmargs}"/>
@@ -804,58 +815,56 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,-do-dist-with-manifest,-do-dist-without-manifest" name="do-dist"/>
     <target depends="init" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <copyfiles files="${reference.org_infogrid_comm.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_comm.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_comm_pingpong.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_comm_pingpong.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_probe.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_probe.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_rest.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_rest.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_rest_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_rest_net.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_rest_net_local.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_rest_net_local.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_rest_net_local_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_rest_net_local_store.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_shell_http.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_shell_http.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_store.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_templates.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_templates.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_viewlet.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_viewlet_bulk.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_viewlet_bulk.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_viewlet_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_viewlet_log4j.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_jee_viewlet_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_jee_viewlet_net.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_kernel.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_kernel.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_kernel_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_kernel_net.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_lid.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_lid.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_lid_model_lid.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_lid_model_lid.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_lid_model_openid_auth.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_lid_model_openid_auth.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_lid_model_yadis.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_lid_model_yadis.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_lid_openid.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_lid_openid.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_meshbase_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_meshbase_store.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_meshbase_store_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_meshbase_store_net.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_model_AclBasedSecurity.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_AclBasedSecurity.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_model_Blob.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Blob.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_model_Common.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Common.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_model_Probe.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Probe.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_model_Viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Viewlet.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_model_Tagging.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Tagging.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_model_Web.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Web.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_model_Wiki.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_model_Wiki.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_modelbase_m.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_modelbase_m.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_module.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_module.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_module_servlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_module_servlet.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_net_local.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_net_local.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_net_local_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_net_local_store.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_probe.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_probe.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_probe_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_probe_store.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_store.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_store_sql.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_store_sql.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_store_sql_mysql.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_store_sql_mysql.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_util.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_util.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_util_logging_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_util_logging_log4j.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_viewlet.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.org_infogrid_vendors_com_mysql_jdbc.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.Log4j.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.Log4j.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.JSTL.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.JSTL.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_comm.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_comm_pingpong.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_probe.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_rest.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_rest_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_rest_net_local.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_rest_net_local_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_shell_http.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_templates.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_viewlet_bulk.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_viewlet_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_jee_viewlet_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_kernel.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_kernel_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_lid.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_lid_model_lid.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_lid_model_openid_auth.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_lid_model_yadis.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_lid_openid.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_meshbase_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_meshbase_store_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_AclBasedSecurity.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_Blob.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_Common.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_Probe.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_Viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_Tagging.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_Web.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_model_Wiki.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_modelbase_m.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_module.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_module_servlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_net_local.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_net_local_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_probe.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_probe_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_store_sql.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_store_sql_mysql.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_util.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_util_logging_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.Log4j.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.JSTL.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
-        <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.reference.org_infogrid_comm.jar} ${manifest.reference.org_infogrid_comm_pingpong.jar} ${manifest.reference.org_infogrid_jee.jar} ${manifest.reference.org_infogrid_jee_probe.jar} ${manifest.reference.org_infogrid_jee_rest.jar} ${manifest.reference.org_infogrid_jee_rest_net.jar} ${manifest.reference.org_infogrid_jee_rest_net_local.jar} ${manifest.reference.org_infogrid_jee_rest_net_local_store.jar} ${manifest.reference.org_infogrid_jee_shell_http.jar} ${manifest.reference.org_infogrid_jee_store.jar} ${manifest.reference.org_infogrid_jee_templates.jar} ${manifest.reference.org_infogrid_jee_viewlet.jar} ${manifest.reference.org_infogrid_jee_viewlet_bulk.jar} ${manifest.reference.org_infogrid_jee_viewlet_log4j.jar} ${manifest.reference.org_infogrid_jee_viewlet_net.jar} ${manifest.reference.org_infogrid_kernel.jar} ${manifest.reference.org_infogrid_kernel_net.jar} ${manifest.reference.org_infogrid_lid.jar} ${manifest.reference.org_infogrid_lid_model_lid.jar} ${manifest.reference.org_infogrid_lid_model_openid_auth.jar} ${manifest.reference.org_infogrid_lid_model_yadis.jar} ${manifest.reference.org_infogrid_lid_openid.jar} ${manifest.reference.org_infogrid_meshbase_store.jar} ${manifest.reference.org_infogrid_meshbase_store_net.jar} ${manifest.reference.org_infogrid_model_AclBasedSecurity.jar} ${manifest.reference.org_infogrid_model_Blob.jar} ${manifest.reference.org_infogrid_model_Common.jar} ${manifest.reference.org_infogrid_model_Probe.jar} ${manifest.reference.org_infogrid_model_Viewlet.jar} ${manifest.reference.org_infogrid_model_Tagging.jar} ${manifest.reference.org_infogrid_model_Web.jar} ${manifest.reference.org_infogrid_model_Wiki.jar} ${manifest.reference.org_infogrid_modelbase_m.jar} ${manifest.reference.org_infogrid_module.jar} ${manifest.reference.org_infogrid_module_servlet.jar} ${manifest.reference.org_infogrid_net_local.jar} ${manifest.reference.org_infogrid_net_local_store.jar} ${manifest.reference.org_infogrid_probe.jar} ${manifest.reference.org_infogrid_probe_store.jar} ${manifest.reference.org_infogrid_store.jar} ${manifest.reference.org_infogrid_store_sql.jar} ${manifest.reference.org_infogrid_store_sql_mysql.jar} ${manifest.reference.org_infogrid_util.jar} ${manifest.reference.org_infogrid_util_logging_log4j.jar} ${manifest.reference.org_infogrid_viewlet.jar} ${manifest.reference.org_infogrid_vendors_com_mysql_jdbc.jar} ${manifest.libs.Log4j.classpath} ${manifest.libs.JSTL.classpath} "/>
-        </manifest>
+        <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
         <copyfiles files="${reference.org_infogrid_comm.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -907,7 +916,10 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.Log4j.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.JSTL.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
-    <target depends="init,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest" if="do.tmp.war.package" name="do-ear-dist">
+    <target depends="init" if="dist.ear.dir" name="-clean-webinf-lib">
+        <delete dir="${build.web.dir}/WEB-INF/lib"/>
+    </target>
+    <target depends="init,-clean-webinf-lib,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest" if="do.tmp.war.package" name="do-ear-dist">
         <dirname file="${dist.ear.war}" property="dist.jar.dir"/>
         <mkdir dir="${dist.jar.dir}"/>
         <jar compress="${jar.compress}" jarfile="${dist.ear.war}" manifest="${build.web.dir}/META-INF/MANIFEST.MF">
@@ -919,7 +931,7 @@ exists or setup the property manually. For example like this:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="init,compile,-pre-dist,do-dist,-post-dist" description="Build distribution (WAR)." name="dist"/>
-    <target depends="init,-init-cos,compile,-pre-dist,do-ear-dist,-post-dist" description="Build distribution (WAR) to be packaged into an EAR." name="dist-ear"/>
+    <target depends="init,-clean-webinf-lib,-init-cos,compile,-pre-dist,do-ear-dist,-post-dist" description="Build distribution (WAR) to be packaged into an EAR." name="dist-ear"/>
     <!--
                 EXECUTION SECTION
             -->
@@ -1034,7 +1046,7 @@ exists or setup the property manually. For example like this:
     <!--
                 DEBUGGING SECTION
             -->
-    <target depends="init,compile,compile-jsps,-do-compile-single-jsp,-pre-dist,-do-tmp-dist-with-manifest,-do-tmp-dist-without-manifest" description="Debug project in IDE." if="netbeans.home" name="debug">
+    <target depends="init,-init-cos,compile,compile-jsps,-do-compile-single-jsp,-pre-dist,-do-tmp-dist-with-manifest,-do-tmp-dist-without-manifest" description="Debug project in IDE." if="netbeans.home" name="debug">
         <nbstartserver debugmode="true"/>
         <antcall target="connect-debugger"/>
         <nbdeploy clientUrlPart="${client.urlPart}" debugmode="true" forceRedeploy="true"/>
@@ -1112,13 +1124,14 @@ exists or setup the property manually. For example like this:
             -->
     <target depends="init,compile" if="have.tests" name="-pre-pre-compile-test">
         <mkdir dir="${build.test.classes.dir}"/>
+        <property name="j2ee.platform.embeddableejb.classpath" value=""/>
     </target>
     <target name="-pre-compile-test">
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test" if="have.tests" name="-do-compile-test">
-        <webproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}" debug="true" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
+        <webproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}:${j2ee.platform.embeddableejb.classpath}" debug="true" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
@@ -1134,7 +1147,7 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single" if="have.tests" name="-do-compile-test-single">
         <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
-        <webproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}" debug="true" destdir="${build.test.classes.dir}" excludes="" includes="${javac.includes}" srcdir="${test.src.dir}"/>
+        <webproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}:${j2ee.platform.embeddableejb.classpath}" debug="true" destdir="${build.test.classes.dir}" excludes="" includes="${javac.includes}" srcdir="${test.src.dir}"/>
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
@@ -1181,7 +1194,7 @@ exists or setup the property manually. For example like this:
         <delete file="${test.report.file}"/>
         <!-- must exist, otherwise the XML formatter would fail -->
         <mkdir dir="${build.test.results.dir}"/>
-        <webproject1:debug args="${test.class}" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" classpath="${ant.home}/lib/ant.jar:${ant.home}/lib/ant-junit.jar:${debug.test.classpath}">
+        <webproject1:debug args="${test.class}" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" classpath="${ant.home}/lib/ant.jar:${ant.home}/lib/ant-junit.jar:${debug.test.classpath}:${j2ee.platform.embeddableejb.classpath}">
             <customize>
                 <arg value="showoutput=true"/>
                 <arg value="formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter"/>
