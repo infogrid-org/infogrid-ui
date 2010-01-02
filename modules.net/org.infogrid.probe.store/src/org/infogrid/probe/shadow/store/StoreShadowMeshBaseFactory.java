@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -30,7 +30,6 @@ import org.infogrid.store.prefixing.IterablePrefixingStore;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.logging.Log;
 
 /**
  * Knows how to instantiate StoreShadowMeshBaseFactory.
@@ -41,8 +40,6 @@ public class StoreShadowMeshBaseFactory
         implements
             ShadowMeshBaseFactory
 {
-    private static final Log log = Log.getLogInstance( StoreShadowMeshBaseFactory.class ); // our own, private logger
-
     /**
      * Factory method for the StoreShadowMeshBaseFactory itself.
      * 
@@ -139,8 +136,9 @@ public class StoreShadowMeshBaseFactory
         
         ret.setFactory( this );
 
+        Long next; // out here for debugging
         try {
-            Long next = ret.doUpdateNow( argument );
+            next = ret.doUpdateNow( argument );
 
         } catch( Throwable ex ) {
             throw new FactoryException( this, ex );

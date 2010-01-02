@@ -38,13 +38,12 @@
    different. There can be only one instance of a SceneTemplate (i.e. a Scene) for the same
    combination of MeshObjects.</p>
 
-<p>SceneTemplates define their particular structure through
+<p>SceneTemplates define their particular structure through</p>
 <ul>
  <li>the concept of a SceneTemplateRole, which specifies participation constraints (multiplicity)</li>
  <li>and through SceneTemplate-specific code, located in the particular subclass of SceneTemplate,
      that knows how MeshObjects relate to each other.</li>
 </ul>
-</p>
 
 <p>For example, the subclass of SceneTemplate called ExtendedFamilySceneTemplate used for the example
    above would have three SceneTemplateRoles, called GrandParent, Parent and Child. The multiplicities

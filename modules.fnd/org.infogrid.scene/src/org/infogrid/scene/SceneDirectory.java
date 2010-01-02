@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -54,6 +54,7 @@ public class SceneDirectory
      * @return the created Scene, or null
      * @throws MatchAmbiguousException thrown if the match is ambiguous
      */
+    @SuppressWarnings("unchecked")
     public synchronized Scene findOrCreateSceneFor(
             SceneTemplate                   template,
             SceneRole.Root                  matchedRootRole,
@@ -67,7 +68,7 @@ public class SceneDirectory
             throw new IllegalArgumentException( "SceneTemplate may not be null" );
         }
 
-        WeakReference [] sceneReferences = (WeakReference []) theScenes.get( template );
+        WeakReference<Scene> [] sceneReferences = theScenes.get( template );
 
         // FIXME: this algorithm should also shrink the array, not just grow it.
         // When looking through the array, we should not only memorize the location
@@ -83,7 +84,7 @@ public class SceneDirectory
                     continue;
                 }
 
-                Scene currentScene = (Scene) sceneReferences[i].get();
+                Scene currentScene = sceneReferences[i].get();
                 if( currentScene == null || currentScene.isDead() ) {
                     sceneReferences[i] = null;
                     holeIndex = i;
@@ -100,13 +101,13 @@ public class SceneDirectory
         Scene currentScene = template.match( matchedRootRole, matchedEntityRolesSubset, matchedSceneRolesSubset, life, this );
         if( currentScene != null ) {
             if( holeIndex >=0 ) {
-                sceneReferences[holeIndex] = new WeakReference( currentScene );
+                sceneReferences[holeIndex] = new WeakReference<Scene>( currentScene );
 
             } else {
                 if( sceneReferences != null ) {
-                    sceneReferences = ArrayHelper.append( sceneReferences, new WeakReference( currentScene ), WeakReference.class );
+                    sceneReferences = (WeakReference<Scene>[]) ArrayHelper.append( sceneReferences, new WeakReference<Scene>( currentScene ), WeakReference.class );
                 } else {
-                    sceneReferences = new WeakReference[] { new WeakReference( currentScene ) };
+                    sceneReferences = (WeakReference<Scene>[]) new WeakReference[] { new WeakReference<Scene>( currentScene ) };
                 }
 
                 theScenes.put( template, sceneReferences );
@@ -159,7 +160,7 @@ public class SceneDirectory
      * are arrays of WeakReferences pointing to the Scenes, in order to not consume resources
      * when we don't need to.
      */
-    protected HashMap theScenes = new HashMap( 20 );
+    protected HashMap<SceneTemplate,WeakReference<Scene>[]> theScenes = new HashMap<SceneTemplate,WeakReference<Scene>[]>( 20 );
 
     /**
      * The directory of SceneTemplates.

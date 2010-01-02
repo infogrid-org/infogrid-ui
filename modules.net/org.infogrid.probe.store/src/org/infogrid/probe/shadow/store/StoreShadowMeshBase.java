@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -173,90 +173,6 @@ public class StoreShadowMeshBase
         }
         return ret;
     }
-//
-//    /**
-//     * Factory method to restore a StoreShadowMeshBase from an ExternalizedShadowMeshBase object.
-//     * 
-//     * @param identifier the NetMeshBaseIdentifier of this NetMeshBase
-//     * @param externalized externalized representation of the content of the StoreShadowMeshBase
-//     * @param meshBaseIdentifierFactory the factory for NetMeshBaseIdentifiers
-//     * @param netMeshObjectAccessSpecificationFactory the factory for NetMeshObjectAccessSpecifications
-//     * @param endpointFactory the factory for communications endpoints
-//     * @param proxyPolicyFactory the factory for ProxyPolicies for communications with other NetMeshBases
-//     * @param modelBase the ModelBase containing type information
-//     * @param accessMgr the AccessManager that controls access to this NetMeshBase
-//     * @param directory the ProbeDirectory to use
-//     * @param timeNotNeededTillExpires the time, in milliseconds, that this MShadowMeshBase will continue operating
-//     *         even if none of its MeshObjects are replicated to another NetMeshBase. If this is negative, it means "forever".
-//     *         If this is 0, it will expire immediately after the first Probe run, before the caller returns, which is probably
-//     *         not very useful.
-//     * @param proxyStore the IterableStore in which to store the StoreShadowMeshBase's Proxies
-//     * @param context the Context in which this NetMeshBase runs.
-//     * @return the restored StoreShadowMeshBase
-//     */
-//    public static StoreShadowMeshBase restore(
-//            NetMeshBaseIdentifier                   identifier,
-//            ExternalizedShadowMeshBase              externalized,
-//            NetMeshBaseIdentifierFactory            meshBaseIdentifierFactory,
-//            NetMeshObjectAccessSpecificationFactory netMeshObjectAccessSpecificationFactory,
-//            ProxyMessageEndpointFactory             endpointFactory,
-//            ProxyPolicyFactory                      proxyPolicyFactory,
-//            ModelBase                               modelBase,
-//            NetAccessManager                        accessMgr,
-//            ProbeDirectory                          directory,
-//            long                                    timeNotNeededTillExpires,
-//            IterableStore                           proxyStore,
-//            Context                                 context )
-//    {
-//        DefaultShadowProxyFactory   proxyFactory   = DefaultShadowProxyFactory.create( endpointFactory, proxyPolicyFactory );
-//        ShadowStoreProxyEntryMapper theProxyMapper = new ShadowStoreProxyEntryMapper( proxyFactory );
-//
-//        MCachingHashMap<MeshObjectIdentifier,MeshObject>                objectStorage = MCachingHashMap.create();
-//        IterableStoreBackedSwappingHashMap<NetMeshBaseIdentifier,Proxy> proxyStorage  = IterableStoreBackedSwappingHashMap.createWeak( theProxyMapper, proxyStore );
-//
-//        StoreProxyManager proxyManager = StoreProxyManager.create( proxyFactory, proxyStorage );
-//
-//        NetMeshObjectIdentifierFactory      identifierFactory = DefaultAnetMeshObjectIdentifierFactory.create( identifier, meshBaseIdentifierFactory );
-//        ImmutableMMeshObjectSetFactory      setFactory        = ImmutableMMeshObjectSetFactory.create( NetMeshObject.class, NetMeshObjectIdentifier.class );
-//        StoreShadowMeshBaseLifecycleManager life              = StoreShadowMeshBaseLifecycleManager.create();
-//
-//        StoreShadowMeshBase ret = new StoreShadowMeshBase(
-//                identifier,
-//                identifierFactory,
-//                meshBaseIdentifierFactory,
-//                netMeshObjectAccessSpecificationFactory,
-//                setFactory,
-//                modelBase,
-//                life,
-//                accessMgr,
-//                objectStorage,
-//                proxyManager,
-//                directory,
-//                System.currentTimeMillis(),
-//                timeNotNeededTillExpires,
-//                context  );
-//
-//        setFactory.setMeshBase( ret );
-//        proxyFactory.setNetMeshBase( ret );
-//        theProxyMapper.setMeshBase( ret );
-//
-//        // cannot restore the Proxies here, we don't have the data
-//
-//        for( ExternalizedNetMeshObject current : externalized.getExternalizedNetMeshObjects() ) {
-//            try {
-//                life.restore( current );
-//
-//            } catch( Throwable ex ) {
-//                // just in case
-//                log.error( ex );
-//            }
-//        }
-//        
-//        if( log.isDebugEnabled() ) {
-//            log.traceMethodCallEntry( "created " + ret );
-//        }
-//        return ret;
-//    }
 
     /**
      * Constructor for subclasses only.

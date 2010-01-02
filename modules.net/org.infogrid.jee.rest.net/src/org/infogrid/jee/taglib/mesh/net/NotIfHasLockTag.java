@@ -8,15 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.mesh.net;
 
-import org.infogrid.jee.taglib.IgnoreException;
-
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.taglib.IgnoreException;
 
 /**
  * This tag tests whether a NetMeshObject currently does not have the lock.
@@ -25,6 +24,8 @@ public class NotIfHasLockTag
         extends
             AbstractIfHasLockTag
 {
+    private static final long serialVersionUID = 1L; // helps with serialization
+
     /**
      * Constructor.
      */

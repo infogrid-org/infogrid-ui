@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -321,6 +321,7 @@ public class ImplementationGenerator
         outStream.println( "      * @throws org.infogrid.mesh.IllegalPropertyValueException should not be thrown -- codegenerator faulty");
         outStream.println( "      * @throws org.infogrid.mesh.NotPermittedException should not be thrown -- codegenerator faulty");
         outStream.println( "      * @throws org.infogrid.meshbase.transaction.TransactionException should not be thrown -- codegenerator faulty");
+        outStream.println( "      * @throws org.infogrid.model.primitives.UnknownEnumeratedValueException should not be thrown -- codegenerator faulty");
         outStream.println( "      */" );
         outStream.println( "    public static void initializeDefaultValues(" );
         outStream.println( "            TypeInitializer init," );

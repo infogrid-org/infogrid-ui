@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.scene;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.EventObject;
 import org.infogrid.util.FlexibleListenerSet;
 import org.infogrid.util.FlexiblePropertyChangeListenerSet;
 import org.infogrid.util.logging.Log;
@@ -390,16 +391,16 @@ public abstract class AbstractActiveSceneSet
     /**
      * Listeners for the ActiveSceneSet events.
      */
-    protected FlexibleListenerSet theSetListeners = new FlexibleListenerSet() {
+    protected FlexibleListenerSet<ActiveSceneSetListener,EventObject,Object> theSetListeners = new FlexibleListenerSet<ActiveSceneSetListener,EventObject,Object>() {
         public void fireEventToListener(
-                Object listener,
-                Object event,
-                Object parameter )
+                ActiveSceneSetListener listener,
+                EventObject            event,
+                Object                 parameter )
         {
             if( event instanceof SceneAddedEvent ) {
-                ((ActiveSceneSetListener)listener).sceneAdded( (SceneAddedEvent) event );
+                listener.sceneAdded( (SceneAddedEvent) event );
             } else if( event instanceof SceneRemovedEvent ) {
-                ((ActiveSceneSetListener)listener).sceneRemoved( (SceneRemovedEvent) event );
+                listener.sceneRemoved( (SceneRemovedEvent) event );
             } else {
                 log.error( "unexpected event type " + event );
             }

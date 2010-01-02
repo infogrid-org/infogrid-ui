@@ -10,7 +10,6 @@ div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
     visibility: hidden;
     display: none;
     -moz-opacity: 0.9;
-    filter:alpha(opacity=90);
 }
 div.org-infogrid-jee-taglib-candy-OverlayTag {
     z-index: 11;

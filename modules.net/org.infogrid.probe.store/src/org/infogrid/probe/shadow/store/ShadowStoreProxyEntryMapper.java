@@ -8,14 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.probe.shadow.store;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.externalized.ExternalizedProxy;
@@ -116,16 +115,9 @@ public class ShadowStoreProxyEntryMapper
             return null;
         }
 
-        long timeCreated     = value.getTimeCreated();
-        long timeUpdated     = value.getTimeUpdated();
-        long timeRead        = value.getTimeRead();
-        long timeExpires     = value.getTimeExpires();
-        InputStream stream   = value.getDataAsStream();
-        int  length          = value.getData().length;
-        
         try {
             ExternalizedProxy externalized = encoder.decodeExternalizedProxy(
-                    stream,
+                    value.getDataAsStream(),
                     theMeshBase );
 
             Proxy ret = theProxyFactory.restoreProxy( externalized );

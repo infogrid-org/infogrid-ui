@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,6 +21,7 @@ import org.infogrid.codegen.AbstractGenerator;
 import org.infogrid.mesh.set.ByTypeMeshObjectSelector;
 import org.infogrid.mesh.set.MeshObjectSelector;
 import org.infogrid.model.primitives.AttributableMeshType;
+import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.CollectableMeshType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.L10Map;
@@ -350,7 +351,7 @@ public class ModelLoaderGenerator
         outStream.println( "                " + getValueString( theEntity.getName()                           ) + ","   ); // StringValue             theName,
         outStream.println( "                " + getValueString( theEntity.getUserVisibleNameMap()             ) + ","   ); // L10Map                  theUserNames,
         outStream.println( "                " + getValueString( theEntity.getUserVisibleDescriptionMap()      ) + ","   ); // L10Map                  theUserDescriptions,
-        outStream.println( "                " + getValueString( theEntity.getIcon()                           ) + ","   ); // BlobValue               theIcon,
+        outStream.println( "                " + getValueString( theEntity.getIcon(), BlobDataType.theJdkSupportedBitmapType.getJavaConstructorString( LOADER_VAR )) + ","   ); // BlobValue               theIcon,
         outStream.println( "                theSa," ); // SubjectArea               theSubjectArea,
         outStream.println( "                " + getTypeString(  theEntity.getDirectSupertypes()               ) + ","   ); // AttributableMeshType [] supertypes,
         outStream.println( "                " + getIdentifierStrings( theEntity.getSynonyms()                 ) + ","   ); // AttributableMeshType [] supertypes,
@@ -465,7 +466,8 @@ public class ModelLoaderGenerator
         // first deal with the DataType because they may need a separate declaration
 
         String typeVarName = varName + "_type";
-        outStream.println( "        DataType " + typeVarName + " = " + thePropertyType.getDataType().getJavaConstructorString( LOADER_VAR ) + ";" );
+        // outStream.println( "        DataType " + typeVarName + " = " + thePropertyType.getDataType().getJavaConstructorString( LOADER_VAR ) + ";" );
+        outStream.println( "        " + thePropertyType.getDataType().getClass().getName() + " " + typeVarName + " = " + thePropertyType.getDataType().getJavaConstructorString( LOADER_VAR ) + ";" );
 
         boolean isProjected  = thePropertyType instanceof ProjectedPropertyType;
         boolean isOverriding = thePropertyType.getOverride() != null && thePropertyType.getOverride().length > 0;
@@ -801,7 +803,7 @@ public class ModelLoaderGenerator
         if( val == null ) {
             return "null";
         } else {
-            return val.getJavaConstructorString( LOADER_VAR, null );
+            return val.getJavaConstructorString( LOADER_VAR, BlobDataType.theTextPlainOrHtmlType.getJavaConstructorString( LOADER_VAR ) );
         }
     }
 

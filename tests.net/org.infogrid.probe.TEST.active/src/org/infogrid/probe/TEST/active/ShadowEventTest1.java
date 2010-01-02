@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -27,11 +27,11 @@ import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.RelatedAlreadyException;
+import org.infogrid.mesh.RoleTypeBlessedAlreadyException;
 import org.infogrid.mesh.net.NetMeshObject;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSetFactory;
-import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSet;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetFactory;
 import org.infogrid.mesh.set.active.ActiveMeshObjectSetListener;
@@ -52,6 +52,7 @@ import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.m.MProbeDirectory;
 import org.infogrid.probe.shadow.ShadowMeshBase;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Tests that an ActiveMeshObjectSet gets updated correctly based on changes in data source read by a Probe.
@@ -268,20 +269,22 @@ public class ShadowEventTest1
                 CoherenceSpecification coherence,
                 StagingMeshBase        mb )
             throws
-                IsAbstractException,
                 EntityBlessedAlreadyException,
                 EntityNotBlessedException,
-                RelatedAlreadyException,
-                NotRelatedException,
-                MeshObjectIdentifierNotUniqueException,
                 IllegalPropertyTypeException,
                 IllegalPropertyValueException,
-                TransactionException,
-                NotPermittedException,
-                ProbeException,
                 IOException,
+                IsAbstractException,
+                MeshObjectIdentifierNotUniqueException,
                 ModuleException,
-                URISyntaxException
+                NotPermittedException,
+                NotRelatedException,
+                ProbeException,
+                RelatedAlreadyException,
+                RoleTypeBlessedAlreadyException,
+                TransactionException,
+                URISyntaxException,
+                StringRepresentationParseException
         {
             log.debug( "Running probe for " + probeRunCounter );
 

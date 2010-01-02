@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -234,7 +234,7 @@ public abstract class DependentSceneFactory
             boolean b1 = theMatchedActiveSceneSet.potentiallyRemove( potentiallyRemovedScene );
             boolean b2 = theUnmatchedActiveSceneSet.potentiallyRemove( potentiallyRemovedScene );
         }
-        InputSceneListener oldListener = (InputSceneListener) inputSceneToListenerMap.remove( removedParentScene );
+        InputSceneListener oldListener = inputSceneToListenerMap.remove( removedParentScene );
         removedSceneEntitySet.removeActiveMeshObjectSetListener( oldListener );
     }
 
@@ -342,7 +342,7 @@ public abstract class DependentSceneFactory
      * This maps an input Scene to the listener of its events. This is there because otherwise,
      * the garbage collector would collect the listeners.
      */
-    private HashMap inputSceneToListenerMap = new HashMap();
+    private HashMap<Scene,InputSceneListener> inputSceneToListenerMap = new HashMap<Scene,InputSceneListener>();
 
     /**
      * The set of Scenes that we manage and that are currently matched.

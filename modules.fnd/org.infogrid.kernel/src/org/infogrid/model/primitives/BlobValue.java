@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -431,6 +431,7 @@ public abstract class BlobValue
         /**
          * Private constructor.
          *
+         * @param type the BlobDataType to which this BlobDataType belongs
          * @param value the content of the BlobValue
          * @param mimeType the MIME type of the BlobValue in "abc/def" format
          */
@@ -539,11 +540,8 @@ public abstract class BlobValue
                 String typeVar )
         {
             StringBuilder sb = new StringBuilder( 60 ); // fudge
-            sb.append( "((" );
-            sb.append( BlobDataType.class.getName() );
-            sb.append( ")" );
             sb.append( typeVar );
-            sb.append( ").createBlobValue( \"" );
+            sb.append( ".createBlobValue( \"" );
 
             StringValue.encodeAsJavaString( theValue, sb );
 
@@ -762,11 +760,8 @@ public abstract class BlobValue
                 String typeVar )
         {
             StringBuffer sb = new StringBuffer( 60 ); // fudge
-            sb.append( "((" );
-            sb.append( BlobDataType.class.getName() );
-            sb.append( ")" );
             sb.append( typeVar );
-            sb.append( ").createBlobValue( " );
+            sb.append( ".createBlobValue( " );
             sb.append( "new byte[] { " );
 
             for ( int i=0; i<theValue.length; ++i ) {
@@ -836,6 +831,7 @@ public abstract class BlobValue
         /**
          * Private constructor.
          *
+         * @param type the BlobDataType to which this BlobDataType belongs
          * @param loader the ClassLoader relative to which we load
          * @param loadFrom the location relative to loader from which we load
          * @param mimeType the MIME type of the BlobValue, in "abc/def" format
@@ -1006,11 +1002,8 @@ public abstract class BlobValue
                 String typeVar )
         {
             StringBuffer sb = new StringBuffer( 60 ); // fudge
-            sb.append( "((" );
-            sb.append( BlobDataType.class.getName() );
-            sb.append( ")" );
             sb.append( typeVar );
-            sb.append( ").createBlobValueByLoadingFrom( " );
+            sb.append( ".createBlobValueByLoadingFrom( " );
             sb.append( classLoaderVar );
             sb.append( " , \"" );
             sb.append( theLoadFrom );
