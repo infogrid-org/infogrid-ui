@@ -8,7 +8,7 @@
 #
 # For more information about InfoGrid go to http://infogrid.org/
 #
-# Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+# Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 # All rights reserved.
 #
 # (end of header)
@@ -17,7 +17,7 @@
 # check-in
 
 FLAGS="-i";
-THISYEAR="2009";
+THISYEAR="2010";
 
 echo '** Checking that no funny paths exist. **'
 grep ${FLAGS} '\.\./\.\./\.\.' {modules*,apps*,tests*}/*/nbproject/project.properties
