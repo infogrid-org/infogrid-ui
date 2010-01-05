@@ -27,11 +27,11 @@ button.commit {
     background-repeat: no-repeat;
 }
 table.dialog-buttons {
-    border-top-width: 1px;
+    border-width: 1px 0 0 0;
     border-top-style: dotted;
     width: 100%;
     margin-top: 20px;
-    }
+}
 table.dialog-buttons > * > tr > td {
     border-width: 0;
     text-align: center;

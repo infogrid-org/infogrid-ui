@@ -58,11 +58,13 @@ while( iter.hasNext() ) {
  %>
     <tr>
      <td colspan="2">
-      <table class="dialog-buttons">
-       <tr>
-        <td><input type="submit" value="Change"/></td>
-       </tr>
-      </table>
+      <div class="dialog-buttons">
+       <table class="dialog-buttons">
+        <tr>
+         <td><input type="submit" value="Change"/></td>
+        </tr>
+       </table>
+      </div>
      </td>
     </tr>
    </tbody>

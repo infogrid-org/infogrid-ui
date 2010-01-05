@@ -21,14 +21,16 @@
   <div class="current-content">
    <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki/WikiObject_Content" stringRepresentation="Edit"/>
   </div>
-  <table class="dialog-buttons">
+  <div class="dialog-buttons">
    <u:safeFormHiddenInput/>
    <input id="shell.submit" type="hidden" name="shell.submit" value="" />
-   <tr>
-    <td><button type="button" name="ViewletStateTransition" value="do-cancel" class="cancel" onclick="document.getElementById( 'shell.submit' ).value='cancel'; document.getElementById('viewlet').submit()">Discard</button></td>
-    <td><button type="button" name="ViewletStateTransition" value="do-commit" class="commit" onclick="document.getElementById( 'shell.submit' ).value='commit'; document.getElementById('viewlet').submit()">Save</button></td>
-   </tr>
-  </table>
+   <table class="dialog-buttons">
+    <tr>
+     <td><button type="button" name="ViewletStateTransition" value="do-cancel" class="cancel" onclick="document.getElementById( 'shell.submit' ).value='cancel'; document.getElementById('viewlet').submit()">Discard</button></td>
+     <td><button type="button" name="ViewletStateTransition" value="do-commit" class="commit" onclick="document.getElementById( 'shell.submit' ).value='commit'; document.getElementById('viewlet').submit()">Save</button></td>
+    </tr>
+   </table>
+  </div>
  </v:ifState>
  <v:ifState viewletState="view">
   <div class="content">

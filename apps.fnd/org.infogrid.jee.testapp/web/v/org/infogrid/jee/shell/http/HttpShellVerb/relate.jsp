@@ -17,12 +17,14 @@
    </tr>
    <tr>
     <td colspan="2">
-     <table class="dialog-buttons">
-      <tr>
-       <td><input type="submit" value="Relate" /></td>
-       <td><a href="javascript:overlay_hide( 'org-infogrid-jee-shell-http-HttpShellVerb-relate' )">Cancel</a></td>
-      </tr>
-     </table>
+     <div class="dialog-buttons">
+      <table class="dialog-buttons">
+       <tr>
+        <td><input type="submit" value="Relate" /></td>
+        <td><a href="javascript:overlay_hide( 'org-infogrid-jee-shell-http-HttpShellVerb-relate' )">Cancel</a></td>
+       </tr>
+      </table>
+     </div>
     </td>
    </tr>
   </table>

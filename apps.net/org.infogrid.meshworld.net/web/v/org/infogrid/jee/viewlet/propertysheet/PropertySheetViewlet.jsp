@@ -32,14 +32,16 @@
 <%@ include file="/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet/neighbors.jsp" %>
 
  <v:ifState viewletState="edit">
-  <u:safeFormHiddenInput/>
-  <input id="shell.submit" type="hidden" name="shell.submit" value="" />
-  <table class="dialog-buttons">
-   <tr>
-    <td><button type="button" name="ViewletStateTransition" value="do-cancel" class="cancel" onclick="document.getElementById( 'shell.submit' ).value='cancel'; document.getElementById('viewlet').submit()">Discard</button></td>
-    <td><button type="button" name="ViewletStateTransition" value="do-commit" class="commit" onclick="document.getElementById( 'shell.submit' ).value='commit'; document.getElementById('viewlet').submit()">Save</button></td>
-   </tr>
-  </table>
+  <div class="dialog-buttons">
+   <u:safeFormHiddenInput/>
+   <input id="shell.submit" type="hidden" name="shell.submit" value="" />
+   <table class="dialog-buttons">
+    <tr>
+     <td><button type="button" name="ViewletStateTransition" value="do-cancel" class="cancel" onclick="document.getElementById( 'shell.submit' ).value='cancel'; document.getElementById('viewlet').submit()">Discard</button></td>
+     <td><button type="button" name="ViewletStateTransition" value="do-commit" class="commit" onclick="document.getElementById( 'shell.submit' ).value='commit'; document.getElementById('viewlet').submit()">Save</button></td>
+    </tr>
+   </table>
+  </div>
  </v:ifState>
 </v:viewlet>
 

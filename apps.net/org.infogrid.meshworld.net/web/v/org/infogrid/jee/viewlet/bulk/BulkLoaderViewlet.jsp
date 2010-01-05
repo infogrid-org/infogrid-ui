@@ -8,27 +8,29 @@
  %>
 <v:viewletAlternatives />
 <v:viewlet>
-    <u:safeForm method="post" action="${Viewlet.postUrl}">
-        <table style="width: 100%">
-            <tr>
-                <td>
-                    <h2>Enter XML:</h2>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <textarea name="bulkXml" style="width: 100%" rows="50">${Viewlet.bulkXml}</textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table class="dialog-buttons">
-                        <tr>
-                            <td><input type="submit" value="Create"/></td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>    
-        </table>
-    </u:safeForm>
+ <u:safeForm method="post" action="${Viewlet.postUrl}">
+  <table style="width: 100%">
+   <tr>
+    <td>
+     <h2>Enter XML:</h2>
+    </td>
+   </tr>
+   <tr>
+    <td>
+     <textarea name="bulkXml" style="width: 100%" rows="50">${Viewlet.bulkXml}</textarea>
+    </td>
+   </tr>
+   <tr>
+    <td>
+     <div class="dialog-buttons">
+      <table class="dialog-buttons">
+       <tr>
+        <td><input type="submit" value="Create"/></td>
+       </tr>
+      </table>
+     </div>
+    </td>
+   </tr>    
+  </table>
+ </u:safeForm>
 </v:viewlet>
