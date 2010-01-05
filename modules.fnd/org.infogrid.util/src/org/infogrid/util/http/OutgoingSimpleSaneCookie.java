@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -186,7 +186,6 @@ public class OutgoingSimpleSaneCookie
         if( theSecure ) {
             buf.append( "; secure" );
         }
-
 
         return buf.toString();
     }

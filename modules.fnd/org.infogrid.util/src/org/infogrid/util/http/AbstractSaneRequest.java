@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,6 +18,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.logging.Log;
 
@@ -524,6 +526,54 @@ public abstract class AbstractSaneRequest
         } else {
             throw new IllegalStateException();
         }
+    }
+
+    /**
+     * Return this absolute full URL but with all URL arguments stripped whose names meet at least
+     * one of the provided Patterns.
+     * For example, http://example.com/?abc=def&abcd=ef&abcde=f&x=y would become http://example.com?abc=def&x=y
+     * if invoked with Pattern "^abcd.*$".
+     *
+     * @param patterns the Patterns
+     * @return the absolute full URL without the matched URL arguments
+     */
+    public String getAbsoluteFullUriWithoutMatchingArguments(
+            Pattern [] patterns )
+    {
+        String        in  = getAbsoluteFullUri();
+        StringBuilder ret = new StringBuilder( in.length() );
+
+        int index = in.indexOf( '?' );
+        if( index < 0 ) {
+            return in;
+        }
+        ret.append( in.substring( 0, index ));
+        char sep = '?';
+        String [] pairs = in.substring( index+1 ).split( "&" );
+
+        outer:
+        for( int i=0 ; i<pairs.length ; ++i ) {
+            int equals = pairs[i].indexOf( '=' );
+            String name;
+            if( equals >= 0 ) {
+                name = pairs[i].substring( 0, equals );
+            } else {
+                name = pairs[i];
+            }
+            name = HTTP.decodeUrlArgument( name );
+
+            for( int j=0 ; j<patterns.length ; ++j ) {
+                Matcher m = patterns[j].matcher( name );
+                if( m.matches() ) {
+                    continue outer;
+                }
+            }
+            // did not match
+            ret.append( sep );
+            ret.append( pairs[i] );
+            sep = '&';
+        }
+        return ret.toString();
     }
 
     /**
