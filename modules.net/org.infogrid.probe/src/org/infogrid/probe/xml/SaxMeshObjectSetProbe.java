@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -371,7 +371,7 @@ public class SaxMeshObjectSetProbe
             if( width == null || width.length() == 0 ) {
                 log.error( "empty '" + EXTENT_VALUE_WIDTH_TAG + "' on '" + EXTENT_VALUE_TAG + "'" );
             }            
-            if( height == null && height.length() == 0 ) {
+            if( height == null || height.length() == 0 ) {
                 log.error( "empty '" + EXTENT_VALUE_HEIGHT_TAG + "' on '" + EXTENT_VALUE_TAG + "'" );
             }
             theObjectBeingParsed.setCurrentPropertyValue( ExtentValue.create( Double.parseDouble( width ), Double.parseDouble( height )));
@@ -395,7 +395,7 @@ public class SaxMeshObjectSetProbe
             if( x == null || x.length() == 0 ) {
                 log.error( "empty '" + POINT_VALUE_X_TAG + "' on '" + POINT_VALUE_TAG + "'" );
             }
-            if( y != null || y.length() == 0 ) {
+            if( y == null || y.length() == 0 ) {
                 log.error( "empty '" + POINT_VALUE_Y_TAG + "' on '" + POINT_VALUE_TAG + "'" );
             }
             theObjectBeingParsed.setCurrentPropertyValue( PointValue.create( Double.parseDouble( x ), Double.parseDouble( y )));

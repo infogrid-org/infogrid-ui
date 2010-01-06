@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -128,15 +128,18 @@ public class InstrumentedThread
      */
     public void advanceNormally()
     {
+        Breakpoint runTo;
         synchronized( this ) {
             if( ! isAlive() ) {
                 start();
             }
+            runTo = runToBreakpoint;
+            runToBreakpoint = null;
         }
-        if( runToBreakpoint != null ) {
-            synchronized( runToBreakpoint ) {
-                runToBreakpoint.notifyAll();
-                runToBreakpoint = null;
+
+        if( runTo != null ) {
+            synchronized( runTo ) {
+                runTo.notifyAll();
             }
         }
     }

@@ -8,12 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.mesh.set.active.m;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import org.infogrid.mesh.set.TraversalPathSorter;
 import org.infogrid.mesh.set.active.ActiveTraversalPathSet;
 import org.infogrid.mesh.set.active.ActiveTraversalPathSetListener;
@@ -21,13 +23,8 @@ import org.infogrid.mesh.set.active.OrderedActiveTraversalPathSet;
 import org.infogrid.mesh.set.active.TraversalPathAddedEvent;
 import org.infogrid.mesh.set.active.TraversalPathRemovedEvent;
 import org.infogrid.mesh.set.active.OrderedTraversalPathSetReorderedEvent;
-
 import org.infogrid.model.traversal.TraversalPath;
-
 import org.infogrid.util.ArrayHelper;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * <p>This ActiveTraversalSet has the same content as a passed-in ActiveActiveTraversalSet,
@@ -68,13 +65,13 @@ public class OrderedActiveMTraversalPathSet
 
         TraversalPath [] underlyingPaths = theUnderlyingSet.getTraversalPaths();
 
-        if( theMaximum != UNLIMITED && theMaximum < fullContent.length ) {
-            setInitialContent( ArrayHelper.copyIntoNewArray( fullContent, 0, theMaximum, TraversalPath.class ));
+        if( theMaximum != UNLIMITED && theMaximum < underlyingPaths.length ) {
+            setInitialContent( theSorter.getOrderedInNew(
+                    ArrayHelper.copyIntoNewArray( underlyingPaths, 0, theMaximum, TraversalPath.class )));
         } else {
-            setInitialContent( fullContent );
+            setInitialContent( theSorter.getOrderedInNew( underlyingPaths ));
         }
 
-        setInitialContent( theSorter.getOrderedInNew( underlyingPaths ));
     }
 
     /**

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -165,51 +165,53 @@ public class ViewletDispatcherServlet
             request.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition != null ? transition.getName() : null ); // even set if null
         }
 
-        synchronized( viewlet ) {
-            Throwable thrown  = null;
-            try {
-                viewlet.view( toView );
-                if( SafeUnsafePostFilter.isSafePost( servletRequest ) ) {
-                    viewlet.performBeforeSafePost( restfulRequest, structured );
+        if( viewlet != null ) {
+            synchronized( viewlet ) {
+                Throwable thrown  = null;
+                try {
+                    viewlet.view( toView );
+                    if( SafeUnsafePostFilter.isSafePost( servletRequest ) ) {
+                        viewlet.performBeforeSafePost( restfulRequest, structured );
 
-                } else if( SafeUnsafePostFilter.isUnsafePost( servletRequest ) ) {
-                    viewlet.performBeforeUnsafePost( restfulRequest, structured );
+                    } else if( SafeUnsafePostFilter.isUnsafePost( servletRequest ) ) {
+                        viewlet.performBeforeUnsafePost( restfulRequest, structured );
 
-                } else if( SafeUnsafePostFilter.mayBeSafeOrUnsafePost( servletRequest ) ) {
-                    viewlet.performBeforeMaybeSafeOrUnsafePost( restfulRequest, structured );
+                    } else if( SafeUnsafePostFilter.mayBeSafeOrUnsafePost( servletRequest ) ) {
+                        viewlet.performBeforeMaybeSafeOrUnsafePost( restfulRequest, structured );
 
-                } else {
-                    viewlet.performBeforeGet( restfulRequest, structured );
+                    } else {
+                        viewlet.performBeforeGet( restfulRequest, structured );
+                    }
+
+                    viewlet.processRequest( restfulRequest, toView, structured );
+
+                } catch( RuntimeException t ) {
+                    thrown = t;
+                    throw (RuntimeException) thrown; // notice the finally block
+
+                } catch( CannotViewException t ) {
+                    thrown = t;
+                    throw new ServletException( thrown ); // notice the finally block
+
+                } catch( UnsafePostException t ) {
+                    thrown = t;
+                    throw new ServletException( thrown ); // notice the finally block
+
+                } catch( ServletException t ) {
+                    thrown = t;
+                    throw (ServletException) thrown; // notice the finally block
+
+                } catch( IOException t ) {
+                    thrown = t;
+                    throw (IOException) thrown; // notice the finally block
+
+                } finally {
+                    viewlet.performAfter( restfulRequest, structured, thrown );
+
+                    servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME,        oldViewlet );
+                    servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_NAME,            oldState );
+                    servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, oldStateTransition );
                 }
-
-                viewlet.processRequest( restfulRequest, toView, structured );
-
-            } catch( RuntimeException t ) {
-                thrown = t;
-                throw (RuntimeException) thrown; // notice the finally block
-
-            } catch( CannotViewException t ) {
-                thrown = t;
-                throw new ServletException( thrown ); // notice the finally block
-
-            } catch( UnsafePostException t ) {
-                thrown = t;
-                throw new ServletException( thrown ); // notice the finally block
-
-            } catch( ServletException t ) {
-                thrown = t;
-                throw (ServletException) thrown; // notice the finally block
-
-            } catch( IOException t ) {
-                thrown = t;
-                throw (IOException) thrown; // notice the finally block
-
-            } finally {
-                viewlet.performAfter( restfulRequest, structured, thrown );
-
-                servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME,        oldViewlet );
-                servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_NAME,            oldState );
-                servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, oldStateTransition );
             }
         }
     }

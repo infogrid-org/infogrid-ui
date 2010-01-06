@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -223,6 +223,24 @@ public final class TimePeriodValue
                 && (theSecond == ((TimePeriodValue)otherValue).theSecond);
         }
         return false;
+    }
+
+    /**
+     * Determine hash code. Make editor happy that otherwise indicates a warning.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        int ret = 0;
+        ret = (ret << 1) ^ theYear;
+        ret = (ret << 1) ^ theMonth;
+        ret = (ret << 1) ^ theDay;
+        ret = (ret << 1) ^ theHour;
+        ret = (ret << 1) ^ theMinute;
+        ret = (ret << 1) ^ (int) theSecond;
+        return ret;
     }
 
     /**

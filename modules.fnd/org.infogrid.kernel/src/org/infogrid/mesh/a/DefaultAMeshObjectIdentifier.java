@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -202,7 +202,7 @@ public class DefaultAMeshObjectIdentifier
         }
 
         String meshObjectExternalForm = IdentifierStringifier.defaultFormat( toExternalForm(), pars );
-        String meshBaseExternalForm   = IdentifierStringifier.defaultFormat( meshBase.getIdentifier().toExternalForm(), pars );
+        String meshBaseExternalForm   = meshBase != null ? IdentifierStringifier.defaultFormat( meshBase.getIdentifier().toExternalForm(), pars ) : null;
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
@@ -270,7 +270,7 @@ public class DefaultAMeshObjectIdentifier
         }
 
         String meshObjectExternalForm = toExternalForm();
-        String meshBaseExternalForm   = meshBase.getIdentifier().toExternalForm();
+        String meshBaseExternalForm   = meshBase != null ? meshBase.getIdentifier().toExternalForm() : null;
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype
@@ -332,7 +332,7 @@ public class DefaultAMeshObjectIdentifier
         }
 
         String meshObjectExternalForm = toExternalForm();
-        String meshBaseExternalForm   = meshBase.getIdentifier().toExternalForm();
+        String meshBaseExternalForm   = meshBase != null ? meshBase.getIdentifier().toExternalForm() : null;
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype

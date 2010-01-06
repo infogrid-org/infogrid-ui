@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -124,9 +124,8 @@ public class ViewletTag
         }
         content.append( "<div class=\"viewlet" );
 
-        if( vl != null ) {
-            String vlHtmlClass = vl.getHtmlClass();
-
+        String vlHtmlClass = vl.getHtmlClass();
+        if( vlHtmlClass != null ) {
             content.append( " " ).append( vlHtmlClass.replace( '.', '-') );
         }
         if( theCssClass != null ) {

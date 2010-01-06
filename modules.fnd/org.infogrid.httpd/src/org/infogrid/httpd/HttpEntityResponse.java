@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -256,13 +257,15 @@ public class HttpEntityResponse
             theWriter.write( HttpResponseHeaderFields.CR );
         }
 
+        DateFormat myRfc1123Format = (DateFormat) theRfc1123Format.clone(); // DateFormat is not thread safe
+
         // Expires
         Date expires = theEntity.getExpires();
         if( expires != null )
         {
             theWriter.write( HttpEntityHeaderFields.EXPIRES_TAG );
             theWriter.write( HttpResponseHeaderFields.SEPARATOR );
-            theWriter.write( theRfc1123Format.format( expires ) );
+            theWriter.write( myRfc1123Format.format( expires ) );
             theWriter.write( HttpResponseHeaderFields.CR );
         }
 
@@ -272,7 +275,7 @@ public class HttpEntityResponse
         {
             theWriter.write( HttpEntityHeaderFields.LAST_MODIFIED_TAG );
             theWriter.write( HttpResponseHeaderFields.SEPARATOR );
-            theWriter.write( theRfc1123Format.format( lastModified ) );
+            theWriter.write( myRfc1123Format.format( lastModified ) );
             theWriter.write( HttpResponseHeaderFields.CR );
         }
     }

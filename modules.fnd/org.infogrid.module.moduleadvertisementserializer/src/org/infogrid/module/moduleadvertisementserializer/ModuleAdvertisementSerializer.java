@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -205,9 +205,11 @@ public class ModuleAdvertisementSerializer
             toStream = new FileOutputStream( outputFile );
             writeDebugAdvertisement( theAdv, toStream );
         }
-        toStream.flush();
-        toStream.close();
 
+        if( toStream != null ) {
+            toStream.flush();
+           toStream.close();
+        }
     }
 
     /**
@@ -275,7 +277,7 @@ public class ModuleAdvertisementSerializer
         out.println( "//" );
         out.println( "// For more information about InfoGrid go to http://infogrid.org/" );
         out.println( "//" );
-        out.println( "// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst" );
+        out.println( "// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst" );
         out.println( "// All rights reserved." );
         out.println( "//" );
         out.println();

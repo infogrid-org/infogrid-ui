@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -157,6 +157,7 @@ public abstract class DynamicLoadFromStoreMap<K,V>
      * @return <tt>true</tt> if this map contains a mapping for the specified
      *         key.
      */
+    @SuppressWarnings("element-type-mismatch")
     public boolean containsKey(
             Object key )
     {
@@ -176,6 +177,7 @@ public abstract class DynamicLoadFromStoreMap<K,V>
      * @return <tt>true</tt> if this map maps one or more keys to the
      *         specified value.
      */
+    @SuppressWarnings("element-type-mismatch")
     public boolean containsValue(
             Object value )
     {
@@ -194,6 +196,7 @@ public abstract class DynamicLoadFromStoreMap<K,V>
      * @return the value to which this map maps the specified key, or
      *	       <tt>null</tt> if the map contains no mapping for this key.
      */
+    @SuppressWarnings("element-type-mismatch")
     public V get(
             Object key )
     {
@@ -247,6 +250,7 @@ public abstract class DynamicLoadFromStoreMap<K,V>
      * @param key the key
      * @return the old value previously stored using the same key, if any
      */
+    @SuppressWarnings("element-type-mismatch")
     public V remove(
             Object key )
     {
@@ -341,6 +345,7 @@ public abstract class DynamicLoadFromStoreMap<K,V>
      * @return <tt>true</tt> if the specified object is equal to this map.
      */
     @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(
             Object o )
     {

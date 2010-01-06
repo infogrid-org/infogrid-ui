@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -356,7 +356,7 @@ public abstract class AbstractGenerator
      *
      * @return date and time in String form
      */
-    public static String currentDateTime()
+    public synchronized static String currentDateTime()
     {
         return theCurrentDateTimeFormat.format( new java.util.Date() );
     }
@@ -392,7 +392,7 @@ public abstract class AbstractGenerator
             + "// \n"
             + "// For more information about InfoGrid go to http://infogrid.org/\n"
             + "//\n"
-            + "// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst\n"
+            + "// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst\n"
             + "// All rights reserved.\n"
             + "//\n";
 

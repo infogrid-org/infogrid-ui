@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -167,6 +167,9 @@ public abstract class HttpResponse
         throws
             IOException
     {
+        DateFormat myRfc1123Format       = (DateFormat) theRfc1123Format.clone(); // DateFormat is not thread safe
+        DateFormat myCookieExpiresFormat = (DateFormat) theCookieExpiresFormat.clone(); // DateFormat is not thread safe
+
         // HTTP/1.1 200 OK
         theWriter.write( theHttpVersion );
         theWriter.write( " " );
@@ -182,7 +185,7 @@ public abstract class HttpResponse
         // Date: Thu, 04 Dec 2003 05:36:08 GMT
         theWriter.write( HttpResponseHeaderFields.DATE_TAG );
         theWriter.write( HttpResponseHeaderFields.SEPARATOR );
-        theWriter.write( theRfc1123Format.format( new Date() ));
+        theWriter.write( myRfc1123Format.format( new Date() ));
         theWriter.write( HttpResponseHeaderFields.CR );
 
         // Pragma: skipped
@@ -240,7 +243,7 @@ public abstract class HttpResponse
 
                     theWriter.write( HttpResponseHeaderFields.COOKIE_EXPIRES );
                     theWriter.write( HttpResponseHeaderFields.EQUALS );
-                    theWriter.write( theCookieExpiresFormat.format( expires ));
+                    theWriter.write( myCookieExpiresFormat.format( expires ));
                 }
                 if( domain != null ) {
                     theWriter.write( HttpResponseHeaderFields.SEMI_SEPARATOR );

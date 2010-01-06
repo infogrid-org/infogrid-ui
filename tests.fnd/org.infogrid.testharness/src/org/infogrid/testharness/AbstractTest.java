@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -583,6 +583,7 @@ public abstract class AbstractTest
     {
         if( condition == null ) {
             reportError( msg, condition );
+            return false;
 
         } else if( ! condition ) {
             reportError( msg );

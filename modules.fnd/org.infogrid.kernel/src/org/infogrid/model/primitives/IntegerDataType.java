@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -152,9 +152,30 @@ public class IntegerDataType
             return    ( theMin.equals( realOther.theMin ))
                    && ( theMax.equals(  realOther.theMax ))
                    && (   ( theUnitFamily == null && realOther.theUnitFamily == null )
-                       || theUnitFamily.equals( realOther.theUnitFamily ));
+                       || ( theUnitFamily != null && theUnitFamily.equals( realOther.theUnitFamily )));
         }
         return false;
+    }
+
+    /**
+     * Determine hash code. Make editor happy that otherwise indicates a warning.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        int ret = 0;
+        if( theMin != null ) {
+            ret ^= theMin.hashCode();
+        }
+        if( theMax != null ) {
+            ret ^= theMax.hashCode();
+        }
+        if( theUnitFamily != null ) {
+            ret ^= theUnitFamily.hashCode();
+        }
+        return ret;
     }
 
     /**
@@ -174,7 +195,7 @@ public class IntegerDataType
             return    ( theMin.isSmallerOrEquals( realOther.theMin ))
                    && ( realOther.theMax.isSmallerOrEquals( theMax ))
                    && (    ( theUnitFamily == null && realOther.theUnitFamily == null )
-                        || theUnitFamily.equals( realOther.theUnitFamily ));
+                        || ( theUnitFamily != null && theUnitFamily.equals( realOther.theUnitFamily )));
         }
         return false;
     }

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -383,7 +383,7 @@ public class TraversalPath
             MeshObjectsNotFoundException
     {
         if( theMeshBase == null ) {
-            throw new MeshObjectsNotFoundException( theMeshBase, identifier );
+            throw new NullPointerException();
         }
         
         MeshObject ret = theMeshBase.findMeshObjectByIdentifierOrThrow( identifier );
@@ -435,7 +435,7 @@ public class TraversalPath
     @Override
     public int hashCode()
     {
-        return theReached.hashCode() | theTraversedSpec.hashCode(); // good enough
+        return theReached.hashCode() ^ theTraversedSpec.hashCode(); // good enough
     }
 
     /**

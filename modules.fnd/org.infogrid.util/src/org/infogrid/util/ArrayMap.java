@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -345,14 +345,15 @@ public class ArrayMap<K,V>
             Object o )
     {
         if( o instanceof ArrayMap ) {
-            boolean ret = theStorage.equals( ((ArrayMap) o).theStorage );
+            @SuppressWarnings("unchecked")
+            boolean ret = theStorage.equals( ((ArrayMap<K,V>) o).theStorage );
             return ret;
         }
         return false;
     }
     
     /**
-     * Hash code to make IDE happy.
+     * Hash code. This is here to make the IDE happy that otherwise indicates a warning.
      * 
      * @return hash code
      */
@@ -429,48 +430,6 @@ public class ArrayMap<K,V>
             V ret = theValue;
             theValue = value;
             return ret;
-        }
-
-        /**
-         * Determine equality.
-         * 
-         * @param o the Object compare against
-         */
-        @Override
-        public boolean equals(
-                Object o )
-        {
-            if( o instanceof MyPair ) {
-                MyPair realO = (MyPair) o;
-                
-                if( theName == null ) {
-                    if( realO.theName != null ) {
-                        return false;
-                    }
-                } else if( !theName.equals( realO.theName )) {
-                    return false;
-                }
-                if( theValue == null ) {
-                    if( realO.theValue != null ) {
-                        return false;
-                    }
-                } else if( !theValue.equals( realO.theValue )) {
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * Hashcode to make IDE happy.
-         * 
-         * @return hash code
-         */
-        @Override
-        public int hashCode()
-        {
-            return super.hashCode();
         }
     }
     

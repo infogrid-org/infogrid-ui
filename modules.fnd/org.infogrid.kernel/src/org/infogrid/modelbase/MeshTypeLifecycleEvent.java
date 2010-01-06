@@ -8,14 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.modelbase;
 
 import org.infogrid.model.primitives.MeshType;
-
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.util.event.AbstractExternalizableEvent;
 import org.infogrid.util.event.SourceUnresolvedException;
@@ -57,5 +56,4 @@ public abstract class MeshTypeLifecycleEvent
     {
         return ModelBaseSingleton.getSingleton();
     }
-    
 }

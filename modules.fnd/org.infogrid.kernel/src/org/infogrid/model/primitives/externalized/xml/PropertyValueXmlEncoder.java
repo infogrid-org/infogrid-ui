@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -350,7 +350,7 @@ public class PropertyValueXmlEncoder
             if( width == null || width.length() == 0 ) {
                 log.error( "empty '" + EXTENT_VALUE_WIDTH_TAG + "' on '" + EXTENT_VALUE_TAG + "'" );
             }            
-            if( height == null && height.length() == 0 ) {
+            if( height == null || height.length() == 0 ) {
                 log.error( "empty '" + EXTENT_VALUE_HEIGHT_TAG + "' on '" + EXTENT_VALUE_TAG + "'" );
             }
             thePropertyValue = ExtentValue.create( Double.parseDouble( width ), Double.parseDouble( height ));

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -465,6 +465,24 @@ public final class BlobDataType
     }
 
     /**
+     * Determine hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        int ret = 0;
+        if( theDefaultValue != null ) {
+            ret ^= theDefaultValue.hashCode();
+        }
+        for( int i=0 ; i<theMimeTypes.length ; ++i ) {
+            ret ^= theMimeTypes[i].hashCode();
+        }
+        return ret;
+    }
+
+    /**
       * Test whether this DataType is a superset of or equals the argument
       * DataType. This is useful to test whether an assigment of
       * values is legal prior to attempting to do it.
@@ -877,7 +895,7 @@ public final class BlobDataType
         if( supportsTextMimeType() ) {
             if( defaultValue == null || defaultValue.hasTextMimeType() ) {
                 return representation.formatEntry(
-                        defaultValue.getClass(),
+                        defaultValue != null ? defaultValue.getClass() : null,
                         "UploadEditStringWithTextDefault",
                         pars,
                 /* 0 */ editVariable,

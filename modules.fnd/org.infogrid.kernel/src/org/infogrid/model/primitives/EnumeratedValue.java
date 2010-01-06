@@ -164,6 +164,20 @@ public final class EnumeratedValue
     }
 
     /**
+     * Determine hash code. Make editor happy that otherwise indicates a warning.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        int ret = 0;
+        ret ^= theDataType != null ? theDataType.hashCode() : 0;
+        ret ^= theValue.hashCode();
+
+        return ret;
+    }
+    /**
       * Obtain as string representation, for debugging.
       *
       * @return string representation of this object

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -99,7 +99,7 @@ public class L10MapImpl
             String [] myKey = parseLocaleString( currentString );
 
             keys[i]   = myKey;
-            values[i] = theMap.get( myKey );
+            values[i] = theMap.get( currentString );
 
             ++i;
         }
@@ -198,6 +198,7 @@ public class L10MapImpl
      * Implementation of the other two get methods.
      *
      * @param k String array with 1 to 3 elements, representing language, country and variant
+     * @return the PropertyValue
      */
     protected PropertyValue get(
             String [] k )
@@ -253,8 +254,9 @@ public class L10MapImpl
         if( keys == null ) {
             return null;
         }
+        String [] parsed = parseLocaleString( l );
         for( int i=0 ; i<keys.length ; ++i ) {
-            if( keys[i].equals( l )) {
+            if( ArrayHelper.equals( keys, parsed )) {
                 return values[i];
             }
         }

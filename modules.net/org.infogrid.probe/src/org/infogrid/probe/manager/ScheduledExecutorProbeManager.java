@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -145,7 +145,7 @@ public abstract class ScheduledExecutorProbeManager
             ProbeException,
             IsDeadException
     {
-        Future<Long> f = theFutures.get( shadow.getIdentifier() );
+        Future<Long> f = theFutures.remove( shadow.getIdentifier() );
         if( f != null && !f.isCancelled() ) {
             f.cancel( false );
         }
@@ -255,7 +255,16 @@ public abstract class ScheduledExecutorProbeManager
      * This maps from the ShadowMeshBase's identifier to the Future.
      */
     protected Map<NetMeshBaseIdentifier,ScheduledFuture<Long>> theFutures
-            = new HashMap<NetMeshBaseIdentifier,ScheduledFuture<Long>>();
+            = new HashMap<NetMeshBaseIdentifier,ScheduledFuture<Long>>()
+    {
+        @Override
+        public ScheduledFuture<Long> remove( Object id ) {
+            if( log.isTraceEnabled() ) {
+                log.traceMethodCallEntry( this, "remove", id );
+            }
+            return super.remove( id );
+        }
+    };
 
     /**
      * The default thread-pool size.
@@ -323,6 +332,7 @@ public abstract class ScheduledExecutorProbeManager
             }
             
             ScheduledExecutorProbeManager belongsTo = theBelongsTo.get();
+            boolean                       removeOld = true;
             try {
                 Long nextTime= -1L;
 
@@ -345,6 +355,8 @@ public abstract class ScheduledExecutorProbeManager
                         }
                         ScheduledFuture<Long> f = belongsTo.theExecutorService.schedule( this, nextTime.longValue(), TimeUnit.MILLISECONDS );
                         belongsTo.theFutures.put( theShadowIdentifier, f );
+
+                        removeOld = false; // otherwise we remove what we just added, the old one was removed as a side effect of put
                     }
 
                 } catch( IsDeadException ex ) {
@@ -354,8 +366,8 @@ public abstract class ScheduledExecutorProbeManager
                 return nextTime;
 
             } finally {
-                if( belongsTo != null ) {
-                    belongsTo.theFutures.remove( this );
+                if( belongsTo != null && removeOld ) {
+                    belongsTo.theFutures.remove( theShadowIdentifier );
                 }
             }
         }

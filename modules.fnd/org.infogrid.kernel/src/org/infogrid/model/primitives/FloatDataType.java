@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -159,6 +159,26 @@ public class FloatDataType
     }
 
     /**
+     * Determine hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        int ret = 0;
+        if( theMin != null ) {
+            ret ^= theMin.hashCode();
+        }
+        if( theMax != null ) {
+            ret ^= theMax.hashCode();
+        }
+        if( theUnitFamily != null ) {
+            ret ^= theUnitFamily.hashCode();
+        }
+        return ret;
+    }
+    /**
       * Test whether this DataType is a superset of or equals the argument
       * DataType. This is useful to test whether an assigment of
       * values is legal prior to attempting to do it.
@@ -175,7 +195,7 @@ public class FloatDataType
             return    ( theMin.isSmallerOrEquals( realOther.theMin ))
                    && ( realOther.theMax.isSmallerOrEquals( theMax ))
                    && (    ( theUnitFamily == null && realOther.theUnitFamily == null )
-                        || theUnitFamily.equals( realOther.theUnitFamily ));
+                        || ( theUnitFamily != null && theUnitFamily.equals( realOther.theUnitFamily )));
         }
         return false;
     }

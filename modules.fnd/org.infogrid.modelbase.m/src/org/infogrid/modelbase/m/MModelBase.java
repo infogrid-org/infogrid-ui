@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,7 +17,6 @@ package org.infogrid.modelbase.m;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.util.Iterator;
 import org.infogrid.model.primitives.AttributableMeshType;
@@ -60,8 +59,7 @@ import org.infogrid.util.logging.Log;
   */
 public class MModelBase
         implements
-            ModelBase,
-            Serializable
+            ModelBase
 {
     private static final Log  log              = Log.getLogInstance(MModelBase.class); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization

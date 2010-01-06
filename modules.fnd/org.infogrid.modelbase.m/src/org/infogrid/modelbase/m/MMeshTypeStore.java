@@ -8,12 +8,16 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.modelbase.m;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
@@ -21,27 +25,17 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyTypeGroup;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.SubjectArea;
-
 import org.infogrid.modelbase.MeshTypeCreatedEvent;
 import org.infogrid.modelbase.MeshTypeLifecycleEvent;
 import org.infogrid.modelbase.MeshTypeLifecycleEventListener;
-
 import org.infogrid.module.ModuleException;
-
 import org.infogrid.util.logging.Log;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
   * This stores a working model, in memory. A working model is the set of SubjectAreas currently needed
   * by some application. In-memory implementation.
   */
 public class MMeshTypeStore
-        implements
-            Serializable
 {
     private static final Log  log              = Log.getLogInstance( MMeshTypeStore.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
@@ -477,8 +471,8 @@ public class MMeshTypeStore
     /**
      * Helper class used as key in the hash tables.
      * 
-     * @param T the first component of the key
-     * @param S the second component of the key
+     * @param <T> the first component of the key
+     * @param <S> the second component of the key
      */
     public static class KeyInTable<T,S>
             implements

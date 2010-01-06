@@ -529,6 +529,17 @@ public abstract class BlobValue
         }
 
         /**
+         * Determine hash code.
+         *
+         * @return hash code
+         */
+        @Override
+        public int hashCode()
+        {
+            return theValue.hashCode();
+        }
+
+        /**
          * Obtain a string which is the Java-language constructor expression reflecting this value.
          *
          * @param classLoaderVar name of a variable containing the class loader to be used to initialize this value
@@ -746,6 +757,21 @@ public abstract class BlobValue
                 return true;
             }
             return false;
+        }
+
+        /**
+         * Determine hash code. Make editor happy that otherwise indicates a warning.
+         *
+         * @return hash code
+         */
+        @Override
+        public int hashCode()
+        {
+            int ret = 0;
+            for( int i=0 ; i<theValue.length ; ++i ) {
+                ret ^= theValue[i];
+            }
+            return ret;
         }
 
         /**
@@ -1037,9 +1063,9 @@ public abstract class BlobValue
             sb.append( theLoadFrom );
 
             sb.append( ", value: " );
-            sb.append( theValue );
+            sb.append( theValue.length );
 
-            sb.append( ", [" ).append( getMimeType()).append( "]" );
+            sb.append( "bytes, [" ).append( getMimeType()).append( "]" );
             sb.append( " }>" );
 
             return sb.toString();
@@ -1124,6 +1150,23 @@ public abstract class BlobValue
 
             }
             return false;
+        }
+
+        /**
+         * Determine hash code.
+         *
+         * @return hash code
+         */
+        @Override
+        public int hashCode()
+        {
+            ensureLoaded();
+
+            int ret = 0;
+            for( int i=0 ; i<theValue.length ; ++i ) {
+                ret ^= theValue[i];
+            }
+            return ret;
         }
 
         /**

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,7 +24,6 @@ import org.infogrid.mesh.set.active.ActiveTraversalPathSet;
 import org.infogrid.mesh.set.active.MeshObjectAddedEvent;
 import org.infogrid.mesh.set.active.MeshObjectRemovedEvent;
 import org.infogrid.mesh.set.active.OrderedActiveMeshObjectSetReorderedEvent;
-import org.infogrid.mesh.set.active.m.ConstantActiveMMeshObjectSet;
 import org.infogrid.meshbase.transaction.MeshObjectStateEvent;
 import org.infogrid.util.FlexiblePropertyChangeListenerSet;
 
@@ -250,6 +249,21 @@ public abstract class SceneRole
         }
 
         /**
+         * Hash code. This is here to make the IDE happy that otherwise indicates a warning.
+         *
+         * @return hash code
+         */
+        @Override
+        public int hashCode()
+        {
+            int ret = theRoot.hashCode();
+
+            ret ^= theTemplateRole.hashCode();
+
+            return ret;
+        }
+
+        /**
          * Callback from the player indicating a change in a property.
          *
          * @param theEvent the event
@@ -445,6 +459,21 @@ public abstract class SceneRole
         }
 
         /**
+         * Hash code. This is here to make the IDE happy that otherwise indicates a warning.
+         *
+         * @return hash code
+         */
+        @Override
+        public int hashCode()
+        {
+            int ret = thePaths.hashCode();
+
+            ret ^= theTemplateRole.hashCode();
+
+            return ret;
+        }
+
+        /**
          * The TraversalPaths to the players in this SceneRole.
          */
         protected ActiveTraversalPathSet thePaths;
@@ -540,6 +569,21 @@ public abstract class SceneRole
         }
 
         /**
+         * Hash code. This is here to make the IDE happy that otherwise indicates a warning.
+         *
+         * @return hash code
+         */
+        @Override
+        public int hashCode()
+        {
+            int ret = thePlayers.hashCode();
+
+            ret ^= theTemplateRole.hashCode();
+
+            return ret;
+        }
+
+        /**
          * The players playing this SceneTemplateRole in this SceneRole.
          */
         protected ActiveMeshObjectSet thePlayers;
@@ -600,6 +644,21 @@ public abstract class SceneRole
                 return thePlayers.equals( realOther.thePlayers );
             }
             return false;
+        }
+
+        /**
+         * Hash code. This is here to make the IDE happy that otherwise indicates a warning.
+         *
+         * @return hash code
+         */
+        @Override
+        public int hashCode()
+        {
+            int ret = thePlayers.hashCode();
+
+            ret ^= theTemplateRole.hashCode();
+
+            return ret;
         }
 
         /**

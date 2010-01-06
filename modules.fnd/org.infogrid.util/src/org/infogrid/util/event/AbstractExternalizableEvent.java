@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -52,9 +52,6 @@ public abstract class AbstractExternalizableEvent<S,SID,V,VID>
     {
         super( DUMMY_SENDER );
 
-        if( sourceIdentifier == null ) {
-            throw new NullPointerException( "Null source identifier given" );
-        }
         theSource               = source;
         theSourceIdentifier     = sourceIdentifier;
         theDeltaValue           = deltaValue;

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -206,15 +206,13 @@ public class HadoopStoreIterator
     {
         Path []       found = theDelegate.next( n );
         StoreValue [] ret   = new StoreValue[ found.length ];
-        if( found != null ) {
-            try {
-                for( int i=0 ; i<found.length ; ++i ) {
-                    ret[i] = theStore.getStoreValueMapper().readStoreValue(
-                        theStore.getFileSystem().open( found[i] ));
-                }
-            } catch( IOException ex ) {
-                log.error( ex );
+        try {
+            for( int i=0 ; i<found.length ; ++i ) {
+                ret[i] = theStore.getStoreValueMapper().readStoreValue(
+                    theStore.getFileSystem().open( found[i] ));
             }
+        } catch( IOException ex ) {
+            log.error( ex );
         }
         return ret;
     }
@@ -259,15 +257,14 @@ public class HadoopStoreIterator
     {
         Path []       found = theDelegate.previous( n );
         StoreValue [] ret   = new StoreValue[ found.length ];
-        if( found != null ) {
-            try {
-                for( int i=0 ; i<found.length ; ++i ) {
-                    ret[i] = theStore.getStoreValueMapper().readStoreValue(
-                        theStore.getFileSystem().open( found[i] ));
-                }
-            } catch( IOException ex ) {
-                log.error( ex );
+
+        try {
+            for( int i=0 ; i<found.length ; ++i ) {
+                ret[i] = theStore.getStoreValueMapper().readStoreValue(
+                    theStore.getFileSystem().open( found[i] ));
             }
+        } catch( IOException ex ) {
+            log.error( ex );
         }
         return ret;
     }

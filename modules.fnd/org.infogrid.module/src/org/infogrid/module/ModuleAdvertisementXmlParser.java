@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -429,7 +430,9 @@ public class ModuleAdvertisementXmlParser
 
         } else if( BUILD_TIME_TAG.equals( qName )) {
             try {
-                buildDate = theDefaultDateFormat.parse( lastString );
+                DateFormat myDateFormat = (DateFormat) theDefaultDateFormat.clone(); // not thread-safe
+
+                buildDate = myDateFormat.parse( lastString );
             } catch( ParseException ex ) {
                 throw new SAXParseException( "Date value cannot be parsed: " + ex, theLocator );
             }

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -149,9 +149,9 @@ public class HttpCookie
     {
         // NetBeans-generated
         int hash = 7;
-        hash = 83 * hash + (this.theName != null ? this.theName.hashCode() : 0);
-        hash = 83 * hash + (this.theDomain != null ? this.theDomain.hashCode() : 0);
-        hash = 83 * hash + (this.thePath != null ? this.thePath.hashCode() : 0);
+        hash = 83 * hash + ( theName != null   ? theName.hashCode()   : 0 );
+        hash = 83 * hash + ( theDomain != null ? theDomain.hashCode() : 0 );
+        hash = 83 * hash + ( thePath != null   ? thePath.hashCode()   : 0 );
         return hash;
     }
 

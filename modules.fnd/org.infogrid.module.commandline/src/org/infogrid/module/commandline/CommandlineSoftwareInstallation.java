@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -361,7 +361,7 @@ public class CommandlineSoftwareInstallation
             } catch( IOException ex ) { // directory does not exist
             }
         }
-        if( installDirName != null ) {
+        if( installDirName == null ) {
             return UNKNOWN_PRODUCT_ID;
         }
 

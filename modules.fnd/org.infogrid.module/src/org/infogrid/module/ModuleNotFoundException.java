@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -50,15 +50,11 @@ public class ModuleNotFoundException
         StringBuffer buf = new StringBuffer( 100 ); // fudge
         buf.append( "ModuleNotFoundException: could not resolve Module " );
 
-        if( theModuleAdvertisement != null ) {
-            buf.append( theModuleAdvertisement.getModuleName() );
-            if( theModuleAdvertisement.getModuleVersion() != null ) {
-                buf.append( theModuleAdvertisement.getModuleVersion() );
-            } else {
-                buf.append( "?" );
-            }
+        buf.append( theModuleAdvertisement.getModuleName() );
+        if( theModuleAdvertisement.getModuleVersion() != null ) {
+            buf.append( theModuleAdvertisement.getModuleVersion() );
         } else {
-            buf.append( "null" );
+            buf.append( "?" );
         }
         buf.append( ", was looking for JAR files: " );
 

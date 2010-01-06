@@ -8,12 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.meshbase.net.xpriso;
 
+import java.io.Serializable;
 import org.infogrid.comm.CarriesInvocationId;
 import org.infogrid.mesh.net.NetMeshObjectIdentifier;
 import org.infogrid.mesh.net.externalized.ExternalizedNetMeshObject;
@@ -36,7 +37,8 @@ import org.infogrid.meshbase.net.transaction.NetMeshObjectTypeRemovedEvent;
  */
 public interface XprisoMessage
         extends
-            CarriesInvocationId
+            CarriesInvocationId,
+            Serializable
 {
     /**
      * Obtain the NetMeshBaseIdentifier of the sender.

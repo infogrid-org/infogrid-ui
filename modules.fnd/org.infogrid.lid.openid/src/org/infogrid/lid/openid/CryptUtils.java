@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -43,7 +43,7 @@ public abstract class CryptUtils
         try {
             byte [] realData = data.toByteArray();
             // insert leading zero if MSB set
-            if( realData[0] > 127 ) {
+            if( ( 0xff & realData[0] ) > 127 ) { // make integer, not signed byte for comparison
                 realData = ArrayHelper.append( new byte[] { (byte) 0 }, realData );
             }
             
@@ -71,7 +71,7 @@ public abstract class CryptUtils
         try {
             byte [] realData = data.toByteArray();
             // insert leading zero if MSB set
-            if( realData[0] > 127 ) {
+            if( ( 0xff & realData[0] ) > 127 ) { // make integer, not signed byte for comparison
                 realData = ArrayHelper.append( new byte[] { (byte) 0 }, realData );
             }
 

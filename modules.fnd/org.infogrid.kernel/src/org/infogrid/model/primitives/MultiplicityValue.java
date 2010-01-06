@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -131,6 +131,17 @@ public final class MultiplicityValue
                 && (maximum == ((MultiplicityValue)otherValue).maximum);
         }
         return false;
+    }
+
+    /**
+     * Determine hash code. Make editor happy that otherwise indicates a warning.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        return minimum * maximum;
     }
 
     /**

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -154,6 +154,8 @@ public class OpenIdRpSideAssociationNegotiator
         Date replace_after = null;
         Date expiry        = null;
 
+        DateFormat myDateFormat = (DateFormat) theDateFormat.clone(); // DateFormat is not thread-safe
+
         String receivedContent = response.getContentAsString();
         StringTokenizer token1 = new StringTokenizer( receivedContent, "\n" );
         while( token1.hasMoreElements() ) {
@@ -171,11 +173,11 @@ public class OpenIdRpSideAssociationNegotiator
                     } else if( "assoc_handle".equals( key )) {
                         theAssociationHandle = value;
                     } else if( "issued".equals( key )) {
-                        issued = theDateFormat.parse( value );
+                        issued = myDateFormat.parse( value );
                     } else if( "replace_after".equals( key )) {
-                        replace_after = theDateFormat.parse( value );
+                        replace_after = myDateFormat.parse( value );
                     } else if( "expiry".equals( key )) {
-                        expiry = theDateFormat.parse( value );
+                        expiry = myDateFormat.parse( value );
                     } else if( "expires_in".equals( key )) {
                         expires_in = Long.parseLong( value, 10 );
                     } else if( "session_type".equals( key )) {

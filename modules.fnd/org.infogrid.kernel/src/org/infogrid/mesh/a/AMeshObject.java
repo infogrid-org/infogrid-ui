@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -928,11 +928,11 @@ public class AMeshObject
                     throw new NotRelatedException( realNeighbor, this );
                 }
 
-                MeshObjectIdentifier [] neighborIdentifiers      = nMgr.getNeighborIdentifiers( this );
-                MeshObjectIdentifier [] otherNeighborIdentifiers = realNeighbor != null ? nMgr.getNeighborIdentifiers( realNeighbor ) : null;
-
-                RoleType [] oldRoleTypesHere  = nMgr.getRoleTypesFor( this, realNeighbor.getIdentifier() ); // will throw NotRelatedException
-                RoleType [] oldRoleTypesThere = realNeighbor != null ? nMgr.getRoleTypesFor( realNeighbor, theIdentifier ) : null; // will throw NotRelatedException
+//                MeshObjectIdentifier [] neighborIdentifiers      = nMgr.getNeighborIdentifiers( this );
+//                MeshObjectIdentifier [] otherNeighborIdentifiers = realNeighbor != null ? nMgr.getNeighborIdentifiers( realNeighbor ) : null;
+//
+                RoleType [] oldRoleTypesHere  = realNeighbor != null ? nMgr.getRoleTypesFor( this, realNeighbor.getIdentifier() ) : null; // will throw NotRelatedException
+                RoleType [] oldRoleTypesThere = realNeighbor != null ? nMgr.getRoleTypesFor( realNeighbor, theIdentifier )        : null; // will throw NotRelatedException
 
                 RoleType [] roleTypesToRemoveThere = new RoleType[ roleTypesToRemoveHere.length ];
                 for( int i=0 ; i<roleTypesToRemoveHere.length ; ++i ) {

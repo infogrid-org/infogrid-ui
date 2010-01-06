@@ -8,13 +8,12 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid.local;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import org.infogrid.util.AbstractHasIdentifier;
@@ -27,8 +26,7 @@ public abstract class AbstractLidPersona
         extends
             AbstractHasIdentifier
         implements
-            LidPersona,
-            Serializable
+            LidPersona
 {
     /**
      * Constructor for subclasses only.

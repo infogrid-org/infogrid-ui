@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -641,8 +642,9 @@ public abstract class ModuleAdvertisement
     String getAsXml(
             String tagName )
     {
-        StringBuilder buf = new StringBuilder( 256 );
+        DateFormat myDateFormat = (DateFormat) theDefaultDateFormat.clone(); // DateFormat is not thread-safe
 
+        StringBuilder buf = new StringBuilder( 256 );
         buf.append( "<" ).append( tagName ).append( ">\n" );
 
         if( theModuleName != null && theModuleName.length() > 0 ) {
@@ -659,12 +661,12 @@ public abstract class ModuleAdvertisement
         }
         if( theModuleBuildDate != null ) {
             appendOpenTag( BUILD_TIME_TAG, buf );
-            buf.append( theDefaultDateFormat.format( theModuleBuildDate ));
+            buf.append( myDateFormat.format( theModuleBuildDate ));
             appendCloseTag( BUILD_TIME_TAG, buf );
             buf.append( '\n' );
         } else {
             appendOpenTag( BUILD_TIME_TAG, buf );
-            buf.append( theDefaultDateFormat.format( new Date() )); // now
+            buf.append( myDateFormat.format( new Date() )); // now
             appendCloseTag( BUILD_TIME_TAG, buf );
             buf.append( '\n' );
         }

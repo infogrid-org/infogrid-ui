@@ -99,6 +99,29 @@ public class UnitFamily
     }
 
     /**
+     * Determine hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        int ret = 0;
+        ret = ( ret << 1 ) ^ theMeterExponent;
+        ret = ( ret << 1 ) ^ theKilogramExponent;
+        ret = ( ret << 1 ) ^ theSecondExponent;
+        ret = ( ret << 1 ) ^ theAmpereExponent;
+        ret = ( ret << 1 ) ^ theKelvinExponent;
+        ret = ( ret << 1 ) ^ theMoleExponent;
+        ret = ( ret << 1 ) ^ theCandelaExponent;
+        ret = ( ret << 1 ) ^ theRadianExponent;
+        ret = ( ret << 1 ) ^ theSteradianExponent;
+        ret = ( ret << 1 ) ^ theByteExponent;
+
+        return ret;
+    }
+
+    /**
       * Find out whether two UnitFamilies are compatible. For example,
       * centimenters and inches are compatible because they both denote length.
       * Meter and square meters are not, because one denotes a length, the other

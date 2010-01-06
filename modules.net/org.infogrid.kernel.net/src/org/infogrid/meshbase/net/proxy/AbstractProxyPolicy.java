@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -691,10 +691,12 @@ public abstract class AbstractProxyPolicy
                 log.warn( ex );
             }
 
-            for( int i=0 ; i<firstTimeObjects.length ; ++i ) {
-                if( firstTimeObjects[i] != null ) {
-                    if( addPotentiallyConvey( firstTimeObjects[i], perhapsOutgoing, incomingProxy ) ) {
-                        ret.addRegisterReplicationIfNotAlready( firstTimeObjects[i] );
+            if( firstTimeObjects != null ) {
+                for( int i=0 ; i<firstTimeObjects.length ; ++i ) {
+                    if( firstTimeObjects[i] != null ) {
+                        if( addPotentiallyConvey( firstTimeObjects[i], perhapsOutgoing, incomingProxy ) ) {
+                            ret.addRegisterReplicationIfNotAlready( firstTimeObjects[i] );
+                        }
                     }
                 }
             }
