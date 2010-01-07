@@ -155,6 +155,13 @@ public interface LidClientAuthenticationStatus
     public abstract HasIdentifier getClientPersona();
     
     /**
+     * Determine whether the client has indicated its desire to log in.
+     *
+     * @return true if the client wishes to log in
+     */
+    public abstract boolean clientWishesToLogin();
+
+    /**
      * Determine whether the client has indicated its desire to cancel the active session, if any.
      * This does not mean the client wishes to become anonymous but that the client wishes to move from authenticated
      * status to claimed only.

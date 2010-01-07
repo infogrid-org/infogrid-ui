@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -38,6 +38,7 @@ public class SimpleLidClientAuthenticationStatus
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
      * @param clientLoggedOn the client just logged on
+     * @param clientWishesToLogin the client wishes to log in
      * @param wishesCancelSession the client wishes to cancel the session
      * @param clientWishesToLogout the client wishes to log out
      * @param authenticationServices the authentication services available to this client, if any
@@ -52,6 +53,7 @@ public class SimpleLidClientAuthenticationStatus
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
             boolean                          clientLoggedOn,
+            boolean                          clientWishesToLogin,
             boolean                          wishesCancelSession,
             boolean                          clientWishesToLogout,
             LidAuthenticationService []      authenticationServices,
@@ -65,6 +67,7 @@ public class SimpleLidClientAuthenticationStatus
                 carriedInvalidCredentialTypes,
                 invalidCredentialExceptions,
                 clientLoggedOn,
+                clientWishesToLogin,
                 wishesCancelSession,
                 clientWishesToLogout,
                 authenticationServices,
@@ -83,6 +86,7 @@ public class SimpleLidClientAuthenticationStatus
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
      * @param clientLoggedOn the client just logged on
+     * @param clientWishesToLogin the client wishes to log in
      * @param wishesCancelSession the client wishes to cancel the session
      * @param clientWishesToLogout the client wishes to log out
      * @param authenticationServices the authentication services available to this client, if any
@@ -97,6 +101,7 @@ public class SimpleLidClientAuthenticationStatus
             Collection<LidCredentialType>             carriedInvalidCredentialTypes,
             Collection<LidInvalidCredentialException> invalidCredentialExceptions,
             boolean                                   clientLoggedOn,
+            boolean                                   clientWishesToLogin,
             boolean                                   wishesCancelSession,
             boolean                                   clientWishesToLogout,
             LidAuthenticationService []               authenticationServices,
@@ -116,6 +121,7 @@ public class SimpleLidClientAuthenticationStatus
                         ? ArrayHelper.copyIntoNewArray( invalidCredentialExceptions,   LidInvalidCredentialException.class )
                         : null,
                 clientLoggedOn,
+                clientWishesToLogin,
                 wishesCancelSession,
                 clientWishesToLogout,
                 authenticationServices,
@@ -134,6 +140,7 @@ public class SimpleLidClientAuthenticationStatus
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
      * @param clientLoggedOn the client just logged on
+     * @param clientWishesToLogin the client wishes to log in
      * @param wishesCancelSession the client wishes to cancel the session
      * @param clientWishesToLogout the client wishes to log out
      * @param authenticationServices the authentication services available to this client, if any
@@ -147,6 +154,7 @@ public class SimpleLidClientAuthenticationStatus
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
             boolean                          clientLoggedOn,
+            boolean                          clientWishesToLogin,
             boolean                          wishesCancelSession,
             boolean                          clientWishesToLogout,
             LidAuthenticationService []      authenticationServices,
@@ -159,6 +167,7 @@ public class SimpleLidClientAuthenticationStatus
                 carriedInvalidCredentialTypes,
                 invalidCredentialExceptions,
                 clientLoggedOn,
+                clientWishesToLogin,
                 wishesCancelSession,
                 clientWishesToLogout,
                 authenticationServices,

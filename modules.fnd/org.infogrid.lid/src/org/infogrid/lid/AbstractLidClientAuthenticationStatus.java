@@ -40,6 +40,7 @@ public abstract class AbstractLidClientAuthenticationStatus
      * @param carriedInvalidCredentialTypes the credential types carried as part of this request that did not validate successfully, if any
      * @param invalidCredentialExceptions the exceptions indicating the problems with the invalid credentials, in the same sequence, if any
      * @param clientLoggedOn the client just logged on
+     * @param clientWishesToLogin the client wishes to log in
      * @param clientWishesToCancelSession the client wishes to cancel the session
      * @param clientWishesToLogout the client wishes to log out
      * @param authenticationServices the authentication services available to this client, if any
@@ -53,6 +54,7 @@ public abstract class AbstractLidClientAuthenticationStatus
             LidCredentialType []             carriedInvalidCredentialTypes,
             LidInvalidCredentialException [] invalidCredentialExceptions,
             boolean                          clientLoggedOn,
+            boolean                          clientWishesToLogin,
             boolean                          clientWishesToCancelSession,
             boolean                          clientWishesToLogout,
             LidAuthenticationService []      authenticationServices,
@@ -68,6 +70,7 @@ public abstract class AbstractLidClientAuthenticationStatus
         theInvalidCredentialExceptions   = invalidCredentialExceptions;
 
         theClientLoggedOn              = clientLoggedOn;
+        theClientWishesToLogin         = clientWishesToLogin;
         theClientWishesToCancelSession = clientWishesToCancelSession;
         theClientWishesToLogout        = clientWishesToLogout;
 
@@ -303,6 +306,16 @@ public abstract class AbstractLidClientAuthenticationStatus
     }
 
     /**
+     * Determine whether the client has indicated its desire to log in.
+     *
+     * @return true if the client wishes to log in
+     */
+    public boolean clientWishesToLogin()
+    {
+        return theClientWishesToLogin;
+    }
+
+    /**
      * Determine whether the client has indicated its desire to cancel the active session, if any.
      * This does not mean the client wishes to become anonymous (that would be expressed as getClientPersona()==null
      * with a non-null getSessionBelongsToPersona()) but that the client wishes to move from authenticated
@@ -413,6 +426,11 @@ public abstract class AbstractLidClientAuthenticationStatus
      * Client has just logged on.
      */
     protected boolean theClientLoggedOn;
+
+    /**
+     * Client has indicated that a login should be performed.
+     */
+    protected boolean theClientWishesToLogin;
 
     /**
      * Client has indicated that the session should be canceled.

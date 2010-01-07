@@ -166,13 +166,14 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
             }
         }
 
-        boolean clientLoggedOn       = false;
-        boolean wishesCancelSession  = false;
-        boolean clientWishesToLogout = false;
-        if(    lidRequest.matchUrlArgument( "lid-action", "cancel-session" )
+        boolean clientLoggedOn            = false;
+        boolean clientWishesToLogin       = false;
+        boolean clientWishesCancelSession = false;
+        boolean clientWishesToLogout      = false;
+        if(    lidRequest.matchUrlArgument(    "lid-action", "cancel-session" )
             || lidRequest.matchPostedArgument( "lid-action", "cancel-session" ) )
         {
-            wishesCancelSession = true;
+            clientWishesCancelSession = true;
         }
         if( lidArgumentString != null && lidArgumentString.length() == 0 && sessionClientIdentifier != null ) {
             clientWishesToLogout = true;
@@ -240,6 +241,13 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
                 log.error( ex );
             }
         }
+        if(    lidArgumentString != null
+            && lidArgumentString.length() > 0
+            && ( validCredentialTypes == null   || validCredentialTypes.isEmpty() )
+            && ( invalidCredentialTypes == null || invalidCredentialTypes.isEmpty() ))
+        {
+            clientWishesToLogin = true;
+        }
 
         LidAuthenticationService [] authServices = determineAuthenticationServices( client );
 
@@ -251,7 +259,8 @@ public abstract class AbstractLidClientAuthenticationPipelineStage
                 invalidCredentialTypes,
                 invalidCredentialExceptions,
                 clientLoggedOn,
-                wishesCancelSession,
+                clientWishesToLogin,
+                clientWishesCancelSession,
                 clientWishesToLogout,
                 authServices,
                 siteIdentifier );

@@ -145,6 +145,12 @@ public class DefaultLidSessionManagementStage
 
             lidCookieIdentifierToSet = clientAuthStatus.getClientIdentifier();
 
+        } else if( clientAuthStatus.clientWishesToLogin() ) {
+            // valid user, but no valid session
+            deleteLidCookie     = Boolean.FALSE;
+            deleteSessionCookie = Boolean.TRUE;
+            createNewSession    = Boolean.FALSE;
+
         } else if( clientAuthStatus.clientWishesToCancelSession()) {
 
             deleteLidCookie     = Boolean.FALSE;
