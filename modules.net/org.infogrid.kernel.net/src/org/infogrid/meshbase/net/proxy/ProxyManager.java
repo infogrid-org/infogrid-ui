@@ -88,6 +88,7 @@ public class ProxyManager
         }
         for( Proxy p : temp ) {
             p.die( isPermanent );
+            factoryCreatedObjectUpdated( p );
             if( isPermanent ) {
                 remove( p.getPartnerMeshBaseIdentifier() );
             }
