@@ -229,6 +229,25 @@ public abstract class AbstractSaneRequest
     }
 
     /**
+     * Obtain the value of a named argument provided in the URL, or null.
+     * If more than one argument is given by this name,
+     * return the first one.
+     *
+     * @param name the name of the argument
+     * @return the value of the argument with name name
+     */
+    public String getFirstUrlArgument(
+            String name )
+    {
+        String [] almost = getMultivaluedUrlArgument( name );
+        if( almost == null || almost.length == 0 ) {
+            return null;
+        } else {
+            return almost[0];
+        }
+    }
+
+    /**
      * Obtain all arguments of this Request given in the URL.
      *
      * @return a Map of name to value mappings for all arguments

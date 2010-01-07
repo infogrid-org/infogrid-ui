@@ -149,7 +149,18 @@ public interface SaneRequest
      */
     public abstract String getUrlArgument(
             String name );
-    
+
+    /**
+     * Obtain the value of a named argument provided in the URL, or null.
+     * If more than one argument is given by this name,
+     * return the first one.
+     *
+     * @param name the name of the argument
+     * @return the value of the argument with name name
+     */
+    public abstract String getFirstUrlArgument(
+            String name );
+
     /**
      * Obtain all arguments of this Request provided in the URL.
      *

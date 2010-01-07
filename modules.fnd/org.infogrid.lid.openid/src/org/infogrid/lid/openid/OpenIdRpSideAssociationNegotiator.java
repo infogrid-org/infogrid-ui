@@ -203,7 +203,7 @@ public class OpenIdRpSideAssociationNegotiator
         if( errorCode != null || error != null ) {
             throw new FactoryException(
                     this,
-                    new OpenIdAssociationException.ErrorMessage( errorCode, error ));
+                    new OpenIdModeErrorException( errorCode, error ));
         }
         if(    theAssociationType != null
             && !OpenIdRpSideAssociationNegotiationParameters.HMAC_SHA1.equals( theAssociationType )
