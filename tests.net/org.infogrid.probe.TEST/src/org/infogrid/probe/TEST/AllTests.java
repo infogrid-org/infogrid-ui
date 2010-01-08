@@ -144,6 +144,9 @@ public class AllTests
                         YadisTest7.class,
                         AbstractTest.fileSystemFileName( YadisTest7.class, "YadisTest7.xml" ),
                         "2000" ),
+                new TestSpec(
+                        YadisTest8.class,
+                        "0" )
         };
 
         TestSpec [] writableProbeTests = {
