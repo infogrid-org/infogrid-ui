@@ -8,16 +8,16 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.lid;
 
 import javax.servlet.http.HttpServletResponse;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.Identifier;
 import org.infogrid.util.http.OutgoingSaneCookie;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Instructions what to do to manage the client's session.
@@ -95,7 +95,7 @@ public interface LidSessionManagementInstructions
      * @param sessionManager the LidSessionManager to use
      */
     public void applyAsRecommended(
-            SaneServletRequest  request,
+            SaneRequest         request,
             HttpServletResponse response,
             LidSessionManager   sessionManager );
 }

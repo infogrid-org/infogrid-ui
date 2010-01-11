@@ -202,6 +202,10 @@ public class SaneServletRequest
                 String relativeBaseUriAtProxy;
                 String relativeFullUriAtProxy;
                 if( contextPathAtProxy != null ) {
+                    if( contextPathAtProxy.endsWith( "/" )) {
+                        // supposed to be given without slash, but then it not always is, particularly for "/" itself
+                        contextPathAtProxy = contextPathAtProxy.substring( 0, contextPathAtProxy.length()-1 );
+                    }
                     relativeBaseUriAtProxy = contextPathAtProxy + relativeBaseUri.substring( contextPath.length() );
                     relativeFullUriAtProxy = contextPathAtProxy + relativeFullUri.substring( contextPath.length() );
                 } else {

@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.lid.credential.LidCredentialType;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
@@ -27,6 +26,7 @@ import org.infogrid.util.Identifier;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.OutgoingSaneCookie;
 import org.infogrid.util.http.OutgoingSimpleSaneCookie;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -278,7 +278,7 @@ public class SimpleLidSessionManagementInstructions
      * @param sessionManager the LidSessionManager to use
      */
     public void applyAsRecommended(
-            SaneServletRequest  request,
+            SaneRequest         request,
             HttpServletResponse response,
             LidSessionManager   sessionManager )
     {
@@ -325,20 +325,22 @@ public class SimpleLidSessionManagementInstructions
         }
         if( theCookiesToSet != null ) {
             for( OutgoingSimpleSaneCookie current : theCookiesToSet ) {
-                Cookie toAdd = new Cookie( HTTP.encodeCookieName( current.getName()), current.getValue() );
-                if( current.getDomain() != null ) {
-                    toAdd.setDomain( current.getDomain() );
-                }
-                if( current.getPath() != null ) {
-                    toAdd.setPath( current.getPath() );
-                }
-                if( current.getExpires() != null ) {
-                    long ageInMillis = current.getExpires().getTime() - System.currentTimeMillis();
-                    toAdd.setMaxAge( (int)( ageInMillis/1000L ) );
-                }
-                toAdd.setSecure( current.getSecure() );
+                // if we set a JEE cookie, funny string escape problems occur. For example, if the cookie
+                // value is not quoted and contains a :, Java thinks it is a HTTP header separator and
+                // ignores the rest of the value. If it is quoted, something in the output logic double-quotes
+                // the trailing quote, but not the leading quote. So we do it ourselves.
 
-                response.addCookie( toAdd );
+                String headerLine = current.getAsHttpValue();
+                int    colon      = headerLine.indexOf( ":" );
+
+                if( colon > 0 ) {
+                    String name  = headerLine.substring( 0, colon ).trim();
+                    String value = headerLine.substring( colon+1 ).trim();
+
+                    response.addHeader( name, value );
+                } else {
+                    log.error( "No colon found in ", headerLine );
+                }
             }
         }
     }

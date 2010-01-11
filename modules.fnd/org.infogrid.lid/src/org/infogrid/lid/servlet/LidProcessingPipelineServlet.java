@@ -67,24 +67,25 @@ public class LidProcessingPipelineServlet
             ServletException,
             IOException
     {
-        InfoGridWebApp     app         = InfoGridWebApp.getSingleton();
-        Context            appContext  = app.getApplicationContext();
-        HttpServletRequest realRequest = (HttpServletRequest) request;
-        SaneServletRequest lidRequest  = SaneServletRequest.create( realRequest );
+        InfoGridWebApp     app             = InfoGridWebApp.getSingleton();
+        Context            appContext      = app.getApplicationContext();
+        HttpServletRequest realRequest     = (HttpServletRequest) request;
+        SaneServletRequest lidRequest      = SaneServletRequest.create( realRequest );
+        SaneRequest        originalRequest = lidRequest.getOriginalSaneRequest();
         StructuredResponse lidResponse = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
         LidProcessingPipeline pipe = obtainLidProcessingPipeline( appContext );
 
-        String site  = lidRequest.getAbsoluteContextUri();
+        String site  = originalRequest.getAbsoluteContextUri();
         String realm = site;
 
         try {
-            pipe.processPipeline( lidRequest, lidResponse, SimpleStringIdentifier.create( site ), realm );
+            pipe.processPipeline( originalRequest, lidResponse, SimpleStringIdentifier.create( site ), realm );
 
-            invokeServlet( lidRequest, lidResponse );
+            invokeServlet( originalRequest, lidResponse );
 
         } catch( Throwable ex ) {
-            handleException( lidRequest, lidResponse, ex );
+            handleException( originalRequest, lidResponse, ex );
         }
     }
     
@@ -112,7 +113,7 @@ public class LidProcessingPipelineServlet
      * @throws IOException thrown if an I/O error occurred
      */
     protected void invokeServlet(
-            SaneServletRequest lidRequest,
+            SaneRequest        lidRequest,
             StructuredResponse lidResponse )
         throws
             ServletException,

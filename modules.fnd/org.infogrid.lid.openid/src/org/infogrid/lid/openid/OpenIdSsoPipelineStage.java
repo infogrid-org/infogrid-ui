@@ -229,7 +229,7 @@ public class OpenIdSsoPipelineStage
 
         if( redirect.length() > 0 ) {
             String redirectUrl = HTTP.appendArgumentPairToUrl( return_to, redirect.toString().substring( 1 ));
-        
+
             TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
             section.setLocation( redirectUrl );
             section.setHttpResponseCode( 302 );

@@ -78,19 +78,6 @@ public class LidAbortProcessingPipelineException
         this( source, null, null, cause );
     }
 
-//    /**
-//     * Constructor.
-//     *
-//     * @param source the LidProcessingPipelineStage that threw this exception
-//     * @param dispatcherToRun the RequestDispatcher to run as a result of this Exception, if any
-//     */
-//    public LidAbortProcessingPipelineException(
-//            LidProcessingPipelineStage source,
-//            RequestDispatcher          dispatcherToRun )
-//    {
-//        this( source, dispatcherToRun, null );
-//    }
-
     /**
      * Constructor.
      *
