@@ -83,4 +83,37 @@ public class MeshOpenId2CredentialType
         }
         return ArrayHelper.copyIntoNewArray( almost, String.class );
     }
+
+    /**
+     * Determine equality.
+     *
+     * @param other the objects to compare against
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( other instanceof MeshOpenId2CredentialType ) {
+            MeshOpenId2CredentialType realOther = (MeshOpenId2CredentialType) other;
+
+            if( !theAssociationManager.equals( realOther.theAssociationManager )) {
+                return false;
+            }
+
+            return theNonceManager.equals( realOther.theNonceManager );
+        }
+        return false;
+    }
+
+    /**
+     * Hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        return theAssociationManager.hashCode() ^ theNonceManager.hashCode();
+    }
 }

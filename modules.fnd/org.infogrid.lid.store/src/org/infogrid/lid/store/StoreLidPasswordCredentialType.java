@@ -69,15 +69,43 @@ public class StoreLidPasswordCredentialType
         StoreLidLocalPersona realSubject            = (StoreLidLocalPersona) subject;
         String               storedHashedCredential = realSubject.getCredentialFor( this );
 
+        if( storedHashedCredential == null ) {
+            throw new LidInvalidCredentialException( subject.getIdentifier(), this );
+        }
         byte [] rawHashedCredential = HashedPasswordUtils.string2raw( storedHashedCredential );
 
         String givenPassword = request.getPostedArgument( "lid-credential" );
 
         if( !HashedPasswordUtils.isValid( givenPassword, rawHashedCredential )) {
-            throw new LidInvalidCredentialException(
-                    subject.getIdentifier(),
-                    this );
+            throw new LidInvalidCredentialException( subject.getIdentifier(), this );
         }
         // else return without further complications
+    }
+
+    /**
+     * Determine equality.
+     *
+     * @param other the objects to compare against
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( other instanceof StoreLidPasswordCredentialType ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        return getClass().hashCode();
     }
 }

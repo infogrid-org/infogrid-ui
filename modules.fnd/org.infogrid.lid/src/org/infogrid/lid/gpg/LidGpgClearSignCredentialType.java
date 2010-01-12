@@ -143,6 +143,43 @@ public class LidGpgClearSignCredentialType
     }
 
     /**
+     * Determine equality.
+     *
+     * @param other the objects to compare against
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( other instanceof LidGpgClearSignCredentialType ) {
+            LidGpgClearSignCredentialType realOther = (LidGpgClearSignCredentialType) other;
+
+            if( !theGpg.equals( realOther.theGpg )) {
+                return false;
+            }
+
+            if( !theGpgPublicKeyManager.equals( realOther.theGpgPublicKeyManager )) {
+                return false;
+            }
+
+            return theNonceManager.equals( realOther.theNonceManager );
+        }
+        return false;
+    }
+
+    /**
+     * Hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        return theGpg.hashCode() ^ theGpgPublicKeyManager.hashCode() ^ theNonceManager.hashCode();
+    }
+
+    /**
      * The LidGpg to use.
      */
     protected LidGpg theGpg;

@@ -157,16 +157,21 @@ public abstract class TranslatingLidLocalPersonaManager
      * 
      * @param persona input parameter
      * @return translated LidLocalPersona
+     * @throws LidLocalPersonaUnknownException thrown if the Persona is unknown
+     * @throws InvalidIdentifierException thrown if the identifier is invalid
      */
     protected LidLocalPersona translatePersonaForward(
             LidLocalPersona persona )
+        throws
+            LidLocalPersonaUnknownException,
+            InvalidIdentifierException
     {
         if( persona == null ) {
             return null;
         }
         Identifier delegateIdentifier = translateIdentifierForward( persona.getIdentifier() );
         
-        LidLocalPersona ret = new TranslatingLidLocalPersona( delegateIdentifier, persona );
+        LidLocalPersona ret = theDelegate.find( delegateIdentifier );
 
         return ret;
     }

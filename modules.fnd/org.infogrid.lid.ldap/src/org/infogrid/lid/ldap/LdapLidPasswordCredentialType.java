@@ -104,6 +104,39 @@ public class LdapLidPasswordCredentialType
     }
 
     /**
+     * Determine equality.
+     *
+     * @param other the objects to compare against
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( other instanceof LdapLidPasswordCredentialType ) {
+            LdapLidPasswordCredentialType realOther = (LdapLidPasswordCredentialType) other;
+
+            if( !thePasswordDirProps.equals( realOther.thePasswordDirProps )) {
+                return false;
+            }
+
+            return theIdentifierSuffix.equals( realOther.theIdentifierSuffix );
+        }
+        return false;
+    }
+
+    /**
+     * Hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        return thePasswordDirProps.hashCode() ^ theIdentifierSuffix.hashCode();
+    }
+
+    /**
      * The Properties to use when attempting to check a password.
      */
     protected Properties thePasswordDirProps;

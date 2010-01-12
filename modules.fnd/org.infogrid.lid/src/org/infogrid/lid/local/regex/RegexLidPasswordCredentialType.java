@@ -87,6 +87,35 @@ public class RegexLidPasswordCredentialType
     }
 
     /**
+     * Determine equality.
+     *
+     * @param other the objects to compare against
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(
+            Object other )
+    {
+        if( other instanceof RegexLidPasswordCredentialType ) {
+            RegexLidPasswordCredentialType realOther = (RegexLidPasswordCredentialType) other;
+
+            return thePasswordRegex.equals( realOther.thePasswordRegex );
+        }
+        return false;
+    }
+
+    /**
+     * Hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode()
+    {
+        return thePasswordRegex.hashCode();
+    }
+
+    /**
      * The password regular expression.
      */
     protected Pattern thePasswordRegex;
