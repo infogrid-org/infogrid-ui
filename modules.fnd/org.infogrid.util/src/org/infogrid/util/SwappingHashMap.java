@@ -183,6 +183,7 @@ public abstract class SwappingHashMap<K,V>
             Object key )
     {
         cleanup();
+        @SuppressWarnings("element-type-mismatch")
         Reference<V> found = theDelegate.get( key );
         V ret = found != null ? found.get() : null;
         
