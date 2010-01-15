@@ -1,0 +1,3 @@
+org.infogrid.probe.test
+org.infogrid.probe.store.test
+org.infogrid.probe.test.active [no-run]
