@@ -111,15 +111,17 @@ public class VerbatimStructuredResponseTemplate
         JeeFormatter theFormatter = getContext().findContextObjectOrThrow( JeeFormatter.class );
         
         List<Throwable> reportedProblems = structured.problems();
-        try {
-            String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, StringRepresentationDirectory.TEXT_PLAIN_NAME, false );
-            if( errorContent != null ) {
-                Writer w = delegate.getWriter();
-                w.write( errorContent );
-                w.flush();
+        if( reportedProblems != null && !reportedProblems.isEmpty() ) {
+            try {
+                String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, StringRepresentationDirectory.TEXT_PLAIN_NAME, false );
+                if( errorContent != null ) {
+                    Writer w = delegate.getWriter();
+                    w.write( errorContent );
+                    w.flush();
+                }
+            } catch( StringifierException ex ) {
+                log.error( ex );
             }
-        } catch( StringifierException ex ) {
-            log.error( ex );
         }
 
         String textContent = structured.getDefaultTextSection().getContent();

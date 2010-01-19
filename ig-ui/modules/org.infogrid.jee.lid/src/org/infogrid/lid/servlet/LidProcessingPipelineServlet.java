@@ -23,11 +23,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.servlet.AbstractServletInvokingServlet;
+import org.infogrid.jee.templates.NoContentStructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.TextStructuredResponseSection;
+import org.infogrid.jee.templates.VerbatimStructuredResponseTemplate;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
 import org.infogrid.lid.DefaultLidProcessingPipeline;
 import org.infogrid.lid.LidAbortProcessingPipelineException;
+import org.infogrid.lid.LidAbortProcessingPipelineWithContentException;
+import org.infogrid.lid.LidAbortProcessingPipelineWithErrorException;
+import org.infogrid.lid.LidAbortProcessingPipelineWithRedirectException;
 import org.infogrid.lid.LidProcessingPipeline;
+import org.infogrid.lid.yadis.YadisPipelineProcessingStage;
 import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
@@ -80,7 +87,7 @@ public class LidProcessingPipelineServlet
         String realm = site;
 
         try {
-            pipe.processPipeline( originalRequest, lidResponse, SimpleStringIdentifier.create( site ), realm );
+            pipe.processPipeline( originalRequest, SimpleStringIdentifier.create( site ), realm );
 
             invokeServlet( originalRequest, lidResponse );
 
@@ -126,6 +133,12 @@ public class LidProcessingPipelineServlet
                     dispatcher,
                     lidRequest,
                     lidResponse );
+
+            String yadisHeader = (String) lidRequest.getAttribute( YadisPipelineProcessingStage.YADIS_HTTP_HEADER_REQUEST_ATTRIBUTE_NAME );
+            if( yadisHeader != null ) {
+                lidResponse.addHeader( YadisPipelineProcessingStage.YADIS_HTTP_HEADER, yadisHeader );
+            }
+
         } else {
             log.error( "Could not find RequestDispatcher (servlet) with name " + theServletName );
         }
@@ -143,7 +156,37 @@ public class LidProcessingPipelineServlet
             StructuredResponse lidResponse,
             Throwable          t )
     {
-        if( t instanceof LidAbortProcessingPipelineException ) {
+        if( t instanceof LidAbortProcessingPipelineWithContentException ) {
+
+            LidAbortProcessingPipelineWithContentException realT = (LidAbortProcessingPipelineWithContentException) t;
+
+            TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
+            section.setHttpResponseCode( 200 );
+            section.setContent(  realT.getContent()     );
+            section.setMimeType( realT.getContentType() );
+
+            lidResponse.setRequestedTemplateName( VerbatimStructuredResponseTemplate.VERBATIM_TEXT_TEMPLATE_NAME );
+
+        } else if( t instanceof LidAbortProcessingPipelineWithRedirectException ) {
+
+            LidAbortProcessingPipelineWithRedirectException realT = (LidAbortProcessingPipelineWithRedirectException) t;
+
+            TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
+            section.setHttpResponseCode( realT.getStatus() );
+            section.setLocation(         realT.getLocation() );
+
+            lidResponse.setRequestedTemplateName( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME );
+
+        } else if( t instanceof LidAbortProcessingPipelineWithErrorException ) {
+
+            LidAbortProcessingPipelineWithErrorException realT = (LidAbortProcessingPipelineWithErrorException) t;
+
+            TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
+            section.setHttpResponseCode( realT.getStatus() );
+
+            lidResponse.setRequestedTemplateName( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME );
+
+        } else if( t instanceof LidAbortProcessingPipelineException ) {
             // do nothing, this is fine
         } else {
             log.error( t );
