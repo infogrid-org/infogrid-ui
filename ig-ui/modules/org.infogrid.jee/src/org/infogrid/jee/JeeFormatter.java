@@ -562,7 +562,7 @@ public class JeeFormatter
 
         char content[] = new char[ value.length() ];
         value.getChars( 0, value.length(), content, 0 );
-        StringBuffer ret = new StringBuffer( content.length + content.length/5 + 5 );
+        StringBuilder ret = new StringBuilder( content.length + content.length/5 + 5 );
 
         for( int i=0 ; i<content.length ; ++i ) {
             switch( content[i] ) {
@@ -603,7 +603,7 @@ public class JeeFormatter
 
         char content[] = new char[ value.length() ];
         value.getChars( 0, value.length(), content, 0 );
-        StringBuffer ret = new StringBuffer( content.length + content.length/5 + 5 );
+        StringBuilder ret = new StringBuilder( content.length + content.length/5 + 5 );
 
         for( int i=0 ; i<content.length ; ++i ) {
             switch( content[i] ) {
