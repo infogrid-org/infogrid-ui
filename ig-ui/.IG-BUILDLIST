@@ -1,4 +1,3 @@
 modules [no-run]
-# apps [no-run]
-testapps [no-run]
-tests
+testapps [no-run][no-dist]
+tests [no-dist]
