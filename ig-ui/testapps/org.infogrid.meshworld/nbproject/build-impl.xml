@@ -435,9 +435,6 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_model_Tagging}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
-        <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="jar">
-            <property name="deploy.on.save" value="false"/>
-        </ant>
         <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -516,9 +513,6 @@ exists or setup the property manually. For example like this:
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_model_Tagging}/build.xml" inheritall="false" target="jar">
-            <property name="deploy.on.save" value="false"/>
-        </ant>
-        <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="jar">
@@ -711,7 +705,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_model_Tagging.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Wiki.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${reference.org_infogrid_modelbase_m.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_module.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_module_servlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
@@ -743,7 +736,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_model_Tagging.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Wiki.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${reference.org_infogrid_modelbase_m.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_module.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_module_servlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -1069,7 +1061,6 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Common}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Tagging}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_modelbase_m}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Viewlet}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Wiki}/build.xml" inheritall="false" target="clean"/>

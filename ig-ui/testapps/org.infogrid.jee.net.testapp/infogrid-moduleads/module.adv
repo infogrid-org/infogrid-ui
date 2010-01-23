@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -26,7 +26,6 @@
 
   <requires name="org.infogrid.util.logging.log4j"/>
   <requires name="org.infogrid.comm.pingpong"/>
-  <requires name="org.infogrid.modelbase.m"/>
   <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.model.Viewlet"/>
   <requires name="org.infogrid.model.Probe"/>
