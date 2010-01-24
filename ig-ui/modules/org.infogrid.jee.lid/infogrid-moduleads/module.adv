@@ -25,6 +25,5 @@
   <requires name="org.infogrid.lid"/>
   <requires name="org.infogrid.lid.openid"/>
   <requires name="org.infogrid.util"/>
-  <requires name="org.infogrid.viewlet"/>
  </dependencies>
 </standardmodule>
