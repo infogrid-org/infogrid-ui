@@ -12,7 +12,7 @@ div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
     -moz-opacity: 0.9;
 }
 div.org-infogrid-jee-taglib-candy-OverlayTag {
-    z-index: 11;
+    z-index: 101;
     position: absolute;
     top: 50px;
     right: 100px;
