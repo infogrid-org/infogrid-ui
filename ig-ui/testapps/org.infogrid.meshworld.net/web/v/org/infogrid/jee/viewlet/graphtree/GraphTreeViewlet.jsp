@@ -11,7 +11,7 @@
 
  <div class="content">
   <div class="org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content">
-   <iframe name="detail" width="100%" height="100%"></iframe>
+   <iframe name="detail"></iframe>
   </div>
   <div class="org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar">
    <dl class="level1">
