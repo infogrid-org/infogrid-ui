@@ -8,12 +8,13 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.viewlet.probe.shadow;
 
+import java.text.ParseException;
 import javax.servlet.ServletException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.meshbase.AllMeshBasesViewlet;
@@ -29,7 +30,6 @@ import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
@@ -140,8 +140,6 @@ public class ShadowAwareAllMeshBasesViewlet
             return; // silently fail
         }
 
-//        InfoGridWebApp app = InfoGridWebApp.getSingleton();
-//        Context        c   = app.getApplicationContext();
         Context c = getContext();
 
         NetMeshBase           mainMeshBase       = c.findContextObjectOrThrow( NetMeshBase.class );
@@ -150,7 +148,7 @@ public class ShadowAwareAllMeshBasesViewlet
         try {
             meshBaseIdentifier = mainMeshBase.getMeshBaseIdentifierFactory().fromExternalForm( meshBaseName );
 
-        } catch( StringRepresentationParseException ex ) {
+        } catch( ParseException ex ) {
             log.warn( ex );
             return; // silently fail
         }

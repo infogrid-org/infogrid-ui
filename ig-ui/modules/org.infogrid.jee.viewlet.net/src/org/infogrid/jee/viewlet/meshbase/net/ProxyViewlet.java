@@ -8,13 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.viewlet.meshbase.net;
 
 import java.io.IOException;
+import java.text.ParseException;
 import javax.servlet.ServletException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
@@ -25,7 +26,6 @@ import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.rest.RestfulRequest;
 import org.infogrid.rest.net.NetRestfulRequest;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.DefaultViewedMeshObjects;
@@ -123,7 +123,7 @@ public class ProxyViewlet
             throw new ServletException( ex );
         } catch( NotPermittedException ex ) {
             throw new ServletException( ex );
-        } catch( StringRepresentationParseException ex ) {
+        } catch( ParseException ex ) {
             throw new ServletException( ex );
         }
         

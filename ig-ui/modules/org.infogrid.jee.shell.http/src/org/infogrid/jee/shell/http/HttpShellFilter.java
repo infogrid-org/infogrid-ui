@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.shell.http;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,6 @@ import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationDirectory;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * <p>Recognizes <code>MeshObject</code> change-related requests as part of the incoming HTTP
@@ -374,7 +374,7 @@ public class HttpShellFilter
                 }
             }
 
-        } catch( StringRepresentationParseException ex ) {
+        } catch( ParseException ex ) {
             throw new HttpShellException( ex );
 
         } catch( MeshObjectAccessException ex ) {
@@ -448,14 +448,14 @@ public class HttpShellFilter
      * @param varName the variable name of the to-be-accessed object in the request
      * @param request the request
      * @return the MeshBase
-     * @throws StringRepresentationParseException thrown if the name of the MeshBase could not be parsed
+     * @throws ParseException thrown if the name of the MeshBase could not be parsed
      */
     @SuppressWarnings("unchecked")
     protected MeshBase findMeshBaseFor(
             String      varName,
             SaneRequest request )
         throws
-            StringRepresentationParseException
+            ParseException
     {
         ensureInitialized();
 
@@ -487,13 +487,13 @@ public class HttpShellFilter
      * @param idFact the MeshObjectIdentifierFactory
      * @param raw the String
      * @return the parsed MeshObjectIdentifier
-     * @throws StringRepresentationParseException thrown if the MeshObjectIdentifier could not be parsed
+     * @throws ParseException thrown if the MeshObjectIdentifier could not be parsed
      */
     protected MeshObjectIdentifier parseMeshObjectIdentifier(
             MeshObjectIdentifierFactory idFact,
             String                      raw )
         throws
-            StringRepresentationParseException
+            ParseException
     {
         ensureInitialized();
 

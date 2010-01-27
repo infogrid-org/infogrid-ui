@@ -8,13 +8,14 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.rest.defaultapp;
 
 import java.io.IOException;
+import java.text.ParseException;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -30,7 +31,6 @@ import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.StringRepresentationContext;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are REST-ful.
@@ -143,7 +143,7 @@ public abstract class AbstractRestfulAppInitializationFilter
             }
             return mbId;
 
-        } catch( StringRepresentationParseException ex ) {
+        } catch( ParseException ex ) {
             throw new RuntimeException( ex );
         }
     }

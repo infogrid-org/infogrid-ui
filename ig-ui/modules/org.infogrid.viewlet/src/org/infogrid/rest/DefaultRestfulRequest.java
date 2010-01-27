@@ -8,12 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.rest;
 
+import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.mesh.NotPermittedException;
@@ -23,11 +24,11 @@ import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
+import org.infogrid.util.UnknownSymbolParseException;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Default implementation of RestfulRequest.
@@ -106,13 +107,13 @@ public class DefaultRestfulRequest
      * 
      * @throws MeshObjectAccessException thrown if the requested MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller did not have the permission to perform this operation
-     * @throws StringRepresentationParseException thrown if the request URI could not be parsed
+     * @throws ParseException thrown if the request URI could not be parsed
      */
     protected void calculate()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                StringRepresentationParseException
+                ParseException
     {
         String relativeBaseUrl = theSaneRequest.getRelativeBaseUri();
         if( relativeBaseUrl.startsWith( theContextPath )) {
@@ -145,7 +146,7 @@ public class DefaultRestfulRequest
             MeshBase mb = theMeshBaseNameServer.get( theRequestedMeshBaseIdentifier );
 
             if( mb == null ) {
-                throw new StringRepresentationParseException( meshBaseIdentifierString, null, null );
+                throw new UnknownSymbolParseException( theSaneRequest.getAbsoluteFullUri(), -1, meshBaseIdentifierString );
             }
 
             theRequestedMeshObjectIdentifier = mb.getMeshObjectIdentifierFactory().fromExternalForm( meshObjectIdentifierString );

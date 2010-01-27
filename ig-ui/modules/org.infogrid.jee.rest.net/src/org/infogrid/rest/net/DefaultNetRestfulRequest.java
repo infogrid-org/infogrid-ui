@@ -8,12 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.rest.net;
 
+import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.mesh.NotPermittedException;
@@ -106,13 +107,13 @@ public class DefaultNetRestfulRequest
      * 
      * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
-     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
+     * @throws ParseException thrown if a parsing error occurred
      */
     protected void calculate()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                StringRepresentationParseException
+                ParseException
     {
         String relativeBaseUrl = theSaneRequest.getRelativeBaseUri();
         if( relativeBaseUrl.startsWith( theContextPath )) {
@@ -170,13 +171,13 @@ public class DefaultNetRestfulRequest
      * @return the NetMeshBaseIdentifier
      * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
-     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
+     * @throws ParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
      */
     public NetMeshBaseIdentifier determineRequestedProxyIdentifier()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                StringRepresentationParseException
+                ParseException
     {
         if( theRequestedProxyIdentifier == null ) {
             calculate();
@@ -190,13 +191,13 @@ public class DefaultNetRestfulRequest
      * @return the Proxy
      * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
-     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
+     * @throws ParseException thrown if a parsing error occurred
      */
     public Proxy determineRequestedProxy()
             throws
                 MeshObjectAccessException,
                 NotPermittedException,
-                StringRepresentationParseException
+                ParseException
     {
         if( theRequestedProxy == null ) {
             calculate();

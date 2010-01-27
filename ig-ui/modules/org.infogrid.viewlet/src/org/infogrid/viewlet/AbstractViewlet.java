@@ -8,12 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.viewlet;
 
+import java.text.ParseException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -23,7 +24,6 @@ import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Factors out commonly used functionality for Viewlets.
@@ -146,14 +146,14 @@ public abstract class AbstractViewlet
      *
      * @param identifier the MeshObjectIdentifier in String form
      * @return the found MeshObject, or null if not found
-     * @throws StringRepresentationParseException the String was malformed
+     * @throws ParseException the String was malformed
      * @throws MeshObjectAccessException accessing the MeshObject failed
      * @throws NotPermittedException the caller does not have sufficient permissions to access the MeshObject
      */
     protected MeshObject resolveMeshObject(
             String identifier )
         throws
-            StringRepresentationParseException,
+            ParseException,
             MeshObjectAccessException,
             NotPermittedException
     {

@@ -8,18 +8,18 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.rest.net;
 
+import java.text.ParseException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.rest.RestfulRequest;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Encapsulates parameter parsing according to InfoGrid REST conventions.
@@ -35,13 +35,13 @@ public interface NetRestfulRequest
      * @return the NetMeshBaseIdentifier
      * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
-     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
+     * @throws ParseException thrown if a parsing error occurred
      */
     public NetMeshBaseIdentifier determineRequestedProxyIdentifier()
         throws
             MeshObjectAccessException,
             NotPermittedException,
-            StringRepresentationParseException;
+            ParseException;
     
     /**
      * Determine the requested Proxy, if any.
@@ -49,11 +49,11 @@ public interface NetRestfulRequest
      * @return the Proxy
      * @throws MeshObjectAccessException thrown if a MeshObject could not be accessed
      * @throws NotPermittedException thrown if the caller was not permitted to perform this operation
-     * @throws StringRepresentationParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
+     * @throws ParseException thrown if the MeshBaseIdentifier passed into the constructor could not be parsed
      */
     public Proxy determineRequestedProxy()
         throws
             MeshObjectAccessException,
             NotPermittedException,
-            StringRepresentationParseException;
+            ParseException;
 }

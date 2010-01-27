@@ -8,12 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.viewlet.servlet.net;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import org.infogrid.rest.net.DefaultNetRestfulRequest;
@@ -30,7 +31,6 @@ import org.infogrid.model.traversal.TraversalDictionary;
 import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Extends ViewletDispatcherServlet to also be able to render Shadows and Proxies.
@@ -76,7 +76,7 @@ public class NetViewletDispatcherServlet
      * @param traversalDict the TraversalDictionary to use
      * @return the created Map, or null
      * @throws MeshObjectAccessException thrown if one or more MeshObjects could not be accessed
-     * @throws StringRepresentationParseException thrown if a URI parsing error occurred
+     * @throws ParseException thrown if a parsing problem occurred
      * @throws NotPermittedException thrown if an attempted operation was not permitted
      */
     @Override
@@ -85,7 +85,7 @@ public class NetViewletDispatcherServlet
             TraversalDictionary  traversalDict )
         throws
             MeshObjectAccessException,
-            StringRepresentationParseException,
+            ParseException,
             NotPermittedException
     {
         Map<String,Object[]> viewletPars = super.determineViewletParameters( restful, traversalDict );

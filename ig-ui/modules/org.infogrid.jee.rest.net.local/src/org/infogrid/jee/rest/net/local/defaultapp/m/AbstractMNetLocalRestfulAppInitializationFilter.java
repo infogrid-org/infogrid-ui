@@ -8,12 +8,13 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.rest.net.local.defaultapp.m;
 
+import java.text.ParseException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import javax.servlet.ServletException;
@@ -45,7 +46,6 @@ import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * Common functionality of application initialization filters that are net-enabled and REST-ful.
@@ -175,12 +175,12 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
      *
      * @param meshBaseIdentifierFactory the NetMeshBaseIdentifierFactory to us
      * @return the created and populated ProbeDirectory
-     * @throws StringRepresentationParseException thrown if an identifier could not be parsed
+     * @throws ParseException thrown if an identifier could not be parsed
      */
     protected ProbeDirectory createAndPopulateProbeDirectory(
             NetMeshBaseIdentifierFactory meshBaseIdentifierFactory )
         throws
-            StringRepresentationParseException
+            ParseException
     {
         ProbeDirectory ret = MProbeDirectory.create();
         return ret;

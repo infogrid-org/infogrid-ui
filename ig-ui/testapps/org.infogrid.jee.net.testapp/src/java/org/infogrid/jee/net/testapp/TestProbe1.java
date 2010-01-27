@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.net.testapp;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -35,7 +36,6 @@ import org.infogrid.probe.ApiProbe;
 import org.infogrid.probe.ProbeException;
 import org.infogrid.probe.StagingMeshBase;
 import org.infogrid.probe.StagingMeshBaseLifecycleManager;
-import org.infogrid.util.text.StringRepresentationParseException;
 
 /**
  * A Probe for testing purposes.
@@ -64,12 +64,12 @@ public class TestProbe1
             RoleTypeBlessedAlreadyException,
             TransactionException,
             URISyntaxException,
-            StringRepresentationParseException
+            ParseException
     {
         StagingMeshBaseLifecycleManager life = freshMeshBase.getMeshBaseLifecycleManager();
         
-        NetMeshObject xxx = life.createMeshObject( freshMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( "#xxx" ));
+        NetMeshObject xxxx = life.createMeshObject( freshMeshBase.getMeshObjectIdentifierFactory().fromExternalForm( "#xxxx" ));
         
-        xxx.relate( freshMeshBase.getHomeObject() );
+        xxxx.relate( freshMeshBase.getHomeObject() );
     }
 }

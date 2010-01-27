@@ -8,13 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.rest;
 
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -50,7 +51,6 @@ import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationParameters;
-import org.infogrid.util.text.StringRepresentationParseException;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -627,14 +627,14 @@ public class RestfulJeeFormatter
      * @param representation the StringRepresentation of the to-be-parsed String
      * @param s the String
      * @return the MeshObjectIdentifier
-     * @throws StringRepresentationParseException thrown if a syntax error occurred
+     * @throws ParseException thrown if a syntax error occurred
      */
     public MeshObjectIdentifier fromMeshObjectIdentifier(
             MeshObjectIdentifierFactory factory,
             StringRepresentation        representation,
             String                      s )
         throws
-            StringRepresentationParseException
+            ParseException
     {
         if( s == null ) {
             return null;
