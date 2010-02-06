@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -39,6 +39,8 @@ public class StructuredResponse
             HasHeaderPreferences,
             CanBeDumped
 {
+    private static final Log log = Log.getLogInstance( StructuredResponse.class ); // our own, private logger
+
     /**
      * Factory method.
      *
@@ -373,12 +375,15 @@ public class StructuredResponse
     public void reportProblem(
             Throwable t )
     {
+        if( log.isDebugEnabled() ) { 
+            log.debug( "Reporting problem: ", t );
+        }
         if( theCurrentProblems.size() <= theMaxProblems ) {
             // make sure we aren't growing this indefinitely
             theCurrentProblems.add( t );
 
         } else {
-            Log.getLogInstance( StructuredResponse.class ).error( "Too many problems. Ignored ", t ); // late initialization
+            log.error( "Too many problems. Ignored ", t ); // late initialization
         }
     }
 
