@@ -386,7 +386,7 @@ public class SaneServletRequest
             String key   = HTTP.decodeUrlArgument( keyValue[0] );
             String value = HTTP.decodeUrlArgument( keyValue.length == 2 ? keyValue[1] : "" ); // reasonable default?
 
-            if( !"lid-submit".equalsIgnoreCase( key )) {
+            if( !LID_SUBMIT_PARAMETER_NAME.equalsIgnoreCase( key )) {
                 // We need to remove the submit button's contribution
                 
                 String [] haveAlready = arguments.get( key );
@@ -1182,6 +1182,11 @@ public class SaneServletRequest
      * HTTP header name for the context path in a reverse proxy configuration.
      */
     public static final String HTTP_PROXY_FORWARDED_CONTEXT = "X-Forwarded-Context";
+
+    /**
+     * Name of a POSTed parameter that represents the submit button.
+     */
+    public static final String LID_SUBMIT_PARAMETER_NAME = "lid-submit";
 
     /**
      * Bridges the SaneCookie interface into the servlet cookies.
