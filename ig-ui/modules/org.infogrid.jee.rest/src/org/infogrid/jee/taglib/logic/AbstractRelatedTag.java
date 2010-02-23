@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -165,7 +165,7 @@ public abstract class AbstractRelatedTag
             if( theTraversalSpecificationName != null ) {
                 throw new JspException( "Must specify either traversalSpecification or traversalSpecificationName, not both" );
             }
-            spec = findTraversalSpecificationOrThrow( theTraversalSpecification );
+            spec = findTraversalSpecificationOrThrow( start, theTraversalSpecification );
         } else if( theTraversalSpecificationName != null ) {
             spec = (TraversalSpecification) lookupOrThrow( theTraversalSpecificationName );
         } else {

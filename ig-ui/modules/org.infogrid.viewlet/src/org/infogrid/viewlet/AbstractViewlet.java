@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.model.traversal.TraversalSpecification;
@@ -120,13 +121,23 @@ public abstract class AbstractViewlet
     }
 
     /**
+     * Obtain the set of TraversalPaths that the Viewlet currently uses to the Objects, if any.
+     *
+     * @return the TraversalPathSet
+     */
+    public TraversalPathSet getTraversalPathSet()
+    {
+        return theViewedMeshObjects.getTraversalPathSet();
+    }
+
+    /**
      * Obtain the Objects.
      * 
      * @return the set of Objects, which may be empty
      */
-    public MeshObjectSet getObjects()
+    public MeshObjectSet getReachedObjects()
     {
-        return theViewedMeshObjects.getObjects();
+        return theViewedMeshObjects.getReachedObjects();
     }
 
     /**

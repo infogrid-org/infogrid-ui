@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.viewlet;
 
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.traversal.TraversalSpecification;
 
@@ -61,15 +62,17 @@ public class DefaultViewedMeshObjects
      * @param subjectParameters the parameters of the newly selected subject, if any
      * @param viewletParameters the parameters of the Viewlet, if any
      * @param traversal the TraversalSpecification currently in effect on the Viewlet, if any
+     * @param traversalPaths the TraversalPaths to the currently highlighted objects, if any
      */
     @Override
     public void update(
             MeshObject             subject,
             Map<String,Object[]>   subjectParameters,
             Map<String,Object[]>   viewletParameters,
-            TraversalSpecification traversal )
+            TraversalSpecification traversal,
+            TraversalPathSet       traversalPaths )
     {
-        super.update( subject, subjectParameters, viewletParameters, traversal );
+        super.update( subject, subjectParameters, viewletParameters, traversal, traversalPaths );
 
         if( theTraversalSpecification == null ) {
             // insert default

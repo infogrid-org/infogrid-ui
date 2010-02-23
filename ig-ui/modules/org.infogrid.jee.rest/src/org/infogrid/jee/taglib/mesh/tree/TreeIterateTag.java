@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,6 +21,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.logging.Log;
@@ -60,6 +61,7 @@ public class TreeIterateTag
         theTraversals             = null;
         theMeshObjectLoopVar      = null;
         theLevelVar               = null;
+        theTraversalPathLoopVar   = null;
         theState                  = STATE.INIT;
         theCurrentNode            = null;
         if( theStack == null ) {
@@ -165,6 +167,29 @@ public class TreeIterateTag
     }
 
     /**
+     * Obtain value of the traversalPathLoopVar property.
+     *
+     * @return value of the traversalPathLoopVar property
+     * @see #setTraversalPathLoopVar
+     */
+    public final String getTraversalPathLoopVar()
+    {
+        return theTraversalPathLoopVar;
+    }
+
+    /**
+     * Set value of the traversalPathLoopVar property.
+     *
+     * @param newValue new value of the traversalPathLoopVar property
+     * @see #getTraversalPathLoopVar
+     */
+    public final void setTraversalPathLoopVar(
+            String newValue )
+    {
+        theTraversalPathLoopVar = newValue;
+    }
+
+    /**
      * Enable related tags to determine the current level.
      *
      * @return the current level
@@ -193,9 +218,9 @@ public class TreeIterateTag
         }
         try {
             MeshObject start = (MeshObject) lookupOrThrow( theStartObjectName );
-            theTraversals    = findTraversalSpecificationSequenceOrThrow( theTraversalSpecification );
+            theTraversals    = findTraversalSpecificationSequenceOrThrow( start, theTraversalSpecification );
 
-            if( theTraversals.length == 0 ) {
+            if( theTraversals == null || theTraversals.length == 0 ) {
                 return SKIP_BODY;
             }
 
@@ -215,6 +240,10 @@ public class TreeIterateTag
             }
             if( theLevelVar != null ) {
                 pageContext.getRequest().setAttribute( theLevelVar, theStack.size() );
+            }
+            if( theTraversalPathLoopVar != null ) {
+                TraversalPath traversalPath = constructCurrentTraversalPath();
+                pageContext.getRequest().setAttribute( theTraversalPathLoopVar, traversalPath );
             }
             return EVAL_BODY_INCLUDE;
 
@@ -333,6 +362,10 @@ public class TreeIterateTag
             if( theLevelVar != null ) {
                 pageContext.getRequest().setAttribute( theLevelVar, theStack.size() );
             }
+            if( theTraversalPathLoopVar != null ) {
+                TraversalPath traversalPath  = constructCurrentTraversalPath();
+                pageContext.getRequest().setAttribute( theTraversalPathLoopVar, traversalPath );
+            }
 
             return EVAL_BODY_AGAIN;
 
@@ -363,6 +396,12 @@ public class TreeIterateTag
             }
             if( theLevelVar != null ) {
                 pageContext.getRequest().removeAttribute( theLevelVar );
+            }
+            if( theTraversalPathLoopVar != null ) {
+                pageContext.getRequest().removeAttribute( theTraversalPathLoopVar );
+            }
+            if( theTraversalPathLoopVar != null ) {
+                pageContext.getRequest().removeAttribute( theTraversalPathLoopVar );
             }
             return EVAL_PAGE;
 
@@ -411,6 +450,29 @@ public class TreeIterateTag
     public boolean processUpTag()
     {
         return theState == STATE.GO_UP;
+    }
+
+    /**
+     * Construct the current TraversalPath.
+     *
+     * @return the current TraversalPath
+     */
+    protected TraversalPath constructCurrentTraversalPath()
+    {
+        TraversalPath ret = null;
+
+        if( theCurrentNode != null ) {
+            // we don't know whether the current node came from "peekPrevious()" or "peekNext()", so we
+            // deal with it directly and skip that step when walking the stack. It's faster that way anyway.
+            ret = TraversalPath.create( theTraversals[ theStack.size()-1 ], theCurrentNode, ret );
+            for( int i=theStack.size()-2 ; i>=0 ; --i ) {
+                CursorIterator<MeshObject> current = theStack.get( i );
+                if( current.hasPrevious() ) {
+                    ret = TraversalPath.create( theTraversals[i], current.peekPrevious(), ret );
+                }
+            }
+        }
+        return ret;
     }
 
     /**
@@ -466,6 +528,11 @@ public class TreeIterateTag
      * String containing the name of the variable that contains the current depth level in the iteration.
      */
     protected String theLevelVar;
+
+    /**
+     * String containing the name of the variable that contains the current TraversalPath in the iteration.
+     */
+    protected String theTraversalPathLoopVar;
 
     /**
      * Parsed TraversalSpecifications, in sequence.

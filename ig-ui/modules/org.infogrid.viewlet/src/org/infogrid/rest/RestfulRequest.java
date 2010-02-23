@@ -30,23 +30,6 @@ import org.infogrid.util.http.SaneRequestUtils;
 public interface RestfulRequest
 {
     /**
-     * Obtain the context path of the application in the manner JEE does it,
-     * ie as a relative URL.
-     *
-     * @return the context path
-     * @see #getAbsoluteContextPath
-     */
-    public String getContextPath();
-
-    /**
-     * Obtain the fully-qualified context path of the application.
-     * 
-     * @return the context path
-     * @see #getContextPath()
-     */
-    public String getAbsoluteContextPath();
-    
-    /**
      * Obtain the underlying SaneRequest.
      *
      * @return the SaneRequest
@@ -88,18 +71,18 @@ public interface RestfulRequest
                 ParseException;
 
     /**
-     * Determine the requested traversal, if any.
+     * Determine the requested traversal parameters, if any.
      * 
-     * @return the traversal
+     * @return the traversal parameters
      */
-    public String getRequestedTraversal();
+    public String [] getRequestedTraversalParameters();
     
     /**
-     * Obtain the name of the requested Viewlet, if any.
+     * Obtain the name of the requested Viewlet type, if any.
      *
-     * @return class name of the requested Viewlet
+     * @return type name of the requested Viewlet
      */
-    public String getRequestedViewletClassName();
+    public String getRequestedViewletTypeName();
     
     /**
      * Obtain the requested MIME type, if any.
@@ -140,9 +123,4 @@ public interface RestfulRequest
      * Name of the LID traversal parameter.
      */
     public static final String LID_TRAVERSAL_PARAMETER_NAME = "lid-traversal";
-    
-    /**
-     * The prefix in the lid-traversal string that indicates an Xpath.
-     */
-    public static final String XPATH_PREFIX = "xpath:";
 }

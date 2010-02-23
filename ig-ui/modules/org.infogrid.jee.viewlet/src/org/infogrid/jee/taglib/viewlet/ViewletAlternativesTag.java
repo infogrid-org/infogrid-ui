@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -30,6 +30,7 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.http.SaneRequestUtils;
 
 /**
  * Allows the user to select an alternate JeeViewlet to display the current subject.
@@ -84,11 +85,20 @@ public class ViewletAlternativesTag
         ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
 
         if( candidates.length > 0 ) {
+
+            Integer nextId = (Integer) lookup( INSTANCE_ID_PAR_NAME );
+            if( nextId == null ) {
+                nextId = 1;
+            }
+
             String nameInCss = getClass().getName().replace( '.', '-' );
-            println( "<div class=\"" + nameInCss + "\" id=\"" + nameInCss + "\">" );
-            print( "<h3><a href=\"javascript:toggle_viewlet_alternatives()\">" );
+            println( "<div class=\"" + nameInCss + "\" id=\"" + nameInCss + nextId + "\">" );
+            print( "<h3><a href=\"javascript:toggle_viewlet_alternatives( '" + nameInCss + nextId + "' )\">" );
             print( theResourceHelper.getResourceString( "Title" ));
             println( "</a></h3>" );
+
+            pageContext.getRequest().setAttribute( INSTANCE_ID_PAR_NAME, nextId + 1 );
+
             println( "<ul>" );
 
             String                 url = restful.getSaneRequest().getAbsoluteFullUri();
@@ -112,17 +122,20 @@ public class ViewletAlternativesTag
             println( "</ul>" );
             println( "</div>" );
 
+            String contextPath = restful.getSaneRequest().getContextPath();
+            String classSlash  = getClass().getName().replace( '.' , '/' );
+
             StringBuilder js = new StringBuilder();
             js.append( "<script src=\"" );
-            js.append( restful.getContextPath() );
+            js.append( contextPath );
             js.append( "/v/" );
-            js.append( getClass().getName().replace( '.' , '/' ));
+            js.append( classSlash );
             js.append( ".js" );
             js.append( "\" type=\"text/javascript\"></script>\n" );
 
             StringBuilder css = new StringBuilder();
             css.append( "<link rel=\"stylesheet\" href=\"" );
-            css.append( restful.getContextPath() );
+            css.append( contextPath );
             css.append( "/v/" );
             css.append( getClass().getName().replace( '.' , '/' ));
             css.append( ".css" );
@@ -140,4 +153,9 @@ public class ViewletAlternativesTag
      * Our ResourceHelper.
      */
     private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( ViewletAlternativesTag.class );
+
+    /**
+     * Identifies the attribute in the request context that counts up instances of this tag per request.
+     */
+    protected static final String INSTANCE_ID_PAR_NAME = SaneRequestUtils.classToAttributeName( ViewletAlternativesTag.class, "instanceid" );
 }

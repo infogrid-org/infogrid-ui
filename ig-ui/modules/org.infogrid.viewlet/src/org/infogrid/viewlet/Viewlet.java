@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.viewlet;
 
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.context.ObjectInContext;
 
@@ -79,11 +80,18 @@ public interface Viewlet
     public MeshObject getSubject();
 
     /**
-     * Obtain the TraversalSpecification that the Viewlet currently uses.
+     * Obtain the TraversalSpecification that the Viewlet currently uses, if any.
      * 
      * @return the TraversalSpecification that the Viewlet currently uses
      */
     public TraversalSpecification getTraversalSpecification();
+
+    /**
+     * Obtain the set of TraversalPaths that the Viewlet currently uses to the Objects, if any.
+     *
+     * @return the TraversalPathSet
+     */
+    public TraversalPathSet getTraversalPathSet();
 
     /**
      * Obtain the Objects, i.e. the MeshObjects reached by traversing from the
@@ -91,7 +99,7 @@ public interface Viewlet
      * 
      * @return the Objects
      */
-    public MeshObjectSet getObjects();
+    public MeshObjectSet getReachedObjects();
 
     /**
       * Obtain the MeshObjects that this Viewlet is currently viewing, plus

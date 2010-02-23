@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,6 +17,7 @@ package org.infogrid.viewlet;
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.NotSingleMemberException;
@@ -62,17 +63,26 @@ public abstract class AbstractViewedMeshObjects
      * @param subjectParameters the parameters of the newly selected subject, if any
      * @param viewletParameters the parameters of the Viewlet, if any
      * @param traversal the TraversalSpecification currently in effect on the Viewlet, if any
+     * @param traversalPaths the TraversalPaths to the currently highlighted objects, if any
      */
     public void update(
             MeshObject             subject,
             Map<String,Object[]>   subjectParameters,
             Map<String,Object[]>   viewletParameters,
-            TraversalSpecification traversal )
+            TraversalSpecification traversal,
+            TraversalPathSet       traversalPaths )
     {
         theSubject                = subject;
         theSubjectParameters      = subjectParameters;
         theViewletParameters      = viewletParameters;
         theTraversalSpecification = traversal;
+        theTraversalPaths         = traversalPaths;
+
+        if( theTraversalPaths != null ) {
+            theReachedObjects = theTraversalPaths.getDestinationsAsSet();
+        } else {
+            theReachedObjects = null;
+        }
     }
 
     /**
@@ -86,7 +96,8 @@ public abstract class AbstractViewedMeshObjects
         update( newObjectsToView.getSubject(),
                 newObjectsToView.getSubjectParameters(),
                 newObjectsToView.getViewletParameters(),
-                newObjectsToView.getTraversalSpecification() );
+                newObjectsToView.getTraversalSpecification(),
+                newObjectsToView.getTraversalPaths() );
     }
 
     /**
@@ -239,21 +250,30 @@ public abstract class AbstractViewedMeshObjects
     }
 
     /**
+     * Obtain the set of TraversalPaths that the Viewlet currently uses, if any.
+     *
+     * @return the TraversalPathSet
+     */
+    public TraversalPathSet getTraversalPathSet()
+    {
+        return theTraversalPaths;
+    }
+
+    /**
      * Obtain the Objects, i.e. the MeshObjects reached by traversing from the
      * Subject via the TraversalSpecification.
      * 
      * @return the Objects
      */
-    public final MeshObjectSet getObjects()
+    public final MeshObjectSet getReachedObjects()
     {
-        if( theObjects == null ) {
-            if( theTraversalSpecification != null ) {
-                theObjects = theSubject.traverse( theTraversalSpecification );
-            } else {
-                theObjects = theSubject.traverseToNeighborMeshObjects();
-            }
+        if( theReachedObjects != null ) {
+            return theReachedObjects;
         }
-        return theObjects;
+        if( theTraversalSpecification != null ) {
+            return theSubject.traverse( theTraversalSpecification );
+        }
+        return null;
     }
 
     /**
@@ -278,13 +298,13 @@ public abstract class AbstractViewedMeshObjects
                 new String [] {
                         "subject",
                         "viewlet",
-                        "objects",
+                        "reachedObjects",
                         "meshBase"
                 },
                 new Object [] {
                         theSubject,
                         theViewlet,
-                        theObjects,
+                        theReachedObjects,
                         theMeshBase
         } );
     }
@@ -315,9 +335,14 @@ public abstract class AbstractViewedMeshObjects
     protected TraversalSpecification theTraversalSpecification;
 
     /**
+     * The current set of TraversalPaths.
+     */
+    protected TraversalPathSet theTraversalPaths;
+
+    /**
      * The set of MeshObjects.
      */
-    protected MeshObjectSet theObjects;
+    protected MeshObjectSet theReachedObjects;
 
     /**
      * The MeshBase from which the viewed MeshObjects are taken.

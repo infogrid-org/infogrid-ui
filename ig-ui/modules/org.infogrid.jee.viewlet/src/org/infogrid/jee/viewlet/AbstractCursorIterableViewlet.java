@@ -8,15 +8,17 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.viewlet;
 
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.SubsettingCursorIterator;
+import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
@@ -79,7 +81,12 @@ public abstract class AbstractCursorIterableViewlet
      */
     protected CursorIterator<MeshObject> determineCursorIterator()
     {
-        return getObjects().iterator();
+        MeshObjectSet reached = getReachedObjects();
+        if( reached != null ) {
+            return reached.iterator();
+        } else {
+            return ZeroElementCursorIterator.create();
+        }
     }
 
     /**

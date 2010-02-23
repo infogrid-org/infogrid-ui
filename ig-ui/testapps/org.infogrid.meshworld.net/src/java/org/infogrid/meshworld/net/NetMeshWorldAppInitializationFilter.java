@@ -23,6 +23,8 @@ import org.infogrid.jee.rest.net.local.defaultapp.store.AbstractStoreNetLocalRes
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.defaultapp.AppInitializationException;
+import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.traversal.xpath.XpathTraversalTranslator;
 import org.infogrid.store.m.MStore;
 import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.util.CompoundException;
@@ -129,6 +131,9 @@ public class NetMeshWorldAppInitializationFilter
             Exception
     {
         super.initializeContextObjects( rootContext );
+
+        MeshBase mb = rootContext.findContextObjectOrThrow( MeshBase.class );
+        rootContext.addContextObject( XpathTraversalTranslator.create( mb ));
 
         SimpleContext iframeContext = SimpleContext.create( rootContext, "iframe" ); // making rootContext a parent allows us to delegate automatically if not found locally
         InfoGridWebApp.getSingleton().getContextDirectory().addContext( iframeContext );

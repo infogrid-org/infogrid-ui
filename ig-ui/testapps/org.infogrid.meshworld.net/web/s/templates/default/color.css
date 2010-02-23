@@ -66,6 +66,21 @@ div.viewlet-state {
     border-color: rgb(0,80,144);
 }
 
+dt {
+    border-color: transparent;
+}
+dt.reached {
+    border-color: #c0c0e0;
+}
+dt.selected {
+    background: #8080b0;
+    border-color: #c0c0e0;
+}
+dt.selected,
+dt.selected * {
+    color: white;
+}
+
 div.org-infogrid-jee-taglib-candy-OverlayTag {
     border: 3px solid rgb(0,80,144);
 }

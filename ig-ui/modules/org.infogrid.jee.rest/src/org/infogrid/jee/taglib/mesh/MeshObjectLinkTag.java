@@ -8,17 +8,24 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.model.traversal.TraversalPath;
+import org.infogrid.model.traversal.TraversalTranslator;
+import org.infogrid.model.traversal.TraversalTranslatorException;
+import org.infogrid.rest.RestfulRequest;
+import org.infogrid.util.http.HTTP;
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -30,6 +37,7 @@ public class MeshObjectLinkTag
         AbstractInfoGridBodyTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
+    private static final Log  log              = Log.getLogInstance( MeshObjectLinkTag.class ); // our own, private logger
 
     /**
      * Constructor.
@@ -52,6 +60,7 @@ public class MeshObjectLinkTag
         theTarget               = null;
         theTitle                = null;
         theStringRepresentation = null;
+        theTraversalPathName    = null;
 
         super.initializeToDefaults();
     }
@@ -218,6 +227,29 @@ public class MeshObjectLinkTag
     }
 
     /**
+     * Obtain value of the traversalPathName property.
+     *
+     * @return value of the traversalPathName property
+     * @see #setTraversalPathName
+     */
+    public String getTraversalPathName()
+    {
+        return theTraversalPathName;
+    }
+
+    /**
+     * Set value of the traversalPathName property.
+     *
+     * @param newValue new value of the traversalPathName property
+     * @see #getTraversalPathName
+     */
+    public void setTraversalPathName(
+            String newValue )
+    {
+        theTraversalPathName = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -236,8 +268,10 @@ public class MeshObjectLinkTag
             obj = (MeshObject) lookupOrThrow( theMeshObjectName );
         }
 
+        String addArguments = constructAddArguments();
+
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, theAddArguments, theTarget, theTitle, theStringRepresentation );
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, addArguments, theTarget, theTitle, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -279,6 +313,49 @@ public class MeshObjectLinkTag
     }
 
     /**
+     * Helper method to construct the additionalArguments value to pass on.
+     *
+     * @return the value
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     */
+    protected String constructAddArguments()
+        throws
+            JspException,
+            IgnoreException
+    {
+        if( theTraversalPathName == null ) {
+            return theAddArguments;
+        }
+
+        TraversalTranslator translator = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( TraversalTranslator.class );
+        if( translator == null ) {
+            return theAddArguments;
+        }
+
+        TraversalPath path = (TraversalPath) lookupOrThrow( theTraversalPathName );
+
+        try {
+            String [] args = translator.translateTraversalPath( theMeshObject, path );
+            if( args == null || args.length == 0 ) {
+                return theAddArguments;
+            }
+            StringBuilder buf = new StringBuilder();
+            if( theAddArguments != null ) {
+                buf.append( theAddArguments );
+            }
+            for( int i=0 ; i<args.length ; ++i ) {
+                buf.append( "&" ).append( RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME ).append( "=" ).append( HTTP.encodeToValidUrlArgument( args[i] ));
+            }
+            return buf.toString();
+
+        } catch( TraversalTranslatorException ex ) {
+            log.error( ex );
+            return theAddArguments;
+        }
+    }
+
+    /**
      * Name of the bean that holds the MeshObject (mutually exclusive with theMeshObject).
      */
     protected String theMeshObjectName;
@@ -312,4 +389,9 @@ public class MeshObjectLinkTag
      * Name of the String representation.
      */
     protected String theStringRepresentation;
+
+    /**
+     * Traversal path, in String form.
+     */
+    protected String theTraversalPathName;
 }

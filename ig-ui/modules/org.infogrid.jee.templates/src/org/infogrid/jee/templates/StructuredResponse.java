@@ -17,6 +17,7 @@ package org.infogrid.jee.templates;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -296,6 +297,26 @@ public class StructuredResponse
             }
         }
         return null;
+    }
+
+    /**
+     * Obtain an Iterator over the text section templates currently used.
+     *
+     * @return the Iterator
+     */
+    public Iterator<TextStructuredResponseSectionTemplate> textSectionTemplateIterator()
+    {
+        return theTextSections.keySet().iterator();
+    }
+
+    /**
+     * Obtain an Iterator over the binary section templates currently used.
+     *
+     * @return the Iterator
+     */
+    public Iterator<BinaryStructuredResponseSectionTemplate> binarySectionTemplateIterator()
+    {
+        return theBinarySections.keySet().iterator();
     }
 
     /**

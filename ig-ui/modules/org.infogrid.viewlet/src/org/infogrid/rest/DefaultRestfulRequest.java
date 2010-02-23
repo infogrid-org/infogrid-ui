@@ -43,25 +43,22 @@ public class DefaultRestfulRequest
      * Factory method.
      * 
      * @param lidRequest the underlying incoming SaneRequest
-     * @param contextPath the context path of the JEE application
      * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
      * @param meshBaseNameServer the name server with which to look up MeshBases
      * @return the created DefaultRestfulRequest
      */
     public static DefaultRestfulRequest create(
             SaneRequest                                     lidRequest,
-            String                                          contextPath,
-            String                                          defaultMeshBaseIdentifier,
+            MeshBaseIdentifier                               defaultMeshBaseIdentifier,
             MeshBaseNameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer )
     {
-        return create( lidRequest, contextPath, defaultMeshBaseIdentifier, null, meshBaseNameServer );
+        return create( lidRequest, defaultMeshBaseIdentifier, null, meshBaseNameServer );
     }
 
     /**
      * Factory method.
      *
      * @param lidRequest the underlying incoming SaneRequest
-     * @param contextPath the context path of the JEE application
      * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
      * @param meshBaseIdentifierFactory the factory to use to create MeshBaseIdentifiers
      * @param meshBaseNameServer the name server with which to look up MeshBases
@@ -69,34 +66,31 @@ public class DefaultRestfulRequest
      */
     public static DefaultRestfulRequest create(
             SaneRequest                                     lidRequest,
-            String                                          contextPath,
-            String                                          defaultMeshBaseIdentifier,
+            MeshBaseIdentifier                              defaultMeshBaseIdentifier,
             MeshBaseIdentifierFactory                       meshBaseIdentifierFactory,
             MeshBaseNameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer )
     {
         if( meshBaseIdentifierFactory == null ) {
             meshBaseIdentifierFactory = DefaultMeshBaseIdentifierFactory.create();
         }
-        return new DefaultRestfulRequest( lidRequest, contextPath, defaultMeshBaseIdentifier, meshBaseIdentifierFactory, meshBaseNameServer );
+        return new DefaultRestfulRequest( lidRequest, defaultMeshBaseIdentifier, meshBaseIdentifierFactory, meshBaseNameServer );
     }
 
     /**
      * Constructor.
      * 
      * @param lidRequest the underlying incoming SaneRequest
-     * @param contextPath the context path of the JEE application
      * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
      * @param meshBaseIdentifierFactory the factory for MeshBaseIdentifiers if any are specified in the request
      * @param meshBaseNameServer the name server with which to look up MeshBases
      */
     protected DefaultRestfulRequest(
             SaneRequest                                     lidRequest,
-            String                                          contextPath,
-            String                                          defaultMeshBaseIdentifier,
+            MeshBaseIdentifier                              defaultMeshBaseIdentifier,
             MeshBaseIdentifierFactory                       meshBaseIdentifierFactory,
             MeshBaseNameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer )
     {
-        super( lidRequest, contextPath, defaultMeshBaseIdentifier );
+        super( lidRequest, defaultMeshBaseIdentifier );
 
         theMeshBaseIdentifierFactory = meshBaseIdentifierFactory;
         theMeshBaseNameServer        = meshBaseNameServer;
@@ -116,8 +110,8 @@ public class DefaultRestfulRequest
                 ParseException
     {
         String relativeBaseUrl = theSaneRequest.getRelativeBaseUri();
-        if( relativeBaseUrl.startsWith( theContextPath )) {
-            String trailer = relativeBaseUrl.substring( theContextPath.length() );
+        if( relativeBaseUrl.startsWith( theSaneRequest.getContextPath() )) {
+            String trailer = relativeBaseUrl.substring( theSaneRequest.getContextPath().length() );
             if( trailer.startsWith( "/" )) {
                 trailer = trailer.substring( 1 );
             }
@@ -135,13 +129,14 @@ public class DefaultRestfulRequest
                 meshBaseIdentifierString   = null;
                 meshObjectIdentifierString = trailer;
             }
-            if( meshBaseIdentifierString == null ) {
-                meshBaseIdentifierString = theDefaultMeshBaseIdentifier;
-            }
             if( meshObjectIdentifierString == null ) {
                 meshObjectIdentifierString = "";
             }
-            theRequestedMeshBaseIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( meshBaseIdentifierString );
+            if( meshBaseIdentifierString != null ) {
+                theRequestedMeshBaseIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( meshBaseIdentifierString );
+            } else {
+                theRequestedMeshBaseIdentifier = theDefaultMeshBaseIdentifier;
+            }
             
             MeshBase mb = theMeshBaseNameServer.get( theRequestedMeshBaseIdentifier );
 
@@ -153,7 +148,7 @@ public class DefaultRestfulRequest
             theRequestedMeshObject           = mb.accessLocally( theRequestedMeshObjectIdentifier );
             
         } else {
-            throw new IllegalArgumentException( "Cannot process incoming relative URI " + relativeBaseUrl + " that is outside of context path " + theContextPath );
+            throw new IllegalArgumentException( "Cannot process incoming relative URI " + relativeBaseUrl + " that is outside of context path " + theSaneRequest.getContextPath() );
         }
     }
 
@@ -169,15 +164,15 @@ public class DefaultRestfulRequest
                 new String[] {
                     "theRequestedMeshBaseIdentifier",
                     "theRequestedMeshObjectIdentifier",
-                    "theRequestedTraversal",
+                    "getRequestedTraversalParameters()",
                     "theRequestedViewletClass",
                     "theRequestedMimeType"
                 },
                 new Object[] {
                     theRequestedMeshBaseIdentifier,
                     theRequestedMeshObjectIdentifier,
-                    theRequestedTraversal,
-                    theRequestedViewletClass,
+                    getRequestedTraversalParameters(),
+                    theRequestedViewletTypeName,
                     theRequestedMimeType
                 });
     }

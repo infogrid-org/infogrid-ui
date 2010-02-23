@@ -43,60 +43,54 @@ public class DefaultNetRestfulRequest
      * Factory method.
      *
      * @param lidRequest the underlying incoming SaneRequest
-     * @param contextPath the context path of the JEE application
-     * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
+     * @param defaultMeshBaseIdentifier the identifier of the default MeshBase
      * @param meshBaseNameServer the name server with which to look up MeshBases
      * @return the created DefaultNetRestfulRequest
      */
     public static DefaultNetRestfulRequest create(
             SaneRequest                                              lidRequest,
-            String                                                   contextPath,
-            String                                                   defaultMeshBaseIdentifier,
+            NetMeshBaseIdentifier                                    defaultMeshBaseIdentifier,
             NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer )
     {
-        return create( lidRequest, contextPath, defaultMeshBaseIdentifier, null, meshBaseNameServer );
+        return create( lidRequest, defaultMeshBaseIdentifier, null, meshBaseNameServer );
     }
 
     /**
      * Factory method.
      *
      * @param lidRequest the underlying incoming SaneRequest
-     * @param contextPath the context path of the JEE application
-     * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
+     * @param defaultMeshBaseIdentifier the identifier of the default MeshBase
      * @param meshBaseIdentifierFactory the factory to use to create MeshBaseIdentifiers
      * @param meshBaseNameServer the name server with which to look up MeshBases
      * @return the created DefaultNetRestfulRequest
      */
     public static DefaultNetRestfulRequest create(
             SaneRequest                                              lidRequest,
-            String                                                   contextPath,
-            String                                                   defaultMeshBaseIdentifier,
+            NetMeshBaseIdentifier                                    defaultMeshBaseIdentifier,
             NetMeshBaseIdentifierFactory                             meshBaseIdentifierFactory,
             NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer )
     {
         if( meshBaseIdentifierFactory == null ) {
             meshBaseIdentifierFactory = DefaultNetMeshBaseIdentifierFactory.create();
         }
-        return new DefaultNetRestfulRequest( lidRequest, contextPath, defaultMeshBaseIdentifier, meshBaseIdentifierFactory, meshBaseNameServer );
+        return new DefaultNetRestfulRequest( lidRequest, defaultMeshBaseIdentifier, meshBaseIdentifierFactory, meshBaseNameServer );
     }
 
     /**
      * Constructor.
      * 
      * @param lidRequest the incoming request
-     * @param contextPath the application's JEE context path
-     * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
+     * @param defaultMeshBaseIdentifier the identifier of the default MeshBase
      * @param meshBaseIdentifierFactory the factory for MeshBaseIdentifiers if any are specified in the request
      * @param meshBaseNameServer the name server with which to look up MeshBases
      */
     protected DefaultNetRestfulRequest(
             SaneRequest                                              lidRequest,
-            String                                                   contextPath,
-            String                                                   defaultMeshBaseIdentifier,
+            NetMeshBaseIdentifier                                    defaultMeshBaseIdentifier,
             NetMeshBaseIdentifierFactory                             meshBaseIdentifierFactory,
             NetMeshBaseNameServer<NetMeshBaseIdentifier,NetMeshBase> meshBaseNameServer )
     {
-        super( lidRequest, contextPath, defaultMeshBaseIdentifier );
+        super( lidRequest, defaultMeshBaseIdentifier );
 
         theMeshBaseIdentifierFactory = meshBaseIdentifierFactory;
         theMeshBaseNameServer        = meshBaseNameServer;
@@ -116,8 +110,8 @@ public class DefaultNetRestfulRequest
                 ParseException
     {
         String relativeBaseUrl = theSaneRequest.getRelativeBaseUri();
-        if( relativeBaseUrl.startsWith( theContextPath )) {
-            String trailer = relativeBaseUrl.substring( theContextPath.length() );
+        if( relativeBaseUrl.startsWith( theSaneRequest.getContextPath() )) {
+            String trailer = relativeBaseUrl.substring( theSaneRequest.getContextPath().length() );
             if( trailer.startsWith( "/" )) {
                 trailer = trailer.substring( 1 );
             }
@@ -138,13 +132,14 @@ public class DefaultNetRestfulRequest
                 proxyIdentifierString      = null;
                 meshObjectIdentifierString = trailer;
             }
-            if( meshBaseIdentifierString == null ) {
-                meshBaseIdentifierString = theDefaultMeshBaseIdentifier;
-            }
             if( meshObjectIdentifierString == null ) {
                 meshObjectIdentifierString = "";
             }
-            theRequestedMeshBaseIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( meshBaseIdentifierString );
+            if( meshBaseIdentifierString != null ) {
+                theRequestedMeshBaseIdentifier = theMeshBaseIdentifierFactory.guessFromExternalForm( meshBaseIdentifierString );
+            } else {
+                theRequestedMeshBaseIdentifier = theDefaultMeshBaseIdentifier;
+            }
 
             NetMeshBase mb = theMeshBaseNameServer.get( (NetMeshBaseIdentifier) theRequestedMeshBaseIdentifier );
 
@@ -161,7 +156,7 @@ public class DefaultNetRestfulRequest
             }
             
         } else {
-            throw new IllegalArgumentException( "Cannot process incoming relative URI " + relativeBaseUrl + " that is outside of context path " + theContextPath );
+            throw new IllegalArgumentException( "Cannot process incoming relative URI " + relativeBaseUrl + " that is outside of context path " + theSaneRequest.getContextPath() );
         }
     }
 

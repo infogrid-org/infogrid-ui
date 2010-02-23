@@ -35,14 +35,16 @@ import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.RoleType;
 import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
-import org.infogrid.model.traversal.SequentialCompoundTraversalSpecification;
-import org.infogrid.model.traversal.StayRightHereTraversalSpecification;
 import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.model.traversal.TraversalTranslator;
+import org.infogrid.model.traversal.TraversalTranslatorException;
 import org.infogrid.modelbase.MeshTypeIdentifierFactory;
 import org.infogrid.modelbase.MeshTypeNotFoundException;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
@@ -294,97 +296,173 @@ public class RestfulJeeFormatter
     /**
      * Find a TraversalSpecification, or return null.
      *
-     * @param name name of the TraversalSpecification
+     * @param startObject the start MeshObject
+     * @param traversalTerm the serialized TraversalSpecification
      * @return the found TraversalSpecification, or null
-     * @throws MeshTypeWithIdentifierNotFoundException thrown if a MeshTypeIdentifier was not found
      */
     public TraversalSpecification findTraversalSpecification(
+            MeshObject startObject,
+            String     traversalTerm )
+    {
+        TraversalSpecification ret = findRoleTypeByIdentifier( traversalTerm );
+        if( ret != null ) {
+            return ret;
+        }
+
+        Context             appContext = InfoGridWebApp.getSingleton().getApplicationContext();
+        TraversalTranslator dict       = appContext.findContextObject( TraversalTranslator.class );
+
+        String [] traversalTerms = traversalTerm.split( "\\s" );
+        try {
+            ret = findTraversalSpecificationByTraversalTranslator( startObject, traversalTerms, dict );
+        } catch( TraversalTranslatorException ex ) {
+            // ignore
+            if( log.isDebugEnabled() ) {
+                log.debug( ex );
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Find a RoleType by its MeshTypeIdentifier.
+     *
+     * @param name the identifier
+     * @return the RoleType, or null
+     */
+    public RoleType findRoleTypeByIdentifier(
             String name )
-        throws
-            MeshTypeWithIdentifierNotFoundException
     {
         ModelBase                 mb     = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( ModelBase.class );
         MeshTypeIdentifierFactory idFact = mb.getMeshTypeIdentifierFactory();
 
-        TraversalSpecification ret;
+        MeshTypeIdentifier id = idFact.fromExternalForm( name );
 
-        name = name.trim();
-
-        String [] componentNames = name.split( "!" );
-
-        if( componentNames.length == 1 ) {
-            if( ".".equals( name )) {
-                ret = StayRightHereTraversalSpecification.create();
-            } else {
-                MeshTypeIdentifier id = idFact.fromExternalForm( name );
-
-                ret = mb.findRoleTypeByIdentifier( id );
-            }
-        } else {
-            TraversalSpecification [] components = new TraversalSpecification[ componentNames.length ];
-            for( int i=0 ; i<componentNames.length ; ++i ) {
-                componentNames[i] = componentNames[i].trim();
-                
-                if( ".".equals( componentNames[i] )) {
-                    components[i] = StayRightHereTraversalSpecification.create();
-                } else {
-                    MeshTypeIdentifier id = idFact.fromExternalForm( componentNames[i] );
-
-                    components[i] = mb.findRoleTypeByIdentifier( id );
-
-                }
-            }
-            ret = SequentialCompoundTraversalSpecification.create( components );
+        try {
+            RoleType ret = mb.findRoleTypeByIdentifier( id );
+            return ret;
+        } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+            // ignore
+            return null;
         }
+    }
 
+    /**
+     * Find a TraversalSpecification by asking a TraversalTranslator.
+     *
+     * @param startObject the start MeshObject
+     * @param traversalTerms the terms of the serialized TraversalSpecification
+     * @param dict the TraversalTranslator
+     * @return the TraversalSpecification, or null
+     * @throws TraversalTranslatorException thrown if the traversalTerms could not be translated
+     */
+    public TraversalSpecification findTraversalSpecificationByTraversalTranslator(
+            MeshObject          startObject,
+            String []           traversalTerms,
+            TraversalTranslator dict )
+        throws
+            TraversalTranslatorException
+    {
+        TraversalSpecification ret = dict.translateTraversalSpecification( startObject, traversalTerms );
         return ret;
     }
 
     /**
      * Find a TraversalSpecification, or throw an Exception.
      *
-     * @param name name of the TraversalSpecification
+     * @param startObject the start MeshObject
+     * @param traversalTerm the serialized TraversalSpecification
      * @return the found TraversalSpecification
      * @throws JspException thrown if the TraversalSpecification could not be found
      */
     public TraversalSpecification findTraversalSpecificationOrThrow(
-            String name )
+            MeshObject startObject,
+            String     traversalTerm )
         throws
             JspException
     {
-        name = name.trim();
-        if( "*".equals( name )) {
+        TraversalSpecification ret = findRoleTypeByIdentifier( traversalTerm );
+        if( ret != null ) {
+            return ret;
+        }
+
+        Context             appContext = InfoGridWebApp.getSingleton().getApplicationContext();
+        TraversalTranslator dict       = appContext.findContextObject( TraversalTranslator.class );
+
+        if( dict == null ) {
             return null;
         }
 
+        String [] traversalTerms = traversalTerm.split( "\\s" );
         try {
-            TraversalSpecification ret = findTraversalSpecification( name );
-            return ret;
+            ret = findTraversalSpecificationByTraversalTranslator( startObject, traversalTerms, dict );
 
-        } catch( MeshTypeWithIdentifierNotFoundException ex ) {
-            throw new JspException( ex );
+        } catch( TraversalTranslatorException ex ) {
+            throw new JspException( "Could not find TraversalSpecification " + traversalTerm, ex );
+        }
+        return ret;
+    }
+
+    /**
+     * Find a sequence of TraversalSpecifications, or return null.
+     *
+     * @param startObject the start MeshObject
+     * @param traversalTerm the serialized TraversalSpecifications
+     * @return the found sequence of TraversalSpecifications, or null
+     */
+    public TraversalSpecification [] findTraversalSpecificationSequence(
+            MeshObject startObject,
+            String     traversalTerm )
+    {
+        Context             appContext = InfoGridWebApp.getSingleton().getApplicationContext();
+        TraversalTranslator dict       = appContext.findContextObject( TraversalTranslator.class );
+
+        if( dict == null ) {
+            return null;
+        }
+
+        String [] traversalTerms = traversalTerm.split( "\\s" );
+        try {
+            TraversalSpecification [] ret = dict.translateTraversalSpecifications( startObject, traversalTerms );
+            return ret;
+        } catch( TraversalTranslatorException ex ) {
+            // ignore
+            if( log.isDebugEnabled() ) {
+                log.debug( ex );
+            }
+            return null;
         }
     }
 
     /**
      * Find a sequence of TraversalSpecifications, or throw an Exception.
      *
-     * @param name name of the TraversalSpecification sequence
+     * @param startObject the start MeshObject
+     * @param traversalTerm the serialized TraversalSpecifications
      * @return the found sequence of TraversalSpecifications
      * @throws JspException thrown if the TraversalSpecification could not be found
      */
     public TraversalSpecification [] findTraversalSpecificationSequenceOrThrow(
-            String name )
+            MeshObject startObject,
+            String     traversalTerm )
         throws
             JspException
     {
-        String [] components = name.split( "\\s" );
+        Context             appContext = InfoGridWebApp.getSingleton().getApplicationContext();
+        TraversalTranslator dict       = appContext.findContextObject( TraversalTranslator.class );
 
-        TraversalSpecification [] ret = new TraversalSpecification[ components.length ];
-        for( int i=0 ; i<components.length ; ++i ) {
-            ret[i] = findTraversalSpecificationOrThrow( components[i] );
+        if( dict == null ) {
+            return null;
         }
-        return ret;
+
+        String [] traversalTerms = traversalTerm.split( "\\s" );
+        try {
+            TraversalSpecification [] ret = dict.translateTraversalSpecifications( startObject, traversalTerms );
+            return ret;
+
+        } catch( TraversalTranslatorException ex ) {
+            throw new JspException( "Could not find TraversalSpecification " + traversalTerm, ex );
+        }
     }
 
     /**

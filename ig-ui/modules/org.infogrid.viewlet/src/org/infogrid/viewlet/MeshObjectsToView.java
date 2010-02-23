@@ -17,7 +17,9 @@ package org.infogrid.viewlet;
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
+import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.NotSingleMemberException;
@@ -50,6 +52,7 @@ public class MeshObjectsToView
                 null,
                 null,
                 null,
+                null,
                 request,
                 subject.getMeshBase() );
     }
@@ -74,13 +77,13 @@ public class MeshObjectsToView
                 viewletTypeName,
                 null,
                 null,
+                null,
                 request,
                 subject.getMeshBase() );
     }
 
-
     /**
-     * Factory method, specifying all parameters.
+     * Factory method.
      * 
      * @param subject the subject for the Viewlet
      * @param subjectParameters the parameters for the Viewlet
@@ -105,6 +108,75 @@ public class MeshObjectsToView
                 viewletTypeName,
                 viewletParameters,
                 traversalSpecification,
+                null,
+                request,
+                subject.getMeshBase());
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param subject the subject for the Viewlet
+     * @param subjectParameters the parameters for the Viewlet
+     * @param viewletTypeName the type of Viewlet to use
+     * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
+     * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
+     * @param traversalPath the TraversalPath to the single highlighted object
+     * @param request the incoming RestfulRequest
+     * @return the created MeshObjectsToView
+     */
+    public static MeshObjectsToView create(
+            MeshObject             subject,
+            Map<String,Object[]>   subjectParameters,
+            String                 viewletTypeName,
+            Map<String,Object[]>   viewletParameters,
+            TraversalSpecification traversalSpecification,
+            TraversalPath          traversalPath,
+            RestfulRequest         request )
+    {
+        MeshBase mb = subject.getMeshBase();
+
+        return new MeshObjectsToView(
+                subject,
+                subject.getIdentifier(),
+                subjectParameters,
+                viewletTypeName,
+                viewletParameters,
+                traversalSpecification,
+                traversalPath != null ? mb.getMeshObjectSetFactory().createSingleMemberImmutableTraversalPathSet( traversalPath ) : null,
+                request,
+                subject.getMeshBase());
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param subject the subject for the Viewlet
+     * @param subjectParameters the parameters for the Viewlet
+     * @param viewletTypeName the type of Viewlet to use
+     * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
+     * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
+     * @param traversalPaths the TraversalPaths to the highlighted objects
+     * @param request the incoming RestfulRequest
+     * @return the created MeshObjectsToView
+     */
+    public static MeshObjectsToView create(
+            MeshObject             subject,
+            Map<String,Object[]>   subjectParameters,
+            String                 viewletTypeName,
+            Map<String,Object[]>   viewletParameters,
+            TraversalSpecification traversalSpecification,
+            TraversalPathSet       traversalPaths,
+            RestfulRequest         request )
+    {
+        return new MeshObjectsToView(
+                subject,
+                subject.getIdentifier(),
+                subjectParameters,
+                viewletTypeName,
+                viewletParameters,
+                traversalSpecification,
+                traversalPaths,
                 request,
                 subject.getMeshBase());
     }
@@ -118,6 +190,7 @@ public class MeshObjectsToView
      * @param viewletTypeName the type of Viewlet to use
      * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
      * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
+     * @param traversalPaths the TraversalPaths to the highlighted objects
      * @param request the incoming RestfulRequest
      * @param mb the MeshBase from which the viewed MeshObjects are taken
      */
@@ -128,6 +201,7 @@ public class MeshObjectsToView
             String                 viewletTypeName,
             Map<String,Object[]>   viewletParameters,
             TraversalSpecification traversalSpecification,
+            TraversalPathSet       traversalPaths,
             RestfulRequest         request,
             MeshBase               mb )
     {
@@ -136,6 +210,7 @@ public class MeshObjectsToView
         theViewletTypeName        = viewletTypeName;
         theViewletParameters      = viewletParameters;
         theTraversalSpecification = traversalSpecification;
+        theTraversalPaths         = traversalPaths;
         theRequest                = request;
         theMeshBase               = mb;
     }
@@ -299,6 +374,16 @@ public class MeshObjectsToView
     }
 
     /**
+     * Obtain the reached Objects by means of their TraversalPaths.
+     *
+     * @return the TraversalPaths
+     */
+    public TraversalPathSet getTraversalPaths()
+    {
+        return theTraversalPaths;
+    }
+
+    /**
      * Obtain the incoming RestfulRequest as a result of which this MeshObjectsToView
      * was created.
      *
@@ -334,7 +419,8 @@ public class MeshObjectsToView
                     "subjectPars",
                     "viewletTypeName",
                     "viewletPars",
-                    "traversalSpecification"
+                    "traversalSpecification",
+                    "traversalPaths"
                 },
                 new Object[] {
                     theSubject,
@@ -342,7 +428,8 @@ public class MeshObjectsToView
                     theSubjectParameters,
                     theViewletTypeName,
                     theViewletParameters,
-                    theTraversalSpecification
+                    theTraversalSpecification,
+                    theTraversalPaths
         });
     }
 
@@ -376,6 +463,11 @@ public class MeshObjectsToView
      * The TraversalSpecification from the subject, if any.
      */
     protected TraversalSpecification theTraversalSpecification;
+
+    /**
+     * The TraversalPaths to the highlighed objects, if any.
+     */
+    protected TraversalPathSet theTraversalPaths;
 
     /**
      * The incoming Restful request, as a result of which this MeshObjectsToView instance

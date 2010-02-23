@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -363,17 +363,23 @@ public abstract class AbstractJeeViewlet
         String      ret  = getBaseRequestURI();
         SaneRequest sane = theCurrentRequest.getSaneRequest();
         
-        String traversal = sane.getUrlArgument( RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME );
+        String [] traversal = sane.getMultivaluedUrlArgument( RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME );
         if( traversal != null ) {
-            ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME, traversal );
+            for( int i=0 ; i<traversal.length ; ++i ) {
+                ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME, traversal[i] );
+            }
         }
-        String format = sane.getUrlArgument( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
+        String [] format = sane.getMultivaluedUrlArgument( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
         if( format != null ) {
-            ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_FORMAT_PARAMETER_NAME, format );
+            for( int i=0 ; i<format.length ; ++i ) {
+                ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_FORMAT_PARAMETER_NAME, format[i] );
+            }
         }
-        String appContext = sane.getUrlArgument( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
+        String [] appContext = sane.getMultivaluedUrlArgument( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
         if( appContext != null ) {
-            ret = HTTP.appendArgumentToUrl( ret, TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME, appContext );
+            for( int i=0 ; i<appContext.length ; ++i ) {
+                ret = HTTP.appendArgumentToUrl( ret, TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME, appContext[i] );
+            }
         }
         return ret;
     }

@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -109,7 +109,7 @@ public abstract class AbstractTraverseSetTestTag
             IgnoreException
     {
         MeshObject             start = (MeshObject) lookupOrThrow( theStartObjectName );
-        TraversalSpecification spec  = findTraversalSpecificationOrThrow( theTraversalSpecification );
+        TraversalSpecification spec  = findTraversalSpecificationOrThrow( start, theTraversalSpecification );
 
         MeshObjectSet ret = start.traverse( spec );
         return ret;

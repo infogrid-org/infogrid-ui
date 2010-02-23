@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -202,12 +202,12 @@ public interface JeeViewlet
     public static final String SUBJECT_ATTRIBUTE_NAME = "Subject";
 
     /**
-     * Name of the viewlet parameter that contains the current JeeViewletState.
+     * Name of the Request attribute that contains the current JeeViewletState.
      */
     public static final String VIEWLET_STATE_NAME = "ViewletState";
 
     /**
-     * Name of the viewlet parameter that contains the desired JeeViewletStateTransition.
+     * Name of the Request attribute that contains the desired JeeViewletStateTransition.
      */
     public static final String VIEWLET_STATE_TRANSITION_NAME = "ViewletStateTransition";
 }    

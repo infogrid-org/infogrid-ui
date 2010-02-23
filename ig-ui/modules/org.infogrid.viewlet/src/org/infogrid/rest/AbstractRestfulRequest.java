@@ -37,43 +37,14 @@ public abstract class AbstractRestfulRequest
      * Constructor.
      * 
      * @param lidRequest the underlying incoming SaneRequest
-     * @param contextPath the context path of the JEE application
-     * @param defaultMeshBaseIdentifier the identifier, in String form, of the default MeshBase
+     * @param defaultMeshBaseIdentifier the identifier of the default MeshBase
      */
     protected AbstractRestfulRequest(
-            SaneRequest lidRequest,
-            String      contextPath,
-            String      defaultMeshBaseIdentifier )
+            SaneRequest        lidRequest,
+            MeshBaseIdentifier defaultMeshBaseIdentifier )
     {
-        theSaneRequest = lidRequest;
-        theContextPath = contextPath;
-        
-        StringBuilder buf = new StringBuilder();
-        buf.append( lidRequest.getRootUri() );
-        buf.append( contextPath );
-        theAbsoluteContextPath = buf.toString();
-
+        theSaneRequest               = lidRequest;
         theDefaultMeshBaseIdentifier = defaultMeshBaseIdentifier;
-    }
-
-    /**
-     * Obtain the context path of the application.
-     *
-     * @return the context path
-     */
-    public String getContextPath()
-    {
-        return theContextPath;
-    }
-
-    /**
-     * Obtain the absolute context path of the application.
-     *
-     * @return the context path
-     */
-    public String getAbsoluteContextPath()
-    {
-        return theAbsoluteContextPath;
     }
 
     /**
@@ -87,40 +58,28 @@ public abstract class AbstractRestfulRequest
     }
 
     /**
-     * Determine the requested traversal, if any.
-     * 
-     * @return the traversal
-     */
-    public String getRequestedTraversal()
-    {
-        if( theRequestedTraversal == null ) {
-            String format = theSaneRequest.getUrlArgument( LID_TRAVERSAL_PARAMETER_NAME );
-
-            if( format != null ) {
-                theRequestedTraversal = format;
-            } else {
-                theRequestedTraversal = NO_ANSWER_STRING;
-            }
-        }
-        if( (Object) theRequestedTraversal != (Object) NO_ANSWER_STRING ) { // typecast to avoid warning
-            return theRequestedTraversal;
-        } else {
-            return null;
-        }        
-    }
-    
-    /**
-     * Obtain the name of the requested Viewlet, if any.
+     * Determine the requested traversal parameters, if any.
      *
-     * @return class name of the requested Viewlet
+     * @return the traversal parameters
      */
-    public String getRequestedViewletClassName()
+    public String [] getRequestedTraversalParameters()
     {
-        if( theRequestedViewletClass == null ) {
-            theRequestedViewletClass = determineArgumentForMulti( LID_FORMAT_PARAMETER_NAME, VIEWLET_PREFIX );
+        String [] format = theSaneRequest.getMultivaluedUrlArgument( LID_TRAVERSAL_PARAMETER_NAME );
+        return format;
+    }
+
+    /**
+     * Obtain the name of the requested Viewlet type, if any.
+     *
+     * @return type name of the requested Viewlet
+     */
+    public String getRequestedViewletTypeName()
+    {
+        if( theRequestedViewletTypeName == null ) {
+            theRequestedViewletTypeName = determineArgumentForMulti( LID_FORMAT_PARAMETER_NAME, VIEWLET_PREFIX );
         }
-        if( (Object) theRequestedViewletClass != (Object) NO_ANSWER_STRING ) { // typecast to avoid warning
-            return theRequestedViewletClass;
+        if( (Object) theRequestedViewletTypeName != (Object) NO_ANSWER_STRING ) { // typecast to avoid warning
+            return theRequestedViewletTypeName;
         } else {
             return null;
         }
@@ -264,24 +223,9 @@ public abstract class AbstractRestfulRequest
     protected SaneRequest theSaneRequest;
 
     /**
-     * The context path of the web application.
+     * The requested Viewlet type, if any. (buffered)
      */
-    protected String theContextPath;
-
-    /**
-     * The calculated absolute context path.
-     */
-    protected String theAbsoluteContextPath;
-
-    /**
-     * The requested traversal, if any. (buffered)
-     */
-    protected String theRequestedTraversal = null;
-
-    /**
-     * The requested Viewlet class, if any. (buffered)
-     */
-    protected String theRequestedViewletClass = null;
+    protected String theRequestedViewletTypeName = null;
 
     /**
      * The requested MIME type, if any. (buffered)
@@ -306,7 +250,7 @@ public abstract class AbstractRestfulRequest
     /**
      * The identifier of the default MeshBase.
      */
-    protected String theDefaultMeshBaseIdentifier;
+    protected MeshBaseIdentifier theDefaultMeshBaseIdentifier;
 
     /**
      * Buffered values are set to this String to express "we did the parsing, but did not

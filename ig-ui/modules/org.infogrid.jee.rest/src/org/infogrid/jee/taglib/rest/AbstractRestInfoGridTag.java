@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -116,32 +116,64 @@ public abstract class AbstractRestInfoGridTag
     }
 
     /**
+     * Find a TraversalSpecification, or return null.
+     *
+     * @param startObject the start MeshObject
+     * @param traversalTerm the serialized TraversalSpecification
+     * @return the found TraversalSpecification, or null
+     */
+    protected TraversalSpecification findTraversalSpecification(
+            MeshObject startObject,
+            String     traversalTerm )
+    {
+        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecification( startObject, traversalTerm );
+    }
+
+    /**
      * Find a TraversalSpecification, or throw an Exception.
      *
-     * @param name name of the TraversalSpecification
+     * @param startObject the start MeshObject
+     * @param traversalTerm the serialized TraversalSpecification
      * @return the found TraversalSpecification
      * @throws JspException thrown if the TraversalSpecification could not be found
      */
     protected TraversalSpecification findTraversalSpecificationOrThrow(
-            String name )
+            MeshObject startObject,
+            String     traversalTerm )
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationOrThrow( name );
+        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationOrThrow( startObject, traversalTerm );
+    }
+
+    /**
+     * Find a sequence of TraversalSpecifications, or return null.
+     *
+     * @param startObject the start MeshObject
+     * @param traversalTerm the serialized TraversalSpecification
+     * @return the found sequence of TraversalSpecifications, or null
+     */
+    protected TraversalSpecification [] findTraversalSpecificationSequence(
+            MeshObject startObject,
+            String     traversalTerm )
+    {
+        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationSequence( startObject, traversalTerm );
     }
 
     /**
      * Find a sequence of TraversalSpecifications, or throw an Exception.
      *
-     * @param name name of the TraversalSpecification sequence
+     * @param startObject the start MeshObject
+     * @param traversalTerm the serialized TraversalSpecification
      * @return the found sequence of TraversalSpecifications
      * @throws JspException thrown if the TraversalSpecification could not be found
      */
     protected TraversalSpecification [] findTraversalSpecificationSequenceOrThrow(
-            String name )
+            MeshObject startObject,
+            String     traversalTerm )
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationSequenceOrThrow( name );
+        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationSequenceOrThrow( startObject, traversalTerm );
     }
 }

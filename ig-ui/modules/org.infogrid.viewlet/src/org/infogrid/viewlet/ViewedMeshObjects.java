@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,6 +17,7 @@ package org.infogrid.viewlet;
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.NotSingleMemberException;
@@ -108,12 +109,19 @@ public interface ViewedMeshObjects
     public TraversalSpecification getTraversalSpecification();
 
     /**
+     * Obtain the set of TraversalPaths that the Viewlet currently uses, if any.
+     *
+     * @return the TraversalPathSet
+     */
+    public TraversalPathSet getTraversalPathSet();
+
+    /**
      * Obtain the Objects, i.e. the MeshObjects reached by traversing from the
      * Subject via the TraversalSpecification.
      * 
-     * @return the Objects, or empty set
+     * @return the Objects, or null
      */
-    public MeshObjectSet getObjects();
+    public MeshObjectSet getReachedObjects();
 
     /**
      * Obtain the MeshBase from which the viewed MeshObjects are taken.
