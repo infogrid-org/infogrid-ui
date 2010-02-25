@@ -82,11 +82,13 @@ dt.selected * {
 }
 
 div.org-infogrid-jee-taglib-candy-OverlayTag {
+    background: #ffffff;
     border: 3px solid rgb(0,80,144);
 }
 div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
     background: #808080;
 }
+
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet div.audit {
     border-color: #808080;
 }
@@ -134,7 +136,7 @@ div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet table.set > tbody > 
     background: #f6f6ff;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr > td {
-    border-color: #a0a0a0;
+    border-color: #d0d0d0;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr > td > ul > li > p {
     border-color: #d0d0d0 !important;
@@ -185,12 +187,6 @@ table.dialog-buttons {
     border-top-color: #808080;
 }
 
-div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
-    background: #808080;
-}
-div.org-infogrid-jee-taglib-candy-OverlayTag {
-    background: #ffffff;
-}
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.roletypes {
     border-color: rgb(0,80,144);
 }
