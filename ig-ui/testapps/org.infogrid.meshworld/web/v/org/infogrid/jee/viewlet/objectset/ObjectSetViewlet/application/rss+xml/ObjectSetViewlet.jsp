@@ -22,7 +22,7 @@
    </mesh:propertyIterate>
   </mesh:blessedByIterate>
 
-  <objectset:iterate meshObjectSetName="Viewlet.Objects" meshObjectLoopVar="current">
+  <objectset:iterate meshObjectSetName="Viewlet.reachedObjects" meshObjectLoopVar="current" ignore="true">
    <objectset:iteratecontentrow>
     <item>
      <guid><mesh:meshObjectId meshObjectName="current" /></guid>
