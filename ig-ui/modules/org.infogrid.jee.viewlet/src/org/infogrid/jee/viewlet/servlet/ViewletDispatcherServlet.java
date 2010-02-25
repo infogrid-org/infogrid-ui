@@ -45,6 +45,7 @@ import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
+import org.infogrid.model.traversal.TermMissingTraversalTranslatorException;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalTranslator;
 import org.infogrid.model.traversal.TraversalSpecification;
@@ -270,6 +271,8 @@ public class ViewletDispatcherServlet
             try {
                 path = traversalDict.translateTraversalPath( subject, traversalStrings );
 
+            } catch( TermMissingTraversalTranslatorException ex ) {
+                // only a TraversalSpec given, not a TraversalPath
             } catch( TraversalTranslatorException ex ) {
                 log.error( ex );
             }
