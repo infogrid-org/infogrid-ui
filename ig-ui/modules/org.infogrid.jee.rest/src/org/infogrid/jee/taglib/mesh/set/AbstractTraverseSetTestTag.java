@@ -111,6 +111,10 @@ public abstract class AbstractTraverseSetTestTag
         MeshObject             start = (MeshObject) lookupOrThrow( theStartObjectName );
         TraversalSpecification spec  = findTraversalSpecificationOrThrow( start, theTraversalSpecification );
 
+        if( spec == null ) {
+            throw new JspException( "Cannot find TraversalSpecification: " + theTraversalSpecification );
+        }
+
         MeshObjectSet ret = start.traverse( spec );
         return ret;
     }
