@@ -226,6 +226,49 @@ public class RestfulJeeFormatter
     }
     
     /**
+     * Find a MeshObject with the given identifier, or return null.
+
+     * @param identifier the MeshObjectIdentifier in String form
+     * @return the found MeshObject, or null
+     * @throws JspException thrown if the identifier could not be parsed
+     */
+    public MeshObject findMeshObject(
+            String identifier )
+        throws
+            JspException
+    {
+        Context  appContext = InfoGridWebApp.getSingleton().getApplicationContext();
+        MeshBase mb         = appContext.findContextObjectOrThrow( MeshBase.class );
+
+        try {
+            MeshObject ret = mb.findMeshObjectByIdentifier( mb.getMeshObjectIdentifierFactory().fromExternalForm( identifier));
+            return ret;
+
+        } catch( ParseException ex ) {
+            throw new JspException( "Could not parse identifier " + identifier );
+        }
+    }
+
+    /**
+     * Find a MeshObject with the given identifier, or throw an Exception.
+
+     * @param identifier the MeshObjectIdentifier in String form
+     * @return the found MeshObject
+     * @throws JspException thrown if the identifier could not be parsed or the MeshObject could not be found
+     */
+    public MeshObject findMeshObjectOrThrow(
+            String identifier )
+        throws
+            JspException
+    {
+        MeshObject ret = findMeshObject( identifier );
+        if( ret == null ) {
+            throw new JspException( "Could not find MeshObject with identifier " + identifier );
+        }
+        return ret;
+    }
+
+    /**
      * Find a PropertyType on a MeshObject by name.
      *
      * @param obj the MeshObject

@@ -44,10 +44,34 @@ public abstract class AbstractTraverseSetTestTag
     @Override
     protected void initializeToDefaults()
     {
+        theStartObject            = null;
         theStartObjectName        = null;
         theTraversalSpecification = null;
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the startObject property.
+     *
+     * @return value of the startObject property
+     * @see #setStartObject
+     */
+    public final String getStartObject()
+    {
+        return theStartObject;
+    }
+
+    /**
+     * Set value of the startObject property.
+     *
+     * @param newValue new value of the startObject property
+     * @see #getStartObject
+     */
+    public final void setStartObject(
+            String newValue )
+    {
+        theStartObject = newValue;
     }
 
     /**
@@ -108,8 +132,14 @@ public abstract class AbstractTraverseSetTestTag
             JspException,
             IgnoreException
     {
-        MeshObject             start = (MeshObject) lookupOrThrow( theStartObjectName );
-        TraversalSpecification spec  = findTraversalSpecificationOrThrow( start, theTraversalSpecification );
+        MeshObject start;
+        if( theStartObject != null ) {
+            start = findMeshObjectOrThrow( theStartObject );
+        } else {
+            start = (MeshObject) lookupOrThrow( theStartObjectName );
+        }
+
+        TraversalSpecification spec = findTraversalSpecificationOrThrow( start, theTraversalSpecification );
 
         if( spec == null ) {
             throw new JspException( "Cannot find TraversalSpecification: " + theTraversalSpecification );
@@ -156,6 +186,11 @@ public abstract class AbstractTraverseSetTestTag
             MeshObjectSet set )
         throws
             JspException;
+
+    /**
+     * String form of the start MeshObject's identifier.
+     */
+    protected String theStartObject;
 
     /**
      * Name of the bean that contains the start MeshObject.

@@ -81,6 +81,36 @@ public abstract class AbstractRestInfoGridTag
     }
 
     /**
+     * Find a MeshObject with the given identifier, or return null.
+
+     * @param identifier the MeshObjectIdentifier in String form
+     * @return the found MeshObject, or null
+     * @throws JspException thrown if the identifier could not be parsed
+     */
+    protected MeshObject findMeshObject(
+            String identifier )
+        throws
+            JspException
+    {
+        return ((RestfulJeeFormatter)theFormatter).findMeshObject( identifier );
+    }
+
+    /**
+     * Find a MeshObject with the given identifier, or throw an Exception.
+
+     * @param identifier the MeshObjectIdentifier in String form
+     * @return the found MeshObject
+     * @throws JspException thrown if the identifier could not be parsed or the MeshObject could not be found
+     */
+    protected MeshObject findMeshObjectOrThrow(
+            String identifier )
+        throws
+            JspException
+    {
+        return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( identifier );
+    }
+
+    /**
      * Find a PropertyType, or return null. This will consider the
      * EntityTypes that the MeshObject is currently blessed with, and look for
      * a PropertyType with the given name.
