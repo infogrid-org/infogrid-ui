@@ -81,6 +81,8 @@ public class TestAppInitializationFilter
         } catch( NotPermittedException ex ) {
             getLog().error( ex );
         } catch( TransactionException ex ) {
+            getLog().error( ex );
+        } finally {
             if( tx != null ) {
                 tx.commitTransaction();
             }
