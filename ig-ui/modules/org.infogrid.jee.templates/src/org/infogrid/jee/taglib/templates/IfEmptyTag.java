@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,7 +22,7 @@ import org.infogrid.jee.templates.StructuredResponseSection;
  * Tests whether a named StructuredResponseSectionTemplate is empty.
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class IfEmtpyTag
+public class IfEmptyTag
     extends
         AbstractSectionTestTag
 {
@@ -31,7 +31,7 @@ public class IfEmtpyTag
     /**
      * Constructor.
      */
-    public IfEmtpyTag()
+    public IfEmptyTag()
     {
         // noop
     }
