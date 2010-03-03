@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -174,24 +174,19 @@ public class NoViewletFoundException
     protected transient ModuleRegistry theModuleRegistry;
     
     /**
-     * Our ResourceHelper.
-     */
-    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( NoViewletFoundException.class );
-
-    /**
      * The default entry in the resouce files, prefixed by the StringRepresentation's prefix.
      */
-    public static final String DEFAULT_ENTRY = "Message";
+    public static final String DEFAULT_ENTRY = "String";
 
     /**
      * The default entry in the resouce files for the case where no ViewletType has
      * been specified, prefixed by the StringRepresentation's prefix.
      */
-    public static final String DEFAULT_NO_VIEWLET_TYPE_ENTRY = "MessageNoViewletType";
+    public static final String DEFAULT_NO_VIEWLET_TYPE_ENTRY = DEFAULT_ENTRY + "NoViewletType";
 
     /**
      * The default entry in the resouce files for the case where a ViewletType has
      * been specified, prefixed by the StringRepresentation's prefix.
      */
-    public static final String DEFAULT_VIEWLET_TYPE_ENTRY = "MessageViewletType";
+    public static final String DEFAULT_VIEWLET_TYPE_ENTRY = DEFAULT_ENTRY + "ViewletType";
 }
