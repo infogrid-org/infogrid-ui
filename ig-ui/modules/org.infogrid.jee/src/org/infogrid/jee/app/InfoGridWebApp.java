@@ -17,19 +17,15 @@ package org.infogrid.jee.app;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import org.infogrid.util.QuitManager;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextDirectory;
 import org.infogrid.util.context.SimpleContextDirectory;
 import org.infogrid.util.http.SaneRequestUtils;
-import org.infogrid.util.text.SimpleStringRepresentationContext;
-import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * <p>An InfoGrid web application. This needs to be subclassed.</p>
@@ -293,23 +289,6 @@ public abstract class InfoGridWebApp
         } else {
             return false;
         }
-    }
-    
-    /**
-     * Construct a StringRepresentationContext appropriate for this application. This may
-     * be overridden by subclasses.
-     * 
-     * @param request the incoming request
-     * @return the created StringRepresentationContext
-     */
-    public StringRepresentationContext constructStringRepresentationContext(
-            HttpServletRequest request )
-    {
-        HashMap<String,Object> contextObjects = new HashMap<String,Object>();
-        contextObjects.put( StringRepresentationContext.WEB_CONTEXT_KEY, request.getContextPath() );
- 
-        StringRepresentationContext ret = SimpleStringRepresentationContext.create( contextObjects );
-        return ret;
     }
 
     /**

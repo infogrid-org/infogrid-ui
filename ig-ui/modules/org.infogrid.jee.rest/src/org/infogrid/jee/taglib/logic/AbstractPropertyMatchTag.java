@@ -17,11 +17,9 @@ package org.infogrid.jee.taglib.logic;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringifierException;
 
@@ -91,11 +89,10 @@ public abstract class AbstractPropertyMatchTag
     {
         PropertyValue found = evaluate();
 
-        StringRepresentation        rep     = theFormatter.determineStringRepresentation( StringRepresentationDirectory.TEXT_PLAIN_NAME );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        StringRepresentation rep = theFormatter.determineStringRepresentation( StringRepresentationDirectory.TEXT_PLAIN_NAME );
 
         try {
-            String foundAsString = PropertyValue.toStringRepresentation( found, rep, context, null );
+            String foundAsString = PropertyValue.toStringRepresentation( found, rep, null );
 
             Pattern p = Pattern.compile( theExpression );
             Matcher m = p.matcher( foundAsString );

@@ -25,14 +25,12 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyContent;
-import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.util.LocalizedException;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
@@ -972,7 +970,7 @@ public class JeeFormatter
     /**
      * Format a list of problems represented as Throwables.
      * 
-     * @param request the incoming request
+     * @param saneRequest the incoming request
      * @param reportedProblems the reported problems
      * @param stringRepresentation the StringRepresentation to use
      * @param colloquial if applicable, output in colloquial form
@@ -980,24 +978,24 @@ public class JeeFormatter
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatProblems(
-            SaneRequest        request,
+            SaneRequest        saneRequest,
             List<Throwable>    reportedProblems,
             String             stringRepresentation,
             boolean            colloquial )
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
-
-        StringRepresentationParameters pars = constructStringRepresentationParameters( -1, colloquial );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.COLLOQUIAL, colloquial );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY, saneRequest.getContextPath() );
 
         String        sep = "";
         StringBuilder buf = new StringBuilder();
         for( Throwable current : reportedProblems ) {
             Throwable toFormat = determineThrowableToFormat( current );
 
-            String temp = rep.formatThrowable( toFormat, context, pars );
+            String temp = rep.formatThrowable( toFormat, pars );
             if(    buf.length() > 0
                 && temp.charAt( 0 ) != '\n'
                 && buf.charAt( buf.length()-1 ) != '\n' )
@@ -1090,34 +1088,6 @@ public class JeeFormatter
             sanitized = temp.toString();
         }
         return sanitized;
-    }
-
-    /**
-     * Helper method to create a StringRepresentationParameters from a
-     * maximum length and a colloquial, if needed.
-     *
-     * @param maxLength the maximum length. -1 means unlimited.
-     * @param colloquial if true, emit colloquial representation
-     * @return the StringRepresentationParameters, if any
-     */
-    public StringRepresentationParameters constructStringRepresentationParameters(
-            int     maxLength,
-            boolean colloquial )
-    {
-        SimpleStringRepresentationParameters ret;
-        if( maxLength >= 0 ) {
-            ret = SimpleStringRepresentationParameters.create();
-            ret.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
-            if( colloquial ) {
-                ret.put( StringRepresentationParameters.COLLOQUIAL, true );
-            }
-        } else if( colloquial ) {
-            ret = SimpleStringRepresentationParameters.create();
-            ret.put( StringRepresentationParameters.COLLOQUIAL, true );
-        } else {
-            ret = null;
-        }
-        return ret;
     }
 
     /**

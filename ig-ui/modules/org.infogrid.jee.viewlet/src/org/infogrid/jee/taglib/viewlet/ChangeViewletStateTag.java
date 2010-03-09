@@ -147,7 +147,7 @@ public class ChangeViewletStateTag
                         if( !DISPLAY_COMPACT.equals( theDisplay )) {
                             buf.append( "  <li>" );
                             buf.append( "<b>" );
-                            buf.append( found.toStringRepresentation( null, null, null ) ); // arguments don't matter
+                            buf.append( found.toStringRepresentation( null, null ) ); // arguments don't matter
                             buf.append( "</b>" );
                             buf.append( "  </li>\n" );
                         }
@@ -156,7 +156,7 @@ public class ChangeViewletStateTag
                         buf.append( "<a href=\"" );
                         buf.append( HTTP.replaceOrAppendArgumentToUrl( href, JeeViewletState.VIEWLET_STATE_PAR_NAME, current ));
                         buf.append( "\">" );
-                        buf.append( found.toStringRepresentation( null, null, null ) ); // arguments don't matter
+                        buf.append( found.toStringRepresentation( null, null ) ); // arguments don't matter
                         buf.append( "</a>" );
                         buf.append( "  </li>\n" );
 

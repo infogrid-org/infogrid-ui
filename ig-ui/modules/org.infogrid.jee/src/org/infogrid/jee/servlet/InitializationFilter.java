@@ -28,9 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * <p>Filter that makes sure InfoGrid initialization has been performed prior to processing
@@ -114,9 +112,6 @@ public class InitializationFilter
 
             request.setAttribute( FULLCONTEXT_PARAMETER, fullContext.toString() );
 
-            StringRepresentationContext context = createStringRepresentationContext( realRequest );
-            request.setAttribute( STRING_REPRESENTATION_CONTEXT_PARAMETER, context );
-            
             chain.doFilter( request, response );
 
         } catch( Throwable t ) {
@@ -130,21 +125,6 @@ public class InitializationFilter
                 throw new ServletException( t2 );
             }
         }
-    }
-
-    /**
-     * Construct an appropriate StringRepresentationContext. This may be overridden by subclasses.
-     * 
-     * @param request the incoming request
-     * @return the created StringRepresentationContext
-     */
-    protected StringRepresentationContext createStringRepresentationContext(
-            HttpServletRequest request )
-    {
-        InfoGridWebApp app = InfoGridWebApp.getSingleton();
-        
-        StringRepresentationContext ret = app.constructStringRepresentationContext( request );
-        return ret;
     }
 
     /**
@@ -276,12 +256,6 @@ public class InitializationFilter
      */
     public static final String FULLCONTEXT_PARAMETER = "FULLCONTEXT";
     
-    /**
-     * Name of the default StringRepresentationContext in the RequestContext.
-     */
-    public static final String STRING_REPRESENTATION_CONTEXT_PARAMETER
-            = SaneRequestUtils.classToAttributeName( StringRepresentationContext.class );
-
     /**
      * The Filter configuration object.
      */

@@ -45,7 +45,6 @@ public class ProxyLinkTag
     protected void initializeToDefaults()
     {
         theProxyName            = null;
-        theRootPath             = null;
         theAddArguments         = null;
         theTarget               = null;
         theTitle                = null;
@@ -75,29 +74,6 @@ public class ProxyLinkTag
             String newValue )
     {
         theProxyName = newValue;
-    }
-
-    /**
-     * Obtain value of the rootPath property.
-     *
-     * @return value of the rootPath property
-     * @see #setRootPath
-     */
-    public String getRootPath()
-    {
-        return theRootPath;
-    }
-
-    /**
-     * Set value of the rootPath property.
-     *
-     * @param newValue new value of the rootPath property
-     * @see #getRootPath
-     */
-    public void setRootPath(
-            String newValue )
-    {
-        theRootPath = newValue;
     }
 
     /**
@@ -207,7 +183,7 @@ public class ProxyLinkTag
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
 
         try {
-            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkStart( pageContext, p, theRootPath, theAddArguments, theTarget, theTitle, theStringRepresentation );
+            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkStart( pageContext, p, theAddArguments, theTarget, theTitle, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -233,7 +209,7 @@ public class ProxyLinkTag
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
 
         try {
-            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkEnd( pageContext, p, theRootPath, theStringRepresentation );
+            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyLinkEnd( pageContext, p, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -247,11 +223,6 @@ public class ProxyLinkTag
      * Name of the bean that holds the Proxy.
      */
     protected String theProxyName;
-    
-    /**
-     * The HTTP path prepended to the HREF, e.g. http://example.com/foo/bar/?obj=
-     */
-    protected String theRootPath;
     
     /**
      * The arguments to append to the URL, separated by &.

@@ -16,20 +16,17 @@ package org.infogrid.jee.rest;
 
 import java.lang.reflect.Method;
 import java.text.ParseException;
-import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.templates.servlet.TemplatesFilter;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.mesh.text.MeshStringRepresentationContext;
-import org.infogrid.mesh.text.SimpleMeshStringRepresentationContext;
+import org.infogrid.mesh.text.MeshStringRepresentationParameters;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
@@ -50,7 +47,6 @@ import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
@@ -237,11 +233,11 @@ public class RestfulJeeFormatter
         throws
             JspException
     {
-        Context  appContext = InfoGridWebApp.getSingleton().getApplicationContext();
-        MeshBase mb         = appContext.findContextObjectOrThrow( MeshBase.class );
+        MeshBase mb = getDefaultMeshBase();
 
         try {
-            MeshObject ret = mb.findMeshObjectByIdentifier( mb.getMeshObjectIdentifierFactory().fromExternalForm( identifier));
+            MeshObject ret = mb.findMeshObjectByIdentifier(
+                    mb.getMeshObjectIdentifierFactory().fromExternalForm( identifier ));
             return ret;
 
         } catch( ParseException ex ) {
@@ -536,12 +532,28 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
-        
-        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial, owningMeshObject, propertyType, nullString, editVar );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        String ret = PropertyValue.toStringRepresentation( value, rep, context, pars );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY, saneRequest.getContextPath() );
+        if( maxLength >= 0 ) {
+            pars.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
+        }
+        pars.put( StringRepresentationParameters.COLLOQUIAL, colloquial );
+        if( owningMeshObject != null ) {
+            pars.put( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT, owningMeshObject );
+        }
+        if( propertyType != null ) {
+            pars.put( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE, propertyType );
+        }
+        if( nullString != null ) {
+            pars.put( StringRepresentationParameters.NULL_STRING, nullString );
+        }
+        if( editVar != null ) {
+            pars.put( StringRepresentationParameters.EDIT_VARIABLE, editVar );
+        }
+        String ret = PropertyValue.toStringRepresentation( value, rep, pars );
         return ret;
     }
 
@@ -563,11 +575,16 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
- 
-        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, false );
-        String ret = identifier.toStringRepresentation( rep, context, pars );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+
+        String ret = identifier.toStringRepresentation( rep, pars );
         
         return ret;
     }
@@ -592,12 +609,17 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
 
-        String ret = mesh.toStringRepresentation( rep, context, pars );
+        String ret = mesh.toStringRepresentation( rep, pars );
         return ret;
     }
 
@@ -638,17 +660,17 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        HashMap<String,Object> localMap = new HashMap<String,Object>();
-        localMap.put( MeshStringRepresentationContext.MESHOBJECT_KEY, mesh );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
 
-        SimpleMeshStringRepresentationContext delegateContext
-                = SimpleMeshStringRepresentationContext.create( localMap, context );
-
-        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, false );
-        String ret = mesh.getIdentifier().toStringRepresentation( rep, delegateContext, pars );
+        String ret = mesh.getIdentifier().toStringRepresentation( rep, pars );
         return ret;
     }
 
@@ -695,18 +717,18 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
 
         addArguments = potentiallyAddAppContext( (HttpServletRequest) pageContext.getRequest(), addArguments );
 
-        HashMap<String,Object> localMap = new HashMap<String,Object>();
-        localMap.put( MeshStringRepresentationContext.MESHOBJECT_KEY, mesh );
-
-        SimpleMeshStringRepresentationContext delegateContext
-                = SimpleMeshStringRepresentationContext.create( localMap, context );
-
-        String ret = mesh.getIdentifier().toStringRepresentationLinkStart( addArguments, target, title, rep, delegateContext );
+        String ret = mesh.getIdentifier().toStringRepresentationLinkStart( addArguments, target, title, rep, pars );
         return ret;
     }
 
@@ -728,16 +750,16 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        HashMap<String,Object> localMap = new HashMap<String,Object>();
-        localMap.put( MeshStringRepresentationContext.MESHOBJECT_KEY, mesh );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
 
-        SimpleMeshStringRepresentationContext delegateContext
-                = SimpleMeshStringRepresentationContext.create( localMap, context );
-
-        String ret = mesh.getIdentifier().toStringRepresentationLinkEnd( rep, delegateContext );
+        String ret = mesh.getIdentifier().toStringRepresentationLinkEnd( rep, pars );
         return ret;
 }
 
@@ -785,11 +807,16 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        StringRepresentationParameters pars = constructStringRepresentationParameters( maxLength, colloquial );
-        String ret = base.toStringRepresentation( rep, context, pars );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               colloquial );
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        
+        String ret = base.toStringRepresentation( rep, pars );
         return ret;
     }
 
@@ -836,12 +863,16 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
 
         addArguments = potentiallyAddAppContext( (HttpServletRequest) pageContext.getRequest(), addArguments );
 
-        String ret = base.toStringRepresentationLinkStart( addArguments, target, title, rep, context );
+        String ret = base.toStringRepresentationLinkStart( addArguments, target, title, rep, pars );
         return ret;
     }
 
@@ -863,10 +894,14 @@ public class RestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        String ret = base.toStringRepresentationLinkEnd( rep, context );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+
+        String ret = base.toStringRepresentationLinkEnd( rep, pars );
         return ret;
     }
 
@@ -937,62 +972,22 @@ public class RestfulJeeFormatter
     }
 
     /**
-     * Helper method to create a StringRepresentationParameters from a
-     * maximum length, a colloquial, and owning MeshObject and PropertyType, if needed.
+     * Helper method to determine the default MeshBase.
      *
-     * @param maxLength the maximum length. -1 means unlimited.
-     * @param colloquial if true, emit colloquial representation
-     * @param owningMeshObject the MeshObject that owns this PropertyValue, if any
-     * @param propertyType the PropertyType of the PropertyValue, if any
-     * @param nullString the String to display of the value is null
-     * @param editVar name of the HTML form elements to use
-     * @return the StringRepresentationParameters, if any
+     * @return the default MeshBase
      */
-    public StringRepresentationParameters constructStringRepresentationParameters(
-            int          maxLength,
-            boolean      colloquial,
-            MeshObject   owningMeshObject,
-            PropertyType propertyType,
-            String       nullString,
-            String       editVar )
+    protected MeshBase getDefaultMeshBase()
     {
-        SimpleStringRepresentationParameters ret = null;
-        if( maxLength >= 0 ) {
-            if( ret == null ) {
-                ret = SimpleStringRepresentationParameters.create();
-            }
-            ret.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
+        if( theDefaultMeshBase == null ) {
+            Context appContext = InfoGridWebApp.getSingleton().getApplicationContext();
+            theDefaultMeshBase = appContext.findContextObjectOrThrow( MeshBase.class );
         }
-        if( colloquial ) {
-            if( ret == null ) {
-                ret = SimpleStringRepresentationParameters.create();
-            }
-            ret.put( StringRepresentationParameters.COLLOQUIAL, true );
-        }
-        if( owningMeshObject != null ) {
-            if( ret == null ) {
-                ret = SimpleStringRepresentationParameters.create();
-            }
-            ret.put( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT, owningMeshObject );
-        }
-        if( propertyType != null ) {
-            if( ret == null ) {
-                ret = SimpleStringRepresentationParameters.create();
-            }
-            ret.put( ModelPrimitivesStringRepresentationParameters.PROPERTY_TYPE, propertyType );
-        }
-        if( nullString != null ) {
-            if( ret == null ) {
-                ret = SimpleStringRepresentationParameters.create();
-            }
-            ret.put( StringRepresentationParameters.NULL_STRING, nullString );
-        }
-        if( editVar != null ) {
-            if( ret == null ) {
-                ret = SimpleStringRepresentationParameters.create();
-            }
-            ret.put( StringRepresentationParameters.EDIT_VARIABLE, editVar );
-        }
-        return ret;
+        return theDefaultMeshBase;
     }
+
+    /**
+     * The default MeshBase, if any.
+     */
+    protected MeshBase theDefaultMeshBase;
+
 }

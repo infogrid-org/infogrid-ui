@@ -14,23 +14,15 @@
 
 package org.infogrid.jee.rest.defaultapp;
 
-import java.io.IOException;
 import java.text.ParseException;
-import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.templates.defaultapp.AbstractAppInitializationFilter;
-import org.infogrid.mesh.text.MeshStringRepresentationContext;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.text.StringRepresentationContext;
 
 /**
  * Common functionality of application initialization filters that are REST-ful.
@@ -45,37 +37,6 @@ public abstract class AbstractRestfulAppInitializationFilter
     protected AbstractRestfulAppInitializationFilter()
     {
         // nothing
-    }
-
-    /**
-     * Set up the request before performing the delegation to the chain.
-     *
-     * @param request The servlet request we are processing
-     * @param response The servlet response we are creating
-     * @param chain The filter chain we are processing
-     *
-     * @throws IOException if an input/output error occurs
-     * @throws ServletException if a servlet error occurs
-     */
-    @Override
-    protected void doFilterPrepare(
-            ServletRequest  request,
-            ServletResponse response,
-            FilterChain     chain )
-        throws
-            IOException,
-            ServletException
-    {
-        Context appContext = InfoGridWebApp.getSingleton().getApplicationContext();
-
-        StringRepresentationContext stringRepContext
-                = (StringRepresentationContext) request.getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
-        MeshBase mb
-                = appContext.findContextObject( MeshBase.class );
-
-        if( stringRepContext != null && mb != null ) {
-            stringRepContext.put( MeshStringRepresentationContext.DEFAULT_MESHBASE_KEY, mb );
-        }
     }
 
     /**

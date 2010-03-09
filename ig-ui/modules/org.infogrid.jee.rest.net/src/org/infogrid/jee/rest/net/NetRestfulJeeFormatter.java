@@ -14,15 +14,16 @@
 
 package org.infogrid.jee.rest.net;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
-import org.infogrid.jee.servlet.InitializationFilter;
-import org.infogrid.mesh.text.SimpleMeshStringRepresentationContext;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.meshbase.net.proxy.Proxy;
+import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -76,12 +77,9 @@ public class NetRestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
-
-        context = perhapsOverrideStringRepresentationContext( rootPath, context );
+        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
         
-        String ret = p.toStringRepresentation( rep, context, null );
+        String ret = p.toStringRepresentation( rep, null );
         return ret;
     }
 
@@ -108,7 +106,6 @@ public class NetRestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param p the Proxy whose identifier is to be formatted
-     * @param rootPath alternate root path to use, if any
      * @param title title of the HTML link, if any
      * @param addArguments additional arguments to the URL, if any
      * @param target the HTML target, if any
@@ -119,7 +116,6 @@ public class NetRestfulJeeFormatter
     public String formatProxyLinkStart(
             PageContext pageContext,
             Proxy       p,
-            String      rootPath,
             String      addArguments,
             String      target,
             String      title,
@@ -127,12 +123,13 @@ public class NetRestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        context = perhapsOverrideStringRepresentationContext( rootPath, context );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
 
-        String ret = p.toStringRepresentationLinkStart( addArguments, target, title, rep, context );
+        String ret = p.toStringRepresentationLinkStart( addArguments, target, title, rep, pars );
         return ret;
     }
 
@@ -141,7 +138,6 @@ public class NetRestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param p the Proxy whose identifier is to be formatted
-     * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
@@ -149,42 +145,17 @@ public class NetRestfulJeeFormatter
     public String formatProxyLinkEnd(
             PageContext pageContext,
             Proxy       p,
-            String      rootPath,
             String      stringRepresentation )
         throws
             StringifierException
     {
-        StringRepresentation        rep     = determineStringRepresentation( stringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        context = perhapsOverrideStringRepresentationContext( rootPath, context );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
 
-        String ret = p.toStringRepresentationLinkEnd( rep, context );
-        return ret;
-    }
-
-    /**
-     * Helper method to perhaps override a StringRepresentationContext if a
-     * non-default rootPath has been given.
-     * 
-     * @param rootPath alternate root path to use, if any
-     * @param candidate the candidate StringRepresentationContext
-     * @return the candidate StringRepresentationContext, or an overridden StringRepresentationContext
-     */
-    protected StringRepresentationContext perhapsOverrideStringRepresentationContext(
-            String                      rootPath,
-            StringRepresentationContext candidate )
-    {
-        StringRepresentationContext ret;
-        
-        if( rootPath == null ) {
-            ret = candidate;
-        } else {
-            HashMap<String,Object> contextObjects = new HashMap<String,Object>();
-            contextObjects.put( StringRepresentationContext.WEB_CONTEXT_KEY, rootPath );
-            
-            ret = SimpleMeshStringRepresentationContext.create( contextObjects, candidate );
-        }
+        String ret = p.toStringRepresentationLinkEnd( rep, pars );
         return ret;
     }
 }

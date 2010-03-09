@@ -14,16 +14,18 @@
 
 package org.infogrid.jee.taglib.mesh;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.servlet.InitializationFilter;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.L10Map;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationContext;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
@@ -261,8 +263,7 @@ public class MeshTypeTag
         PropertyValue value = null;
         String        text  = null;
 
-        StringRepresentation        rep     = theFormatter.determineStringRepresentation( theStringRepresentation );
-        StringRepresentationContext context = (StringRepresentationContext) pageContext.getRequest().getAttribute( InitializationFilter.STRING_REPRESENTATION_CONTEXT_PARAMETER );
+        StringRepresentation rep = theFormatter.determineStringRepresentation( theStringRepresentation );
 
         if( thePropertyName != null ) {
             Object found = lookupOrThrow( theMeshTypeName, thePropertyName );
@@ -286,10 +287,15 @@ public class MeshTypeTag
             } else if( found instanceof DataType ) {
                 DataType realFound = (DataType) found;
 
-                StringRepresentationParameters pars = theFormatter.constructStringRepresentationParameters( theMaxLength, theColloquial );
+                SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+
+                SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+                pars.put( StringRepresentationParameters.MAX_LENGTH, theMaxLength );
+                pars.put( StringRepresentationParameters.COLLOQUIAL, theColloquial );
+                pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
 
                 try {
-                    text = realFound.toStringRepresentation( rep, context, pars );
+                    text = realFound.toStringRepresentation( rep, pars );
 
                 } catch( StringifierException ex ) {
                     throw new JspException( ex );
