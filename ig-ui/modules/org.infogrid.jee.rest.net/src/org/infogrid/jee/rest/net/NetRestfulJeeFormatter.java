@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -127,9 +127,12 @@ public class NetRestfulJeeFormatter
 
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,               saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.LINK_TARGET_KEY,               target );
+        pars.put( StringRepresentationParameters.LINK_TITLE_KEY,                title );
+        pars.put( StringRepresentationParameters.HTML_URL_ADDITIONAL_ARGUMENTS, addArguments );
 
-        String ret = p.toStringRepresentationLinkStart( addArguments, target, title, rep, pars );
+        String ret = p.toStringRepresentationLinkStart( rep, pars );
         return ret;
     }
 

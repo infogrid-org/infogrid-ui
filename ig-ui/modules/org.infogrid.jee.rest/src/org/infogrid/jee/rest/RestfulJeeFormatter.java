@@ -719,16 +719,19 @@ public class RestfulJeeFormatter
     {
         SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
-        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
-        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
-        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
-
         addArguments = potentiallyAddAppContext( (HttpServletRequest) pageContext.getRequest(), addArguments );
 
-        String ret = mesh.getIdentifier().toStringRepresentationLinkStart( addArguments, target, title, rep, pars );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.COLLOQUIAL,                    false );
+        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,            mesh );
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY,      getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,               saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.LINK_TARGET_KEY,               target );
+        pars.put( StringRepresentationParameters.LINK_TITLE_KEY,                title );
+        pars.put( StringRepresentationParameters.HTML_URL_ADDITIONAL_ARGUMENTS, addArguments );
+
+        String ret = mesh.getIdentifier().toStringRepresentationLinkStart( rep, pars );
         return ret;
     }
 
@@ -865,14 +868,17 @@ public class RestfulJeeFormatter
     {
         SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
-        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
-        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
-
         addArguments = potentiallyAddAppContext( (HttpServletRequest) pageContext.getRequest(), addArguments );
 
-        String ret = base.toStringRepresentationLinkStart( addArguments, target, title, rep, pars );
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY,      getDefaultMeshBase() );
+        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,               saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.LINK_TARGET_KEY,               target );
+        pars.put( StringRepresentationParameters.LINK_TITLE_KEY,                title );
+        pars.put( StringRepresentationParameters.HTML_URL_ADDITIONAL_ARGUMENTS, addArguments );
+
+        String ret = base.toStringRepresentationLinkStart( rep, pars );
         return ret;
     }
 
