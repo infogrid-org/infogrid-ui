@@ -101,7 +101,7 @@ public class ViewletAlternativesTag
 
             println( "<ul>" );
 
-            String                 url = restful.getSaneRequest().getAbsoluteFullUri();
+            String                 url = restful.getSaneRequest().getRelativeFullUri();
             HashMap<String,String> map = new HashMap<String,String>();
 
             for( int i=0 ; i<candidates.length ; ++i ) {
