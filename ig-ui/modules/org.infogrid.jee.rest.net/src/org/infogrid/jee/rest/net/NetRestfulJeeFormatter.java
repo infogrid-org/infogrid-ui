@@ -127,7 +127,8 @@ public class NetRestfulJeeFormatter
 
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,               saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY,      saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY,      saneRequest.getContextPath() );
         pars.put( StringRepresentationParameters.LINK_TARGET_KEY,               target );
         pars.put( StringRepresentationParameters.LINK_TITLE_KEY,                title );
         pars.put( StringRepresentationParameters.HTML_URL_ADDITIONAL_ARGUMENTS, addArguments );
@@ -156,7 +157,8 @@ public class NetRestfulJeeFormatter
 
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY,      saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY,      saneRequest.getContextPath() );
 
         String ret = p.toStringRepresentationLinkEnd( rep, pars );
         return ret;

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,6 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.util.AbstractLocalizedException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
-import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
@@ -136,9 +135,7 @@ public abstract class CannotViewException
                         pars,
                         theViewlet.getName(),
                         theViewlet.getUserVisibleName(),
-                        theObjectsToView.getSubject(),
-                        theObjectsToView.getSubject().getIdentifier(),
-                        IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
+                        theObjectsToView.getSubject());
 
             } else {
                 return rep.formatEntry(
@@ -148,8 +145,7 @@ public abstract class CannotViewException
                         theViewlet.getName(),
                         theViewlet.getUserVisibleName(),
                         theObjectsToView.getSubject(),
-                        theObjectsToView.getSubject().getIdentifier(),
-                        IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
+                        theObjectsToView.getViewletTypeName());
             }
         }
     }
@@ -197,9 +193,7 @@ public abstract class CannotViewException
                     pars,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
-                    theObjectsToView.getSubject(),
-                    theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
+                    theObjectsToView.getSubject());
         }
     }
 
@@ -246,9 +240,7 @@ public abstract class CannotViewException
                     pars,
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
-                    theObjectsToView.getSubject(),
-                    theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
+                    theObjectsToView.getSubject());
         }
     }
     
@@ -300,8 +292,6 @@ public abstract class CannotViewException
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
-                    theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ),
                     theName );
         }
         
@@ -362,8 +352,6 @@ public abstract class CannotViewException
                     theViewlet.getName(),
                     theViewlet.getUserVisibleName(),
                     theObjectsToView.getSubject(),
-                    theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ),
                     theName,
                     theValue );
         }
@@ -422,8 +410,7 @@ public abstract class CannotViewException
                     pars,
                     theViewlet != null ? theViewlet.getName() : null,
                     theViewlet != null ? theViewlet.getUserVisibleName() : null,
-                    theIdentifier,
-                    IdentifierStringifier.defaultFormat( theIdentifier.toExternalForm(), pars ));
+                    theIdentifier );
         }
         
         /**
@@ -502,9 +489,7 @@ public abstract class CannotViewException
             /* 0 */ theViewlet.getName(),
             /* 1 */ theViewlet.getUserVisibleName(),
             /* 2 */ theObjectsToView.getSubject(),
-            /* 3 */ theObjectsToView.getSubject().getIdentifier(),
-            /* 4 */ IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ),
-            /* 5 */ msg );
+            /* 3 */ msg );
         }
     }
 }

@@ -536,7 +536,8 @@ public class RestfulJeeFormatter
 
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY, saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
         if( maxLength >= 0 ) {
             pars.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
         }
@@ -582,7 +583,8 @@ public class RestfulJeeFormatter
         pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
         pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
 
         String ret = identifier.toStringRepresentation( rep, pars );
         
@@ -617,7 +619,8 @@ public class RestfulJeeFormatter
         pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
         pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
 
         String ret = mesh.toStringRepresentation( rep, pars );
         return ret;
@@ -668,7 +671,8 @@ public class RestfulJeeFormatter
         pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
         pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
 
         String ret = mesh.getIdentifier().toStringRepresentation( rep, pars );
         return ret;
@@ -726,7 +730,8 @@ public class RestfulJeeFormatter
         pars.put( StringRepresentationParameters.COLLOQUIAL,                    false );
         pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,            mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY,      getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,               saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY,      saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY,      saneRequest.getContextPath() );
         pars.put( StringRepresentationParameters.LINK_TARGET_KEY,               target );
         pars.put( StringRepresentationParameters.LINK_TITLE_KEY,                title );
         pars.put( StringRepresentationParameters.HTML_URL_ADDITIONAL_ARGUMENTS, addArguments );
@@ -760,7 +765,8 @@ public class RestfulJeeFormatter
         pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
         pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
 
         String ret = mesh.getIdentifier().toStringRepresentationLinkEnd( rep, pars );
         return ret;
@@ -817,7 +823,8 @@ public class RestfulJeeFormatter
         pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
         pars.put( StringRepresentationParameters.COLLOQUIAL,               colloquial );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
         
         String ret = base.toStringRepresentation( rep, pars );
         return ret;
@@ -873,7 +880,8 @@ public class RestfulJeeFormatter
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY,      getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,               saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY,      saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY,      saneRequest.getContextPath() );
         pars.put( StringRepresentationParameters.LINK_TARGET_KEY,               target );
         pars.put( StringRepresentationParameters.LINK_TITLE_KEY,                title );
         pars.put( StringRepresentationParameters.HTML_URL_ADDITIONAL_ARGUMENTS, addArguments );
@@ -905,7 +913,8 @@ public class RestfulJeeFormatter
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY,          saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
 
         String ret = base.toStringRepresentationLinkEnd( rep, pars );
         return ret;

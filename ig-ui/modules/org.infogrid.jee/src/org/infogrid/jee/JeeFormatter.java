@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -987,8 +987,9 @@ public class JeeFormatter
     {
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-        pars.put( StringRepresentationParameters.COLLOQUIAL, colloquial );
-        pars.put( StringRepresentationParameters.WEB_CONTEXT_KEY, saneRequest.getContextPath() );
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               colloquial );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
 
         String        sep = "";
         StringBuilder buf = new StringBuilder();

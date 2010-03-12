@@ -45,11 +45,11 @@ public class AllMeshObjectsTest1
         String content = r.getContentAsString();
         
         String [] objects = {
-            "<a href=\"/org.infogrid.jee.net.testapp/custom://example.org/%3ffoo=bar%26argl=brgl\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl</span></a>",
+            "<a href=\"/org.infogrid.jee.net.testapp/custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl</span></a>",
             "<a href=\"/org.infogrid.jee.net.testapp/\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">&lt;HOME&gt;</span></a>",
-            "<a href=\"/org.infogrid.jee.net.testapp/custom://example.com/\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.com/</span></a>",
-            "<a href=\"/org.infogrid.jee.net.testapp/custom://example.com/%23xxxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.com/#xxxx</span></a>",
-            "<a href=\"/org.infogrid.jee.net.testapp/custom://example.org/%3ffoo=bar%26argl=brgl%23xxxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl#xxxx</span></a>"
+            "<a href=\"/org.infogrid.jee.net.testapp/custom%3A//example.com/\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.com/</span></a>",
+            "<a href=\"/org.infogrid.jee.net.testapp/custom%3A//example.com/%23xxxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.com/#xxxx</span></a>",
+            "<a href=\"/org.infogrid.jee.net.testapp/custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl%23xxxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl#xxxx</span></a>"
         };
         for( int i=0 ; i<objects.length ; ++i ) {
             checkCondition( content.indexOf( objects[i] ) >=0, "Not found: " + objects[i] );

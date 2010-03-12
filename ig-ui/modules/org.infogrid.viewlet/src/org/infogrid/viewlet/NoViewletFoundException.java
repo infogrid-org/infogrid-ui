@@ -19,7 +19,6 @@ import org.infogrid.util.FactoryException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
 import org.infogrid.util.text.HasStringRepresentation;
-import org.infogrid.util.text.IdentifierStringifier;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
@@ -108,18 +107,14 @@ public class NoViewletFoundException
                     getClass(),
                     DEFAULT_NO_VIEWLET_TYPE_ENTRY,
                     pars,
-                    theObjectsToView.getSubject(),
-                    theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
+                    theObjectsToView.getSubject());
 
         } else {
             return rep.formatEntry(
                     getClass(),
                     DEFAULT_VIEWLET_TYPE_ENTRY,
                     pars,
-                    theObjectsToView.getSubject(),
-                    theObjectsToView.getSubject().getIdentifier(),
-                    IdentifierStringifier.defaultFormat( theObjectsToView.getSubject().getIdentifier().toExternalForm(), pars ));
+                    theObjectsToView.getSubject());
         }
     }
 
