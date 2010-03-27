@@ -92,7 +92,7 @@ public abstract class AbstractPropertyMatchTag
         StringRepresentation rep = theFormatter.determineStringRepresentation( StringRepresentationDirectory.TEXT_PLAIN_NAME );
 
         try {
-            String foundAsString = PropertyValue.toStringRepresentation( found, rep, null );
+            String foundAsString = PropertyValue.toStringRepresentationOrNull( found, rep, null );
 
             Pattern p = Pattern.compile( theExpression );
             Matcher m = p.matcher( foundAsString );

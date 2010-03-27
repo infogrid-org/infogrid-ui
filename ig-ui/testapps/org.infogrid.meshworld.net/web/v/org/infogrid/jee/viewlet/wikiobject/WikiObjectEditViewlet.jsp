@@ -8,8 +8,8 @@
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/wikiobject/WikiObjectEditViewlet.css"/>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/viewlet/ChangeViewletStateTag.css"/>
-<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyValueTag.css"/>
-<tmpl:script src="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyValueTag.js"/>
+<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyTag.css"/>
+<tmpl:script src="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyTag.js"/>
 <v:viewletAlternatives />
 <v:changeViewletState viewletStates="edit" display="compact"/>
 <v:viewlet formId="viewlet">
@@ -34,7 +34,7 @@
  </v:ifState>
  <v:ifState viewletState="view">
   <div class="content">
-   <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki/WikiObject_Content" stringRepresentation="Plain"/>
+   <mesh:property meshObjectName="Subject" propertyType="org.infogrid.model.Wiki/WikiObject_Content" />
   </div>
  </v:ifState>
 </v:viewlet>

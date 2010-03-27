@@ -14,19 +14,13 @@
 
 package org.infogrid.jee.taglib.mesh;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
-import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.L10Map;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyValue;
-import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -284,24 +278,7 @@ public class MeshTypeTag
                 } else {
                     value = map.get( theLocale );
                 }
-            } else if( found instanceof DataType ) {
-                DataType realFound = (DataType) found;
 
-                SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
-
-                SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-                pars.put( StringRepresentationParameters.MAX_LENGTH,               theMaxLength );
-                pars.put( StringRepresentationParameters.COLLOQUIAL,               theColloquial );
-                pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
-                pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
-
-                try {
-                    text = realFound.toStringRepresentation( rep, pars );
-
-                } catch( StringifierException ex ) {
-                    throw new JspException( ex );
-                }
-                    // a bit of a funny structure, but the best I can do
             } else {
                 throw new ClassCastException( "Found object named " + theMeshTypeName + " is neither a PropertyValue nor an L10Map: " + found );
             }
@@ -319,12 +296,9 @@ public class MeshTypeTag
         if( text == null ) {
             // a bit of a funny structure, but the best I can do
             try {
-                text = formatValue(
+                text = formatPropertyValue(
                         pageContext,
-                        null,
-                        null,
                         value,
-                        null,
                         theNullString,
                         rep.getName(),
                         theMaxLength,

@@ -17,9 +17,10 @@ package org.infogrid.jee.taglib.mesh;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
+import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.model.primitives.PropertyType;
-import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringifierException;
 
@@ -262,14 +263,13 @@ public class PropertyTag
             JspException,
             IgnoreException
     {
-        MeshObject obj  = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject   obj  = (MeshObject) lookupOrThrow( theMeshObjectName );
+        PropertyType type = null;
 
         if( obj == null ) {
             // if we get here, ignore is necessarily true
             return SKIP_BODY;
         }
-        PropertyType  type  = null;
-        PropertyValue value = null;
         
         if( thePropertyType != null ) {
             if( thePropertyTypeName != null ) {
@@ -278,21 +278,11 @@ public class PropertyTag
             
             type = findPropertyTypeOrThrow( obj, thePropertyType );
 
-        } else if( thePropertyTypeName == null ) {
+        } else if( thePropertyTypeName != null ) {
+            type = (PropertyType) lookupOrThrow( thePropertyTypeName );
+
+        } else {
             throw new JspException( "Must specify either propertyTypeName or propertyType" );
-        }
-
-        if( value == null ) {
-            if( type == null ) {
-                type = (PropertyType) lookupOrThrow( thePropertyTypeName );
-            }
-
-            try {
-                value = obj.getPropertyValue( type );
-
-            } catch( Exception ex ) {
-                throw new JspException( ex );
-            }        
         }
 
         Integer varCounter = (Integer) lookup( VARIABLE_COUNTER_NAME );
@@ -315,11 +305,10 @@ public class PropertyTag
         String editVar = String.format( VARIABLE_PATTERN, varCounter );
 
         try {
-            String text = formatValue(
+            String text = formatProperty(
                     pageContext,
                     obj,
                     type,
-                    value,
                     editVar,
                     theNullString,
                     realStringRep,
@@ -328,6 +317,10 @@ public class PropertyTag
             print( text );
 
         } catch( StringifierException ex ) {
+            throw new JspException( ex );
+        } catch( IllegalPropertyTypeException ex ) {
+            throw new JspException( ex );
+        } catch( NotPermittedException ex ) {
             throw new JspException( ex );
         }
 

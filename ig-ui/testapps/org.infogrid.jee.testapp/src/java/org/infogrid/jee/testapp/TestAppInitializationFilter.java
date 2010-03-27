@@ -18,15 +18,17 @@ import java.text.ParseException;
 import org.infogrid.jee.rest.defaultapp.m.AbstractMRestfulAppInitializationFilter;
 import org.infogrid.mesh.IsAbstractException;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.MeshObjectIdentifierNotUniqueException;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.RelatedAlreadyException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseLifecycleManager;
+import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Blob.BlobSubjectArea;
+import org.infogrid.model.Test.TestSubjectArea;
+import org.infogrid.model.primitives.EntityType;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.ViewletFactory;
@@ -57,19 +59,66 @@ public class TestAppInitializationFilter
     protected void populateMeshBase(
             MeshBase mb )
     {
-        MeshBaseLifecycleManager life = mb.getMeshBaseLifecycleManager();
+        MeshBaseLifecycleManager    life   = mb.getMeshBaseLifecycleManager();
+        MeshObjectIdentifierFactory idFact = mb.getMeshObjectIdentifierFactory();
+        MeshObject                  home   = mb.getHomeObject();
         
+        EntityType [] typesToInstantiate = {
+            TestSubjectArea.MANDATORYBLOBANY,
+            TestSubjectArea.MANDATORYBLOBHTML,
+            TestSubjectArea.MANDATORYBLOBIMAGE,
+            TestSubjectArea.MANDATORYBLOBJPG,
+            TestSubjectArea.MANDATORYBLOBPLAIN,
+            TestSubjectArea.MANDATORYBLOBPLAINORHTML,
+            TestSubjectArea.MANDATORYBOOLEAN,
+            TestSubjectArea.MANDATORYCOLOR,
+            TestSubjectArea.MANDATORYENUMERATED,
+            TestSubjectArea.MANDATORYEXTENT,
+            TestSubjectArea.MANDATORYFLOAT,
+            TestSubjectArea.MANDATORYINTEGER,
+            TestSubjectArea.MANDATORYMULTIPLICITY,
+            TestSubjectArea.MANDATORYPOINT,
+            TestSubjectArea.MANDATORYPROPERTIES,
+            TestSubjectArea.MANDATORYSTRING,
+            TestSubjectArea.MANDATORYTIMEPERIOD,
+            TestSubjectArea.MANDATORYTIMESTAMP,
+            TestSubjectArea.OPTIONALBLOBANY,
+            TestSubjectArea.OPTIONALBLOBHTML,
+            TestSubjectArea.OPTIONALBLOBIMAGE,
+            TestSubjectArea.OPTIONALBLOBJPG,
+            TestSubjectArea.OPTIONALBLOBPLAIN,
+            TestSubjectArea.OPTIONALBLOBPLAINORHTML,
+            TestSubjectArea.OPTIONALBOOLEAN,
+            TestSubjectArea.OPTIONALCOLOR,
+            TestSubjectArea.OPTIONALENUMERATED,
+            TestSubjectArea.OPTIONALEXTENT,
+            TestSubjectArea.OPTIONALFLOAT,
+            TestSubjectArea.OPTIONALINTEGER,
+            TestSubjectArea.OPTIONALMULTIPLICITY,
+            TestSubjectArea.OPTIONALPOINT,
+            TestSubjectArea.OPTIONALPROPERTIES,
+            TestSubjectArea.OPTIONALSTRING,
+            TestSubjectArea.OPTIONALTIMEPERIOD,
+            TestSubjectArea.OPTIONALTIMESTAMP
+        };
+
         Transaction tx = null;
         try {
             tx = mb.createTransactionNow();
             
-            MeshObjectIdentifier id = mb.getMeshObjectIdentifierFactory().fromExternalForm( "image" ); // testing is easier with well-known object
             MeshObject image = life.createMeshObject(
-                    id,
+                    idFact.fromExternalForm( "image" ), // testing is easier with well-known object
                     BlobSubjectArea.IMAGE );
             
-            mb.getHomeObject().relate( image );
+            home.relate( image );
             
+            for( int i=0 ; i<typesToInstantiate.length ; ++i ) {
+                MeshObject current = life.createMeshObject(
+                        idFact.fromExternalForm( typesToInstantiate[i].getName().value()),
+                        typesToInstantiate[i] );
+                home.relate( current );
+            }
+
         } catch( ParseException ex ) {
             getLog().error( ex );
         } catch( MeshObjectIdentifierNotUniqueException ex ) {

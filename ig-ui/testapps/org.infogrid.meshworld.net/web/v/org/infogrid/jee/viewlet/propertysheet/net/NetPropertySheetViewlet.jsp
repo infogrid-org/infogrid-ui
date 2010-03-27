@@ -11,8 +11,8 @@
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/propertysheet/PropertySheetViewlet.css"/>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/propertysheet/net/NetPropertySheetViewlet.css"/>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/viewlet/ChangeViewletStateTag.css"/>
-<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyValueTag.css"/>
-<tmpl:script src="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyValueTag.js"/>
+<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyTag.css"/>
+<tmpl:script src="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/PropertyTag.js"/>
 
 <v:viewletAlternatives />
 <v:changeViewletState viewletStates="edit" display="compact"/>

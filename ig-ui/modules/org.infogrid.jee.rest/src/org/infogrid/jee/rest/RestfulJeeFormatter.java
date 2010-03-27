@@ -23,6 +23,7 @@ import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.servlet.TemplatesFilter;
+import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
@@ -508,10 +509,7 @@ public class RestfulJeeFormatter
      * Format a PropertyValue.
      *
      * @param pageContext the PageContext object for this page
-     * @param owningMeshObject the MeshObject that owns this PropertyValue, if any
-     * @param propertyType the PropertyType of the PropertyValue, if any
      * @param value the PropertyValue
-     * @param editVar name of the HTML form elements to use
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
      * @param maxLength maximum length of emitted String. -1 means unlimited.
@@ -521,16 +519,67 @@ public class RestfulJeeFormatter
      */
     public String formatPropertyValue(
             PageContext   pageContext,
-            MeshObject    owningMeshObject,
-            PropertyType  propertyType,
             PropertyValue value,
-            String        editVar,
             String        nullString,
             String        stringRepresentation,
             int           maxLength,
             boolean       colloquial )
         throws
             StringifierException
+    {
+        String ret;
+        if( value == null ) {
+            ret = nullString;
+        } else {
+            SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+
+            StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+            SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+            pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+            pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
+            if( maxLength >= 0 ) {
+                pars.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
+            }
+            pars.put( StringRepresentationParameters.COLLOQUIAL, colloquial );
+
+            if( nullString != null ) {
+                pars.put( StringRepresentationParameters.NULL_STRING, nullString );
+            }
+            ret = value.toStringRepresentation( rep, pars );
+        }
+        return ret;
+    }
+
+    /**
+     * Format a Property.
+     *
+     * @param pageContext the PageContext object for this page
+     * @param owningMeshObject the MeshObject that owns this Property
+     * @param propertyType the PropertyType of the Property
+     * @param editVar name of the HTML form elements to use
+     * @param nullString the String to display of the value is null
+     * @param stringRepresentation the StringRepresentation for PropertyValues
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
+     * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify\
+     * @throws IllegalPropertyTypeException thrown if the PropertyType does not exist on this MeshObject
+     *         because the MeshObject has not been blessed with a MeshType that provides this PropertyType
+     * @throws NotPermittedException thrown if the caller is not authorized to perform this operation
+     */
+    public String formatProperty(
+            PageContext   pageContext,
+            MeshObject    owningMeshObject,
+            PropertyType  propertyType,
+            String        editVar,
+            String        nullString,
+            String        stringRepresentation,
+            int           maxLength,
+            boolean       colloquial )
+        throws
+            StringifierException,
+            IllegalPropertyTypeException,
+            NotPermittedException
     {
         SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
@@ -554,7 +603,13 @@ public class RestfulJeeFormatter
         if( editVar != null ) {
             pars.put( StringRepresentationParameters.EDIT_VARIABLE, editVar );
         }
-        String ret = PropertyValue.toStringRepresentation( value, rep, pars );
+
+        String ret = propertyType.getDataType().formatProperty(
+                owningMeshObject,
+                propertyType,
+                rep,
+                pars );
+
         return ret;
     }
 

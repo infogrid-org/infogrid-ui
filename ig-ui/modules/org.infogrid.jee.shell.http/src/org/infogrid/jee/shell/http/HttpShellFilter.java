@@ -689,15 +689,12 @@ public class HttpShellFilter
                 }
 
 
+            } else if( propValueString != null ) {
+                value = propertyType.fromStringRepresentation( theParsingRepresentation, propValueString, propMimeString );
+
             } else {
-                if( propValueString == null ) {
-                    throw new InvalidArgumentException( propValueKey );
-                }
-                // if( propMimeString == null || propMimeString.startsWith( "text/" )) {
-                    value = propertyType.fromStringRepresentation( theParsingRepresentation, propValueString, propMimeString );
-                // } else {
-                //     value = BlobValue.create( propValueString, propMimeString );
-                // }
+                // nothing given: leave as is
+                continue;
             }
 
             Transaction tx2 = tx.obtain();
@@ -724,7 +721,7 @@ public class HttpShellFilter
 
             StringRepresentationDirectory dir = appContext.findContextObjectOrThrow( StringRepresentationDirectory.class );
 
-            theParsingRepresentation = dir.get( StringRepresentationDirectory.TEXT_PLAIN_NAME );
+            theParsingRepresentation = dir.get( StringRepresentationDirectory.TEXT_HTTP_POST_NAME );
             if( theParsingRepresentation == null ) {
                 theParsingRepresentation = dir.getFallback();
             }
