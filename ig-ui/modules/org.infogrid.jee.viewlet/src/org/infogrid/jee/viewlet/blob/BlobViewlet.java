@@ -125,7 +125,7 @@ public class BlobViewlet
     {
         MeshObject subject = theViewedMeshObjects.getSubject();
         
-        String       propTypeName = restful.getSaneRequest().getPostedArgument( PROPERTY_TYPE_PAR );
+        String       propTypeName = restful.getSaneRequest().getUrlArgument( PROPERTY_TYPE_PAR );
         PropertyType propType     = null;
 
         if( propTypeName != null ) {
