@@ -322,7 +322,7 @@ public abstract class AbstractMeshObjectSetIterateTag
         }
         public boolean isLast()
         {
-            return theIterator.hasNext();
+            return hasNext();
         }
     }
 }

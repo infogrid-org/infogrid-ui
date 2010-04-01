@@ -210,6 +210,11 @@
     </tag>
     
     <tag>
+        <name>iteratefooter</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateFooterTag</tag-class>
+    </tag>
+
+    <tag>
         <name>iteratenocontent</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateNoContentTag</tag-class>
     </tag>
