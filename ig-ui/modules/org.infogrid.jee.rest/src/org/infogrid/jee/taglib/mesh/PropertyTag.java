@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -51,7 +51,7 @@ public class PropertyTag
         theMeshObjectName       = null;
         thePropertyTypeName     = null;
         thePropertyType         = null;
-        theNullString           = "";
+        theNullString           = null;
         theStringRepresentation = null;
         theMaxLength            = -1;
         theColloquial           = false;

@@ -1,43 +1,43 @@
 function org_infogrid_jee_taglib_mesh_PropertyTag_initProperty_value( nodeName, objectName, propertyType, currentValue, defaultValue, isOptional, isReadOnly ) {
-    var nullInput = document.getElementById( nodeName + '.propertyvalue.1.null' );
-    var createDiv = document.getElementById( nodeName + '.div.create' );
-    var removeDiv = document.getElementById( nodeName + '.div.remove' );
-    var valueDiv  = document.getElementById( nodeName + '.div.value' );
+    var nullInput  = document.getElementById( nodeName + '.propertyvalue.1.null' );
+    var createSpan = document.getElementById( nodeName + '.span.create' );
+    var removeSpan = document.getElementById( nodeName + '.span.remove' );
+    var valueSpan  = document.getElementById( nodeName + '.span.value' );
 
     if( currentValue == null ) {
         nullInput.value = 'true';
-        createDiv.style.display = 'inline';
-        removeDiv.style.display = 'none';
-        valueDiv.style.display  = 'none';
+        createSpan.style.display = 'inline';
+        removeSpan.style.display = 'none';
+        valueSpan.style.display  = 'none';
 
     } else if( isOptional ) {
-        removeDiv.style.display = 'inline';
+        removeSpan.style.display = 'inline';
     }
 }
 
 function org_infogrid_jee_taglib_mesh_PropertyTag_doRemove( nodeName ) {
-    var nullInput = document.getElementById( nodeName + '.propertyvalue.1.null' );
-    var createDiv = document.getElementById( nodeName + '.div.create' );
-    var removeDiv = document.getElementById( nodeName + '.div.remove' );
-    var valueDiv  = document.getElementById( nodeName + '.div.value' );
+    var nullInput  = document.getElementById( nodeName + '.propertyvalue.1.null' );
+    var createSpan = document.getElementById( nodeName + '.span.create' );
+    var removeSpan = document.getElementById( nodeName + '.span.remove' );
+    var valueSpan  = document.getElementById( nodeName + '.span.value' );
 
     nullInput.value = 'true';
 
-    createDiv.style.display = 'inline';
-    removeDiv.style.display = 'none';
-    valueDiv.style.display  = 'none';
+    createSpan.style.display = 'inline';
+    removeSpan.style.display = 'none';
+    valueSpan.style.display  = 'none';
 }
 function org_infogrid_jee_taglib_mesh_PropertyTag_doCreate( nodeName ) {
-    var nullInput = document.getElementById( nodeName + '.propertyvalue.1.null' );
-    var createDiv = document.getElementById( nodeName + '.div.create' );
-    var removeDiv = document.getElementById( nodeName + '.div.remove' );
-    var valueDiv  = document.getElementById( nodeName + '.div.value' );
+    var nullInput  = document.getElementById( nodeName + '.propertyvalue.1.null' );
+    var createSpan = document.getElementById( nodeName + '.span.create' );
+    var removeSpan = document.getElementById( nodeName + '.span.remove' );
+    var valueSpan  = document.getElementById( nodeName + '.span.value' );
 
     nullInput.value = 'false';
 
-    createDiv.style.display = 'none';
-    removeDiv.style.display = 'inline';
-    valueDiv.style.display  = 'inline';
+    createSpan.style.display = 'none';
+    removeSpan.style.display = 'inline';
+    valueSpan.style.display  = 'inline';
 }
 
 function org_infogrid_jee_taglib_mesh_PropertyTag_mimeSet( nodeName ) {
