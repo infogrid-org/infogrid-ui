@@ -22,8 +22,6 @@
  <dependencies>
   <requires name="org.infogrid.util.logging.log4j">
    <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/jee/testapp/Log.properties"/>
-  </requires>
-  <requires name="org.infogrid.util">
    <parameter name="org.infogrid.util.ResourceHelper.ApplicationResourceBundle" value="org/infogrid/jee/testapp/TestApp" />
   </requires>
   <requires name="org.infogrid.model.Test"/>
