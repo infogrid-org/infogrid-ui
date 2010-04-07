@@ -15,6 +15,7 @@
 package org.infogrid.lid.servlet;
 
 import java.io.IOException;
+import java.util.Iterator;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -26,34 +27,31 @@ import org.infogrid.jee.servlet.AbstractServletInvokingServlet;
 import org.infogrid.jee.templates.NoContentStructuredResponseTemplate;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
-import org.infogrid.jee.templates.VerbatimStructuredResponseTemplate;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
-import org.infogrid.lid.DefaultLidProcessingPipeline;
-import org.infogrid.lid.LidAbortProcessingPipelineException;
-import org.infogrid.lid.LidAbortProcessingPipelineWithContentException;
-import org.infogrid.lid.LidAbortProcessingPipelineWithErrorException;
-import org.infogrid.lid.LidAbortProcessingPipelineWithRedirectException;
-import org.infogrid.lid.LidProcessingPipeline;
-import org.infogrid.lid.yadis.YadisPipelineProcessingStage;
+import org.infogrid.lid.DefaultLidPipeline;
+import org.infogrid.lid.LidPipeline;
+import org.infogrid.lid.LidPipelineInstructions;
+import org.infogrid.lid.LidPipelineStageInstructions;
+import org.infogrid.lid.LidSsoPipelineStageInstructions;
 import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
- * Invokes the LidProcessingPipeline.
+ * Invokes the LidPipeline.
  */
-public class LidProcessingPipelineServlet
+public class LidPipelineServlet
         extends
             AbstractServletInvokingServlet
 {
     private static final long serialVersionUID = 1L; // helps with serialization
-    private static final Log  log              = Log.getLogInstance( LidProcessingPipelineServlet.class ); // our own, private logger
+    private static final Log  log              = Log.getLogInstance( LidPipelineServlet.class ); // our own, private logger
 
     /**
      * Constructor.
      */
-    public LidProcessingPipelineServlet()
+    public LidPipelineServlet()
     {
         // nothing right now
     }
@@ -81,15 +79,44 @@ public class LidProcessingPipelineServlet
         SaneRequest        originalRequest = lidRequest.getOriginalSaneRequest();
         StructuredResponse lidResponse = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
-        LidProcessingPipeline pipe = obtainLidProcessingPipeline( appContext );
+        LidPipeline pipe = obtainLidPipeline( appContext );
 
-        String site  = originalRequest.getAbsoluteContextUri();
-        String realm = site;
-
+        String  site  = originalRequest.getAbsoluteContextUri();
+        String  realm = site;
+        boolean done  = false;
         try {
-            pipe.processPipeline( originalRequest, SimpleStringIdentifier.create( site ), realm );
+            LidPipelineInstructions compoundInstructions
+                    = pipe.processPipeline( originalRequest, SimpleStringIdentifier.create( site ), realm );
 
-            invokeServlet( originalRequest, lidResponse );
+            LidPipelineStageInstructions currentInstructions;
+            
+            if( !done ) {
+                currentInstructions = compoundInstructions.getYadisInstructions();
+                if( currentInstructions != null ) {
+                    done = currentInstructions.applyAsRecommended( originalRequest, lidResponse.getDelegate() );
+                }
+            }
+
+            if( !done ) {
+                Iterator<LidSsoPipelineStageInstructions> iter = compoundInstructions.getSsoInstructionsIter();
+                while( !done && iter.hasNext() ) {
+                    currentInstructions = iter.next();
+                    if( currentInstructions != null ) {
+                        done = currentInstructions.applyAsRecommended( originalRequest, lidResponse.getDelegate() );
+                    }
+                }
+            }
+
+            if( !done ) {
+                currentInstructions = compoundInstructions.getSessionManagementInstructions();
+                if( currentInstructions != null ) {
+                    done = currentInstructions.applyAsRecommended( originalRequest, lidResponse.getDelegate() );
+                }
+            }
+
+            if( !done ) {
+                invokeServlet( originalRequest, lidResponse, compoundInstructions );
+            }
 
         } catch( Throwable ex ) {
             handleException( originalRequest, lidResponse, ex );
@@ -97,20 +124,20 @@ public class LidProcessingPipelineServlet
     }
     
     /**
-     * Overridable method to create the LidProcessingPipeline.
+     * Overridable method to create the LidPipeline.
      * 
      * @param c Context for the pipeline
-     * @return the created LidProcessingPipeline
+     * @return the created LidPipeline
      */
-    protected LidProcessingPipeline obtainLidProcessingPipeline(
+    protected LidPipeline obtainLidPipeline(
             Context c )
     {
         if( thePipeline == null ) {
-            thePipeline = DefaultLidProcessingPipeline.create( c );
+            thePipeline = DefaultLidPipeline.create( c );
         }
         return thePipeline;
     }
-    
+
     /**
      * Invoke the configured servlet. Instead of doing what our superclass does, we use the template framework.
      * 
@@ -120,12 +147,16 @@ public class LidProcessingPipelineServlet
      * @throws IOException thrown if an I/O error occurred
      */
     protected void invokeServlet(
-            SaneRequest        lidRequest,
-            StructuredResponse lidResponse )
+            SaneRequest                       lidRequest,
+            StructuredResponse                lidResponse,
+            LidPipelineInstructions compoundInstructions )
         throws
             ServletException,
             IOException
     {
+        lidRequest.setAttribute( PROCESSING_PIPELINE_INSTRUCTIONS_ATTRIBUTE_NAME, compoundInstructions );
+        lidRequest.setAttribute( REQUESTED_RESOURCE_ATTRIBUTE_NAME,               compoundInstructions.getRequestedResource() );
+
         RequestDispatcher dispatcher = getServletContext().getNamedDispatcher( theServletName );
 
         if( dispatcher != null ) {
@@ -133,11 +164,6 @@ public class LidProcessingPipelineServlet
                     dispatcher,
                     lidRequest,
                     lidResponse );
-
-            String yadisHeader = (String) lidRequest.getAttribute( YadisPipelineProcessingStage.YADIS_HTTP_HEADER_REQUEST_ATTRIBUTE_NAME );
-            if( yadisHeader != null ) {
-                lidResponse.addHeader( YadisPipelineProcessingStage.YADIS_HTTP_HEADER, yadisHeader );
-            }
 
         } else {
             log.error( "Could not find RequestDispatcher (servlet) with name " + theServletName );
@@ -156,51 +182,26 @@ public class LidProcessingPipelineServlet
             StructuredResponse lidResponse,
             Throwable          t )
     {
-        if( t instanceof LidAbortProcessingPipelineWithContentException ) {
+        log.error( t );
 
-            LidAbortProcessingPipelineWithContentException realT = (LidAbortProcessingPipelineWithContentException) t;
+        TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
+        section.setHttpResponseCode( 500 );
 
-            TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
-            section.setHttpResponseCode( 200 );
-            section.setContent(  realT.getContent()     );
-            section.setMimeType( realT.getContentType() );
-
-            lidResponse.setRequestedTemplateName( VerbatimStructuredResponseTemplate.VERBATIM_TEXT_TEMPLATE_NAME );
-
-        } else if( t instanceof LidAbortProcessingPipelineWithRedirectException ) {
-
-            LidAbortProcessingPipelineWithRedirectException realT = (LidAbortProcessingPipelineWithRedirectException) t;
-
-            TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
-            section.setHttpResponseCode( realT.getStatus() );
-            section.setLocation(         realT.getLocation() );
-
-            lidResponse.setRequestedTemplateName( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME );
-
-        } else if( t instanceof LidAbortProcessingPipelineWithErrorException ) {
-
-            LidAbortProcessingPipelineWithErrorException realT = (LidAbortProcessingPipelineWithErrorException) t;
-
-            TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
-            section.setHttpResponseCode( realT.getStatus() );
-
-            lidResponse.setRequestedTemplateName( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME );
-
-        } else if( t instanceof LidAbortProcessingPipelineException ) {
-            // do nothing, this is fine
-        } else {
-
-            log.error( t );
-
-            TextStructuredResponseSection section = lidResponse.getDefaultTextSection();
-            section.setHttpResponseCode( 500 );
-
-            lidResponse.setRequestedTemplateName( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME );
-        }
+        lidResponse.setRequestedTemplateName( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME );
     }
 
     /**
-     * Cached LidProcessingPipeline.
+     * Cached LidPipeline.
      */
-    protected LidProcessingPipeline thePipeline;
+    protected LidPipeline thePipeline;
+
+    /**
+     * Name of the HasIdentifier instance found in the request after the pipeline has
+     * been processed.
+     */
+    public static final String REQUESTED_RESOURCE_ATTRIBUTE_NAME = "org_infogrid_lid_RequestedResource";
+
+    public static final String PROCESSING_PIPELINE_INSTRUCTIONS_ATTRIBUTE_NAME = "org_infogrid_lid_ProcessingPipelineInstructions";
+
+
 }
