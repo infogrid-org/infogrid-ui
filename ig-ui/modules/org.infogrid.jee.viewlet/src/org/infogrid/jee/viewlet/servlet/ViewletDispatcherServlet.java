@@ -170,22 +170,25 @@ public class ViewletDispatcherServlet
         if( viewlet != null ) {
             synchronized( viewlet ) {
                 Throwable thrown  = null;
+                boolean   done    = false;
                 try {
                     viewlet.view( toView );
                     if( SafeUnsafePostFilter.isSafePost( servletRequest ) ) {
-                        viewlet.performBeforeSafePost( restfulRequest, structured );
+                        done = viewlet.performBeforeSafePost( restfulRequest, structured );
 
                     } else if( SafeUnsafePostFilter.isUnsafePost( servletRequest ) ) {
-                        viewlet.performBeforeUnsafePost( restfulRequest, structured );
+                        done = viewlet.performBeforeUnsafePost( restfulRequest, structured );
 
                     } else if( SafeUnsafePostFilter.mayBeSafeOrUnsafePost( servletRequest ) ) {
-                        viewlet.performBeforeMaybeSafeOrUnsafePost( restfulRequest, structured );
+                        done = viewlet.performBeforeMaybeSafeOrUnsafePost( restfulRequest, structured );
 
                     } else {
-                        viewlet.performBeforeGet( restfulRequest, structured );
+                        done = viewlet.performBeforeGet( restfulRequest, structured );
                     }
 
-                    viewlet.processRequest( restfulRequest, toView, structured );
+                    if( !done ) {
+                        viewlet.processRequest( restfulRequest, toView, structured );
+                    }
 
                 } catch( RuntimeException t ) {
                     thrown = t;

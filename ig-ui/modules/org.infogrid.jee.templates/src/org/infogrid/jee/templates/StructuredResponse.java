@@ -503,6 +503,17 @@ public class StructuredResponse
     }
 
     /**
+     * Set the desired MIME type.
+     *
+     * @param newValue the new value
+     */
+    public void setMimeType(
+            String newValue )
+    {
+        theMimeType = newValue;
+    }
+
+    /**
      * Obtain the Cookies.
      * 
      * @return the Cookies
@@ -510,6 +521,17 @@ public class StructuredResponse
     public Collection<Cookie> getCookies()
     {
         return theCookies;
+    }
+
+    /**
+     * Add a Cookie.
+     *
+     * @param toAdd the Cookie to add
+     */
+    public void addCookie(
+            Cookie toAdd )
+    {
+        theCookies.add( toAdd );
     }
 
     /**
@@ -523,6 +545,17 @@ public class StructuredResponse
     }
 
     /**
+     * Set a redirect location.
+     *
+     * @param newValue the new value
+     */
+    public void setLocation(
+            String newValue )
+    {
+        theLocation = newValue;
+    }
+
+    /**
      * Obtain the HTTP response code.
      * 
      * @return the HTTP response code
@@ -531,7 +564,18 @@ public class StructuredResponse
     {
         return theHttpResponseCode;
     }
-    
+
+    /**
+     * Set the desired HTTP response code.
+     *
+     * @param newValue the new value
+     */
+    public void setHttpResponseCode(
+            int newValue )
+    {
+        theHttpResponseCode = newValue;
+    }
+
     /**
      * Obtain the locale.
      * 
@@ -543,6 +587,17 @@ public class StructuredResponse
     }
 
     /**
+     * Set the locale.
+     *
+     * @param newValue the new value
+     */
+    public void setLocale(
+            Locale newValue )
+    {
+        theLocale = newValue;
+    }
+
+    /**
      * Obtain the character encoding.
      * 
      * @return the character encoding
@@ -551,7 +606,18 @@ public class StructuredResponse
     {
         return theCharacterEncoding;
     }
-    
+
+    /**
+     * Set the character encoding.
+     *
+     * @param newValue the new value
+     */
+    public void setCharacterEncoding(
+            String newValue )
+    {
+        theCharacterEncoding = newValue;
+    }
+
     /**
      * Obtain the ServletContext whithin this response is being assembled.
      * 

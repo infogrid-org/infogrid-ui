@@ -69,13 +69,15 @@ public interface JeeViewlet
      * 
      * @param request the incoming request
      * @param response the response to be assembled
+     * @return if true, the result of the viewlet processing has been deposited into the response object
+     *         already and regular processing will be skipped. If false, regular processing continues.
      * @throws ServletException thrown if an error occurred
      * @see #performBeforeSafePost
      * @see #performBeforeUnsafePost
      * @see #performBeforeMaybeSafeOrUnsafePost
      * @see #performAfter
      */
-    public void performBeforeGet(
+    public boolean performBeforeGet(
             RestfulRequest     request,
             StructuredResponse response )
         throws
@@ -89,13 +91,15 @@ public interface JeeViewlet
      * 
      * @param request the incoming request
      * @param response the response to be assembled
+     * @return if true, the result of the viewlet processing has been deposited into the response object
+     *         already and regular processing will be skipped. If false, regular processing continues.
      * @throws ServletException thrown if an error occurred
      * @see #performBeforeGet
      * @see #performBeforeUnsafePost
      * @see #performBeforeMaybeSafeOrUnsafePost
      * @see #performAfter
      */
-    public void performBeforeSafePost(
+    public boolean performBeforeSafePost(
             RestfulRequest     request,
             StructuredResponse response )
         throws
@@ -111,6 +115,8 @@ public interface JeeViewlet
      * 
      * @param request the incoming request
      * @param response the response to be assembled
+     * @return if true, the result of the viewlet processing has been deposited into the response object
+     *         already and regular processing will be skipped. If false, regular processing continues.
      * @throws UnsafePostException thrown if the unsafe POST operation was not acceptable
      * @throws ServletException thrown if an error occurred
      * @see #performBeforeGet
@@ -118,7 +124,7 @@ public interface JeeViewlet
      * @see #performBeforeMaybeSafeOrUnsafePost
      * @see #performAfter
      */
-    public void performBeforeUnsafePost(
+    public boolean performBeforeUnsafePost(
             RestfulRequest     request,
             StructuredResponse response )
         throws
@@ -135,12 +141,14 @@ public interface JeeViewlet
      * 
      * @param request the incoming request
      * @param response the response to be assembled
+     * @return if true, the result of the viewlet processing has been deposited into the response object
+     *         already and regular processing will be skipped. If false, regular processing continues.
      * @throws ServletException thrown if an error occurred
      * @see #performBeforeGet
      * @see #performBeforeSafePost
      * @see #performAfter
      */
-    public void performBeforeMaybeSafeOrUnsafePost(
+    public boolean performBeforeMaybeSafeOrUnsafePost(
             RestfulRequest     request,
             StructuredResponse response )
         throws

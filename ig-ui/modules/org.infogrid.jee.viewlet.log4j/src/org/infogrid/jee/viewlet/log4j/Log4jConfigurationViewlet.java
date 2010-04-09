@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -144,16 +144,18 @@ public class Log4jConfigurationViewlet
      *
      * @param request the incoming request
      * @param response the response to be assembled
+     * @return if true, the result of the viewlet processing has been deposited into the response object
+     *         already and regular processing will be skipped. If false, regular processing continues.
      * @throws ServletException thrown if an error occurred
      */
     @Override
-    public void performBeforeSafePost(
+    public boolean performBeforeSafePost(
             RestfulRequest     request,
             StructuredResponse response )
         throws
             ServletException
     {
-        performPost( request, response );
+        return performPost( request, response );
     }
 
     /**
@@ -164,16 +166,18 @@ public class Log4jConfigurationViewlet
      *
      * @param request the incoming request
      * @param response the response to be assembled
+     * @return if true, the result of the viewlet processing has been deposited into the response object
+     *         already and regular processing will be skipped. If false, regular processing continues.
      * @throws ServletException thrown if an error occurred
      */
     @Override
-    public void performBeforeMaybeSafeOrUnsafePost(
+    public boolean performBeforeMaybeSafeOrUnsafePost(
             RestfulRequest     request,
             StructuredResponse response )
         throws
             ServletException
     {
-        performPost( request, response );
+        return performPost( request, response );
     }
 
     /**
@@ -181,9 +185,11 @@ public class Log4jConfigurationViewlet
      *
      * @param request the incoming request
      * @param response the response to be assembled
+     * @return if true, the result of the viewlet processing has been deposited into the response object
+     *         already and regular processing will be skipped. If false, regular processing continues.
      * @throws ServletException thrown if an error occurred
      */
-    protected void performPost(
+    protected boolean performPost(
             RestfulRequest     request,
             StructuredResponse response )
         throws
@@ -211,6 +217,9 @@ public class Log4jConfigurationViewlet
                 l.getDelegate().setLevel( null );
             }
         }
+        response.setHttpResponseCode( 303 );
+        response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
+        return true;
     }
 
     /**
