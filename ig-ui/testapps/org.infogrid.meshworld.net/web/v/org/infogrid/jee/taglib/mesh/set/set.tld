@@ -17,14 +17,14 @@
     <tlib-version>1.0</tlib-version>
     <short-name>set</short-name>
     <uri>/v/org/infogrid/jee/taglib/mesh/set/set.tld</uri>
-    
+
     <!-- Tags are ordered alphabetically by Java Class name. Makes it easier
          to find them in the IDE. -->
 
     <tag>
         <name>ifSetContains</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.IfSetContainsTag</tag-class>
-        
+
         <attribute>
             <name>meshObjectSetName</name>
             <rtexprvalue>true</rtexprvalue>
@@ -51,7 +51,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>ifSetEmpty</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.IfSetEmptyTag</tag-class>
@@ -78,7 +78,7 @@
     <tag>
         <name>ifSetNotEmpty</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.IfSetNotEmptyTag</tag-class>
-        
+
         <attribute>
             <name>meshObjectSetName</name>
             <rtexprvalue>true</rtexprvalue>
@@ -200,15 +200,69 @@
     </tag>
 
     <tag>
+        <name>setSize</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.SetSizeTag</tag-class>
+
+        <attribute>
+            <name>meshObjectSetName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>traverseSetSize</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.TraverseSetSizeTag</tag-class>
+
+        <attribute>
+            <name>startObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>startObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>traversalSpecification</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>iteratecontentrow</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateContentRowTag</tag-class>
     </tag>
-    
+
     <tag>
         <name>iterateheader</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateHeaderTag</tag-class>
     </tag>
-    
+
     <tag>
         <name>iteratefooter</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateFooterTag</tag-class>
@@ -248,7 +302,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>traverseIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetTraverseIterateTag</tag-class>
