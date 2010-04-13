@@ -54,7 +54,7 @@ public class MeshObjectSetIterateFooterTag
         }
 
         AbstractMeshObjectSetIterateTag realParentTag = (AbstractMeshObjectSetIterateTag) parentTag;
-        if( !realParentTag.hasNext() ) {
+        if( realParentTag.displayFooter() ) {
             return EVAL_BODY_INCLUDE;
         } else {
             return SKIP_BODY;

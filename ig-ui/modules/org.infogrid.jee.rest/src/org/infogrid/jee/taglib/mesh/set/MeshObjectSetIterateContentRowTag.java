@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -65,27 +65,11 @@ public class MeshObjectSetIterateContentRowTag
                         ? (AbstractMeshObjectSetIterateTag) parentTag
                         : (AbstractMeshObjectSetIterateTag) grandParentTag;
 
-        if( theRealParentTag.processesEmptySet() ) {
+        if( theRealParentTag.displayContentRow() ) {
+            return EVAL_BODY_INCLUDE;
+        } else {
             return SKIP_BODY;
         }
-        return EVAL_BODY_INCLUDE;
-    }
-
-    /**
-     * Our implementation of doEndTag().
-     *
-     * @return evaluate or skip body
-     * @throws JspException thrown if an evaluation error occurred
-     */
-    @Override
-    protected int realDoEndTag()
-        throws
-            JspException
-    {
-        if( theRealParentTag.processesEmptySet() ) {
-            return EVAL_PAGE;
-        }
-        return EVAL_PAGE;
     }
 
     /**
