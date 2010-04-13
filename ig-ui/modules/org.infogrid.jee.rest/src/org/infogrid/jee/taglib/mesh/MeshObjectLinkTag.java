@@ -268,14 +268,16 @@ public class MeshObjectLinkTag
             obj = (MeshObject) lookupOrThrow( theMeshObjectName );
         }
 
-        String addArguments = constructAddArguments();
+        if( obj != null ) { // make be ignore="true"
+            String addArguments = constructAddArguments();
 
-        try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, addArguments, theTarget, theTitle, theStringRepresentation );
-            print( text );
+            try {
+                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, addArguments, theTarget, theTitle, theStringRepresentation );
+                print( text );
 
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
+            } catch( StringifierException ex ) {
+                throw new JspException( ex );
+            }
         }
 
         return EVAL_BODY_INCLUDE;
@@ -301,12 +303,14 @@ public class MeshObjectLinkTag
             obj = (MeshObject) lookupOrThrow( theMeshObjectName );
         }
 
-        try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, theRootPath, theStringRepresentation );
-            print( text );
+        if( obj != null ) { // make be ignore="true"
+            try {
+                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, theRootPath, theStringRepresentation );
+                print( text );
 
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
+            } catch( StringifierException ex ) {
+                throw new JspException( ex );
+            }
         }
 
         return EVAL_PAGE;

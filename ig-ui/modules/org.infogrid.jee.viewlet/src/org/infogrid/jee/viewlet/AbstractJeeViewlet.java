@@ -180,9 +180,14 @@ public abstract class AbstractJeeViewlet
         throws
             ServletException
     {
-        response.setHttpResponseCode( 303 );
-        response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
-        return true;
+        if( request.getSaneRequest().getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
+            // only if no errors have been reported
+            response.setHttpResponseCode( 303 );
+            response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -236,9 +241,14 @@ public abstract class AbstractJeeViewlet
         throws
             ServletException
     {
-        response.setHttpResponseCode( 303 );
-        response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
-        return true;
+        if( request.getSaneRequest().getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
+            // only if no errors have been reported
+            response.setHttpResponseCode( 303 );
+            response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**
