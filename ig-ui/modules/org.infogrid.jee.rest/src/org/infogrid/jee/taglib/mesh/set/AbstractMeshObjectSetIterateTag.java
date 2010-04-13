@@ -22,7 +22,10 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.set.ByPropertyValueSorter;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.MeshObjectSorter;
+import org.infogrid.model.primitives.PropertyType;
 
 /**
  * Factors out common code for tags that iterate over the content of a <code>MeshObjectSet</code>.
@@ -49,6 +52,8 @@ public abstract class AbstractMeshObjectSetIterateTag
     {
         theMeshObjectLoopVar = null;
         theStatusVar         = null;
+        theOrderBy           = null;
+        theReverse           = null;
         theCounter           = 0;
         theSet               = null;
         theIterator          = null;
@@ -106,6 +111,52 @@ public abstract class AbstractMeshObjectSetIterateTag
     }
 
     /**
+     * Obtain value of the orderBy property.
+     *
+     * @return value of the orderBy property
+     * @see #setOrderBy
+     */
+    public final String getOrderBy()
+    {
+        return theOrderBy;
+    }
+
+    /**
+     * Set value of the orderBy property.
+     *
+     * @param newValue new value of the orderBy property
+     * @see #getOrderBy
+     */
+    public final void setOrderBy(
+            String newValue )
+    {
+        theOrderBy = newValue;
+    }
+
+    /**
+     * Obtain value of the reverse property.
+     *
+     * @return value of the reverse property
+     * @see #setReverse
+     */
+    public final String getReverse()
+    {
+        return theReverse;
+    }
+
+    /**
+     * Set value of the reverse property.
+     *
+     * @param newValue new value of the reverse property
+     * @see #getReverse
+     */
+    public final void setReverse(
+            String newValue )
+    {
+        theReverse = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -123,6 +174,15 @@ public abstract class AbstractMeshObjectSetIterateTag
         if( theSet == null ) {
             // can be, if ignore=true
             return SKIP_BODY;
+        }
+        if( theOrderBy != null ) {
+            PropertyType orderBy = (PropertyType) findMeshTypeByIdentifier( theOrderBy );
+
+            boolean reverse = theFormatter.isTrue( theReverse );
+
+            MeshObjectSorter sorter = ByPropertyValueSorter.create( orderBy, reverse );
+
+            theSet = theSet.getFactory().createOrderedImmutableMeshObjectSet( theSet, sorter );
         }
 
         if( theSet.isEmpty() ) {
@@ -311,6 +371,16 @@ public abstract class AbstractMeshObjectSetIterateTag
      * String containing the name of the loop variable that contains the LoopTagStatus.
      */
     private String theStatusVar;
+
+    /**
+     * String containing the identifier of the PropertyType by which we sort the set, if any.
+     */
+    protected String theOrderBy;
+
+    /**
+     * String containing a boolean flag indicating whether we should iterate in the reverse sort order.
+     */
+    protected String theReverse;
 
     /**
      * Counts the number of iterations performed so far.

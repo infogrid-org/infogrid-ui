@@ -21,6 +21,7 @@ import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.traversal.TraversalSpecification;
@@ -144,6 +145,21 @@ public abstract class AbstractRestInfoGridBodyTag
             JspException
     {
         return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( identifier );
+    }
+
+    /**
+     * Find a MeshType by its identifier.
+     *
+     * @param identifier the MeshTypeIdentifier in String form
+     * @return the found MeshType, or null
+     * @throws JspException thrown if the identifier could not be parsed
+     */
+    public MeshType findMeshTypeByIdentifier(
+            String identifier )
+        throws
+            JspException
+    {
+        return ((RestfulJeeFormatter)theFormatter).findMeshTypeByIdentifier( identifier );
     }
 
     /**

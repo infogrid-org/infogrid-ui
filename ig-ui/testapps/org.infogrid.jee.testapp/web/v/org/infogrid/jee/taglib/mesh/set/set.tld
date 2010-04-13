@@ -290,6 +290,14 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>orderBy</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>reverse</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>filter</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -325,6 +333,14 @@
         </attribute>
         <attribute>
             <name>statusVar</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>orderBy</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>reverse</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>

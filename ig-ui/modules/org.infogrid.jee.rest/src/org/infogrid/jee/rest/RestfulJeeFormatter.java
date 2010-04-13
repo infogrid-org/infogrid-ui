@@ -30,6 +30,7 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.text.MeshStringRepresentationParameters;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
+import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
@@ -243,6 +244,32 @@ public class RestfulJeeFormatter
 
         } catch( ParseException ex ) {
             throw new JspException( "Could not parse identifier " + identifier );
+        }
+    }
+
+    /**
+     * Find a MeshType by its identifier.
+     *
+     * @param identifier the MeshTypeIdentifier in String form
+     * @return the found MeshType, or null
+     * @throws JspException thrown if the identifier could not be parsed
+     */
+    public MeshType findMeshTypeByIdentifier(
+            String identifier )
+        throws
+            JspException
+    {
+        ModelBase                 mb     = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( ModelBase.class );
+        MeshTypeIdentifierFactory idFact = mb.getMeshTypeIdentifierFactory();
+
+        MeshTypeIdentifier id = idFact.fromExternalForm( identifier );
+
+        try {
+            MeshType ret = mb.findMeshTypeByIdentifier( id );
+            return ret;
+        } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+            // ignore
+            return null;
         }
     }
 
