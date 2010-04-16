@@ -23,6 +23,8 @@ import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.ByPropertyValueSorter;
+import org.infogrid.mesh.set.DefaultMeshObjectSorter;
+import org.infogrid.mesh.set.DefaultTraversalPathSorter.ByUserVisibleStringComparator;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSorter;
 import org.infogrid.model.primitives.PropertyType;
@@ -175,15 +177,23 @@ public abstract class AbstractMeshObjectSetIterateTag
             // can be, if ignore=true
             return SKIP_BODY;
         }
+
+        boolean          reverse = theFormatter.isTrue( theReverse );
+        MeshObjectSorter sorter;
         if( theOrderBy != null ) {
             PropertyType orderBy = (PropertyType) findMeshTypeByIdentifier( theOrderBy );
 
-            boolean reverse = theFormatter.isTrue( theReverse );
+            sorter = ByPropertyValueSorter.create( orderBy, reverse );
 
-            MeshObjectSorter sorter = ByPropertyValueSorter.create( orderBy, reverse );
-
-            theSet = theSet.getFactory().createOrderedImmutableMeshObjectSet( theSet, sorter );
+        } else {
+            if( !reverse ) {
+                sorter = DefaultMeshObjectSorter.BY_USER_VISIBLE_STRING;
+            } else {
+                sorter = DefaultMeshObjectSorter.BY_REVERSE_USER_VISIBLE_STRING;
+            }
         }
+
+        theSet = theSet.getFactory().createOrderedImmutableMeshObjectSet( theSet, sorter );
 
         if( theSet.isEmpty() ) {
             theStatus = Status.PROCESS_NO_CONTENT_ROW;
