@@ -94,20 +94,22 @@ public class LidPipelineServlet
 
             authStatus = compoundInstructions.getClientAuthenticationStatus();
 
-            if( authStatus.getClientIdentifier() != null ) {
-                request.setAttribute( CLIENT_ATTRIBUTE_NAME,    authStatus.getClientAccount() );
-                request.setAttribute( CLIENT_ID_ATTRIBUTE_NAME, authStatus.getClientIdentifier() );
-                request.setAttribute( USER_ID_ATTRIBUTE_NAME,   authStatus.getClientIdentifier() );
-                request.setAttribute( LID_ATTRIBUTE_NAME,       authStatus.getClientIdentifier() );
-                request.setAttribute( USER_NICK_ATTRIBUTE_NAME, IdentifierStringifier.toColloquialIdentifier( authStatus.getClientIdentifier().toExternalForm() )); // FIXME
-            }
-            if( authStatus.getClientAccountIdentifier() != null ) {
-                request.setAttribute( ACCOUNT_ATTRIBUTE_NAME,    authStatus.getClientAccount() );
-                request.setAttribute( ACCOUNT_ID_ATTRIBUTE_NAME, authStatus.getClientAccountIdentifier() );
-                if( authStatus.getClientIdentifier() == null ) {
-                    request.setAttribute( USER_ID_ATTRIBUTE_NAME,   authStatus.getClientAccountIdentifier() );
-                    request.setAttribute( LID_ATTRIBUTE_NAME,       authStatus.getClientAccountIdentifier() );
-                    request.setAttribute( USER_NICK_ATTRIBUTE_NAME, IdentifierStringifier.toColloquialIdentifier( authStatus.getClientAccountIdentifier().toExternalForm() )); // FIXME
+            if( authStatus.isAnonymous() ) {
+                if( authStatus.getClientIdentifier() != null ) {
+                    request.setAttribute( CLIENT_ATTRIBUTE_NAME,    authStatus.getClientAccount() );
+                    request.setAttribute( CLIENT_ID_ATTRIBUTE_NAME, authStatus.getClientIdentifier() );
+                    request.setAttribute( USER_ID_ATTRIBUTE_NAME,   authStatus.getClientIdentifier() );
+                    request.setAttribute( LID_ATTRIBUTE_NAME,       authStatus.getClientIdentifier() );
+                    request.setAttribute( USER_NICK_ATTRIBUTE_NAME, IdentifierStringifier.toColloquialIdentifier( authStatus.getClientIdentifier().toExternalForm() )); // FIXME
+                }
+                if( authStatus.getClientAccountIdentifier() != null ) {
+                    request.setAttribute( ACCOUNT_ATTRIBUTE_NAME,    authStatus.getClientAccount() );
+                    request.setAttribute( ACCOUNT_ID_ATTRIBUTE_NAME, authStatus.getClientAccountIdentifier() );
+                    if( authStatus.getClientIdentifier() == null ) {
+                        request.setAttribute( USER_ID_ATTRIBUTE_NAME,   authStatus.getClientAccountIdentifier() );
+                        request.setAttribute( LID_ATTRIBUTE_NAME,       authStatus.getClientAccountIdentifier() );
+                        request.setAttribute( USER_NICK_ATTRIBUTE_NAME, IdentifierStringifier.toColloquialIdentifier( authStatus.getClientAccountIdentifier().toExternalForm() )); // FIXME
+                    }
                 }
             }
 
