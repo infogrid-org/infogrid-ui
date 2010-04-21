@@ -29,6 +29,7 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
 import org.infogrid.lid.DefaultLidPipeline;
+import org.infogrid.lid.LidClientAuthenticationStatus;
 import org.infogrid.lid.LidPipeline;
 import org.infogrid.lid.LidPipelineInstructions;
 import org.infogrid.lid.LidPipelineStageInstructions;
@@ -37,6 +38,7 @@ import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.IdentifierStringifier;
 
 /**
  * Invokes the LidPipeline.
@@ -84,9 +86,30 @@ public class LidPipelineServlet
         String  site  = originalRequest.getAbsoluteContextUri();
         String  realm = site;
         boolean done  = false;
+        LidClientAuthenticationStatus authStatus;
+
         try {
             LidPipelineInstructions compoundInstructions
                     = pipe.processPipeline( originalRequest, SimpleStringIdentifier.create( site ), realm );
+
+            authStatus = compoundInstructions.getClientAuthenticationStatus();
+
+            if( authStatus.getClientIdentifier() != null ) {
+                request.setAttribute( CLIENT_ATTRIBUTE_NAME,    authStatus.getClientAccount() );
+                request.setAttribute( CLIENT_ID_ATTRIBUTE_NAME, authStatus.getClientIdentifier() );
+                request.setAttribute( USER_ID_ATTRIBUTE_NAME,   authStatus.getClientIdentifier() );
+                request.setAttribute( LID_ATTRIBUTE_NAME,       authStatus.getClientIdentifier() );
+                request.setAttribute( USER_NICK_ATTRIBUTE_NAME, IdentifierStringifier.toColloquialIdentifier( authStatus.getClientIdentifier().toExternalForm() )); // FIXME
+            }
+            if( authStatus.getClientAccountIdentifier() != null ) {
+                request.setAttribute( ACCOUNT_ATTRIBUTE_NAME,    authStatus.getClientAccount() );
+                request.setAttribute( ACCOUNT_ID_ATTRIBUTE_NAME, authStatus.getClientAccountIdentifier() );
+                if( authStatus.getClientIdentifier() == null ) {
+                    request.setAttribute( USER_ID_ATTRIBUTE_NAME,   authStatus.getClientAccountIdentifier() );
+                    request.setAttribute( LID_ATTRIBUTE_NAME,       authStatus.getClientAccountIdentifier() );
+                    request.setAttribute( USER_NICK_ATTRIBUTE_NAME, IdentifierStringifier.toColloquialIdentifier( authStatus.getClientAccountIdentifier().toExternalForm() )); // FIXME
+                }
+            }
 
             LidPipelineStageInstructions currentInstructions;
             
@@ -143,12 +166,13 @@ public class LidPipelineServlet
      * 
      * @param lidRequest the incoming request
      * @param lidResponse the outgoing response
+     * @param compoundInstructions the recommended LidPipelineInstructions to follow
      * @throws ServletException thrown if an error occurred
      * @throws IOException thrown if an I/O error occurred
      */
     protected void invokeServlet(
-            SaneRequest                       lidRequest,
-            StructuredResponse                lidResponse,
+            SaneRequest             lidRequest,
+            StructuredResponse      lidResponse,
             LidPipelineInstructions compoundInstructions )
         throws
             ServletException,
@@ -201,7 +225,50 @@ public class LidPipelineServlet
      */
     public static final String REQUESTED_RESOURCE_ATTRIBUTE_NAME = "org_infogrid_lid_RequestedResource";
 
+    /**
+     * Name of the LidPipelineProcessingInstructions that are recommended.
+     */
     public static final String PROCESSING_PIPELINE_INSTRUCTIONS_ATTRIBUTE_NAME = "org_infogrid_lid_ProcessingPipelineInstructions";
 
+    /**
+     * Name of the request attribute that contains the identifier of the currently authenticated user if that user has
+     * been authenticated with a remote account, e.g. OpenID, regardless of whether or not the user is associated with a
+     * local LidAccount.
+     */
+    public static final String CLIENT_ID_ATTRIBUTE_NAME = "CLIENT_ID";
 
+    /**
+     * Name of the request attribute that contains the HasIdentifier object (e.g. a MeshObject) representing the authenticated
+     * user if that user has been authenticated with a remote account, e.g. OpenID, regardless of whether or not the
+     * user is associated with a local LidAccount.
+     */
+    public static final String CLIENT_ATTRIBUTE_NAME = "CLIENT";
+
+    /**
+     * Name of the request attribute that contains the identifier of the user's local LidAccount, if any.
+     */
+    public static final String ACCOUNT_ID_ATTRIBUTE_NAME = "ACCOUNT_ID";
+
+    /**
+     * Name of the request attribute that contains the user's local LidAccount, if any.
+     */
+    public static final String ACCOUNT_ATTRIBUTE_NAME = "ACCOUNT";
+
+    /**
+     * Name of the request attribute that contains the identifier of the currently authenticated user. If the user has
+     * authenticated with the local LidAccount, it holds the identifier of the local LidAccount. If the user has authenticated
+     * with a remote account (e.g. OpenID), it holds the identifier of the remote account (regardless of whether or
+     * not it is associated with a local LidAccount).
+     */
+    public static final String USER_ID_ATTRIBUTE_NAME = "USER_ID";
+
+    /**
+     * Name of the request attribute that contains the user's nickname to be shown on web pages.
+     */
+    public static final String USER_NICK_ATTRIBUTE_NAME = "USER_NICK";
+
+    /**
+     * Synonym of USER_ID.
+     */
+    public static final String LID_ATTRIBUTE_NAME = "lid";
 }
