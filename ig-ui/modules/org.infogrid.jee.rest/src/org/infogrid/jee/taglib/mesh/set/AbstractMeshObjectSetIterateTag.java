@@ -24,7 +24,6 @@ import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.ByPropertyValueSorter;
 import org.infogrid.mesh.set.DefaultMeshObjectSorter;
-import org.infogrid.mesh.set.DefaultTraversalPathSorter.ByUserVisibleStringComparator;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSorter;
 import org.infogrid.model.primitives.PropertyType;
