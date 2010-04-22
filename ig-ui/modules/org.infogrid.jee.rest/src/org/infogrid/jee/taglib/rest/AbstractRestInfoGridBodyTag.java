@@ -21,6 +21,7 @@ import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
@@ -114,6 +115,32 @@ public abstract class AbstractRestInfoGridBodyTag
                 stringRepresentation,
                 theMaxLength,
                 colloquial );
+        return ret;
+    }
+
+    /**
+     * Format a DataType.
+     *
+     * @param pageContext the PageContext in which to format the Property
+     * @param type the DataType to format
+     * @param stringRepresentation the StringRepresentation to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    protected final String formatDataType(
+            PageContext pageContext,
+            DataType    type,
+            String      stringRepresentation,
+            int         maxLength )
+        throws
+            StringifierException
+    {
+        String ret = ((RestfulJeeFormatter)theFormatter).formatDataType(
+                pageContext,
+                type,
+                stringRepresentation,
+                maxLength );
         return ret;
     }
 

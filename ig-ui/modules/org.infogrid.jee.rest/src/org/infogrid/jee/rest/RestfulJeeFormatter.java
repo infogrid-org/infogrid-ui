@@ -30,6 +30,7 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.text.MeshStringRepresentationParameters;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
+import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
@@ -674,6 +675,33 @@ public class RestfulJeeFormatter
     }
 
     /**
+     * Format a DataType.
+     *
+     * @param pageContext the PageContext in which to format the Property
+     * @param type the DataType to format
+     * @param stringRepresentation the StringRepresentation to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    public String formatDataType(
+            PageContext pageContext,
+            DataType    type,
+            String      stringRepresentation,
+            int         maxLength )
+        throws
+            StringifierException
+    {
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+
+        String ret = type.toStringRepresentation( rep, pars );
+        return ret;
+    }
+
+    /**
      * Format the start of a MeshObject.
      *
      * @param pageContext the PageContext object for this page
@@ -698,7 +726,7 @@ public class RestfulJeeFormatter
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
         pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
-        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               colloquial );
         pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
         pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );

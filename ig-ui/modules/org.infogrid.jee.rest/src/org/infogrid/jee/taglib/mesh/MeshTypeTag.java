@@ -17,10 +17,10 @@ package org.infogrid.jee.taglib.mesh;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
+import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.L10Map;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyValue;
-import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -257,8 +257,6 @@ public class MeshTypeTag
         PropertyValue value = null;
         String        text  = null;
 
-        StringRepresentation rep = theFormatter.determineStringRepresentation( theStringRepresentation );
-
         if( thePropertyName != null ) {
             Object found = lookupOrThrow( theMeshTypeName, thePropertyName );
 
@@ -277,6 +275,18 @@ public class MeshTypeTag
                     value = map.getExact( theLocale );
                 } else {
                     value = map.get( theLocale );
+                }
+
+            } else if( found instanceof DataType ) {
+                try {
+                    text = formatDataType(
+                            pageContext,
+                            (DataType) found,
+                            theStringRepresentation,
+                            theMaxLength );
+
+                } catch( StringifierException ex ) {
+                    throw new JspException( ex );
                 }
 
             } else {
@@ -300,7 +310,7 @@ public class MeshTypeTag
                         pageContext,
                         value,
                         theNullString,
-                        rep.getName(),
+                        theStringRepresentation,
                         theMaxLength,
                         theColloquial );
 
