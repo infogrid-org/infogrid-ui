@@ -702,7 +702,7 @@ public class RestfulJeeFormatter
     }
 
     /**
-     * Format the start of a MeshObject.
+     * Format a MeshObject.
      *
      * @param pageContext the PageContext object for this page
      * @param mesh the MeshObject that is to be formatted
@@ -712,7 +712,7 @@ public class RestfulJeeFormatter
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
-    public String formatMeshObjectStart(
+    public String formatMeshObject(
             PageContext pageContext,
             MeshObject  mesh,
             String      stringRepresentation,
@@ -727,7 +727,6 @@ public class RestfulJeeFormatter
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
         pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
         pars.put( StringRepresentationParameters.COLLOQUIAL,               colloquial );
-        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
         pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
         pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
@@ -737,26 +736,7 @@ public class RestfulJeeFormatter
     }
 
     /**
-     * Format the end of a MeshObject.
-     *
-     * @param pageContext the PageContext object for this page
-     * @param mesh the MeshObject that is to be formatted
-     * @param stringRepresentation the StringRepresentation to use
-     * @return the String to display
-     * @throws StringifierException thrown if there was a problem when attempting to stringify
-     */
-    public String formatMeshObjectEnd(
-            PageContext pageContext,
-            MeshObject  mesh,
-            String      stringRepresentation )
-        throws
-            StringifierException
-    {
-        return ""; // nothing
-    }
-
-    /**
-     * Format the start of the identifier of a MeshObject.
+     * Format the identifier of a MeshObject.
      *
      * @param pageContext the PageContext object for this page
      * @param mesh the MeshObject whose identifier is to be formatted
@@ -765,7 +745,7 @@ public class RestfulJeeFormatter
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
-    public String formatMeshObjectIdentifierStart(
+    public String formatMeshObjectIdentifier(
             PageContext        pageContext,
             MeshObject         mesh,
             String             stringRepresentation,
@@ -779,32 +759,12 @@ public class RestfulJeeFormatter
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
         pars.put( StringRepresentationParameters.MAX_LENGTH,               maxLength );
         pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
-        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
         pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
         pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
 
         String ret = mesh.getIdentifier().toStringRepresentation( rep, pars );
         return ret;
-    }
-
-    /**
-     * Format the end of the identifier of a MeshObject.
-     *
-     * @param pageContext the PageContext object for this page
-     * @param mesh the MeshObject whose identifier is to be formatted
-     * @param stringRepresentation the StringRepresentation to use
-     * @return the String to display
-     * @throws StringifierException thrown if there was a problem when attempting to stringify
-     */
-    public String formatMeshObjectIdentifierEnd(
-            PageContext        pageContext,
-            MeshObject         mesh,
-            String             stringRepresentation )
-        throws
-            StringifierException
-    {
-        return ""; // nothing
     }
 
     /**
@@ -838,7 +798,6 @@ public class RestfulJeeFormatter
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
         pars.put( StringRepresentationParameters.COLLOQUIAL,                    false );
-        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,            mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY,      getDefaultMeshBase() );
         pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY,      saneRequest.getAbsoluteContextUri() );
         pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY,      saneRequest.getContextPath() );
@@ -846,7 +805,7 @@ public class RestfulJeeFormatter
         pars.put( StringRepresentationParameters.LINK_TITLE_KEY,                title );
         pars.put( StringRepresentationParameters.HTML_URL_ADDITIONAL_ARGUMENTS, addArguments );
 
-        String ret = mesh.getIdentifier().toStringRepresentationLinkStart( rep, pars );
+        String ret = mesh.toStringRepresentationLinkStart( rep, pars );
         return ret;
     }
 
@@ -873,12 +832,11 @@ public class RestfulJeeFormatter
         StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
         SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
         pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
-        pars.put( MeshStringRepresentationParameters.MESHOBJECT_KEY,       mesh );
         pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY, getDefaultMeshBase() );
         pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
         pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
 
-        String ret = mesh.getIdentifier().toStringRepresentationLinkEnd( rep, pars );
+        String ret = mesh.toStringRepresentationLinkEnd( rep, pars );
         return ret;
 }
 

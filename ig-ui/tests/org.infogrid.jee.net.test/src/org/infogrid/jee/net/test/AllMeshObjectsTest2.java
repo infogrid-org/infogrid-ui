@@ -45,8 +45,8 @@ public class AllMeshObjectsTest2
         String content = r.getContentAsString();
         
         String [] objects = {
-            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl]\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">&lt;HOME&gt;</span> in NetMeshBase custom://example.org/?foo=bar&amp;argl=brgl</a>",
-            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl]custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl%23xxxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl#xxxx</span> in NetMeshBase custom://example.org/?foo=bar&amp;argl=brgl</a>"
+            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl]\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl</span></a>",
+            "<a href=\"/org.infogrid.jee.net.testapp/[meshbase=custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl]custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl%23xxxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl#xxxx</span></a>"
 
         };
         for( int i=0 ; i<objects.length ; ++i ) {

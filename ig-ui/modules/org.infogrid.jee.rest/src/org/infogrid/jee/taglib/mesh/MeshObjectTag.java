@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -187,7 +187,7 @@ public class MeshObjectTag
         }
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectStart( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObject( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -195,37 +195,6 @@ public class MeshObjectTag
         }
 
         return EVAL_BODY_INCLUDE;
-    }
-
-    /**
-     * Our implementation of doEndTag().
-     *
-     * @return evaluate or skip body
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    @Override
-    protected int realDoEndTag()
-        throws
-            JspException,
-            IgnoreException
-    {
-        MeshObject obj;
-        if( theMeshObject != null ) {
-            obj = theMeshObject;
-        } else {
-            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
-        }
-
-        try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectEnd( pageContext, obj, theStringRepresentation );
-            print( text );
-
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
-        }
-
-        return EVAL_PAGE;
     }
 
     /**
