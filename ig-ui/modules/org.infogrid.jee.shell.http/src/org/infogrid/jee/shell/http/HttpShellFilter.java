@@ -30,7 +30,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.util.http.MimePart;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
@@ -501,11 +500,9 @@ public class HttpShellFilter
         if( raw == null || raw.length() == 0 ) {
             ret = null;
         } else {
-            ret = theFormatter.fromMeshObjectIdentifier(
-                idFact,
-                theParsingRepresentation,
-                raw );
+            ret = idFact.fromStringRepresentation( theParsingRepresentation, raw );
         }
+
         return ret;
     }
 
@@ -725,8 +722,6 @@ public class HttpShellFilter
             if( theParsingRepresentation == null ) {
                 theParsingRepresentation = dir.getFallback();
             }
-
-            theFormatter = appContext.findContextObjectOrThrow( RestfulJeeFormatter.class );
         }
     }
 
@@ -807,11 +802,6 @@ public class HttpShellFilter
      * The StringRepresentation to use.
      */
     protected StringRepresentation theParsingRepresentation;
-
-    /**
-     * The JeeFormatter to use.
-     */
-    protected RestfulJeeFormatter theFormatter;
 
     /**
      * Creates a Transaction when needed.

@@ -26,7 +26,6 @@
   </requires>
   <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.model.Viewlet"/>
-  <requires name="org.infogrid.jee.rest"/>
   <requires name="org.infogrid.jee.viewlet"/>
   <requires name="org.infogrid.jee.templates"/>
   <requires name="org.infogrid.jee.shell.http"/>

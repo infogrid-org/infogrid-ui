@@ -31,7 +31,7 @@
   <requires name="org.infogrid.model.Blob"/>
   <requires name="org.infogrid.model.Common"/>
   <requires name="org.infogrid.model.Probe"/>
-  <requires name="org.infogrid.jee.rest.net.local.store"/>
+  <requires name="org.infogrid.jee.viewlet.net.local.store"/>
   <requires name="org.infogrid.jee.viewlet.net"/>
   <requires name="org.infogrid.jee.probe"/>
   <requires name="org.infogrid.jee.templates"/>

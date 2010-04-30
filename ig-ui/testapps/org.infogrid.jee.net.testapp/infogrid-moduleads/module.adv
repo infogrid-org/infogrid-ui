@@ -29,7 +29,7 @@
   <requires name="org.infogrid.model.Test"/>
   <requires name="org.infogrid.model.Viewlet"/>
   <requires name="org.infogrid.model.Probe"/>
-  <requires name="org.infogrid.jee.rest.net.local"/>
+  <requires name="org.infogrid.jee.viewlet.net.local"/>
   <requires name="org.infogrid.jee.viewlet.net"/>
   <requires name="org.infogrid.jee.templates"/>
   <requires name="org.infogrid.jee.shell.http"/>
