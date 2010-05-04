@@ -38,6 +38,6 @@ public class NotIfHasAccountTag
             JspException,
             IgnoreException
     {
-        return !hasAccount();
+        return getAccount() == null;
     }
 }

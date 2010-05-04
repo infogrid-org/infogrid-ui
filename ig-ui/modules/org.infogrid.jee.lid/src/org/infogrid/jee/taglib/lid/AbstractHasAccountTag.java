@@ -79,14 +79,14 @@ public abstract class AbstractHasAccountTag
             IgnoreException;
 
     /**
-     * Determine whether the current user has an account.
+     * Determine the current user's account, if any
      *
-     * @return true if the current user has an account
+     * @return the current user's account, if any
      */
-    protected boolean hasAccount()
+    protected LidAccount getAccount()
     {
         LidAccount account = (LidAccount) pageContext.getRequest().getAttribute( LidPipelineServlet.ACCOUNT_ATTRIBUTE_NAME );
 
-        return account != null;
+        return account;
     }
 }
