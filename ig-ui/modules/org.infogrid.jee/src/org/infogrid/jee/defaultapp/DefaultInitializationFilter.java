@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -31,6 +31,7 @@ import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringRepresentationDirectorySingleton;
@@ -53,10 +54,12 @@ public class DefaultInitializationFilter
     /**
      * Initialize the InfoGridWebApp if needed.
      *
+     * @param incomingRequest the incoming request
      * @throws ServletException thrown if the InfoGridWebApp could not be initialized
      */
     @Override
-    protected void initializeInfoGridWebApp()
+    protected void initializeInfoGridWebApp(
+            SaneRequest incomingRequest )
         throws
             ServletException
     {
@@ -86,7 +89,7 @@ public class DefaultInitializationFilter
                 theApp = initializeViaClassName( className );
                 
             } else if( rootModule != null && rootModule.length() > 0 ) {
-                theApp = initializeViaModuleName( rootModule );
+                theApp = initializeViaModuleName( incomingRequest, rootModule );
                 
             } else {
                 throw new ServletException( "Don't know how we got there" );
@@ -141,12 +144,14 @@ public class DefaultInitializationFilter
     /**
      * Initialize via InfoGridWebApp and initializing a root module.
      * 
+     * @param incomingRequest the incoming request
      * @param rootModule the name of the module to be activated
      * @return the instantiated class
      * @throws ServletException thrown if the InfoGridWebApp could not be initialized
      */
     protected InfoGridWebApp initializeViaModuleName(
-            String rootModule )
+            SaneRequest incomingRequest,
+            String      rootModule )
         throws
             ServletException
     {
@@ -179,7 +184,7 @@ public class DefaultInitializationFilter
         rootContext.addContextObject( QuitManager.create() );
 
         try {
-            initializeContextObjects( rootContext );
+            initializeContextObjects( incomingRequest, rootContext );
 
         } catch( Throwable t ) {
             throw new ServletException( "could not initialize context objects", t );
@@ -194,11 +199,13 @@ public class DefaultInitializationFilter
     /**
      * Initialize the context objects. This may be overridden by subclasses.
      *
+     * @param incomingRequest the incoming request
      * @param rootContext the root Context
      * @throws Exception initialization may fail
      */
     protected void initializeContextObjects(
-            Context rootContext )
+            SaneRequest incomingRequest,
+            Context     rootContext )
         throws
             Exception
     {

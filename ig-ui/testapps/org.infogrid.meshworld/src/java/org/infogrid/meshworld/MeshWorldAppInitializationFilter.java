@@ -31,6 +31,7 @@ import org.infogrid.util.CompoundException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.naming.NamingReportingException;
 import org.infogrid.viewlet.ViewletFactory;
 
@@ -106,16 +107,18 @@ public class MeshWorldAppInitializationFilter
     /**
      * Initialize the context objects. This may be overridden by subclasses.
      *
+     * @param incomingRequest the incoming request
      * @param rootContext the root Context
      * @throws Exception initialization may fail
      */
     @Override
     protected void initializeContextObjects(
-            Context rootContext )
+            SaneRequest incomingRequest,
+            Context     rootContext )
         throws
             Exception
     {
-        super.initializeContextObjects( rootContext );
+        super.initializeContextObjects( incomingRequest, rootContext );
 
         MeshBase mb = rootContext.findContextObjectOrThrow( MeshBase.class );
         rootContext.addContextObject( XpathTraversalTranslator.create( mb ));

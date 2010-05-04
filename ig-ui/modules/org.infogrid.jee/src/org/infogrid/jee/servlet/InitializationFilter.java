@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -96,11 +96,11 @@ public class InitializationFilter
         HttpServletResponse realResponse = (HttpServletResponse) response;
 
         try {
-            initializeInfoGridWebApp();
-
             // SaneServletRequest adds itself as a request attribute
             SaneRequest lidRequest = SaneServletRequest.create( realRequest );
             request.setAttribute( CONTEXT_PARAMETER, realRequest.getContextPath() );
+
+            initializeInfoGridWebApp( lidRequest );
 
             if( getLog().isDebugEnabled() ) {
                 getLog().debug( "InitializationFilter: ", lidRequest );
@@ -152,9 +152,11 @@ public class InitializationFilter
     /**
      * Initialize the InfoGridWebApp if needed.
      *
+     * @param incomingRequest the incoming request
      * @throws ServletException thrown if the InfoGridWebApp could not be initialized
      */
-    protected void initializeInfoGridWebApp()
+    protected void initializeInfoGridWebApp(
+            SaneRequest incomingRequest )
         throws
             ServletException
     {

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -135,7 +135,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
                         exec,
                         true,
                         appContext );
-                populateMeshBase( meshBase );
+                populateMeshBase( saneRequest, meshBase );
                 appContext.addContextObject( meshBase );
                 // MeshBase adds itself to QuitManager
 
@@ -154,10 +154,10 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             }
 
             if( thrown == null ) {
-                initializeContextObjects( appContext );
+                initializeContextObjects( saneRequest, appContext );
             } else {
                 try {
-                    initializeContextObjects( appContext );
+                    initializeContextObjects( saneRequest, appContext );
                 } catch( Throwable t ) {
                     // ignore
                 }
@@ -212,21 +212,25 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
     /**
      * Convenience method to avoid subclassing mistakes.
      *
+     * @param incomingRequest the incoming request
      * @param mb the MeshBase to initialize
      */
     @Override
     protected void populateMeshBase(
-            MeshBase mb )
+            SaneRequest incomingRequest,
+            MeshBase    mb )
     {
-        populateNetMeshBase( (NetMeshBase) mb );
+        populateNetMeshBase( incomingRequest, (NetMeshBase) mb );
     }
 
     /**
      * Initialize the initial content of the NetMeshBase.
      *
+     * @param incomingRequest the incoming request
      * @param mb the NetMeshBase to initialize
      */
     protected void populateNetMeshBase(
+            SaneRequest incomingRequest,
             NetMeshBase mb )
     {
         // nothing on this level

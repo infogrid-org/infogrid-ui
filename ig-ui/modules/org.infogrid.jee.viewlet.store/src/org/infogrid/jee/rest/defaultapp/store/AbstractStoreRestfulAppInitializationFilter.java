@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -97,7 +97,7 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
                 AccessManager accessMgr = createAccessManager();
 
                 IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, appContext );
-                populateMeshBase( meshBase );
+                populateMeshBase( saneRequest, meshBase );
                 appContext.addContextObject( meshBase );
                 // MeshBase adds itself to QuitManager
 
@@ -118,10 +118,10 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
             }
 
             if( thrown == null ) {
-                initializeContextObjects( appContext );
+                initializeContextObjects( saneRequest, appContext );
             } else {
                 try {
-                    initializeContextObjects( appContext );
+                    initializeContextObjects( saneRequest, appContext );
                 } catch( Throwable t ) {
                     // ignore
                 }

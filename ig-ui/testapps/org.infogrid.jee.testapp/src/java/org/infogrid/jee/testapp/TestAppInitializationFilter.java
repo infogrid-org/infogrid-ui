@@ -29,7 +29,9 @@ import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.Blob.BlobSubjectArea;
 import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.traversal.xpath.XpathTraversalTranslator;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.ViewletFactory;
 
@@ -53,11 +55,13 @@ public class TestAppInitializationFilter
     /**
      * Initialize the initial content of the MeshBase.
      * 
+     * @param incomingRequest the incoming request
      * @param mb the MeshBase to initialize
      */
     @Override
     protected void populateMeshBase(
-            MeshBase mb )
+            SaneRequest incomingRequest,
+            MeshBase    mb )
     {
         MeshBaseLifecycleManager    life   = mb.getMeshBaseLifecycleManager();
         MeshObjectIdentifierFactory idFact = mb.getMeshObjectIdentifierFactory();
@@ -141,16 +145,21 @@ public class TestAppInitializationFilter
     /**
      * Initialize the context objects. This may be overridden by subclasses.
      *
+     * @param incomingRequest the incoming request
      * @param rootContext the root Context
      * @throws Exception initialization may fail
      */
     @Override
     protected void initializeContextObjects(
-            Context rootContext )
+            SaneRequest incomingRequest,
+            Context     rootContext )
         throws
             Exception
     {
-        super.initializeContextObjects( rootContext );
+        super.initializeContextObjects( incomingRequest, rootContext );
+
+        MeshBase mb = rootContext.findContextObjectOrThrow( MeshBase.class );
+        rootContext.addContextObject( XpathTraversalTranslator.create( mb ));
 
         ViewletFactory vlFact = new TestAppViewletFactory();
         rootContext.addContextObject( vlFact );
