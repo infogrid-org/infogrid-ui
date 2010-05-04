@@ -49,7 +49,7 @@ public class DefaultRestfulRequest
      */
     public static DefaultRestfulRequest create(
             SaneRequest                                     lidRequest,
-            MeshBaseIdentifier                               defaultMeshBaseIdentifier,
+            MeshBaseIdentifier                              defaultMeshBaseIdentifier,
             MeshBaseNameServer<MeshBaseIdentifier,MeshBase> meshBaseNameServer )
     {
         return create( lidRequest, defaultMeshBaseIdentifier, null, meshBaseNameServer );
