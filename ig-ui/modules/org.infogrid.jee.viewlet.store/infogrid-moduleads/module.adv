@@ -9,19 +9,19 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
 <standardmodule>
- <name>org.infogrid.jee.rest.store</name>
+ <name>org.infogrid.jee.viewlet.store</name>
  <username>JEE/REST Store support for InfoGrid.</username>
  <userdescription>Makes developing REST-ful applications based on Store with InfoGrid easier.</userdescription>
  <provides>
-  <jar>org.infogrid.jee.rest.store.jar</jar> 
+  <jar>org.infogrid.jee.viewlet.store.jar</jar>
  </provides>
  <dependencies>
-  <requires name="org.infogrid.jee.rest"/>
+  <requires name="org.infogrid.jee.viewlet"/>
   <requires name="org.infogrid.jee.store"/>
   <requires name="org.infogrid.meshbase.store"/>
   <requires name="org.infogrid.kernel"/>

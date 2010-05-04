@@ -18,7 +18,7 @@
  <username>JEE/REST Net support for InfoGrid.</username>
  <userdescription>Makes developing REST-ful, net-based applications with InfoGrid easier.</userdescription>
  <provides>
-  <jar>org.infogrid.jee.rest.net.local.jar</jar>
+  <jar>org.infogrid.jee.viewlet.net.local.jar</jar>
  </provides>
  <dependencies>
   <requires name="org.infogrid.jee.viewlet.net"/>
