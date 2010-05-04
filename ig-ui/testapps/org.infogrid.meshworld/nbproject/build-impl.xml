@@ -432,9 +432,6 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_model_Tagging}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
-        <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="jar">
-            <property name="deploy.on.save" value="false"/>
-        </ant>
         <ant antfile="${project.org_infogrid_model_Viewlet}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -507,9 +504,6 @@ exists or setup the property manually. For example like this:
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_model_Tagging}/build.xml" inheritall="false" target="jar">
-            <property name="deploy.on.save" value="false"/>
-        </ant>
-        <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_model_Viewlet}/build.xml" inheritall="false" target="jar">
@@ -1052,7 +1046,6 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Common}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Tagging}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_model_Test}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Viewlet}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Wiki}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="clean"/>
