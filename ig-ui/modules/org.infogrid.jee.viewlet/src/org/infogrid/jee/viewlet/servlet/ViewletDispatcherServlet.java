@@ -16,6 +16,7 @@ package org.infogrid.jee.viewlet.servlet;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.GenericServlet;
@@ -58,6 +59,7 @@ import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactory;
 
 /**
@@ -134,6 +136,8 @@ public class ViewletDispatcherServlet
             throw new ServletExceptionWithHttpStatusCode( ex, HttpServletResponse.SC_BAD_REQUEST ); // 400
         }
 
+        servletRequest.setAttribute( JeeViewlet.VIEWLET_STACK_ATTRIBUTE_NAME, new ArrayDeque<Viewlet>() ); // in case the Viewlet contains other Viewlets
+
         JeeViewlet viewlet = null;
         if( subject != null ) {
             servletRequest.setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME, subject );
@@ -150,24 +154,18 @@ public class ViewletDispatcherServlet
                     throw new ServletException( ex ); // pass on
                 }
             }
-        }
-        
-        // create a stack of Viewlets and other request attributes
-        JeeViewlet oldViewlet = (JeeViewlet) servletRequest.getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
-        servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, viewlet );
-
-        String oldState           = (String) request.getAttribute( JeeViewlet.VIEWLET_STATE_NAME );
-        String oldStateTransition = (String) request.getAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
-
-        if( toView != null ) {
-            JeeViewletState state = (JeeViewletState) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_NAME );
-            request.setAttribute( JeeViewlet.VIEWLET_STATE_NAME, state != null ? state.getName() : null ); // even set if null
-
-            JeeViewletStateTransition transition = (JeeViewletStateTransition) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
-            request.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition != null ? transition.getName() : null ); // even set if null
+            servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, viewlet );
         }
 
         if( viewlet != null ) {
+            if( toView != null ) {
+                JeeViewletState state = (JeeViewletState) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_NAME );
+                request.setAttribute( JeeViewlet.VIEWLET_STATE_NAME, state != null ? state.getName() : null ); // even set if null
+
+                JeeViewletStateTransition transition = (JeeViewletStateTransition) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
+                request.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition != null ? transition.getName() : null ); // even set if null
+            }
+
             synchronized( viewlet ) {
                 Throwable thrown  = null;
                 boolean   done    = false;
@@ -212,10 +210,6 @@ public class ViewletDispatcherServlet
 
                 } finally {
                     viewlet.performAfter( restfulRequest, structured, thrown );
-
-                    servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME,        oldViewlet );
-                    servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_NAME,            oldState );
-                    servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, oldStateTransition );
                 }
             }
         }

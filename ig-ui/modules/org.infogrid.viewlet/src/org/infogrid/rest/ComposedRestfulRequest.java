@@ -91,7 +91,28 @@ public class ComposedRestfulRequest
         theRequestedMeshObjectIdentifier = requestedMeshObjectIdentifier;
         theRequestedMimeType             = requestedMimeType;
         theRequestedViewletTypeName      = requestedViewletTypeName;
+    }
 
+    /**
+     * Obtain the name of the requested Viewlet type, if any.
+     *
+     * @return type name of the requested Viewlet
+     */
+    @Override
+    public String getRequestedViewletTypeName()
+    {
+        return theRequestedViewletTypeName; // only return what was set
+    }
+
+    /**
+     * Obtain the requested MIME type, if any.
+     *
+     * @return the requested MIME type, if any
+     */
+    @Override
+    public String getRequestedMimeType()
+    {
+        return theRequestedMimeType; // only return what was set
     }
 
     /**

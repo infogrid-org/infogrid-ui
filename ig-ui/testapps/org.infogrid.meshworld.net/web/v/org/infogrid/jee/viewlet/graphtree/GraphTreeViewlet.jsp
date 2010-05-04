@@ -13,9 +13,9 @@
 
  <div class="content">
   <div class="org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content">
-   <set:iterate meshObjectSetName="Viewlet.reachedObjects" meshObjectLoopVar="obj" ignore="true">
-    <v:includeViewlet subject="${obj}" viewletTypeName="org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet" requestContext="include"/>
-   </set:iterate>
+   <set:pathIterate traversalPathSetName="Viewlet.viewedObjects.traversalPathSet" loopVar="path" ignore="true">
+    <v:includeViewlet reachedByName="path" requestContext="include"/>
+   </set:pathIterate>
   </div>
   <div class="org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar">
    <dl class="level1">
@@ -28,7 +28,9 @@
      </tree:up>
      <tree:nodeBefore>
       <dt class="<v:ifIsReachedObject object='${current}'>reached</v:ifIsReachedObject> <v:ifIsReachedObject traversalPath='${traversalPath}'>selected</v:ifIsReachedObject>">
-       <mesh:meshObjectLink meshObjectName="Subject" traversalPathName="traversalPath" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet"><mesh:meshObject meshObjectName="current" maxLength="20" /></mesh:meshObjectLink>
+       <mesh:meshObjectLink meshObjectName="Subject" traversalPathName="traversalPath" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet">
+        <mesh:meshObject meshObjectName="current" colloquial="true" maxLength="20" />
+       </mesh:meshObjectLink>
       </dt>
      </tree:nodeBefore>
     </tree:treeIterate>

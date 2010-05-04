@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -56,32 +56,10 @@ public class ViewletAlternativesIterateTag
     @Override
     protected void initializeToDefaults()
     {
-        theSubjectName     = null;
         theLoopVar         = null;
         theWorstAcceptable = null;
         
         super.initializeToDefaults();
-    }
-
-    /**
-     * Set the SubjectName property.
-     *
-     * @param newValue the new value
-     */
-    public void setSubjectName(
-            String newValue )
-    {
-        theSubjectName = newValue;
-    }
-
-    /**
-     * Obtain the SubjectName property.
-     *
-     * @return the SubjectName property
-     */
-    public String getSubjectName()
-    {
-        return theSubjectName;
     }
 
     /**
@@ -141,17 +119,11 @@ public class ViewletAlternativesIterateTag
         Viewlet        currentViewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
         RestfulRequest restful        = (RestfulRequest) lookupOrThrow( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
 
-        if( theSubjectName != null && theSubjectName.length() > 0 ) {
-            theSubject = (MeshObject) lookupOrThrow( theSubjectName );
-
-        } else {
-            theSubject = currentViewlet.getSubject();
-        }
-
-        Context c = currentViewlet.getContext();
+        MeshObject subject = currentViewlet.getSubject();
+        Context    c       = currentViewlet.getContext();
 
         ViewletFactory    factory = c.findContextObjectOrThrow( ViewletFactory.class );
-        MeshObjectsToView toView  = MeshObjectsToView.create( theSubject, restful );
+        MeshObjectsToView toView  = MeshObjectsToView.create( subject, restful );
 
         ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
         int max = candidates.length;
@@ -256,16 +228,6 @@ public class ViewletAlternativesIterateTag
             return false;
         }
     }
-
-    /**
-     * Name of the bean that contains the subject. If none is given, use the current Viewlet's subject.
-     */
-    protected String theSubjectName;
-
-    /**
-     * The subject we iterate over.
-     */
-    protected MeshObject theSubject;
 
     /**
      * String containing the name of the loop variable that contains the ViewletFactoryChoice.

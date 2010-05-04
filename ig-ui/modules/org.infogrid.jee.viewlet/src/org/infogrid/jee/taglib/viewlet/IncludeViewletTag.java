@@ -15,9 +15,12 @@
 package org.infogrid.jee.taglib.viewlet;
 
 import java.io.IOException;
+import java.net.URL;
 import java.text.ParseException;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +30,11 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.jee.sane.OverridingSaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
+import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.TextStructuredResponseSectionTemplate;
@@ -45,16 +50,19 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.MeshBaseIdentifier;
+import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
+import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.model.traversal.TraversalTranslator;
 import org.infogrid.model.traversal.TraversalTranslatorException;
 import org.infogrid.rest.ComposedRestfulRequest;
+import org.infogrid.rest.DefaultRestfulRequest;
 import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextDirectory;
-import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
@@ -87,6 +95,7 @@ public class IncludeViewletTag
     protected void initializeToDefaults()
     {
         theSubject         = null;
+        theReachedByName   = null;
         theMimeType        = null;
         theViewletTypeName = null;
         theRequestContext  = null;
@@ -115,6 +124,29 @@ public class IncludeViewletTag
             MeshObject newValue )
     {
         theSubject = newValue;
+    }
+
+    /**
+     * Obtain value of the reachedByName property.
+     *
+     * @return value of the reachedByName property
+     * @see #setSubject
+     */
+    public final String getReachedByName()
+    {
+        return theReachedByName;
+    }
+
+    /**
+     * Set value of the reachedByName property.
+     *
+     * @param newValue new value of the reachedByName property
+     * @see #getSubject
+     */
+    public final void setReachedByName(
+            String newValue )
+    {
+        theReachedByName = newValue;
     }
 
     /**
@@ -190,7 +222,8 @@ public class IncludeViewletTag
      * Do the start tag operation.
      *
      * @return indicate how to continue processing
-     * @throws JspException thrown if a processing error occurred
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
      * @throws IOException thrown if an I/O Exception occurred
      * @see javax.servlet.jsp.tagext.TagSupport#doStartTag()
      */
@@ -198,12 +231,13 @@ public class IncludeViewletTag
     public int realDoStartTag()
         throws
             JspException,
+            IgnoreException,
             IOException
     {
         // This all seems to be a bit of a mess, but I can't think of making it simpler right now. (FIXME?)
         
         HttpServletRequest servletRequest = (HttpServletRequest) pageContext.getRequest();
-        SaneRequest        saneRequest    = SaneServletRequest.create( servletRequest );
+        SaneServletRequest saneRequest    = SaneServletRequest.create( servletRequest );
 
         InfoGridWebApp app = InfoGridWebApp.getSingleton();
         Context c          = (Context) saneRequest.getAttribute( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
@@ -224,20 +258,105 @@ public class IncludeViewletTag
             throw new ContextMeshBaseNotFoundException();
         }
 
+        MeshObject     subject;
+        TraversalPath  path;
+        RestfulRequest restfulRequest = null; // make compiler happy
+
+        if( theSubject != null ) {
+            if( theReachedByName != null ) {
+                throw new JspException( "Specify either but not both attributes: subject and reachedByName" );
+            }
+            subject = theSubject;
+            path    = null;
+
+            restfulRequest = ComposedRestfulRequest.create(
+                    saneRequest,
+                    mb.getIdentifier(),
+                    null,
+                    subject,
+                    subject.getIdentifier(),
+                    theMimeType,
+                    theViewletTypeName );
+
+        } else {
+            @SuppressWarnings("unchecked")
+            MeshBaseNameServer<MeshBaseIdentifier,MeshBase> ns = c.findContextObject( MeshBaseNameServer.class );
+
+            String [] includeUrls = saneRequest.getMultivaluedUrlArgument( INCLUDE_URL_ARGUMENT_NAME );
+
+            // if there's no reachedBy, use includeUrls
+            // if there's a reachedBy, try to find the right includeUrls
+
+            if( theReachedByName != null ) {
+                path    = (TraversalPath) lookupOrThrow( theReachedByName );
+                subject = path.getLastMeshObject();
+
+                if( includeUrls == null || includeUrls.length == 0 ) {
+                    restfulRequest = ComposedRestfulRequest.create(
+                            saneRequest,
+                            mb.getIdentifier(),
+                            null,
+                            subject,
+                            subject.getIdentifier(),
+                            theMimeType,
+                            theViewletTypeName );
+
+                } else {
+                    URL appUrl = new URL( saneRequest.getAbsoluteContextUri());
+                    for( int i=0 ; i<includeUrls.length ; ++i ) {
+                        URL u = new URL( appUrl, includeUrls[i] );
+
+                        restfulRequest = DefaultRestfulRequest.create(
+                                OverridingSaneServletRequest.create( u, "GET", saneRequest ),
+                                mb.getIdentifier(),
+                                ns );
+                        try {
+                            if( subject.getIdentifier().equals( restfulRequest.determineRequestedMeshObjectIdentifier() )) {
+                                break;
+                            }
+                        } catch( ParseException ex ) {
+                            log.error( ex );
+                        }
+                        restfulRequest = null;
+                    }
+                }
+            } else {
+                path    = null;
+                subject = null;
+
+                if( includeUrls != null && includeUrls.length == 1 ) {
+                    restfulRequest = DefaultRestfulRequest.create(
+                            OverridingSaneServletRequest.create( new URL( includeUrls[0] ), "GET", saneRequest ),
+                            mb.getIdentifier(),
+                            ns );
+                }
+            }
+
+            if( restfulRequest != null ) {
+
+                try {
+                    subject = restfulRequest.determineRequestedMeshObject();
+                    
+                } catch( MeshObjectAccessException ex ) {
+                    throw new JspException( ex );
+                } catch( NotPermittedException ex ) {
+                    throw new JspException( ex );
+                } catch( ParseException ex ) {
+                    throw new JspException( ex );
+                }
+                if( subject == null ) {
+                    throw new JspException( "Cannot determine subject of included Viewlet" );
+                }
+            } else {
+                log.error( "Inconsistent request: ", saneRequest );
+                return SKIP_BODY;
+            }
+        }
+
         StructuredResponse outerStructured = (StructuredResponse) saneRequest.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
         StructuredResponse innerStructured = StructuredResponse.create( (HttpServletResponse) pageContext.getResponse(), pageContext.getServletContext() );
         servletRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, innerStructured );
-
-        @SuppressWarnings("unchecked")
-        RestfulRequest restfulRequest = ComposedRestfulRequest.create(
-                saneRequest,
-                mb.getIdentifier(),
-                null,
-                theSubject,
-                theSubject.getIdentifier(),
-                theMimeType,
-                theViewletTypeName );
 
         servletRequest.setAttribute( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME, restfulRequest );
 
@@ -262,7 +381,7 @@ public class IncludeViewletTag
         }
 
         JeeViewlet viewlet = null;
-        if( theSubject != null ) {
+        if( subject != null ) {
             if( saneRequest.matchUrlArgument( "lid-meta", "formats" )) {
                 viewlet = LidMetaFormatsViewlet.create( mb, c );
 
@@ -279,22 +398,27 @@ public class IncludeViewletTag
         if( viewlet != null ) {
             Viewlet enclosingViewlet = (Viewlet) lookup( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
             if( enclosingViewlet != null && enclosingViewlet.getName().equals( viewlet.getName() )) {
-                throw new JspException( "Cannot include Viewlet of same name " + viewlet.getName() + " in itself: will lead to infinite recursion" );
+                if( subject == enclosingViewlet.getSubject() ) {
+                    throw new JspException( "Cannot include Viewlet " + viewlet.getName() + " in itself with same Subject: will lead to infinite recursion" );
+                }
             }
         }
 
         if( viewlet != null ) {
             synchronized( viewlet ) {
-                    // create a stack of Viewlets and other request attributes
-                JeeViewlet oldViewlet         = (JeeViewlet) servletRequest.getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
-                MeshObject oldSubject         = (MeshObject) servletRequest.getAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME );
-                String     oldState           = (String) servletRequest.getAttribute( JeeViewlet.VIEWLET_STATE_NAME );
-                String     oldStateTransition = (String) servletRequest.getAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
-                
+                // create a stack of Viewlets and other request attributes
+                JeeViewlet    oldViewlet = (JeeViewlet) servletRequest.getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+                TraversalPath oldPath    = (TraversalPath) servletRequest.getAttribute( TRAVERSAL_PATH_ATTRIBUTE_NAME );
+
+                @SuppressWarnings("unchecked")
+                ArrayDeque<Viewlet> viewletStack = (ArrayDeque<Viewlet>) servletRequest.getAttribute( JeeViewlet.VIEWLET_STACK_ATTRIBUTE_NAME );
+                viewletStack.push( oldViewlet );
+
                 Throwable thrown  = null;
                 try {
                     servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME, viewlet );
-                    servletRequest.setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME, theSubject );
+                    servletRequest.setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME, subject );
+                    servletRequest.setAttribute( TRAVERSAL_PATH_ATTRIBUTE_NAME,     path );
 
                     if( toView != null ) {
                         JeeViewletState state = (JeeViewletState) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_NAME );
@@ -348,10 +472,15 @@ public class IncludeViewletTag
                         log.error( ex2 );
                     }
 
+                    // restore context
+                    
+                    viewletStack.pop();
+
                     servletRequest.setAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME,        oldViewlet );
-                    servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_NAME,            oldState );
-                    servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, oldStateTransition );
-                    servletRequest.setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME       , oldSubject );
+                    servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_NAME,            oldViewlet.getViewletState() );
+                    servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, oldViewlet.getViewedObjects().getViewletParameter( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME) );
+                    servletRequest.setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME       , oldViewlet.getSubject() );
+                    servletRequest.setAttribute( TRAVERSAL_PATH_ATTRIBUTE_NAME,            oldPath );
                 }
             }
         }
@@ -361,6 +490,7 @@ public class IncludeViewletTag
             while( iter.hasNext() ) {
                 TextStructuredResponseSectionTemplate template = iter.next();
                 TextStructuredResponseSection there = innerStructured.getTextSection( template );
+                TextStructuredResponseSection here  = outerStructured.obtainTextSection( template );
 
                 if( StructuredResponse.TEXT_DEFAULT_SECTION.equals( template )) {
                     // inline main section
@@ -369,10 +499,16 @@ public class IncludeViewletTag
 
                 } else {
                     // copy non-main sections
-                    TextStructuredResponseSection here  = outerStructured.obtainTextSection( template );
                     here.appendContent( there.getContent() );
                 }
 
+                // pass on errors
+                List<Throwable> problems = there.problems();
+                if( problems != null ) {
+                    for( Throwable t : problems ) {
+                        here.reportProblem( t );
+                    }
+                }
             }
         }
 
@@ -517,6 +653,12 @@ public class IncludeViewletTag
     protected MeshObject theSubject;
 
     /**
+     * The name of the request attribute containing the TraversalPath that led to the Subject of
+     * the included Viewlet.
+     */
+    protected String theReachedByName;
+
+    /**
      * The requested MIME type.
      */
     protected String theMimeType;
@@ -530,4 +672,14 @@ public class IncludeViewletTag
      * The request context.
      */
     protected String theRequestContext;
+
+    /**
+     * Name of the request attribute that contains the TraversalPath.
+     */
+    public static final String TRAVERSAL_PATH_ATTRIBUTE_NAME = "traversal-path";
+
+    /**
+     * Name of the URL argument that contains the URL for the included viewlet.
+     */
+    public static final String INCLUDE_URL_ARGUMENT_NAME = "lid-include";
 }

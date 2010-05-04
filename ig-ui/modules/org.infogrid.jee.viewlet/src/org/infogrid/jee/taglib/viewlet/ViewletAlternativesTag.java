@@ -15,7 +15,7 @@
 package org.infogrid.jee.taglib.viewlet;
 
 import javax.servlet.jsp.JspException;
-import java.util.HashMap;
+import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
@@ -57,6 +57,9 @@ public class ViewletAlternativesTag
     @Override
     protected void initializeToDefaults()
     {
+        thePane     = ViewletAlternativeLinkTag.PANE_HERE;
+        theRootPath = null;
+
         super.initializeToDefaults();
     }
 
@@ -101,20 +104,25 @@ public class ViewletAlternativesTag
 
             println( "<ul>" );
 
-            String                 url = restful.getSaneRequest().getRelativeFullUri();
-            HashMap<String,String> map = new HashMap<String,String>();
-
             for( int i=0 ; i<candidates.length ; ++i ) {
-                map.put( RestfulRequest.LID_FORMAT_PARAMETER_NAME, RestfulRequest.VIEWLET_PREFIX + candidates[i].getName() );
-                map.put( JeeViewlet.VIEWLET_STATE_NAME, null ); // erase ViewletState
                 print( "<li" );
                 if( candidates[i].getName().equals( currentViewlet.getName() )) {
                     print( " class=\"selected\"" );
                 }
                 print( ">" );
-                print( "<a href=\"" );
-                print( theFormatter.constructHrefWithDifferentArguments( url, map ));
-                print( "\">" );
+                
+                String text = ViewletAlternativeLinkTag.constructText(
+                        currentViewlet,
+                        candidates[i],
+                        (RestfulJeeFormatter) theFormatter,
+                        pageContext,
+                        thePane,
+                        theRootPath,
+                        null,
+                        null,
+                        null,
+                        null );
+                print( text );
                 print( candidates[i].getUserVisibleName() );
                 print( "</a>" );
                 println( "</li>" );
@@ -158,4 +166,15 @@ public class ViewletAlternativesTag
      * Identifies the attribute in the request context that counts up instances of this tag per request.
      */
     protected static final String INSTANCE_ID_PAR_NAME = SaneRequestUtils.classToAttributeName( ViewletAlternativesTag.class, "instanceid" );
+
+    /**
+     * Name of the pane.
+     */
+    protected String thePane;
+
+    /**
+     * The HTTP path prepended to the HREF, e.g. http://example.com/foo/bar/?obj=
+     */
+    protected String theRootPath;
+
 }

@@ -16,7 +16,7 @@ package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
+import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.util.text.StringifierException;
@@ -27,7 +27,7 @@ import org.infogrid.util.text.StringifierException;
  */
 public class MeshObjectTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractInfoGridTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 

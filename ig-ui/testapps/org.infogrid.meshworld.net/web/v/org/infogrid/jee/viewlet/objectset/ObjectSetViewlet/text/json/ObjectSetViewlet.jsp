@@ -8,7 +8,7 @@
  %><%@ taglib prefix="c"         uri="http://java.sun.com/jsp/jstl/core"
  %>
 [
-<objectset:iterate meshObjectSetName="Viewlet.reachedObjects" meshObjectLoopVar="current" ignore="true">
+<objectset:iterate meshObjectSetName="Viewlet.reachedObjects" loopVar="current" ignore="true">
  <objectset:iteratecontentrow>
   {
     "Identifier" : <mesh:meshObjectId meshObjectName="current" stringRepresentation="Java"/>,

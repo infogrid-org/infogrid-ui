@@ -59,10 +59,12 @@ public abstract class AbstractRestfulAppInitializationFilter
     /**
      * Initialize the initial content of the MeshBase.
      *
+     * @param incomingRequest the incoming request
      * @param mb the MeshBase to initialize
      */
     protected void populateMeshBase(
-            MeshBase mb )
+            SaneRequest incomingRequest,
+            MeshBase    mb )
     {
         // nothing on this level
     }
@@ -70,11 +72,13 @@ public abstract class AbstractRestfulAppInitializationFilter
     /**
      * Initialize the context objects. This may be overridden by subclasses.
      *
+     * @param incomingRequest the incoming request
      * @param rootContext the root Context
      * @throws Exception initialization may fail
      */
     protected void initializeContextObjects(
-            Context rootContext )
+            SaneRequest incomingRequest,
+            Context     rootContext )
         throws
             Exception
     {

@@ -218,4 +218,11 @@ public interface JeeViewlet
      * Name of the Request attribute that contains the desired JeeViewletStateTransition.
      */
     public static final String VIEWLET_STATE_TRANSITION_NAME = "ViewletStateTransition";
+
+    /**
+     * Sometimes, a Viewlet includes another Viewlet. This is the name of the Request attribute
+     * that contains the Stack of the Viewlets enclosing the current one. That Stack does not
+     * contain the current Viewlet.
+     */
+    public static final String VIEWLET_STACK_ATTRIBUTE_NAME = "ViewletStack";
 }    

@@ -71,22 +71,95 @@
     <tag>
         <name>viewletAlternatives</name>
         <tag-class>org.infogrid.jee.taglib.viewlet.ViewletAlternativesTag</tag-class>
+        <attribute>
+            <name>pane</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rootPath</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>
         <name>viewletAlternativesIterate</name>
         <tag-class>org.infogrid.jee.taglib.viewlet.ViewletAlternativesIterateTag</tag-class>
         <attribute>
-            <name>subjectName</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
             <name>loopVar</name>
             <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
         </attribute>
         <attribute>
             <name>worstAcceptable</name>
             <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>viewletAlternativeLink</name>
+        <tag-class>org.infogrid.jee.taglib.viewlet.ViewletAlternativeLinkTag</tag-class>
+        <attribute>
+            <name>viewletAlternativeName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>pane</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rootPath</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>addArguments</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>target</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>title</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>stringRepresentation</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>viewletAlternative</name>
+        <tag-class>org.infogrid.jee.taglib.viewlet.ViewletAlternativeTag</tag-class>
+        <attribute>
+            <name>viewletAlternativeName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
         </attribute>
         <attribute>
             <name>filter</name>
@@ -134,7 +207,10 @@
         <attribute>
             <name>subject</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>reachedByName</name>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>mimeType</name>

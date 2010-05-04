@@ -282,7 +282,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>meshObjectLoopVar</name>
+            <name>loopVar</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -328,7 +328,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>meshObjectLoopVar</name>
+            <name>loopVar</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -337,6 +337,40 @@
         </attribute>
         <attribute>
             <name>orderBy</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>reverse</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pathIterate</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.TraversalPathSetIterateTag</tag-class>
+        <attribute>
+            <name>traversalPathSetName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>loopVar</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>statusVar</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
