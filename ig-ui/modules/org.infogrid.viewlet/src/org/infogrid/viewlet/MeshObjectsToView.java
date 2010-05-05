@@ -73,8 +73,8 @@ public class MeshObjectsToView
         return new MeshObjectsToView(
                 subject,
                 subject.getIdentifier(),
-                null,
                 viewletTypeName,
+                null,
                 null,
                 null,
                 null,
@@ -84,42 +84,11 @@ public class MeshObjectsToView
 
     /**
      * Factory method.
-     * 
-     * @param subject the subject for the Viewlet
-     * @param subjectParameters the parameters for the Viewlet
-     * @param viewletTypeName the type of Viewlet to use
-     * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
-     * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
-     * @param request the incoming RestfulRequest
-     * @return the created MeshObjectsToView
-     */
-    public static MeshObjectsToView create(
-            MeshObject             subject,
-            Map<String,Object[]>   subjectParameters,
-            String                 viewletTypeName,
-            Map<String,Object[]>   viewletParameters,
-            TraversalSpecification traversalSpecification,
-            RestfulRequest         request )
-    {
-        return new MeshObjectsToView(
-                subject,
-                subject.getIdentifier(),
-                subjectParameters,
-                viewletTypeName,
-                viewletParameters,
-                traversalSpecification,
-                null,
-                request,
-                subject.getMeshBase());
-    }
-
-    /**
-     * Factory method.
      *
      * @param subject the subject for the Viewlet
-     * @param subjectParameters the parameters for the Viewlet
      * @param viewletTypeName the type of Viewlet to use
      * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
+     * @param arrivedAtPath the TraversalPath by which we arrived here, if any
      * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
      * @param traversalPath the TraversalPath to the single highlighted object
      * @param request the incoming RestfulRequest
@@ -127,9 +96,9 @@ public class MeshObjectsToView
      */
     public static MeshObjectsToView create(
             MeshObject             subject,
-            Map<String,Object[]>   subjectParameters,
             String                 viewletTypeName,
             Map<String,Object[]>   viewletParameters,
+            TraversalPath          arrivedAtPath,
             TraversalSpecification traversalSpecification,
             TraversalPath          traversalPath,
             RestfulRequest         request )
@@ -139,9 +108,9 @@ public class MeshObjectsToView
         return new MeshObjectsToView(
                 subject,
                 subject.getIdentifier(),
-                subjectParameters,
                 viewletTypeName,
                 viewletParameters,
+                arrivedAtPath,
                 traversalSpecification,
                 traversalPath != null ? mb.getMeshObjectSetFactory().createSingleMemberImmutableTraversalPathSet( traversalPath ) : null,
                 request,
@@ -152,9 +121,9 @@ public class MeshObjectsToView
      * Factory method.
      *
      * @param subject the subject for the Viewlet
-     * @param subjectParameters the parameters for the Viewlet
      * @param viewletTypeName the type of Viewlet to use
      * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
+     * @param arrivedAtPath the TraversalPath by which we arrived here, if any
      * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
      * @param traversalPaths the TraversalPaths to the highlighted objects
      * @param request the incoming RestfulRequest
@@ -162,9 +131,9 @@ public class MeshObjectsToView
      */
     public static MeshObjectsToView create(
             MeshObject             subject,
-            Map<String,Object[]>   subjectParameters,
             String                 viewletTypeName,
             Map<String,Object[]>   viewletParameters,
+            TraversalPath          arrivedAtPath,
             TraversalSpecification traversalSpecification,
             TraversalPathSet       traversalPaths,
             RestfulRequest         request )
@@ -172,9 +141,9 @@ public class MeshObjectsToView
         return new MeshObjectsToView(
                 subject,
                 subject.getIdentifier(),
-                subjectParameters,
                 viewletTypeName,
                 viewletParameters,
+                arrivedAtPath,
                 traversalSpecification,
                 traversalPaths,
                 request,
@@ -186,9 +155,9 @@ public class MeshObjectsToView
      * 
      * @param subject the subject for the Viewlet
      * @param subjectIdentifier the identifier of the subject for the Viewlet
-     * @param subjectParameters the parameters for the Viewlet
      * @param viewletTypeName the type of Viewlet to use
      * @param viewletParameters the Viewlet parameters (eg size, zoom, ...) to use
+     * @param arrivedAtPath the TraversalPath by which we arrived here, if any
      * @param traversalSpecification the TraversalSpecification to apply when viewing the subject
      * @param traversalPaths the TraversalPaths to the highlighted objects
      * @param request the incoming RestfulRequest
@@ -197,18 +166,18 @@ public class MeshObjectsToView
     protected MeshObjectsToView(
             MeshObject             subject,
             MeshObjectIdentifier   subjectIdentifier,
-            Map<String,Object[]>   subjectParameters,
             String                 viewletTypeName,
             Map<String,Object[]>   viewletParameters,
+            TraversalPath          arrivedAtPath,
             TraversalSpecification traversalSpecification,
             TraversalPathSet       traversalPaths,
             RestfulRequest         request,
             MeshBase               mb )
     {
         theSubject                = subject;
-        theSubjectParameters      = subjectParameters;
         theViewletTypeName        = viewletTypeName;
         theViewletParameters      = viewletParameters;
+        theArrivedAtPath          = arrivedAtPath;
         theTraversalSpecification = traversalSpecification;
         theTraversalPaths         = traversalPaths;
         theRequest                = request;
@@ -233,65 +202,6 @@ public class MeshObjectsToView
     public MeshObjectIdentifier getSubjectIdentifier()
     {
         return theSubjectIdentifier;
-    }
-
-    /**
-     * Obtain the value of a named subject parameter.
-     *
-     * @param name the name of the subject parameter
-     * @return the value, if any
-     * @throws NotSingleMemberException if a Viewlet parameter had more than one value
-     */
-    public Object getSubjectParameter(
-            String name )
-        throws
-            NotSingleMemberException
-    {
-        if( theSubjectParameters == null ) {
-            return null;
-        }
-
-        Object [] ret = theSubjectParameters.get( name );
-        if( ret == null ) {
-            return null;
-        }
-        switch( ret.length ) {
-            case 0:
-                return null;
-
-            case 1:
-                return ret[0];
-
-            default:
-                throw new NotSingleMemberException( "Parameter name has more than one value", ret.length );
-        }
-    }
-
-    /**
-     * Obtain all values of a multi-valued subject parameter.
-     *
-     * @param name the name of the subject parameter
-     * @return the values, if any
-     */
-    public Object [] getMultivaluedSubjectParameter(
-            String name )
-    {
-        if( theSubjectParameters == null ) {
-            return null;
-        }
-
-        Object [] ret = theSubjectParameters.get( name );
-        return ret;
-    }
-
-    /**
-     * Obtain the parameters for the subject.
-     *
-     * @return the parameters for the subject, if any
-     */
-    public Map<String,Object[]> getSubjectParameters()
-    {
-        return theSubjectParameters;
     }
 
     /**
@@ -364,6 +274,17 @@ public class MeshObjectsToView
     }
 
     /**
+     * Determine how we arrived at this Viewlet, if available. This
+     * is most likely a member of the TraversalPathSet of the parent Viewlet.
+     *
+     * @return the TraversalPath through which we arrived here
+     */
+    public TraversalPath getArrivedAtPath()
+    {
+        return theArrivedAtPath;
+    }
+
+    /**
      * Obtain the TraversalSpecification that the Viewlet is supposed to use.
      * 
      * @return the TraversalSpecification that the Viewlet is supposed to use
@@ -416,18 +337,18 @@ public class MeshObjectsToView
                 new String[] {
                     "subject",
                     "subjectIdentifier",
-                    "subjectPars",
                     "viewletTypeName",
                     "viewletPars",
+                    "arrivedAtPath",
                     "traversalSpecification",
                     "traversalPaths"
                 },
                 new Object[] {
                     theSubject,
                     theSubjectIdentifier,
-                    theSubjectParameters,
                     theViewletTypeName,
                     theViewletParameters,
+                    theArrivedAtPath,
                     theTraversalSpecification,
                     theTraversalPaths
         });
@@ -444,11 +365,6 @@ public class MeshObjectsToView
     protected MeshObjectIdentifier theSubjectIdentifier;
 
     /**
-     * The parameters for the subject, if any.
-     */
-    protected Map<String,Object[]> theSubjectParameters;
-
-    /**
      * The type of Viewlet we would like to view the subject.
      */
     protected String theViewletTypeName;
@@ -458,7 +374,13 @@ public class MeshObjectsToView
      * This is multi-valued.
      */
     protected Map<String,Object[]> theViewletParameters;
-    
+
+    /**
+     * The path by which we got here. This is most likely a member of the TraversalPathSet of
+     * the parent Viewlet (if any).
+     */
+    protected TraversalPath theArrivedAtPath;
+
     /**
      * The TraversalSpecification from the subject, if any.
      */

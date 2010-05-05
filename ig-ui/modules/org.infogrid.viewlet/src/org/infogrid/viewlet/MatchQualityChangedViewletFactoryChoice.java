@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -87,6 +87,7 @@ public class MatchQualityChangedViewletFactoryChoice
      * @param toView the MeshObjectsToView to match against
      * @return the match quality
      */
+    @Override
     public double getMatchQualityFor(
             MeshObjectsToView toView )
     {
@@ -99,16 +100,18 @@ public class MatchQualityChangedViewletFactoryChoice
      * this method.
      * 
      * @param toView the MeshObjectsToView; only used for error reporting
+     * @param parent the parent Viewlet, if any
      * @param c the Context to use
      * @return the instantiated Viewlet
      */
     public Viewlet instantiateViewlet(
             MeshObjectsToView        toView,
+            Viewlet                  parent,
             Context                  c )
         throws
             CannotViewException
     {
-        return theDelegate.instantiateViewlet( toView, c );
+        return theDelegate.instantiateViewlet( toView, parent, c );
     }
     
     /**

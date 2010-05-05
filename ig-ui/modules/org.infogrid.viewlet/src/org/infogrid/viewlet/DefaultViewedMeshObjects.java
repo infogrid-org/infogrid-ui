@@ -18,6 +18,7 @@ import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 
 /**
@@ -59,20 +60,20 @@ public class DefaultViewedMeshObjects
      * Through this method, the Viewlet that this object belongs to updates this object.
      *
      * @param subject the new subject of the Viewlet
-     * @param subjectParameters the parameters of the newly selected subject, if any
      * @param viewletParameters the parameters of the Viewlet, if any
      * @param traversal the TraversalSpecification currently in effect on the Viewlet, if any
      * @param traversalPaths the TraversalPaths to the currently highlighted objects, if any
+     * @param arrivedAtPath the TraversalPath through which we arrived at this Viewlet, if any
      */
     @Override
     public void update(
             MeshObject             subject,
-            Map<String,Object[]>   subjectParameters,
             Map<String,Object[]>   viewletParameters,
             TraversalSpecification traversal,
-            TraversalPathSet       traversalPaths )
+            TraversalPathSet       traversalPaths,
+            TraversalPath          arrivedAtPath )
     {
-        super.update( subject, subjectParameters, viewletParameters, traversal, traversalPaths );
+        super.update( subject, viewletParameters, traversal, traversalPaths, arrivedAtPath );
 
         if( theTraversalSpecification == null ) {
             // insert default

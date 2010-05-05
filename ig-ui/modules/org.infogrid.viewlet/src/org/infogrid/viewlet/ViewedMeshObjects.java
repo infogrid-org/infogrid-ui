@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.NotSingleMemberException;
 
@@ -37,34 +38,6 @@ public interface ViewedMeshObjects
      * @return the subject of the Viewlet
      */
     public MeshObject getSubject();
-
-    /**
-     * Obtain the parameters of the subject of the Viewlet.
-     *
-     * @return the parameters of the subject of the Viewlet
-     */
-    public Map<String,Object[]> getSubjectParameters();
-
-    /**
-     * Obtain the value of a named subject parameter.
-     *
-     * @param name the name of the subject parameter
-     * @return the value, if any
-     * @throws NotSingleMemberException if a Viewlet parameter had more than one value
-     */
-    public Object getSubjectParameter(
-            String name )
-        throws
-            NotSingleMemberException;
-
-    /**
-     * Obtain all values of a multi-valued subject parameter.
-     *
-     * @param name the name of the subject parameter
-     * @return the values, if any
-     */
-    public Object [] getMultivaluedSubjectParameter(
-            String name );
 
     /**
      * Obtain the Viewlet by which these MeshObjects are viewed.
@@ -100,6 +73,14 @@ public interface ViewedMeshObjects
      */
     public Object [] getMultivaluedViewletParameter(
             String name );
+
+    /**
+     * Determine how we arrived at this Viewlet, if available. This
+     * is most likely a member of the TraversalPathSet of the parent Viewlet.
+     *
+     * @return the TraversalPath through which we arrived here
+     */
+    public TraversalPath getArrivedAtPath();
 
     /**
      * Obtain the TraversalSpecification that the Viewlet currently uses.

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -178,12 +178,14 @@ public class InModuleViewletFactoryChoice
      * Instantiate a ViewletFactoryChoice into a Viewlet.
      * 
      * @param toView the MeshObjectsToView; only used for error reporting
+     * @param parent the parent Viewlet, if any
      * @param c the Context to use
      * @return the instantiated Viewlet
      */
     @SuppressWarnings( { "unchecked" } )
     public Viewlet instantiateViewlet(
             MeshObjectsToView toView,
+            Viewlet           parent,
             Context           c )
         throws
             CannotViewException
@@ -193,7 +195,7 @@ public class InModuleViewletFactoryChoice
             ClassLoader viewletClassLoader = viewletModule.getClassLoader();
             Class       viewletClass = Class.forName( theCapability.getImplementationName(), true, viewletClassLoader );
 
-            return instantiateViewlet( toView, (Class<? extends Viewlet>) viewletClass, c );
+            return instantiateViewlet( toView, (Class<? extends Viewlet>) viewletClass, parent, c );
 
         } catch( ClassNotFoundException ex ) {
             throw new org.infogrid.viewlet.CannotViewException.InternalError( null, toView, ex );
@@ -219,6 +221,7 @@ public class InModuleViewletFactoryChoice
      *
      * @param toView the MeshObjectsToView; only used for error reporting
      * @param viewletClass the Viewlet Class to instantiate
+     * @param parent the parent Viewlet, if any
      * @param c the Context to use
      * @return the instantiated Viewlet
      * @throws CannotViewException if, against expectations, the Viewlet corresponding
@@ -228,6 +231,7 @@ public class InModuleViewletFactoryChoice
     protected static Viewlet instantiateViewlet(
             MeshObjectsToView        toView,
             Class<? extends Viewlet> viewletClass,
+            Viewlet                  parent,
             Context                  c )
         throws
             CannotViewException
@@ -239,7 +243,9 @@ public class InModuleViewletFactoryChoice
 
             Object ret = factoryMethod.invoke(
                     null, // static method
-                    c );
+                    toView.getMeshBase(), // meshbase
+                    parent, // parent
+                    c ); // context
 
             return (Viewlet) ret;
 

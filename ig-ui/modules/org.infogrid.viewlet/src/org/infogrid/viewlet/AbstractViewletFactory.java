@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,7 +24,6 @@ import org.infogrid.model.Viewlet.ViewletSubjectArea;
 import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.FactoryException;
-import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -32,7 +31,7 @@ import org.infogrid.util.logging.Log;
  */
 public abstract class AbstractViewletFactory
         extends
-            AbstractFactory<MeshObjectsToView,Viewlet,Context>
+            AbstractFactory<MeshObjectsToView,Viewlet,ViewletFactoryArguments>
         implements
             ViewletFactory
 {
@@ -58,13 +57,13 @@ public abstract class AbstractViewletFactory
      * Factory method.
      *
      * @param theObjectsToView the MeshObjectsToView by the to-be-created Viewlet
-     * @param c the Context in which the to-be-created Viewlet will run
+     * @param argument any argument-style information required for object creation, if any
      * @return the created object
      * @throws FactoryException catch-all Exception, consider its cause
      */
     public Viewlet obtainFor(
-            MeshObjectsToView theObjectsToView,
-            Context           c )
+            MeshObjectsToView       theObjectsToView,
+            ViewletFactoryArguments argument )
         throws
             FactoryException
     {
@@ -75,7 +74,7 @@ public abstract class AbstractViewletFactory
         }
 
         try {
-            return candidates[0].instantiateViewlet( theObjectsToView, c );
+            return candidates[0].instantiateViewlet( theObjectsToView, argument.getParent(), argument.getContext() );
 
         } catch( CannotViewException ex ) {
             throw new FactoryException( this, ex );

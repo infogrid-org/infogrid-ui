@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.NotSingleMemberException;
 import org.infogrid.util.logging.CanBeDumped;
@@ -60,23 +61,23 @@ public abstract class AbstractViewedMeshObjects
      * Through this method, the Viewlet that this object belongs to updates this object.
      *
      * @param subject the new subject of the Viewlet
-     * @param subjectParameters the parameters of the newly selected subject, if any
      * @param viewletParameters the parameters of the Viewlet, if any
      * @param traversal the TraversalSpecification currently in effect on the Viewlet, if any
      * @param traversalPaths the TraversalPaths to the currently highlighted objects, if any
+     * @param arrivedAtPath the TraversalPath through which we arrived at this Viewlet, if any
      */
     public void update(
             MeshObject             subject,
-            Map<String,Object[]>   subjectParameters,
             Map<String,Object[]>   viewletParameters,
             TraversalSpecification traversal,
-            TraversalPathSet       traversalPaths )
+            TraversalPathSet       traversalPaths,
+            TraversalPath          arrivedAtPath )
     {
         theSubject                = subject;
-        theSubjectParameters      = subjectParameters;
         theViewletParameters      = viewletParameters;
         theTraversalSpecification = traversal;
         theTraversalPaths         = traversalPaths;
+        theArrivedAtPath          = arrivedAtPath;
 
         if( theTraversalPaths != null ) {
             theReachedObjects = theTraversalPaths.getDestinationsAsSet();
@@ -94,10 +95,10 @@ public abstract class AbstractViewedMeshObjects
             MeshObjectsToView newObjectsToView )
     {
         update( newObjectsToView.getSubject(),
-                newObjectsToView.getSubjectParameters(),
                 newObjectsToView.getViewletParameters(),
                 newObjectsToView.getTraversalSpecification(),
-                newObjectsToView.getTraversalPaths() );
+                newObjectsToView.getTraversalPaths(),
+                newObjectsToView.getArrivedAtPath() );
     }
 
     /**
@@ -109,65 +110,6 @@ public abstract class AbstractViewedMeshObjects
     public final MeshObject getSubject()
     {
         return theSubject;
-    }
-
-    /**
-     * Obtain the value of a named subject parameter.
-     *
-     * @param name the name of the subject parameter
-     * @return the value, if any
-     * @throws NotSingleMemberException if a Viewlet parameter had more than one value
-     */
-    public Object getSubjectParameter(
-            String name )
-        throws
-            NotSingleMemberException
-    {
-        if( theSubjectParameters == null ) {
-            return null;
-        }
-
-        Object [] ret = theSubjectParameters.get( name );
-        if( ret == null ) {
-            return null;
-        }
-        switch( ret.length ) {
-            case 0:
-                return null;
-
-            case 1:
-                return ret[0];
-
-            default:
-                throw new NotSingleMemberException( "Parameter name has more than one value", ret.length );
-        }
-    }
-
-    /**
-     * Obtain all values of a multi-valued subject parameter.
-     *
-     * @param name the name of the subject parameter
-     * @return the values, if any
-     */
-    public Object [] getMultivaluedSubjectParameter(
-            String name )
-    {
-        if( theSubjectParameters == null ) {
-            return null;
-        }
-
-        Object [] ret = theSubjectParameters.get( name );
-        return ret;
-    }
-
-    /**
-     * Obtain the parameters for the subject.
-     *
-     * @return the parameters for the subject, if any.
-     */
-    public final Map<String,Object[]> getSubjectParameters()
-    {
-        return theSubjectParameters;
     }
 
     /**
@@ -237,6 +179,17 @@ public abstract class AbstractViewedMeshObjects
     public final Map<String,Object[]> getViewletParameters()
     {
         return theViewletParameters;
+    }
+
+    /**
+     * Determine how we arrived at this Viewlet, if available. This
+     * is most likely a member of the TraversalPathSet of the parent Viewlet.
+     *
+     * @return the TraversalPath through which we arrived here
+     */
+    public final TraversalPath getArrivedAtPath()
+    {
+        return theArrivedAtPath;
     }
 
     /**
@@ -320,15 +273,15 @@ public abstract class AbstractViewedMeshObjects
     protected MeshObject theSubject;
 
     /**
-     * The parameters for the subject, if any.
-     */
-    protected Map<String,Object[]> theSubjectParameters;
-
-    /**
      * The Viewlet parameters, if any.
      */
     protected Map<String,Object[]> theViewletParameters;
-    
+
+    /**
+     * The path through which we arrived at this Viewlet, if any.
+     */
+    protected TraversalPath theArrivedAtPath;
+
     /**
      * The TraversalSpecification, if any.
      */

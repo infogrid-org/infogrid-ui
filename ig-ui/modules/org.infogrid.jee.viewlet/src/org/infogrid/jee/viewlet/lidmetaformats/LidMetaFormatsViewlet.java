@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -37,15 +37,17 @@ public class LidMetaFormatsViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the viewed MeshObjects are taken
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static LidMetaFormatsViewlet create(
             MeshBase mb,
+            Viewlet  parent,
             Context  c )
     {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        LidMetaFormatsViewlet    ret    = new LidMetaFormatsViewlet( viewed, c );
+        LidMetaFormatsViewlet    ret    = new LidMetaFormatsViewlet( viewed, parent, c );
 
         viewed.setViewlet( ret );
 
@@ -64,11 +66,12 @@ public class LidMetaFormatsViewlet
         return new DefaultViewletFactoryChoice( LidMetaFormatsViewlet.class, matchQuality ) {
                 public Viewlet instantiateViewlet(
                         MeshObjectsToView        toView,
+                        Viewlet                  parent,
                         Context                  c )
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), c );
+                    return create( toView.getMeshBase(), parent, c );
                 }
         };
     }
@@ -77,13 +80,15 @@ public class LidMetaFormatsViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected LidMetaFormatsViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
-        super( viewed, c );
+        super( viewed, parent, c );
     }
 
     /**
@@ -95,7 +100,7 @@ public class LidMetaFormatsViewlet
     {
         ViewletFactory vlFact = getContext().findContextObjectOrThrow( ViewletFactory.class );
 
-        MeshObjectsToView toView = MeshObjectsToView.create( getViewedObjects().getSubject(), null );
+        MeshObjectsToView toView = MeshObjectsToView.create( getViewedObjects().getSubject(), theCurrentRequest );
 
         ViewletFactoryChoice [] ret = vlFact.determineFactoryChoicesOrderedByMatchQuality( toView );
         return ret;

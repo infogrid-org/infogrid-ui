@@ -51,15 +51,17 @@ public class BulkLoaderViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the MeshObjects are taken
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created Viewlet
      */
     public static BulkLoaderViewlet create(
             MeshBase mb,
+            Viewlet  parent,
             Context  c )
     {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        BulkLoaderViewlet        ret    = new BulkLoaderViewlet( viewed, c );
+        BulkLoaderViewlet        ret    = new BulkLoaderViewlet( viewed, parent, c );
 
         viewed.setViewlet( ret );
         return ret;
@@ -77,11 +79,12 @@ public class BulkLoaderViewlet
         return new DefaultViewletFactoryChoice( BulkLoaderViewlet.class, matchQuality ) {
                 public Viewlet instantiateViewlet(
                         MeshObjectsToView        toView,
+                        Viewlet                  parent,
                         Context                  c )
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), c );
+                    return create( toView.getMeshBase(), parent, c );
                 }
         };
     }
@@ -90,13 +93,15 @@ public class BulkLoaderViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected BulkLoaderViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
-        super( viewed, c );
+        super( viewed, parent, c );
     }
     
     /**

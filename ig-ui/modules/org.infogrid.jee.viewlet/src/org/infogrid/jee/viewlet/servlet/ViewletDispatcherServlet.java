@@ -61,6 +61,7 @@ import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactory;
+import org.infogrid.viewlet.ViewletFactoryArguments;
 
 /**
  * <p>Main JeeViewlet dispatcher to determine the REST subject, the best JeeViewlet, and
@@ -143,12 +144,12 @@ public class ViewletDispatcherServlet
             servletRequest.setAttribute( JeeViewlet.SUBJECT_ATTRIBUTE_NAME, subject );
 
             if( saneRequest.matchUrlArgument( "lid-meta", "formats" )) {
-                viewlet = LidMetaFormatsViewlet.create( mb, c );
+                viewlet = LidMetaFormatsViewlet.create( mb, null, c );
 
             } else {
                 ViewletFactory viewletFact = c.findContextObjectOrThrow( ViewletFactory.class );
                 try {
-                    viewlet = (JeeViewlet) viewletFact.obtainFor( toView, c );
+                    viewlet = (JeeViewlet) viewletFact.obtainFor( toView, ViewletFactoryArguments.create( c ) );
 
                 } catch( FactoryException ex ) {
                     throw new ServletException( ex ); // pass on
@@ -160,10 +161,10 @@ public class ViewletDispatcherServlet
         if( viewlet != null ) {
             if( toView != null ) {
                 JeeViewletState state = (JeeViewletState) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_NAME );
-                request.setAttribute( JeeViewlet.VIEWLET_STATE_NAME, state != null ? state.getName() : null ); // even set if null
+                request.setAttribute( JeeViewlet.VIEWLET_STATE_NAME, state ); // even set if null
 
                 JeeViewletStateTransition transition = (JeeViewletStateTransition) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
-                request.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition != null ? transition.getName() : null ); // even set if null
+                request.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition ); // even set if null
             }
 
             synchronized( viewlet ) {
@@ -294,9 +295,9 @@ public class ViewletDispatcherServlet
 
         MeshObjectsToView ret = MeshObjectsToView.create(
                 subject,
-                null,
                 viewletTypeName,
                 viewletPars,
+                null,
                 spec,
                 path,
                 restful );
@@ -348,6 +349,9 @@ public class ViewletDispatcherServlet
         }
 
         Map<String,String[]> otherPars = restful.getViewletParameters();
+        otherPars.remove( JeeViewlet.VIEWLET_STATE_NAME ); // make sure we don't get duplicates
+        otherPars.remove( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
+
         if( otherPars != null ) {
             if( viewletPars == null ) {
                 viewletPars = new HashMap<String,Object[]>();

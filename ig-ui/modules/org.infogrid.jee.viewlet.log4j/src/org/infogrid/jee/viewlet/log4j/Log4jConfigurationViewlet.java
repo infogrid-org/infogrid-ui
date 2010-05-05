@@ -53,15 +53,17 @@ public class Log4jConfigurationViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the MeshObjects are taken
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created Viewlet
      */
     public static Log4jConfigurationViewlet create(
             MeshBase mb,
+            Viewlet  parent,
             Context  c )
     {
         DefaultViewedMeshObjects  viewed = new DefaultViewedMeshObjects( mb );
-        Log4jConfigurationViewlet ret    = new Log4jConfigurationViewlet( viewed, c );
+        Log4jConfigurationViewlet ret    = new Log4jConfigurationViewlet( viewed, parent, c );
 
         viewed.setViewlet( ret );
         return ret;
@@ -79,11 +81,12 @@ public class Log4jConfigurationViewlet
         return new DefaultViewletFactoryChoice( Log4jConfigurationViewlet.class, matchQuality ) {
                 public Viewlet instantiateViewlet(
                         MeshObjectsToView        toView,
+                        Viewlet                  parent,
                         Context                  c )
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), c );
+                    return create( toView.getMeshBase(), parent, c );
                 }
         };
     }
@@ -92,13 +95,15 @@ public class Log4jConfigurationViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected Log4jConfigurationViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
-        super( viewed, c );
+        super( viewed, parent, c );
     }
 
     /**

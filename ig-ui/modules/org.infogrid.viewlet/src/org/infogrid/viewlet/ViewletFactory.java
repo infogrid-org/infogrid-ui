@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.viewlet;
 
 import org.infogrid.util.Factory;
 import org.infogrid.util.FactoryException;
-import org.infogrid.util.context.Context;
 
 /**
  * <p>A factory for Viewlets. Objects supporting this interface not only support the
@@ -36,20 +35,20 @@ import org.infogrid.util.context.Context;
  */
 public interface ViewletFactory
         extends
-            Factory<MeshObjectsToView,Viewlet,Context>
+            Factory<MeshObjectsToView,Viewlet,ViewletFactoryArguments>
 {
     /**
      * Factory method. This is inhereted from the <code>Factory</code> interface, but
      * repeated here for clarity.
      *
      * @param key the MeshObjectsToView with this Viewlet
-     * @param argument the Context in which the Viewlet is supposed to run
+     * @param argument any argument-style information required for object creation, if any
      * @return the created Viewlet
      * @throws FactoryException catch-all Exception, consider its cause
      */
     public abstract Viewlet obtainFor(
-            MeshObjectsToView key,
-            Context           argument )
+            MeshObjectsToView       key,
+            ViewletFactoryArguments argument )
         throws
             FactoryException;
     

@@ -22,6 +22,7 @@ import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
+import org.infogrid.viewlet.Viewlet;
 
 /**
  * Factors out common functionality for Viewlets that display sets through
@@ -35,13 +36,15 @@ public abstract class AbstractCursorIterableViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected AbstractCursorIterableViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
-        super( viewed, c );
+        super( viewed, parent, c );
     }
 
     /**

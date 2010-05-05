@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -67,6 +67,7 @@ public interface ViewletFactoryChoice
      * this method.
      * 
      * @param toView the MeshObjectsToView; only used for error reporting
+     * @param parent the parent Viewlet, if any
      * @param c the Context to use
      * @return the instantiated Viewlet
      * @throws CannotViewException if, against expectations, the Viewlet corresponding
@@ -75,6 +76,7 @@ public interface ViewletFactoryChoice
      */
     public abstract Viewlet instantiateViewlet(
             MeshObjectsToView        toView,
+            Viewlet                  parent,
             Context                  c )
         throws
             CannotViewException;

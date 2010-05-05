@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -20,6 +20,7 @@ import org.infogrid.util.PagingCursorIterator;
 import org.infogrid.util.context.Context;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
+import org.infogrid.viewlet.Viewlet;
 
 /**
  * Factors out common functionality for Viewlets that display sets in
@@ -33,15 +34,17 @@ public abstract class AbstractPagingCursorIterableViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param defaultPageLength the default page length
      * @param c the application context
      */
     protected AbstractPagingCursorIterableViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             int                       defaultPageLength,
             Context                   c )
     {
-        super( viewed, c );
+        super( viewed, parent, c );
 
         theDefaultPageLength = defaultPageLength;
     }
@@ -51,6 +54,7 @@ public abstract class AbstractPagingCursorIterableViewlet
      *
      * @throws CannotViewException.InvalidParameter thrown if a windowing parameter was invalid
      */
+    @Override
     protected void ensureInitialized()
         throws
             CannotViewException.InvalidParameter

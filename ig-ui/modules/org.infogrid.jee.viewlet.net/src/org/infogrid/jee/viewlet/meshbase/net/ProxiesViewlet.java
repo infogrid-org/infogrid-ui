@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -36,15 +36,17 @@ public class ProxiesViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the viewed MeshObjects are taken
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static ProxiesViewlet create(
             MeshBase mb,
+            Viewlet  parent,
             Context  c )
     {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        ProxiesViewlet           ret    = new ProxiesViewlet( viewed, c );
+        ProxiesViewlet           ret    = new ProxiesViewlet( viewed, parent, c );
 
         viewed.setViewlet( ret );
 
@@ -63,11 +65,12 @@ public class ProxiesViewlet
         return new DefaultViewletFactoryChoice( ProxiesViewlet.class, matchQuality ) {
                 public Viewlet instantiateViewlet(
                         MeshObjectsToView        toView,
+                        Viewlet                  parent,
                         Context                  c )
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), c );
+                    return create( toView.getMeshBase(), parent, c );
                 }
         };
     }
@@ -76,12 +79,14 @@ public class ProxiesViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected ProxiesViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
-        super( viewed, c );
+        super( viewed, parent, c );
     }
 }

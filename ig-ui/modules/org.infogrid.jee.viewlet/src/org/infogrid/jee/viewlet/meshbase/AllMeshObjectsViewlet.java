@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -40,15 +40,17 @@ public class AllMeshObjectsViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the viewed MeshObjects are taken
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static AllMeshObjectsViewlet create(
             MeshBase mb,
+            Viewlet  parent,
             Context  c )
     {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        AllMeshObjectsViewlet    ret    = new AllMeshObjectsViewlet( viewed, c );
+        AllMeshObjectsViewlet    ret    = new AllMeshObjectsViewlet( viewed, parent, c );
 
         viewed.setViewlet( ret );
 
@@ -67,11 +69,12 @@ public class AllMeshObjectsViewlet
         return new DefaultViewletFactoryChoice( AllMeshObjectsViewlet.class, matchQuality ) {
                 public Viewlet instantiateViewlet(
                         MeshObjectsToView        toView,
+                        Viewlet                  parent,
                         Context                  c )
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), c );
+                    return create( toView.getMeshBase(), parent, c );
                 }
         };
     }
@@ -80,13 +83,15 @@ public class AllMeshObjectsViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected AllMeshObjectsViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
-        super( viewed, DEFAULT_PAGE_SIZE, c );
+        super( viewed, parent, DEFAULT_PAGE_SIZE, c );
     }
 
     /**

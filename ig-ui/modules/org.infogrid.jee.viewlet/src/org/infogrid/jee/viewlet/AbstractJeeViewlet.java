@@ -15,21 +15,36 @@
 package org.infogrid.jee.viewlet;
 
 import java.io.IOException;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.security.UnsafePostException;
+import org.infogrid.jee.taglib.viewlet.IncludeViewletTag;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.servlet.TemplatesFilter;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
+import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.text.MeshStringRepresentationParameters;
+import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.traversal.TraversalPath;
+import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.model.traversal.TraversalTranslator;
+import org.infogrid.model.traversal.TraversalTranslatorException;
 import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
-import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.AbstractViewlet;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.ViewedMeshObjects;
+import org.infogrid.viewlet.Viewlet;
 
 /**
  * Factors out commonly used functionality for JeeViewlets.
@@ -40,17 +55,21 @@ public abstract class AbstractJeeViewlet
         implements
             JeeViewlet
 {
+    private static final Log log = Log.getLogInstance( AbstractJeeViewlet.class ); // our own, private logger
+
     /**
      * Constructor, for subclasses only.
      * 
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected AbstractJeeViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
-        super( viewed, c );
+        super( viewed, parent, c );
     }
     
     /**
@@ -376,6 +395,106 @@ public abstract class AbstractJeeViewlet
     }
 
     /**
+     * Obtain the URL that leads to this Viewlet, with this subject, and all the same parameters,
+     * contained in the same hierarchy of outer Viewlets (if any) as currently.
+     *
+     * @return the URL
+     */
+    public String getHerePaneViewletUrl()
+    {
+        return getAnyPaneViewletUrl( theParentViewlet, getViewedObjects().getArrivedAtPath() );
+    }
+
+    /**
+     * Obtain the URL that leads to this Viewlet, with this subject, and all the same parameters,
+     * as currently. However, if this Viewlet is currently contained by one or a hierarchy of other
+     * Viewlets, display the Viewlet outside of that hierarchy.
+     *
+     * @return the URL
+     */
+    public String getTopPaneViewletUrl()
+    {
+        return getAnyPaneViewletUrl( null, null );
+    }
+
+    /**
+     * Internal implementation method to obtain the Viewlet's URL. If a parent is specified, construct
+     * a composite URL that goes from the parent on down.
+     *
+     * @param parent the parent Viewlet, if any
+     * @param useThisArrivedAt use this TraversalPath instead of our own, if given
+     * @return the URL
+     */
+    protected String getAnyPaneViewletUrl(
+            Viewlet       parent,
+            TraversalPath useThisArrivedAt )
+    {
+        Context c = getContext();
+
+        MeshObject             subject     = getSubject();
+        ViewedMeshObjects      vo          = getViewedObjects();
+        TraversalSpecification spec        = vo.getTraversalSpecification();
+        Map<String,Object[]>   viewletPars = vo.getViewletParameters();
+
+        StringRepresentationDirectory srepdir         = c.findContextObject( StringRepresentationDirectory.class );
+        MeshBase                      defaultMeshBase = c.findContextObject( MeshBase.class );
+        TraversalTranslator           translator      = c.findContextObject( TraversalTranslator.class );
+
+        SimpleStringRepresentationParameters pars    = SimpleStringRepresentationParameters.create();
+        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY,      defaultMeshBase );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY,      theCurrentRequest.getSaneRequest().getContextPath() );
+
+        StringRepresentation rep = srepdir.get( "Url" );
+
+        StringBuilder buf = new StringBuilder();
+        try {
+            buf.append( subject.toStringRepresentationLinkStart( rep, pars ));
+
+        } catch( StringifierException ex ) {
+            log.error( ex );
+        }
+
+        try {
+            String [] traversalArgs = null;
+            if( useThisArrivedAt != null ) {
+                traversalArgs = translator.translateTraversalPath( subject, useThisArrivedAt );
+            } else if( spec != null ) {
+                traversalArgs = translator.translateTraversalSpecification( subject, spec );
+            }
+            if( traversalArgs != null && traversalArgs.length > 0 ) {
+                for( int i=0 ; i<traversalArgs.length ; ++i ) {
+                    HTTP.appendArgumentPairToUrl( RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME, HTTP.encodeToValidUrlArgument( traversalArgs[i] ));
+                }
+            }
+        } catch( TraversalTranslatorException ex ) {
+            log.error( ex );
+        }
+
+        if( viewletPars != null ) {
+            for( String key : viewletPars.keySet() ) {
+                Object [] values = viewletPars.get( key );
+                for( int i=0 ; i<values.length ; ++i ) {
+                    HTTP.appendArgumentToUrl( buf, key, values[i].toString() );
+                }
+            }
+        }
+
+        String ret;
+        if( parent == null ) {
+            ret = buf.toString();
+
+        } else {
+            // go up hierarchically
+            StringBuilder buf2 = new StringBuilder();
+            buf2.append( ((AbstractJeeViewlet)parent).getAnyPaneViewletUrl( parent.getParentViewlet(), vo.getArrivedAtPath() ));
+
+            HTTP.appendArgumentToUrl( buf2, IncludeViewletTag.INCLUDE_URL_ARGUMENT_NAME, buf.toString() );
+            ret = buf2.toString();
+        }
+        return ret;
+    }
+
+    /**
      * Obtain the URL to which forms should be HTTP POSTed. This
      * can be overridden by subclasses.
      *
@@ -383,30 +502,8 @@ public abstract class AbstractJeeViewlet
      */
     public String getPostUrl()
     {
-        String      ret  = getBaseRequestURI();
-        SaneRequest sane = theCurrentRequest.getSaneRequest();
-        
-        String [] traversal = sane.getMultivaluedUrlArgument( RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME );
-        if( traversal != null ) {
-            for( int i=0 ; i<traversal.length ; ++i ) {
-                ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME, traversal[i] );
-            }
-        }
-        String [] format = sane.getMultivaluedUrlArgument( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
-        if( format != null ) {
-            for( int i=0 ; i<format.length ; ++i ) {
-                ret = HTTP.appendArgumentToUrl( ret, RestfulRequest.LID_FORMAT_PARAMETER_NAME, format[i] );
-            }
-        }
-        String [] appContext = sane.getMultivaluedUrlArgument( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
-        if( appContext != null ) {
-            for( int i=0 ; i<appContext.length ; ++i ) {
-                ret = HTTP.appendArgumentToUrl( ret, TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME, appContext[i] );
-            }
-        }
-        return ret;
+        return getHerePaneViewletUrl();
     }
-
 
     /**
      * This method converts the name of a Class (subclass of this one) into the default request URL

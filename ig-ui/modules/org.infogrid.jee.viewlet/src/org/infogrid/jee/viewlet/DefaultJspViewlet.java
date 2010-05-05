@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -36,16 +36,18 @@ public class DefaultJspViewlet
      *
      * @param pseudoClassName the fully-qualified class name of the class that will be impersonated
      * @param mb the MeshBase from which the viewed MeshObjects are taken
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created Viewlet
      */
     public static DefaultJspViewlet create(
             String   pseudoClassName,
             MeshBase mb,
+            Viewlet  parent,
             Context  c )
     {
         DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        DefaultJspViewlet        ret    = new DefaultJspViewlet( pseudoClassName, viewed, c );
+        DefaultJspViewlet        ret    = new DefaultJspViewlet( pseudoClassName, viewed, parent, c );
 
         viewed.setViewlet( ret );
 
@@ -66,11 +68,12 @@ public class DefaultJspViewlet
         return new DefaultJspViewletFactoryChoice( pseudoClassName, matchQuality ) {
                 public Viewlet instantiateViewlet(
                         MeshObjectsToView        toView,
+                        Viewlet                  parent,
                         Context                  c )
                     throws
                         CannotViewException
                 {
-                    return create( pseudoClassName, toView.getMeshBase(), c );
+                    return create( pseudoClassName, toView.getMeshBase(), parent, c );
                 }
         };
     }
@@ -80,13 +83,15 @@ public class DefaultJspViewlet
      *
      * @param pseudoClassName the fully-qualified class name of the class that will be impersonated
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected DefaultJspViewlet(
             String                    pseudoClassName,
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
-        super( pseudoClassName, viewed, c );
+        super( pseudoClassName, viewed, parent, c );
     }
 }

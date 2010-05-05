@@ -39,15 +39,18 @@ public abstract class AbstractViewlet
      * Constructor, for subclasses only.
      * 
      * @param viewed the AbstractViewedMeshObjects implementation to use
+     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected AbstractViewlet(
             AbstractViewedMeshObjects viewed,
+            Viewlet                   parent,
             Context                   c )
     {
         super( c );
 
         theViewedMeshObjects = viewed;
+        theParentViewlet     = parent;
     }
     
     /**
@@ -153,6 +156,16 @@ public abstract class AbstractViewlet
     }
 
     /**
+     * Obtain the Viewlet in which this Viewlet is contained, if any.
+     *
+     * @return the parent Viewlet
+     */
+    public Viewlet getParentViewlet()
+    {
+        return theParentViewlet;
+    }
+
+    /**
      * Helper method to resolve a MeshObject from a MeshObjectIdentifier in String form.
      *
      * @param identifier the MeshObjectIdentifier in String form
@@ -179,4 +192,9 @@ public abstract class AbstractViewlet
      * The objects being viewed.
      */
     protected AbstractViewedMeshObjects theViewedMeshObjects;
+
+    /**
+     * The parent Viewlet, if any.
+     */
+    protected Viewlet theParentViewlet;
 }

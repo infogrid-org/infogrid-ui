@@ -109,4 +109,11 @@ public interface Viewlet
       * @return the ViewedMeshObjects
       */
     public ViewedMeshObjects getViewedObjects();
+
+    /**
+     * Obtain the Viewlet in which this Viewlet is contained, if any.
+     *
+     * @return the parent Viewlet
+     */
+    public Viewlet getParentViewlet();
 }

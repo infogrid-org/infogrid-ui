@@ -68,6 +68,7 @@ import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactory;
+import org.infogrid.viewlet.ViewletFactoryArguments;
 
 /**
  * Include another Viewlet.
@@ -258,6 +259,8 @@ public class IncludeViewletTag
             throw new ContextMeshBaseNotFoundException();
         }
 
+        Viewlet enclosingViewlet = (Viewlet) lookup( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+
         MeshObject     subject;
         TraversalPath  path;
         RestfulRequest restfulRequest = null; // make compiler happy
@@ -362,7 +365,7 @@ public class IncludeViewletTag
 
         MeshObjectsToView toView;
         try {
-            toView  = createMeshObjectsToView( restfulRequest, dict );
+            toView  = createMeshObjectsToView( restfulRequest, path, dict );
 
         } catch( MeshObjectAccessException ex ) {
             throw new JspException( ex );
@@ -383,12 +386,12 @@ public class IncludeViewletTag
         JeeViewlet viewlet = null;
         if( subject != null ) {
             if( saneRequest.matchUrlArgument( "lid-meta", "formats" )) {
-                viewlet = LidMetaFormatsViewlet.create( mb, c );
+                viewlet = LidMetaFormatsViewlet.create( mb, enclosingViewlet, c );
 
             } else {
                 ViewletFactory viewletFact = c.findContextObjectOrThrow( ViewletFactory.class );
                 try {
-                    viewlet = (JeeViewlet) viewletFact.obtainFor( toView, c );
+                    viewlet = (JeeViewlet) viewletFact.obtainFor( toView, ViewletFactoryArguments.create( enclosingViewlet, c ) );
 
                 } catch( FactoryException ex ) {
                     throw new JspException( ex ); // pass on
@@ -396,7 +399,6 @@ public class IncludeViewletTag
             }
         }
         if( viewlet != null ) {
-            Viewlet enclosingViewlet = (Viewlet) lookup( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
             if( enclosingViewlet != null && enclosingViewlet.getName().equals( viewlet.getName() )) {
                 if( subject == enclosingViewlet.getSubject() ) {
                     throw new JspException( "Cannot include Viewlet " + viewlet.getName() + " in itself with same Subject: will lead to infinite recursion" );
@@ -422,10 +424,10 @@ public class IncludeViewletTag
 
                     if( toView != null ) {
                         JeeViewletState state = (JeeViewletState) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_NAME );
-                        servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_NAME, state != null ? state.getName() : null ); // even set if null
+                        servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_NAME, state ); // even set if null
 
                         JeeViewletStateTransition transition = (JeeViewletStateTransition) toView.getViewletParameter( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME );
-                        servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition != null ? transition.getName() : null ); // even set if null
+                        servletRequest.setAttribute( JeeViewlet.VIEWLET_STATE_TRANSITION_NAME, transition ); // even set if null
                     }
 
                     viewlet.view( toView );
@@ -458,7 +460,7 @@ public class IncludeViewletTag
 
                 } catch( ServletException t ) {
                     thrown = t;
-                    throw (JspException) thrown; // notice the finally block
+                    throw new JspException( thrown ); // notice the finally block
 
                 } catch( IOException t ) {
                     thrown = t;
@@ -519,6 +521,7 @@ public class IncludeViewletTag
      * Create a MeshObjectsToView object. This can be overridden by subclasses.
      *
      * @param restful the incoming RESTful request
+     * @param arrivedAt the path by which we arrived for this Viewlet
      * @param traversalDict the TraversalTranslator to use
      * @return the created MeshObjectsToView
      * @throws MeshObjectAccessException thrown if one or more MeshObjects could not be accessed
@@ -528,6 +531,7 @@ public class IncludeViewletTag
      */
     protected MeshObjectsToView createMeshObjectsToView(
             RestfulRequest       restful,
+            TraversalPath        arrivedAt,
             TraversalTranslator  traversalDict )
         throws
             MeshObjectAccessException,
@@ -558,10 +562,11 @@ public class IncludeViewletTag
 
         MeshObjectsToView ret = MeshObjectsToView.create(
                 subject,
-                null,
                 viewletTypeName,
                 viewletPars,
+                arrivedAt,
                 traversal,
+                (TraversalPath) null,
                 restful );
         return ret;
     }

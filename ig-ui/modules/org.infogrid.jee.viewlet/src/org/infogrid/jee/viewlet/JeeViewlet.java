@@ -193,6 +193,23 @@ public interface JeeViewlet
             IOException;
             
     /**
+     * Obtain the URL that leads to this Viewlet, with this subject, and all the same parameters,
+     * contained in the same hierarchy of outer Viewlets (if any) as currently.
+     *
+     * @return the URL
+     */
+    public String getHerePaneViewletUrl();
+
+    /**
+     * Obtain the URL that leads to this Viewlet, with this subject, and all the same parameters,
+     * as currently. However, if this Viewlet is currently contained by one or a hierarchy of other
+     * Viewlets, display the Viewlet outside of that hierarchy.
+     *
+     * @return the URL
+     */
+    public String getTopPaneViewletUrl();
+
+    /**
      * Obtain the URL to which forms should be HTTP POSTed.
      *
      * @return the URL
