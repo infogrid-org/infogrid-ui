@@ -138,19 +138,8 @@ public class NetMeshWorldAppInitializationFilter
         MeshBase mb = rootContext.findContextObjectOrThrow( MeshBase.class );
         rootContext.addContextObject( XpathTraversalTranslator.create( mb ));
 
-        SimpleContext iframeContext = SimpleContext.create( rootContext, "iframe" ); // making rootContext a parent allows us to delegate automatically if not found locally
-        InfoGridWebApp.getSingleton().getContextDirectory().addContext( iframeContext );
-
         ViewletFactory mainVlFact   = new MainNetMeshWorldViewletFactory();
-        ViewletFactory iframeVlFact = new IframeNetMeshWorldViewletFactory();
 
         rootContext.addContextObject( mainVlFact );
-        iframeContext.addContextObject( iframeVlFact );
-
-        StructuredResponseTemplateFactory iframeRtFact
-                = DefaultStructuredResponseTemplateFactory.create(
-                        "default-iframe",
-                        DefaultStructuredResponseTemplateFactory.DEFAULT_MIME_TYPE );
-        iframeContext.addContextObject( iframeRtFact );
     }
 }

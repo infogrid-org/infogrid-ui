@@ -26,7 +26,7 @@
       <th class="type"></th>
       <td class="name"><mesh:type meshTypeName="propertyType" /></td>
       <td class="value">
-       <mesh:property meshObjectName="Subject" propertyTypeName="propertyType" ignore="true" state="${ViewletState}"/>
+       <mesh:property meshObjectName="Subject" propertyTypeName="propertyType" ignore="true" state="${ViewletState.name}"/>
       </td>
      </tr>
     </mesh:propertyIterate>
