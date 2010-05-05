@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -61,7 +61,7 @@ public class SafeFormTag
         theOnKeyUp       = null;
         theAction        = null;
         theMethod        = null;
-        theEncType       = null;
+        theEnctype       = null;
         theAccept        = null;
         theName          = null;
         theOnsubmit      = null;
@@ -160,9 +160,9 @@ public class SafeFormTag
      * 
      * @return the attribute
      */
-    public String getEncType()
+    public String getEnctype()
     {
-        return theEncType;
+        return theEnctype;
     }
 
     /**
@@ -170,10 +170,10 @@ public class SafeFormTag
      * 
      * @param newValue the new value for the attribute
      */
-    public void setEncType(
+    public void setEnctype(
             String newValue )
     {
-        theEncType = newValue;
+        theEnctype = newValue;
     }
 
     /**
@@ -565,7 +565,7 @@ public class SafeFormTag
         appendIfNeeded( "keyup",          theOnKeyUp );
         appendIfNeeded( "action",         theAction );
         appendIfNeeded( "method",         theMethod );
-        appendIfNeeded( "enctype",        theEncType );
+        appendIfNeeded( "enctype",        theEnctype );
         appendIfNeeded( "accept",         theAccept );
         appendIfNeeded( "name",           theName );
         appendIfNeeded( "onsubmit",       theOnsubmit );
@@ -679,7 +679,7 @@ public class SafeFormTag
     /**
      * The enctype attribute.
      */
-    protected String theEncType;
+    protected String theEnctype;
     
     /**
      * The accept attribute.
