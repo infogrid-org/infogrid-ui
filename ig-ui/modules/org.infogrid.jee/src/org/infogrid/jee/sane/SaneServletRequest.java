@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.util.ArrayCursorIterator;
@@ -94,20 +93,13 @@ public class SaneServletRequest
         String queryString      = sRequest.getQueryString();
         String method           = sRequest.getMethod();
         String server           = sRequest.getServerName();
-        String httpHostOnly     = server;
         int    port             = sRequest.getServerPort();
         String protocol         = sRequest.getScheme().equalsIgnoreCase( "https" ) ? "https" : "http";
         String relativeBaseUri  = sRequest.getRequestURI();
         String contextPath      = sRequest.getContextPath();
         String clientIp         = sRequest.getRemoteAddr();
 
-        String httpHost = constructHttpHost( httpHostOnly, protocol, port );
-
-        String relativeFullUri = relativeBaseUri;
-
-        if( queryString != null && queryString.length() != 0 ) {
-            relativeFullUri += "?" + queryString;
-        }
+        String serverWithNonDefaultPort = constructServerPlusNonDefaultPort( server, protocol, port );
 
         Cookie []             servletCookies = sRequest.getCookies();
         IncomingSaneCookie [] cookies;
@@ -139,6 +131,7 @@ public class SaneServletRequest
                 } else {
                     addFormDataArguments( inStream, mimeType, postedArguments, mimeParts );
                 }
+                postedArguments.remove( LID_SUBMIT_PARAMETER_NAME ); // delete the contribution of the submit button
 
             } catch( IOException ex ) {
                 log.error( ex );
@@ -148,6 +141,7 @@ public class SaneServletRequest
         }
 
         addUrlEncodedArguments( queryString, urlArguments );
+        urlArguments.remove( LID_SUBMIT_PARAMETER_NAME ); // delete the contribution of the submit button
 
         SaneRequest requestAtProxy = null;
         if( theDetermineRequestFromProxyOriginalRequest ) {
@@ -155,14 +149,13 @@ public class SaneServletRequest
             // an original request. If not, use the local ones.
 
             String clientIpAtProxy     = sRequest.getHeader( HTTP_PROXY_HEADER_FORWARDED_FOR );
-            String httpHostOnlyAtProxy = sRequest.getHeader( HTTP_PROXY_HEADER_FORWARDED_HOST );
             String serverAtProxy       = sRequest.getHeader( HTTP_PROXY_FORWARDED_SERVER );
             String protocolAtProxy     = sRequest.getHeader( HTTP_PROXY_FORWARDED_PROTOCOL );
             String contextPathAtProxy  = sRequest.getHeader( HTTP_PROXY_FORWARDED_CONTEXT );
             String tmp                 = sRequest.getHeader( HTTP_PROXY_FORWARDED_PORT );
 
             if(    clientIpAtProxy     != null
-                || httpHostOnlyAtProxy != null
+                || serverAtProxy       != null
                 || serverAtProxy       != null
                 || protocolAtProxy     != null
                 || contextPathAtProxy  != null
@@ -170,9 +163,6 @@ public class SaneServletRequest
             {
                 if( clientIpAtProxy == null ) {
                     clientIpAtProxy = clientIp;
-                }
-                if( httpHostOnlyAtProxy == null ) {
-                    httpHostOnlyAtProxy = httpHostOnly;
                 }
                 if( serverAtProxy == null ) {
                     serverAtProxy = server;
@@ -194,44 +184,39 @@ public class SaneServletRequest
                     portAtProxy = port;
                 }
 
-                String httpHostAtProxy = constructHttpHost( httpHostOnlyAtProxy, protocolAtProxy, portAtProxy );
-                if( httpHostAtProxy == null ) {
-                    httpHostAtProxy = httpHost;
+                String serverWithNonDefaultPortAtProxy = constructServerPlusNonDefaultPort( serverAtProxy, protocolAtProxy, portAtProxy );
+                if( serverWithNonDefaultPortAtProxy == null ) {
+                    serverWithNonDefaultPortAtProxy = serverWithNonDefaultPort;
                 }
 
                 String relativeBaseUriAtProxy;
-                String relativeFullUriAtProxy;
                 if( contextPathAtProxy != null ) {
                     if( contextPathAtProxy.endsWith( "/" )) {
                         // supposed to be given without slash, but then it not always is, particularly for "/" itself
                         contextPathAtProxy = contextPathAtProxy.substring( 0, contextPathAtProxy.length()-1 );
                     }
                     relativeBaseUriAtProxy = contextPathAtProxy + relativeBaseUri.substring( contextPath.length() );
-                    relativeFullUriAtProxy = contextPathAtProxy + relativeFullUri.substring( contextPath.length() );
                 } else {
                     relativeBaseUriAtProxy = relativeBaseUri;
-                    relativeFullUriAtProxy = relativeFullUri;
                 }
 
                 requestAtProxy = new SaneServletRequest(
                         sRequest,
                         method,
+                        protocolAtProxy,
                         serverAtProxy,
                         portAtProxy,
-                        httpHostOnlyAtProxy,
-                        httpHostAtProxy,
-                        protocolAtProxy,
+                        serverWithNonDefaultPortAtProxy,
                         relativeBaseUriAtProxy,
-                        relativeFullUriAtProxy,
-                        contextPathAtProxy,
-                        postData,
+                        queryString,
                         urlArguments,
+                        postData,
                         postedArguments,
                         mimeParts,
-                        queryString,
                         cookies,
                         mimeType,
                         clientIpAtProxy,
+                        contextPathAtProxy,
                         null );
             }
         }
@@ -239,22 +224,20 @@ public class SaneServletRequest
         SaneServletRequest ret = new SaneServletRequest(
                 sRequest,
                 method,
+                protocol,
                 server,
                 port,
-                httpHostOnly,
-                httpHost,
-                protocol,
+                serverWithNonDefaultPort,
                 relativeBaseUri,
-                relativeFullUri,
-                contextPath,
-                postData,
+                queryString,
                 urlArguments,
+                postData,
                 postedArguments,
                 mimeParts,
-                queryString,
                 cookies,
                 mimeType,
                 clientIp,
+                contextPath,
                 requestAtProxy );
 
         if( log.isTraceEnabled() ) {
@@ -264,141 +247,55 @@ public class SaneServletRequest
     }
 
     /**
-     * Helper method to construct the host-port combination if non-standard ports.
-     *
-     * @param httpHostOnly just the HTTP host
-     * @param protocol the protocol, e.g. http
-     * @param port the port number
-     * @return the host-port combination
-     */
-    static String constructHttpHost(
-            String httpHostOnly,
-            String protocol,
-            int    port )
-    {
-        if( httpHostOnly == null ) {
-            return null;
-        }
-
-        String httpHost = httpHostOnly;
-        if( "http".equals( protocol )) {
-            if( port != 80 ) {
-                httpHost += ":" + port;
-            }
-        } else if( "https".equals( protocol )) {
-            if( port != 443 ) {
-                httpHost += ":" + port;
-            }
-        } else {
-            httpHost += ":" + port;
-        }
-        return httpHost;
-    }
-
-    /**
-     * Constructor.
+     * Private constructor, use factory method
      *
      * @param sRequest the HttpServletRequest from which the SaneServletRequest is created
      * @param method the HTTP method
-     * @param server the HTTP server
-     * @param port the HTTP server port
-     * @param httpHostOnly the HTTP host, without port
-     * @param httpHost the HTTP host with port
      * @param protocol http or https
+     * @param server the server
+     * @param port the server port
+     * @param serverPlusNonDefaultPort the server, plus, if the port is non-default, a colon and the port number
      * @param relativeBaseUri the relative base URI
-     * @param relativeFullUri the relative full URI
-     * @param contextPath the JEE context path
-     * @param postData the data HTTP POST'd, if any
+     * @param queryString the string past the ? in the URL
      * @param urlArguments the arguments given in the URL, if any
+     * @param postData the data HTTP POST'd, if any
      * @param postedArguments the arguments given via HTTP POST, if any
      * @param mimeParts the MimeParts given via HTTP POST, if any
-     * @param queryString the string past the ? in the URL
      * @param cookies the sent cookies
      * @param mimeType the sent MIME type, if any
      * @param clientIp the client's IP address
-     * @param requestAtProxy the request as received by the reverse proxy, if any
+     * @param contextPath the JEE context path
+     * @param requestAtProxy the SaneRequest received by the reverse proxy, if any
      */
     protected SaneServletRequest(
             HttpServletRequest     sRequest,
             String                 method,
+            String                 protocol,
             String                 server,
             int                    port,
-            String                 httpHostOnly,
-            String                 httpHost,
-            String                 protocol,
+            String                 serverPlusNonDefaultPort,
             String                 relativeBaseUri,
-            String                 relativeFullUri,
-            String                 contextPath,
-            String                 postData,
+            String                 queryString,
             Map<String,String[]>   urlArguments,
+            String                 postData,
             Map<String,String[]>   postedArguments,
             Map<String,MimePart[]> mimeParts,
-            String                 queryString,
             IncomingSaneCookie []  cookies,
             String                 mimeType,
             String                 clientIp,
+            String                 contextPath,
             SaneRequest            requestAtProxy )
     {
-        super( requestAtProxy );
+        super( protocol, server, port, serverPlusNonDefaultPort, relativeBaseUri, queryString, urlArguments, contextPath, requestAtProxy );
 
         theDelegate         = sRequest;
         theMethod           = method;
-        theServer           = server;
-        thePort             = port;
-        theHttpHostOnly     = httpHostOnly;
-        theHttpHost         = httpHost;
-        theProtocol         = protocol;
-        theRelativeBaseUri  = relativeBaseUri;
-        theRelativeFullUri  = relativeFullUri;
-        theContextPath      = contextPath;
         thePostData         = postData;
-        theUrlArguments     = urlArguments;
         thePostedArguments  = postedArguments;
         theMimeParts        = mimeParts;
-        theQueryString      = queryString;
         theCookies          = cookies;
         theMimeType         = mimeType;
         theClientIp         = clientIp;
-    }
-
-    /**
-     * Helper to parse URL-encoded name-value pairs, and put them in the right places.
-     *
-     * @param data the data to add
-     * @param arguments the URL arguments in the process of being assembled
-     */
-    protected static void addUrlEncodedArguments(
-            String               data,
-            Map<String,String[]> arguments )
-    {
-        if( data == null || data.length() == 0 ) {
-            return;
-        }
-        if( data.charAt( 0 ) == '?' ) {
-            data = data.substring( 1 );
-        }
-
-        StringTokenizer pairTokenizer = new StringTokenizer( data, "&" );
-        while( pairTokenizer.hasMoreTokens() ) {
-            String    pair     = pairTokenizer.nextToken();
-            String [] keyValue = pair.split( "=", 2 );
-
-            String key   = HTTP.decodeUrlArgument( keyValue[0] );
-            String value = HTTP.decodeUrlArgument( keyValue.length == 2 ? keyValue[1] : "" ); // reasonable default?
-
-            if( !LID_SUBMIT_PARAMETER_NAME.equalsIgnoreCase( key )) {
-                // We need to remove the submit button's contribution
-                
-                String [] haveAlready = arguments.get( key );
-                String [] newValue;
-                if( haveAlready == null ) {
-                    newValue = new String[] { value };
-                } else {
-                    newValue = ArrayHelper.append( haveAlready, value, String.class );
-                }
-                arguments.put( key, newValue );
-            }
-        }
     }
     
     /**
@@ -551,103 +448,6 @@ public class SaneServletRequest
     }
 
     /**
-     * Determine the requested, relative base URI.
-     * In a request for URL <code>http://example.com:123/foo/bar?abc=def</code>,
-     * that would be <code>/foo/bar</code>.
-     *
-     * @return the requested base URI
-     */
-    public String getRelativeBaseUri()
-    {
-        return theRelativeBaseUri;
-    }
-
-    /**
-     * Determine the requested, relative full URI.
-     * In a request to URL <code>http://example.com:123/foo/bar?abc=def</code>
-     * that would be <code>/foo/bar?abc=def</code>.
-     *
-     * @return the requested relative full URI
-     */
-    public String getRelativeFullUri()
-    {
-        return theRelativeFullUri;
-    }
-
-    /**
-     * Get the name of the server.
-     *
-     * @return the name of the server
-     */
-    public String getServer()
-    {
-        return theServer;
-    }
-
-    /**
-     * Obtain the host name.
-     *
-     * @return the host name
-     */
-    public String getHttpHost()
-    {
-        return theHttpHost;
-    }
-
-    /**
-     * Get the value of the HTTP 1.1 host name field, but without the port.
-     *
-     * @return the HTTP 1.1 host name field, but without the port
-     */
-    public String getHttpHostOnly()
-    {
-        return theHttpHostOnly;
-    }
-
-    /**
-     * Get the port at which this request arrived.
-     *
-     * @return the port at which this request arrived
-     */
-    public int getPort()
-    {
-        return thePort;
-    }
-
-    /**
-     * Get the protocol, i.e. <code>http</code> or <code>https</code>.
-     *
-     * @return <code>http</code> or <code>https</code>
-     */
-    public String getProtocol()
-    {
-        return theProtocol;
-    }
-
-    /**
-     * Obtain all values of a multi-valued argument given in the URL.
-     *
-     * @param argName name of the argument
-     * @return the values, or <code>null</code>
-     */
-    public String [] getMultivaluedUrlArgument(
-            String argName )
-    {
-        String [] ret = theUrlArguments.get( argName );
-        return ret;
-    }
-
-    /**
-     * Obtain all arguments of this request given in the URL.
-     *
-     * @return a Map of name to value mappings for all arguments
-     */
-    public Map<String,String[]> getUrlArguments()
-    {
-        return theUrlArguments;
-    }
-
-    /**
      * Obtain all values of a multi-valued POST'd argument.
      *
      * @param argName name of the argument
@@ -672,32 +472,6 @@ public class SaneServletRequest
     {
         return thePostedArguments;
     }    
-
-    /**
-     * Obtain the relative context Uri of this application.
-     *
-     * @return the relative context URI
-     */
-    public String getContextPath()
-    {
-        return theContextPath;
-    }
-
-    /**
-     * Obtain the absolute context Uri of this application.
-     *
-     * @return the absolute context URI
-     */
-    public String getAbsoluteContextUri()
-    {
-        if( theAbsoluteContextUri == null ) {
-            StringBuilder buf = new StringBuilder();
-            buf.append( getRootUri() );
-            buf.append( theContextPath );
-            theAbsoluteContextUri = buf.toString();
-        }
-        return theAbsoluteContextUri;
-    }
 
     /**
      * Obtain the cookies that were sent as part of this request.
@@ -736,16 +510,6 @@ public class SaneServletRequest
     public String getPostData()
     {
         return thePostData;
-    }
-
-    /**
-     * Obtain the query string, if any.
-     * 
-     * @return the query string
-     */
-    public String getQueryString()
-    {
-        return theQueryString;
     }
 
     /**
@@ -996,11 +760,8 @@ public class SaneServletRequest
                     "theDelegate",
                     "theMethod",
                     "theServer",
-                    "theHttpHost",
-                    "theHttpHostOnly",
                     "thePort",
                     "theRelativeBaseUri",
-                    "theRelativeFullUri",
                     "theCookies",
                     "theProtocol",
                     "theQueryString",
@@ -1017,11 +778,8 @@ public class SaneServletRequest
                     theDelegate,
                     theMethod,
                     theServer,
-                    theHttpHost,
-                    theHttpHostOnly,
                     thePort,
                     theRelativeBaseUri,
-                    theRelativeFullUri,
                     theCookies,
                     theProtocol,
                     theQueryString,
@@ -1046,69 +804,14 @@ public class SaneServletRequest
     protected String theMethod;
 
     /**
-     * The http server.
-     */
-    protected String theServer;
-
-    /**
-     * The http host, potentially with port.
-     */
-    protected String theHttpHost;
-
-    /**
-     * The http host, without the port.
-     */
-    protected String theHttpHostOnly;
-
-    /**
-     * The port.
-     */
-    protected int thePort;
-
-    /**
-     * The relative base URI of the Request.
-     */
-    protected String theRelativeBaseUri;
-
-    /**
-     * The relative full URI of the Request.
-     */
-    protected String theRelativeFullUri;
-
-    /**
      * The cookies on this request. Allocated when needed.
      */
     protected IncomingSaneCookie[] theCookies;
     
     /**
-     * The http or https protocol.
-     */
-    protected String theProtocol;
-
-    /**
-     * The query String, if any.
-     */
-    protected String theQueryString;
-
-    /**
-     * The full absolute context URI.
-     */
-    protected String theAbsoluteContextUri;
-
-    /**
-     * The relative Jee context path for this server.
-     */
-    protected String theContextPath;
-
-    /**
      * The data that was posted, if any.
      */
     protected String thePostData;
-
-    /**
-     * The arguments to the Request provided as part of the URL, mapping from argument name to argument value.
-     */
-    protected Map<String,String[]> theUrlArguments;
 
     /**
      * The arguments to the Request that were POST'd, if any.

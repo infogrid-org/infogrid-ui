@@ -19,6 +19,10 @@ import javax.servlet.ServletException;
 import org.infogrid.jee.templates.BinaryStructuredResponseSection;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
+import org.infogrid.jee.viewlet.DefaultJeeViewedMeshObjects;
+import org.infogrid.jee.viewlet.DefaultJeeViewletFactoryChoice;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
+import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
@@ -30,13 +34,9 @@ import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
-import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.context.Context;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.viewlet.CannotViewException;
-import org.infogrid.viewlet.DefaultViewedMeshObjects;
-import org.infogrid.viewlet.DefaultViewletFactoryChoice;
-import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
@@ -55,17 +55,15 @@ public class BlobViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the viewed MeshObjects are taken
-     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static BlobViewlet create(
             MeshBase mb,
-            Viewlet  parent,
             Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        BlobViewlet              ret    = new BlobViewlet( viewed, parent, c );
+        DefaultJeeViewedMeshObjects viewed = new DefaultJeeViewedMeshObjects( mb );
+        BlobViewlet                 ret    = new BlobViewlet( viewed, c );
 
         viewed.setViewlet( ret );
 
@@ -75,21 +73,20 @@ public class BlobViewlet
     /**
      * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
      *
+     * @param toView the MeshObjectsToView for which this is a choice
      * @param matchQuality the match quality
      * @return the ViewletFactoryChoice
      */
     public static ViewletFactoryChoice choice(
-            double matchQuality )
+            JeeMeshObjectsToView toView,
+            double               matchQuality )
     {
-        return new DefaultViewletFactoryChoice( BlobViewlet.class, matchQuality ) {
-                public Viewlet instantiateViewlet(
-                        MeshObjectsToView        toView,
-                        Viewlet                  parent,
-                        Context                  c )
+        return new DefaultJeeViewletFactoryChoice( toView, BlobViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet()
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), parent, c );
+                    return create( getMeshObjectsToView().getMeshBase(), getMeshObjectsToView().getContext() );
                 }
         };
     }
@@ -97,32 +94,28 @@ public class BlobViewlet
     /**
      * Constructor. This is protected: use factory method or subclass.
      *
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the JeeViewedMeshObjects to use
      * @param c the application context
      */
     protected BlobViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
     }
 
     /**
-     * Process the incoming RestfulRequest. Default implementation that can be
+     * Process the incoming request. Default implementation that can be
      * overridden by subclasses.
      * 
-     * @param restful the incoming RestfulRequest
-     * @param toView the MeshObjectsToView, mostly for error reporting
+     * @param request the incoming request
      * @param structured the StructuredResponse into which to write the result
      * @throws javax.servlet.ServletException processing failed
      * @throws java.io.IOException I/O error
      */
     @Override
     public void processRequest(
-            RestfulRequest     restful,
-            MeshObjectsToView  toView,
+            SaneRequest        request,
             StructuredResponse structured )
         throws
             ServletException,
@@ -130,7 +123,7 @@ public class BlobViewlet
     {
         MeshObject subject = theViewedMeshObjects.getSubject();
         
-        String       propTypeName = restful.getSaneRequest().getUrlArgument( PROPERTY_TYPE_PAR );
+        String       propTypeName = request.getUrlArgument( PROPERTY_TYPE_PAR );
         PropertyType propType     = null;
 
         if( propTypeName != null ) {

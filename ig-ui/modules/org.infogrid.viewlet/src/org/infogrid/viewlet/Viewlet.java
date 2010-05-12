@@ -62,44 +62,12 @@ public interface Viewlet
             CannotViewException;
     
     /**
-      * Set the REST-ful subject for this Viewlet. This is a simplified version of {@link #view( MeshObjectsToView )}.
-      *
-      * @param toView the MeshObject to view
-      * @throws CannotViewException thrown if this Viewlet cannot view this MeshObject
-      */
-    public void setSubject(
-            MeshObject toView )
-        throws
-            CannotViewException;
-    
-    /**
-     * Obtain the REST-ful subject.
+     * Obtain the REST-ful subject. This is a convenience method as it only delegates to
+     * the ViewedMeshObjects.
      *
      * @return the subject
      */
     public MeshObject getSubject();
-
-    /**
-     * Obtain the TraversalSpecification that the Viewlet currently uses, if any.
-     * 
-     * @return the TraversalSpecification that the Viewlet currently uses
-     */
-    public TraversalSpecification getTraversalSpecification();
-
-    /**
-     * Obtain the set of TraversalPaths that the Viewlet currently uses to the Objects, if any.
-     *
-     * @return the TraversalPathSet
-     */
-    public TraversalPathSet getTraversalPathSet();
-
-    /**
-     * Obtain the Objects, i.e. the MeshObjects reached by traversing from the
-     * Subject via the TraversalSpecification.
-     * 
-     * @return the Objects
-     */
-    public MeshObjectSet getReachedObjects();
 
     /**
       * Obtain the MeshObjects that this Viewlet is currently viewing, plus
@@ -108,12 +76,5 @@ public interface Viewlet
       *
       * @return the ViewedMeshObjects
       */
-    public ViewedMeshObjects getViewedObjects();
-
-    /**
-     * Obtain the Viewlet in which this Viewlet is contained, if any.
-     *
-     * @return the parent Viewlet
-     */
-    public Viewlet getParentViewlet();
+    public ViewedMeshObjects getViewedMeshObjects();
 }

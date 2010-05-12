@@ -15,7 +15,7 @@
 package org.infogrid.jee.viewlet;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Deque;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import org.infogrid.jee.app.InfoGridWebApp;
@@ -23,28 +23,11 @@ import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.taglib.viewlet.IncludeViewletTag;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
-import org.infogrid.mesh.MeshObject;
-import org.infogrid.mesh.text.MeshStringRepresentationParameters;
-import org.infogrid.meshbase.MeshBase;
-import org.infogrid.model.traversal.TraversalPath;
-import org.infogrid.model.traversal.TraversalSpecification;
-import org.infogrid.model.traversal.TraversalTranslator;
-import org.infogrid.model.traversal.TraversalTranslatorException;
-import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.http.HTTP;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.SimpleStringRepresentationParameters;
-import org.infogrid.util.text.StringRepresentation;
-import org.infogrid.util.text.StringRepresentationDirectory;
-import org.infogrid.util.text.StringRepresentationParameters;
-import org.infogrid.util.text.StringifierException;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.AbstractViewlet;
 import org.infogrid.viewlet.CannotViewException;
-import org.infogrid.viewlet.MeshObjectsToView;
-import org.infogrid.viewlet.ViewedMeshObjects;
-import org.infogrid.viewlet.Viewlet;
 
 /**
  * Factors out commonly used functionality for JeeViewlets.
@@ -60,44 +43,27 @@ public abstract class AbstractJeeViewlet
     /**
      * Constructor, for subclasses only.
      * 
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the JeeViewedMeshObjects to use
      * @param c the application context
      */
     protected AbstractJeeViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
     }
-    
+
     /**
-      * The Viewlet is being instructed to view certain objects, which are packaged as MeshObjectsToView.
+      * Obtain the MeshObjects that this Viewlet is currently viewing, plus
+      * context information. This method will return the same instance of ViewedMeshObjects
+      * during the lifetime of the Viewlet.
       *
-      * @param toView the MeshObjects to view
-      * @throws CannotViewException thrown if this Viewlet cannot view these MeshObjects
+      * @return the ViewedMeshObjects
       */
     @Override
-    public void view(
-            MeshObjectsToView toView )
-        throws
-            CannotViewException
+    public JeeViewedMeshObjects getViewedMeshObjects()
     {
-        super.view( toView );
-
-        theViewletState           = (JeeViewletState)           toView.getViewletParameter( VIEWLET_STATE_NAME );
-        theViewletStateTransition = (JeeViewletStateTransition) toView.getViewletParameter( VIEWLET_STATE_TRANSITION_NAME );
-    }
-
-    /**
-     * Obtain the current state of the Viewlet.
-     *
-     * @return the current state of the Viewlet, if any
-     */
-    public JeeViewletState getViewletState()
-    {
-        return theViewletState;
+        return (JeeViewedMeshObjects) super.getViewedMeshObjects();
     }
 
     /**
@@ -113,28 +79,13 @@ public abstract class AbstractJeeViewlet
     }
 
     /**
-     * Obtain the desired next state of the Viewlet.
+     * The current JeeViewletState.
      *
-     * @return the desired next state of the Viewlet, if any
+     * @return the current state
      */
-    public JeeViewletState getNextViewletState()
+    public JeeViewletState getViewletState()
     {
-        JeeViewletStateTransition trans = getViewletStateTransition();
-        if( trans != null ) {
-            return trans.getNextState();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Obtain the desired transition from the current state of the Viewlet.
-     *
-     * @return the desired transition from the current state of the Viewlet, if any
-     */
-    public JeeViewletStateTransition getViewletStateTransition()
-    {
-        return theViewletStateTransition;
+        return getViewedMeshObjects().getViewletState();
     }
 
     /**
@@ -168,7 +119,7 @@ public abstract class AbstractJeeViewlet
      * @see #performAfter
      */
     public boolean performBeforeGet(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException
@@ -194,15 +145,15 @@ public abstract class AbstractJeeViewlet
      * @see #performAfter
      */
     public boolean performBeforeSafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException
     {
-        if( request.getSaneRequest().getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
+        if( request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
             // only if no errors have been reported
             response.setHttpResponseCode( 303 );
-            response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
+            response.setLocation( request.getAbsoluteFullUri() );
             return true;
         } else {
             return false;
@@ -228,13 +179,13 @@ public abstract class AbstractJeeViewlet
      * @see #performAfter
      */
     public boolean performBeforeUnsafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             UnsafePostException,
             ServletException
     {
-        throw new UnsafePostException( request.getSaneRequest() );
+        throw new UnsafePostException( request );
     }
 
     /**
@@ -255,15 +206,15 @@ public abstract class AbstractJeeViewlet
      * @see #performAfter
      */
     public boolean performBeforeMaybeSafeOrUnsafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException
     {
-        if( request.getSaneRequest().getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
+        if( request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
             // only if no errors have been reported
             response.setHttpResponseCode( 303 );
-            response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
+            response.setLocation( request.getAbsoluteFullUri() );
             return true;
         } else {
             return false;
@@ -285,7 +236,7 @@ public abstract class AbstractJeeViewlet
      * @see #performBeforeUnsafePost
      */
     public void performAfter(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response,
             Throwable          thrown )
         throws
@@ -315,7 +266,7 @@ public abstract class AbstractJeeViewlet
     {
         String ret;
         if( theCurrentRequest != null ) {
-            ret = theCurrentRequest.getSaneRequest().getAbsoluteFullUri();
+            ret = theCurrentRequest.getAbsoluteFullUri();
         } else {
             ret = null;
         }
@@ -331,7 +282,7 @@ public abstract class AbstractJeeViewlet
     {
         String ret;
         if( theCurrentRequest != null ) {
-            ret = theCurrentRequest.getSaneRequest().getAbsoluteBaseUri();
+            ret = theCurrentRequest.getAbsoluteBaseUri();
         } else {
             ret = null;
         }
@@ -339,18 +290,16 @@ public abstract class AbstractJeeViewlet
     }
 
     /**
-     * Process the incoming RestfulRequest. Default implementation that can be
+     * Process the incoming request. Default implementation that can be
      * overridden by subclasses.
      * 
-     * @param restful the incoming RestfulRequest
-     * @param toView the MeshObjectsToView, mostly for error reporting
+     * @param request the incoming request
      * @param structured the StructuredResponse into which to write the result
      * @throws javax.servlet.ServletException processing failed
      * @throws java.io.IOException I/O error
      */
     public void processRequest(
-            RestfulRequest     restful,
-            MeshObjectsToView  toView,
+            SaneRequest        request,
             StructuredResponse structured )
         throws
             ServletException,
@@ -360,7 +309,7 @@ public abstract class AbstractJeeViewlet
             if( theCurrentRequest != null ) {
                 throw new IllegalStateException( "Have current request already: " + theCurrentRequest );
             }
-            theCurrentRequest = restful;
+            theCurrentRequest = request;
         }
         
         try {
@@ -371,17 +320,17 @@ public abstract class AbstractJeeViewlet
 
                 RequestDispatcher dispatcher = app.findLocalizedRequestDispatcher(
                         servletPath,
-                        restful.getSaneRequest().acceptLanguageIterator(),
+                        request.acceptLanguageIterator(),
                         structured.getServletContext() );
 
                 if( dispatcher != null ) {
-                    JeeTemplateUtils.runRequestDispatcher( dispatcher, restful.getSaneRequest(), structured );
+                    JeeTemplateUtils.runRequestDispatcher( dispatcher, request, structured );
 
                 } else {
                     throw new ServletException(
                             new CannotViewException.InternalError(
                                     this,
-                                    toView,
+                                    getViewedMeshObjects().getMeshObjectsToView(),
                                     "Cannot find RequestDispatcher at " + servletPath,
                                     null ));
                 }
@@ -395,114 +344,36 @@ public abstract class AbstractJeeViewlet
     }
 
     /**
-     * Obtain the URL that leads to this Viewlet, with this subject, and all the same parameters,
-     * contained in the same hierarchy of outer Viewlets (if any) as currently.
-     *
-     * @return the URL
-     */
-    public String getHerePaneViewletUrl()
-    {
-        return getAnyPaneViewletUrl( theParentViewlet, getViewedObjects().getArrivedAtPath() );
-    }
-
-    /**
-     * Obtain the URL that leads to this Viewlet, with this subject, and all the same parameters,
-     * as currently. However, if this Viewlet is currently contained by one or a hierarchy of other
-     * Viewlets, display the Viewlet outside of that hierarchy.
-     *
-     * @return the URL
-     */
-    public String getTopPaneViewletUrl()
-    {
-        return getAnyPaneViewletUrl( null, null );
-    }
-
-    /**
-     * Internal implementation method to obtain the Viewlet's URL. If a parent is specified, construct
-     * a composite URL that goes from the parent on down.
-     *
-     * @param parent the parent Viewlet, if any
-     * @param useThisArrivedAt use this TraversalPath instead of our own, if given
-     * @return the URL
-     */
-    protected String getAnyPaneViewletUrl(
-            Viewlet       parent,
-            TraversalPath useThisArrivedAt )
-    {
-        Context c = getContext();
-
-        MeshObject             subject     = getSubject();
-        ViewedMeshObjects      vo          = getViewedObjects();
-        TraversalSpecification spec        = vo.getTraversalSpecification();
-        Map<String,Object[]>   viewletPars = vo.getViewletParameters();
-
-        StringRepresentationDirectory srepdir         = c.findContextObject( StringRepresentationDirectory.class );
-        MeshBase                      defaultMeshBase = c.findContextObject( MeshBase.class );
-        TraversalTranslator           translator      = c.findContextObject( TraversalTranslator.class );
-
-        SimpleStringRepresentationParameters pars    = SimpleStringRepresentationParameters.create();
-        pars.put( MeshStringRepresentationParameters.DEFAULT_MESHBASE_KEY,      defaultMeshBase );
-        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY,      theCurrentRequest.getSaneRequest().getContextPath() );
-
-        StringRepresentation rep = srepdir.get( "Url" );
-
-        StringBuilder buf = new StringBuilder();
-        try {
-            buf.append( subject.toStringRepresentationLinkStart( rep, pars ));
-
-        } catch( StringifierException ex ) {
-            log.error( ex );
-        }
-
-        try {
-            String [] traversalArgs = null;
-            if( useThisArrivedAt != null ) {
-                traversalArgs = translator.translateTraversalPath( subject, useThisArrivedAt );
-            } else if( spec != null ) {
-                traversalArgs = translator.translateTraversalSpecification( subject, spec );
-            }
-            if( traversalArgs != null && traversalArgs.length > 0 ) {
-                for( int i=0 ; i<traversalArgs.length ; ++i ) {
-                    HTTP.appendArgumentPairToUrl( RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME, HTTP.encodeToValidUrlArgument( traversalArgs[i] ));
-                }
-            }
-        } catch( TraversalTranslatorException ex ) {
-            log.error( ex );
-        }
-
-        if( viewletPars != null ) {
-            for( String key : viewletPars.keySet() ) {
-                Object [] values = viewletPars.get( key );
-                for( int i=0 ; i<values.length ; ++i ) {
-                    HTTP.appendArgumentToUrl( buf, key, values[i].toString() );
-                }
-            }
-        }
-
-        String ret;
-        if( parent == null ) {
-            ret = buf.toString();
-
-        } else {
-            // go up hierarchically
-            StringBuilder buf2 = new StringBuilder();
-            buf2.append( ((AbstractJeeViewlet)parent).getAnyPaneViewletUrl( parent.getParentViewlet(), vo.getArrivedAtPath() ));
-
-            HTTP.appendArgumentToUrl( buf2, IncludeViewletTag.INCLUDE_URL_ARGUMENT_NAME, buf.toString() );
-            ret = buf2.toString();
-        }
-        return ret;
-    }
-
-    /**
-     * Obtain the URL to which forms should be HTTP POSTed. This
-     * can be overridden by subclasses.
+     * Obtain the default URL to which forms should be HTTP POSTed.
      *
      * @return the URL
      */
     public String getPostUrl()
     {
-        return getHerePaneViewletUrl();
+        @SuppressWarnings("unchecked")
+        Deque<JeeViewedMeshObjects> parentViewedStack = (Deque<JeeViewedMeshObjects>) theCurrentRequest.getAttribute( IncludeViewletTag.PARENT_STACK_ATTRIBUTE_NAME );
+
+        return getPostUrl( parentViewedStack );
+    }
+
+    /**
+     * Obtain the URL to which forms should be HTTP POSTed.
+     * By default, that is the same URL
+     * as the current URL, but with the Viewlet state set to VIEW.
+     * This can be overridden by subclasses.
+     *
+     * @param viewedMeshObjectsStack the Stack of ViewedMeshObjects of the parent Viewlets, if any
+     * @return the URL
+     */
+    public String getPostUrl(
+            Deque<JeeViewedMeshObjects> viewedMeshObjectsStack )
+    {
+        JeeMeshObjectsToView currentlyToView = getViewedMeshObjects().getMeshObjectsToView();
+        JeeMeshObjectsToView newToView       = currentlyToView.createCopy();
+
+        newToView.setViewletState( DefaultJeeViewletStateEnum.VIEW );
+
+        return newToView.getAsUrl( viewedMeshObjectsStack );
     }
 
     /**
@@ -519,7 +390,7 @@ public abstract class AbstractJeeViewlet
         almost.append( "/v/" );
         almost.append( viewletClassName.replace( '.', '/' ));
         
-        String mime = theCurrentRequest.getRequestedMimeType();
+        String mime = getViewedMeshObjects().getMimeType();
         if( mime != null && mime.length() > 0 ) {
             // FIXME: does not handle * parameters right now
             almost.append( "/" );
@@ -553,15 +424,5 @@ public abstract class AbstractJeeViewlet
     /**
      * The request currently being processed.
      */
-    protected RestfulRequest theCurrentRequest;
-
-    /**
-     * The current JeeViewletState.
-     */
-    protected JeeViewletState theViewletState;
-
-    /**
-     * The desired transition from the current JeeViewletState.
-     */
-    protected JeeViewletStateTransition theViewletStateTransition;
+    protected SaneRequest theCurrentRequest;
 }

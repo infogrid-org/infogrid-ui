@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -134,7 +134,7 @@ public class ProxyIdentifierTag
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
 
         try {
-            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierStart( pageContext, p, null, theStringRepresentation, theMaxLength );
+            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierStart( pageContext, p, theStringRepresentation, theMaxLength );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -159,7 +159,7 @@ public class ProxyIdentifierTag
     {
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
         
-        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierEnd( pageContext, p, null, theStringRepresentation );
+        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyIdentifierEnd( pageContext, p, theStringRepresentation );
 
         print( text );
 

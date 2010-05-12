@@ -76,7 +76,11 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>rootPath</name>
+            <name>target</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>stringRepresentation</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
@@ -120,10 +124,6 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>rootPath</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
             <name>addArguments</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -160,6 +160,10 @@
             <name>viewletAlternativeName</name>
             <rtexprvalue>true</rtexprvalue>
             <required>true</required>
+        </attribute>
+        <attribute>
+            <name>stringRepresentation</name>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>filter</name>

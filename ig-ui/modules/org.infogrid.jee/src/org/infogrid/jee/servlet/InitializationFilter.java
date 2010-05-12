@@ -107,7 +107,7 @@ public class InitializationFilter
             }
             StringBuilder fullContext = new StringBuilder();
             fullContext.append( lidRequest.getProtocol() ).append( "://" );
-            fullContext.append( lidRequest.getHttpHost() );
+            fullContext.append( lidRequest.getServerPlusNonDefaultPort() );
             fullContext.append( realRequest.getContextPath() );
 
             request.setAttribute( FULLCONTEXT_PARAMETER, fullContext.toString() );

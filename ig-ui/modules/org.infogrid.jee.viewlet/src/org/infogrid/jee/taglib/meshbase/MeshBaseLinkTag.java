@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -46,7 +46,6 @@ public class MeshBaseLinkTag
     protected void initializeToDefaults()
     {
         theMeshBaseName         = null;
-        theRootPath             = null;
         theAddArguments         = null;
         theTarget               = null;
         theTitle                = null;
@@ -76,29 +75,6 @@ public class MeshBaseLinkTag
             String newValue )
     {
         theMeshBaseName = newValue;
-    }
-
-    /**
-     * Obtain value of the rootPath property.
-     *
-     * @return value of the rootPath property
-     * @see #setRootPath
-     */
-    public String getRootPath()
-    {
-        return theRootPath;
-    }
-
-    /**
-     * Set value of the rootPath property.
-     *
-     * @param newValue new value of the rootPath property
-     * @see #getRootPath
-     */
-    public void setRootPath(
-            String newValue )
-    {
-        theRootPath = newValue;
     }
 
     /**
@@ -208,7 +184,7 @@ public class MeshBaseLinkTag
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkStart( pageContext, mb, theRootPath, theAddArguments, theTarget, theTitle, theStringRepresentation );
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkStart( pageContext, mb, theAddArguments, theTarget, theTitle, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -234,7 +210,7 @@ public class MeshBaseLinkTag
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkEnd( pageContext, mb, theRootPath, theStringRepresentation );
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkEnd( pageContext, mb, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -248,11 +224,6 @@ public class MeshBaseLinkTag
      * Name of the bean that holds the MeshBase.
      */
     protected String theMeshBaseName;
-    
-    /**
-     * The HTTP path prepended to the HREF, e.g. http://example.com/foo/bar/?obj=
-     */
-    protected String theRootPath;
     
     /**
      * The arguments to append to the URL, separated by &.

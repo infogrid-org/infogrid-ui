@@ -52,18 +52,18 @@ public class MeshObjectSetIterateContentRowTag
         Tag grandParentTag = parentTag != null ? parentTag.getParent() : null;
 
         if( parentTag == null ) {
-            throw new JspException( "MeshObjectSetIterateContentRow tag must be directly contained in an AbstractMeshObjectSetIterateTag tag" );
+            throw new JspException( "MeshObjectSetIterateContentRow tag must be directly contained in an AbstractSetIterateTag tag" );
         }
-        if(    !( parentTag      instanceof AbstractMeshObjectSetIterateTag )
-            && !( grandParentTag instanceof AbstractMeshObjectSetIterateTag ))
+        if(    !( parentTag      instanceof AbstractSetIterateTag )
+            && !( grandParentTag instanceof AbstractSetIterateTag ))
         {
-            throw new JspException( "MeshObjectSetIterateContentRow tag must be directly contained in an AbstractMeshObjectSetIterateTag tag, or a MeshObjectSetIterateContentTag" );
+            throw new JspException( "MeshObjectSetIterateContentRow tag must be directly contained in an AbstractSetIterateTag tag" );
         }
 
         theRealParentTag =
-                (parentTag instanceof AbstractMeshObjectSetIterateTag)
-                        ? (AbstractMeshObjectSetIterateTag) parentTag
-                        : (AbstractMeshObjectSetIterateTag) grandParentTag;
+                (parentTag instanceof AbstractSetIterateTag)
+                        ? (AbstractSetIterateTag) parentTag
+                        : (AbstractSetIterateTag) grandParentTag;
 
         if( theRealParentTag.displayContentRow() ) {
             return EVAL_BODY_INCLUDE;
@@ -75,5 +75,5 @@ public class MeshObjectSetIterateContentRowTag
     /**
      * The real parent tag.
      */
-    protected AbstractMeshObjectSetIterateTag theRealParentTag;
+    protected AbstractSetIterateTag theRealParentTag;
 }

@@ -14,7 +14,7 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.util.context.Context;
+import org.infogrid.util.text.HasStringRepresentation;
 
 /**
  * <p>A choice for instantiating a Viewlet by a ViewletFactory. See
@@ -22,13 +22,15 @@ import org.infogrid.util.context.Context;
  *    of this interface are provided by their Viewlet implementations.</p>
  */
 public interface ViewletFactoryChoice
+        extends
+            HasStringRepresentation
 {
     /**
-     * Obtain a user-visible String to display to the user for this ViewletFactoryChoice.
+     * Determine the MeshObjectsToView for which this is a choice.
      *
-     * @return the user-visible String
+     * @return the MeshObjectsToView
      */
-    public abstract String getUserVisibleName();
+    public abstract MeshObjectsToView getMeshObjectsToView();
 
     /**
      * Obtain the computable name of the Viewlet.
@@ -66,18 +68,12 @@ public interface ViewletFactoryChoice
      * {org.infogrid.viewlet.Viewlet#view Viewlet.view} after having called
      * this method.
      * 
-     * @param toView the MeshObjectsToView; only used for error reporting
-     * @param parent the parent Viewlet, if any
-     * @param c the Context to use
      * @return the instantiated Viewlet
      * @throws CannotViewException if, against expectations, the Viewlet corresponding
      *         to this ViewletFactoryChoice could not view the MeshObjectsToView after
      *         all. This usually indicates a programming error.
      */
-    public abstract Viewlet instantiateViewlet(
-            MeshObjectsToView        toView,
-            Viewlet                  parent,
-            Context                  c )
+    public abstract Viewlet instantiateViewlet()
         throws
             CannotViewException;
     

@@ -8,21 +8,26 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.viewlet;
 
+import java.util.Deque;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.viewlet.DefaultJeeViewletStateEnum;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
+import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.JeeViewletState;
-import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.http.HTTP;
+import org.infogrid.util.StringHelper;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -114,8 +119,8 @@ public class ChangeViewletStateTag
             IgnoreException
     {
         // this needs to be simple lookup so the periods in the class name don't trigger nestedLookup
-        RestfulRequest restful        = (RestfulRequest) lookupOrThrow( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
-        JeeViewlet     currentViewlet = (JeeViewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+        SaneRequest request        = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+        JeeViewlet  currentViewlet = (JeeViewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
 
         JeeViewletState    currentState    = currentViewlet.getViewletState();
         JeeViewletState [] possibleStates  = currentViewlet.getPossibleViewletStates();
@@ -125,8 +130,12 @@ public class ChangeViewletStateTag
             StringBuilder buf             = new StringBuilder();
             boolean       hasOtherElement = false;
 
-            String href = restful.getSaneRequest().getAbsoluteFullUri();
-            href = theFormatter.filter( href );
+            JeeMeshObjectsToView currentlyToView = currentViewlet.getViewedMeshObjects().getMeshObjectsToView();
+            @SuppressWarnings("unchecked")
+            Deque<JeeViewedMeshObjects> parentViewedStack = (Deque<JeeViewedMeshObjects>) request.getAttribute( IncludeViewletTag.PARENT_STACK_ATTRIBUTE_NAME );
+
+            // String href = request.getAbsoluteFullUri();
+            // href = theFormatter.filter( href );
 
             String nameInCss = getClass().getName().replace( '.', '-' );
             buf.append( "<div class=\"" ).append( nameInCss ).append( "\" id=\"" ).append( nameInCss ).append( "\">\n" );
@@ -154,7 +163,14 @@ public class ChangeViewletStateTag
                     } else {
                         buf.append( "  <li>" );
                         buf.append( "<a href=\"" );
-                        buf.append( HTTP.replaceOrAppendArgumentToUrl( href, JeeViewletState.VIEWLET_STATE_PAR_NAME, current ));
+                        // buf.append( HTTP.replaceOrAppendArgumentToUrl( href, JeeViewletState.VIEWLET_STATE_PAR_NAME, current ));
+
+                        JeeMeshObjectsToView newToView  = currentlyToView.createCopy();
+                        newToView.setViewletState( found );
+
+                        String href = newToView.getAsUrl( parentViewedStack );
+                        buf.append( StringHelper.stringToHtml( href ));
+
                         buf.append( "\">" );
                         buf.append( found.toStringRepresentation( null, null ) ); // arguments don't matter
                         buf.append( "</a>" );

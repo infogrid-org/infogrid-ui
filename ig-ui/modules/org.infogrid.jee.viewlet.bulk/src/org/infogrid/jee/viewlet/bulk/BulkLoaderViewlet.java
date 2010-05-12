@@ -20,6 +20,10 @@ import java.util.Iterator;
 import javax.servlet.ServletException;
 import org.infogrid.util.context.Context;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.viewlet.DefaultJeeViewedMeshObjects;
+import org.infogrid.jee.viewlet.DefaultJeeViewletFactoryChoice;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
+import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
 import org.infogrid.jee.viewlet.SimpleJeeViewlet;
 import org.infogrid.mesh.externalized.ExternalizedMeshObject;
 import org.infogrid.mesh.externalized.xml.BulkExternalizedMeshObjectXmlEncoder;
@@ -27,14 +31,9 @@ import org.infogrid.meshbase.BulkLoadException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
-import org.infogrid.viewlet.DefaultViewedMeshObjects;
-import org.infogrid.viewlet.DefaultViewletFactoryChoice;
-import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
@@ -51,17 +50,15 @@ public class BulkLoaderViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the MeshObjects are taken
-     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created Viewlet
      */
     public static BulkLoaderViewlet create(
             MeshBase mb,
-            Viewlet  parent,
             Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        BulkLoaderViewlet        ret    = new BulkLoaderViewlet( viewed, parent, c );
+        DefaultJeeViewedMeshObjects viewed = new DefaultJeeViewedMeshObjects( mb );
+        BulkLoaderViewlet           ret    = new BulkLoaderViewlet( viewed, c );
 
         viewed.setViewlet( ret );
         return ret;
@@ -70,21 +67,20 @@ public class BulkLoaderViewlet
     /**
      * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
      *
+     * @param toView the MeshObjectsToView for which this is a choice
      * @param matchQuality the match quality
      * @return the ViewletFactoryChoice
      */
     public static ViewletFactoryChoice choice(
-            double matchQuality )
+            JeeMeshObjectsToView toView,
+            double               matchQuality )
     {
-        return new DefaultViewletFactoryChoice( BulkLoaderViewlet.class, matchQuality ) {
-                public Viewlet instantiateViewlet(
-                        MeshObjectsToView        toView,
-                        Viewlet                  parent,
-                        Context                  c )
+        return new DefaultJeeViewletFactoryChoice( toView, BulkLoaderViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet()
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), parent, c );
+                    return create( getMeshObjectsToView().getMeshBase(), getMeshObjectsToView().getContext() );
                 }
         };
     }
@@ -92,16 +88,14 @@ public class BulkLoaderViewlet
     /**
      * Constructor. This is protected: use factory method or subclass.
      *
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the JeeViewedMeshObjects to use
      * @param c the application context
      */
     protected BulkLoaderViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
     }
     
     /**
@@ -118,7 +112,7 @@ public class BulkLoaderViewlet
      */
     @Override
     public boolean performBeforeSafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException
@@ -140,7 +134,7 @@ public class BulkLoaderViewlet
      */
     @Override
     public boolean performBeforeMaybeSafeOrUnsafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException
@@ -158,13 +152,12 @@ public class BulkLoaderViewlet
      * @throws ServletException thrown if an error occurred
      */
     protected boolean performPost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException
     {
-        SaneRequest theSaneRequest = request.getSaneRequest();
-        String      bulkXml        = theSaneRequest.getPostedArgument( LOAD_CONTENT_ARGUMENT_NAME );
+        String bulkXml = request.getPostedArgument( LOAD_CONTENT_ARGUMENT_NAME );
 
         MeshBase    base = getSubject().getMeshBase();
         Transaction tx   = null;
@@ -201,7 +194,7 @@ public class BulkLoaderViewlet
             }
         }
         response.setHttpResponseCode( 303 );
-        response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
+        response.setLocation( request.getAbsoluteFullUri() );
         return true;
     }
 

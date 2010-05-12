@@ -465,7 +465,7 @@
       creates the HTML for a hyperlink to a <code>MeshObject</code>. Clicking on the generated link
       will send the browser to the respective <code>MeshObject</code>.</p>
    <p>Example:</p>
-   <pre>&lt;MeshObjectLinkTag meshObjectName=&quot;obj&quot; rootPath=&quot;http://example.com/foo/&quot; /&gt;</pre>
+   <pre>&lt;MeshObjectLinkTag meshObjectName=&quot;obj&quot; /&gt;</pre>
    <p>will look up a <code>MeshObject</code> added as attribute named 'obj' to the (page context), prepending
       the <code>http://example.com/foo/</code> address the local replica.</p>
    <p>The following tag attributes are provided:</p>
@@ -482,12 +482,6 @@
       <td><code>meshObjectName</code></td>
       <td>Name of the bean whose types are being iterated over. Must be a <code>MeshObject</code>.</td>
       <td>required</td>
-     </tr>
-     <tr>
-      <td><code>rootPath</code></td>
-      <td>The root URL at which the <code>MeshObject</code>'s <code>MeshBase</code> is to be found.
-          Defaults to &quot;<code>/</code>&quot;.</td>
-      <td>optional</td>
      </tr>
      <tr>
       <td><code>addArguments</code></td>

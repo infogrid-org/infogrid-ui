@@ -13,8 +13,10 @@
 
  <div class="content">
   <div class="org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content">
-   <set:pathIterate traversalPathSetName="Viewlet.viewedObjects.traversalPathSet" loopVar="path" ignore="true">
-    <v:includeViewlet reachedByName="path" requestContext="include"/>
+   <set:pathIterate traversalPathSetName="Viewlet.viewedMeshObjects.traversalPathSet" loopVar="path">
+    <set:iteratecontentrow>
+     <v:includeViewlet reachedByName="path" requestContext="include"/>
+    </set:iteratecontentrow>
    </set:pathIterate>
   </div>
   <div class="org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar">

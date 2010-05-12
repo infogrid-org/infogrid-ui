@@ -14,7 +14,9 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.util.context.Context;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * A ViewletFactoryChoice whose quality has been overridden, but otherwise delegates
@@ -27,28 +29,21 @@ public class MatchQualityChangedViewletFactoryChoice
     /**
      * Constructor.
      *
+     * @param toView the MeshObjectsToView for which this is a choice
      * @param matchQuality the overridden match quality
      * @param delegate the underlying ViewletFactoryChoice
      */
     public MatchQualityChangedViewletFactoryChoice(
+            MeshObjectsToView    toView,
             double               matchQuality,
             ViewletFactoryChoice delegate )
     {
-        super( matchQuality );
-
-        theDelegate= delegate;
+        super( toView );
+        
+        theMatchQuality = matchQuality;
+        theDelegate     = delegate;
     }
     
-    /**
-     * Obtain a user-visible String to display to the user for this ViewletFactoryChoice.
-     *
-     * @return the user-visible String
-     */
-    public String getUserVisibleName()
-    {
-        return theDelegate.getUserVisibleName();
-    }
-
     /**
      * Obtain the computable name of the Viewlet.
      * 
@@ -99,23 +94,53 @@ public class MatchQualityChangedViewletFactoryChoice
      * {org.infogrid.viewlet.Viewlet#view Viewlet.view} after having called
      * this method.
      * 
-     * @param toView the MeshObjectsToView; only used for error reporting
-     * @param parent the parent Viewlet, if any
-     * @param c the Context to use
      * @return the instantiated Viewlet
      */
-    public Viewlet instantiateViewlet(
-            MeshObjectsToView        toView,
-            Viewlet                  parent,
-            Context                  c )
+    public Viewlet instantiateViewlet()
         throws
             CannotViewException
     {
-        return theDelegate.instantiateViewlet( toView, parent, c );
+        return theDelegate.instantiateViewlet();
     }
-    
+
+    /**
+     * Obtain a String representation of this instance that can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param pars collects parameters that may influence the String representation
+     * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    public String toStringRepresentation(
+            StringRepresentation           rep,
+            StringRepresentationParameters pars )
+        throws
+            StringifierException
+    {
+        String delegateString = theDelegate.toStringRepresentation( rep, pars );
+
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
+                StringRepresentation.DEFAULT_ENTRY,
+                pars,
+        /* 0 */ this,
+        /* 1 */ delegateString,
+        /* 2 */ theMatchQuality );
+
+        return ret;
+    }
+
     /**
      * The underlying ViewletFactoryChoice that we override and delegate to.
      */
     protected ViewletFactoryChoice theDelegate;
+
+    /**
+     * The match quality.
+     *
+     * @see ViewletFactoryChoice#PERFECT_MATCH_QUALITY
+     * @see ViewletFactoryChoice#AVERAGE_MATCH_QUALITY
+     * @see ViewletFactoryChoice#WORST_MATCH_QUALITY
+     */
+    protected double theMatchQuality;
 }

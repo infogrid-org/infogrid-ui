@@ -19,11 +19,11 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalTranslator;
 import org.infogrid.model.traversal.TraversalTranslatorException;
-import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.StringifierException;
@@ -55,7 +55,6 @@ public class MeshObjectLinkTag
     {
         theMeshObjectName       = null;
         theMeshObject           = null;
-        theRootPath             = null;
         theAddArguments         = null;
         theTarget               = null;
         theTitle                = null;
@@ -109,29 +108,6 @@ public class MeshObjectLinkTag
             MeshObject newValue )
     {
         theMeshObject = newValue;
-    }
-
-    /**
-     * Obtain value of the rootPath property.
-     *
-     * @return value of the rootPath property
-     * @see #setRootPath
-     */
-    public String getRootPath()
-    {
-        return theRootPath;
-    }
-
-    /**
-     * Set value of the rootPath property.
-     *
-     * @param newValue new value of the rootPath property
-     * @see #getRootPath
-     */
-    public void setRootPath(
-            String newValue )
-    {
-        theRootPath = newValue;
     }
 
     /**
@@ -272,7 +248,7 @@ public class MeshObjectLinkTag
             String addArguments = constructAddArguments();
 
             try {
-                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, theRootPath, addArguments, theTarget, theTitle, theStringRepresentation );
+                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, addArguments, theTarget, theTitle, theStringRepresentation );
                 print( text );
 
             } catch( StringifierException ex ) {
@@ -305,7 +281,7 @@ public class MeshObjectLinkTag
 
         if( obj != null ) { // make be ignore="true"
             try {
-                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, theRootPath, theStringRepresentation );
+                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, theStringRepresentation );
                 print( text );
 
             } catch( StringifierException ex ) {
@@ -349,7 +325,7 @@ public class MeshObjectLinkTag
                 buf.append( theAddArguments );
             }
             for( int i=0 ; i<args.length ; ++i ) {
-                buf.append( "&" ).append( RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME ).append( "=" ).append( HTTP.encodeToValidUrlArgument( args[i] ));
+                buf.append( "&" ).append( JeeMeshObjectsToView.LID_TRAVERSAL_ARGUMENT_NAME ).append( "=" ).append( HTTP.encodeToValidUrlArgument( args[i] ));
             }
             return buf.toString();
 
@@ -369,11 +345,6 @@ public class MeshObjectLinkTag
      */
     protected MeshObject theMeshObject;
 
-    /**
-     * The HTTP path prepended to the HREF, e.g. http://example.com/foo/bar/?obj=
-     */
-    protected String theRootPath;
-    
     /**
      * The arguments to append to the URL, separated by &.
      */

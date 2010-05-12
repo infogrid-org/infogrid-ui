@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -70,7 +70,7 @@
 
  <servlet>
   <servlet-name>ViewletDispatcher</servlet-name>
-  <servlet-class>org.infogrid.jee.viewlet.servlet.net.NetViewletDispatcherServlet</servlet-class>
+  <servlet-class>org.infogrid.jee.viewlet.servlet.ViewletDispatcherServlet</servlet-class>
  </servlet>
 
 

@@ -16,15 +16,15 @@ package org.infogrid.jee.viewlet.meshbase;
 
 import java.util.Iterator;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
+import org.infogrid.jee.viewlet.DefaultJeeViewedMeshObjects;
+import org.infogrid.jee.viewlet.DefaultJeeViewletFactoryChoice;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
+import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.util.context.Context;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
-import org.infogrid.viewlet.DefaultViewedMeshObjects;
-import org.infogrid.viewlet.DefaultViewletFactoryChoice;
-import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
@@ -41,17 +41,15 @@ public class AllMeshBasesViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the viewed MeshObjects are taken
-     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static AllMeshBasesViewlet create(
             MeshBase mb,
-            Viewlet  parent,
             Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        AllMeshBasesViewlet      ret    = new AllMeshBasesViewlet( viewed, parent, c );
+        DefaultJeeViewedMeshObjects viewed = new DefaultJeeViewedMeshObjects( mb );
+        AllMeshBasesViewlet         ret    = new AllMeshBasesViewlet( viewed, c );
 
         viewed.setViewlet( ret );
 
@@ -61,21 +59,20 @@ public class AllMeshBasesViewlet
     /**
      * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
      *
+     * @param toView the JeeMeshObjectsToView for which this is a choice
      * @param matchQuality the match quality
      * @return the ViewletFactoryChoice
      */
     public static ViewletFactoryChoice choice(
-            double matchQuality )
+            JeeMeshObjectsToView toView,
+            double               matchQuality )
     {
-        return new DefaultViewletFactoryChoice( AllMeshBasesViewlet.class, matchQuality ) {
-                public Viewlet instantiateViewlet(
-                        MeshObjectsToView        toView,
-                        Viewlet                  parent,
-                        Context                  c )
+        return new DefaultJeeViewletFactoryChoice( toView, AllMeshBasesViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet()
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), parent, c );
+                    return create( getMeshObjectsToView().getMeshBase(), getMeshObjectsToView().getContext() );
                 }
         };
     }
@@ -83,16 +80,14 @@ public class AllMeshBasesViewlet
     /**
      * Constructor. This is protected: use factory method or subclass.
      *
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the JeeViewedMeshObjects to use
      * @param c the application context
      */
     protected AllMeshBasesViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
     }
 
     /**

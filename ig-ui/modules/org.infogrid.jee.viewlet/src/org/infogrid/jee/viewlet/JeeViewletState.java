@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1999-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1999-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 
 package org.infogrid.jee.viewlet;
@@ -30,6 +30,13 @@ public interface JeeViewletState
      */
     public String getName();
 
+    /**
+     * If true, this is the default state of the JeeViewlet.
+     *
+     * @return true if default
+     */
+    public boolean isDefaultState();
+    
     /**
      * Default URL parameter name containing the viewlet state.
      */

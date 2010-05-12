@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,7 +17,9 @@ package org.infogrid.jee.viewlet;
 import java.util.ArrayList;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.viewlet.DefaultViewletFactoryChoice;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>A ViewletFactoryChoice that instantiates the SimpleJeeViewlet as default, pretending to
@@ -28,36 +30,23 @@ import org.infogrid.viewlet.DefaultViewletFactoryChoice;
  */
 public abstract class DefaultJspViewletFactoryChoice
         extends
-            DefaultViewletFactoryChoice
+            DefaultJeeViewletFactoryChoice
 {
     /**
      * Constructor for subclasses only, use factory method.
      * 
+     * @param toView the JeeMeshObjectsToView for which this is a choice
      * @param pseudoClassName the name of the (non-exististing) Viewlet class
      * @param matchQuality the match quality
      */
     protected DefaultJspViewletFactoryChoice(
-            String         pseudoClassName,
-            double         matchQuality )
+            JeeMeshObjectsToView toView,
+            String               pseudoClassName,
+            double               matchQuality )
     {
-        super( SimpleJeeViewlet.class, matchQuality );
+        super( toView, SimpleJeeViewlet.class, pseudoClassName, matchQuality );
 
         thePseudoClassName = pseudoClassName;
-    }
-    
-    /**
-     * Obtain a user-visible String to display to the user for this ViewletFactoryChoice.
-     *
-     * @return the user-visible String
-     */
-    @Override
-    public String getUserVisibleName()
-    {
-        ResourceHelper rh  = ResourceHelper.getInstance( thePseudoClassName, DefaultJspViewletFactoryChoice.class.getClassLoader()  );
-
-        String ret = rh.getResourceStringOrDefault( "UserVisibleName", thePseudoClassName );
-
-        return ret;
     }
 
     /**
@@ -86,6 +75,35 @@ public abstract class DefaultJspViewletFactoryChoice
         determineClassNames( theViewletClass, almost );
 
         String [] ret = ArrayHelper.copyIntoNewArray( almost, String.class );
+        return ret;
+    }
+
+    /**
+     * Obtain a String representation of this instance that can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param pars collects parameters that may influence the String representation
+     * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    @Override
+    public String toStringRepresentation(
+            StringRepresentation           rep,
+            StringRepresentationParameters pars )
+        throws
+            StringifierException
+    {
+        String userVisibleName = ResourceHelper.getInstance( thePseudoClassName, DefaultJspViewletFactoryChoice.class.getClassLoader() ).getResourceStringOrDefault( "UserVisibleName", thePseudoClassName );
+
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
+                StringRepresentation.DEFAULT_ENTRY,
+                pars,
+        /* 0 */ this,
+        /* 1 */ theViewletClass.getName(),
+        /* 2 */ userVisibleName,
+        /* 3 */ theMatchQuality );
+
         return ret;
     }
 

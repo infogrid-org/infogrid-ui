@@ -48,11 +48,11 @@ public class MeshObjectSetIterateNoContentTag
             JspException
     {
         Tag parentTag = getParent();
-        if( parentTag == null || !( parentTag instanceof AbstractMeshObjectSetIterateTag )) {
-            throw new JspException( "IterateContentRow tag must be directly contained in an AbstractMeshObjectSetIterateTag tag" );
+        if( parentTag == null || !( parentTag instanceof AbstractSetIterateTag )) {
+            throw new JspException( "IterateContentRow tag must be directly contained in an AbstractSetIterateTag tag" );
         }
 
-        AbstractMeshObjectSetIterateTag realParentTag = (AbstractMeshObjectSetIterateTag) parentTag;
+        AbstractSetIterateTag realParentTag = (AbstractSetIterateTag) parentTag;
 
         if( realParentTag.displayNoContentRow() ) {
             return EVAL_BODY_INCLUDE;

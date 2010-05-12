@@ -22,13 +22,13 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.ArrayCursorIterator;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactory;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 import org.infogrid.util.context.Context;
+import org.infogrid.viewlet.MeshObjectsToViewFactory;
 
 /**
  * Iterates over all ViewletFactoryAlternatives for a given Subject.
@@ -116,16 +116,16 @@ public class ViewletAlternativesIterateTag
             JspException,
             IgnoreException
     {
-        Viewlet        currentViewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
-        RestfulRequest restful        = (RestfulRequest) lookupOrThrow( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
+        Viewlet currentViewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
 
         MeshObject subject = currentViewlet.getSubject();
         Context    c       = currentViewlet.getContext();
 
-        ViewletFactory    factory = c.findContextObjectOrThrow( ViewletFactory.class );
-        MeshObjectsToView toView  = MeshObjectsToView.create( subject, restful );
+        MeshObjectsToViewFactory toViewFact = c.findContextObjectOrThrow( MeshObjectsToViewFactory.class );
+        ViewletFactory           vlFact     = c.findContextObjectOrThrow( ViewletFactory.class );
+        MeshObjectsToView toView  = toViewFact.obtainFor( subject );
 
-        ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
+        ViewletFactoryChoice [] candidates = vlFact.determineFactoryChoicesOrderedByMatchQuality( toView );
         int max = candidates.length;
 
         if( theWorstAcceptable != null ) {

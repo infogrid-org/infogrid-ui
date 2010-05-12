@@ -212,10 +212,6 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>rootPath</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
             <name>addArguments</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

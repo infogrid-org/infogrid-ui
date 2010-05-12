@@ -10,7 +10,7 @@
  %>
 <v:viewletAlternatives />
 <v:viewlet>
- <h1><netmeshbase:proxyId proxyName="Proxy"/></h1>
+ <h1><netmeshbase:proxyId proxyName="Viewlet.viewedMeshObjects.proxy"/></h1>
  <table>
   <thead>
    <tr>

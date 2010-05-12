@@ -14,24 +14,19 @@
 
 package org.infogrid.jee.taglib.viewlet;
 
-import java.util.Deque;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.viewlet.JeeViewlet;
-import org.infogrid.mesh.MeshObject;
-import org.infogrid.model.traversal.TraversalPath;
-import org.infogrid.model.traversal.TraversalSpecification;
-import org.infogrid.model.traversal.TraversalTranslator;
-import org.infogrid.model.traversal.TraversalTranslatorException;
-import org.infogrid.rest.RestfulRequest;
-import org.infogrid.util.http.HTTP;
+import org.infogrid.jee.viewlet.JeeViewletFactoryChoice;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
-import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
@@ -59,8 +54,7 @@ public class ViewletAlternativeLinkTag
     protected void initializeToDefaults()
     {
         theViewletAlternativeName = null;
-        thePane                   = PANE_HERE;
-        theRootPath               = null;
+        thePane                   = null;
         theAddArguments           = null;
         theTarget                 = null;
         theTitle                  = null;
@@ -113,29 +107,6 @@ public class ViewletAlternativeLinkTag
             String newValue )
     {
         thePane = newValue;
-    }
-
-    /**
-     * Obtain value of the rootPath property.
-     *
-     * @return value of the rootPath property
-     * @see #setRootPath
-     */
-    public String getRootPath()
-    {
-        return theRootPath;
-    }
-
-    /**
-     * Set value of the rootPath property.
-     *
-     * @param newValue new value of the rootPath property
-     * @see #getRootPath
-     */
-    public void setRootPath(
-            String newValue )
-    {
-        theRootPath = newValue;
     }
 
     /**
@@ -242,288 +213,32 @@ public class ViewletAlternativeLinkTag
             JspException,
             IgnoreException
     {
-        Viewlet              viewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
         ViewletFactoryChoice choice  = (ViewletFactoryChoice) lookupOrThrow( theViewletAlternativeName );
 
-        if( viewlet != null ) { // may happen if ignore="true"
-            String text = constructText(
-                        viewlet,
-                        choice,
-                        (RestfulJeeFormatter) theFormatter,
-                        pageContext,
-                        thePane,
-                        theRootPath,
-                        theTarget,
-                        theTitle,
-                        theAddArguments,
-                        theStringRepresentation );
+        if( choice != null ) { // may happen if ignore="true"
+            StringRepresentation rep = theFormatter.determineStringRepresentation( theStringRepresentation );
 
-            print( text );
+            SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
+            SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+            pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+            pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
+            pars.put( StringRepresentationParameters.LINK_TARGET_KEY,          theTarget );
+            pars.put( StringRepresentationParameters.LINK_TITLE_KEY,           theTitle );
+            pars.put( JeeViewlet.PANE_STRING_REPRESENTATION_PARAMETER_KEY,     thePane );
+            pars.put( JeeViewletFactoryChoice.VIEWEDMESHOBJECTS_STACK_KEY,     saneRequest.getAttribute( IncludeViewletTag.PARENT_STACK_ATTRIBUTE_NAME ));
+
+            try {
+                String text = choice.toStringRepresentationLinkStart( rep, pars );
+                print( text );
+
+            } catch( StringifierException ex ) {
+                throw new JspException( ex );
+            }
             return EVAL_BODY_INCLUDE;
+
         } else {
             return SKIP_BODY;
-        }
-    }
-
-    /**
-     * Construct the correct text. This is a static method to the ViewletAlternativesTag
-     * can also invoke it.
-     *
-     * @param viewlet the enclosing Viewlet
-     * @param choice the ViewletFactoryChoice
-     * @param formatter the RestfulJeeFormatter to use
-     * @param pageContext the current PageContext
-     * @param pane the pane attribute
-     * @param rootPath the root path, if any
-     * @param target the target attribute for the link, if any
-     * @param title the title attribute for the link, if any
-     * @param addArguments any manually specified additional arguments
-     * @param stringRepresentation the StringRepresentation to use
-     * @return the text to be printed
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    protected static String constructText(
-            Viewlet              viewlet,
-            ViewletFactoryChoice choice,
-            RestfulJeeFormatter  formatter,
-            PageContext          pageContext,
-            String               pane,
-            String               rootPath,
-            String               target,
-            String               title,
-            String               addArguments,
-            String               stringRepresentation )
-        throws
-            JspException,
-            IgnoreException
-    {
-        String ret;
-        if( PANE_HERE.equals( pane )) {
-            ret = constructTextForHerePane(
-                    viewlet,
-                    choice,
-                    formatter,
-                    pageContext,
-                    rootPath,
-                    target,
-                    title,
-                    addArguments,
-                    stringRepresentation );
-
-        } else if( PANE_TOP.equals( pane )) {
-            ret = constructTextForTopPane(
-                    viewlet,
-                    choice,
-                    formatter,
-                    pageContext,
-                    rootPath,
-                    target,
-                    title,
-                    addArguments,
-                    stringRepresentation );
-
-        } else {
-            throw new JspException( "Unknown value for pane attribute: " + pane );
-        }
-        return ret;
-    }
-
-    /**
-     * Construct the text to be printed in case the pane attribute is set to PANE_HERE.
-     *
-     * @param viewlet the enclosing Viewlet
-     * @param choice the ViewletFactoryChoice
-     * @param formatter the RestfulJeeFormatter to use
-     * @param pageContext the current PageContext
-     * @param rootPath the root path, if any
-     * @param target the target attribute for the link, if any
-     * @param title the title attribute for the link, if any
-     * @param addArguments any manually specified additional arguments
-     * @param stringRepresentation the StringRepresentation to use
-     * @return the text to be printed
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    protected static String constructTextForHerePane(
-            Viewlet              viewlet,
-            ViewletFactoryChoice choice,
-            RestfulJeeFormatter  formatter,
-            PageContext          pageContext,
-            String               rootPath,
-            String               target,
-            String               title,
-            String               addArguments,
-            String               stringRepresentation )
-        throws
-            JspException,
-            IgnoreException
-    {
-        @SuppressWarnings("unchecked")
-        Deque<Viewlet> viewletStack = (Deque<Viewlet>) pageContext.getRequest().getAttribute( JeeViewlet.VIEWLET_STACK_ATTRIBUTE_NAME );
-
-        if( viewletStack == null || viewletStack.isEmpty() ) {
-            return constructTextForTopPane( viewlet, choice, formatter, pageContext, rootPath, target, title, addArguments, stringRepresentation );
-        }
-
-        String delegateString;
-        try {
-            delegateString = formatter.formatMeshObjectLinkStart(
-                    pageContext,
-                    viewlet.getSubject(),
-                    rootPath,
-                    RestfulRequest.LID_FORMAT_PARAMETER_NAME + "=" + RestfulRequest.VIEWLET_PREFIX + choice.getName(),
-                    null,
-                    null,
-                    "Url" );
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
-        }
-
-        Viewlet topViewlet = viewletStack.getFirst();
-
-        TraversalPath myTraversalPath = (TraversalPath) pageContext.getRequest().getAttribute( IncludeViewletTag.TRAVERSAL_PATH_ATTRIBUTE_NAME );
-
-        String topAddArguments = constructAddArguments(
-                topViewlet.getSubject(),
-                myTraversalPath,
-                topViewlet.getTraversalSpecification(),
-                topViewlet.getName(),
-                IncludeViewletTag.INCLUDE_URL_ARGUMENT_NAME + "=" + HTTP.encodeToValidUrlArgument( delegateString ) );
-                // IncludeViewletTag.INCLUDE_URL_ARGUMENT_NAME + "=" + HTTP.encodeToValidUrlArgument( buf.toString() ) );
-
-        try {
-            String text = formatter.formatMeshObjectLinkStart(
-                    pageContext,
-                    topViewlet.getSubject(),
-                    rootPath,
-                    topAddArguments,
-                    target,
-                    title,
-                    stringRepresentation );
-            return text;
-
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
-        }
-    }
-
-    /**
-     * Construct the text to be printed in case the pane attribute is set to PANE_TOP.
-     *
-     * @param viewlet the enclosing Viewlet
-     * @param choice the ViewletFactoryChoice
-     * @param formatter the RestfulJeeFormatter to use
-     * @param pageContext the current PageContext
-     * @param rootPath the root path, if any
-     * @param target the target attribute for the link, if any
-     * @param title the title attribute for the link, if any
-     * @param addArguments any manually specified additional arguments
-     * @param stringRepresentation the StringRepresentation to use
-     * @return the text to be printed
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    protected static String constructTextForTopPane(
-            Viewlet              viewlet,
-            ViewletFactoryChoice choice,
-            RestfulJeeFormatter  formatter,
-            PageContext          pageContext,
-            String               rootPath,
-            String               target,
-            String               title,
-            String               addArguments,
-            String               stringRepresentation )
-        throws
-            JspException,
-            IgnoreException
-    {
-        String realAddArguments = constructAddArguments(
-                viewlet.getSubject(),
-                null,
-                viewlet.getViewedObjects().getTraversalSpecification(),
-                choice.getName(),
-                addArguments );
-
-        try {
-            String text = formatter.formatMeshObjectLinkStart(
-                    pageContext,
-                    viewlet.getSubject(),
-                    rootPath,
-                    realAddArguments,
-                    target,
-                    title,
-                    stringRepresentation );
-            return text;
-
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
-        }
-    }
-
-    /**
-     * Helper method.
-     *
-     * @param obj the MeshObject for which to construct the URL arguments
-     * @param path the TraversalPath, if any
-     * @param spec the TraversalSpecification, if any
-     * @param viewletType the desired type of Viewlet, if any
-     * @param addArguments any manually specified additional arguments
-     * @return the constructed additional arguments
-     */
-    protected static String constructAddArguments(
-            MeshObject    obj,
-            TraversalPath path,
-            TraversalSpecification spec,
-            String        viewletType,
-            String        addArguments )
-    {
-        StringBuilder ret = new StringBuilder();
-        String        sep = "";
-
-        if( viewletType != null ) {
-            ret.append( sep );
-            ret.append( RestfulRequest.LID_FORMAT_PARAMETER_NAME );
-            ret.append( '=' );
-            ret.append( RestfulRequest.VIEWLET_PREFIX );
-            ret.append( HTTP.encodeToValidUrlArgument( viewletType ));
-            sep = "&";
-        }
-
-        String [] traversalArgs = null;
-        try {
-            TraversalTranslator translator
-                    = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( 
-                            TraversalTranslator.class );
-
-            if( path != null ) {
-                traversalArgs = translator.translateTraversalPath( obj, path );
-            } else if( spec != null ) {
-                traversalArgs = translator.translateTraversalSpecification( obj, spec );
-            }
-
-        } catch( TraversalTranslatorException ex ) {
-            log.error( ex );
-        }
-        if( traversalArgs != null && traversalArgs.length > 0 ) {
-            for( int i=0 ; i<traversalArgs.length ; ++i ) {
-                ret.append( sep );
-                ret.append( RestfulRequest.LID_TRAVERSAL_PARAMETER_NAME ).append( "=" ).append( HTTP.encodeToValidUrlArgument( traversalArgs[i] ));
-                sep = "&";
-            }
-        }
-
-        if( addArguments != null ) {
-            ret.append( sep );
-            ret.append( addArguments );
-            sep = "&";
-        }
-
-        if( ret.length() > 0 ) {
-            return ret.toString();
-        } else {
-            return null;
         }
     }
 
@@ -540,8 +255,19 @@ public class ViewletAlternativeLinkTag
             JspException,
             IgnoreException
     {
-        print( "</a>" );
+        ViewletFactoryChoice choice  = (ViewletFactoryChoice) lookupOrThrow( theViewletAlternativeName );
 
+        if( choice != null ) { // may happen if ignore="true"
+            StringRepresentation rep = theFormatter.determineStringRepresentation( theStringRepresentation );
+            try {
+
+                String text = choice.toStringRepresentationLinkEnd( rep, null );
+                print( text );
+
+            } catch( StringifierException ex ) {
+                throw new JspException( ex );
+            }
+        }
         return EVAL_PAGE;
     }
 
@@ -554,17 +280,6 @@ public class ViewletAlternativeLinkTag
      * Name of the pane.
      */
     protected String thePane;
-
-    /**
-     * Values for the pane attribute:
-     */
-    public static final String PANE_HERE = "here"; // default
-    public static final String PANE_TOP  = "top";
-
-    /**
-     * The HTTP path prepended to the HREF, e.g. http://example.com/foo/bar/?obj=
-     */
-    protected String theRootPath;
 
     /**
      * The arguments to append to the URL, separated by &.

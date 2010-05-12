@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,9 @@ package org.infogrid.viewlet;
 
 import java.util.ArrayList;
 import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Factors out common functionality for ViewletFactoryChoice implementations.
@@ -25,14 +28,24 @@ public abstract class AbstractViewletFactoryChoice
             ViewletFactoryChoice
 {
     /**
-     * Private constructor, use factory method. Specify match quality.
+     * Private constructor for subclasses only.
      *
-     * @param matchQuality the match quality
+     * @param toView the MeshObjectsToView for which this is a choice
      */
     protected AbstractViewletFactoryChoice(
-            double matchQuality )
+            MeshObjectsToView toView )
     {
-        theMatchQuality = matchQuality;
+        theToView = toView;
+    }
+
+    /**
+     * Determine the MeshObjectsToView for which this is a choice.
+     *
+     * @return the MeshObjectsToView
+     */
+    public MeshObjectsToView getMeshObjectsToView()
+    {
+        return theToView;
     }
 
     /**
@@ -43,22 +56,6 @@ public abstract class AbstractViewletFactoryChoice
     public String getName()
     {
         return getImplementationName();
-    }
-
-    /**
-     * Obtain a measure of the match quality. 0 means &quot;perfect match&quot;,
-     * while larger numbers mean increasingly worse match quality.
-     *
-     * @param toView the MeshObjectsToView to match against
-     * @return the match quality
-     * @see ViewletFactoryChoice#PERFECT_MATCH_QUALITY
-     * @see ViewletFactoryChoice#AVERAGE_MATCH_QUALITY
-     * @see ViewletFactoryChoice#WORST_MATCH_QUALITY
-     */
-    public double getMatchQualityFor(
-            MeshObjectsToView toView )
-    {
-        return theMatchQuality;
     }
 
     /**
@@ -103,11 +100,43 @@ public abstract class AbstractViewletFactoryChoice
     }
 
     /**
-     * The match quality.
+     * Obtain the start part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
      *
-     * @see ViewletFactoryChoice#PERFECT_MATCH_QUALITY
-     * @see ViewletFactoryChoice#AVERAGE_MATCH_QUALITY
-     * @see ViewletFactoryChoice#WORST_MATCH_QUALITY
+     * @param rep the StringRepresentation
+     * @param pars collects parameters that may influence the String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     * @return String representation
      */
-    protected double theMatchQuality;
+    public String toStringRepresentationLinkStart(
+            StringRepresentation           rep,
+            StringRepresentationParameters pars )
+        throws
+            StringifierException
+    {
+        return "";
+    }
+
+    /**
+     * Obtain the end part of a String representation of this object that acts
+     * as a link/hyperlink and can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param pars collects parameters that may influence the String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     * @return String representation
+     */
+    public String toStringRepresentationLinkEnd(
+            StringRepresentation           rep,
+            StringRepresentationParameters pars )
+        throws
+            StringifierException
+    {
+        return "";
+    }
+
+    /**
+     * The MeshObjectsToView for which this is a choice.
+     */
+    protected MeshObjectsToView theToView;
 }

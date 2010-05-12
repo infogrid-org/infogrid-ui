@@ -35,7 +35,7 @@ import org.infogrid.util.FactoryException;
  */
 public interface ViewletFactory
         extends
-            Factory<MeshObjectsToView,Viewlet,ViewletFactoryArguments>
+            Factory<MeshObjectsToView,Viewlet,Void>
 {
     /**
      * Factory method. This is inhereted from the <code>Factory</code> interface, but
@@ -47,8 +47,8 @@ public interface ViewletFactory
      * @throws FactoryException catch-all Exception, consider its cause
      */
     public abstract Viewlet obtainFor(
-            MeshObjectsToView       key,
-            ViewletFactoryArguments argument )
+            MeshObjectsToView key,
+            Void              argument )
         throws
             FactoryException;
     

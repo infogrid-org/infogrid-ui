@@ -120,9 +120,9 @@ public abstract class AbstractIsReachedObjectViewletTag
             if( theTraversalPath != null ) {
                 throw new JspException( "Must not specify both object and traversalPath properties" );
             }
-            eval = evaluateTest( theObject, vl.getReachedObjects() );
+            eval = evaluateTest( theObject, vl.getViewedMeshObjects().getReachedObjects() );
         } else if( theTraversalPath != null ) {
-            eval = evaluateTest( theTraversalPath, vl.getTraversalPathSet() );
+            eval = evaluateTest( theTraversalPath, vl.getViewedMeshObjects().getTraversalPathSet() );
         } else {
             throw new JspException( "Must specify either object or traversalPath properties" );
         }

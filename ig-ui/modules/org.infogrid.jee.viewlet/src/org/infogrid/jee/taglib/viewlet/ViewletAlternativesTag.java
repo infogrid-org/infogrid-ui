@@ -14,15 +14,17 @@
 
 package org.infogrid.jee.taglib.viewlet;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.viewlet.JeeViewlet;
+import org.infogrid.jee.viewlet.JeeViewletFactoryChoice;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.rest.RestfulRequest;
+import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactory;
@@ -30,7 +32,13 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.http.SaneRequestUtils;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
+import org.infogrid.viewlet.MeshObjectsToViewFactory;
 
 /**
  * Allows the user to select an alternate JeeViewlet to display the current subject.
@@ -57,10 +65,80 @@ public class ViewletAlternativesTag
     @Override
     protected void initializeToDefaults()
     {
-        thePane     = ViewletAlternativeLinkTag.PANE_HERE;
-        theRootPath = null;
+        thePane                 = null;
+        theTarget               = null;
+        theStringRepresentation = null;
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the pane property.
+     *
+     * @return value of the pane property
+     * @see #setPane
+     */
+    public String getPane()
+    {
+        return thePane;
+    }
+
+    /**
+     * Set value of the pane property.
+     *
+     * @param newValue new value of the pane property
+     * @see #getPane
+     */
+    public void setPane(
+            String newValue )
+    {
+        thePane = newValue;
+    }
+
+    /**
+     * Obtain value of the target property.
+     *
+     * @return value of the target property
+     * @see #setTarget
+     */
+    public String getTarget()
+    {
+        return theTarget;
+    }
+
+    /**
+     * Set value of the target property.
+     *
+     * @param newValue new value of the target property
+     * @see #getTarget
+     */
+    public void setTarget(
+            String newValue )
+    {
+        theTarget = newValue;
+    }
+
+    /**
+     * Obtain value of the stringRepresentation property.
+     *
+     * @return value of the stringRepresentation property
+     * @see #setStringRepresentation
+     */
+    public String getStringRepresentation()
+    {
+        return theStringRepresentation;
+    }
+
+    /**
+     * Set value of the stringRepresentation property.
+     *
+     * @param newValue new value of the stringRepresentation property
+     * @see #getStringRepresentation
+     */
+    public void setStringRepresentation(
+            String newValue )
+    {
+        theStringRepresentation = newValue;
     }
 
     /**
@@ -76,16 +154,22 @@ public class ViewletAlternativesTag
             IgnoreException
     {
         StructuredResponse theResponse    = (StructuredResponse) lookupOrThrow( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-        RestfulRequest     restful        = (RestfulRequest) lookupOrThrow( RestfulRequest.RESTFUL_REQUEST_ATTRIBUTE_NAME );
         Viewlet            currentViewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
         
-        MeshObject subject = currentViewlet.getSubject();
-        Context    c       = currentViewlet.getContext();
+        MeshObject    subject       = currentViewlet.getSubject();
+        TraversalPath arrivedAtPath = currentViewlet.getViewedMeshObjects().getArrivedAtPath();
+        Context       c             = currentViewlet.getContext();
+
+        MeshObjectsToViewFactory toViewFact = c.findContextObjectOrThrow( MeshObjectsToViewFactory.class );
+        ViewletFactory           vlFact     = c.findContextObjectOrThrow( ViewletFactory.class );
         
-        ViewletFactory factory = c.findContextObjectOrThrow( ViewletFactory.class );
-        
-        MeshObjectsToView       toView     = MeshObjectsToView.create( subject, restful );
-        ViewletFactoryChoice [] candidates = factory.determineFactoryChoicesOrderedByMatchQuality( toView );
+        MeshObjectsToView toView;
+        if( arrivedAtPath != null ) {
+            toView = toViewFact.obtainFor( arrivedAtPath );
+        } else {
+            toView = toViewFact.obtainFor( subject ); // don't have a parent
+        }
+        ViewletFactoryChoice [] candidates = vlFact.determineFactoryChoicesOrderedByMatchQuality( toView );
 
         if( candidates.length > 0 ) {
 
@@ -102,35 +186,44 @@ public class ViewletAlternativesTag
 
             pageContext.getRequest().setAttribute( INSTANCE_ID_PAR_NAME, nextId + 1 );
 
-            println( "<ul>" );
+            SaneRequest          saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+            StringRepresentation rep         = theFormatter.determineStringRepresentation( theStringRepresentation );
 
+            SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+            pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+            pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
+            pars.put( StringRepresentationParameters.LINK_TARGET_KEY,          theTarget );
+            pars.put( JeeViewlet.PANE_STRING_REPRESENTATION_PARAMETER_KEY,     thePane );
+            pars.put( JeeViewletFactoryChoice.VIEWEDMESHOBJECTS_STACK_KEY,     saneRequest.getAttribute( IncludeViewletTag.PARENT_STACK_ATTRIBUTE_NAME ));
+
+            println( "<ul>" );
             for( int i=0 ; i<candidates.length ; ++i ) {
                 print( "<li" );
                 if( candidates[i].getName().equals( currentViewlet.getName() )) {
                     print( " class=\"selected\"" );
                 }
                 print( ">" );
-                
-                String text = ViewletAlternativeLinkTag.constructText(
-                        currentViewlet,
-                        candidates[i],
-                        (RestfulJeeFormatter) theFormatter,
-                        pageContext,
-                        thePane,
-                        theRootPath,
-                        null,
-                        null,
-                        null,
-                        null );
-                print( text );
-                print( candidates[i].getUserVisibleName() );
-                print( "</a>" );
+
+                try {
+                    String text = candidates[i].toStringRepresentationLinkStart( rep, pars );
+                    print( text );
+
+                    text = candidates[i].toStringRepresentation( rep, pars );
+                    print( text );
+
+                    text = candidates[i].toStringRepresentationLinkEnd( rep, pars );
+                    print( text );
+
+                } catch( StringifierException ex ) {
+                    throw new JspException( ex );
+                }
+
                 println( "</li>" );
             }
             println( "</ul>" );
             println( "</div>" );
 
-            String contextPath = restful.getSaneRequest().getContextPath();
+            String contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath();
             String classSlash  = getClass().getName().replace( '.' , '/' );
 
             StringBuilder js = new StringBuilder();
@@ -173,8 +266,12 @@ public class ViewletAlternativesTag
     protected String thePane;
 
     /**
-     * The HTTP path prepended to the HREF, e.g. http://example.com/foo/bar/?obj=
+     * The HTML frame to target, if any.
      */
-    protected String theRootPath;
+    protected String theTarget;
 
+    /**
+     * Name of the String representation.
+     */
+    protected String theStringRepresentation;
 }

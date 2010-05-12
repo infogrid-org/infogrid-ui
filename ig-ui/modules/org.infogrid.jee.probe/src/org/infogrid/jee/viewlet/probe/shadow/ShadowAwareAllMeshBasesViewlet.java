@@ -17,6 +17,10 @@ package org.infogrid.jee.viewlet.probe.shadow;
 import java.text.ParseException;
 import javax.servlet.ServletException;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.viewlet.DefaultJeeViewedMeshObjects;
+import org.infogrid.jee.viewlet.DefaultJeeViewletFactoryChoice;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
+import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
 import org.infogrid.jee.viewlet.meshbase.AllMeshBasesViewlet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
@@ -26,15 +30,10 @@ import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.probe.manager.ActiveProbeManager;
 import org.infogrid.probe.manager.ProbeManager;
 import org.infogrid.probe.shadow.ShadowMeshBase;
-import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
-import org.infogrid.viewlet.DefaultViewedMeshObjects;
-import org.infogrid.viewlet.DefaultViewletFactoryChoice;
-import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
@@ -51,17 +50,15 @@ public class ShadowAwareAllMeshBasesViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the viewed MeshObjects are taken
-     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static AllMeshBasesViewlet create(
             MeshBase mb,
-            Viewlet  parent,
             Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        AllMeshBasesViewlet      ret    = new ShadowAwareAllMeshBasesViewlet( viewed, parent, c );
+        DefaultJeeViewedMeshObjects viewed = new DefaultJeeViewedMeshObjects( mb );
+        AllMeshBasesViewlet         ret    = new ShadowAwareAllMeshBasesViewlet( viewed, c );
 
         viewed.setViewlet( ret );
 
@@ -71,21 +68,20 @@ public class ShadowAwareAllMeshBasesViewlet
     /**
      * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
      *
+     * @param toView the MeshObjectsToView for which this is a choice
      * @param matchQuality the match quality
      * @return the ViewletFactoryChoice
      */
     public static ViewletFactoryChoice choice(
-            double matchQuality )
+            JeeMeshObjectsToView toView,
+            double               matchQuality )
     {
-        return new DefaultViewletFactoryChoice( ShadowAwareAllMeshBasesViewlet.class, matchQuality ) {
-                public Viewlet instantiateViewlet(
-                        MeshObjectsToView        toView,
-                        Viewlet                  parent,
-                        Context                  c )
+        return new DefaultJeeViewletFactoryChoice( toView, ShadowAwareAllMeshBasesViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet()
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), parent, c );
+                    return create( getMeshObjectsToView().getMeshBase(), getMeshObjectsToView().getContext() );
                 }
         };
     }
@@ -94,15 +90,13 @@ public class ShadowAwareAllMeshBasesViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
      * @param c the application context
      */
     protected ShadowAwareAllMeshBasesViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
     }
 
     /**
@@ -123,16 +117,14 @@ public class ShadowAwareAllMeshBasesViewlet
      */
     @Override
     public boolean performBeforeSafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException
     {
-        SaneRequest sane = request.getSaneRequest();
-
-        String meshBaseName = sane.getPostedArgument( FORM_MESHBASE_NAME );
-        String runNowAction = sane.getPostedArgument( FORM_RUNNOWACTION_NAME );
-        String stopAction   = sane.getPostedArgument( FORM_STOPACTION_NAME );
+        String meshBaseName = request.getPostedArgument( FORM_MESHBASE_NAME );
+        String runNowAction = request.getPostedArgument( FORM_RUNNOWACTION_NAME );
+        String stopAction   = request.getPostedArgument( FORM_STOPACTION_NAME );
 
         boolean doRunNow = false;
         boolean doStop   = false;
@@ -202,7 +194,7 @@ public class ShadowAwareAllMeshBasesViewlet
             }
         }
         response.setHttpResponseCode( 303 );
-        response.setLocation( request.getSaneRequest().getAbsoluteFullUri() );
+        response.setLocation( request.getAbsoluteFullUri() );
         return true;
     }
 

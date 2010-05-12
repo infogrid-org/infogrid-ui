@@ -62,7 +62,6 @@ public class NetRestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param p the Proxy whose identifier is to be formatted
-     * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @param maxLength maximum length of emitted String
      * @return the String to display
@@ -71,7 +70,6 @@ public class NetRestfulJeeFormatter
     public String formatProxyIdentifierStart(
             PageContext pageContext,
             Proxy       p,
-            String      rootPath,
             String      stringRepresentation,
             int         maxLength )
         throws
@@ -88,14 +86,12 @@ public class NetRestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param p the Proxy whose identifier is to be formatted
-     * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      */
     public String formatProxyIdentifierEnd(
             PageContext pageContext,
             Proxy       p,
-            String      rootPath,
             String      stringRepresentation )
     {
         return ""; // nothing

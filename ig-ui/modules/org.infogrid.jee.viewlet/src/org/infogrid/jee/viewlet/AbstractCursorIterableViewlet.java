@@ -20,9 +20,7 @@ import org.infogrid.util.CursorIterator;
 import org.infogrid.util.SubsettingCursorIterator;
 import org.infogrid.util.ZeroElementCursorIterator;
 import org.infogrid.util.context.Context;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
-import org.infogrid.viewlet.Viewlet;
 
 /**
  * Factors out common functionality for Viewlets that display sets through
@@ -35,16 +33,14 @@ public abstract class AbstractCursorIterableViewlet
     /**
      * Constructor. This is protected: use factory method or subclass.
      *
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the JeeViewedMeshObjects to use
      * @param c the application context
      */
     protected AbstractCursorIterableViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
     }
 
     /**
@@ -84,7 +80,7 @@ public abstract class AbstractCursorIterableViewlet
      */
     protected CursorIterator<MeshObject> determineCursorIterator()
     {
-        MeshObjectSet reached = getReachedObjects();
+        MeshObjectSet reached = getViewedMeshObjects().getReachedObjects();
         if( reached != null ) {
             return reached.iterator();
         } else {
@@ -104,8 +100,8 @@ public abstract class AbstractCursorIterableViewlet
         throws
             CannotViewException.InvalidParameter
     {
-        String minName    = (String) getViewedObjects().getViewletParameter( MIN_NAME );
-        String maxName    = (String) getViewedObjects().getViewletParameter( MAX_NAME );
+        String minName    = (String) getViewedMeshObjects().getViewletParameter( MIN_NAME );
+        String maxName    = (String) getViewedMeshObjects().getViewletParameter( MAX_NAME );
 
         CursorIterator<MeshObject> ret = iter; // default
 

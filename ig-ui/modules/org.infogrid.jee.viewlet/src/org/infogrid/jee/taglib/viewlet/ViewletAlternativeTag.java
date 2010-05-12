@@ -17,6 +17,8 @@ package org.infogrid.jee.taglib.viewlet;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringifierException;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
@@ -44,6 +46,7 @@ public class ViewletAlternativeTag
     protected void initializeToDefaults()
     {
         theViewletAlternativeName = null;
+        theStringRepresentation   = null;
 
         super.initializeToDefaults();
     }
@@ -72,6 +75,29 @@ public class ViewletAlternativeTag
     }
 
     /**
+     * Obtain value of the stringRepresentation property.
+     *
+     * @return value of the stringRepresentation property
+     * @see #setStringRepresentation
+     */
+    public String getStringRepresentation()
+    {
+        return theStringRepresentation;
+    }
+
+    /**
+     * Set value of the stringRepresentation property.
+     *
+     * @param newValue new value of the stringRepresentation property
+     * @see #getStringRepresentation
+     */
+    public void setStringRepresentation(
+            String newValue )
+    {
+        theStringRepresentation = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -83,16 +109,29 @@ public class ViewletAlternativeTag
             JspException,
             IgnoreException
     {
-        ViewletFactoryChoice choice = (ViewletFactoryChoice) lookupOrThrow( theViewletAlternativeName );
+        ViewletFactoryChoice choice  = (ViewletFactoryChoice) lookupOrThrow( theViewletAlternativeName );
 
-        String text = choice.getUserVisibleName();
-        print( text );
+        if( choice != null ) { // may happen if ignore="true"
+            StringRepresentation rep = theFormatter.determineStringRepresentation( theStringRepresentation );
+            try {
 
-        return EVAL_BODY_INCLUDE;
+                String text = choice.toStringRepresentation( rep, null );
+                print( text );
+
+            } catch( StringifierException ex ) {
+                throw new JspException( ex );
+            }
+        }
+        return EVAL_PAGE;
     }
 
     /**
      * Name of the bean that holds the ViewletFactoryChoice
      */
     protected String theViewletAlternativeName;
+
+    /**
+     * Name of the String representation.
+     */
+    protected String theStringRepresentation;
 }

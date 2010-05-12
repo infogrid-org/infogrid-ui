@@ -14,8 +14,8 @@
 
 package org.infogrid.jee.viewlet;
 
-import org.infogrid.rest.RestfulRequest;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.http.SaneUrl;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationParameters;
 
@@ -26,9 +26,9 @@ public enum DefaultJeeViewletStateEnum
         implements
             JeeViewletState
 {
-    VIEW( "view" ),
-    EDIT( "edit" ),
-    PREVIEW( "preview" );
+    VIEW(    "view",    true ),
+    EDIT(    "edit",    false ),
+    PREVIEW( "preview", false );
 
     /**
      * Constructor.
@@ -36,9 +36,11 @@ public enum DefaultJeeViewletStateEnum
      * @param stateName state of the state in which the Viewlet is
      */
     private DefaultJeeViewletStateEnum(
-            String stateName )
+            String  stateName,
+            boolean isDefault )
     {
         theStateName = stateName;
+        theIsDefault = isDefault;
     }
 
     /**
@@ -52,15 +54,25 @@ public enum DefaultJeeViewletStateEnum
     }
 
     /**
+     * If true, this is the default state of the JeeViewlet.
+     *
+     * @return true if default
+     */
+    public boolean isDefaultState()
+    {
+        return theIsDefault;
+    }
+
+    /**
      * Obtain the correct member of this enum, given this incoming request.
      *
      * @param request the incoming request
      * @return the DefaultJeeViewletStateEnum
      */
     public static DefaultJeeViewletStateEnum fromRequest(
-            RestfulRequest request )
+            SaneUrl request )
     {
-        String value = request.getSaneRequest().getUrlArgument( VIEWLET_STATE_PAR_NAME );
+        String value = request.getUrlArgument( VIEWLET_STATE_PAR_NAME );
         if( value != null ) {
             for( DefaultJeeViewletStateEnum candidate : DefaultJeeViewletStateEnum.values() ) {
                 if( candidate.theStateName.equals( value )) {
@@ -119,6 +131,11 @@ public enum DefaultJeeViewletStateEnum
      * Name of the state.
      */
     protected String theStateName;
+
+    /**
+     * Is the state the default state.
+     */
+    protected boolean theIsDefault;
 
     /**
      * Our ResourceHelper.

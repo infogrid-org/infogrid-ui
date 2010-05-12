@@ -8,13 +8,17 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.viewlet;
 
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Default implementation for ViewletFactoryChoice.
@@ -26,27 +30,39 @@ public abstract class DefaultViewletFactoryChoice
     /**
      * Private constructor, use factory method. Specify match quality.
      *
+     * @param toView the MeshObjectsToView for which this is a choice
      * @param viewletClass the Viewlet's class
+     * @param viewletTypeName name of the Viewlet type that this represents, if any
      * @param matchQuality the match quality
      */
     protected DefaultViewletFactoryChoice(
+            MeshObjectsToView        toView,
             Class<? extends Viewlet> viewletClass,
+            String                   viewletTypeName,
             double                   matchQuality )
     {
-        super( matchQuality );
+        super( possiblyCreateCopyWithViewletType( toView, viewletTypeName ) );
 
+        theMatchQuality = matchQuality;
         theViewletClass = viewletClass;
     }
-    
+
     /**
-     * Obtain a user-visible String to display to the user for this ViewletFactoryChoice.
+     * Helper method to create a copy of a MeshObjectsToView and set the correct Viewlet type.
      *
-     * @return the user-visible String
+     * @param original the MeshObjectsToView to copy
+     * @param viewletTypeName the Viewlet type
+     * @return the adjusted MeshObjectsToView
      */
-    public String getUserVisibleName()
+    static MeshObjectsToView possiblyCreateCopyWithViewletType(
+            MeshObjectsToView original,
+            String            viewletTypeName )
     {
-        ResourceHelper rh  = ResourceHelper.getInstance( theViewletClass );
-        String         ret = rh.getResourceStringOrDefault( "UserVisibleName", theViewletClass.getName() );
+        if( StringHelper.compareTo( original.getViewletTypeName(), viewletTypeName ) == 0 ) {
+            return original;
+        }
+        MeshObjectsToView ret = original.createCopy();
+        ret.setViewletTypeName( viewletTypeName );
 
         return ret;
     }
@@ -72,7 +88,60 @@ public abstract class DefaultViewletFactoryChoice
     }
 
     /**
+     * Obtain a measure of the match quality. 0 means &quot;perfect match&quot;,
+     * while larger numbers mean increasingly worse match quality.
+     *
+     * @param toView the MeshObjectsToView to match against
+     * @return the match quality
+     * @see ViewletFactoryChoice#PERFECT_MATCH_QUALITY
+     * @see ViewletFactoryChoice#AVERAGE_MATCH_QUALITY
+     * @see ViewletFactoryChoice#WORST_MATCH_QUALITY
+     */
+    public double getMatchQualityFor(
+            MeshObjectsToView toView )
+    {
+        return theMatchQuality;
+    }
+
+    /**
+     * Obtain a String representation of this instance that can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param pars collects parameters that may influence the String representation
+     * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    public String toStringRepresentation(
+            StringRepresentation           rep,
+            StringRepresentationParameters pars )
+        throws
+            StringifierException
+    {
+        String userVisibleName = ResourceHelper.getInstance( theViewletClass ).getResourceStringOrDefault( "UserVisibleName", theViewletClass.getName() );
+        
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
+                StringRepresentation.DEFAULT_ENTRY,
+                pars,
+        /* 0 */ this,
+        /* 1 */ theViewletClass.getName(),
+        /* 2 */ userVisibleName,
+        /* 2 */ theMatchQuality );
+
+        return ret;
+    }
+
+    /**
      * The Viewlet's class.
      */
     protected Class<? extends Viewlet> theViewletClass;
+
+    /**
+     * The match quality.
+     *
+     * @see ViewletFactoryChoice#PERFECT_MATCH_QUALITY
+     * @see ViewletFactoryChoice#AVERAGE_MATCH_QUALITY
+     * @see ViewletFactoryChoice#WORST_MATCH_QUALITY
+     */
+    protected double theMatchQuality;
 }

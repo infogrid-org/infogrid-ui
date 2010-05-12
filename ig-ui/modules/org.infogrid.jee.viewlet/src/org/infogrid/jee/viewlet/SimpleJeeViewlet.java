@@ -15,8 +15,6 @@
 package org.infogrid.jee.viewlet;
 
 import org.infogrid.util.context.Context;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
-import org.infogrid.viewlet.Viewlet;
 
 /**
  * Very simple implementation of Viewlet that provides no special features. It
@@ -29,33 +27,29 @@ public abstract class SimpleJeeViewlet
     /**
      * Constructor. This is protected: use factory method or subclass.
      *
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the JeeViewedMeshObjects to use
      * @param c the application context
      */
     protected SimpleJeeViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        this( null, viewed, parent, c );
+        this( null, viewed, c );
     }
 
     /**
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param path the path for the RequestDispatcher
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the AbstractViewedMeshObjects to use
      * @param c the application context
      */
     protected SimpleJeeViewlet(
-            String                    path,
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            String               path,
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
 
         thePath = path;
     }

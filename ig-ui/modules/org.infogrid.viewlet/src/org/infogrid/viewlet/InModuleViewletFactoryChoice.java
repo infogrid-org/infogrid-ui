@@ -29,67 +29,38 @@ import org.infogrid.module.StandardModuleAdvertisement;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * ViewletFactoryChoice referencing a ModuleCapability in a Module.
  */
 public class InModuleViewletFactoryChoice
-        implements
-            ViewletFactoryChoice
+        extends
+            AbstractViewletFactoryChoice
 {
     private static final Log log = Log.getLogInstance( InModuleViewletFactoryChoice.class ); // our own, private logger
 
     /**
      * Constructor.
      *
+     * @param toView the MeshObjectsToView for which this is a choice
      * @param reg the ModuleRegistry against which to resolve the StandardModuleAdvertisement
      * @param ad the StandardModuleAdvertisement that contains the candidate
      * @param cap the ModuleCapability that was found
      */
     public InModuleViewletFactoryChoice(
+            MeshObjectsToView           toView,
             ModuleRegistry              reg,
             StandardModuleAdvertisement ad,
             ModuleCapability            cap )
     {
+        super( toView );
+
         theModuleRegistry = reg;
         theAd             = ad;
         theCapability     = cap;
-    }
-
-    /**
-     * Obtain a user-visible String to display to the user for this ViewletFactoryChoice.
-     *
-     * @return the user-visible String
-     */
-    public String getUserVisibleName()
-    {
-        try {
-            Module m = theModuleRegistry.resolve( theAd );
-
-            ResourceHelper rh = ResourceHelper.getInstance( theCapability.getImplementationName(), m.getClassLoader() );
-            String         className = getImplementationName();
-
-            String ret = rh.getResourceStringOrDefault( className, className );
-            return ret;
-
-        } catch( MalformedURLException ex ) {
-            log.warn( ex );
-            return getImplementationName();
-
-        } catch( ModuleException ex ) {
-            log.warn( ex );
-            return getImplementationName();
-        }
-    }
-    
-    /**
-     * Obtain the computable name of the Viewlet.
-     * 
-     * @return the Viewlet's name
-     */
-    public String getName()
-    {
-        return getImplementationName();
     }
 
     /**
@@ -177,16 +148,10 @@ public class InModuleViewletFactoryChoice
     /**
      * Instantiate a ViewletFactoryChoice into a Viewlet.
      * 
-     * @param toView the MeshObjectsToView; only used for error reporting
-     * @param parent the parent Viewlet, if any
-     * @param c the Context to use
      * @return the instantiated Viewlet
      */
     @SuppressWarnings( { "unchecked" } )
-    public Viewlet instantiateViewlet(
-            MeshObjectsToView toView,
-            Viewlet           parent,
-            Context           c )
+    public Viewlet instantiateViewlet()
         throws
             CannotViewException
     {
@@ -195,22 +160,22 @@ public class InModuleViewletFactoryChoice
             ClassLoader viewletClassLoader = viewletModule.getClassLoader();
             Class       viewletClass = Class.forName( theCapability.getImplementationName(), true, viewletClassLoader );
 
-            return instantiateViewlet( toView, (Class<? extends Viewlet>) viewletClass, parent, c );
+            return instantiateViewlet( (Class<? extends Viewlet>) viewletClass );
 
         } catch( ClassNotFoundException ex ) {
-            throw new org.infogrid.viewlet.CannotViewException.InternalError( null, toView, ex );
+            throw new org.infogrid.viewlet.CannotViewException.InternalError( null, getMeshObjectsToView(), ex );
             
         } catch( ModuleResolutionException ex ) {
             log.error( ex );
-            throw new org.infogrid.viewlet.CannotViewException.InternalError( null, toView, ex );
+            throw new org.infogrid.viewlet.CannotViewException.InternalError( null, getMeshObjectsToView(), ex );
             
         } catch( ModuleNotFoundException ex ) {
             log.error( ex );
-            throw new org.infogrid.viewlet.CannotViewException.InternalError( null, toView, ex );
+            throw new org.infogrid.viewlet.CannotViewException.InternalError( null, getMeshObjectsToView(), ex );
             
         } catch( MalformedURLException ex ) {
             log.error( ex );
-            throw new org.infogrid.viewlet.CannotViewException.InternalError( null, toView, ex );
+            throw new org.infogrid.viewlet.CannotViewException.InternalError( null, getMeshObjectsToView(), ex );
             
         }
     }
@@ -219,23 +184,19 @@ public class InModuleViewletFactoryChoice
      * Helper method to instantiate a ViewletFactoryChoice into a Viewlet. The use of this
      * method is optional by implementations.
      *
-     * @param toView the MeshObjectsToView; only used for error reporting
      * @param viewletClass the Viewlet Class to instantiate
-     * @param parent the parent Viewlet, if any
-     * @param c the Context to use
      * @return the instantiated Viewlet
      * @throws CannotViewException if, against expectations, the Viewlet corresponding
      *         to this ViewletFactoryChoice could not view the MeshObjectsToView after
      *         all. This usually indicates a programming error.
      */
-    protected static Viewlet instantiateViewlet(
-            MeshObjectsToView        toView,
-            Class<? extends Viewlet> viewletClass,
-            Viewlet                  parent,
-            Context                  c )
+    protected Viewlet instantiateViewlet(
+            Class<? extends Viewlet> viewletClass )
         throws
             CannotViewException
     {
+        MeshObjectsToView toView = getMeshObjectsToView();
+
         try {
             Method factoryMethod = viewletClass.getMethod(
                     "create",
@@ -244,8 +205,7 @@ public class InModuleViewletFactoryChoice
             Object ret = factoryMethod.invoke(
                     null, // static method
                     toView.getMeshBase(), // meshbase
-                    parent, // parent
-                    c ); // context
+                    toView.getContext() ); // context
 
             return (Viewlet) ret;
 
@@ -256,6 +216,44 @@ public class InModuleViewletFactoryChoice
         } catch( InvocationTargetException ex ) {
             throw new CannotViewException.InternalError( null, toView, ex );
         }
+    }
+
+    /**
+     * Obtain a String representation of this instance that can be shown to the user.
+     *
+     * @param rep the StringRepresentation
+     * @param pars collects parameters that may influence the String representation
+     * @return String representation
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    public String toStringRepresentation(
+            StringRepresentation           rep,
+            StringRepresentationParameters pars )
+        throws
+            StringifierException
+    {
+        String userVisibleName = getImplementationName(); // default
+
+        try {
+            Module m = theModuleRegistry.resolve( theAd );
+            userVisibleName = ResourceHelper.getInstance( theCapability.getImplementationName(), m.getClassLoader() ).getResourceStringOrDefault( "UserVisibleName", getImplementationName() );
+
+        } catch( MalformedURLException ex ) {
+            log.warn( ex );
+
+        } catch( ModuleException ex ) {
+            log.warn( ex );
+        }
+
+        String ret = rep.formatEntry(
+                getClass(), // dispatch to the right subtype
+                StringRepresentation.DEFAULT_ENTRY,
+                pars,
+        /* 0 */ this,
+        /* 1 */ getImplementationName(),
+        /* 2 */ userVisibleName );
+
+        return ret;
     }
 
     /**

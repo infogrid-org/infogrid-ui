@@ -76,14 +76,16 @@ public abstract class AbstractViewedMeshObjects
         theSubject                = subject;
         theViewletParameters      = viewletParameters;
         theTraversalSpecification = traversal;
-        theTraversalPaths         = traversalPaths;
         theArrivedAtPath          = arrivedAtPath;
 
-        if( theTraversalPaths != null ) {
+        if( traversalPaths != null ) {
+            theTraversalPaths = traversalPaths;
             theReachedObjects = theTraversalPaths.getDestinationsAsSet();
         } else {
-            theReachedObjects = null;
+            theTraversalPaths = theMeshBase.getMeshObjectSetFactory().obtainEmptyImmutableTraversalPathSet();
+            theReachedObjects = theMeshBase.getMeshObjectSetFactory().obtainEmptyImmutableMeshObjectSet();
         }
+        theMeshObjectsToView = null; // must be null if this method was invoked
     }
 
     /**
@@ -99,6 +101,8 @@ public abstract class AbstractViewedMeshObjects
                 newObjectsToView.getTraversalSpecification(),
                 newObjectsToView.getTraversalPaths(),
                 newObjectsToView.getArrivedAtPath() );
+
+        theMeshObjectsToView = newObjectsToView.createCopy(); // set it back to non-null because this method was invoked
     }
 
     /**
@@ -240,6 +244,17 @@ public abstract class AbstractViewedMeshObjects
     }
 
     /**
+     * Obtain the MeshObjectsToView object that was received by the Viewlet, leading to this
+     * ViewedMeshObjects.
+     *
+     * @return the MeshObjectsToView
+     */
+    public MeshObjectsToView getMeshObjectsToView()
+    {
+        return theMeshObjectsToView;
+    }
+
+    /**
      * Dump this object.
      *
      * @param d the Dumper to dump to
@@ -252,13 +267,15 @@ public abstract class AbstractViewedMeshObjects
                         "subject",
                         "viewlet",
                         "reachedObjects",
-                        "meshBase"
+                        "meshBase",
+                        "meshObjectsToView"
                 },
                 new Object [] {
                         theSubject,
                         theViewlet,
                         theReachedObjects,
-                        theMeshBase
+                        theMeshBase,
+                        theMeshObjectsToView
         } );
     }
 
@@ -301,4 +318,10 @@ public abstract class AbstractViewedMeshObjects
      * The MeshBase from which the viewed MeshObjects are taken.
      */
     protected MeshBase theMeshBase;
+
+    /**
+     * The MeshObjectsToView object that was received by the Viewlet, leading to this
+     * ViewedMeshObjects.
+     */
+    protected MeshObjectsToView theMeshObjectsToView;
 }

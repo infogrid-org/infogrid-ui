@@ -31,7 +31,7 @@ import org.infogrid.util.logging.Log;
  */
 public abstract class AbstractViewletFactory
         extends
-            AbstractFactory<MeshObjectsToView,Viewlet,ViewletFactoryArguments>
+            AbstractFactory<MeshObjectsToView,Viewlet,Void>
         implements
             ViewletFactory
 {
@@ -62,8 +62,8 @@ public abstract class AbstractViewletFactory
      * @throws FactoryException catch-all Exception, consider its cause
      */
     public Viewlet obtainFor(
-            MeshObjectsToView       theObjectsToView,
-            ViewletFactoryArguments argument )
+            MeshObjectsToView  theObjectsToView,
+            Void               argument )
         throws
             FactoryException
     {
@@ -74,7 +74,7 @@ public abstract class AbstractViewletFactory
         }
 
         try {
-            return candidates[0].instantiateViewlet( theObjectsToView, argument.getParent(), argument.getContext() );
+            return candidates[0].instantiateViewlet();
 
         } catch( CannotViewException ex ) {
             throw new FactoryException( this, ex );
@@ -150,7 +150,10 @@ public abstract class AbstractViewletFactory
             }
             if( foundImplementation ) {
                 if( foundType ) {
-                    ret[count++] = new MatchQualityChangedViewletFactoryChoice( ViewletFactoryChoice.USER_SELECTED_MATCH_QUALITY, withoutType[i] );
+                    ret[count++] = new MatchQualityChangedViewletFactoryChoice(
+                            theObjectsToView,
+                            ViewletFactoryChoice.USER_SELECTED_MATCH_QUALITY,
+                            withoutType[i] );
                 } else {
                     ret[count++] = withoutType[i];
                 }

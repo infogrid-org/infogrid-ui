@@ -15,22 +15,19 @@
 package org.infogrid.jee.viewlet.meshbase.net;
 
 import java.io.IOException;
-import java.text.ParseException;
 import javax.servlet.ServletException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
-import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.jee.viewlet.DefaultJeeViewedMeshObjects;
+import org.infogrid.jee.viewlet.DefaultJeeViewletFactoryChoice;
+import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
+import org.infogrid.jee.viewlet.net.JeeNetMeshObjectsToView;
+import org.infogrid.jee.viewlet.net.NetMeshObjectsToView;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.net.proxy.Proxy;
-import org.infogrid.rest.RestfulRequest;
-import org.infogrid.rest.net.NetRestfulRequest;
 import org.infogrid.util.context.Context;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.viewlet.CannotViewException;
-import org.infogrid.viewlet.DefaultViewedMeshObjects;
-import org.infogrid.viewlet.DefaultViewletFactoryChoice;
-import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
@@ -46,17 +43,15 @@ public class ProxyViewlet
      * Factory method.
      *
      * @param mb the MeshBase from which the viewed MeshObjects are taken
-     * @param parent the parent Viewlet, if any
      * @param c the application context
      * @return the created PropertySheetViewlet
      */
     public static ProxyViewlet create(
             MeshBase mb,
-            Viewlet  parent,
             Context  c )
     {
-        DefaultViewedMeshObjects viewed = new DefaultViewedMeshObjects( mb );
-        ProxyViewlet             ret    = new ProxyViewlet( viewed, parent, c );
+        DefaultJeeViewedMeshObjects viewed = new DefaultJeeViewedMeshObjects( mb );
+        ProxyViewlet                ret    = new ProxyViewlet( viewed, c );
 
         viewed.setViewlet( ret );
 
@@ -66,21 +61,20 @@ public class ProxyViewlet
     /**
      * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
      *
+     * @param toView the MeshObjectsToView for which this is a choice
      * @param matchQuality the match quality
      * @return the ViewletFactoryChoice
      */
     public static ViewletFactoryChoice choice(
-            double matchQuality )
+            JeeNetMeshObjectsToView toView,
+            double                  matchQuality )
     {
-        return new DefaultViewletFactoryChoice( ProxyViewlet.class, matchQuality ) {
-                public Viewlet instantiateViewlet(
-                        MeshObjectsToView        toView,
-                        Viewlet                  parent,
-                        Context                  c )
+        return new DefaultJeeViewletFactoryChoice( toView, ProxyViewlet.class, matchQuality ) {
+                public Viewlet instantiateViewlet()
                     throws
                         CannotViewException
                 {
-                    return create( toView.getMeshBase(), parent, c );
+                    return create( getMeshObjectsToView().getMeshBase(), getMeshObjectsToView().getContext() );
                 }
         };
     }
@@ -88,50 +82,38 @@ public class ProxyViewlet
     /**
      * Constructor. This is protected: use factory method or subclass.
      *
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the JeeViewedMeshObjects implementation to use
      * @param c the application context
      */
     protected ProxyViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
     }
 
     /**
-     * Override processing the incoming RestfulRequest.
+     * Override processing the incoming request.
      * 
-     * @param restful the incoming RestfulRequest
-     * @param toView the MeshObjectsToView, mostly for error reporting
+     * @param request the incoming request
      * @param structured the StructuredResponse into which to write the result
      * @throws javax.servlet.ServletException processing failed
      * @throws java.io.IOException I/O error
      */
     @Override
     public void processRequest(
-            RestfulRequest     restful,
-            MeshObjectsToView  toView,
+            SaneRequest        request,
             StructuredResponse structured )
         throws
             ServletException,
             IOException
     {
-        NetRestfulRequest realRestful = (NetRestfulRequest) restful;
-        
-        try {
-            Proxy pseudoSubject = realRestful.determineRequestedProxy();
-            realRestful.getSaneRequest().setAttribute( "Proxy", pseudoSubject );
+        super.processRequest( request, structured );
 
-        } catch( MeshObjectAccessException ex ) {
-            throw new ServletException( ex );
-        } catch( NotPermittedException ex ) {
-            throw new ServletException( ex );
-        } catch( ParseException ex ) {
-            throw new ServletException( ex );
-        }
+        NetMeshObjectsToView realToView = (NetMeshObjectsToView) getViewedMeshObjects().getMeshObjectsToView();
+
+        Proxy pseudoSubject = realToView.getRequestedProxy();
+        request.setAttribute( "Proxy", pseudoSubject );
         
-        super.processRequest( restful, toView, structured );
     }
 }

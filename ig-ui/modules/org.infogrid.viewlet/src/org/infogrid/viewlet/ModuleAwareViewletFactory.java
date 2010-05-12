@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -80,7 +80,7 @@ public class ModuleAwareViewletFactory
          
             ModuleCapability [] caps = current.findCapabilitiesByInterface( Viewlet.class.getName() );
             for( int j=0 ; j<caps.length ; ++j ) {
-                ret.add( new InModuleViewletFactoryChoice( theModuleRegistry, current, caps[j] ) );
+                ret.add( new InModuleViewletFactoryChoice( theObjectsToView, theModuleRegistry, current, caps[j] ) );
             }
             
         }

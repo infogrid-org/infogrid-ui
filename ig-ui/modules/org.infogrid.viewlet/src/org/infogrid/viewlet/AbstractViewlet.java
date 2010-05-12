@@ -38,19 +38,16 @@ public abstract class AbstractViewlet
     /**
      * Constructor, for subclasses only.
      * 
-     * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
+     * @param viewed the ViewedMeshObjects to use
      * @param c the application context
      */
     protected AbstractViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            Context                   c )
+            ViewedMeshObjects viewed,
+            Context           c )
     {
         super( c );
 
         theViewedMeshObjects = viewed;
-        theParentViewlet     = parent;
     }
     
     /**
@@ -87,22 +84,7 @@ public abstract class AbstractViewlet
     {
         theViewedMeshObjects.updateFrom( toView );
     }
-    
-    /**
-      * Set the REST-ful subject for this Viewlet. This is a simplified version of {@link #view( MeshObjectsToView )}.
-      *
-      * @param toView the MeshObject to view
-      * @throws CannotViewException thrown if this Viewlet cannot view this MeshObject
-      * @deprecated for consistency, only <code>view( MeshObjectsToView )</code> should be used
-      */
-    public void setSubject(
-            MeshObject toView )
-        throws
-            CannotViewException
-    {
-        view( MeshObjectsToView.create( toView, null ));
-    }
-    
+
     /**
      * Obtain the REST-ful subject.
      *
@@ -114,55 +96,15 @@ public abstract class AbstractViewlet
     }
 
     /**
-     * Obtain the TraversalSpecification that the Viewlet currently uses.
-     * 
-     * @return the TraversalSpecification that the Viewlet currently uses
-     */
-    public TraversalSpecification getTraversalSpecification()
-    {
-        return theViewedMeshObjects.getTraversalSpecification();
-    }
-
-    /**
-     * Obtain the set of TraversalPaths that the Viewlet currently uses to the Objects, if any.
-     *
-     * @return the TraversalPathSet
-     */
-    public TraversalPathSet getTraversalPathSet()
-    {
-        return theViewedMeshObjects.getTraversalPathSet();
-    }
-
-    /**
-     * Obtain the Objects.
-     * 
-     * @return the set of Objects, which may be empty
-     */
-    public MeshObjectSet getReachedObjects()
-    {
-        return theViewedMeshObjects.getReachedObjects();
-    }
-
-    /**
       * Obtain the MeshObjects that this Viewlet is currently viewing, plus
       * context information. This method will return the same instance of ViewedMeshObjects
       * during the lifetime of the Viewlet.
       *
       * @return the ViewedMeshObjects
       */
-    public ViewedMeshObjects getViewedObjects()
+    public ViewedMeshObjects getViewedMeshObjects()
     {
         return theViewedMeshObjects;
-    }
-
-    /**
-     * Obtain the Viewlet in which this Viewlet is contained, if any.
-     *
-     * @return the parent Viewlet
-     */
-    public Viewlet getParentViewlet()
-    {
-        return theParentViewlet;
     }
 
     /**
@@ -191,10 +133,5 @@ public abstract class AbstractViewlet
     /**
      * The objects being viewed.
      */
-    protected AbstractViewedMeshObjects theViewedMeshObjects;
-
-    /**
-     * The parent Viewlet, if any.
-     */
-    protected Viewlet theParentViewlet;
+    protected ViewedMeshObjects theViewedMeshObjects;
 }

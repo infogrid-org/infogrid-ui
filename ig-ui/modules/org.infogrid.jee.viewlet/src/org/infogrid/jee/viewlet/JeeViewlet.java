@@ -15,11 +15,11 @@
 package org.infogrid.jee.viewlet;
 
 import java.io.IOException;
+import java.util.Deque;
 import javax.servlet.ServletException;
 import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.rest.RestfulRequest;
-import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.viewlet.Viewlet;
 
 /**
@@ -41,11 +41,14 @@ public interface JeeViewlet
             Viewlet
 {
     /**
-     * Obtain the current state of the Viewlet.
-     *
-     * @return the current state of the Viewlet
-     */
-    public JeeViewletState getViewletState();
+      * Obtain the MeshObjects that this Viewlet is currently viewing, plus
+      * context information. This method will return the same instance of ViewedMeshObjects
+      * during the lifetime of the Viewlet.
+      *
+      * @return the ViewedMeshObjects
+      */
+    @Override
+    public JeeViewedMeshObjects getViewedMeshObjects();
 
     /**
      * Obtain all possible states of this Viewlet. This may depend on the current MeshObjectsToView
@@ -54,6 +57,13 @@ public interface JeeViewlet
      * @return the possible ViewletStates
      */
     public JeeViewletState [] getPossibleViewletStates();
+    
+    /**
+     * The current JeeViewletState.
+     *
+     * @return the current state
+     */
+    public JeeViewletState getViewletState();
 
     /**
      * Obtain the Html class name for this Viewlet that will be used for the enclosing <tt>div</tt> tag.
@@ -78,7 +88,7 @@ public interface JeeViewlet
      * @see #performAfter
      */
     public boolean performBeforeGet(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException;
@@ -100,7 +110,7 @@ public interface JeeViewlet
      * @see #performAfter
      */
     public boolean performBeforeSafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException;
@@ -125,7 +135,7 @@ public interface JeeViewlet
      * @see #performAfter
      */
     public boolean performBeforeUnsafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             UnsafePostException,
@@ -149,7 +159,7 @@ public interface JeeViewlet
      * @see #performAfter
      */
     public boolean performBeforeMaybeSafeOrUnsafePost(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException;
@@ -169,52 +179,42 @@ public interface JeeViewlet
      * @see #performBeforeUnsafePost
      */
     public void performAfter(
-            RestfulRequest     request,
+            SaneRequest        request,
             StructuredResponse response,
             Throwable          thrown )
         throws
             ServletException;
 
     /**
-     * Process the incoming RestfulRequest.
+     * Process the incoming request.
      * 
-     * @param request the incoming RestfulRequest
-     * @param toView the MeshObjectsToView, mostly for error reporting
+     * @param request the incoming request
      * @param response the StructuredResponse into which to write the result
      * @throws ServletException thrown if an error occurred
      * @throws IOException thrown if writing the output failed
      */
     public void processRequest(
-            RestfulRequest     request,
-            MeshObjectsToView  toView,
+            SaneRequest        request,
             StructuredResponse response )
         throws
             ServletException,
             IOException;
-            
-    /**
-     * Obtain the URL that leads to this Viewlet, with this subject, and all the same parameters,
-     * contained in the same hierarchy of outer Viewlets (if any) as currently.
-     *
-     * @return the URL
-     */
-    public String getHerePaneViewletUrl();
 
     /**
-     * Obtain the URL that leads to this Viewlet, with this subject, and all the same parameters,
-     * as currently. However, if this Viewlet is currently contained by one or a hierarchy of other
-     * Viewlets, display the Viewlet outside of that hierarchy.
-     *
-     * @return the URL
-     */
-    public String getTopPaneViewletUrl();
-
-    /**
-     * Obtain the URL to which forms should be HTTP POSTed.
+     * Obtain the default URL to which forms should be HTTP POSTed.
      *
      * @return the URL
      */
     public String getPostUrl();
+
+    /**
+     * Obtain the URL to which forms should be HTTP POSTed.
+     *
+     * @param viewedMeshObjectsStack the Stack of ViewedMeshObjects of the parent Viewlets, if any
+     * @return the URL
+     */
+    public String getPostUrl(
+            Deque<JeeViewedMeshObjects> viewedMeshObjectsStack );
 
     /**
      * Name of the Request attribute that contains the current JeeViewlet instance.
@@ -227,19 +227,8 @@ public interface JeeViewlet
     public static final String SUBJECT_ATTRIBUTE_NAME = "Subject";
 
     /**
-     * Name of the Request attribute that contains the current JeeViewletState.
+     * Key in the StringRepresentationParameters collection that identifies which pane should be
+     * used.
      */
-    public static final String VIEWLET_STATE_NAME = "ViewletState";
-
-    /**
-     * Name of the Request attribute that contains the desired JeeViewletStateTransition.
-     */
-    public static final String VIEWLET_STATE_TRANSITION_NAME = "ViewletStateTransition";
-
-    /**
-     * Sometimes, a Viewlet includes another Viewlet. This is the name of the Request attribute
-     * that contains the Stack of the Viewlets enclosing the current one. That Stack does not
-     * contain the current Viewlet.
-     */
-    public static final String VIEWLET_STACK_ATTRIBUTE_NAME = "ViewletStack";
+    public static final String PANE_STRING_REPRESENTATION_PARAMETER_KEY = "pane";
 }    

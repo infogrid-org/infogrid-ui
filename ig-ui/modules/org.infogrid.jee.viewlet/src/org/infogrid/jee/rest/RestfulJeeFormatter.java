@@ -772,7 +772,6 @@ public class RestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param mesh the MeshObject whose identifier is to be formatted
-     * @param rootPath alternate root path to use, if any
      * @param addArguments additional arguments to the URL, if any
      * @param target the HTML target, if any
      * @param title the HTML title attribute, if any
@@ -783,7 +782,6 @@ public class RestfulJeeFormatter
     public String formatMeshObjectLinkStart(
             PageContext        pageContext,
             MeshObject         mesh,
-            String             rootPath,
             String             addArguments,
             String             target,
             String             title,
@@ -814,7 +812,6 @@ public class RestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param mesh the MeshObject whose identifier is to be formatted
-     * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
@@ -822,7 +819,6 @@ public class RestfulJeeFormatter
     public String formatMeshObjectLinkEnd(
             PageContext        pageContext,
             MeshObject         mesh,
-            String             rootPath,
             String             stringRepresentation )
         throws
             StringifierException
@@ -922,7 +918,6 @@ public class RestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param base the MeshBase whose identifier is to be formatted
-     * @param rootPath alternate root path to use, if any
      * @param addArguments additional arguments to the URL, if any
      * @param target the HTML target, if any
      * @param title title of the HTML link, if any
@@ -933,7 +928,6 @@ public class RestfulJeeFormatter
     public String formatMeshBaseLinkStart(
             PageContext        pageContext,
             MeshBase           base,
-            String             rootPath,
             String             addArguments,
             String             target,
             String             title,
@@ -963,7 +957,6 @@ public class RestfulJeeFormatter
      *
      * @param pageContext the PageContext object for this page
      * @param base the MeshBase whose identifier is to be formatted
-     * @param rootPath alternate root path to use, if any
      * @param stringRepresentation the StringRepresentation to use
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
@@ -971,7 +964,6 @@ public class RestfulJeeFormatter
     public String formatMeshBaseLinkEnd(
             PageContext        pageContext,
             MeshBase           base,
-            String             rootPath,
             String             stringRepresentation )
         throws
             StringifierException

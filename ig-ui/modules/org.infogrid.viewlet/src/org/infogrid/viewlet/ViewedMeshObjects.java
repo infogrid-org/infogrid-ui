@@ -110,4 +110,20 @@ public interface ViewedMeshObjects
      * @return the MeshBase
      */
     public MeshBase getMeshBase();
+
+    /**
+     * Obtain the MeshObjectsToView object that was received by the Viewlet, leading to this
+     * ViewedMeshObjects.
+     *
+     * @return the MeshObjectsToView
+     */
+    public MeshObjectsToView getMeshObjectsToView();
+
+    /**
+     * Through this method, the Viewlet that this object belongs to updates this object.
+     *
+     * @param newObjectsToView the new objects accepted to be viewed by the Viewlet
+     */
+    public void updateFrom(
+            MeshObjectsToView newObjectsToView );
 }

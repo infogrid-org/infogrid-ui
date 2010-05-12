@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.testapp;
 
 import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
 import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.Blob.BlobSubjectArea;
@@ -43,20 +44,22 @@ public class TestAppViewletFactory
      * Find the ViewletFactoryChoices that apply to these MeshObjectsToView, but ignore the specified
      * viewlet type. If none are found, return an emtpy array.
      *
-     * @param theObjectsToView the MeshObjectsToView
+     * @param toView the MeshObjectsToView
      * @return the found ViewletFactoryChoices, if any
      */
     public ViewletFactoryChoice [] determineFactoryChoicesIgnoringType(
-            MeshObjectsToView theObjectsToView )
+            MeshObjectsToView toView )
     {
+        JeeMeshObjectsToView realToView = (JeeMeshObjectsToView) toView;
+
         ArrayList<ViewletFactoryChoice> ret = new ArrayList<ViewletFactoryChoice>();
         
-        MeshObject subject = theObjectsToView.getSubject();
+        MeshObject subject = toView.getSubject();
 
         if( subject.isBlessedBy( BlobSubjectArea.IMAGE )) {
-            ret.add( BlobViewlet.choice( ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( BlobViewlet.choice( realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         }
-        ret.add( DefaultJspViewlet.choice( "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

@@ -18,19 +18,20 @@ import java.io.IOException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.defaultapp.store.AbstractStoreRestfulAppInitializationFilter;
-import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
-import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.defaultapp.AppInitializationException;
+import org.infogrid.jee.viewlet.DefaultJeeMeshObjectsToViewFactory;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToViewFactory;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.MeshBaseIdentifierFactory;
+import org.infogrid.meshbase.MeshBaseNameServer;
+import org.infogrid.model.traversal.TraversalTranslator;
 import org.infogrid.model.traversal.xpath.XpathTraversalTranslator;
 import org.infogrid.store.m.MStore;
 import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.util.CompoundException;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
-import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.naming.NamingReportingException;
 import org.infogrid.viewlet.ViewletFactory;
@@ -121,10 +122,25 @@ public class MeshWorldAppInitializationFilter
         super.initializeContextObjects( incomingRequest, rootContext );
 
         MeshBase mb = rootContext.findContextObjectOrThrow( MeshBase.class );
-        rootContext.addContextObject( XpathTraversalTranslator.create( mb ));
+
+        MeshBaseIdentifierFactory mbIdentifierFact = rootContext.findContextObject( MeshBaseIdentifierFactory.class );
+        MeshBaseNameServer        mbNameServer     = rootContext.findContextObject( MeshBaseNameServer.class );
+
+        TraversalTranslator translator = XpathTraversalTranslator.create( mb );
+        rootContext.addContextObject( translator );
 
         ViewletFactory mainVlFact = new MainMeshWorldViewletFactory();
-
         rootContext.addContextObject( mainVlFact );
+
+        @SuppressWarnings("unchecked")
+        JeeMeshObjectsToViewFactory toViewFact = DefaultJeeMeshObjectsToViewFactory.create(
+                mb.getIdentifier(),
+                mbIdentifierFact,
+                mbNameServer,
+                translator,
+                incomingRequest.getContextPath(),
+                incomingRequest.getAbsoluteContextUri(),
+                rootContext );
+        rootContext.addContextObject( toViewFact );
     }
 }

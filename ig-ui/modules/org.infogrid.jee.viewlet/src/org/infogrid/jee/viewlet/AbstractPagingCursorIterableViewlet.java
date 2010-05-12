@@ -18,7 +18,6 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.PagingCursorIterator;
 import org.infogrid.util.context.Context;
-import org.infogrid.viewlet.AbstractViewedMeshObjects;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.Viewlet;
 
@@ -34,17 +33,15 @@ public abstract class AbstractPagingCursorIterableViewlet
      * Constructor. This is protected: use factory method or subclass.
      *
      * @param viewed the AbstractViewedMeshObjects implementation to use
-     * @param parent the parent Viewlet, if any
      * @param defaultPageLength the default page length
      * @param c the application context
      */
     protected AbstractPagingCursorIterableViewlet(
-            AbstractViewedMeshObjects viewed,
-            Viewlet                   parent,
-            int                       defaultPageLength,
-            Context                   c )
+            JeeViewedMeshObjects viewed,
+            int                  defaultPageLength,
+            Context              c )
     {
-        super( viewed, parent, c );
+        super( viewed, c );
 
         theDefaultPageLength = defaultPageLength;
     }
@@ -93,8 +90,8 @@ public abstract class AbstractPagingCursorIterableViewlet
         throws
             CannotViewException.InvalidParameter
     {
-        String pageStart  = (String) getViewedObjects().getViewletParameter( PAGE_START_NAME );
-        String pageLength = (String) getViewedObjects().getViewletParameter( PAGE_LENGTH_NAME );
+        String pageStart  = (String) getViewedMeshObjects().getViewletParameter( PAGE_START_NAME );
+        String pageLength = (String) getViewedMeshObjects().getViewletParameter( PAGE_LENGTH_NAME );
         
         MeshObject start;
         int        page;
