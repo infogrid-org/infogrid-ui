@@ -133,6 +133,7 @@ public abstract class DefaultJeeViewletFactoryChoice
      * @return String representation
      */
     @Override
+    @SuppressWarnings("unchecked")
     public String toStringRepresentationLinkEnd(
             StringRepresentation           rep,
             StringRepresentationParameters pars )

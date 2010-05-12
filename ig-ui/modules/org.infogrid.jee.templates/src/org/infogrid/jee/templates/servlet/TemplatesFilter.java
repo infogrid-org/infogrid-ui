@@ -101,7 +101,13 @@ public class TemplatesFilter
 
         } catch( Throwable ex ) {
             lastException = ex;
-            getLog().error( ex );
+
+            Log l = getLog();
+            if( l != null ) { // catastrophic errors sometimes even prevent logging from being initialized
+                l.error( ex );
+            } else {
+                ex.printStackTrace();
+            }
 
         } finally {
             request.removeAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );

@@ -115,7 +115,13 @@ public class InitializationFilter
             chain.doFilter( request, response );
 
         } catch( Throwable t ) {
-            getLog().error( t );
+            Log l = getLog();
+
+            if( l != null ) { // catastrophic errors sometimes even prevent logging from being initialized
+                l.error( t );
+            } else {
+                t.printStackTrace();
+            }
 
             try {
                 processException( realRequest, realResponse, t ); // may throw again

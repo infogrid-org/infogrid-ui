@@ -24,6 +24,7 @@ import org.infogrid.jee.taglib.viewlet.IncludeViewletTag;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewlet;
@@ -153,7 +154,12 @@ public abstract class AbstractJeeViewlet
         if( request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
             // only if no errors have been reported
             response.setHttpResponseCode( 303 );
-            response.setLocation( request.getAbsoluteFullUri() );
+
+            String target = request.getUrlArgument( "lid-target" );
+            if( target == null ) {
+                target = request.getAbsoluteFullUri();
+            }
+            response.setLocation( target );
             return true;
         } else {
             return false;
@@ -358,8 +364,9 @@ public abstract class AbstractJeeViewlet
 
     /**
      * Obtain the URL to which forms should be HTTP POSTed.
-     * By default, that is the same URL
-     * as the current URL, but with the Viewlet state set to VIEW.
+     * By default, that is the URL of the current Viewlet, but in the "top" pane rather than the "here" pane,
+     * concatenated with a lid-target argument with the value of the URL of the current Viewlet, in the "here" pane.
+     * The Viewlet state is also set to VIEW.
      * This can be overridden by subclasses.
      *
      * @param viewedMeshObjectsStack the Stack of ViewedMeshObjects of the parent Viewlets, if any
@@ -373,7 +380,12 @@ public abstract class AbstractJeeViewlet
 
         newToView.setViewletState( DefaultJeeViewletStateEnum.VIEW );
 
-        return newToView.getAsUrl( viewedMeshObjectsStack );
+        StringBuilder buf = new StringBuilder();
+        buf.append( newToView.getAsUrl( (Deque<JeeViewedMeshObjects>) null ));
+        if( viewedMeshObjectsStack != null && !viewedMeshObjectsStack.isEmpty() ) {
+            HTTP.appendArgumentToUrl( buf, "lid-target", newToView.getAsUrl( viewedMeshObjectsStack ));
+        }
+        return buf.toString();
     }
 
     /**
