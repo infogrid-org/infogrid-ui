@@ -151,19 +151,7 @@ public abstract class AbstractJeeViewlet
         throws
             ServletException
     {
-        if( request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
-            // only if no errors have been reported
-            response.setHttpResponseCode( 303 );
-
-            String target = request.getUrlArgument( "lid-target" );
-            if( target == null ) {
-                target = request.getAbsoluteFullUri();
-            }
-            response.setLocation( target );
-            return true;
-        } else {
-            return false;
-        }
+        return defaultPerformPost( request, response );
     }
 
     /**
@@ -217,16 +205,39 @@ public abstract class AbstractJeeViewlet
         throws
             ServletException
     {
+        return defaultPerformPost( request, response );
+    }
+    
+    /**
+     * Default implementation of what happens upon POST.
+     *
+     * @param request the incoming request
+     * @param response the response to be assembled
+     * @return if true, the result of the viewlet processing has been deposited into the response object
+     *         already and regular processing will be skipped. If false, regular processing continues.
+     * @throws ServletException thrown if an error occurred
+     */
+    protected boolean defaultPerformPost(
+            SaneRequest        request,
+            StructuredResponse response )
+        throws
+            ServletException
+    {
         if( request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
             // only if no errors have been reported
             response.setHttpResponseCode( 303 );
-            response.setLocation( request.getAbsoluteFullUri() );
+
+            String target = request.getUrlArgument( "lid-target" );
+            if( target == null ) {
+                target = request.getAbsoluteFullUri();
+            }
+            response.setLocation( target );
             return true;
         } else {
             return false;
         }
     }
-    
+
     /**
      * <p>Invoked after to the execution of the Servlet. It is the hook by which
      * the JeeViewlet can perform whatever operations needed after to the execution of the servlet, e.g.

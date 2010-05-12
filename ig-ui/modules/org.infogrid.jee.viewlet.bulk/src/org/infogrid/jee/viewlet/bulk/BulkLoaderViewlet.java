@@ -193,9 +193,7 @@ public class BulkLoaderViewlet
                 tx.commitTransaction();
             }
         }
-        response.setHttpResponseCode( 303 );
-        response.setLocation( request.getAbsoluteFullUri() );
-        return true;
+        return defaultPerformPost( request, response );
     }
 
     /**

@@ -212,9 +212,7 @@ public class Log4jConfigurationViewlet
                 l.getDelegate().setLevel( null );
             }
         }
-        response.setHttpResponseCode( 303 );
-        response.setLocation( request.getAbsoluteFullUri() );
-        return true;
+        return defaultPerformPost( request, response );
     }
 
     /**
