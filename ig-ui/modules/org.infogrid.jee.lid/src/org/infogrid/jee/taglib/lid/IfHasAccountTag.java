@@ -53,7 +53,7 @@ public class IfHasAccountTag
      * Set value of the status property.
      *
      * @param newValue new value of the status property
-     * @see #getAccountStatus
+     * @see #getStatus
      */
     public final void setStatus(
             String newValue )

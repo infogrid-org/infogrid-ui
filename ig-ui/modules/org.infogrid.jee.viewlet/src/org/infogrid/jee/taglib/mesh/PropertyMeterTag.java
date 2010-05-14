@@ -140,7 +140,7 @@ public class PropertyMeterTag
      * Obtain value of the min property.
      *
      * @return value of the min property
-     * @see #setMinValue
+     * @see #setMin
      */
     public final String getMin()
     {

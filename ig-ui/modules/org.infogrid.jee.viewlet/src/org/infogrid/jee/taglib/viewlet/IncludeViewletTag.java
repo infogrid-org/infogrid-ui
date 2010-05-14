@@ -56,14 +56,17 @@ import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactory;
 
 /**
- * Include another Viewlet.
- * @see <a href="package-summary.html">Details in package documentation</a>.
+ * <p>Include another Viewlet.</p>
  *
- * There are two stacks of objects in the request context:
- * 1. The TO-INCLUDE-STACK contains the MeshObjectsToView in the user's incoming request URL; elements get taken off
- *    the stack each time we encounter an IncludeViewletTag
- * 2. The PARENT-STACK contains the ViewedMeshObjects of the Viewlet invoking this IncludeViewletTag (and its parents etc.);
- *    elements are put on the stack each time we encounter an IncludeViewletTag.
+ * <p>There are two stacks of objects in the request context:</p>
+ * <ol>
+ *  <li>The TO-INCLUDE-STACK contains the MeshObjectsToView in the user's incoming request URL; elements get taken off
+ *      the stack each time we encounter an IncludeViewletTag</li>
+ *  <li>The PARENT-STACK contains the ViewedMeshObjects of the Viewlet invoking this IncludeViewletTag (and its parents etc.);
+ *      elements are put on the stack each time we encounter an IncludeViewletTag.</li>
+ * </ol>
+ * 
+ * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IncludeViewletTag
         extends
