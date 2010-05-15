@@ -22,7 +22,7 @@ import org.infogrid.jee.viewlet.JeeViewletState;
  * <p>This tag tests for the Viewlet not being in a particular ViewletState.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class NotIfViewletState
+public class NotIfViewletStateTag
         extends
             AbstractViewletStateConditionTag
 {
