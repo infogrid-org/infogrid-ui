@@ -15,9 +15,6 @@
 package org.infogrid.viewlet;
 
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.mesh.set.MeshObjectSet;
-import org.infogrid.mesh.set.TraversalPathSet;
-import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.context.ObjectInContext;
 
 /**

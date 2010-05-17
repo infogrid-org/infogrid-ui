@@ -409,11 +409,11 @@ public abstract class AbstractSetIterateTag<T>
         }
         public boolean isFirst()
         {
-            return theStatus == Status.PROCESS_HEADER_AND_FIRST_ROW;
+            return theStatus == Status.PROCESS_HEADER_AND_FIRST_ROW || theStatus == Status.PROCESS_SINGLE_ROW;
         }
         public boolean isLast()
         {
-            return theStatus == Status.PROCESS_FOOTER_AND_LAST_ROW;
+            return theStatus == Status.PROCESS_FOOTER_AND_LAST_ROW || theStatus == Status.PROCESS_SINGLE_ROW;
         }
     }
 }

@@ -51,6 +51,7 @@ import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneUrl;
 import org.infogrid.util.logging.Log;
+import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
 
 /**
@@ -289,6 +290,9 @@ public class DefaultJeeNetMeshObjectsToViewFactory
             NetMeshObjectIdentifier subjectIdentifier = mb.getMeshObjectIdentifierFactory().fromExternalForm( subjectIdentifierString );
             subject                                   = mb.accessLocally( subjectIdentifier );
 
+            if( subject == null ) {
+                throw new FactoryException( this, new CannotViewException.NoSubject( subjectIdentifier ));
+            }
             if( proxyIdentifierString != null ) {
                 requestedProxyIdentifier = (NetMeshBaseIdentifier) theMeshBaseIdentifierFactory.guessFromExternalForm( proxyIdentifierString );
                 requestedProxy           = mb.getProxyFor( requestedProxyIdentifier );
