@@ -48,7 +48,7 @@ public class MeshBaseIdentifierTag
         theMeshBaseName         = null;
         theStringRepresentation = null;
         theMaxLength            = -1;
-        theColloquial           = false;
+        theColloquial           = true;
 
         super.initializeToDefaults();
     }

@@ -54,7 +54,7 @@ public class MeshTypeTag
         theMaxLength            = -1;
         theLocale               = null;
         theExactLocaleMatch     = null;
-        theColloquial           = false;
+        theColloquial           = true;
 
         super.initializeToDefaults();
     }

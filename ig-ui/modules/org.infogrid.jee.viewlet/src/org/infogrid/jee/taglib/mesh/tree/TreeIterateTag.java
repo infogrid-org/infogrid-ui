@@ -20,7 +20,9 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.set.DefaultMeshObjectSorter;
 import org.infogrid.mesh.set.MeshObjectSet;
+import org.infogrid.mesh.set.MeshObjectSorter;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.CursorIterator;
@@ -216,6 +218,8 @@ public class TreeIterateTag
         if( log.isTraceEnabled() ) {
             log.traceMethodCallEntry( this, "realDoStartTag" );
         }
+        theSetSorter = DefaultMeshObjectSorter.BY_USER_VISIBLE_STRING;
+        
         try {
             MeshObject start = (MeshObject) lookupOrThrow( theStartObjectName );
             theTraversals    = findTraversalSpecificationSequenceOrThrow( start, theTraversalSpecification );
@@ -228,6 +232,7 @@ public class TreeIterateTag
             if( currentChildren.isEmpty() ) {
                 return SKIP_BODY;
             }
+            currentChildren = currentChildren.getFactory().createOrderedImmutableMeshObjectSet( currentChildren, theSetSorter );
 
             CursorIterator<MeshObject> iter = currentChildren.iterator();
             theCurrentNode = iter.next();
@@ -285,6 +290,7 @@ public class TreeIterateTag
                 && ( theStack.size() < theTraversals.length ))
             {
                 currentChildren = theCurrentNode.traverse( theTraversals[ theStack.size() ] );
+                currentChildren = currentChildren.getFactory().createOrderedImmutableMeshObjectSet( currentChildren, theSetSorter );
             } else {
                 currentChildren = null;
             }
@@ -548,6 +554,11 @@ public class TreeIterateTag
      * The currently processed MeshObject.
      */
     protected MeshObject theCurrentNode;
+
+    /**
+     * The sorter to use for the MeshObjects on any given level.
+     */
+    protected MeshObjectSorter theSetSorter;
 
     /**
      * The current state.

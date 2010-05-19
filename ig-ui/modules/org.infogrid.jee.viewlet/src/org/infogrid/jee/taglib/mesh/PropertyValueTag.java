@@ -50,7 +50,7 @@ public class PropertyValueTag
         theNullString           = "";
         theStringRepresentation = null;
         theMaxLength            = -1;
-        theColloquial           = false;
+        theColloquial           = true;
 
         super.initializeToDefaults();
     }

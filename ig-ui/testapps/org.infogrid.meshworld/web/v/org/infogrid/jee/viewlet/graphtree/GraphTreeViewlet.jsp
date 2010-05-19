@@ -31,7 +31,7 @@
      <tree:nodeBefore>
       <dt class="<v:ifIsReachedObject object='${current}'>reached</v:ifIsReachedObject> <v:ifIsReachedObject traversalPath='${traversalPath}'>selected</v:ifIsReachedObject>">
        <mesh:meshObjectLink meshObjectName="Subject" traversalPathName="traversalPath" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet">
-        <mesh:meshObject meshObjectName="current" colloquial="true" maxLength="20" />
+        <mesh:meshObject meshObjectName="current" maxLength="20" />
        </mesh:meshObjectLink>
       </dt>
      </tree:nodeBefore>

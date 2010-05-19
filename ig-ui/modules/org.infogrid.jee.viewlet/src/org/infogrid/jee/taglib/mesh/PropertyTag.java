@@ -54,7 +54,7 @@ public class PropertyTag
         theNullString           = null;
         theStringRepresentation = null;
         theMaxLength            = -1;
-        theColloquial           = false;
+        theColloquial           = true;
         theState                = null;
 
         super.initializeToDefaults();
