@@ -270,6 +270,11 @@ public class LidPipelineServlet
     public static final String USER_NICK_ATTRIBUTE_NAME = "USER_NICK";
 
     /**
+     * Name of the request attribute that contains the names of the groups that the user is a member of.
+     */
+    public static final String USER_GROUPS_ATTRIBUTE_NAME = "USER_GROUPS";
+
+    /**
      * Synonym of USER_ID.
      */
     public static final String LID_ATTRIBUTE_NAME = "lid";
