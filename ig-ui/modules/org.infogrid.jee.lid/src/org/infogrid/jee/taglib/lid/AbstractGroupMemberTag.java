@@ -112,6 +112,9 @@ public abstract class AbstractGroupMemberTag
     protected boolean isMember()
     {
         String [] toTest = theGroups.split( SEPARATOR );
+        for( int i=0 ; i<toTest.length ; ++i ) {
+            toTest[i] = toTest[i].trim();
+        }
 
         // look for group membership via the LidAccount
         LidAccount me = (LidAccount) pageContext.getRequest().getAttribute( LidPipelineServlet.ACCOUNT_ATTRIBUTE_NAME );
