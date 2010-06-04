@@ -16,6 +16,7 @@ package org.infogrid.jee.viewlet;
 
 import java.util.Deque;
 import org.infogrid.model.traversal.TraversalPath;
+import org.infogrid.util.http.SaneUrl;
 import org.infogrid.viewlet.MeshObjectsToView;
 
 /**
@@ -106,6 +107,13 @@ public interface JeeMeshObjectsToView
      */
     @Override
     public JeeMeshObjectsToView createCopy();
+
+    /**
+     * Obtain the incoming request that led to this MeshObjectsToView, if any.
+     *
+     * @return the incoming request
+     */
+    public SaneUrl getRequest();
 
     /**
      * Name of the LID format URL argument in the incoming request.

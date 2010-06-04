@@ -166,7 +166,8 @@ public class DefaultJeeNetMeshObjectsToViewFactory
                 null,
                 null,
                 theRelativeContextPath,
-                getContext() );
+                getContext(),
+                null );
 
         return ret;
     }
@@ -213,7 +214,8 @@ public class DefaultJeeNetMeshObjectsToViewFactory
                 null,
                 null,
                 theRelativeContextPath,
-                getContext() );
+                getContext(),
+                null );
 
         return ret;
     }
@@ -391,7 +393,8 @@ public class DefaultJeeNetMeshObjectsToViewFactory
                 viewletTransition,
                 mimeType,
                 theRelativeContextPath,
-                getContext() );
+                getContext(),
+                null );
 
         return ret;
     }

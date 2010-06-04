@@ -22,6 +22,7 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneUrl;
 
 /**
  * Augments MeshObjectsToView for JEE Viewlets.
@@ -44,6 +45,7 @@ public class DefaultJeeMeshObjectsToView
      * @param transition the ViewletStateTransition to make
      * @param mimeType the requested MIME type, if any
      * @param contextPath context path of the web application
+     * @param request the incoming request from which this MeshObjectsToView was parsed
      * @param c the Context
      */
     protected DefaultJeeMeshObjectsToView(
@@ -58,7 +60,8 @@ public class DefaultJeeMeshObjectsToView
             JeeViewletStateTransition transition,
             String                    mimeType,
             String                    contextPath,
-            Context                   c )
+            Context                   c,
+            SaneUrl                   request )
     {
         super(  subject,
                 viewletTypeName,
@@ -71,7 +74,8 @@ public class DefaultJeeMeshObjectsToView
                 transition,
                 mimeType,
                 contextPath,
-                c );
+                c,
+                request );
     }
 
     /**
@@ -99,7 +103,8 @@ public class DefaultJeeMeshObjectsToView
                 theTransition,
                 theMimeType,
                 theContextPath,
-                getContext() );
+                getContext(),
+                theRequest );
 
         if( getClass() != ret.getClass() ) {
             throw new UnsupportedOperationException( "Did you forget to override createCopy() in class: " + getClass().getName() );

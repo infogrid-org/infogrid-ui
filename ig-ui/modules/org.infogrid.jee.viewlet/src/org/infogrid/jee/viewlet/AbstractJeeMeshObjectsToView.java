@@ -27,6 +27,7 @@ import org.infogrid.model.traversal.TraversalTranslator;
 import org.infogrid.model.traversal.TraversalTranslatorException;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.http.SaneUrl;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
@@ -61,6 +62,7 @@ public abstract class AbstractJeeMeshObjectsToView
      * @param mimeType the requested MIME type, if any
      * @param contextPath the context path of the web application
      * @param c the Context
+     * @param request the incoming request from which this MeshObjectsToView was parsed
      */
     protected AbstractJeeMeshObjectsToView(
             MeshObject                subject,
@@ -74,7 +76,8 @@ public abstract class AbstractJeeMeshObjectsToView
             JeeViewletStateTransition transition,
             String                    mimeType,
             String                    contextPath,
-            Context                   c )
+            Context                   c,
+            SaneUrl                   request )
     {
         super(  subject,
                 viewletTypeName,
@@ -85,10 +88,11 @@ public abstract class AbstractJeeMeshObjectsToView
                 mb,
                 c );
 
-        theState         = state;
-        theTransition    = transition;
-        theMimeType      = mimeType;
-        theContextPath   = contextPath;
+        theState       = state;
+        theTransition  = transition;
+        theMimeType    = mimeType;
+        theContextPath = contextPath;
+        theRequest     = request;
     }
 
     /**
@@ -276,6 +280,16 @@ public abstract class AbstractJeeMeshObjectsToView
     }
 
     /**
+     * Obtain the incoming request that led to this MeshObjectsToView, if any.
+     *
+     * @return the incoming request
+     */
+    public SaneUrl getRequest()
+    {
+        return theRequest;
+    }
+
+    /**
      * The request MIME type, if any.
      */
     protected String theMimeType;
@@ -294,4 +308,9 @@ public abstract class AbstractJeeMeshObjectsToView
      * The context path of the web application.
      */
     protected String theContextPath;
+
+    /**
+     * The incoming request, if any.
+     */
+    protected SaneUrl theRequest;
 }

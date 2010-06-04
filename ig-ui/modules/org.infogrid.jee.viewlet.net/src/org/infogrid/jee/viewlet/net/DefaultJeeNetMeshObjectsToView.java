@@ -26,6 +26,7 @@ import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneUrl;
 
 /**
  * Extends DefaultJeeMeshObjectsToView to be able to express that a Proxy shall be viewed instead.
@@ -52,6 +53,7 @@ public class DefaultJeeNetMeshObjectsToView
      * @param mimeType the requested MIME type, if any
      * @param contextPath context path of the web application
      * @param c the Context
+     * @param request the incoming request from which this MeshObjectsToView was parsed
      */
     protected DefaultJeeNetMeshObjectsToView(
             NetMeshObject             subject,
@@ -66,7 +68,8 @@ public class DefaultJeeNetMeshObjectsToView
             JeeViewletStateTransition transition,
             String                    mimeType,
             String                    contextPath,
-            Context                   c )
+            Context                   c,
+            SaneUrl                   request )
     {
         super(  subject,
                 viewletTypeName,
@@ -79,7 +82,8 @@ public class DefaultJeeNetMeshObjectsToView
                 transition,
                 mimeType,
                 contextPath,
-                c );
+                c,
+                request );
 
         theProxy = proxy;
     }
@@ -143,7 +147,8 @@ public class DefaultJeeNetMeshObjectsToView
                 theTransition,
                 theMimeType,
                 theContextPath,
-                getContext() );
+                getContext(),
+                theRequest );
 
         if( getClass() != ret.getClass() ) {
             throw new UnsupportedOperationException( "Did you forget to override createCopy() in class: " + getClass().getName() );
