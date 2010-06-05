@@ -14,7 +14,16 @@
   <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Create"/></a>
   <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-accessLocally', {} )" title="Open a MeshObject"><img src="${CONTEXT}/s/images/world_add.png" alt="Open"/></a>
  </div>
- <h1>All MeshObjects in the MeshBase</h1>
+ <h1>
+<%
+    MeshBase mb = ((MeshObject)pageContext.getRequest().getAttribute( "Subject" )).getMeshBase();
+    if( mb instanceof IterableMeshBase ) {
+        out.print( ((IterableMeshBase)mb).getSize() );
+    } else {
+        out.print( "All" );
+    }
+%>
+ MeshObjects in the MeshBase</h1>
 
  <div class="nav">
   <div class="left">

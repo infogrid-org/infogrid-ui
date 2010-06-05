@@ -8,10 +8,22 @@
  %><%@ taglib prefix="u"           uri="/v/org/infogrid/jee/taglib/util/util.tld"
  %><%@ taglib prefix="v"           uri="/v/org/infogrid/jee/taglib/viewlet/viewlet.tld"
  %><%@ taglib prefix="c"           uri="http://java.sun.com/jsp/jstl/core"
+ %><%@ page import="org.infogrid.meshbase.IterableMeshBase"
+ %><%@ page import="org.infogrid.meshbase.MeshBase"
+ %><%@ page import="org.infogrid.mesh.MeshObject"
  %>
 <v:viewletAlternatives />
 <v:viewlet>
- <h1>All MeshObjects in the MeshBase</h1>
+ <h1>
+<%
+    MeshBase mb = ((MeshObject)pageContext.getRequest().getAttribute( "Subject" )).getMeshBase();
+    if( mb instanceof IterableMeshBase ) {
+        out.print( ((IterableMeshBase)mb).getSize() );
+    } else {
+        out.print( "All" );
+    }
+%>
+ MeshObjects in the MeshBase</h1>
  <ol>
   <c:forEach items="${Viewlet.cursorIterator}" var="current" varStatus="currentStatus">
    <li>
