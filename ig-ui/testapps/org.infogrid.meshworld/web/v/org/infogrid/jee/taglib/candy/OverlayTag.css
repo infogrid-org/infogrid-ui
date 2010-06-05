@@ -15,6 +15,7 @@ div.org-infogrid-jee-taglib-candy-OverlayTag {
     top: 30%;
     left: 50%;
     -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
     width: 400px;
     margin-left: -200px;
     padding: 25px;

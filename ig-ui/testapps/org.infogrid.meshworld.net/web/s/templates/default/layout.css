@@ -29,6 +29,7 @@ button.commit {
     width: 80px;
     padding: 2px 2px 2px 18px;
     -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
     background-position: 4px 50%;
     background-repeat: no-repeat;
 }
@@ -49,6 +50,7 @@ div.viewlet {
     border: 1px solid;
     padding: 10px 10px 10px 20px;
     -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
     clear: right;
     margin: 0px;
 }
@@ -59,6 +61,7 @@ div.viewlet-state {
     border-width: 1px;
     border-style: solid;
     -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
     padding: 10px;
     font-size: 0.7em;
     margin: 0 0 10px 10px;
