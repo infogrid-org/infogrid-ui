@@ -21,6 +21,7 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
+import org.infogrid.jee.viewlet.JeeMeshObjectsToViewFactory;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.JeeViewletFactoryChoice;
 import org.infogrid.mesh.MeshObject;
@@ -34,11 +35,11 @@ import org.infogrid.util.logging.Log;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.http.SaneRequestUtils;
+import org.infogrid.util.http.SaneUrl;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
-import org.infogrid.viewlet.MeshObjectsToViewFactory;
 
 /**
  * Allows the user to select an alternate JeeViewlet to display the current subject.
@@ -154,20 +155,21 @@ public class ViewletAlternativesTag
             IgnoreException
     {
         StructuredResponse theResponse    = (StructuredResponse) lookupOrThrow( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-        Viewlet            currentViewlet = (Viewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+        JeeViewlet         currentViewlet = (JeeViewlet) lookupOrThrow( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
         
         MeshObject    subject       = currentViewlet.getSubject();
         TraversalPath arrivedAtPath = currentViewlet.getViewedMeshObjects().getArrivedAtPath();
         Context       c             = currentViewlet.getContext();
+        SaneUrl       request       = currentViewlet.getViewedMeshObjects().getMeshObjectsToView().getRequest();
 
-        MeshObjectsToViewFactory toViewFact = c.findContextObjectOrThrow( MeshObjectsToViewFactory.class );
-        ViewletFactory           vlFact     = c.findContextObjectOrThrow( ViewletFactory.class );
+        JeeMeshObjectsToViewFactory toViewFact = c.findContextObjectOrThrow( JeeMeshObjectsToViewFactory.class );
+        ViewletFactory              vlFact     = c.findContextObjectOrThrow( ViewletFactory.class );
         
         MeshObjectsToView toView;
         if( arrivedAtPath != null ) {
-            toView = toViewFact.obtainFor( arrivedAtPath );
+            toView = toViewFact.obtainFor( arrivedAtPath, request );
         } else {
-            toView = toViewFact.obtainFor( subject ); // don't have a parent
+            toView = toViewFact.obtainFor( subject, request ); // don't have a parent
         }
         ViewletFactoryChoice [] candidates = vlFact.determineFactoryChoicesOrderedByMatchQuality( toView );
 

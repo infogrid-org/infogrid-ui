@@ -130,7 +130,7 @@ public class DefaultJeeMeshObjectsToViewFactory
     public DefaultJeeMeshObjectsToView obtainFor(
             MeshObject key )
     {
-        return obtainFor( key, null );
+        return obtainFor( key, null, null );
     }
 
     /**
@@ -144,22 +144,7 @@ public class DefaultJeeMeshObjectsToViewFactory
             MeshObject subject,
             String     viewletTypeName )
     {
-        DefaultJeeMeshObjectsToView ret = new DefaultJeeMeshObjectsToView(
-                subject,
-                viewletTypeName,
-                null,
-                null,
-                null,
-                null,
-                subject.getMeshBase(),
-                null,
-                null,
-                null,
-                theRelativeContextPath,
-                getContext(),
-                null );
-
-        return ret;
+        return obtainFor( subject, viewletTypeName, null );
     }
 
     /**
@@ -172,7 +157,7 @@ public class DefaultJeeMeshObjectsToViewFactory
     public DefaultJeeMeshObjectsToView obtainFor(
             TraversalPath reachedBy )
     {
-        return obtainFor( reachedBy, null );
+        return obtainFor( reachedBy, null, null );
     }
 
     /**
@@ -187,24 +172,7 @@ public class DefaultJeeMeshObjectsToViewFactory
             TraversalPath     reachedBy,
             String            viewletTypeName )
     {
-        MeshObject subject = reachedBy.getLastMeshObject();
-
-        DefaultJeeMeshObjectsToView ret = new DefaultJeeMeshObjectsToView(
-                subject,
-                viewletTypeName,
-                null,
-                reachedBy,
-                null,
-                null,
-                subject.getMeshBase(),
-                null,
-                null,
-                null,
-                theRelativeContextPath,
-                getContext(),
-                null );
-
-        return ret;
+        return obtainFor( reachedBy, viewletTypeName, null );
     }
 
     /**
@@ -214,7 +182,7 @@ public class DefaultJeeMeshObjectsToViewFactory
      * @return the created MeshObjectsToView
      * @throws FactoryException thrown if the MeshObjectsToView could not be created
      */
-    public MeshObjectsToView obtainFor(
+    public DefaultJeeMeshObjectsToView obtainFor(
             SaneUrl request )
         throws
             FactoryException
@@ -364,6 +332,103 @@ public class DefaultJeeMeshObjectsToViewFactory
                 viewletState,
                 viewletTransition,
                 mimeType,
+                theRelativeContextPath,
+                getContext(),
+                request );
+
+        return ret;
+    }
+
+
+    /**
+     * Create a MeshObjectsToView that only asks for a subject.
+     * Repeated here for clarity.
+     *
+     * @param subject the subject MeshObject
+     * @param request the SaneUrl of the current request
+     * @return the created MeshObjectsToView
+     */
+    public DefaultJeeMeshObjectsToView obtainFor(
+            MeshObject subject,
+            SaneUrl    request )
+    {
+        return obtainFor( subject, null, request );
+    }
+
+    /**
+     * Create a MeshObjectsToView that asks for a subject to be viewed with a named Viewlet type.
+     * Repeated here for clarity.
+     *
+     * @param subject the subject MeshObject
+     * @param viewletTypeName the name of the Viewlet type
+     * @param request the SaneUrl of the current request
+     * @return the created MeshObjectsToView
+     */
+    public DefaultJeeMeshObjectsToView obtainFor(
+            MeshObject subject,
+            String     viewletTypeName,
+            SaneUrl    request )
+    {
+        DefaultJeeMeshObjectsToView ret = new DefaultJeeMeshObjectsToView(
+                subject,
+                viewletTypeName,
+                null,
+                null,
+                null,
+                null,
+                subject.getMeshBase(),
+                null,
+                null,
+                null,
+                theRelativeContextPath,
+                getContext(),
+                request );
+
+        return ret;
+    }
+
+    /**
+     * Create a MeshObjectsToView that asks for a subject to be viewed with a named Viewlet type
+     * and TraversalPath by which the subject was reached.
+     *
+     * @param reachedBy the TraversalPath by which the subject (the last MeshObject) was reached
+     * @param request the SaneUrl of the current request
+     * @return the created MeshObjectsToView
+     */
+    public DefaultJeeMeshObjectsToView obtainFor(
+            TraversalPath reachedBy,
+            SaneUrl       request )
+    {
+        return obtainFor( reachedBy, null, request );
+    }
+
+    /**
+     * Create a MeshObjectsToView that asks for a subject to be viewed with a named Viewlet type
+     * and TraversalPath by which the subject was reached.
+     *
+     * @param reachedBy the TraversalPath by which the subject (the last MeshObject) was reached
+     * @param viewletTypeName the name of the Viewlet type
+     * @param request the SaneUrl of the current request
+     * @return the created MeshObjectsToView
+     */
+    public DefaultJeeMeshObjectsToView obtainFor(
+            TraversalPath reachedBy,
+            String        viewletTypeName,
+            SaneUrl       request )
+    {
+        MeshObject subject = reachedBy.getLastMeshObject();
+
+        DefaultJeeMeshObjectsToView ret = new DefaultJeeMeshObjectsToView(
+                subject,
+                viewletTypeName,
+                null,
+                reachedBy,
+                null,
+                null,
+                subject.getMeshBase(),
+                null,
+                null,
+                null,
                 theRelativeContextPath,
                 getContext(),
                 request );

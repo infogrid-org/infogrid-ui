@@ -12,21 +12,20 @@
 // All rights reserved.
 //
 
-package org.infogrid.jee.viewlet;
+package org.infogrid.jee.viewlet.net;
 
+import org.infogrid.jee.viewlet.JeeMeshObjectsToViewFactory;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.http.SaneUrl;
-import org.infogrid.viewlet.MeshObjectsToViewFactory;
 
 /**
- * A factory for JeeMeshObjectsToView objects.
- * @author jernst
+ * Narrows the returned types of the created objects.
  */
-public interface JeeMeshObjectsToViewFactory
-    extends
-        MeshObjectsToViewFactory
+public interface JeeNetMeshObjectsToViewFactory
+        extends
+            JeeMeshObjectsToViewFactory
 {
     /**
      * Create a MeshObjectsToView that only asks for a subject.
@@ -35,7 +34,7 @@ public interface JeeMeshObjectsToViewFactory
      * @param subject the subject MeshObject
      * @return the created MeshObjectsToView
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             MeshObject subject );
 
     /**
@@ -46,7 +45,7 @@ public interface JeeMeshObjectsToViewFactory
      * @param viewletTypeName the name of the Viewlet type
      * @return the created MeshObjectsToView
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             MeshObject subject,
             String     viewletTypeName );
 
@@ -57,7 +56,7 @@ public interface JeeMeshObjectsToViewFactory
      * @param reachedBy the TraversalPath by which the subject (the last MeshObject) was reached
      * @return the created MeshObjectsToView
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             TraversalPath reachedBy );
 
     /**
@@ -68,7 +67,7 @@ public interface JeeMeshObjectsToViewFactory
      * @param viewletTypeName the name of the Viewlet type
      * @return the created MeshObjectsToView
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             TraversalPath reachedBy,
             String        viewletTypeName );
 
@@ -79,7 +78,7 @@ public interface JeeMeshObjectsToViewFactory
      * @return the created MeshObjectsToView
      * @throws FactoryException thrown if the MeshObjectsToView could not be created
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             SaneUrl request )
         throws
             FactoryException;
@@ -92,7 +91,7 @@ public interface JeeMeshObjectsToViewFactory
      * @param request the SaneUrl of the current request
      * @return the created MeshObjectsToView
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             MeshObject subject,
             SaneUrl    request );
 
@@ -105,7 +104,7 @@ public interface JeeMeshObjectsToViewFactory
      * @param request the SaneUrl of the current request
      * @return the created MeshObjectsToView
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             MeshObject subject,
             String     viewletTypeName,
             SaneUrl    request );
@@ -118,7 +117,7 @@ public interface JeeMeshObjectsToViewFactory
      * @param request the SaneUrl of the current request
      * @return the created MeshObjectsToView
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             TraversalPath reachedBy,
             SaneUrl       request );
 
@@ -131,7 +130,7 @@ public interface JeeMeshObjectsToViewFactory
      * @param request the SaneUrl of the current request
      * @return the created MeshObjectsToView
      */
-    public JeeMeshObjectsToView obtainFor(
+    public JeeNetMeshObjectsToView obtainFor(
             TraversalPath reachedBy,
             String        viewletTypeName,
             SaneUrl       request );
