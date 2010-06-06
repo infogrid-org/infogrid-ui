@@ -6,6 +6,9 @@
  %><%@ taglib prefix="v"     uri="/v/org/infogrid/jee/taglib/viewlet/viewlet.tld"
  %><%@ taglib prefix="tmpl"  uri="/v/org/infogrid/jee/taglib/templates/templates.tld"
  %><%@ taglib prefix="c"     uri="http://java.sun.com/jsp/jstl/core"
+ %><%@ page import="org.infogrid.meshbase.IterableMeshBase"
+ %><%@ page import="org.infogrid.meshbase.MeshBase"
+ %><%@ page import="org.infogrid.mesh.MeshObject"
  %>
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/meshbase/AllMeshObjectsViewlet.css"/>
 <v:viewletAlternatives />
