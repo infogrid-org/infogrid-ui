@@ -27,7 +27,6 @@ import org.infogrid.jee.viewlet.JeeViewletFactoryChoice;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.traversal.TraversalPath;
 import org.infogrid.viewlet.MeshObjectsToView;
-import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactory;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 import org.infogrid.util.context.Context;
@@ -180,9 +179,14 @@ public class ViewletAlternativesTag
                 nextId = 1;
             }
 
-            String nameInCss = getClass().getName().replace( '.', '-' );
-            println( "<div class=\"" + nameInCss + "\" id=\"" + nameInCss + nextId + "\">" );
-            print( "<h3><a href=\"javascript:toggle_viewlet_alternatives( '" + nameInCss + nextId + "' )\">" );
+            String divId = INSTANCE_ID_PAR_NAME + nextId;
+            print( "<div class=\"" );
+            print( getClass().getName().replace( ".", "-" ));
+            print( "\" id=\"" );
+            print( divId );
+            println( "\">" );
+
+            print( "<h3><a href=\"javascript:toggle_css_class( '" + divId + "', 'expanded' )\">" );
             print( theResourceHelper.getResourceString( "Title" ));
             println( "</a></h3>" );
 
@@ -226,15 +230,11 @@ public class ViewletAlternativesTag
             println( "</div>" );
 
             String contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath();
-            String classSlash  = getClass().getName().replace( '.' , '/' );
 
             StringBuilder js = new StringBuilder();
             js.append( "<script src=\"" );
             js.append( contextPath );
-            js.append( "/v/" );
-            js.append( classSlash );
-            js.append( ".js" );
-            js.append( "\" type=\"text/javascript\"></script>\n" );
+            js.append( "/v/org/infogrid/jee/taglib/candy/ToggleCssClass.js\" type=\"text/javascript\"></script>\n" );
 
             StringBuilder css = new StringBuilder();
             css.append( "<link rel=\"stylesheet\" href=\"" );
@@ -245,8 +245,12 @@ public class ViewletAlternativesTag
             css.append( "\" />\n" );
 
             TextStructuredResponseSection headSection = theResponse.obtainTextSection( StructuredResponse.HTML_HEAD_SECTION );
-            headSection.appendContent( js.toString() );
-            headSection.appendContent( css.toString() );
+            if( !headSection.containsContent( css.toString() )) {
+                headSection.appendContent( css.toString() );
+            }
+            if( !headSection.containsContent( js.toString() )) {
+                headSection.appendContent( js.toString() );
+            }
         }
 
         return SKIP_BODY;

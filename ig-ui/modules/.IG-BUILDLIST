@@ -11,5 +11,6 @@ org.infogrid.jee.viewlet.net.local.store
 org.infogrid.jee.viewlet.store
 org.infogrid.jee.shell.http
 org.infogrid.jee.lid
+org.infogrid.jee.security.aclbased
 org.infogrid.jee.viewlet.bulk
 org.infogrid.jee.viewlet.log4j

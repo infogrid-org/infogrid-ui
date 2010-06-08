@@ -183,12 +183,10 @@ div.org-infogrid-jee-taglib-mesh-RefreshTag {
 div.org-infogrid-jee-taglib-viewlet-ChangeViewletStateTag {
     font-size: 0.7em;
 }
-div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag,
-div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag-expanded {
+div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag {
     font-size: 0.7em;
 }
-div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag > h3,
-div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag-expanded > h3 {
+div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag > h3 {
     font-size: 1em;
 }
 

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -362,7 +362,9 @@ public abstract class AbstractInfoGridBodyTag
         throws
             JspException
     {
-        theFormatter.print( pageContext, theFormatter.isTrue( theFilter ), text );
+        if( text != null ) {
+            theFormatter.print( pageContext, theFormatter.isTrue( theFilter ), text );
+        }
     }
 
     /**
@@ -376,7 +378,9 @@ public abstract class AbstractInfoGridBodyTag
         throws
             JspException
     {
-        theFormatter.println( pageContext, theFormatter.isTrue( theFilter ), text );
+        if( text != null ) {
+            theFormatter.println( pageContext, theFormatter.isTrue( theFilter ), text );
+        }
     }
 
     /**

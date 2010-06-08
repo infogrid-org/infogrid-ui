@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -145,6 +145,19 @@ public class TextStructuredResponseSection
         } else {
             theContent += toAppend;
         }
+    }
+
+    /**
+     * Determine whether this section containsContent this content fragment already.
+     *
+     * @param testContent the content fragment to test
+     * @return true if this section containsContent the testContent already
+     */
+    public boolean containsContent(
+            String testContent )
+    {
+        int found = theContent.indexOf( testContent );
+        return found >= 0;
     }
 
     /**
