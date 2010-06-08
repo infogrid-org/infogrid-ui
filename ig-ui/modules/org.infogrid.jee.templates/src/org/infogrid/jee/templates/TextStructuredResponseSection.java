@@ -156,8 +156,12 @@ public class TextStructuredResponseSection
     public boolean containsContent(
             String testContent )
     {
-        int found = theContent.indexOf( testContent );
-        return found >= 0;
+        if( theContent == null ) {
+            return false;
+        } else {
+            int found = theContent.indexOf( testContent );
+            return found >= 0;
+        }
     }
 
     /**
