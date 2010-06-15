@@ -108,6 +108,9 @@ public abstract class AbstractPagingCursorIterableViewlet
 
         if( pageLength != null ) {
             page = Integer.parseInt( pageLength );
+            if( page <= 0 ) {
+                page = theDefaultPageLength;
+            }
         } else {
             page = theDefaultPageLength;
         }
