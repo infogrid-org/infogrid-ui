@@ -456,9 +456,6 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
-        <ant antfile="${project.org_infogrid_model_AclBasedSecurity}/build.xml" inheritall="false" target="jar">
-            <property name="deploy.on.save" value="false"/>
-        </ant>
         <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -591,9 +588,6 @@ exists or setup the property manually. For example like this:
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="jar">
-            <property name="deploy.on.save" value="false"/>
-        </ant>
-        <ant antfile="${project.org_infogrid_model_AclBasedSecurity}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="jar">
@@ -826,7 +820,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_lid_openid.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_meshbase_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_meshbase_store_net.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${reference.org_infogrid_model_AclBasedSecurity.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Blob.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Common.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Probe.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
@@ -876,7 +869,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_lid_openid.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_meshbase_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_meshbase_store_net.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${reference.org_infogrid_model_AclBasedSecurity.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Blob.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Common.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_model_Probe.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -1220,7 +1212,6 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_lid_model_yadis}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_lid_openid}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.org_infogrid_model_AclBasedSecurity}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Blob}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Common}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_model_Probe}/build.xml" inheritall="false" target="clean"/>
