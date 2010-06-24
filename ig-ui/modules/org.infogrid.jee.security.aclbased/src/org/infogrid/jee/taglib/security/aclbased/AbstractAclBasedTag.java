@@ -19,7 +19,7 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.security.ThreadIdentityManager;
-import org.infogrid.model.AclBasedSecurity.utils.AclUtils;
+import org.infogrid.meshbase.security.aclbased.utils.AclUtils;
 import org.infogrid.model.primitives.RoleType;
 
 /**

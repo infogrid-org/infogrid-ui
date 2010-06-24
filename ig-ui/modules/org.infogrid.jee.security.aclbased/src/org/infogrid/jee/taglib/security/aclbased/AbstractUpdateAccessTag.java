@@ -16,7 +16,7 @@ package org.infogrid.jee.taglib.security.aclbased;
 
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.model.AclBasedSecurity.AclBasedSecuritySubjectArea;
+import org.infogrid.meshbase.security.aclbased.AclbasedSubjectArea;
 
 /**
  * Factors out functionality common to testing for update access.
@@ -47,7 +47,7 @@ public abstract class AbstractUpdateAccessTag
             JspException,
             IgnoreException
     {
-        boolean ret = hasAccess( AclBasedSecuritySubjectArea.MESHOBJECT_HASUPDATEACCESSTO_PROTECTIONDOMAIN.getSource() );
+        boolean ret = hasAccess( AclbasedSubjectArea.MESHOBJECT_HASUPDATEACCESSTO_PROTECTIONDOMAIN.getSource() );
         return ret;
     }
 }

@@ -44,7 +44,7 @@
                 <id>jar</id>
             </reference>
             <reference>
-                <foreign-project>org_infogrid_model_AclBasedSecurity</foreign-project>
+                <foreign-project>org_infogrid_meshbase_security_aclbased</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

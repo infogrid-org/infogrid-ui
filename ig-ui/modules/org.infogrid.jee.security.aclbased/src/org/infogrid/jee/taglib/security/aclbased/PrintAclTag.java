@@ -26,7 +26,7 @@ import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.set.MeshObjectSet;
-import org.infogrid.model.AclBasedSecurity.AclBasedSecuritySubjectArea;
+import org.infogrid.meshbase.security.aclbased.AclbasedSubjectArea;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.logging.Log;
@@ -150,7 +150,7 @@ public class PrintAclTag
 
         pageContext.getRequest().setAttribute( INSTANCE_ID_PAR_NAME, nextId+1 );
 
-        MeshObjectSet owners = obj.traverse( AclBasedSecuritySubjectArea.MESHOBJECT_HASOWNER_MESHOBJECT.getSource() );
+        MeshObjectSet owners = obj.traverse( AclbasedSubjectArea.MESHOBJECT_HASOWNER_MESHOBJECT.getSource() );
         if( owners.isEmpty() ) {
             println( theResourceHelper.getResourceStringOrNull( "NoOwner" ));
         } else {
@@ -171,7 +171,7 @@ public class PrintAclTag
         println( "<tr>" );
         println( theResourceHelper.getResourceStringOrNull( "ProtectionDomainLabel" ));
         println( "<td>" );
-        MeshObject domain = obj.traverse( AclBasedSecuritySubjectArea.PROTECTIONDOMAIN_GOVERNS_MESHOBJECT.getDestination() ).getSingleMember();
+        MeshObject domain = obj.traverse( AclbasedSubjectArea.PROTECTIONDOMAIN_GOVERNS_MESHOBJECT.getDestination() ).getSingleMember();
         if( domain == null ) {
             println( theResourceHelper.getResourceStringOrNull( "NoProtectionDomain" ));
         } else {
@@ -181,7 +181,7 @@ public class PrintAclTag
         println( "</tr>" );
 
         if( domain != null ) {
-            MeshObjectSet principalSet = domain.traverse( AclBasedSecuritySubjectArea.MESHOBJECT_HASACCESSTO_PROTECTIONDOMAIN.getDestination() );
+            MeshObjectSet principalSet = domain.traverse( AclbasedSubjectArea.MESHOBJECT_HASACCESSTO_PROTECTIONDOMAIN.getDestination() );
             if( !principalSet.isEmpty() ) {
                 println( "<tr>" );
                 println( theResourceHelper.getResourceStringOrNull( "PrincipalsLabel" ));
@@ -196,12 +196,12 @@ public class PrintAclTag
                     String sep = null;
                     try {
                         print( theResourceHelper.getResourceStringOrNull( "BeginAccessRights" ));
-                        if( domain.isRelated( AclBasedSecuritySubjectArea.MESHOBJECT_HASREADACCESSTO_PROTECTIONDOMAIN.getDestination(), current )) {
+                        if( domain.isRelated( AclbasedSubjectArea.MESHOBJECT_HASREADACCESSTO_PROTECTIONDOMAIN.getDestination(), current )) {
                             // print( sep );
                             print( theResourceHelper.getResourceStringOrNull( "ReadAccessRights" ));
                             sep = theResourceHelper.getResourceStringOrNull( "Separator" );
                         }
-                        if( domain.isRelated( AclBasedSecuritySubjectArea.MESHOBJECT_HASUPDATEACCESSTO_PROTECTIONDOMAIN.getDestination(), current )) {
+                        if( domain.isRelated( AclbasedSubjectArea.MESHOBJECT_HASUPDATEACCESSTO_PROTECTIONDOMAIN.getDestination(), current )) {
                             print( sep );
                             print( theResourceHelper.getResourceStringOrNull( "UpdateAccessRights" ));
                             // sep = theResourceHelper.getResourceStringOrNull( "Separator" );
