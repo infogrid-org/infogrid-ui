@@ -27,7 +27,6 @@
   <requires name="org.infogrid.model.Tagging"/>
   <requires name="org.infogrid.model.Viewlet"/>
   <requires name="org.infogrid.model.Wiki"/>
-  <requires name="org.infogrid.model.AclBasedSecurity"/>
   <requires name="org.infogrid.model.Blob"/>
   <requires name="org.infogrid.model.Common"/>
   <requires name="org.infogrid.model.Probe"/>

@@ -15,12 +15,12 @@
 
 <standardmodule>
  <name>org.infogrid.jee.security.aclbased</name>
- <username>Tags to support AclBasedSecurity.</username>
+ <username>Tags to support ACL-based security.</username>
  <provides>
   <jar>org.infogrid.jee.security.aclbased.jar</jar>
  </provides>
  <dependencies>
   <requires name="org.infogrid.jee.viewlet"/>
-  <requires name="org.infogrid.model.AclBasedSecurity"/>
+  <requires name="org.infogrid.meshbase.security.aclbased"/>
  </dependencies>
 </standardmodule>
