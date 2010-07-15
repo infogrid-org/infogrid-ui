@@ -175,18 +175,33 @@ public abstract class AbstractRestInfoGridBodyTag
     }
 
     /**
-     * Find a MeshType by its identifier.
+     * Find a MeshType by its identifier, or return null.
      *
      * @param identifier the MeshTypeIdentifier in String form
      * @return the found MeshType, or null
      * @throws JspException thrown if the identifier could not be parsed
      */
-    public MeshType findMeshTypeByIdentifier(
+    protected MeshType findMeshTypeByIdentifier(
             String identifier )
         throws
             JspException
     {
         return ((RestfulJeeFormatter)theFormatter).findMeshTypeByIdentifier( identifier );
+    }
+
+    /**
+     * Find a MeshType by its identifier, or throw an Exception
+     *
+     * @param identifier the MeshTypeIdentifier in String form
+     * @return the found MeshType, or null
+     * @throws JspException thrown if the identifier could not be parsed
+     */
+    protected MeshType findMeshTypeByIdentifierOrThrow(
+            String identifier )
+        throws
+            JspException
+    {
+        return ((RestfulJeeFormatter)theFormatter).findMeshTypeByIdentifierOrThrow( identifier );
     }
 
     /**

@@ -94,7 +94,7 @@ public abstract class AbstractMeshObjectSetIterateTag
 
         MeshObjectSorter sorter;
         if( theOrderBy != null ) {
-            PropertyType orderBy = (PropertyType) findMeshTypeByIdentifier( theOrderBy );
+            PropertyType orderBy = (PropertyType) findMeshTypeByIdentifierOrThrow( theOrderBy );
 
             sorter = ByPropertyValueSorter.create( orderBy, reverse );
 

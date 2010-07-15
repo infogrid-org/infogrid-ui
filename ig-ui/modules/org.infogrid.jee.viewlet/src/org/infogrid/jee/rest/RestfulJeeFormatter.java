@@ -275,6 +275,25 @@ public class RestfulJeeFormatter
     }
 
     /**
+     * Find a MeshType by its identifier, or throw an Exception
+     *
+     * @param identifier the MeshTypeIdentifier in String form
+     * @return the found MeshType, or null
+     * @throws JspException thrown if the identifier could not be parsed
+     */
+    public MeshType findMeshTypeByIdentifierOrThrow(
+            String identifier )
+        throws
+            JspException
+    {
+        MeshType ret = findMeshTypeByIdentifier( identifier );
+        if( ret == null ) {
+            throw new JspException( "Could not find MeshType with identifier " + identifier );
+        }
+        return ret;
+    }
+
+    /**
      * Find a MeshObject with the given identifier, or throw an Exception.
 
      * @param identifier the MeshObjectIdentifier in String form
