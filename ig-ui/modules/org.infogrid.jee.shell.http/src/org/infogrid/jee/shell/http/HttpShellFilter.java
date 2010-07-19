@@ -53,6 +53,8 @@ import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
+import org.infogrid.meshbase.transaction.OnDemandTransaction;
+import org.infogrid.meshbase.transaction.OnDemandTransactionFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.BlobDataType;
@@ -65,7 +67,6 @@ import org.infogrid.model.primitives.PropertyValueParsingException;
 import org.infogrid.model.primitives.RoleType;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
-import org.infogrid.util.AbstractFactory;
 import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.MCachingHashMap;
@@ -74,8 +75,12 @@ import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextObjectNotFoundException;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationDirectorySingleton;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>Recognizes <code>MeshObject</code> change-related requests as part of the incoming HTTP
@@ -117,6 +122,7 @@ public class HttpShellFilter
         HttpServletRequest  realRequest  = (HttpServletRequest)  request;
         HttpServletResponse realResponse = (HttpServletResponse) response;
         SaneRequest         lidRequest   = SaneServletRequest.create( realRequest );
+        String              redirectUrl  = null;
 
         try {
             if( "POST".equals( lidRequest.getMethod() )) {
@@ -125,7 +131,7 @@ public class HttpShellFilter
                 {
                     String command = lidRequest.getPostedArgument( FULL_SUBMIT_TAG );
                     if( command == null || command.equals( SUBMIT_COMMIT_VALUE )) {
-                        performFactoryOperations( lidRequest );
+                        redirectUrl = performFactoryOperations( lidRequest );
                     }
 
                 } else {
@@ -147,17 +153,22 @@ public class HttpShellFilter
             }
             
         }
-        chain.doFilter( realRequest, realResponse );
+        if( redirectUrl != null ) {
+            realResponse.sendRedirect( redirectUrl );
+        } else {
+            chain.doFilter( realRequest, realResponse );
+        }
     }
     
     /**
      * Perform all factory methods contained in the request.
      * 
      * @param lidRequest the incoming request
+     * @return URL to redirect to, if any
      * @throws NotPermittedException thrown if the caller had insufficient privileges to perform this operation
      * @throws HttpShellException a factory Exception occurred
      */
-    protected void performFactoryOperations(
+    protected String performFactoryOperations(
             SaneRequest lidRequest )
         throws
             NotPermittedException,
@@ -167,10 +178,10 @@ public class HttpShellFilter
                 new OnDemandTransactionFactory(),
                 MCachingHashMap.<MeshBase,OnDemandTransaction>create() );
 
-        try {
-            Map<String,String[]>       postArguments = lidRequest.getPostedArguments();
-            HashMap<String,MeshObject> variables     = new HashMap<String,MeshObject>();
+        Map<String,String[]>       postArguments = lidRequest.getPostedArguments();
+        HashMap<String,MeshObject> variables     = new HashMap<String,MeshObject>();
 
+        try {
             // first look for all arguments of the form <PREFIX>.<VARIABLE>
             for( String arg : postArguments.keySet() ) {
                 if( !arg.startsWith( PREFIX )) {
@@ -418,9 +429,6 @@ public class HttpShellFilter
         } catch( RoleTypeRequiresEntityTypeException ex ) {
             throw new HttpShellException( ex );
 
-        } catch( InvalidArgumentException ex ) {
-            throw new HttpShellException( ex );
-
         } catch( FactoryException ex ) {
             getLog().error( ex ); // should not happen
 
@@ -439,6 +447,47 @@ public class HttpShellFilter
                 }
             }
         }
+
+        // and now for redirects
+        String redirectVar = null;
+        for( String var1Name : variables.keySet() ) {
+            String    key   = PREFIX + var1Name + REDIRECT_TAG;
+            String [] value = postArguments.get( key );
+
+            if( value != null && value.length == 1 && REDIRECT_TAG_TRUE.equalsIgnoreCase( value[0] )) {
+                if( redirectVar != null ) {
+                    throw new HttpShellException( new ConflictingArgumentsException( key, redirectVar ));
+                }
+                redirectVar = var1Name;
+            }
+        }
+
+        String ret = null;
+        if( redirectVar != null ) {
+            MeshObject redirectObj = variables.get( redirectVar );
+
+            StringRepresentationDirectory  dir  = StringRepresentationDirectorySingleton.getSingleton();
+            StringRepresentation           rep  = dir.get( StringRepresentationDirectory.TEXT_URL_NAME );
+            
+            if( rep == null ) {
+                rep = dir.getFallback();
+            }
+            
+            SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+            pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+            pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, lidRequest.getAbsoluteContextUri() );
+            pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, lidRequest.getContextPath() );
+
+            try {
+                ret = redirectObj.getIdentifier().toStringRepresentation( rep, pars );
+
+                ret = lidRequest.getAbsoluteContextUriWithSlash() + ret;
+                
+            } catch( StringifierException ex ) {
+                getLog().error( ex );
+            }
+        }
+        return ret;
     }
 
     /**
@@ -602,7 +651,6 @@ public class HttpShellFilter
      * @param obj the accessed object
      * @param tx the Transaction if and when created
      * @param request the request
-     * @throws InvalidArgumentException an argument was missing or invalid
      * @throws ClassCastException thrown if a MeshType with this identifier could be found, but it was of the wrong type
      * @throws MeshTypeWithIdentifierNotFoundException thrown if a MeshType with this identifier could not be found
      * @throws PropertyValueParsingException thrown if a PropertyValue could not be parsed
@@ -617,7 +665,6 @@ public class HttpShellFilter
             CreateWhenNeeded<Transaction> tx,
             SaneRequest                   request )
         throws
-            InvalidArgumentException,
             ClassCastException,
             MeshTypeWithIdentifierNotFoundException,
             PropertyValueParsingException,
@@ -802,67 +849,4 @@ public class HttpShellFilter
      * The StringRepresentation to use.
      */
     protected StringRepresentation theParsingRepresentation;
-
-    /**
-     * Creates a Transaction when needed.
-     */
-    static class OnDemandTransaction
-            extends
-                CreateWhenNeeded<Transaction>
-    {
-        /**
-         * Constructor.
-         *
-         * @param mb the MeshBase on which the Transaction is created
-         */
-        public OnDemandTransaction(
-                MeshBase mb )
-        {
-            theMeshBase = mb;
-        }
-
-        /**
-         * Instantiation method.
-         *
-         * @return the instantiated object
-         * @throws TransactionException a problem occurred creating the Transaction
-         */
-        protected Transaction instantiate()
-            throws
-                TransactionException
-        {
-            Transaction ret = theMeshBase.createTransactionAsap();
-            return ret;
-        }
-
-        /**
-         * THe MeshBase on which this the Transaction is created
-         */
-        protected MeshBase theMeshBase;
-    }
-
-    /**
-     * Factory for the OnDemandTransaction.
-     */
-    static class OnDemandTransactionFactory
-            extends
-                AbstractFactory<MeshBase,OnDemandTransaction,Void>
-    {
-        /**
-         * Factory method.
-         *
-         * @param key the key information required for object creation, if any
-         * @param argument any argument-style information required for object creation, if any
-         * @return the created object
-         * @throws FactoryException catch-all Exception, consider its cause
-         */
-        public OnDemandTransaction obtainFor(
-                MeshBase key,
-                Void     argument )
-            throws
-                FactoryException
-        {
-            return new OnDemandTransaction( key );
-        }
-    }
 }

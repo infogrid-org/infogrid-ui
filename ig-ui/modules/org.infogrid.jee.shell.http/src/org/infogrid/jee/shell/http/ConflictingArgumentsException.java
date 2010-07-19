@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,11 +17,9 @@ package org.infogrid.jee.shell.http;
 import org.infogrid.util.AbstractLocalizedException;
 
 /**
- * Thrown if an operation is invoked with inconsistent arguments. For example,
- * it is thrown if a different number of propertyTypes and propertyValues are given
- * for setting properties on a MeshObject.
+ * Thrown if an operation is invoked with inconsistent arguments.
  */
-public class InvalidArgumentException
+public class ConflictingArgumentsException
         extends
             AbstractLocalizedException
 {
@@ -30,22 +28,35 @@ public class InvalidArgumentException
     /**
      * Constructor.
      *
-     * @param argName name of the invalid argument
+     * @param arg1Name name of the first conflicting argument
+     * @param arg2Name name of the second conflicting argument
      */
-    public InvalidArgumentException(
-            String argName )
+    public ConflictingArgumentsException(
+            String arg1Name,
+            String arg2Name )
     {
-        theArgumentName = argName;
+        theArgument1Name = arg1Name;
+        theArgument2Name = arg2Name;
     }
     
     /**
-     * Obtain the name of the argument that was invalid
+     * Obtain the name of the first argument that was conflicting.
      *
      * @return name of the argument
      */
-    public String getArgumentName()
+    public String getArgument1Name()
     {
-        return theArgumentName;
+        return theArgument1Name;
+    }
+
+    /**
+     * Obtain the name of the second argument that was conflicting.
+     *
+     * @return name of the argument
+     */
+    public String getArgument2Name()
+    {
+        return theArgument2Name;
     }
 
     /**
@@ -55,11 +66,16 @@ public class InvalidArgumentException
      */    
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theArgumentName };
+        return new Object[] { theArgument1Name, theArgument2Name };
     }
 
     /**
-     * Name of the argument that was invalid.
+     * Name of the first argument that was conflicting.
      */
-    protected String theArgumentName;
+    protected String theArgument1Name;
+
+    /**
+     * Name of the second argument that was conflicting.
+     */
+    protected String theArgument2Name;
 }

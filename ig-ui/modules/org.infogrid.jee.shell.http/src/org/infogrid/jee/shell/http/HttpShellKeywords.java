@@ -139,4 +139,15 @@ public interface HttpShellKeywords
      * if the SUBMIT_TAG is given, indicate "ignore commands".
      */
     public static final String SUBMIT_COMMIT_VALUE = "commit";
+
+    /**
+     * Keyword indicating that a redirect shall be performed.
+     */
+    public static final String REDIRECT_TAG = SEPARATOR + "redirect";
+
+    /**
+     * Value for the REDIRECT_TAG.
+     */
+    public static final String REDIRECT_TAG_TRUE = "true";
+
 }
