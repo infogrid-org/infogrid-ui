@@ -77,6 +77,13 @@ public class BracketContentTag
             JspException,
             IOException
     {
+        Tag parentTag = getParent();
+        if( parentTag == null || !( parentTag instanceof BracketTag )) {
+            throw new JspException( "BracketContentTag tag must be directly contained in an BracketTag tag" );
+        }
+        BracketTag realParentTag = (BracketTag) parentTag;
+        realParentTag.contentFromContentTag( bodyContent.getString() );
+
         return SKIP_BODY;
     }
 
@@ -95,13 +102,6 @@ public class BracketContentTag
             IgnoreException,
             IOException
     {
-        Tag parentTag = getParent();
-        if( parentTag == null || !( parentTag instanceof BracketTag )) {
-            throw new JspException( "BracketContentTag tag must be directly contained in an BracketTag tag" );
-        }
-        BracketTag realParentTag = (BracketTag) parentTag;
-        realParentTag.contentFromContentTag( bodyContent.getString() );
-
         return EVAL_PAGE;
     }
 }

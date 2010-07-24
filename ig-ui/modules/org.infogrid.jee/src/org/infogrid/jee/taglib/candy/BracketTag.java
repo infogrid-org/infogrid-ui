@@ -43,7 +43,8 @@ public class BracketTag
     @Override
     protected void initializeToDefaults()
     {
-        theBuffer = new StringBuilder();
+        theIfContentBuffer    = new StringBuilder();
+        theNotIfContentBuffer = new StringBuilder();
         theFlag   = null;
         
         super.initializeToDefaults();
@@ -77,6 +78,18 @@ public class BracketTag
         throws
             JspException
     {
+        if( theFlag == null ) {
+            throw new JspException( "BracketTag must contain exactly one BracketContentTag" );
+        }
+        if( theFlag ) {
+            if( theIfContentBuffer != null ) {
+                theFormatter.print( pageContext, false, theIfContentBuffer.toString() );
+            }
+        } else {
+            if( theNotIfContentBuffer != null ) {
+                theFormatter.print( pageContext, false, theNotIfContentBuffer.toString() );
+            }
+        }
         return SKIP_BODY;
     }
 
@@ -95,13 +108,6 @@ public class BracketTag
             IgnoreException,
             IOException
     {
-        if( theFlag == null ) {
-            throw new JspException( "BracketTag must contain exactly one BracketContentTag" );
-        }
-        if( theFlag && theBuffer != null ) {
-            // emit
-            theFormatter.printPrevious( pageContext, false, theBuffer.toString() );
-        }
         return EVAL_PAGE;
     }
 
@@ -120,7 +126,7 @@ public class BracketTag
         if( theFlag != null ) {
             throw new JspException( "BracketTag must contain exactly one BracketContentTag" );
         }
-        theBuffer.append( content );
+        theIfContentBuffer.append( content );
 
         if( content.trim().length() == 0 ) {
             theFlag = false;
@@ -141,13 +147,35 @@ public class BracketTag
             JspException,
             IOException
     {
-        theBuffer.append( content );
+        theIfContentBuffer.append( content );
+    }
+
+    /**
+     * Allow the BracketNotIfContentTag to notify us of new content.
+     *
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IOException thrown if an I/O Exception occurred
+     */
+    protected void contentFromNotIfContentTag(
+            String content )
+        throws
+            JspException,
+            IOException
+    {
+        theNotIfContentBuffer.append( content );
     }
 
     /**
      * Buffer for conditional content before we know whether to emit it.
+     * This will be emitted if the BracketContentTag has content.
      */
-    protected StringBuilder theBuffer;
+    protected StringBuilder theIfContentBuffer;
+
+    /**
+     * Buffer for conditional content before we know whether to emit it.
+     * This will be emitted if the BracketContentTag does not have content.
+     */
+    protected StringBuilder theNotIfContentBuffer;
 
     /**
      * If null, we don't know whether to emit yet.

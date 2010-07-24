@@ -24,7 +24,7 @@ import org.infogrid.jee.taglib.IgnoreException;
  * Accessory tag for BracketTag.
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class BracketIfContentTag
+public class BracketNotIfContentTag
     extends
         AbstractInfoGridBodyTag
 {
@@ -33,7 +33,7 @@ public class BracketIfContentTag
     /**
      * Constructor.
      */
-    public BracketIfContentTag()
+    public BracketNotIfContentTag()
     {
         // noop
     }
@@ -82,7 +82,7 @@ public class BracketIfContentTag
             throw new JspException( "BracketIfContentTag tag must be directly contained in an BracketTag tag" );
         }
         BracketTag realParentTag = (BracketTag) parentTag;
-        realParentTag.contentFromIfContentTag( bodyContent.getString() );
+        realParentTag.contentFromNotIfContentTag( bodyContent.getString() );
 
         return SKIP_BODY;
     }

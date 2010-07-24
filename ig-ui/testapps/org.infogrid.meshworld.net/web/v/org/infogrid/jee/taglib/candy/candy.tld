@@ -9,7 +9,7 @@
 
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -20,6 +20,26 @@
 
     <!-- Tags are ordered alphabetically by Java Class name. Makes it easier
          to find them in the IDE. -->
+ <tag>
+  <name>bracket</name>
+  <tag-class>org.infogrid.jee.taglib.candy.BracketTag</tag-class>
+ </tag>
+
+ <tag>
+  <name>bracketContent</name>
+  <tag-class>org.infogrid.jee.taglib.candy.BracketContentTag</tag-class>
+ </tag>
+
+ <tag>
+  <name>bracketIfContent</name>
+  <tag-class>org.infogrid.jee.taglib.candy.BracketIfContentTag</tag-class>
+ </tag>
+
+ <tag>
+  <name>bracketNotIfContent</name>
+  <tag-class>org.infogrid.jee.taglib.candy.BracketNotIfContentTag</tag-class>
+ </tag>
+
  <tag>
   <name>overlay</name>
   <tag-class>org.infogrid.jee.taglib.candy.OverlayTag</tag-class>

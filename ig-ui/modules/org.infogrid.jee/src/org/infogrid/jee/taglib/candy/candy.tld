@@ -36,6 +36,11 @@
  </tag>
 
  <tag>
+  <name>bracketNotIfContent</name>
+  <tag-class>org.infogrid.jee.taglib.candy.BracketNotIfContentTag</tag-class>
+ </tag>
+
+ <tag>
   <name>overlay</name>
   <tag-class>org.infogrid.jee.taglib.candy.OverlayTag</tag-class>
   <attribute>
