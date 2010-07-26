@@ -52,7 +52,7 @@
         </table>
        </td>
        <td class="org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadowcommands">
-        <u:safeForm action="" method="POST">
+        <u:safeForm action="${Viewlet.postUrl}" method="POST">
             <input type="hidden" name="MeshBase" value="<meshbase:meshBaseId meshBaseName="current" stringRepresentation="Plain" filter="true" />"/>
          <ul>
           <li><input type="submit" name="RunNowAction" value="Run now"/></li>
