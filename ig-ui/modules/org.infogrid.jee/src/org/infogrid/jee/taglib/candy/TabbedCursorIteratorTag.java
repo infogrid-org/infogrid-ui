@@ -125,7 +125,7 @@ public class TabbedCursorIteratorTag
         }
         if( theLoopVar != null ) {
             if( current != null ) {
-                pageContext.getRequest().setAttribute( theLoopVar, current );
+                setRequestAttribute( theLoopVar, current );
             } else {
                 pageContext.getRequest().removeAttribute( theLoopVar );
             }
@@ -157,7 +157,7 @@ public class TabbedCursorIteratorTag
             Object current = theCursorIterator.next();
 
             if( theLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theLoopVar, current );
+               setRequestAttribute( theLoopVar, current );
             }
 
             return EVAL_BODY_AGAIN;
@@ -175,9 +175,8 @@ public class TabbedCursorIteratorTag
     @Override
     protected int realDoEndTag()
     {
-        if( theLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( theLoopVar );
-        }
+        // no need to remove request attributes; superclass will do that
+
         return EVAL_PAGE;
     }
     

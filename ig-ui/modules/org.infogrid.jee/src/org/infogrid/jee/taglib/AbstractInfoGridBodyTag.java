@@ -15,6 +15,9 @@
 package org.infogrid.jee.taglib;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.infogrid.jee.JeeFormatter;
@@ -248,6 +251,20 @@ public abstract class AbstractInfoGridBodyTag
             
             initializeToDefaults();
 
+            if( thePushedRequestAttributes != null ) {
+                ServletRequest r = pageContext.getRequest();
+                for( Entry<String,Object> current : thePushedRequestAttributes.entrySet() ) {
+                    String key   = current.getKey();
+                    Object value = current.getValue();
+                    if( value != MARKER ) {
+                        r.setAttribute( key, value );
+                    } else {
+                        r.removeAttribute( key );
+                    }
+                }
+                thePushedRequestAttributes = null;
+            }
+
             return ret;
             
         } catch( IgnoreException ex ) {
@@ -399,7 +416,47 @@ public abstract class AbstractInfoGridBodyTag
     {
         internalRelease();
     }
-    
+
+    /**
+     * Set a request attribute, saving the old value. When the tag ends,
+     * automatically restore the old value.
+     *
+     * @param name name of the request attribute
+     * @param value value of the request attribute
+     * @return the current value of the request attribute
+     */
+    protected Object setRequestAttribute(
+            String name,
+            Object value )
+    {
+        if( thePushedRequestAttributes == null ) {
+            thePushedRequestAttributes = new HashMap<String,Object>();
+        }
+        // cases:
+        // 1. no outer request attribute by this name
+        // 2. outer request attribute by this name exists
+        //
+        // a. this is the first time we set a local value
+        // b. this is the second (or later) time we set it
+
+        Object ret = thePushedRequestAttributes.get( name );
+        if( ret == null ) {
+            // first time
+
+            ret = pageContext.getRequest().getAttribute( name );
+            if( ret == null ) {
+                ret = MARKER;
+            }
+            thePushedRequestAttributes.put( name, ret );
+        }
+        if( ret == MARKER ) {
+            ret = null;
+        }
+        pageContext.getRequest().setAttribute( name, value );
+
+        return ret;
+    }
+
     /**
      * Filter the rendered output for characters that are sensitive in HTML?
      */
@@ -419,4 +476,14 @@ public abstract class AbstractInfoGridBodyTag
      * The formatter to use.
      */
     protected JeeFormatter theFormatter;
+
+    /**
+     * The buffered request attributes that the tag temporarily overrides.
+     */
+    protected HashMap<String,Object> thePushedRequestAttributes;
+
+    /**
+     * Marker object to indicate that the request attribute value is null.
+     */
+    private static final Object MARKER = new Object();
 }

@@ -191,7 +191,7 @@ public class MeshObjectRoleIterateTag
             RoleType current = theIterator.next();
 
             if( theRoleTypeLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theRoleTypeLoopVar, current );
+                setRequestAttribute( theRoleTypeLoopVar, current );
             }
 
             return EVAL_BODY_AGAIN;
@@ -209,9 +209,8 @@ public class MeshObjectRoleIterateTag
     @Override
     protected int realDoEndTag()
     {
-        if( theRoleTypeLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( theRoleTypeLoopVar );
-        }
+        // no need to remove request attributes; superclass will do that
+
         return EVAL_PAGE;
     }
 

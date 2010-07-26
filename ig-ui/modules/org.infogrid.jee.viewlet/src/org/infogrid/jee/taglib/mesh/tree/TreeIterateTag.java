@@ -241,14 +241,14 @@ public class TreeIterateTag
             theState = STATE.PROCESS_NODE_BEFORE;
 
             if( theMeshObjectLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theMeshObjectLoopVar, theCurrentNode );
+                setRequestAttribute( theMeshObjectLoopVar, theCurrentNode );
             }
             if( theLevelVar != null ) {
-                pageContext.getRequest().setAttribute( theLevelVar, theStack.size() );
+                setRequestAttribute( theLevelVar, theStack.size() );
             }
             if( theTraversalPathLoopVar != null ) {
                 TraversalPath traversalPath = constructCurrentTraversalPath();
-                pageContext.getRequest().setAttribute( theTraversalPathLoopVar, traversalPath );
+                setRequestAttribute( theTraversalPathLoopVar, traversalPath );
             }
             return EVAL_BODY_INCLUDE;
 
@@ -363,14 +363,14 @@ public class TreeIterateTag
 
             // set page request variables
             if( theMeshObjectLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theMeshObjectLoopVar, theCurrentNode );
+                setRequestAttribute( theMeshObjectLoopVar, theCurrentNode );
             }
             if( theLevelVar != null ) {
-                pageContext.getRequest().setAttribute( theLevelVar, theStack.size() );
+                setRequestAttribute( theLevelVar, theStack.size() );
             }
             if( theTraversalPathLoopVar != null ) {
                 TraversalPath traversalPath  = constructCurrentTraversalPath();
-                pageContext.getRequest().setAttribute( theTraversalPathLoopVar, traversalPath );
+                setRequestAttribute( theTraversalPathLoopVar, traversalPath );
             }
 
             return EVAL_BODY_AGAIN;
@@ -397,18 +397,6 @@ public class TreeIterateTag
         try {
             theState = STATE.EXIT;
 
-            if( theMeshObjectLoopVar != null ) {
-                pageContext.getRequest().removeAttribute( theMeshObjectLoopVar );
-            }
-            if( theLevelVar != null ) {
-                pageContext.getRequest().removeAttribute( theLevelVar );
-            }
-            if( theTraversalPathLoopVar != null ) {
-                pageContext.getRequest().removeAttribute( theTraversalPathLoopVar );
-            }
-            if( theTraversalPathLoopVar != null ) {
-                pageContext.getRequest().removeAttribute( theTraversalPathLoopVar );
-            }
             return EVAL_PAGE;
 
         } finally {

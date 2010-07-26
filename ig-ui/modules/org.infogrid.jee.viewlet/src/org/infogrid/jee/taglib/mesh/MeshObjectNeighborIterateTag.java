@@ -156,7 +156,7 @@ public class MeshObjectNeighborIterateTag
             MeshObject current = theIterator.next();
 
             if( theNeighborLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theNeighborLoopVar, current );
+                setRequestAttribute( theNeighborLoopVar, current );
             }
 
             return EVAL_BODY_AGAIN;
@@ -174,9 +174,8 @@ public class MeshObjectNeighborIterateTag
     @Override
     protected int realDoEndTag()
     {
-        if( theNeighborLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( theNeighborLoopVar );
-        }
+        // no need to remove request attributes; superclass will do that
+
         return EVAL_PAGE;
     }
 

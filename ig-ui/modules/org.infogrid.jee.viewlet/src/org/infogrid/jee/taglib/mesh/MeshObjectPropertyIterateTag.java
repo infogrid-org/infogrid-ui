@@ -325,10 +325,10 @@ public class MeshObjectPropertyIterateTag
                 }
 
                 if( thePropertyTypeLoopVar != null ) {
-                    pageContext.getRequest().setAttribute( thePropertyTypeLoopVar, currentType );
+                    setRequestAttribute( thePropertyTypeLoopVar, currentType );
                 }
                 if( thePropertyValueLoopVar != null ) {
-                    pageContext.getRequest().setAttribute( thePropertyValueLoopVar, currentValue );
+                    setRequestAttribute( thePropertyValueLoopVar, currentValue );
                 }
 
                 return EVAL_BODY_AGAIN;
@@ -357,12 +357,7 @@ public class MeshObjectPropertyIterateTag
             IgnoreException,
             IOException
     {
-        if( thePropertyTypeLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( thePropertyTypeLoopVar );
-        }
-        if( thePropertyValueLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( thePropertyValueLoopVar );
-        }
+        // no need to remove request attributes; superclass will do that
 
         return EVAL_PAGE;
     }

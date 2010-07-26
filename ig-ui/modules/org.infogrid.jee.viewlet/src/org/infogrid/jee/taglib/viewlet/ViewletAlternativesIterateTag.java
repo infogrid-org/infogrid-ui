@@ -185,7 +185,7 @@ public class ViewletAlternativesIterateTag
             ViewletFactoryChoice current  = theIterator.next();
 
             if( theLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theLoopVar, current );
+                setRequestAttribute( theLoopVar, current );
             }
             return EVAL_BODY_AGAIN;
         }
@@ -207,9 +207,7 @@ public class ViewletAlternativesIterateTag
             IgnoreException,
             IOException
     {
-        if( theLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( theLoopVar );
-        }
+        // no need to remove request attributes; superclass will do that
 
         return EVAL_PAGE;
     }

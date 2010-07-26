@@ -155,7 +155,7 @@ public class ProxyIterateTag
             Proxy found = theProxyIterator.next();
 
             if( theLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theLoopVar, found );
+                setRequestAttribute( theLoopVar, found );
             }
             return EVAL_BODY_AGAIN;
         } else {
@@ -188,7 +188,7 @@ public class ProxyIterateTag
             Proxy found = theProxyIterator.next();
 
             if( theLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theLoopVar, found );
+                setRequestAttribute( theLoopVar, found );
             }
             return EVAL_BODY_AGAIN;
         } else {
@@ -204,9 +204,7 @@ public class ProxyIterateTag
     @Override
     protected int realDoEndTag()
     {
-        if( theLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( theLoopVar );
-        }
+        // no need to remove request attributes; superclass will do that
 
         return EVAL_PAGE;
     }

@@ -158,11 +158,11 @@ public abstract class AbstractSetIterateTag<T>
         } else {
             theCurrent  = theIterator.next();
             if( theLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theLoopVar, theCurrent );
+                setRequestAttribute( theLoopVar, theCurrent );
             }
             if( theStatusVar != null ) {
                 LoopTagStatus status = new MyLoopTagStatus();
-                pageContext.getRequest().setAttribute( theStatusVar, status );
+                setRequestAttribute( theStatusVar, status );
             }
 
             if( theIterator.hasNext() ) {
@@ -220,11 +220,11 @@ public abstract class AbstractSetIterateTag<T>
         ++theCounter;
 
         if( theLoopVar != null ) {
-            pageContext.getRequest().setAttribute( theLoopVar, theCurrent );
+            setRequestAttribute( theLoopVar, theCurrent );
         }
         if( theStatusVar != null ) {
             LoopTagStatus status = new MyLoopTagStatus();
-            pageContext.getRequest().setAttribute( theStatusVar, status );
+            setRequestAttribute( theStatusVar, status );
         }
 
         if( theIterator.hasNext() ) {
@@ -244,12 +244,8 @@ public abstract class AbstractSetIterateTag<T>
     @Override
     protected int realDoEndTag()
     {
-        if( theLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( theLoopVar );
-        }
-        if( theStatusVar != null ) {
-            pageContext.getRequest().removeAttribute( theStatusVar );
-        }
+        // no need to remove request attributes; superclass will do that
+
         return EVAL_PAGE;
     }
 

@@ -157,7 +157,7 @@ public class MeshObjectBlessedByIterateTag
             EntityType current = theIterator.next();
 
             if( theBlessedByLoopVar != null ) {
-                pageContext.getRequest().setAttribute( theBlessedByLoopVar, current );
+                setRequestAttribute( theBlessedByLoopVar, current );
             }
             return EVAL_BODY_AGAIN;
 
@@ -174,9 +174,8 @@ public class MeshObjectBlessedByIterateTag
     @Override
     protected int realDoEndTag()
     {
-        if( theBlessedByLoopVar != null ) {
-            pageContext.getRequest().removeAttribute( theBlessedByLoopVar );
-        }
+        // no need to remove request attributes; superclass will do that
+
         return EVAL_PAGE;
     }
 
