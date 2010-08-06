@@ -90,6 +90,7 @@ public class TestAppInitializationFilter
             TestSubjectArea.MANDATORYPOINT,
             TestSubjectArea.MANDATORYPROPERTIES,
             TestSubjectArea.MANDATORYSTRING,
+            TestSubjectArea.MANDATORYSTRINGREGEX,
             TestSubjectArea.MANDATORYTIMEPERIOD,
             TestSubjectArea.MANDATORYTIMESTAMP,
             TestSubjectArea.OPTIONALBLOBANY,
@@ -109,6 +110,7 @@ public class TestAppInitializationFilter
             TestSubjectArea.OPTIONALPOINT,
             TestSubjectArea.OPTIONALPROPERTIES,
             TestSubjectArea.OPTIONALSTRING,
+            TestSubjectArea.OPTIONALSTRINGREGEX,
             TestSubjectArea.OPTIONALTIMEPERIOD,
             TestSubjectArea.OPTIONALTIMESTAMP
         };
