@@ -18,8 +18,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.module.Module;
 import org.infogrid.module.ModuleException;
@@ -59,7 +61,7 @@ public class DefaultInitializationFilter
      */
     @Override
     protected void initializeInfoGridWebApp(
-            SaneRequest incomingRequest )
+            HttpServletRequest incomingRequest )
         throws
             ServletException
     {
@@ -150,8 +152,8 @@ public class DefaultInitializationFilter
      * @throws ServletException thrown if the InfoGridWebApp could not be initialized
      */
     protected InfoGridWebApp initializeViaModuleName(
-            SaneRequest incomingRequest,
-            String      rootModule )
+            HttpServletRequest incomingRequest,
+            String             rootModule )
         throws
             ServletException
     {
@@ -177,6 +179,9 @@ public class DefaultInitializationFilter
 
         log = Log.getLogInstance( getClass() );
 
+        // SaneServletRequest adds itself as a request attribute
+        SaneRequest lidRequest = SaneServletRequest.create( incomingRequest );
+
         // Context
         SimpleContext rootContext = SimpleContext.createRoot( rootModule + " root context" );
         rootContext.addContextObject( theThisModule.getModuleRegistry() );
@@ -184,7 +189,7 @@ public class DefaultInitializationFilter
         rootContext.addContextObject( QuitManager.create() );
 
         try {
-            initializeContextObjects( incomingRequest, rootContext );
+            initializeContextObjects( lidRequest, rootContext );
 
         } catch( Throwable t ) {
             throw new ServletException( "could not initialize context objects", t );

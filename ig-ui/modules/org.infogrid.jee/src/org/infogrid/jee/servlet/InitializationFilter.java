@@ -96,11 +96,12 @@ public class InitializationFilter
         HttpServletResponse realResponse = (HttpServletResponse) response;
 
         try {
-            // SaneServletRequest adds itself as a request attribute
-            SaneRequest lidRequest = SaneServletRequest.create( realRequest );
             request.setAttribute( CONTEXT_PARAMETER, realRequest.getContextPath() );
 
-            initializeInfoGridWebApp( lidRequest );
+            initializeInfoGridWebApp( realRequest );
+
+            // SaneServletRequest adds itself as a request attribute
+            SaneRequest lidRequest = SaneServletRequest.create( realRequest );
 
             if( getLog().isDebugEnabled() ) {
                 getLog().debug( "InitializationFilter: ", lidRequest );
@@ -162,7 +163,7 @@ public class InitializationFilter
      * @throws ServletException thrown if the InfoGridWebApp could not be initialized
      */
     protected void initializeInfoGridWebApp(
-            SaneRequest incomingRequest )
+            HttpServletRequest incomingRequest )
         throws
             ServletException
     {
