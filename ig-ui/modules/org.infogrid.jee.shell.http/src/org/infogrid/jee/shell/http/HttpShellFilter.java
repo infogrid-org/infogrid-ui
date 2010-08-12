@@ -546,10 +546,16 @@ public class HttpShellFilter
         ensureInitialized();
 
         MeshObjectIdentifier ret;
-        if( raw == null || raw.length() == 0 ) {
+        if( raw == null ) {
             ret = null;
         } else {
-            ret = idFact.fromStringRepresentation( theParsingRepresentation, raw );
+            raw = raw.trim();
+            
+            if( raw.length() == 0 ) {
+                ret = null;
+            } else {
+                ret = idFact.fromStringRepresentation( theParsingRepresentation, raw );
+            }
         }
 
         return ret;
