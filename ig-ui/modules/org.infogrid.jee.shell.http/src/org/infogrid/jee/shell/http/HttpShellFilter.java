@@ -53,6 +53,7 @@ import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
+import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.OnDemandTransactionFactory;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -201,6 +202,10 @@ public class HttpShellFilter
                 HttpShellAccessVerb accessVerb = HttpShellAccessVerb.findAccessFor( varName, lidRequest );
 
                 MeshObjectIdentifier id = parseMeshObjectIdentifier( base.getMeshObjectIdentifierFactory(), varValue );
+
+                if( id == null ) {
+                    throw new HttpShellException( new EmptyArgumentValueException( arg ));
+                }
                 OnDemandTransaction  tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( id, base, tx, lidRequest );
@@ -341,6 +346,12 @@ public class HttpShellFilter
                         MeshObject found2   = variables.get( var2Name );
                         MeshObject found1   = variables.get( var1Name );
 
+                        if( found2 == null ) {
+                            throw new HttpShellException( new SpecifiedMeshObjectNotFoundException( var2Name ));
+                        }
+                        if( found1 == null ) {
+                            throw new HttpShellException( new SpecifiedMeshObjectNotFoundException( var1Name ));
+                        }
                         String   value = lidRequest.getPostedArgument( arg );
                         RoleType rt    = (RoleType) findMeshType( value );
 
