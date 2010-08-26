@@ -405,6 +405,7 @@ public class IncludeViewletTag
             MalformedURLException
     {
         ArrayDeque<MeshObjectsToView> ret = new ArrayDeque<MeshObjectsToView>();
+        String originalAbsoluteContext = request.getOriginalSaneRequest().getAbsoluteContextUri();
 
         SaneUrl current = request;
         while( current != null ) {
@@ -414,7 +415,7 @@ public class IncludeViewletTag
 
             String included = current.getUrlArgument( INCLUDE_URL_ARGUMENT_NAME );
             if( included != null ) {
-                current = SimpleSaneUrl.create( included, request.getAbsoluteContextUri() );
+                current = SimpleSaneUrl.create( included, originalAbsoluteContext );
             } else {
                 current = null;
             }

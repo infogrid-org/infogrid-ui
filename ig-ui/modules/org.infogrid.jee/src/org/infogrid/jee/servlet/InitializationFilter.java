@@ -101,17 +101,16 @@ public class InitializationFilter
             initializeInfoGridWebApp( realRequest );
 
             // SaneServletRequest adds itself as a request attribute
-            SaneRequest lidRequest = SaneServletRequest.create( realRequest );
+            SaneRequest lidRequest      = SaneServletRequest.create( realRequest );
+            SaneRequest originalRequest = lidRequest.getOriginalSaneRequest();
 
             if( getLog().isDebugEnabled() ) {
                 getLog().debug( "InitializationFilter: ", lidRequest );
             }
-            StringBuilder fullContext = new StringBuilder();
-            fullContext.append( lidRequest.getProtocol() ).append( "://" );
-            fullContext.append( lidRequest.getServerPlusNonDefaultPort() );
-            fullContext.append( realRequest.getContextPath() );
+            request.setAttribute( FULLCONTEXT_PARAMETER, lidRequest.getAbsoluteContextUri() );
 
-            request.setAttribute( FULLCONTEXT_PARAMETER, fullContext.toString() );
+            request.setAttribute( ORIGINAL_CONTEXT_PARAMETER,     originalRequest.getContextPath() );
+            request.setAttribute( ORIGINAL_FULLCONTEXT_PARAMETER, originalRequest.getAbsoluteContextUri() );
 
             chain.doFilter( request, response );
 
@@ -258,13 +257,31 @@ public class InitializationFilter
     public static final String CONTEXT_PARAMETER = "CONTEXT";
     
     /**
-     * Name of the String in the RequestContext that is the contextPath of the application.
+     * Name of the String in the RequestContext that is the context path of the application.
      * Having this makes the development of path-independent JSPs much simpler. This
      * is a fully-qualified path including protocol, host and port.
      * @see #CONTEXT_PARAMETER
      */
     public static final String FULLCONTEXT_PARAMETER = "FULLCONTEXT";
     
+    /**
+     * Name of the String in the RequestContext that is the context path of the application
+     * at the Proxy.
+     * Having this makes the development of path-independent JSPs much simpler. This
+     * is a fully-qualified path from the root of the current host, not including the host.
+     * @see #ORIGINAL_FULLCONTEXT_PARAMETER
+     */
+    public static final String ORIGINAL_CONTEXT_PARAMETER = "ORIGINAL_CONTEXT";
+
+    /**
+     * Name of the String in the RequestContext that is the context path of the application
+     * at the Proxy.
+     * Having this makes the development of path-independent JSPs much simpler. This
+     * is a fully-qualified path including protocol, host and port.
+     * @see #ORIGINAL_CONTEXT_PARAMETER
+     */
+    public static final String ORIGINAL_FULLCONTEXT_PARAMETER = "ORIGINAL_FULLCONTEXT";
+
     /**
      * The Filter configuration object.
      */
