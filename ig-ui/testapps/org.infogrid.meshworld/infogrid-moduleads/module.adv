@@ -33,6 +33,7 @@
   <requires name="org.infogrid.store.sql.mysql"/>
   <requires name="org.infogrid.jee.viewlet.bulk"/>
   <requires name="org.infogrid.jee.viewlet.log4j"/>
+  <requires name="org.infogrid.jee.viewlet.module"/>
   <requires name="org.infogrid.util"/>
  </dependencies>
 </standardmodule>

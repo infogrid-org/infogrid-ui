@@ -513,6 +513,9 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_jee_viewlet_log4j}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+        <ant antfile="${project.org_infogrid_jee_viewlet_module}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
         <ant antfile="${project.org_infogrid_jee_viewlet_store}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -585,6 +588,9 @@ exists or setup the property manually. For example like this:
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_jee_viewlet_log4j}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
+        <ant antfile="${project.org_infogrid_jee_viewlet_module}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_jee_viewlet_store}/build.xml" inheritall="false" target="jar">
@@ -783,6 +789,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_jee_viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_jee_viewlet_bulk.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_jee_viewlet_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.org_infogrid_jee_viewlet_module.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_jee_viewlet_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_kernel.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_meshbase_store.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
@@ -813,6 +820,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_jee_viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_jee_viewlet_bulk.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_jee_viewlet_log4j.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.org_infogrid_jee_viewlet_module.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_jee_viewlet_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_kernel.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_meshbase_store.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -1146,6 +1154,7 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_jee_viewlet}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_viewlet_bulk}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_viewlet_log4j}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_jee_viewlet_module}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_jee_viewlet_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_kernel}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_meshbase_store}/build.xml" inheritall="false" target="clean"/>

@@ -37,6 +37,7 @@
   <requires name="org.infogrid.jee.shell.http"/>
   <requires name="org.infogrid.jee.viewlet.bulk"/>
   <requires name="org.infogrid.jee.viewlet.log4j"/>
+  <requires name="org.infogrid.jee.viewlet.module"/>
   <requires name="org.infogrid.kernel.net"/>
   <requires name="org.infogrid.meshbase.store.net"/>
   <requires name="org.infogrid.net.local.store"/>

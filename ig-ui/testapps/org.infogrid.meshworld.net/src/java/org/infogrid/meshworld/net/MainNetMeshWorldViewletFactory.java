@@ -23,6 +23,7 @@ import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
+import org.infogrid.jee.viewlet.module.ModuleDirectoryViewlet;
 import org.infogrid.jee.viewlet.net.JeeNetMeshObjectsToView;
 import org.infogrid.jee.viewlet.probe.shadow.ShadowAwareAllMeshBasesViewlet;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -74,6 +75,7 @@ public class MainNetMeshWorldViewletFactory
             ret.add( AllMeshObjectsViewlet.choice(          realToView, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( AllMeshTypesViewlet.choice(            realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( Log4jConfigurationViewlet.choice(      realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( ModuleDirectoryViewlet.choice(         realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( BulkLoaderViewlet.choice(              realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ProxiesViewlet.choice(                 realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ShadowAwareAllMeshBasesViewlet.choice( realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
