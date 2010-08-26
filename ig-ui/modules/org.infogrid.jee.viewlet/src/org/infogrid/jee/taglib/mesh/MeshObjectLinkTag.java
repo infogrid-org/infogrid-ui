@@ -325,7 +325,7 @@ public class MeshObjectLinkTag
                 buf.append( theAddArguments );
             }
             for( int i=0 ; i<args.length ; ++i ) {
-                buf.append( "&" ).append( JeeMeshObjectsToView.LID_TRAVERSAL_ARGUMENT_NAME ).append( "=" ).append( HTTP.encodeToValidUrlArgument( args[i] ));
+                HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_TRAVERSAL_ARGUMENT_NAME, args[i] );
             }
             return buf.toString();
 
