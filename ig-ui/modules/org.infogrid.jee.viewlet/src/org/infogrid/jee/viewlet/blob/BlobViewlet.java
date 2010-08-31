@@ -48,15 +48,13 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
 public class BlobViewlet
         extends
             AbstractJeeViewlet
-        implements
-            JeeViewlet
 {
     /**
      * Factory method.
      *
      * @param mb the MeshBase from which the viewed MeshObjects are taken
      * @param c the application context
-     * @return the created PropertySheetViewlet
+     * @return the created BlobViewlet
      */
     public static BlobViewlet create(
             MeshBase mb,
