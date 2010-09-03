@@ -260,8 +260,12 @@ public class IncludeViewletTag
         if( toView == null ) {
             JeeMeshObjectsToViewFactory toViewFactory = c.findContextObjectOrThrow( JeeMeshObjectsToViewFactory.class );
 
-            TraversalPath reachedBy = (TraversalPath) lookupOrThrow( theReachedByName );
-            toView = toViewFactory.obtainFor( reachedBy, theViewletTypeName );
+            if( theReachedByName != null ) {
+                TraversalPath reachedBy = (TraversalPath) lookupOrThrow( theReachedByName );
+                toView = toViewFactory.obtainFor( reachedBy, theViewletTypeName );
+            } else {
+                toView = toViewFactory.obtainFor( theSubject, theViewletTypeName );
+            }
         }
         
         MeshObject subject = toView.getSubject();

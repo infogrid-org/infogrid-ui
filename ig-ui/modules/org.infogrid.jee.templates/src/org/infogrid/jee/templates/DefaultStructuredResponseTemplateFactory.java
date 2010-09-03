@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -41,6 +41,20 @@ public class DefaultStructuredResponseTemplateFactory
     {
         DefaultStructuredResponseTemplateFactory ret
                 = new DefaultStructuredResponseTemplateFactory( DEFAULT_TEMPLATE_NAME, DEFAULT_MIME_TYPE );
+        return ret;
+    }
+
+    /**
+     * Factory method.
+     *
+     * @param defaultTemplateName name of the default template
+     * @return the created DefaultStructuredResponseTemplateFactory
+     */
+    public static DefaultStructuredResponseTemplateFactory create(
+            String defaultTemplateName )
+    {
+        DefaultStructuredResponseTemplateFactory ret
+                = new DefaultStructuredResponseTemplateFactory( defaultTemplateName, DEFAULT_MIME_TYPE );
         return ret;
     }
 
