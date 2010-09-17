@@ -29,6 +29,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.infogrid.jee.ProblemReporter;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.util.http.MimePart;
 import org.infogrid.jee.sane.SaneServletRequest;
@@ -53,7 +54,6 @@ import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
-import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.OnDemandTransactionFactory;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -142,18 +142,13 @@ public class HttpShellFilter
         
         } catch( Throwable ex ) {
             getLog().warn( ex );
-            
-            @SuppressWarnings( "unchecked" )
-            List<Throwable> problems = (List<Throwable>) request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
-            if( problems == null ) {
-                problems = new ArrayList<Throwable>();
-                request.setAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME, problems );
+
+            ProblemReporter reporter = (ProblemReporter) request.getAttribute( ProblemReporter.PROBLEM_REPORTER_ATTRIBUTE_NAME );
+            if( reporter != null ) {
+                reporter.reportProblem( ex );
             }
-            synchronized( problems ) {
-                problems.add( ex );
-            }
-            
         }
+
         if( redirectUrl != null ) {
             realResponse.sendRedirect( redirectUrl );
         } else {
@@ -203,7 +198,7 @@ public class HttpShellFilter
 
                 MeshObjectIdentifier id = parseMeshObjectIdentifier( base.getMeshObjectIdentifierFactory(), varValue );
 
-                if( id == null ) {
+                if( !accessVerb.isIdentifierPermitted( id )) {
                     throw new HttpShellException( new EmptyArgumentValueException( arg ));
                 }
                 OnDemandTransaction  tx = txs.obtainFor( base );

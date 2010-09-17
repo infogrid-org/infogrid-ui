@@ -25,6 +25,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.infogrid.jee.ProblemReporter;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.http.SaneRequestUtils;
@@ -38,6 +39,7 @@ import org.infogrid.util.logging.Log;
 public class StructuredResponse
         implements
             HasHeaderPreferences,
+            ProblemReporter,
             CanBeDumped
 {
     private static final Log log = Log.getLogInstance( StructuredResponse.class ); // our own, private logger
@@ -464,12 +466,9 @@ public class StructuredResponse
      * 
      * @return problems reported so far, in sequence
      */
-    public List<Throwable> problems()
+    public Iterator<Throwable> problems()
     {
-        ArrayList<Throwable> ret =  new ArrayList<Throwable>();
-        ret.addAll( theCurrentProblems );
-
-        return ret;
+        return theCurrentProblems.iterator();
     }
 
     /**
@@ -477,19 +476,25 @@ public class StructuredResponse
      * 
      * @return problems reported so far
      */
-    public List<Throwable> problemsAggregate()
+    public Iterator<Throwable> problemsAggregate()
     {
         ArrayList<Throwable> ret =  new ArrayList<Throwable>();
         ret.addAll( theCurrentProblems );
 
         for( TextStructuredResponseSection current : theTextSections.values() ) {
-            ret.addAll( current.problems() );
+            Iterator<Throwable> problemIter = current.problems();
+            while( problemIter.hasNext() ) {
+                ret.add( problemIter.next() );
+            }
         }
         for( BinaryStructuredResponseSection current : theBinarySections.values() ) {
-            ret.addAll( current.problems() );
+            Iterator<Throwable> problemIter = current.problems();
+            while( problemIter.hasNext() ) {
+                ret.add( problemIter.next() );
+            }
         }
 
-        return ret;
+        return ret.iterator();
     }
 
     /**

@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -380,10 +379,10 @@ public class IncludeViewletTag
                 }
 
                 // pass on errors
-                List<Throwable> problems = there.problems();
-                if( problems != null ) {
-                    for( Throwable t : problems ) {
-                        here.reportProblem( t );
+                Iterator<Throwable> problemIter = there.problems();
+                if( problemIter != null ) {
+                    while( problemIter.hasNext() ) {
+                        here.reportProblem( problemIter.next() );
                     }
                 }
             }

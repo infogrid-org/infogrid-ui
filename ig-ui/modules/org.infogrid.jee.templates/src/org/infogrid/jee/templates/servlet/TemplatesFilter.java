@@ -26,6 +26,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.infogrid.jee.ProblemReporter;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.servlet.BufferedServletResponse;
@@ -77,7 +78,7 @@ public class TemplatesFilter
 
         InfoGridWebApp      app           = InfoGridWebApp.getSingleton();
         SaneRequest         saneRequest   = SaneServletRequest.create( realRequest );
-        StructuredResponse  structured    = createStructuredResponse( realResponse );
+        StructuredResponse  structured    = createStructuredResponse( saneRequest, realResponse );
 
         request.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
 
@@ -113,15 +114,6 @@ public class TemplatesFilter
             request.removeAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
         }
 
-        // insert all error messages
-        @SuppressWarnings( "unchecked" )
-        List<Throwable> problems = (List<Throwable>) request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
-
-        if( problems != null ) {
-            for( Throwable current : problems ) {
-                structured.reportProblem( current );
-            }
-        }
         if( lastException != null ) {
             structured.reportProblem( lastException );
         }
@@ -161,15 +153,19 @@ public class TemplatesFilter
     
     /**
      * Overridable method to create a structured response.
-     * 
+     *
+     * @param request the incoming request
      * @param realResponse the underlying HttpServletResponse
      * @return the created StructuredResponse
      */
     protected StructuredResponse createStructuredResponse(
+            SaneRequest         request,
             HttpServletResponse realResponse )
     {
         ServletContext     servletContext = theFilterConfig.getServletContext();
         StructuredResponse ret            = StructuredResponse.create( realResponse, servletContext );
+
+        request.setAttribute( ProblemReporter.PROBLEM_REPORTER_ATTRIBUTE_NAME, ret );
 
         return ret;
     }

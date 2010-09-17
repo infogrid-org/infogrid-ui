@@ -8,38 +8,26 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.templates;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.Cookie;
+import org.infogrid.jee.ProblemReporter;
 
 /**
  * Utility interface that enables us to treat StructuredResponse and StructuredResponseSection
  * uniformly for the purposes of processing their header preferences e.g. cookies.
  */
 public interface HasHeaderPreferences
+        extends
+            ProblemReporter
 {
-    /**
-     * Determine whether problems have been reported.
-     * 
-     * @return true if at least one problem has been reported
-     */
-    public boolean haveProblemsBeenReported();
-
-    /**
-     * Obtain the problems reported so far.
-     * 
-     * @return problems reported so far, in sequence
-     */
-    public List<Throwable> problems();
-
     /**
      * Obtain the desired MIME type.
      * 

@@ -19,7 +19,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.Cookie;
@@ -103,13 +103,32 @@ public abstract class StructuredResponseSection
     }
 
     /**
+     * Convenience method to report several problems that should be shown to the user.
+     *
+     * @param ts [] the Throwables indicating the problems
+     */
+    public void reportProblems(
+            Throwable [] ts )
+    {
+        for( int i=0 ; i<ts.length ; ++i ) {
+            if( theCurrentProblems.size() <= theSectionTemplate.getMaxProblems() ) {
+                // make sure we aren't growing this indefinitely
+                theCurrentProblems.add( ts[i] );
+            } else {
+                log.error( "Too many problems. Ignored " + (ts.length-i) + " problems starting with ", ts[i] );
+                break;
+            }
+        }
+    }
+
+    /**
      * Obtain the problems reported so far.
      * 
      * @return problems reported so far, in sequence
      */
-    public List<Throwable> problems()
+    public Iterator<Throwable> problems()
     {
-        return theCurrentProblems;
+        return theCurrentProblems.iterator();
     }
 
     /**

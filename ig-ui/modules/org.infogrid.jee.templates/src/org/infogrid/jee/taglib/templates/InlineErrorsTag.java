@@ -14,7 +14,7 @@
 
 package org.infogrid.jee.taglib.templates;
 
-import java.util.List;
+import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.sane.SaneServletRequest;
@@ -22,7 +22,6 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseSection;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.text.StringifierException;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -90,23 +89,23 @@ public class InlineErrorsTag
             JspException,
             IgnoreException
     {
-        List<Throwable> reportedProblems;
+        Iterator<Throwable> reportedProblemsIter;
         
         StructuredResponseSection section = evaluate();
         if( section != null ) {
-            reportedProblems = section.problems();
+            reportedProblemsIter = section.problems();
         } else {
             StructuredResponse structured = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
             if( structured == null ) {
                 throw new JspException( "Cannot find StructuredResponse in the request context" );
             }
 
-            reportedProblems = structured.problemsAggregate();
+            reportedProblemsIter = structured.problemsAggregate();
         }
         SaneRequest sane = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
         try {
-            String content = theFormatter.formatProblems( sane, reportedProblems, theStringRepresentation, false );
+            String content = theFormatter.formatProblems( sane, reportedProblemsIter, theStringRepresentation, false );
             print( content );
 
         } catch( StringifierException ex ) {

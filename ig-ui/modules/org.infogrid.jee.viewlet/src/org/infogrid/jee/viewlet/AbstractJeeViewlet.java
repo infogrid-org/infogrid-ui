@@ -223,7 +223,7 @@ public abstract class AbstractJeeViewlet
         throws
             ServletException
     {
-        if( request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME ) == null ) {
+        if( !response.haveProblemsBeenReported() ) {
             // only if no errors have been reported
             response.setHttpResponseCode( 303 );
 

@@ -25,7 +25,6 @@ import org.infogrid.util.QuitManager;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextDirectory;
 import org.infogrid.util.context.SimpleContextDirectory;
-import org.infogrid.util.http.SaneRequestUtils;
 
 /**
  * <p>An InfoGrid web application. This needs to be subclassed.</p>
@@ -309,13 +308,6 @@ public abstract class InfoGridWebApp
             // can happen in Tomcat5.5 -- no idea why, but it's not a problem so we swallow it
         }
     }
-
-    /**
-     * Name of a Request-level attribute that contains the problems that have occurred, as a
-     * List&lt;Throwable&gt;.
-     */
-    public static final String PROCESSING_PROBLEM_EXCEPTION_NAME
-            = SaneRequestUtils.classToAttributeName( InfoGridWebApp.class, "RequestProblems" );
 
     /**
      * The application context.

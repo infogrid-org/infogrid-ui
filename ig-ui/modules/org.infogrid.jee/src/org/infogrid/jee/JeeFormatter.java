@@ -17,7 +17,7 @@ package org.infogrid.jee;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.ServletException;
@@ -201,7 +201,7 @@ public class JeeFormatter
         throws
             JspException
     {
-        int index = name.indexOf( "." );
+        int index = name.indexOf( '.' );
         String firstPart;
         String remainder;
         
@@ -349,7 +349,7 @@ public class JeeFormatter
                 throw new IllegalArgumentException( "Object in property expression cannot be null" );
             }
 
-            index = remainingName.indexOf( "." );
+            index = remainingName.indexOf( '.' );
 
             String currentName;
             if( index > 0 ) {
@@ -411,7 +411,7 @@ public class JeeFormatter
                 throw new IllegalArgumentException( "Object in property expression cannot be null" );
             }
 
-            index = remainingName.indexOf( "." );
+            index = remainingName.indexOf( '.' );
 
             String currentName;
             if( index > 0 ) {
@@ -971,17 +971,17 @@ public class JeeFormatter
      * Format a list of problems represented as Throwables.
      * 
      * @param saneRequest the incoming request
-     * @param reportedProblems the reported problems
+     * @param reportedProblemsIter Iterator over the reported problems
      * @param stringRepresentation the StringRepresentation to use
      * @param colloquial if applicable, output in colloquial form
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
     public String formatProblems(
-            SaneRequest        saneRequest,
-            List<Throwable>    reportedProblems,
-            String             stringRepresentation,
-            boolean            colloquial )
+            SaneRequest         saneRequest,
+            Iterator<Throwable> reportedProblemsIter,
+            String              stringRepresentation,
+            boolean             colloquial )
         throws
             StringifierException
     {
@@ -993,7 +993,8 @@ public class JeeFormatter
 
         String        sep = "";
         StringBuilder buf = new StringBuilder();
-        for( Throwable current : reportedProblems ) {
+        while( reportedProblemsIter.hasNext() ) {
+            Throwable current  = reportedProblemsIter.next();
             Throwable toFormat = determineThrowableToFormat( current );
 
             String temp = rep.formatThrowable( toFormat, pars );

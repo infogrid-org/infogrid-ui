@@ -17,7 +17,7 @@ package org.infogrid.jee.templates;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.List;
+import java.util.Iterator;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.util.context.Context;
@@ -110,10 +110,10 @@ public class VerbatimStructuredResponseTemplate
         
         JeeFormatter theFormatter = getContext().findContextObjectOrThrow( JeeFormatter.class );
         
-        List<Throwable> reportedProblems = structured.problems();
-        if( reportedProblems != null && !reportedProblems.isEmpty() ) {
+        Iterator<Throwable> reportedProblemsIter = structured.problems();
+        if( reportedProblemsIter != null && reportedProblemsIter.hasNext() ) {
             try {
-                String errorContent = theFormatter.formatProblems( theRequest, reportedProblems, StringRepresentationDirectory.TEXT_PLAIN_NAME, false );
+                String errorContent = theFormatter.formatProblems( theRequest, reportedProblemsIter, StringRepresentationDirectory.TEXT_PLAIN_NAME, false );
                 if( errorContent != null ) {
                     Writer w = delegate.getWriter();
                     w.write( errorContent );

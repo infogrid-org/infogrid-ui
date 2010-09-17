@@ -35,6 +35,20 @@ public enum HttpShellAccessVerb
 {
     CREATE( "create" ) {
             /**
+             * Determine whether this identifier is permitted for this verb. The identifier
+             * may be null.
+             *
+             * @param identifier the MeshObjectIdentifier of the to-be-accessed object in the request
+             * @return true if the identifier is permitted
+             */
+            @Override
+            public boolean isIdentifierPermitted(
+                    MeshObjectIdentifier identifier )
+            {
+                return true; // may be null or non-null
+            }
+
+            /**
              * Perform this verb.
              *
              * @param identifier the MeshObjectIdentifier of the to-be-accessed object in the request
@@ -257,6 +271,19 @@ public enum HttpShellAccessVerb
         }
         // if not found, we default to FIND
         return FIND;
+    }
+
+    /**
+     * Determine whether this identifier is permitted for this verb. The identifier
+     * may be null.
+     *
+     * @param identifier the MeshObjectIdentifier of the to-be-accessed object in the request
+     * @return true if the identifier is permitted
+     */
+    public boolean isIdentifierPermitted(
+            MeshObjectIdentifier identifier )
+    {
+        return identifier != null;
     }
 
     /**

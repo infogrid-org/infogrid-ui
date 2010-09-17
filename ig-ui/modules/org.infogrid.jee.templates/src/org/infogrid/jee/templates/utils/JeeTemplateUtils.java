@@ -139,18 +139,9 @@ public abstract class JeeTemplateUtils
             }
 
             if( section != null ) {
-                @SuppressWarnings( "unchecked" )
-                List<Throwable> problems = (List<Throwable>) request.getAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
-
-                if( problems != null ) {
-                    for( Throwable current : problems ) {
-                        section.reportProblem( current );
-                    }
-                }
                 if( lastException != null ) {
                     section.reportProblem( lastException );
                 }
-                request.removeAttribute( InfoGridWebApp.PROCESSING_PROBLEM_EXCEPTION_NAME );
 
                 if( bufferedResponse.getStatus() > 0 ) {
                     section.setHttpResponseCode( bufferedResponse.getStatus());

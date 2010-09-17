@@ -15,6 +15,7 @@
 package org.infogrid.jee.templates;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -123,9 +124,13 @@ public abstract class AbstractStructuredResponseTemplate
             if( status > 0 ) {
                 break;
             }
-            for( Throwable t : current.problems() ) {
-                if( current instanceof CarriesHttpStatusCodeException ) {
-                    status = ((CarriesHttpStatusCodeException)current).getDesiredHttpStatusCode();
+            
+            Iterator<Throwable> problemIter = current.problems();
+            while( problemIter.hasNext() ) {
+                Throwable t = problemIter.next();
+                
+                if( t instanceof CarriesHttpStatusCodeException ) {
+                    status = ((CarriesHttpStatusCodeException)t).getDesiredHttpStatusCode();
                     if( status > 0 ) {
                         break outer;
                     }
