@@ -17,9 +17,7 @@ package org.infogrid.jee.shell.http;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -54,6 +52,7 @@ import org.infogrid.meshbase.MeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
+import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.OnDemandTransactionFactory;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -395,7 +394,10 @@ public class HttpShellFilter
 
         } catch( MeshObjectAccessException ex ) {
             throw new HttpShellException( ex );
-            
+
+        } catch( MeshObjectsNotFoundException ex ) {
+            throw new HttpShellException( ex );
+
         } catch( MeshObjectIdentifierNotUniqueException ex ) {
             throw new HttpShellException( ex );
 
