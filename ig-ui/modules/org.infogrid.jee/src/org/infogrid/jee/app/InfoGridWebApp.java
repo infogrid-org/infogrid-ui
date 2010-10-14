@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,6 +22,7 @@ import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import org.infogrid.util.QuitManager;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextDirectory;
 import org.infogrid.util.context.SimpleContextDirectory;
@@ -93,6 +94,26 @@ public abstract class InfoGridWebApp
         theContextDirectory   = contextDirectory;
 
         theContextDirectory.addContext( applicationContext );
+    }
+
+    /**
+     * Obtain the name of the application.
+     *
+     * @return the name
+     */
+    public final String getName()
+    {
+        return ResourceHelper.getInstance( InfoGridWebApp.class ).getResourceStringOrNull( "Name" );
+    }
+
+    /**
+     * Obtain the user-visible name of the application.
+     *
+     * @return the user-visible name of the application
+     */
+    public final String getUserVisibleName()
+    {
+        return ResourceHelper.getInstance( InfoGridWebApp.class ).getResourceStringOrNull( "UserVisibleName" );
     }
 
     /**

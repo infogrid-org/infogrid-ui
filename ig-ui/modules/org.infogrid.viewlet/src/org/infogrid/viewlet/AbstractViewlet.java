@@ -18,11 +18,9 @@ import java.text.ParseException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
-import org.infogrid.mesh.set.MeshObjectSet;
-import org.infogrid.mesh.set.TraversalPathSet;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectAccessException;
-import org.infogrid.model.traversal.TraversalSpecification;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.context.Context;
 
@@ -58,7 +56,8 @@ public abstract class AbstractViewlet
      */
     public String getUserVisibleName()
     {
-        return getClass().getName();
+        String userVisibleName = ResourceHelper.getInstance( getClass() ).getResourceStringOrDefault( "UserVisibleName", getClass().getName() );
+        return userVisibleName;
     }
 
     /**

@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.viewlet;
 
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 
 /**
@@ -81,6 +82,21 @@ public abstract class AbstractJspViewlet
     public String getName()
     {
         return thePseudoClassName;
+    }
+
+    /**
+     * Obtain a String, to be shown to the user, that identifies this Viewlet to the user.
+     * This default implementation can be overridden by subclasses.
+     *
+     * @return a String
+     */
+    @Override
+    public String getUserVisibleName()
+    {
+        ResourceHelper rh = ResourceHelper.getInstance( thePseudoClassName, DefaultJspViewletFactoryChoice.class.getClassLoader() );
+        
+        String userVisibleName = rh.getResourceStringOrDefault( "UserVisibleName", thePseudoClassName );
+        return userVisibleName;
     }
 
     /**

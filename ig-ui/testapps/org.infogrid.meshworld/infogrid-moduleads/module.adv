@@ -22,6 +22,7 @@
  <dependencies>
   <requires name="org.infogrid.util.logging.log4j">
    <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/meshworld/Log.properties"/>
+   <parameter name="org.infogrid.util.ResourceHelper.ApplicationResourceBundle" value="org/infogrid/meshworld/MeshWorld" />
   </requires>
   <requires name="org.infogrid.jee.shell.http"/>
   <requires name="org.infogrid.jee.viewlet.store"/>

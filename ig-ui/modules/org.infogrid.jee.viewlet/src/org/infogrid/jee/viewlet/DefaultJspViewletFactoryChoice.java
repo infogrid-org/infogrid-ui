@@ -44,7 +44,7 @@ public abstract class DefaultJspViewletFactoryChoice
             String               pseudoClassName,
             double               matchQuality )
     {
-        super( toView, SimpleJeeViewlet.class, pseudoClassName, matchQuality );
+        super( toView, AbstractJeeViewlet.class, pseudoClassName, matchQuality );
 
         thePseudoClassName = pseudoClassName;
     }

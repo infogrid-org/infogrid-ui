@@ -866,6 +866,14 @@ public class StructuredResponse
             = TextHtmlStructuredResponseSectionTemplate.create( "html-head" );
 
     /**
+     * The section representing the title of an HTML document. While this could be considered
+     * a part of the head of the HTML document, in practice it has turned out to be useful if
+     * it is kept separate.
+     */
+    public static final TextHtmlStructuredResponseSectionTemplate HTML_TITLE_SECTION
+            = TextHtmlStructuredResponseSectionTemplate.create( "html-title" );
+
+    /**
      * The section representing the messages section of an HTML document.
      */
     public static final TextHtmlStructuredResponseSectionTemplate HTML_MESSAGES_SECTION

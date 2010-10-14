@@ -22,7 +22,10 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.security.UnsafePostException;
 import org.infogrid.jee.taglib.viewlet.IncludeViewletTag;
 import org.infogrid.jee.templates.StructuredResponse;
+import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
+import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.StringHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
@@ -259,7 +262,31 @@ public abstract class AbstractJeeViewlet
         throws
             ServletException
     {
-        // noop on this level
+        // if no HTML title was set, set one
+
+        TextStructuredResponseSection titleSection = response.obtainTextSection( StructuredResponse.HTML_TITLE_SECTION );
+        if( titleSection.isEmpty() ) {
+            InfoGridWebApp app = InfoGridWebApp.getSingleton();
+
+            String content;
+            if( app.getName() != null ) {
+                content = theResourceHelper.getResourceStringWithArguments(
+                        "DefaultTitleWithApp",
+                        getName(),
+                        getUserVisibleName(),
+                        getSubject().getIdentifier().toExternalForm(),
+                        app.getName(),
+                        app.getUserVisibleName() );
+            } else {
+                content = theResourceHelper.getResourceStringWithArguments(
+                        "DefaultTitleWithoutApp",
+                        getName(),
+                        getUserVisibleName(),
+                        getSubject().getIdentifier().toExternalForm() );
+            }
+
+            titleSection.setContent( content );
+        }
     }
 
     /**
@@ -448,4 +475,9 @@ public abstract class AbstractJeeViewlet
      * The request currently being processed.
      */
     protected SaneRequest theCurrentRequest;
+
+    /**
+     * The ResourceHelper for this class.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( AbstractJeeViewlet.class );
 }
