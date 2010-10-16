@@ -275,6 +275,7 @@ public abstract class AbstractJeeViewlet
                         getName(),
                         getUserVisibleName(),
                         getSubject().getIdentifier().toExternalForm(),
+                        getSubject().getUserVisibleString(),
                         app.getName(),
                         app.getUserVisibleName() );
             } else {
@@ -282,7 +283,8 @@ public abstract class AbstractJeeViewlet
                         "DefaultTitleWithoutApp",
                         getName(),
                         getUserVisibleName(),
-                        getSubject().getIdentifier().toExternalForm() );
+                        getSubject().getIdentifier().toExternalForm(),
+                        getSubject().getUserVisibleString());
             }
 
             titleSection.setContent( content );
