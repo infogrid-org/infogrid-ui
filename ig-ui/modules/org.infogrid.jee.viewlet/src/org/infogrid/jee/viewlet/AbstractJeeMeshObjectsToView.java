@@ -209,8 +209,10 @@ public abstract class AbstractJeeMeshObjectsToView
             String [] traversalArgs = null;
             if( childArrivedAt != null ) {
                 traversalArgs = translator.translateTraversalPath( theSubject, childArrivedAt );
-            } else if( theTraversalSpecification != null ) {
-                traversalArgs = translator.translateTraversalSpecification( theSubject, theTraversalSpecification );
+            // we could do this here:
+            // } else if( theTraversalSpecification != null ) {
+            //      traversalArgs = translator.translateTraversalSpecification( theSubject, theTraversalSpecification );
+            // but that sometimes produces a whole set of included viewlets for N reached MeshObjects, and it's very confusing.
             }
             if( traversalArgs != null && traversalArgs.length > 0 ) {
                 for( int i=0 ; i<traversalArgs.length ; ++i ) {
