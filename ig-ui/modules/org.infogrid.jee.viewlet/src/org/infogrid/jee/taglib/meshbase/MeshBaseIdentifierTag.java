@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -158,7 +158,7 @@ public class MeshBaseIdentifierTag
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseIdentifierStart( pageContext, mb, theStringRepresentation, theMaxLength, theColloquial );
+            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseIdentifier( pageContext, mb, theStringRepresentation, theMaxLength, theColloquial );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -168,32 +168,6 @@ public class MeshBaseIdentifierTag
         return EVAL_BODY_INCLUDE;
     }
 
-    /**
-     * Our implementation of doStartTag().
-     *
-     * @return evaluate or skip body
-     * @throws JspException thrown if an evaluation error occurred
-     * @throws IgnoreException thrown to abort processing without an error
-     */
-    @Override
-    protected int realDoEndTag()
-        throws
-            JspException,
-            IgnoreException
-    {
-        MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
-
-        try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseIdentifierEnd( pageContext, mb, theStringRepresentation );
-            print( text );
-
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
-        }
-
-        return EVAL_PAGE;
-    }
-    
     /**
      * Name of the bean that holds the MeshBase.
      */

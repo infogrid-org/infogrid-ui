@@ -1,21 +1,22 @@
-table.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadow > * > * > td {
-    width: 50%;
+div.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet table.mb > * > * > td {
+    width: 70%;
     padding-left: 15px;
     padding-right: 15px;
 }
-table.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadowinfo {
+div.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet table.mbinfo {
     border: #808080 solid 1px;
 }
-table.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadowinfo th {
+div.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet table.mbinfo > * > * > th {
     text-align: right;
     padding-right: 10px;
+    width: 170px;
 }
-table.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadowinfo td {
+div.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet table.mbinfo > * > * > td {
     padding-left: 5px;
     padding-right: 15px;
 }
-
-td.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadowcommands ul {
+div.org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet table.mb > * > * > td.commands ul {
     list-style: none;
-    display: inline;
+    margin: 0;
+    padding: 0;
 }

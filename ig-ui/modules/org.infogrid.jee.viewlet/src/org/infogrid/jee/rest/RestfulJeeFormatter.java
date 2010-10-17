@@ -880,7 +880,7 @@ public class RestfulJeeFormatter
     }
 
     /**
-     * Format the start of the identifier of a MeshBase.
+     * Format the identifier of a MeshBase.
      *
      * @param pageContext the PageContext object for this page
      * @param base the MeshBase whose identifier is to be formatted
@@ -890,7 +890,7 @@ public class RestfulJeeFormatter
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
-    public String formatMeshBaseIdentifierStart(
+    public String formatMeshBaseIdentifier(
             PageContext        pageContext,
             MeshBase           base,
             String             stringRepresentation,
@@ -909,27 +909,8 @@ public class RestfulJeeFormatter
         pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
         pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
         
-        String ret = base.toStringRepresentation( rep, pars );
+        String ret = base.getIdentifier().toStringRepresentation( rep, pars );
         return ret;
-    }
-
-    /**
-     * Format the end of the identifier of a MeshBase.
-     *
-     * @param pageContext the PageContext object for this page
-     * @param base the MeshBase whose identifier is to be formatted
-     * @param stringRepresentation the StringRepresentation to use
-     * @return the String to display
-     * @throws StringifierException thrown if there was a problem when attempting to stringify
-     */
-    public String formatMeshBaseIdentifierEnd(
-            PageContext        pageContext,
-            MeshBase           base,
-            String             stringRepresentation )
-        throws
-            StringifierException
-    {
-        return ""; // nothing
     }
 
     /**

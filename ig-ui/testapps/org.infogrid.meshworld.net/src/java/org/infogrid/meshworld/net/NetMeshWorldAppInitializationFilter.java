@@ -22,9 +22,12 @@ import org.infogrid.jee.rest.net.local.defaultapp.store.AbstractStoreNetLocalRes
 import org.infogrid.jee.templates.defaultapp.AppInitializationException;
 import org.infogrid.jee.viewlet.JeeMeshObjectsToViewFactory;
 import org.infogrid.jee.viewlet.net.DefaultJeeNetMeshObjectsToViewFactory;
+import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseNameServer;
+import org.infogrid.meshbase.net.sweeper.DefaultNetIterableSweeper;
+import org.infogrid.meshbase.net.sweeper.UnnecessaryReplicasSweepPolicy;
 import org.infogrid.model.traversal.TraversalTranslator;
 import org.infogrid.model.traversal.xpath.XpathTraversalTranslator;
 import org.infogrid.store.m.MStore;
@@ -136,7 +139,8 @@ public class NetMeshWorldAppInitializationFilter
     {
         super.initializeContextObjects( incomingRequest, rootContext );
 
-        NetMeshBase mb = rootContext.findContextObjectOrThrow( NetMeshBase.class );
+        IterableNetMeshBase mb = rootContext.findContextObjectOrThrow( IterableNetMeshBase.class );
+        mb.setSweeper( DefaultNetIterableSweeper.create( mb, UnnecessaryReplicasSweepPolicy.create( 1000L )));
 
         NetMeshBaseIdentifierFactory mbIdentifierFact = rootContext.findContextObject( NetMeshBaseIdentifierFactory.class );
         NetMeshBaseNameServer        mbNameServer     = rootContext.findContextObject( NetMeshBaseNameServer.class );

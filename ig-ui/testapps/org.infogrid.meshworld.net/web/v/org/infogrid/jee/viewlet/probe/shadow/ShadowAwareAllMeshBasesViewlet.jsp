@@ -12,20 +12,30 @@
 <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/probe/shadow/ShadowAwareAllMeshBasesViewlet.css"/>
 <v:viewletAlternatives />
 <v:viewlet>
- <h1>All locally known MeshBases</h1>
+ <h1>All locally known NetMeshBases</h1>
  <ol>
   <c:forEach items="${Viewlet.iterator}" var="current">
    <li>
-    <h4><meshbase:meshBaseLink meshBaseName="current">MeshBase <meshbase:meshBaseId meshBaseName="current"/></meshbase:meshBaseLink></h4>
-    <probe:ifIsShadowMeshBase meshBaseName="current">
-     <table class="org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadow">
-      <tr>
-       <td>
-        <table class="org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadowinfo">
-         <tr>
-          <th>&#35;&nbsp;MeshObjects:</th>
-          <td>${current.size}</td>
-         </tr>
+    <h4>
+     <meshbase:meshBaseLink meshBaseName="current">
+      <probe:ifIsShadowMeshBase meshBaseName="current">
+      ShadowMeshBase
+      </probe:ifIsShadowMeshBase>
+      <probe:notIfIsShadowMeshBase meshBaseName="current">
+      NetMeshBase
+      </probe:notIfIsShadowMeshBase>
+      <meshbase:meshBaseId meshBaseName="current"/>
+     </meshbase:meshBaseLink>
+    </h4>
+    <table class="mb">
+     <tr>
+      <td>
+       <table class="mbinfo">
+        <tr>
+         <th>&#35;&nbsp;MeshObjects:</th>
+         <td>${current.size}</td>
+        </tr>
+        <probe:ifIsShadowMeshBase meshBaseName="current">
          <tr>
           <th>Last run:</th>
           <td><mesh:property meshObjectName="current.homeObject" propertyType="org.infogrid.model.Probe/ProbeUpdateSpecification_LastProbeRun"/></td>
@@ -49,20 +59,25 @@
            </logic:equal>
           </td>
          </tr>
-        </table>
-       </td>
-       <td class="org-infogrid-jee-viewlet-probe-shadow-ShadowAwareAllMeshBasesViewlet-shadowcommands">
-        <u:safeForm action="${Viewlet.postUrl}" method="POST">
-            <input type="hidden" name="MeshBase" value="<meshbase:meshBaseId meshBaseName="current" stringRepresentation="Plain" filter="true" />"/>
-         <ul>
-          <li><input type="submit" name="RunNowAction" value="Run now"/></li>
-          <li><input type="submit" name="StopAction" value="Stop"/></li>
-         </ul>
-         </u:safeForm>
-       </td>
-      </tr>
-     </table>
-    </probe:ifIsShadowMeshBase>
+        </probe:ifIsShadowMeshBase>
+       </table>
+      </td>
+      <td class="commands">
+       <u:safeForm action="${Viewlet.postUrl}" method="POST">
+        <input type="hidden" name="MeshBase" value="<meshbase:meshBaseId meshBaseName="current" stringRepresentation="Plain" filter="true" />"/>
+        <ul>
+         <probe:ifIsShadowMeshBase meshBaseName="current">
+          <li><input type="submit" name="RunNowAction" value="Probe now"/></li>
+          <li><input type="submit" name="StopAction" value="Stop probing"/></li>
+         </probe:ifIsShadowMeshBase>
+         <probe:notIfIsShadowMeshBase meshBaseName="current">
+          <li><input type="submit" name="SweepNowAction" value="Sweep now"/></li>
+         </probe:notIfIsShadowMeshBase>
+        </ul>
+       </u:safeForm>
+      </td>
+     </tr>
+    </table>
    </li>
   </c:forEach>
  </ol>
