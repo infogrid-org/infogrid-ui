@@ -108,12 +108,11 @@ public class ProxyViewlet
             ServletException,
             IOException
     {
-        super.processRequest( request, structured );
-
         NetMeshObjectsToView realToView = (NetMeshObjectsToView) getViewedMeshObjects().getMeshObjectsToView();
 
         Proxy pseudoSubject = realToView.getRequestedProxy();
         request.setAttribute( "Proxy", pseudoSubject );
         
+        super.processRequest( request, structured );
     }
 }
