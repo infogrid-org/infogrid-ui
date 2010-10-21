@@ -22,7 +22,6 @@ import org.infogrid.viewlet.MeshObjectsToViewFactory;
 
 /**
  * A factory for JeeMeshObjectsToView objects.
- * @author jernst
  */
 public interface JeeMeshObjectsToViewFactory
     extends
