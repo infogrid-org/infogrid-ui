@@ -135,7 +135,7 @@ public class HttpShellFilter
                     }
 
                 } else {
-                    getLog().warn( "Ignoring unsafe POST " + lidRequest );
+                    getLog().warn( "Ignoring unsafe POST", lidRequest );
                 }
             }
         
