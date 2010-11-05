@@ -268,23 +268,45 @@ public abstract class AbstractJeeViewlet
         if( titleSection.isEmpty() ) {
             InfoGridWebApp app = InfoGridWebApp.getSingleton();
 
+            String name                     = getName();
+            String userVisibleName          = getUserVisibleName();
+            String subjectIdentifierString  = getSubject().getIdentifier().toExternalForm();
+            String subjectUserVisibleString = getSubject().getUserVisibleString();
+            String appName                  = app.getName();
+            String appUserVisibleName       = app.getUserVisibleName();
+
+            if( name == null ) {
+                name = "";
+            }
+            if( userVisibleName == null ) {
+                userVisibleName = "";
+            }
+            if( subjectUserVisibleString == null ) {
+                subjectUserVisibleString = "";
+            }
+
             String content;
-            if( app.getName() != null ) {
+            if( appName != null ) {
+
+                if( appUserVisibleName == null ) {
+                    appUserVisibleName = appName;
+                }
+
                 content = theResourceHelper.getResourceStringWithArguments(
                         "DefaultTitleWithApp",
-                        getName(),
-                        getUserVisibleName(),
-                        getSubject().getIdentifier().toExternalForm(),
-                        getSubject().getUserVisibleString(),
-                        app.getName(),
-                        app.getUserVisibleName() );
+                /* 0 */ name,
+                /* 1 */ userVisibleName,
+                /* 2 */ subjectIdentifierString,
+                /* 3 */ subjectUserVisibleString,
+                /* 4 */ appName,
+                /* 5 */ appUserVisibleName );
             } else {
                 content = theResourceHelper.getResourceStringWithArguments(
                         "DefaultTitleWithoutApp",
-                        getName(),
-                        getUserVisibleName(),
-                        getSubject().getIdentifier().toExternalForm(),
-                        getSubject().getUserVisibleString());
+                /* 0 */ name,
+                /* 1 */ userVisibleName,
+                /* 2 */ subjectIdentifierString,
+                /* 3 */ subjectUserVisibleString );
             }
 
             titleSection.setContent( content );
