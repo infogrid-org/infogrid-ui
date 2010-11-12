@@ -163,12 +163,14 @@ public class MeshObjectIdentifierTag
             obj = (MeshObject) lookupOrThrow( theMeshObjectName );
         }
 
-        try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, obj, theStringRepresentation, theMaxLength );
-            print( text );
+        if( obj != null ) {
+            try {
+                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, obj, theStringRepresentation, theMaxLength );
+                print( text );
 
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
+            } catch( StringifierException ex ) {
+                throw new JspException( ex );
+            }
         }
 
         return EVAL_BODY_INCLUDE;
