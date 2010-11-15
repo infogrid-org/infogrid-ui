@@ -458,20 +458,23 @@ public class HttpShellFilter
         }
 
         // now handlers
-        for( String handlerName : postArguments.get( HANDLER_TAG )) {
-            try {
-                HttpShellHandler handler = findHandler( handlerName );
-                if( handler == null ) {
-                    throw new SpecifiedHandlerNotFoundException( handlerName );
+        String [] handlerNames = postArguments.get( HANDLER_TAG );
+        if( handlerNames != null ) {
+            for( String handlerName : handlerNames ) {
+                try {
+                    HttpShellHandler handler = findHandler( handlerName );
+                    if( handler == null ) {
+                        throw new SpecifiedHandlerNotFoundException( handlerName );
+                    }
+
+                    handler.handle( variables );
+
+                } catch( HttpShellException ex ) {
+                    throw ex;
+
+                } catch( Throwable ex ) {
+                    throw new HttpShellException( ex );
                 }
-
-                handler.handle( variables );
-
-            } catch( HttpShellException ex ) {
-                throw ex;
-
-            } catch( Throwable ex ) {
-                throw new HttpShellException( ex );
             }
         }
 
