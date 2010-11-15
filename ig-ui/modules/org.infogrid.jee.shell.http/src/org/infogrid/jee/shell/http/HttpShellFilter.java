@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -456,6 +457,24 @@ public class HttpShellFilter
             }
         }
 
+        // now handlers
+        for( String handlerName : postArguments.get( HANDLER_TAG )) {
+            try {
+                HttpShellHandler handler = findHandler( handlerName );
+                if( handler == null ) {
+                    throw new SpecifiedHandlerNotFoundException( handlerName );
+                }
+
+                handler.handle( variables );
+
+            } catch( HttpShellException ex ) {
+                throw ex;
+
+            } catch( Throwable ex ) {
+                throw new HttpShellException( ex );
+            }
+        }
+
         // and now for redirects
         String redirectVar = null;
         for( String var1Name : variables.keySet() ) {
@@ -567,6 +586,26 @@ public class HttpShellFilter
         }
 
         return ret;
+    }
+
+    /**
+     * Helper method to find the instance of a HttpShellHandler by name.
+     *
+     * @param name name of the handler
+     * @return the handler, or null
+     */
+    protected HttpShellHandler findHandler(
+            String name )
+    {
+        Iterator<HttpShellHandler> iter = theAppContext.contextObjectIterator( HttpShellHandler.class );
+        while( iter.hasNext() ) {
+            HttpShellHandler current = iter.next();
+
+            if( name.equals( current.getName() )) {
+                return current;
+            }
+        }
+        return null;
     }
 
     /**
@@ -770,14 +809,14 @@ public class HttpShellFilter
         if( theMainMeshBase == null ) {
             // the name server may be null, so we test against main MeshBase, which is always non-null
 
-            InfoGridWebApp app        = InfoGridWebApp.getSingleton();
-            Context        appContext = app.getApplicationContext();
+            InfoGridWebApp app = InfoGridWebApp.getSingleton();
+            theAppContext      = app.getApplicationContext();
 
-            theMeshBaseNameServer        = appContext.findContextObject( MeshBaseNameServer.class );
-            theMeshBaseIdentifierFactory = appContext.findContextObject( MeshBaseIdentifierFactory.class );
-            theMainMeshBase              = appContext.findContextObjectOrThrow( MeshBase.class );
+            theMeshBaseNameServer        = theAppContext.findContextObject( MeshBaseNameServer.class );
+            theMeshBaseIdentifierFactory = theAppContext.findContextObject( MeshBaseIdentifierFactory.class );
+            theMainMeshBase              = theAppContext.findContextObjectOrThrow( MeshBase.class );
 
-            StringRepresentationDirectory dir = appContext.findContextObjectOrThrow( StringRepresentationDirectory.class );
+            StringRepresentationDirectory dir = theAppContext.findContextObjectOrThrow( StringRepresentationDirectory.class );
 
             theParsingRepresentation = dir.get( StringRepresentationDirectory.TEXT_HTTP_POST_NAME );
             if( theParsingRepresentation == null ) {
@@ -843,6 +882,11 @@ public class HttpShellFilter
      * The Filter configuration object.
      */
     protected FilterConfig theFilterConfig;
+
+    /**
+     * The Context to use.
+     */
+    protected Context theAppContext;
 
     /**
      * Buffered MeshBase name server.

@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -150,4 +150,8 @@ public interface HttpShellKeywords
      */
     public static final String REDIRECT_TAG_TRUE = "true";
 
+    /**
+     * Indicates the name of the handler class.
+     */
+    public static final String HANDLER_TAG = PREFIX + "handler.name";
 }
