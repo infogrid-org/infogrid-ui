@@ -170,6 +170,8 @@ public class HttpShellFilter
             NotPermittedException,
             HttpShellException
     {
+        ensureInitialized();
+
         MSmartFactory<MeshBase,OnDemandTransaction,Void> txs = MSmartFactory.create(
                 new OnDemandTransactionFactory(),
                 MCachingHashMap.<MeshBase,OnDemandTransaction>create() );
@@ -535,8 +537,6 @@ public class HttpShellFilter
         throws
             ParseException
     {
-        ensureInitialized();
-
         StringBuilder key = new StringBuilder();
         key.append( PREFIX );
         key.append( varName );
@@ -573,8 +573,6 @@ public class HttpShellFilter
         throws
             ParseException
     {
-        ensureInitialized();
-
         MeshObjectIdentifier ret;
         if( raw == null ) {
             ret = null;
@@ -840,8 +838,6 @@ public class HttpShellFilter
         throws
             MeshTypeWithIdentifierNotFoundException
     {
-        ensureInitialized();
-
         s = s.trim();
 
         ModelBase          modelBase  = theMainMeshBase.getModelBase();
