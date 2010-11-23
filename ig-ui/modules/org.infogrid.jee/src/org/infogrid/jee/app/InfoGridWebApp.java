@@ -26,6 +26,7 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextDirectory;
 import org.infogrid.util.context.SimpleContextDirectory;
+import org.infogrid.util.logging.Log;
 
 /**
  * <p>An InfoGrid web application. This needs to be subclassed.</p>
@@ -94,6 +95,11 @@ public abstract class InfoGridWebApp
         theContextDirectory   = contextDirectory;
 
         theContextDirectory.addContext( applicationContext );
+
+        Log log = Log.getLogInstance( InfoGridWebApp.class ); // don't use a subclass for this purpose
+        if( log != null ) {
+            log.info( "Started InfoGridWebApp " + getClass().getName(), this );
+        }
     }
 
     /**
@@ -158,7 +164,7 @@ public abstract class InfoGridWebApp
         
         String servletBaseName;
         String servletExtension;
-        int    period = servletName.lastIndexOf( "." );
+        int    period = servletName.lastIndexOf( '.' );
         if( period >= 0 ) {
             servletBaseName  = servletName.substring( 0, period );
             servletExtension = servletName.substring( period ); // include the period
@@ -316,6 +322,11 @@ public abstract class InfoGridWebApp
      */
     public void die()
     {
+        Log log = Log.getLogInstance( InfoGridWebApp.class ); // don't use a subclass for this purpose
+        if( log != null ) {
+            log.info( "Died InfoGridWebApp " + getClass().getName(), this );
+        }
+
         if( theApplicationContext == null ) {
             return;
         }
