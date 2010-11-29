@@ -447,6 +447,12 @@ public abstract class AbstractJeeViewlet
         if( viewedMeshObjectsStack != null && !viewedMeshObjectsStack.isEmpty() ) {
             HTTP.appendArgumentToUrl( buf, "lid-target", newToView.getAsUrl( viewedMeshObjectsStack ));
         }
+        if( currentlyToView.getViewletTypeName() != null ) {
+            HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.VIEWLET_PREFIX + currentlyToView.getViewletTypeName() );
+        }
+        if( currentlyToView.getMimeType() != null ) {
+            HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.MIME_PREFIX + currentlyToView.getMimeType() );
+        }
         return buf.toString();
     }
 

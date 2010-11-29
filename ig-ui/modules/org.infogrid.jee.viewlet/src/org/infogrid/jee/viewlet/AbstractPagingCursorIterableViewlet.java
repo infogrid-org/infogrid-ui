@@ -103,7 +103,12 @@ public abstract class AbstractPagingCursorIterableViewlet
             }
         } else {
             setIter.moveToBeforeFirst();
-            start = setIter.peekNext();
+            if( setIter.hasNext() ) {
+                start = setIter.peekNext();
+            } else {
+                // nothing to show
+                start = null;
+            }
         }
 
         if( pageLength != null ) {
@@ -140,14 +145,14 @@ public abstract class AbstractPagingCursorIterableViewlet
             setIterCopy.moveToBeforeFirst();
             pageIterCopy.moveToBeforeFirst();
 
-            MeshObject firstInSet  = setIterCopy.peekNext();
-            MeshObject firstInPage = pageIterCopy.peekNext();
+            theNavigationStartMeshObject = null; // we are at the beginning unless ...
+            if( setIterCopy.hasNext() && pageIterCopy.hasNext() ) {
+                MeshObject firstInSet  = setIterCopy.peekNext();
+                MeshObject firstInPage = pageIterCopy.peekNext();
 
-            if( firstInSet.equals( firstInPage )) {
-                // we are at the beginning
-                theNavigationStartMeshObject = null;
-            } else {
-                theNavigationStartMeshObject = firstInSet;
+                if( !firstInSet.equals( firstInPage )) {
+                    theNavigationStartMeshObject = firstInSet;
+                }
             }
         }
         return theNavigationStartMeshObject;
@@ -174,21 +179,20 @@ public abstract class AbstractPagingCursorIterableViewlet
             setIterCopy.moveToBeforeFirst();
             pageIterCopy.moveToBeforeFirst();
 
-            MeshObject firstInSet  = setIterCopy.peekNext();
-            MeshObject firstInPage = pageIterCopy.peekNext();
+            theNavigationStartMeshObject = null; // we are at the beginning unless ...
+            if( setIterCopy.hasNext() && pageIterCopy.hasNext() ) {
+                MeshObject firstInSet  = setIterCopy.peekNext();
+                MeshObject firstInPage = pageIterCopy.peekNext();
 
-            if( firstInSet.equals( firstInPage )) {
-                // we are at the beginning
-                theNavigationBackMeshObject = null;
-
-            } else {
-                CursorIterator<MeshObject> setIterCopy2 = theIterator.createCopy();
-                if( setIterCopy2.hasPrevious( thePageIterator.getPageLength() )) {
-                    setIterCopy2.moveBy( -thePageIterator.getPageLength() );
-                } else {
-                    setIterCopy2.moveToBeforeFirst();
+                if( !firstInSet.equals( firstInPage )) {
+                    CursorIterator<MeshObject> setIterCopy2 = theIterator.createCopy();
+                    if( setIterCopy2.hasPrevious( thePageIterator.getPageLength() )) {
+                        setIterCopy2.moveBy( -thePageIterator.getPageLength() );
+                    } else {
+                        setIterCopy2.moveToBeforeFirst();
+                    }
+                    theNavigationBackMeshObject = setIterCopy2.next();
                 }
-                theNavigationBackMeshObject = setIterCopy2.next();
             }
         }
         return theNavigationBackMeshObject;
@@ -215,27 +219,26 @@ public abstract class AbstractPagingCursorIterableViewlet
             setIterCopy.moveToAfterLast();
             pageIterCopy.moveToAfterLast();
 
-            MeshObject lastInSet  = setIterCopy.peekPrevious();
-            MeshObject lastInPage = pageIterCopy.peekPrevious();
+            theNavigationStartMeshObject = null; // we are at the beginning unless ...
+            if( setIterCopy.hasNext() && pageIterCopy.hasNext() ) {
+                MeshObject lastInSet  = setIterCopy.peekPrevious();
+                MeshObject lastInPage = pageIterCopy.peekPrevious();
 
-            if( lastInSet.equals( lastInPage )) {
-                // we are at the beginning
-                theNavigationForwardMeshObject = null;
+                if( !lastInSet.equals( lastInPage )) {
+                    CursorIterator<MeshObject> setIterCopy2 = theIterator.createCopy();
 
-            } else {
-                CursorIterator<MeshObject> setIterCopy2 = theIterator.createCopy();
-
-                if( setIterCopy2.hasNext( thePageIterator.getPageLength() )) {
-                    setIterCopy2.moveBy( thePageIterator.getPageLength() );
-                } else {
-                    setIterCopy2.moveToAfterLast();
-                    if( setIterCopy2.hasPrevious( thePageIterator.getPageLength() )) {
-                        setIterCopy2.moveBy( -thePageIterator.getPageLength() );
+                    if( setIterCopy2.hasNext( thePageIterator.getPageLength() )) {
+                        setIterCopy2.moveBy( thePageIterator.getPageLength() );
                     } else {
-                        setIterCopy2.moveToBeforeFirst();
+                        setIterCopy2.moveToAfterLast();
+                        if( setIterCopy2.hasPrevious( thePageIterator.getPageLength() )) {
+                            setIterCopy2.moveBy( -thePageIterator.getPageLength() );
+                        } else {
+                            setIterCopy2.moveToBeforeFirst();
+                        }
                     }
+                    theNavigationForwardMeshObject = setIterCopy2.next();
                 }
-                theNavigationForwardMeshObject = setIterCopy2.next();
             }
         }
         return theNavigationForwardMeshObject;
@@ -262,23 +265,22 @@ public abstract class AbstractPagingCursorIterableViewlet
             setIterCopy.moveToAfterLast();
             pageIterCopy.moveToAfterLast();
 
-            MeshObject lastInSet  = setIterCopy.peekPrevious();
-            MeshObject lastInPage = pageIterCopy.peekPrevious();
+            theNavigationStartMeshObject = null; // we are at the beginning unless ...
+            if( setIterCopy.hasNext() && pageIterCopy.hasNext() ) {
+                MeshObject lastInSet  = setIterCopy.peekPrevious();
+                MeshObject lastInPage = pageIterCopy.peekPrevious();
 
-            if( lastInSet.equals( lastInPage )) {
-                // we are at the beginning
-                theNavigationEndMeshObject = null;
+                if( !lastInSet.equals( lastInPage )) {
+                    CursorIterator<MeshObject> setIterCopy2 = theIterator.createCopy();
+                    setIterCopy2.moveToAfterLast();
 
-            } else {
-                CursorIterator<MeshObject> setIterCopy2 = theIterator.createCopy();
-                setIterCopy2.moveToAfterLast();
-
-                if( setIterCopy2.hasPrevious( thePageIterator.getPageLength() )) {
-                    setIterCopy2.moveBy( -thePageIterator.getPageLength() );
-                } else {
-                    setIterCopy2.moveToBeforeFirst();
+                    if( setIterCopy2.hasPrevious( thePageIterator.getPageLength() )) {
+                        setIterCopy2.moveBy( -thePageIterator.getPageLength() );
+                    } else {
+                        setIterCopy2.moveToBeforeFirst();
+                    }
+                    theNavigationEndMeshObject = setIterCopy2.next();
                 }
-                theNavigationEndMeshObject = setIterCopy2.next();
             }
         }
         return theNavigationEndMeshObject;

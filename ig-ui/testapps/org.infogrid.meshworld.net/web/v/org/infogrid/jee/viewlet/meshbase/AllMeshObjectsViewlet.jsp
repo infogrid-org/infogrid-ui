@@ -6,6 +6,8 @@
  %><%@ taglib prefix="v"     uri="/v/org/infogrid/jee/taglib/viewlet/viewlet.tld"
  %><%@ taglib prefix="tmpl"  uri="/v/org/infogrid/jee/taglib/templates/templates.tld"
  %><%@ taglib prefix="c"     uri="http://java.sun.com/jsp/jstl/core"
+ %><%@ page import="org.infogrid.jee.viewlet.JeeViewlet"
+ %><%@ page import="org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet"
  %><%@ page import="org.infogrid.meshbase.IterableMeshBase"
  %><%@ page import="org.infogrid.meshbase.MeshBase"
  %><%@ page import="org.infogrid.mesh.MeshObject"
@@ -15,23 +17,32 @@
 <v:viewlet>
  <div class="slide-in-button">
   <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Create"/></a>
-  <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-accessLocally', {} )" title="Open a MeshObject"><img src="${CONTEXT}/s/images/world_add.png" alt="Open"/></a>
  </div>
- <h1>
 <%
-    MeshBase mb = ((MeshObject)pageContext.getRequest().getAttribute( "Subject" )).getMeshBase();
-    if( mb instanceof IterableMeshBase ) {
-        out.print( ((IterableMeshBase)mb).getSize() );
+    AllMeshObjectsViewlet v = (AllMeshObjectsViewlet) pageContext.getRequest().getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+
+    if( v.isFiltered() ) {
+%>
+ <h1>MeshObjects in the MeshBase (Filtered)</h1>
+<%
     } else {
-        out.print( "All" );
+        MeshBase mb = v.getSubject().getMeshBase();
+        if( mb instanceof IterableMeshBase ) {
+%>
+ <h1>MeshObjects in the MeshBase (<%=((IterableMeshBase)mb).getSize() %> Total)</h1>
+<%
+        } else {
+%>
+ <h1>MeshObjects in the MeshBase</h1>
+<%
+        }
     }
 %>
- MeshObjects in the MeshBase</h1>
 
  <div class="nav">
   <div class="left">
    <c:if test="${Viewlet.navigationStartMeshObject != null}">
-    <v:navigateToPage meshObject="${Viewlet.navigationStartMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}">
+    <v:navigateToPage meshObject="${Viewlet.navigationStartMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
      <img src="${CONTEXT}/s/images/control_start_blue.png" alt="Go to start" />
     </v:navigateToPage>
    </c:if>
@@ -42,7 +53,7 @@
 
   <div class="left">
    <c:if test="${Viewlet.navigationBackMeshObject != null}">
-    <v:navigateToPage meshObject="${Viewlet.navigationBackMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}">
+    <v:navigateToPage meshObject="${Viewlet.navigationBackMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
      <img src="${CONTEXT}/s/images/control_rewind_blue.png" alt="start" />
     </v:navigateToPage>
    </c:if>
@@ -53,7 +64,7 @@
 
   <div class="right">
    <c:if test="${Viewlet.navigationEndMeshObject != null}">
-    <v:navigateToPage meshObject="${Viewlet.navigationEndMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}">
+    <v:navigateToPage meshObject="${Viewlet.navigationEndMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
      <img src="${CONTEXT}/s/images/control_end_blue.png" alt="start" />
     </v:navigateToPage>
    </c:if>
@@ -64,7 +75,7 @@
 
   <div class="right">
    <c:if test="${Viewlet.navigationForwardMeshObject != null}">
-    <v:navigateToPage meshObject="${Viewlet.navigationForwardMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}">
+    <v:navigateToPage meshObject="${Viewlet.navigationForwardMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
      <img src="${CONTEXT}/s/images/control_fastforward_blue.png" alt="start" />
     </v:navigateToPage>
    </c:if>
@@ -72,8 +83,24 @@
     <img src="${CONTEXT}/s/images/control_fastforward.png" alt="start" />
    </c:if>
   </div>
+  <div class="middle">
+   <u:safeForm action="${Viewlet.postUrl}" method="GET">
+    <input type="hidden" name="lid-format" value="viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet" />
+    <div class="middle-item">
+     Regex for Identifier: <input type="text" name="identifier-regex" value="${Viewlet.idRegex}"/>
+    </div>
+    <div class="middle-item">
+     Show MeshTypes:
+     <select name="show-types">
+      ${Viewlet.showTypesHtml}
+     </select>
+    </div>
+    <div class="middle-item">
+     <input  type="submit" name="lid-submit" value="Filter" />
+    </div>
+   </div>
+   </u:safeForm>
  </div>
-
  <table class="set">
   <thead>
    <tr>
@@ -116,9 +143,6 @@
        </tr>
        <tr>
         <td class="label">Updated:</td><td><mesh:timeUpdated meshObjectName="current" /></td>
-       </tr>
-       <tr>
-        <td class="label">Last&nbsp;read:</td><td><mesh:timeRead meshObjectName="current" /></td>
        </tr>
       </table>
      </td>

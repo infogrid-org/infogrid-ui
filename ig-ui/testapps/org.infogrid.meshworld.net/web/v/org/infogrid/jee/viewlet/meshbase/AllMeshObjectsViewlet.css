@@ -61,17 +61,23 @@ div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet ul.properties > li >
 }
 
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > div.nav {
-    min-height: 25px;
+    min-height: 35px;
     font-size: 0.8em;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > div.nav > div.left {
     float: left;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 3px 10px 0 10px;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > div.nav > div.right {
     float: right;
+    margin: 5px 10px 0 10px;
+}
+div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > div.nav > div.middle {
+    text-align: center;
+    margin: 15px 0;
+}
+div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > div.nav > div.middle div.middle-item {
+    display: inline;
     margin-left: 10px;
     margin-right: 10px;
 }
-

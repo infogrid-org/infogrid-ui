@@ -14,6 +14,9 @@
 
 package org.infogrid.jee.viewlet.meshbase;
 
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.infogrid.jee.viewlet.AbstractPagingCursorIterableViewlet;
 import org.infogrid.jee.viewlet.DefaultJeeViewedMeshObjects;
 import org.infogrid.jee.viewlet.DefaultJeeViewletFactoryChoice;
@@ -22,10 +25,19 @@ import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.primitives.SubjectArea;
+import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
+import org.infogrid.modelbase.ModelBase;
+import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.CursorIterator;
+import org.infogrid.util.FilteringCursorIterator;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.CannotViewException;
+import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.ViewedMeshObjects;
 import org.infogrid.viewlet.Viewlet;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
@@ -36,6 +48,8 @@ public class AllMeshObjectsViewlet
         extends
             AbstractPagingCursorIterableViewlet
 {
+    private static final Log log = Log.getLogInstance( AllMeshObjectsViewlet.class ); // our own, private logger
+
     /**
      * Factory method.
      *
@@ -90,6 +104,62 @@ public class AllMeshObjectsViewlet
     }
 
     /**
+      * The Viewlet is being instructed to view certain objects, which are packaged as MeshObjectsToView.
+      *
+      * @param toView the MeshObjects to view
+      * @throws CannotViewException thrown if this Viewlet cannot view these MeshObjects
+      */
+    @Override
+    public void view(
+            MeshObjectsToView toView )
+        throws
+            CannotViewException
+    {
+        super.view( toView );
+
+        IterableMeshBase meshBase = (IterableMeshBase) getSubject().getMeshBase(); // derive from the subject, so we can do any MeshBase
+        ModelBase        mb       = meshBase.getModelBase();
+
+        // first reset
+        theIdRegex     = null;
+        theEntityTypes = null;
+
+        ViewedMeshObjects viewed = getViewedMeshObjects();
+        String idRegexString = (String) viewed.getViewletParameter( ID_REGEX_VIEWLET_PARAM );
+        String typesString   = (String) viewed.getViewletParameter( ENTITY_TYPES_VIEWLET_PARAM );
+
+        if( idRegexString != null ) {
+            idRegexString = idRegexString.trim();
+        }
+        if( idRegexString != null && idRegexString.length() > 0 ) {
+            theIdRegex = Pattern.compile( idRegexString );
+        }
+        if( typesString != null ) {
+            typesString = typesString.trim();
+        }
+        if( typesString != null && typesString.length() > 0 ) {
+            try {
+                String [] typesStrings = typesString.split( "," );
+                theEntityTypes = new EntityType[ typesStrings.length ];
+                int count = 0;
+                for( int i=0 ; i<typesStrings.length ; ++i ) {
+                    String current = typesStrings[i].trim();
+                    if( current.length() > 0 ) {
+                        theEntityTypes[count++] = mb.findEntityTypeByIdentifier( mb.getMeshTypeIdentifierFactory().fromExternalForm( typesStrings[i] ));
+                    }
+                }
+                if( count == 0 ) {
+                    theEntityTypes = null;
+                } else if( count < theEntityTypes.length ) {
+                    theEntityTypes = ArrayHelper.copyIntoNewArray( theEntityTypes, 0, count, EntityType.class );
+                }
+            } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+                log.warn( ex ); // perhaps there's a better way of doing this
+            }
+        }
+    }
+
+    /**
      * Detemine the correct CursorIterator. Default implementation can be
      * overridden by subclasses.
      *
@@ -100,7 +170,121 @@ public class AllMeshObjectsViewlet
     {
         IterableMeshBase meshBase = (IterableMeshBase) getSubject().getMeshBase(); // derive from the subject, so we can do any MeshBase
         
-        return meshBase.iterator();
+        CursorIterator<MeshObject> ret = meshBase.iterator();
+        if( theIdRegex != null || theEntityTypes != null ) {
+            ret = FilteringCursorIterator.create(
+                    ret,
+                    new FilteringCursorIterator.Filter<MeshObject>() {
+                            public boolean accept(
+                                    MeshObject obj )
+                            {
+                                if( theIdRegex != null ) {
+                                    Matcher m = theIdRegex.matcher( obj.getIdentifier().toExternalForm() );
+                                    if( !m.find()) {
+                                        return false;
+                                    }
+                                }
+                                if( theEntityTypes == null ) {
+                                    return true;
+                                }
+                                for( int i=0 ; i<theEntityTypes.length ; ++i ) {
+                                    if( obj.isBlessedBy( theEntityTypes[i] )) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                    },
+                    ret.getArrayComponentType() );
+        }
+        return ret;
+    }
+
+    /**
+     * Return true if filtering is in effect.
+     *
+     * @return true if filtering is in effect
+     */
+    public boolean isFiltered()
+    {
+        if( theIdRegex != null ) {
+            return true;
+        }
+        return theEntityTypes != null;
+    }
+
+    /**
+     * Obtain the current regex in effect for the Identifier.
+     *
+     * @return the regex, or null if none
+     */
+    public String getIdRegex()
+    {
+        if( theIdRegex == null ) {
+            return null;
+        } else {
+            return theIdRegex.toString();
+        }
+    }
+
+    /**
+     * Obtain a comma-separated list of all the EntityType identifiers by which we filter.
+     * Null means we do not filter.
+     *
+     * @return the EntityType identifiers
+     */
+    public String getShowTypes()
+    {
+        if( theEntityTypes == null ) {
+            return null;
+        }
+
+        StringBuilder buf = new StringBuilder();
+        String        sep = "";
+
+        for( int i=0 ; i<theEntityTypes.length ; ++i ) {
+            buf.append( sep );
+            buf.append( theEntityTypes[i].getIdentifier().toExternalForm() );
+            sep = ",";
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Obtain an HTML fragment that can be inserted into a HTML select statement that gives the selectable EntityTypes.
+     *
+     * @return the HTML fragment
+     */
+    public String getShowTypesHtml()
+    {
+        StringBuilder ret = new StringBuilder();
+        ret.append( "<option" );
+        if( theEntityTypes == null ) {
+            ret.append( " selected=\"selected\"" );
+        }
+        ret.append( " value=\"\">All EntityTypes</option>\n" );
+
+        // need to list all EntityTypes from the ModelBase, and select the ones that we currently filter by.
+        ModelBase mb = getSubject().getMeshBase().getModelBase();
+
+        Iterator<SubjectArea> saIter = mb.subjectAreaIterator();
+        while( saIter.hasNext() ) {
+            SubjectArea sa = saIter.next();
+            ret.append( "<optgroup label=\"" ).append( sa.getUserVisibleName().value() ).append( "\">\n" );
+
+            for( EntityType et : sa.getEntityTypes()) {
+                ret.append( " <option" );
+                if( theEntityTypes != null && ArrayHelper.isIn( et, theEntityTypes, false )) {
+                    ret.append( " selected=\"selected\"" );
+                }
+                ret.append( " value=\"" ).append( et.getIdentifier().toExternalForm()).append( "\">" );
+                ret.append( et.getUserVisibleName().value() );
+                ret.append( "</option>\n" );
+            }
+
+            ret.append( "</optgroup>\n" );
+        }
+        return ret.toString();
     }
 
     /**
@@ -109,4 +293,24 @@ public class AllMeshObjectsViewlet
     public static final int DEFAULT_PAGE_SIZE = ResourceHelper.getInstance( AllMeshObjectsViewlet.class ).getResourceIntegerOrDefault(
             "DefaultPageSize",
             20 );
+
+    /**
+     * The regular expression for identifiers currently in effect.
+     */
+    protected Pattern theIdRegex;
+
+    /**
+     * The EntityTypes that we filter currently in effect. If this is null, it means "return all".
+     */
+    protected EntityType [] theEntityTypes;
+
+    /**
+     * Viewlet parameter containing the regex for the Identifiers.
+     */
+    public static final String ID_REGEX_VIEWLET_PARAM = "identifier-regex";
+
+    /**
+     * Viewlet parameter containing the list of the EntityTypes for the filter.
+     */
+    public static final String ENTITY_TYPES_VIEWLET_PARAM = "show-types";
 }
