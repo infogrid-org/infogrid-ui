@@ -19,6 +19,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -470,7 +471,7 @@ public class SaneServletRequest
      */
     public Map<String,String[]> getPostedArguments()
     {
-        return thePostedArguments;
+        return Collections.unmodifiableMap( thePostedArguments );
     }    
 
     /**
