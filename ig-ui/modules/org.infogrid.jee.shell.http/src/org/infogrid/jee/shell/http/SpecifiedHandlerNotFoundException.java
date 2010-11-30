@@ -28,7 +28,7 @@ public class SpecifiedHandlerNotFoundException
     /**
      * Constructor.
      *
-     * @param name name of the handler that could not be found
+     * @param handlerName name of the handler that could not be found
      */
     public SpecifiedHandlerNotFoundException(
             String handlerName )
