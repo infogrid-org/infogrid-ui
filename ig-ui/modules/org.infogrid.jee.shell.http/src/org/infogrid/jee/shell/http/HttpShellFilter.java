@@ -178,6 +178,7 @@ public class HttpShellFilter
 
         Map<String,String[]>       postArguments = lidRequest.getPostedArguments();
         HashMap<String,MeshObject> variables     = new HashMap<String,MeshObject>();
+        Throwable                  thrown        = null;
 
         try {
             // first look for all arguments of the form <PREFIX>.<VARIABLE>
@@ -393,57 +394,75 @@ public class HttpShellFilter
             }
 
         } catch( ParseException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( MeshObjectAccessException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( MeshObjectsNotFoundException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( MeshObjectIdentifierNotUniqueException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( MeshTypeWithIdentifierNotFoundException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( IsAbstractException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( EntityNotBlessedException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( EntityBlessedAlreadyException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( IllegalPropertyTypeException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( IllegalPropertyValueException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( PropertyValueParsingException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( NotRelatedException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( RelatedAlreadyException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( RoleTypeNotBlessedException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( RoleTypeBlessedAlreadyException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( RoleTypeRequiresEntityTypeException ex ) {
+            thrown = ex;
             throw new HttpShellException( ex );
 
         } catch( FactoryException ex ) {
+            thrown = ex;
             getLog().error( ex ); // should not happen
 
         } catch( TransactionException ex ) {
+            thrown = ex;
             getLog().error( ex ); // should not happen
 
         } finally {
@@ -451,7 +470,13 @@ public class HttpShellFilter
             for( OnDemandTransaction tx : txs.values() ) {
                 if( tx.hasBeenCreated() ) {
                     try {
-                        tx.obtain().commitTransaction();
+                        Transaction tx2 = tx.obtain();
+
+                        if( thrown == null ) {
+                            tx2.commitTransaction();
+                        } else {
+                            tx2.rollbackTransaction( thrown );
+                        }
                     } catch( Throwable t ) {
                         getLog().error( t );
                     }
