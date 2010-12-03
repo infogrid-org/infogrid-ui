@@ -331,7 +331,7 @@ public class HttpShellFilter
                 }
             }
 
-            // now deal with checkboxes
+            // now deal with checkboxes and radioboxes
             for( String var1Name : variables.keySet() ) {
                 String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
 
@@ -361,6 +361,55 @@ public class HttpShellFilter
                         tx.obtain();
 
                         if( values != null && values.length > 0 ) {
+                            // relate and bless
+                            try {
+                                found1.relate( found2 );
+                            } catch( RelatedAlreadyException t ) {
+                                // ignore
+                            }
+                            try {
+                                found1.blessRelationship( rt, found2 );
+                            } catch( RoleTypeBlessedAlreadyException ex ) {
+                                // ignore
+                            }
+                        } else {
+                            // unbless and possibly unrelate
+                            try {
+                                found1.unblessRelationship( rt, found2 );
+                            } catch( RoleTypeNotBlessedException ex ) {
+                                // ignore
+                            } catch( NotRelatedException ex ) {
+                                // ignore
+                            }
+                            if( found1.getRoleTypes( found2 ).length == 0 ) {
+                                try {
+                                    found1.unrelate( found2 );
+                                } catch( NotRelatedException ex ) {
+                                    // ignore
+                                }
+                            }
+                        }
+                    }
+                    if( arg.endsWith( RADIOBOX_ROLE_TAG )) {
+                        String     var2Name = arg.substring( key.length(), arg.length()-RADIOBOX_ROLE_TAG.length() );
+                        MeshObject found2   = variables.get( var2Name );
+                        MeshObject found1   = variables.get( var1Name );
+
+                        if( found2 == null ) {
+                            throw new HttpShellException( new SpecifiedMeshObjectNotFoundException( var2Name ));
+                        }
+                        if( found1 == null ) {
+                            throw new HttpShellException( new SpecifiedMeshObjectNotFoundException( var1Name ));
+                        }
+                        String   value = lidRequest.getPostedArgument( arg );
+                        RoleType rt    = (RoleType) findMeshType( value );
+
+                        String radiogroupName = lidRequest.getPostedArgument( key + var2Name + RADIOBOX_NAME_TAG );
+                        if( radiogroupName == null ) {
+                            continue;
+                        }
+                        String doBless = lidRequest.getPostedArgument( radiogroupName );
+                        if( doBless != null && doBless.equals( key + var2Name + RADIOBOX_TAG )) {
                             // relate and bless
                             try {
                                 found1.relate( found2 );

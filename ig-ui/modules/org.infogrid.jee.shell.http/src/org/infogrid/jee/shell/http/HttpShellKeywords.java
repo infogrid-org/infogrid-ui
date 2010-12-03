@@ -118,6 +118,23 @@ public interface HttpShellKeywords
     public static final String CHECKBOX_TAG = SEPARATOR + "checkbox";
 
     /**
+     * Keyword indicating the presence of a relationship radiobox by specifying a RoleType that
+     * should be blessed/unblessed.
+     */
+    public static final String RADIOBOX_ROLE_TAG = SEPARATOR + "radiobox.role";
+
+    /**
+     * Keyword indicating the name of the radio group in which blessing/unblessing of
+     * relationships occurs.
+     */
+    public static final String RADIOBOX_NAME_TAG = SEPARATOR + "radiobox.name";
+
+    /**
+     * Keyword indicating that a radiobox was selected to bless a relationship.
+     */
+    public static final String RADIOBOX_TAG = SEPARATOR + "radiobox";
+
+    /**
      * Keyword indicating whether any particular component of the operation should or should
      * not throw an exception if its execution failed.
      */
