@@ -114,7 +114,10 @@
    <c:forEach items="${Viewlet.cursorIterator}" var="current" varStatus="currentStatus">
     <u:rotatingTr statusVar="currentStatus" htmlClasses="bright,dark" firstRowHtmlClass="first" lastRowHtmlClass="last">
      <td>
-      <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete"/></a></div>
+      <div class="slide-in-button">
+       <mesh:meshObjectLink meshObjectName="current" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet"><img src="${CONTEXT}/s/images/pencil.png" alt="Edit"/></mesh:meshObjectLink>
+       <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete"/></a>
+      </div>
       <mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current" maxLength="30"/></mesh:meshObjectLink>
      </td>
      <td>
