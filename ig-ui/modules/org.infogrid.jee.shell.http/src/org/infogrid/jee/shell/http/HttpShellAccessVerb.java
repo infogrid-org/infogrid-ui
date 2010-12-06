@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,6 +21,7 @@ import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectsNotFoundException;
+import org.infogrid.meshbase.sweeper.Sweeper;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.util.CreateWhenNeeded;
@@ -227,6 +228,46 @@ public enum HttpShellAccessVerb
 
                 Transaction tx2 = tx.obtain();
                 mb.getMeshBaseLifecycleManager().deleteMeshObject( found );
+
+                return null; // return found instead?
+            }
+    },
+    SWEEP( "sweep" ) {
+            /**
+             * Perform this verb.
+             *
+             * @param identifier the MeshObjectIdentifier of the to-be-accessed object in the request
+             * @param mb the MeshBase to use for the access
+             * @param tx the Transaction if and when created
+             * @param request the request
+             * @return the accessed MeshObject
+             * @throws MeshObjectIdentifierNotUniqueException thrown if a MeshObject with this identifier exists already
+             * @throws TransactionException thrown if a problem occurred with the Transaction
+             * @throws NotPermittedException thrown if the caller did not have sufficient permissions to perform this operation
+             */
+            public MeshObject access(
+                    MeshObjectIdentifier          identifier,
+                    MeshBase                      mb,
+                    CreateWhenNeeded<Transaction> tx,
+                    SaneRequest                   request )
+                throws
+                    MeshObjectIdentifierNotUniqueException,
+                    MeshObjectsNotFoundException,
+                    TransactionException,
+                    NotPermittedException
+            {
+                if( identifier == null ) {
+                    throw new MeshObjectsNotFoundException( mb, identifier );
+                }
+                MeshObject found = mb.findMeshObjectByIdentifier( identifier );
+                if( found == null ) {
+                    throw new MeshObjectsNotFoundException( mb, identifier );
+                }
+
+                Sweeper s = mb.getSweeper();
+                if( s != null ) {
+                    s.sweepObject( found );
+                }
 
                 return null; // return found instead?
             }

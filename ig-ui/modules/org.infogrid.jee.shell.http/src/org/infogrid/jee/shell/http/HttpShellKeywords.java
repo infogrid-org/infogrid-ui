@@ -152,6 +152,21 @@ public interface HttpShellKeywords
     public static final String FULL_SUBMIT_TAG = PREFIX + SUBMIT_TAG;
 
     /**
+     * Keyword indicating a separate command.
+     */
+    public static final String COMMAND_TAG = "command";
+
+    /**
+     * Optimization to also have this one around.
+     */
+    public static final String FULL_COMMAND_TAG = PREFIX + COMMAND_TAG;
+
+    /**
+     * Possible value of the COMMAND_TAG indicating that the MeshBase should be swept.
+     */
+    public static final String SWEEP_ALL_COMMAND = "sweepAll";
+
+    /**
      * Value of the SUBMIT_TAG keyword that indicates "perform operations". All other values,
      * if the SUBMIT_TAG is given, indicate "ignore commands".
      */

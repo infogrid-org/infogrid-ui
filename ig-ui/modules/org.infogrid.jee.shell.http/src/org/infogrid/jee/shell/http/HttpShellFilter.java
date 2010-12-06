@@ -54,6 +54,8 @@ import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.MeshObjectsNotFoundException;
+import org.infogrid.meshbase.sweeper.SweepPolicy;
+import org.infogrid.meshbase.sweeper.Sweeper;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.OnDemandTransactionFactory;
 import org.infogrid.meshbase.transaction.Transaction;
@@ -189,6 +191,9 @@ public class HttpShellFilter
                 String coreArg = arg.substring( PREFIX.length() );
                 if( coreArg.equals( SUBMIT_TAG )) {
                     continue; // skip submit tag
+                }
+                if( coreArg.equals( COMMAND_TAG )) {
+                    continue; // skip command tag
                 }
                 if( coreArg.indexOf( SEPARATOR ) >= 0 ) {
                     continue; // skip all that aren't referring to the MeshObjects
@@ -438,6 +443,22 @@ public class HttpShellFilter
                                 }
                             }
                         }
+                    }
+                }
+            }
+            String [] commands = postArguments.get( FULL_COMMAND_TAG );
+            if( commands != null ) {
+                for( int i=0 ; i<commands.length ; ++i ) {
+                    String current = commands[i];
+
+                    if( SWEEP_ALL_COMMAND.equals( current )) {
+                        MeshBase mb = findMeshBaseFor( COMMAND_TAG, lidRequest ); // ugly?
+
+                        Sweeper s = mb.getSweeper();
+                        if( s == null ) {
+                            continue;
+                        }
+                        s.sweepAllNow();
                     }
                 }
             }
