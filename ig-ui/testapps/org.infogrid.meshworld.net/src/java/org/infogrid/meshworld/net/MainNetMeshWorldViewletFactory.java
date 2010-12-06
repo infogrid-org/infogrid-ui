@@ -19,7 +19,7 @@ import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
 import org.infogrid.jee.viewlet.log4j.Log4jConfigurationViewlet;
-import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
+import org.infogrid.jee.viewlet.meshbase.net.AllNetMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
@@ -72,7 +72,7 @@ public class MainNetMeshWorldViewletFactory
         
         NetMeshObject subject = (NetMeshObject) toView.getSubject();
         if( subject.getMeshBase().getHomeObject() == subject ) {
-            ret.add( AllMeshObjectsViewlet.choice(          realToView, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( AllNetMeshObjectsViewlet.choice(       realToView, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( AllMeshTypesViewlet.choice(            realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( Log4jConfigurationViewlet.choice(      realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ModuleDirectoryViewlet.choice(         realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));

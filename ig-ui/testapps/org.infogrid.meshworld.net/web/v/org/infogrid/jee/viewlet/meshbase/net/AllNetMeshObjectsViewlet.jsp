@@ -1,6 +1,7 @@
 <%@    page contentType="text/html"
  %><%@ taglib prefix="set"   uri="/v/org/infogrid/jee/taglib/mesh/set/set.tld"
  %><%@ taglib prefix="mesh"  uri="/v/org/infogrid/jee/taglib/mesh/mesh.tld"
+ %><%@ taglib prefix="netmeshbase" uri="/v/org/infogrid/jee/taglib/meshbase/net/netmeshbase.tld"
  %><%@ taglib prefix="candy" uri="/v/org/infogrid/jee/taglib/candy/candy.tld"
  %><%@ taglib prefix="u"     uri="/v/org/infogrid/jee/taglib/util/util.tld"
  %><%@ taglib prefix="v"     uri="/v/org/infogrid/jee/taglib/viewlet/viewlet.tld"
@@ -12,11 +13,13 @@
  %><%@ page import="org.infogrid.meshbase.MeshBase"
  %><%@ page import="org.infogrid.mesh.MeshObject"
  %>
-<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/meshbase/AllMeshObjectsViewlet.css"/>
+<tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/viewlet/meshbase/net/AllNetMeshObjectsViewlet.css"/>
 <v:viewletAlternatives />
 <v:viewlet>
  <div class="slide-in-button">
+  <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-sweepAll', {} )" title="Sweep all"><img src="${CONTEXT}/s/images/arrow_out.png" alt="Sweep all"/></a>
   <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Create"/></a>
+  <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-accessLocally', {} )" title="Open a MeshObject"><img src="${CONTEXT}/s/images/world_add.png" alt="Open"/></a>
  </div>
 <%
     AllMeshObjectsViewlet v = (AllMeshObjectsViewlet) pageContext.getRequest().getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
@@ -85,7 +88,7 @@
   </div>
   <div class="middle">
    <u:safeForm action="${Viewlet.postUrl}" method="GET">
-    <input type="hidden" name="lid-format" value="viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet" />
+    <input type="hidden" name="lid-format" value="viewlet:org.infogrid.jee.viewlet.meshbase.net.AllNetMeshObjectsViewlet" />
     <div class="middle-item">
      Regex for Identifier: <input type="text" name="identifier-regex" value="${Viewlet.idRegex}"/>
     </div>
@@ -93,6 +96,12 @@
      Show MeshTypes:
      <select name="show-types">
       ${Viewlet.showTypesHtml}
+     </select>
+    </div>
+    <div class="middle-item">
+     Home:
+     <select name="home-netmeshbase">
+      ${Viewlet.showHomeNetMeshBaseHtml}
      </select>
     </div>
     <div class="middle-item">
@@ -115,10 +124,16 @@
     <u:rotatingTr statusVar="currentStatus" htmlClasses="bright,dark" firstRowHtmlClass="first" lastRowHtmlClass="last">
      <td>
       <div class="slide-in-button">
+       <c:if test="${!current.homeReplica}">
+        <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-sweep', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Sweep this MeshObject"><img src="${CONTEXT}/s/images/arrow_out.png" alt="Sweep"/></a>
+       </c:if>
        <mesh:meshObjectLink meshObjectName="current" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet"><img src="${CONTEXT}/s/images/pencil.png" alt="Edit"/></mesh:meshObjectLink>
        <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete"/></a>
       </div>
       <mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current" maxLength="30"/></mesh:meshObjectLink>
+      <c:if test="${!current.homeReplica}">
+       <br/>(from <netmeshbase:proxyLink proxyName="current.proxyTowardsHomeReplica" addArguments="?lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet"><netmeshbase:proxyId proxyName="current.proxyTowardsHomeReplica"/></netmeshbase:proxyLink>)
+      </c:if>
      </td>
      <td>
       <mesh:neighborIterate meshObjectName="current" neighborLoopVar="neighbor">
