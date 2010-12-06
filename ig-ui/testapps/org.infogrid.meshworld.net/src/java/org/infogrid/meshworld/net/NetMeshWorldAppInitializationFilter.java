@@ -23,7 +23,6 @@ import org.infogrid.jee.templates.defaultapp.AppInitializationException;
 import org.infogrid.jee.viewlet.JeeMeshObjectsToViewFactory;
 import org.infogrid.jee.viewlet.net.DefaultJeeNetMeshObjectsToViewFactory;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
-import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.meshbase.net.sweeper.DefaultNetIterableSweeper;

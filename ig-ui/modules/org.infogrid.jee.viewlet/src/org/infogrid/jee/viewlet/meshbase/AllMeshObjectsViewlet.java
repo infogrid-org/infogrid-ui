@@ -160,8 +160,7 @@ public class AllMeshObjectsViewlet
     }
 
     /**
-     * Detemine the correct CursorIterator. Default implementation can be
-     * overridden by subclasses.
+     * Determine the correct CursorIterator.
      *
      * @return the CursorIterator
      */
