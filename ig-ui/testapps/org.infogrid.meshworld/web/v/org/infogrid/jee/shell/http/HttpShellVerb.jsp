@@ -11,3 +11,6 @@
 <%@ include file="HttpShellVerb/unbless.jsp" %>
 <%@ include file="HttpShellVerb/unblessRole.jsp" %>
 <%@ include file="HttpShellVerb/unrelate.jsp" %>
+
+<%@ include file="HttpShellVerb/sweep.jsp" %>
+<%@ include file="HttpShellVerb/sweepAll.jsp" %>
