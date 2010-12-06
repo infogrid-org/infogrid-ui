@@ -32,7 +32,7 @@ import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
-import org.infogrid.meshbase.net.NetMeshBase;
+import org.infogrid.meshbase.net.IterableNetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.local.store.IterableLocalNetStoreMeshBase;
@@ -220,7 +220,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             SaneRequest incomingRequest,
             MeshBase    mb )
     {
-        populateNetMeshBase( incomingRequest, (NetMeshBase) mb );
+        populateNetMeshBase( incomingRequest, (IterableNetMeshBase) mb );
     }
 
     /**
@@ -230,8 +230,8 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
      * @param mb the NetMeshBase to initialize
      */
     protected void populateNetMeshBase(
-            SaneRequest incomingRequest,
-            NetMeshBase mb )
+            SaneRequest         incomingRequest,
+            IterableNetMeshBase mb )
     {
         // nothing on this level
     }
