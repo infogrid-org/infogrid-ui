@@ -27,6 +27,9 @@
       <meshbase:meshBaseId meshBaseName="current"/>
      </meshbase:meshBaseLink>
     </h4>
+    <c:if test="${current.dead}">
+     <p class="error">This MeshBase is dead.</p>
+    </c:if>
     <table class="mb">
      <tr>
       <td>
@@ -69,6 +72,7 @@
          <probe:ifIsShadowMeshBase meshBaseName="current">
           <li><input type="submit" name="RunNowAction" value="Probe now"/></li>
           <li><input type="submit" name="StopAction" value="Stop probing"/></li>
+          <li><input type="submit" name="KillAction" value="Kill ShadowMeshBase"/></li>
          </probe:ifIsShadowMeshBase>
          <probe:notIfIsShadowMeshBase meshBaseName="current">
           <li><input type="submit" name="SweepNowAction" value="Sweep now"/></li>
