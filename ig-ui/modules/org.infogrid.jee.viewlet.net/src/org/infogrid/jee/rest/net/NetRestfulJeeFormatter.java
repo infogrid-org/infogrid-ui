@@ -58,6 +58,46 @@ public class NetRestfulJeeFormatter
     }
 
     /**
+     * Format the start of a Proxy.
+     *
+     * @param pageContext the PageContext object for this page
+     * @param p the Proxy
+     * @param stringRepresentation the StringRepresentation to use
+     * @param maxLength maximum length of emitted String
+     * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    public String formatProxyStart(
+            PageContext pageContext,
+            Proxy       p,
+            String      stringRepresentation,
+            int         maxLength )
+        throws
+            StringifierException
+    {
+        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        
+        String ret = p.toStringRepresentation( rep, null );
+        return ret;
+    }
+
+    /**
+     * Format the end of a Proxy.
+     *
+     * @param pageContext the PageContext object for this page
+     * @param p the Proxy
+     * @param stringRepresentation the StringRepresentation to use
+     * @return the String to display
+     */
+    public String formatProxyEnd(
+            PageContext pageContext,
+            Proxy       p,
+            String      stringRepresentation )
+    {
+        return ""; // nothing
+    }
+
+    /**
      * Format the start of a Proxy's identifier.
      *
      * @param pageContext the PageContext object for this page
@@ -76,8 +116,8 @@ public class NetRestfulJeeFormatter
             StringifierException
     {
         StringRepresentation rep = determineStringRepresentation( stringRepresentation );
-        
-        String ret = p.toStringRepresentation( rep, null );
+
+        String ret = p.getPartnerMeshBaseIdentifier().toStringRepresentation( rep, null );
         return ret;
     }
 

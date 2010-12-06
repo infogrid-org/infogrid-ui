@@ -14,7 +14,7 @@
 <ul>
  <netmeshbase:proxyIterate meshObjectName="Subject" loopVar="currentProxy">
   <li>
-   <netmeshbase:proxyLink proxyName="currentProxy"><netmeshbase:proxyId proxyName="currentProxy" stringRepresentation="Html" /></netmeshbase:proxyLink>
+   <netmeshbase:proxyLink proxyName="currentProxy"><netmeshbase:proxy proxyName="currentProxy" /></netmeshbase:proxyLink>
   </li>
  </netmeshbase:proxyIterate>
 </ul>
