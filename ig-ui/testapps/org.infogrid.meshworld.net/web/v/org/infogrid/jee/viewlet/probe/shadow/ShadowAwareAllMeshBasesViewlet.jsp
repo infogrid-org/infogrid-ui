@@ -24,7 +24,7 @@
       <probe:notIfIsShadowMeshBase meshBaseName="current">
       NetMeshBase
       </probe:notIfIsShadowMeshBase>
-      <meshbase:meshBaseId meshBaseName="current"/>
+      <meshbase:meshBaseId meshBaseName="current" colloquial="false" />
      </meshbase:meshBaseLink>
     </h4>
     <c:if test="${current.dead}">
@@ -67,7 +67,7 @@
       </td>
       <td class="commands">
        <u:safeForm action="${Viewlet.postUrl}" method="POST">
-        <input type="hidden" name="MeshBase" value="<meshbase:meshBaseId meshBaseName="current" stringRepresentation="Plain" filter="true" />"/>
+        <input type="hidden" name="MeshBase" value="<meshbase:meshBaseId meshBaseName="current" stringRepresentation="Plain" colloquial="false" />"/>
         <ul>
          <probe:ifIsShadowMeshBase meshBaseName="current">
           <li><input type="submit" name="RunNowAction" value="Probe now"/></li>
