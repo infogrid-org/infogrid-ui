@@ -13,7 +13,11 @@
     All rights reserved.
 -->
 
-<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+<taglib version="2.0"
+        xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+
     <tlib-version>1.0</tlib-version>
     <short-name>set</short-name>
     <uri>/v/org/infogrid/jee/taglib/mesh/set/set.tld</uri>
@@ -254,6 +258,11 @@
     </tag>
 
     <tag>
+        <name>iteratebeyondlimit</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateBeyondLimitTag</tag-class>
+    </tag>
+
+    <tag>
         <name>iteratecontentrow</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateContentRowTag</tag-class>
     </tag>
@@ -295,6 +304,10 @@
         </attribute>
         <attribute>
             <name>reverse</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>limit</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -341,6 +354,10 @@
         </attribute>
         <attribute>
             <name>reverse</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>limit</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>

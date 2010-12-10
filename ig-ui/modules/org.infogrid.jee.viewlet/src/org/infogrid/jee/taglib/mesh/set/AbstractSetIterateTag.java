@@ -51,6 +51,7 @@ public abstract class AbstractSetIterateTag<T>
         theStatusVar         = null;
         theReverse           = null;
         theCounter           = 0;
+        theLimit             = -1;
         theIterator          = null;
         theCurrent           = null;
 
@@ -126,6 +127,29 @@ public abstract class AbstractSetIterateTag<T>
             String newValue )
     {
         theReverse = newValue;
+    }
+
+    /**
+     * Obtain value of the limit property.
+     *
+     * @return value of the limit property
+     * @see #setLimit
+     */
+    public final int getLimit()
+    {
+        return theLimit;
+    }
+
+    /**
+     * Set value of the limit property.
+     *
+     * @param newValue new value of the limit property
+     * @see #getLimit
+     */
+    public final void setLimit(
+            int newValue )
+    {
+        theLimit = newValue;
     }
 
     /**
@@ -227,7 +251,8 @@ public abstract class AbstractSetIterateTag<T>
             setRequestAttribute( theStatusVar, status );
         }
 
-        if( theIterator.hasNext() ) {
+        // theLimit-1 because the last row is still to come
+        if( ( theLimit == -1 || theCounter < theLimit-1 ) && theIterator.hasNext() ) {
             theStatus = Status.PROCESS_MIDDLE_ROW;
         } else {
             theStatus = Status.PROCESS_FOOTER_AND_LAST_ROW;
@@ -326,6 +351,29 @@ public abstract class AbstractSetIterateTag<T>
     }
 
     /**
+     * Allow enclosed tags to determine whether, during this iteration, the
+     * beyondLimit row should be displayed.
+     *
+     * @return true if the beyond limit row should be displayed
+     */
+    public boolean displayBeyondLimit()
+    {
+        if( theLimit == -1 ) {
+            return false;
+        }
+        if( theStatus != Status.PROCESS_FOOTER_AND_LAST_ROW ) {
+            return false;
+        }
+        if( theCounter < theLimit-1 ) {
+            return false;
+        }
+        if( !theIterator.hasNext() ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * String containing the name of the loop variable that contains the current object.
      */
     protected String theLoopVar;
@@ -344,6 +392,11 @@ public abstract class AbstractSetIterateTag<T>
      * Counts the number of iterations performed so far.
      */
     protected int theCounter;
+
+    /**
+     * Integer containing the maximum number of items to emit. -1 if no limit.
+     */
+    protected int theLimit;
 
     /**
      * Iterator over the MeshObjectSet.
