@@ -220,7 +220,7 @@ public abstract class AbstractPagingCursorIterableViewlet
             pageIterCopy.moveToAfterLast();
 
             theNavigationStartMeshObject = null; // we are at the beginning unless ...
-            if( setIterCopy.hasNext() && pageIterCopy.hasNext() ) {
+            if( setIterCopy.hasPrevious() && pageIterCopy.hasPrevious() ) {
                 MeshObject lastInSet  = setIterCopy.peekPrevious();
                 MeshObject lastInPage = pageIterCopy.peekPrevious();
 
@@ -266,7 +266,7 @@ public abstract class AbstractPagingCursorIterableViewlet
             pageIterCopy.moveToAfterLast();
 
             theNavigationStartMeshObject = null; // we are at the beginning unless ...
-            if( setIterCopy.hasNext() && pageIterCopy.hasNext() ) {
+            if( setIterCopy.hasPrevious() && pageIterCopy.hasPrevious() ) {
                 MeshObject lastInSet  = setIterCopy.peekPrevious();
                 MeshObject lastInPage = pageIterCopy.peekPrevious();
 
