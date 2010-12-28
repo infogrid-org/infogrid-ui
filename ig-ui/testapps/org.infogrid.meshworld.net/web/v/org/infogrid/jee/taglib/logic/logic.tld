@@ -9,7 +9,7 @@
 
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -74,6 +74,36 @@
     <tag>
         <name>if</name>
         <tagclass>org.infogrid.jee.taglib.logic.IfTag</tagclass>
+        <attribute>
+            <name>meshObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>propertyTypeName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyType</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ifNull</name>
+        <tagclass>org.infogrid.jee.taglib.logic.IfNullTag</tagclass>
         <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
@@ -278,6 +308,36 @@
         </attribute>
     </tag>
     
+    <tag>
+        <name>notIfNull</name>
+        <tagclass>org.infogrid.jee.taglib.logic.NotIfNullTag</tagclass>
+        <attribute>
+            <name>meshObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>propertyTypeName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyType</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
     <tag>
         <name>notIfRelated</name>
         <tagclass>org.infogrid.jee.taglib.logic.NotIfRelatedTag</tagclass>
