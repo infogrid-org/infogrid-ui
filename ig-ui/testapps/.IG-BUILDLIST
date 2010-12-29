@@ -1,4 +1,4 @@
-org.infogrid.jee.testapp
-org.infogrid.jee.net.testapp
-org.infogrid.meshworld
-org.infogrid.meshworld.net
+org.infogrid.jee.testapp [no-run]
+org.infogrid.jee.net.testapp [no-run]
+org.infogrid.meshworld [no-run]
+org.infogrid.meshworld.net [no-run]
