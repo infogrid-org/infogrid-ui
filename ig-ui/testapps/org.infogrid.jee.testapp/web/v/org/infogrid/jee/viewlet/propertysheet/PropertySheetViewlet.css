@@ -7,7 +7,6 @@ div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table.audit > 
     border-width: 1px;
     border-style: solid;
     padding: 0 10px;
-    font-size: 0.7em;
     margin: 0 0 10px 10px;
 }
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table.audit > * > tr > td.audit {
@@ -44,7 +43,6 @@ div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table.neighbor
     width: 50%;
 }
 
-
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > .type {
     border-bottom: 0px;
 }
@@ -54,5 +52,9 @@ div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr
     border-style: dotted;
 }
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td {
-    border-width: 1px 1px 1px 1px;
+    border-width: 1px;
+}
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > th.entityType {
+    text-align: left;
+    padding-left: 10%;
 }

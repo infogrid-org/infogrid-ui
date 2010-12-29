@@ -82,6 +82,7 @@ public abstract class AbstractRestInfoGridBodyTag
      * @param owningMeshObject the MeshObject that owns this Property
      * @param propertyType the PropertyType of the Property
      * @param editVar name of the HTML form elements to use
+     * @param editIndex index further qualifying the HTML form elements to use
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
      * @param theMaxLength the maximum length of an emitted String
@@ -97,6 +98,7 @@ public abstract class AbstractRestInfoGridBodyTag
             MeshObject    owningMeshObject,
             PropertyType  propertyType,
             String        editVar,
+            int           editIndex,
             String        nullString,
             String        stringRepresentation,
             int           theMaxLength,
@@ -111,6 +113,7 @@ public abstract class AbstractRestInfoGridBodyTag
                 owningMeshObject,
                 propertyType,
                 editVar,
+                editIndex,
                 nullString,
                 stringRepresentation,
                 theMaxLength,

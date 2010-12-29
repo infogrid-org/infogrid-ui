@@ -49,6 +49,7 @@ public class PropertyTag
     protected void initializeToDefaults()
     {
         theMeshObjectName       = null;
+        theMeshObjectVarName    = null;
         thePropertyTypeName     = null;
         thePropertyType         = null;
         theNullString           = null;
@@ -81,6 +82,29 @@ public class PropertyTag
             String newValue )
     {
         theMeshObjectName = newValue;
+    }
+
+    /**
+     * Obtain value of the meshObjectVarName property.
+     *
+     * @return value of the meshObjectVarName property
+     * @see #setMeshObjectVarName
+     */
+    public final String getMeshObjectVarName()
+    {
+        return theMeshObjectVarName;
+    }
+
+    /**
+     * Set value of the meshObjectVarName property.
+     *
+     * @param newValue new value of the meshObjectVarName property
+     * @see #getMeshObjectVarName
+     */
+    public final void setMeshObjectVarName(
+            String newValue )
+    {
+        theMeshObjectVarName = newValue;
     }
 
     /**
@@ -263,12 +287,21 @@ public class PropertyTag
             JspException,
             IgnoreException
     {
-        MeshObject   obj  = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject   obj  = null;
         PropertyType type = null;
 
-        if( obj == null ) {
-            // if we get here, ignore is necessarily true
-            return SKIP_BODY;
+        if( theMeshObjectName != null ) {
+            if( theMeshObjectVarName != null ) {
+                throw new JspException( "Must not specify both meshObjectName and meshObjectVarName" );
+            }
+            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+
+            if( obj == null ) {
+                // if we get here, ignore is necessarily true
+                return SKIP_BODY;
+            }
+        } else if( theMeshObjectVarName == null ) {
+            throw new JspException( "Must specify either meshObjectName or meshObjectVarName" );
         }
         
         if( thePropertyType != null ) {
@@ -302,18 +335,24 @@ public class PropertyTag
             realStringRep = theState + theStringRepresentation;
         }
 
-        String editVar = String.format( VARIABLE_PATTERN, varCounter );
+        String editVar;
+        if( theMeshObjectVarName != null ) {
+            editVar = theMeshObjectVarName;
+        } else {
+            editVar = String.format( VARIABLE_PATTERN, varCounter );
+        }
 
         try {
             String text = formatProperty(
-                    pageContext,
-                    obj,
-                    type,
-                    editVar,
-                    theNullString,
-                    realStringRep,
-                    theMaxLength,
-                    theColloquial );
+                        pageContext,
+                        obj,
+                        type,
+                        editVar,
+                        varCounter,
+                        theNullString,
+                        realStringRep,
+                        theMaxLength,
+                        theColloquial );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -333,6 +372,11 @@ public class PropertyTag
      * String containing the name of the bean that is the MeshObject whose property we render.
      */
     protected String theMeshObjectName;
+
+    /**
+     * String containing the name of the shell variable referring to the MeshObject whose property we render.
+     */
+    protected String theMeshObjectVarName;
 
     /**
      * String containing the name of the bean that is the PropertyType.

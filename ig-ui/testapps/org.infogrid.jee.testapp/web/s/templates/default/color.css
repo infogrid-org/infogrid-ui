@@ -1,17 +1,26 @@
-/* Defines the color scheme for this app. */
+/* Defines the color scheme for this app's main appcontext. */
 
 body {
     background: #dadada;
-}
-div.canvas-main {
-    background: #ffffff;
 }
 
 h1 {
     border-color: rgb(0,80,144);
 }
+h2 {
+    color: rgb(0,80,144);
+}
+textarea {
+    border-color: #808080;
+}
+
+
 .footnote {
-    color: #808080;
+    color: #606060;
+}
+
+div.canvas-main {
+    background: #ffffff;
 }
 
 #canvas-app-row > div.canvas-main {
@@ -41,19 +50,47 @@ div.errors > h2 {
 }
 
 div.viewlet {
+    border-color: #d0d0d0;
+}
+
+button.commit {
+    border-color: #404040;
+}
+button.cancel {
+    border-color: #404040;
+}
+
+div.viewlet-state {
+    background-color: white;
+    background-image: url(../../../../../../s/images/white-shift-vertical-short.png);
     border-color: rgb(0,80,144);
-    background: #fafaff;
+}
+
+dt {
+    border-color: transparent;
+}
+dt.reached {
+    border-color: #c0c0e0;
+}
+dt.selected {
+    background: #8080b0;
+    border-color: #c0c0e0;
+}
+dt.selected,
+dt.selected * {
+    color: white;
 }
 
 div.org-infogrid-jee-taglib-candy-OverlayTag {
+    background: #ffffff;
     border: 3px solid rgb(0,80,144);
 }
 div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
     background: #808080;
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > div.audit {
+
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet div.audit {
     border-color: #808080;
-    background: #ffffff;
 }
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table {
     border: 1px solid #808080;
@@ -67,12 +104,25 @@ div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > tbody > tr > th.entityType {
     background: rgb(239,239,255);
 }
-div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td {
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td,
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td > div.audit {
+    border-width: 1px;
     background: white;
 }
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td.title,
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > td.audit {
+    background-color: inherit;
+}
 div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > * {
+    padding: 5px;
+    border-width: 0px 1px;
+    border-style: dotted;
     border-color: #808080;
 }
+div.org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet > table > * > tr > .type {
+    border-bottom: 0px;
+}
+
 div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag {
     background: white;
     border-color: #808080;
@@ -86,10 +136,14 @@ div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet table.set > tbody > 
     background: #f6f6ff;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr > td {
-    border-color: #a0a0a0;
+    border-color: #d0d0d0;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr > td > ul > li > p {
     border-color: #d0d0d0 !important;
+}
+div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > thead > tr > * {
+    border-color: #d0d0d0 #d0d0d0 rgb(0,80,144) #d0d0d0;
+    background: url(../../../../../../s/images/white-shift-vertical-short.png) top repeat-x;
 }
 
 div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet tr.satitle,
@@ -120,4 +174,19 @@ div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.property tr.pro
 div.org-infogrid-jee-viewlet-wikiobject-WikiObjectEditViewlet div.content {
     border-color: #808080;
     background: white;
+}
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-sidebar {
+    background: #f0f0f0;
+    border-color: #e0e0e0;
+}
+div.org-infogrid-jee-viewlet-graphtree-GraphTreeViewlet-content {
+    background: #ffffff;
+    border-color: #e0e0e0;
+}
+table.dialog-buttons {
+    border-top-color: #808080;
+}
+
+div.org-infogrid-jee-viewlet-modelbase-AllMeshTypesViewlet table.roletypes {
+    border-color: rgb(0,80,144);
 }

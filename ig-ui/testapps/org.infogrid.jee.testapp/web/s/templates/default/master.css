@@ -1,4 +1,4 @@
-/* Master styles for fonts, basic formatting etc.*/
+/* Master styles for fonts, basic formatting etc. for this app's main appcontext. */
 
 body, div, p, dl, dt, ul, span, td, th {
     font-family: Verdana, Tahoma, Helvetica, Arial, Sans-Serif;
@@ -11,7 +11,8 @@ table {
     border-collapse: collapse;
     width: 100%;
 }
-a img {
+a > img,
+img {
     border: 0;
 }
 h1 {
@@ -24,10 +25,10 @@ h2 {
     font-size: 1.2em;
 }
 
-td.top {
+.top {
     vertical-align: top;
 }
-td.bottom {
+.bottom {
     vertical-align: bottom;
 }
 
@@ -36,4 +37,20 @@ td.bottom {
 }
 a {
     text-decoration: none;
+}
+button.cancel,
+button.commit {
+    width: 80px;
+    padding: 2px 2px 2px 18px;
+    border-color: #404040;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background-position: 4px 50%;
+    background-repeat: no-repeat;
+}
+button.cancel {
+    background-image: url(../../images/cancel.png);
+}
+button.commit {
+    background-image: url(../../images/tick.png);
 }
