@@ -209,7 +209,7 @@ public class HttpShellFilter
                 if( !accessVerb.isIdentifierPermitted( id )) {
                     throw new HttpShellException( new EmptyArgumentValueException( arg ));
                 }
-                OnDemandTransaction  tx = txs.obtainFor( base );
+                OnDemandTransaction tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( id, base, tx, lidRequest );
                 if( accessed != null ) {
@@ -242,6 +242,9 @@ public class HttpShellFilter
                 MeshBase            base       = findMeshBaseFor( varName, lidRequest );
                 HttpShellAccessVerb accessVerb = HttpShellAccessVerb.findAccessFor( varName, lidRequest );
 
+                if( !accessVerb.isIdentifierPermitted( null )) {
+                    throw new HttpShellException( new EmptyArgumentValueException( arg.substring( 0, arg.length()-ACCESS_TAG.length() ) ));
+                }
                 OnDemandTransaction  tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( null, base, tx, lidRequest );
