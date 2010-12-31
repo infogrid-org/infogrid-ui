@@ -56,6 +56,7 @@ public class PropertyTag
         theStringRepresentation = null;
         theMaxLength            = -1;
         theColloquial           = true;
+        theAllowNull            = true;
         theState                = null;
 
         super.initializeToDefaults();
@@ -214,7 +215,7 @@ public class PropertyTag
      * Set value of the maxLength property.
      *
      * @param newValue new value of the maxLength property
-     * @see #getNullString
+     * @see #getMaxLength
      */
     public void setMaxLength(
             int newValue )
@@ -237,11 +238,35 @@ public class PropertyTag
      * Set value of the colloquial property.
      *
      * @param newValue new value of the colloquial property
+     * @see #getColloquial
      */
     public void setColloquial(
             boolean newValue )
     {
         theColloquial = newValue;
+    }
+
+    /**
+     * Obtain value of the allowNull property.
+     *
+     * @return value of the allowNull property
+     * @see #setAllowNull
+     */
+    public boolean getAllowNull()
+    {
+        return theAllowNull;
+    }
+
+    /**
+     * Set value of the allowNull property.
+     *
+     * @param newValue new value of the allowNull property
+     * @see #getAllowNull
+     */
+    public void setAllowNull(
+            boolean newValue )
+    {
+        theAllowNull = newValue;
     }
 
     /**
@@ -352,7 +377,8 @@ public class PropertyTag
                         theNullString,
                         realStringRep,
                         theMaxLength,
-                        theColloquial );
+                        theColloquial,
+                        theAllowNull );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -407,6 +433,11 @@ public class PropertyTag
      * Should the value be outputted in colloquial form.
      */
     protected boolean theColloquial;
+
+    /**
+     * If editing, should the Property be allowed to be null.
+     */
+    protected boolean theAllowNull;
 
     /**
      * The state of the tag, e.g. edit vs. view.

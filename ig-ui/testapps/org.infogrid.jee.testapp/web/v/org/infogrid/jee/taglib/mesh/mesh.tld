@@ -335,6 +335,10 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>allowNull</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>state</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

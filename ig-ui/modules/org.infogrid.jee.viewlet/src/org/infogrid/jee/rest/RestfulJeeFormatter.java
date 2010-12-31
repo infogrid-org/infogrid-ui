@@ -331,7 +331,13 @@ public class RestfulJeeFormatter
         }
 
         try {
-            ModelBase mb = theDefaultMeshBase.getModelBase();
+            ModelBase mb;
+            if( obj != null ) {
+                mb = obj.getMeshBase().getModelBase();
+            } else {
+                mb = getDefaultMeshBase().getModelBase();
+            }
+
             PropertyType ret = mb.findPropertyTypeByIdentifier( mb.getMeshTypeIdentifierFactory().fromExternalForm( name ));
             return ret;
 
@@ -616,6 +622,7 @@ public class RestfulJeeFormatter
      * @param stringRepresentation the StringRepresentation for PropertyValues
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param colloquial if applicable, output in colloquial form
+     * @param allowNull if applicable, allow null values to be entered in edit mode
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify\
      * @throws IllegalPropertyTypeException thrown if the PropertyType does not exist on this MeshObject
@@ -631,7 +638,8 @@ public class RestfulJeeFormatter
             String        nullString,
             String        stringRepresentation,
             int           maxLength,
-            boolean       colloquial )
+            boolean       colloquial,
+            boolean       allowNull )
         throws
             StringifierException,
             IllegalPropertyTypeException,
@@ -647,6 +655,7 @@ public class RestfulJeeFormatter
             pars.put( StringRepresentationParameters.MAX_LENGTH, maxLength );
         }
         pars.put( StringRepresentationParameters.COLLOQUIAL, colloquial );
+        pars.put( ModelPrimitivesStringRepresentationParameters.ALLOW_NULL, allowNull );
         if( owningMeshObject != null ) {
             pars.put( ModelPrimitivesStringRepresentationParameters.MESH_OBJECT, owningMeshObject );
         }
