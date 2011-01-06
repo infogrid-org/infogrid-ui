@@ -186,12 +186,15 @@ public class MeshObjectTag
             obj = (MeshObject) lookupOrThrow( theMeshObjectName );
         }
 
-        try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObject( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
-            print( text );
+        if( obj != null ) {
+            // filter may be true
+            try {
+                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObject( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
+                print( text );
 
-        } catch( StringifierException ex ) {
-            throw new JspException( ex );
+            } catch( StringifierException ex ) {
+                throw new JspException( ex );
+            }
         }
 
         return EVAL_BODY_INCLUDE;

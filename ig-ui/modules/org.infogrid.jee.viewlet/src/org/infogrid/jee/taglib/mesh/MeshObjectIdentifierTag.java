@@ -164,6 +164,7 @@ public class MeshObjectIdentifierTag
         }
 
         if( obj != null ) {
+            // filter may be true
             try {
                 String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, obj, theStringRepresentation, theMaxLength );
                 print( text );
