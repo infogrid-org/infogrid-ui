@@ -9,7 +9,7 @@
 
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -24,6 +24,50 @@
     <tag>
         <name>ifIterationHasNext</name>
         <tag-class>org.infogrid.jee.taglib.util.IfIterationHasNextTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>callJspf</name>
+        <tag-class>org.infogrid.jee.taglib.util.CallJspfTag</tag-class>
+        <attribute>
+            <name>page</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>callJspfParam</name>
+        <tag-class>org.infogrid.jee.taglib.util.CallJspfParamTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>jspf</name>
+        <tag-class>org.infogrid.jee.taglib.util.JspfTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>jspfParam</name>
+        <tag-class>org.infogrid.jee.taglib.util.JspfParamTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>type</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>

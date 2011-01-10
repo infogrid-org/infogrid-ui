@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -17,29 +17,28 @@ package org.infogrid.jee.taglib.util;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.BodyContent;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 
 /**
- * <p>Allows the inclusion of named servlets. This should be a standard feature
- *    of the <code>&lt;jsp:include&lt;</code> tag, but it isn't.</p>
+ * <p>Allows the inclusion of JSP fragments as subroutines with parameters.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class NamedServletIncludeTag
+public class CallJspfTag
     extends
         AbstractInfoGridTag
-    
+
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
      * Constructor.
      */
-    public NamedServletIncludeTag()
+    public CallJspfTag()
     {
         // noop
     }
@@ -50,56 +49,33 @@ public class NamedServletIncludeTag
     @Override
     protected void initializeToDefaults()
     {
-        theServletName = null;
-        theFlush       = null;
+        thePage          = null;
+        theOldCallRecord = null;
 
         super.initializeToDefaults();
     }
 
     /**
-     * Obtain value of the servletName property.
+     * Obtain value of the page property.
      *
-     * @return value of the servletName property
-     * @see #setServletName
+     * @return value of the page property
+     * @see #setPage
      */
-    public String getServletName()
+    public String getPage()
     {
-        return theServletName;
+        return thePage;
     }
 
     /**
-     * Set value of the servletName property.
+     * Set value of the page property.
      *
-     * @param newValue new value of the servletName property
-     * @see #getServletName
+     * @param newValue new value of the page property
+     * @see #getPage
      */
-    public void setServletName(
+    public void setPage(
             String newValue )
     {
-        theServletName = newValue;
-    }
-
-    /**
-     * Obtain value of the flush property.
-     *
-     * @return value of the flush property
-     * @see #setFlush
-     */
-    public String getFlush()
-    {
-        return theFlush;
-    }
-
-    /**
-     * Set value of the flush property.
-     *
-     * @param newValue new value of the flush property
-     * @see #getFlush
-     */
-    public void setFlush(
-            String newValue )
-    {
-        theFlush = newValue;
+        thePage = newValue;
     }
 
     /**
@@ -116,30 +92,54 @@ public class NamedServletIncludeTag
             IgnoreException,
             IOException
     {
+        ServletRequest request    = pageContext.getRequest();
+        theOldCallRecord          = (CallJspfRecord) request.getAttribute( CallJspfRecord.CALL_JSPF_RECORD_ATTRIBUTE_NAME );
+        CallJspfRecord callRecord = new CallJspfRecord( thePage );
+        request.setAttribute( CallJspfRecord.CALL_JSPF_RECORD_ATTRIBUTE_NAME, callRecord );
+
+        return EVAL_BODY_INCLUDE; // contains parameter declarations
+    }
+
+    /**
+     * Our implementation of doEndTag(), to be provided by subclasses.
+     *
+     * @return evaluate or skip body
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     * @throws IOException thrown if an I/O Exception occurred
+     */
+    @Override
+    protected int realDoEndTag()
+        throws
+            JspException,
+            IgnoreException,
+            IOException
+    {
         // This is created after org/apache/jasper/runtime/JspRuntimeLibrary.include
-        
-        JspWriter out = pageContext.getOut();
-        if( theFormatter.isTrue( theFlush ) && !(out instanceof BodyContent)) {
-            out.flush();
-        }
+
+        ServletRequest request = pageContext.getRequest();
+        JspWriter      out     = pageContext.getOut();
 
         try {
-            RequestDispatcher rd = pageContext.getServletContext().getNamedDispatcher( theServletName );
-            rd.include( pageContext.getRequest(), new ServletResponseWrapperInclude( (HttpServletResponse) pageContext.getResponse(), out ));
-            return EVAL_BODY_INCLUDE;
-            
+            RequestDispatcher rd = pageContext.getServletContext().getRequestDispatcher( thePage );
+            rd.include( request, new ServletResponseWrapperInclude( (HttpServletResponse) pageContext.getResponse(), out ));
+
+            return EVAL_PAGE;
+
         } catch( ServletException ex ) {
             throw new JspException( ex ); // why in the world are these two differnt types of exceptions?
+        } finally {
+            request.setAttribute( CallJspfRecord.CALL_JSPF_RECORD_ATTRIBUTE_NAME, theOldCallRecord );
         }
     }
 
     /**
-     * Name of the Servlet as configured in <code>web.xml</code>.
+     * Name of the page.
      */
-    protected String theServletName;
-    
+    protected String thePage;
+
     /**
-     * Should we flush prior to including.
+     * The CallJspfRecord to restore.
      */
-    protected String theFlush;
+    CallJspfRecord theOldCallRecord;
 }
