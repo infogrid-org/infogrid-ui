@@ -8,15 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.logic;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshTypeIdentifier;
@@ -28,7 +28,7 @@ import org.infogrid.modelbase.ModelBase;
  */
 public abstract class AbstractTypeTestTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractRestInfoGridBodyTag
 {
     /**
      * Constructor.
@@ -110,7 +110,7 @@ public abstract class AbstractTypeTestTag
             IgnoreException
     {
         try {
-            MeshObject    obj   = (MeshObject) lookupOrThrow( theMeshObjectName );
+            MeshObject    obj   = lookupMeshObjectOrThrow( theMeshObjectName );
             EntityType [] types = obj.getTypes();
 
             ModelBase modelBase = obj.getMeshBase().getModelBase();

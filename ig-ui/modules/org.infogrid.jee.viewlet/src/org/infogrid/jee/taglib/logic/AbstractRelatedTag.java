@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -157,8 +157,8 @@ public abstract class AbstractRelatedTag
             JspException,
             IgnoreException
     {
-        MeshObject start    = (MeshObject) lookupOrThrow( theMeshObjectName );
-        MeshObject neighbor = (MeshObject) lookupOrThrow( theNeighborName );
+        MeshObject start    = lookupMeshObjectOrThrow( theMeshObjectName );
+        MeshObject neighbor = lookupMeshObjectOrThrow( theNeighborName );
 
         TraversalSpecification spec;
         if( theTraversalSpecification != null ) {

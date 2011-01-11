@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
@@ -38,7 +38,7 @@ import org.infogrid.util.StringHelper;
  */
 public class MeshObjectPropertyIterateTag
         extends
-            AbstractInfoGridBodyTag
+            AbstractRestInfoGridBodyTag
         implements
             InfoGridIterationTag
 {
@@ -245,7 +245,7 @@ public class MeshObjectPropertyIterateTag
             JspException,
             IgnoreException
     {
-        theMeshObject = (MeshObject) lookupOrThrow( theMeshObjectName );
+        theMeshObject = lookupMeshObjectOrThrow( theMeshObjectName );
 
         Collection<PropertyType> propertyTypesToShow = new ArrayList<PropertyType>();
         

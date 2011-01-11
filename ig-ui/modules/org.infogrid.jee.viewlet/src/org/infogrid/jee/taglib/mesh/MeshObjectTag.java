@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,8 +16,8 @@ package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
-import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.util.text.StringifierException;
 
@@ -27,7 +27,7 @@ import org.infogrid.util.text.StringifierException;
  */
 public class MeshObjectTag
     extends
-        AbstractInfoGridTag
+        AbstractRestInfoGridTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -183,7 +183,7 @@ public class MeshObjectTag
         if( theMeshObject != null ) {
             obj = theMeshObject;
         } else {
-            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+            obj = lookupMeshObjectOrThrow( theMeshObjectName );
         }
 
         if( obj != null ) {

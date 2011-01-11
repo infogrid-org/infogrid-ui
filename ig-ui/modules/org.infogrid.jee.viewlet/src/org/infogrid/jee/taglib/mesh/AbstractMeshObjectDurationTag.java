@@ -8,15 +8,15 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.util.ResourceHelper;
 
@@ -27,7 +27,7 @@ import org.infogrid.util.ResourceHelper;
  */
 public abstract class AbstractMeshObjectDurationTag
     extends
-        AbstractInfoGridTag
+        AbstractRestInfoGridTag
 {
     /**
      * Constructor.
@@ -117,7 +117,7 @@ public abstract class AbstractMeshObjectDurationTag
             JspException,
             IgnoreException
     {
-        MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject obj = lookupMeshObjectOrThrow( theMeshObjectName );
 
         long then  = getRespectiveTime( obj );
         long now   = System.currentTimeMillis();

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,8 +17,8 @@ package org.infogrid.jee.taglib.mesh;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.set.MeshObjectSet;
@@ -31,7 +31,7 @@ import org.infogrid.model.traversal.TraversalSpecification;
  */
 public class MeshObjectRelatedIterateTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractRestInfoGridBodyTag
     implements
         InfoGridIterationTag
 {
@@ -142,7 +142,7 @@ public class MeshObjectRelatedIterateTag
             IgnoreException,
             IOException
     {
-        MeshObject             obj       = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject             obj       = lookupMeshObjectOrThrow( theMeshObjectName );
         TraversalSpecification traversal = (TraversalSpecification) lookupOrThrow( theTraversalSpecificationName );
         
         MeshObjectSet found = obj.traverse( traversal );

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,9 +18,11 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
+import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.mesh.TypedMeshObjectFacade;
 import org.infogrid.model.primitives.DataType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyType;
@@ -41,6 +43,85 @@ public abstract class AbstractRestInfoGridBodyTag
     protected AbstractRestInfoGridBodyTag()
     {
         // nothing
+    }
+
+    /**
+     * Look up a bean in the scope given by the scope attribute.
+     *
+     * @param name name of the bean
+     * @return the bean
+     * @throws JspException thrown if a processing error occurred
+     */
+    protected final MeshObject lookupMeshObject(
+            String name )
+        throws
+            JspException
+    {
+        Object almost = lookup( name );
+        if( almost instanceof MeshObject ) {
+            return (MeshObject) almost;
+        } else if( almost instanceof TypedMeshObjectFacade ) {
+            return ((TypedMeshObjectFacade)almost).get_Delegate();
+        } else if( almost == null ) {
+            return null;
+        } else {
+            throw new ClassCastException( "Found object named " + name + " is not a MeshObject: " + almost );
+        }
+    }
+
+    /**
+     * Look up a bean in the scope given by the scope attribute, and
+     * throw an exception if not found.
+     *
+     * @param name name of the bean
+     * @return the bean
+     * @throws JspException if the bean was not found and the ignore attribute was not set
+     * @throws IgnoreException thrown if the bean could not be found but the ignore attribute was set
+     */
+    protected final MeshObject lookupMeshObjectOrThrow(
+            String name )
+        throws
+            JspException,
+            IgnoreException
+    {
+        Object almost = lookupOrThrow( name );
+        if( almost instanceof MeshObject ) {
+            return (MeshObject) almost;
+        } else if( almost instanceof TypedMeshObjectFacade ) {
+            return ((TypedMeshObjectFacade)almost).get_Delegate();
+        } else if( almost == null ) {
+            return null;
+        } else {
+            throw new ClassCastException( "Found object named " + name + " is not a MeshObject: " + almost );
+        }
+    }
+
+    /**
+     * Look up the property of a bean in the specified scope, and throw an exception if not found.
+     *
+     * @param name name of the bean
+     * @param propertyName name of the property of the bean
+     * @return the bean's property
+     * @throws JspException if the bean was not found and the ignore attribute was not set
+     * @throws IgnoreException thrown if the bean could not be found but the ignore attribute was set
+     */
+    protected final MeshObject lookupMeshObjectOrThrow(
+            String name,
+            String propertyName )
+        throws
+            JspException,
+            IgnoreException
+    {
+        Object almost = lookupOrThrow( name, propertyName );
+        if( almost instanceof MeshObject ) {
+            return (MeshObject) almost;
+        } else if( almost instanceof TypedMeshObjectFacade ) {
+            return ((TypedMeshObjectFacade)almost).get_Delegate();
+        } else if( almost == null ) {
+            return null;
+        } else {
+            throw new ClassCastException( "Found object named " + name + " is not a MeshObject: " + almost );
+        }
     }
 
     /**

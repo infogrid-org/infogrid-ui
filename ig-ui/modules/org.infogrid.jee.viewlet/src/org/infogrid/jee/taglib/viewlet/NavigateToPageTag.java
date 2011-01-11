@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -64,12 +64,12 @@ public class NavigateToPageTag
             JspException,
             IgnoreException
     {
-        MeshObject subject = (MeshObject) lookupOrThrow( JeeViewlet.SUBJECT_ATTRIBUTE_NAME );
+        MeshObject subject = lookupMeshObjectOrThrow( JeeViewlet.SUBJECT_ATTRIBUTE_NAME );
         MeshObject start;
         if( theMeshObject != null ) {
             start = theMeshObject;
         } else {
-            start = (MeshObject) lookupOrThrow( theMeshObjectName );
+            start = lookupMeshObjectOrThrow( theMeshObjectName );
         }
 
         String toAppend = AbstractPagingCursorIterableViewlet.PAGE_START_NAME + "=" + HTTP.encodeToValidUrlArgument( start.getIdentifier().toExternalForm() );

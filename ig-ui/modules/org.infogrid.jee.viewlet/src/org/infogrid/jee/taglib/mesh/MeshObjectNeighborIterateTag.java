@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,8 +17,8 @@ package org.infogrid.jee.taglib.mesh;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.mesh.MeshObject;
 
@@ -29,7 +29,7 @@ import org.infogrid.mesh.MeshObject;
  */
 public class MeshObjectNeighborIterateTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractRestInfoGridBodyTag
     implements
         InfoGridIterationTag
 {
@@ -116,7 +116,7 @@ public class MeshObjectNeighborIterateTag
             IgnoreException,
             IOException
     {
-        MeshObject obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+        MeshObject obj = lookupMeshObjectOrThrow( theMeshObjectName );
 
         theIterator = obj.traverseToNeighborMeshObjects().iterator();
 

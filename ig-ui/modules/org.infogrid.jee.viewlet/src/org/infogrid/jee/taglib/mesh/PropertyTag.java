@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -319,7 +319,7 @@ public class PropertyTag
             if( theMeshObjectVarName != null ) {
                 throw new JspException( "Must not specify both meshObjectName and meshObjectVarName" );
             }
-            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
+            obj = lookupMeshObjectOrThrow( theMeshObjectName );
 
             if( obj == null ) {
                 // if we get here, ignore is necessarily true

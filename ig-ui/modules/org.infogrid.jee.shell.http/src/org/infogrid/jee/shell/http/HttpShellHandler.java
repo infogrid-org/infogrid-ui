@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,8 @@ package org.infogrid.jee.shell.http;
 
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.meshbase.MeshBase;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Implemented by classes that can be invoked after the HttpShell is done with its processing.
@@ -32,11 +34,15 @@ public interface HttpShellHandler
     /**
      * The main execution method.
      *
+     * @param request the incoming request
      * @param vars the variables set by the HttpShell
+     * @param defaultMeshBase the default MeshBase to use
      * @throws HttpShellException a problem occurred, check cause for details
      */
     public void handle(
-            Map<String,MeshObject> vars )
+            SaneRequest            request,
+            Map<String,MeshObject> vars,
+            MeshBase               defaultMeshBase )
         throws
             HttpShellException;
 }

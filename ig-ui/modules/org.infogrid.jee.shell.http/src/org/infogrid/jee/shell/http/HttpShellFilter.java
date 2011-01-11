@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -54,7 +54,6 @@ import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.MeshObjectsNotFoundException;
-import org.infogrid.meshbase.sweeper.SweepPolicy;
 import org.infogrid.meshbase.sweeper.Sweeper;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.OnDemandTransactionFactory;
@@ -567,7 +566,7 @@ public class HttpShellFilter
                         throw new SpecifiedHandlerNotFoundException( handlerName );
                     }
 
-                    handler.handle( variables );
+                    handler.handle( lidRequest, variables, theMainMeshBase );
 
                 } catch( HttpShellException ex ) {
                     throw ex;

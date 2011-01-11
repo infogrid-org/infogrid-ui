@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -221,7 +221,7 @@ public class TreeIterateTag
         theSetSorter = DefaultMeshObjectSorter.BY_USER_VISIBLE_STRING;
         
         try {
-            MeshObject start = (MeshObject) lookupOrThrow( theStartObjectName );
+            MeshObject start = lookupMeshObjectOrThrow( theStartObjectName );
             theTraversals    = findTraversalSpecificationSequenceOrThrow( start, theTraversalSpecification );
 
             if( theTraversals == null || theTraversals.length == 0 ) {
