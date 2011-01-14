@@ -6,7 +6,7 @@ function org_infogrid_jee_taglib_mesh_PropertyTag_initProperty_value( nodeName, 
 
     if( currentValue == null ) {
         nullInput.value = 'true';
-        createSpan.style.display = 'inline';
+        createSpan.style.display = 'block';
         removeSpan.style.display = 'none';
         valueSpan.style.display  = 'none';
 
@@ -23,7 +23,7 @@ function org_infogrid_jee_taglib_mesh_PropertyTag_doRemove( nodeName, editIndex 
 
     nullInput.value = 'true';
 
-    createSpan.style.display = 'inline';
+    createSpan.style.display = 'block';
     removeSpan.style.display = 'none';
     valueSpan.style.display  = 'none';
 }
