@@ -211,8 +211,8 @@ public class HttpShellFilter
                 OnDemandTransaction tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( id, base, tx, lidRequest );
-                if( accessed != null ) {
-                    variables.put( varName, accessed );
+                variables.put( varName, accessed );
+                if( accessed != null && !accessed.getIsDead() ) {
 
                     // first bless then unbless, then properties
                     potentiallyBless(         varName, accessed, tx, lidRequest );
@@ -247,8 +247,8 @@ public class HttpShellFilter
                 OnDemandTransaction  tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( null, base, tx, lidRequest );
-                if( accessed != null ) {
-                    variables.put( varName, accessed );
+                variables.put( varName, accessed );
+                if( accessed != null && !accessed.getIsDead() ) {
 
                     // first bless then unbless, then properties
                     potentiallyBless(         varName, accessed, tx, lidRequest );
@@ -259,6 +259,12 @@ public class HttpShellFilter
 
             // now unbless roles
             for( String var1Name : variables.keySet() ) {
+
+                MeshObject var1 = variables.get( var1Name );
+                if( var1 != null && var1.getIsDead() ) {
+                    continue;
+                }
+
                 String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
 
                 for( String arg : postArguments.keySet() ) {
@@ -286,6 +292,12 @@ public class HttpShellFilter
 
             // now create and delete relationships
             for( String var1Name : variables.keySet() ) {
+
+                MeshObject var1 = variables.get( var1Name );
+                if( var1 != null && var1.getIsDead() ) {
+                    continue;
+                }
+
                 String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
 
                 for( String arg : postArguments.keySet() ) {
@@ -310,6 +322,11 @@ public class HttpShellFilter
 
             // now bless roles
             for( String var1Name : variables.keySet() ) {
+                MeshObject var1 = variables.get( var1Name );
+                if( var1 != null && var1.getIsDead() ) {
+                    continue;
+                }
+
                 String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
 
                 for( String arg : postArguments.keySet() ) {
@@ -340,6 +357,11 @@ public class HttpShellFilter
 
             // now deal with checkboxes and radioboxes
             for( String var1Name : variables.keySet() ) {
+                MeshObject var1 = variables.get( var1Name );
+                if( var1 != null && var1.getIsDead() ) {
+                    continue;
+                }
+
                 String key = PREFIX + var1Name + TO_TAG + SEPARATOR;
 
                 for( String arg : postArguments.keySet() ) {
@@ -566,7 +588,7 @@ public class HttpShellFilter
                         throw new SpecifiedHandlerNotFoundException( handlerName );
                     }
 
-                    handler.handle( lidRequest, variables, theMainMeshBase );
+                    handler.handle( lidRequest, variables, txs, theMainMeshBase );
 
                 } catch( HttpShellException ex ) {
                     throw ex;

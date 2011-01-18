@@ -229,7 +229,7 @@ public enum HttpShellAccessVerb
                 Transaction tx2 = tx.obtain();
                 mb.getMeshBaseLifecycleManager().deleteMeshObject( found );
 
-                return null; // return found instead?
+                return found;
             }
     },
     SWEEP( "sweep" ) {
@@ -269,7 +269,7 @@ public enum HttpShellAccessVerb
                     s.sweepObject( found );
                 }
 
-                return null; // return found instead?
+                return found;
             }
     };
 

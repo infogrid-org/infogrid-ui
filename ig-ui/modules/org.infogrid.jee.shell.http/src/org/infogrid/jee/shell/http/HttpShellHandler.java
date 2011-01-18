@@ -17,6 +17,8 @@ package org.infogrid.jee.shell.http;
 import java.util.Map;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
+import org.infogrid.meshbase.transaction.OnDemandTransaction;
+import org.infogrid.util.SmartFactory;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -36,13 +38,15 @@ public interface HttpShellHandler
      *
      * @param request the incoming request
      * @param vars the variables set by the HttpShell
+     * @param txs the (now closed) Transactions used by this invocation of the HttpShell
      * @param defaultMeshBase the default MeshBase to use
      * @throws HttpShellException a problem occurred, check cause for details
      */
     public void handle(
-            SaneRequest            request,
-            Map<String,MeshObject> vars,
-            MeshBase               defaultMeshBase )
+            SaneRequest                                     request,
+            Map<String,MeshObject>                          vars,
+            SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
+            MeshBase                                        defaultMeshBase )
         throws
             HttpShellException;
 }
