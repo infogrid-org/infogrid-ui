@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -285,6 +285,12 @@ public abstract class AbstractJeeViewlet
                 subjectUserVisibleString = "";
             }
 
+            String prefix;
+            if( thrown == null && !response.haveProblemsBeenReportedAggregate() ) {
+                prefix = "Default";
+            } else {
+                prefix = "Error";
+            }
             String content;
             if( appName != null ) {
 
@@ -293,7 +299,7 @@ public abstract class AbstractJeeViewlet
                 }
 
                 content = theResourceHelper.getResourceStringWithArguments(
-                        "DefaultTitleWithApp",
+                        prefix + "TitleWithApp",
                 /* 0 */ name,
                 /* 1 */ userVisibleName,
                 /* 2 */ subjectIdentifierString,
@@ -302,7 +308,7 @@ public abstract class AbstractJeeViewlet
                 /* 5 */ appUserVisibleName );
             } else {
                 content = theResourceHelper.getResourceStringWithArguments(
-                        "DefaultTitleWithoutApp",
+                        prefix + "TitleWithoutApp",
                 /* 0 */ name,
                 /* 1 */ userVisibleName,
                 /* 2 */ subjectIdentifierString,
