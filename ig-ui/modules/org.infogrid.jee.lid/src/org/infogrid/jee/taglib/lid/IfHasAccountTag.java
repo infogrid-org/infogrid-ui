@@ -53,6 +53,6 @@ public class IfHasAccountTag
         if( account == null ) {
             return false;
         }
-        return this.evaluateAccount( account );
+        return evaluateAccount( account );
     }
 }

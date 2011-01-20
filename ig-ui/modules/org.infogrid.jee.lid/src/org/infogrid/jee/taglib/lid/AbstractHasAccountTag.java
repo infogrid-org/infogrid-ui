@@ -124,11 +124,8 @@ public abstract class AbstractHasAccountTag
     {
         // have account, now let's check for status
         if( theStatus == null ) {
-            // must be created or active
-            if( account.getAccountStatus().equals( LidAccount.LidAccountStatus.CREATED )) {
-                return true;
-
-            } else if( account.getAccountStatus().equals( LidAccount.LidAccountStatus.ACTIVE )) {
+            // must be active
+            if( account.getAccountStatus().equals( LidAccount.LidAccountStatus.ACTIVE )) {
                 return true;
 
             } else {
@@ -146,11 +143,7 @@ public abstract class AbstractHasAccountTag
                 current = current.substring( 1 ).trim();
             }
 
-            if( "created".equals( current )) {
-                if( positive ^ account.getAccountStatus().equals( LidAccount.LidAccountStatus.CREATED )) {
-                    return false;
-                }
-            } else if( "appliedfor".equals( current ) ) {
+            if( "appliedfor".equals( current ) ) {
                 if( positive ^ account.getAccountStatus() == LidAccount.LidAccountStatus.APPLIEDFOR ) {
                     return false;
                 }
