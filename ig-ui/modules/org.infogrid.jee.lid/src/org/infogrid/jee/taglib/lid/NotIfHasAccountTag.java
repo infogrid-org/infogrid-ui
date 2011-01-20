@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.lid;
 
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.lid.account.LidAccount;
 
 /**
  * Evaluate body if the current user does not have a local account.
@@ -29,15 +30,20 @@ public class NotIfHasAccountTag
     /**
      * Determine whether or not to process the content of this Tag.
      *
+     * @param account the account of the user, if any
      * @return true if the content of this tag shall be processed.
      * @throws JspException thrown if an evaluation error occurred
      * @throws IgnoreException thrown to abort processing without an error
      */
-    protected boolean evaluateTest()
+    protected boolean evaluateTest(
+            LidAccount account )
         throws
             JspException,
             IgnoreException
     {
-        return getAccount() == null;
+        if( account == null ) {
+            return true;
+        }
+        return !this.evaluateAccount( account );
     }
 }

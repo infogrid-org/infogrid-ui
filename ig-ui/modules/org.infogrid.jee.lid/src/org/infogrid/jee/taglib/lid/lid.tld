@@ -9,7 +9,7 @@
 
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -24,24 +24,6 @@
     <tag>
         <name>ifAnonymous</name>
         <tag-class>org.infogrid.jee.taglib.lid.IfAnonymousTag</tag-class>
-
-        <attribute>
-            <name>filter</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>ignore</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>scope</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>notIfAnonymous</name>
-        <tag-class>org.infogrid.jee.taglib.lid.NotIfAnonymousTag</tag-class>
 
         <attribute>
             <name>filter</name>
@@ -81,6 +63,46 @@
     </tag>
 
     <tag>
+        <name>ifHasAccount</name>
+        <tag-class>org.infogrid.jee.taglib.lid.IfHasAccountTag</tag-class>
+
+        <attribute>
+            <name>status</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>notIfAnonymous</name>
+        <tag-class>org.infogrid.jee.taglib.lid.NotIfAnonymousTag</tag-class>
+
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>notIfGroupMember</name>
         <tag-class>org.infogrid.jee.taglib.lid.NotIfGroupMemberTag</tag-class>
 
@@ -104,18 +126,70 @@
     </tag>
 
     <tag>
-        <name>ifHasAccount</name>
-        <tag-class>org.infogrid.jee.taglib.lid.IfHasAccountTag</tag-class>
+        <name>notIfHasAccount</name>
+        <tag-class>org.infogrid.jee.taglib.lid.NotIfHasAccountTag</tag-class>
 
         <attribute>
             <name>status</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>
-        <name>notIfHasAccount</name>
-        <tag-class>org.infogrid.jee.taglib.lid.NotIfHasAccountTag</tag-class>
+        <name>requireAccount</name>
+        <tag-class>org.infogrid.jee.taglib.lid.RequireAccountTag</tag-class>
+
+        <attribute>
+            <name>status</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>requireGroup</name>
+        <tag-class>org.infogrid.jee.taglib.lid.RequireGroupTag</tag-class>
+
+        <attribute>
+            <name>group</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
 </taglib>

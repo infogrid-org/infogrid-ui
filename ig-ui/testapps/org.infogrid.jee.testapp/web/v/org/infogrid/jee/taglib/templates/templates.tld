@@ -9,7 +9,7 @@
 
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -83,6 +83,11 @@
             <name>stringRepresentation</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+    </tag>
+
+    <tag>
+        <name>reportProblem</name>
+        <tag-class>org.infogrid.jee.taglib.templates.ReportProblemTag</tag-class>
     </tag>
 
     <tag>

@@ -14,16 +14,19 @@
 
 package org.infogrid.jee.taglib.lid;
 
+import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.lid.account.LidAccount;
+import org.infogrid.lid.servlet.LidPipelineServlet;
 
 /**
- * Evaluate body if the current user has a local account.
+ * Throw exception and thus end processing if the current user does not have an account.
+ * This is used to protect JSP files from being incorrectly invokable for the wrong user.
  */
-public class IfHasAccountTag
+public class RequireAccountTag
     extends
-        AbstractHasAccountTag
+        IfHasAccountTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -37,22 +40,27 @@ public class IfHasAccountTag
     }
 
     /**
-     * Determine whether or not to process the content of this Tag.
+     * Our implementation of doStartTag().
      *
-     * @param account the account of the user, if any
-     * @return true if the content of this tag shall be processed.
+     * @return evaluate or skip body
      * @throws JspException thrown if an evaluation error occurred
      * @throws IgnoreException thrown to abort processing without an error
+     * @throws IOException thrown if an I/O Exception occurred
      */
-    protected boolean evaluateTest(
-            LidAccount account )
+    @Override
+    protected int realDoStartTag()
         throws
             JspException,
-            IgnoreException
+            IgnoreException,
+            IOException
     {
-        if( account == null ) {
-            return false;
+        LidAccount account = (LidAccount) pageContext.getRequest().getAttribute( LidPipelineServlet.ACCOUNT_ATTRIBUTE_NAME );
+
+        if( evaluateTest( account ) ) {
+            return SKIP_BODY;
+
+        } else {
+            throw new JspException( new RequireAccountTagException());
         }
-        return this.evaluateAccount( account );
     }
 }

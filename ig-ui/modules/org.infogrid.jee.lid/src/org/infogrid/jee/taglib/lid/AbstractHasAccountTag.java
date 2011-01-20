@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -42,7 +42,33 @@ public abstract class AbstractHasAccountTag
     @Override
     protected void initializeToDefaults()
     {
+        theStatus = null;
+
         super.initializeToDefaults();
+    }
+
+
+    /**
+     * Obtain value of the status property.
+     *
+     * @return value of the status property
+     * @see #setStatus
+     */
+    public final String getStatus()
+    {
+        return theStatus;
+    }
+
+    /**
+     * Set value of the status property.
+     *
+     * @param newValue new value of the status property
+     * @see #getStatus
+     */
+    public final void setStatus(
+            String newValue )
+    {
+        theStatus = newValue;
     }
 
     /**
@@ -59,7 +85,9 @@ public abstract class AbstractHasAccountTag
             IgnoreException,
             IOException
     {
-        if( evaluateTest() ) {
+        LidAccount account = (LidAccount) pageContext.getRequest().getAttribute( LidPipelineServlet.ACCOUNT_ATTRIBUTE_NAME );
+
+        if( evaluateTest( account ) ) {
             return EVAL_BODY_INCLUDE;
         } else {
             return SKIP_BODY;
@@ -69,24 +97,93 @@ public abstract class AbstractHasAccountTag
     /**
      * Determine whether or not to process the content of this Tag.
      *
+     * @param account the account of the user, if any
      * @return true if the content of this tag shall be processed.
      * @throws JspException thrown if an evaluation error occurred
      * @throws IgnoreException thrown to abort processing without an error
      */
-    protected abstract boolean evaluateTest()
+    protected abstract boolean evaluateTest(
+            LidAccount account )
         throws
             JspException,
             IgnoreException;
 
     /**
-     * Determine the current user's account, if any
+     * Determine whether or not the given account meets the status specification.
      *
-     * @return the current user's account, if any
+     * @param account the Account to test
+     * @return true if it meets the status
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
      */
-    protected LidAccount getAccount()
+    protected boolean evaluateAccount(
+            LidAccount account )
+        throws
+            JspException,
+            IgnoreException
     {
-        LidAccount account = (LidAccount) pageContext.getRequest().getAttribute( LidPipelineServlet.ACCOUNT_ATTRIBUTE_NAME );
+        // have account, now let's check for status
+        if( theStatus == null ) {
+            // must be created or active
+            if( account.getAccountStatus().equals( LidAccount.LidAccountStatus.CREATED )) {
+                return true;
 
-        return account;
+            } else if( account.getAccountStatus().equals( LidAccount.LidAccountStatus.ACTIVE )) {
+                return true;
+
+            } else {
+                return false;
+            }
+
+        }
+        String [] status = theStatus.split( STATUS_SEPARATOR );
+        for( int i=0 ; i<status.length ; ++i ) {
+            String  current  = status[i].trim().toLowerCase();
+            boolean positive = true;
+
+            if( current.startsWith( "!" )) {
+                positive = false;
+                current = current.substring( 1 ).trim();
+            }
+
+            if( "created".equals( current )) {
+                if( positive ^ account.getAccountStatus().equals( LidAccount.LidAccountStatus.CREATED )) {
+                    return false;
+                }
+            } else if( "appliedfor".equals( current ) ) {
+                if( positive ^ account.getAccountStatus() == LidAccount.LidAccountStatus.APPLIEDFOR ) {
+                    return false;
+                }
+            } else if( "active".equals( current )) {
+                if( positive ^ account.getAccountStatus() == LidAccount.LidAccountStatus.ACTIVE ) {
+                    return false;
+                }
+            } else if( "disabled".equals( current )) {
+                if( positive ^ account.getAccountStatus() == LidAccount.LidAccountStatus.DISABLED ) {
+                    return false;
+                }
+            } else if( "obsoleted".equals( current )) {
+                if( positive ^ account.getAccountStatus() == LidAccount.LidAccountStatus.OBSOLETED ) {
+                    return false;
+                }
+            } else if( "refused".equals( current )) {
+                if( positive ^ account.getAccountStatus() == LidAccount.LidAccountStatus.REFUSED ) {
+                    return false;
+                }
+            } else {
+                throw new JspException( "Unknown LidAccount status name '" + current + "'" );
+            }
+        }
+        return true;
     }
+
+    /**
+     * The required account status.
+     */
+    protected String theStatus;
+
+    /**
+     * String separating the components in the status attribute.
+     */
+    public static final String STATUS_SEPARATOR = ",";
 }
