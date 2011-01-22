@@ -31,7 +31,7 @@ import org.infogrid.module.ModuleAdvertisement;
 import org.infogrid.module.ModuleRegistry;
 import org.infogrid.module.StandardModuleAdvertisement;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.Rfc3339Util;
+import org.infogrid.util.DateTimeUtil;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
@@ -173,7 +173,7 @@ public class ModuleDirectoryViewlet
                 }
                 content.append( "</td><td>" );
                 if( currentAd.getModuleBuildDate() != null ) {
-                    content.append( Rfc3339Util.dateToRfc3339( currentAd.getModuleBuildDate() ));
+                    content.append( DateTimeUtil.dateToRfc3339( currentAd.getModuleBuildDate() ));
                 } else {
                     content.append( theResourceHelper.getResourceString( "NoValue" ));
                 }
