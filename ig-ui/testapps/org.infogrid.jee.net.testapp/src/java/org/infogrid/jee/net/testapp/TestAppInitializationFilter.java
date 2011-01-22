@@ -8,13 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.net.testapp;
 
 import java.text.ParseException;
+import java.util.regex.Pattern;
 import org.infogrid.jee.rest.net.local.defaultapp.m.AbstractMNetLocalRestfulAppInitializationFilter;
 import org.infogrid.jee.viewlet.JeeMeshObjectsToViewFactory;
 import org.infogrid.jee.viewlet.net.DefaultJeeNetMeshObjectsToViewFactory;
@@ -30,6 +31,10 @@ import org.infogrid.meshbase.net.NetMeshBaseLifecycleManager;
 import org.infogrid.meshbase.net.NetMeshBaseNameServer;
 import org.infogrid.meshbase.net.NetMeshObjectAccessException;
 import org.infogrid.meshbase.net.NetMeshObjectIdentifierFactory;
+import org.infogrid.meshbase.net.schemes.HttpScheme;
+import org.infogrid.meshbase.net.schemes.HttpsScheme;
+import org.infogrid.meshbase.net.schemes.Scheme;
+import org.infogrid.meshbase.net.schemes.StrictRegexScheme;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.traversal.TraversalTranslator;
@@ -68,8 +73,11 @@ public class TestAppInitializationFilter
     protected NetMeshBaseIdentifierFactory createNetMeshBaseIdentifierFactory()
     {
         NetMeshBaseIdentifierFactory ret = DefaultNetMeshBaseIdentifierFactory.create(
-                new String[] { "http", "https" },
-                new String[] { "custom" } );
+            new Scheme [] {
+                    new HttpScheme(),
+                    new HttpsScheme(),
+                    new StrictRegexScheme( "custom", Pattern.compile( "custom:.*" ))
+             } );
         return ret;
     }
 
