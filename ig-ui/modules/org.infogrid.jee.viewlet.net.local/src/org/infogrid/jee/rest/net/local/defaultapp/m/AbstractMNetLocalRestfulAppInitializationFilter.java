@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
 import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.jee.security.FormTokenService;
-import org.infogrid.jee.security.m.MFormTokenService;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseNameServer;
@@ -130,10 +128,6 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
             MeshBaseNameServer nameServer = meshBase.getLocalNameServer();
             appContext.addContextObject( nameServer );
 
-            // FormTokenService
-            MFormTokenService formTokenService = MFormTokenService.create();
-            appContext.addContextObject( formTokenService );
-
             // ViewletFactory and utils
 
             initializeContextObjects( saneRequest, appContext );
@@ -146,12 +140,6 @@ public abstract class AbstractMNetLocalRestfulAppInitializationFilter
             } else {
                 throw new ServletException( t );
             }
-        }
-
-        // want some kind of FormTokenService even if initialization failed
-        if( appContext.findContextObject( FormTokenService.class ) == null ) {
-            MFormTokenService formTokenService = MFormTokenService.create();
-            appContext.addContextObject( formTokenService );
         }
     }
 

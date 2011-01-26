@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,13 +16,11 @@ package org.infogrid.jee.taglib.util;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.security.FormTokenService;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
         
 /**
- * <p>Generates an HTML form with a token that reduces CSRF attacks. This token
- * is stored in a Store, and is validated in {@link org.infogrid.jee.security.FormTokenService}.</p>
+ * <p>Generates an HTML form with a token that reduces CSRF attacks.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class SafeFormTag

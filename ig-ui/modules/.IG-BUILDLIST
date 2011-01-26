@@ -3,7 +3,6 @@ org.infogrid.viewlet
 org.infogrid.jee
 org.infogrid.jee.templates
 org.infogrid.jee.viewlet
-org.infogrid.jee.store
 org.infogrid.jee.viewlet.net
 org.infogrid.jee.probe
 org.infogrid.jee.viewlet.net.local

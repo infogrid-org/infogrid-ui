@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -105,7 +105,7 @@ public class ShadowAwareAllMeshBasesViewlet
 
     /**
      * <p>Invoked prior to the execution of the Servlet if the POST method has been requested
-     *    and the FormTokenService determined that the incoming POST was safe.
+     *    and the SafeUnsafePostFilter determined that the incoming POST was safe.
      *    It is the hook by which the JeeViewlet can perform whatever operations needed prior to
      *    the POST execution of the servlet, e.g. the evaluation of POST commands.</p>
      * <p>Subclasses will often override this.</p>

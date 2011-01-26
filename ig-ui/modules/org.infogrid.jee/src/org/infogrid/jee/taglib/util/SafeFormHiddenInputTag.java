@@ -8,20 +8,19 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.util;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.security.FormTokenService;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.util.http.SaneRequestUtils;
 
 /**
  * Inserts the hidden input field with the token to make a safe form. This is only
@@ -78,18 +77,9 @@ public class SafeFormHiddenInputTag
     public static String hiddenInputTagString(
             PageContext pageContext )
     {
-        String value = (String) pageContext.getRequest().getAttribute( FORM_TOKEN_NAME );
+        SaneServletRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+        String             value       = (String) saneRequest.getAttribute( SafeUnsafePostFilter.TOKEN_ATTRIBUTE_NAME );
 
-        if( value == null ) {
-            FormTokenService service = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( FormTokenService.class );
-            if( service != null ) {
-                // no service, no output
-                value = service.generateNewToken();
-            }
-            if( value != null ) {
-                pageContext.getRequest().setAttribute( FORM_TOKEN_NAME, value );
-            }
-        }
         if( value != null ) {
             StringBuilder ret = new StringBuilder();
 
@@ -104,10 +94,4 @@ public class SafeFormHiddenInputTag
             return null;
         }
     }
-
-    /**
-     * Name of the buffered token in the page context.
-     */
-    public static final String FORM_TOKEN_NAME
-            = SaneRequestUtils.classToAttributeName( SafeFormHiddenInputTag.class, "token" );
 }

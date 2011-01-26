@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -81,13 +81,11 @@ public class NetMeshWorldAppInitializationFilter
             theProxyStore       = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "ProxyStoreTable",  "Proxies"       ));
             theShadowStore      = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "ShadowTable",      "Shadows"       ));
             theShadowProxyStore = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "ShadowProxyTable", "ShadowProxies" ));
-            theFormTokenStore   = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "FormTokenTable",   "FormTokens"  ));
 
             theMeshStore.initializeIfNecessary();
             theProxyStore.initializeIfNecessary();
             theShadowStore.initializeIfNecessary();
             theShadowProxyStore.initializeIfNecessary();
-            theFormTokenStore.initializeIfNecessary();
 
         } catch( NamingException ex ) {
             toThrow = new NamingReportingException( name, ctx, ex );
@@ -111,9 +109,6 @@ public class NetMeshWorldAppInitializationFilter
 
             theShadowProxyStore = MStore.create();
             theShadowProxyStore.initializeIfNecessary();
-
-            theFormTokenStore = MStore.create();
-            theFormTokenStore.initializeIfNecessary();
 
             throw new AppInitializationException(
                     new CompoundException(

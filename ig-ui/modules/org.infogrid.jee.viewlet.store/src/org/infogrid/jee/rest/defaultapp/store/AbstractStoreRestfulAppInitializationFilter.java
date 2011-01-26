@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -22,8 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
 import org.infogrid.jee.sane.SaneServletRequest;
-import org.infogrid.jee.security.m.MFormTokenService;
-import org.infogrid.jee.security.store.StoreFormTokenService;
 import org.infogrid.jee.templates.defaultapp.AppInitializationException;
 import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
@@ -107,16 +105,6 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
                 appContext.addContextObject( nameServer );
             }
 
-            if( theFormTokenStore != null ) {
-                // FormTokenService
-                StoreFormTokenService formTokenService = StoreFormTokenService.create( theFormTokenStore );
-                appContext.addContextObject( formTokenService );
-
-            } else {
-                MFormTokenService formTokenService = MFormTokenService.create();
-                appContext.addContextObject( formTokenService );
-            }
-
             if( thrown == null ) {
                 initializeContextObjects( saneRequest, appContext );
             } else {
@@ -156,9 +144,4 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
      * The Store for MeshObjects. This must be set by a subclass.
      */
     protected IterableStore theMeshStore;
-    
-    /**
-     * The Store for form tokens. This must be set by a subclass.
-     */
-    protected IterableStore theFormTokenStore;
 }

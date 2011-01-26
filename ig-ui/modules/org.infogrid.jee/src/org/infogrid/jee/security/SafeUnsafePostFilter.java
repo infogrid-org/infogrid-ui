@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,9 +23,12 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import org.infogrid.jee.app.InfoGridWebApp;
+import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.UniqueStringGenerator;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.http.SaneRequestUtils;
 
@@ -64,13 +67,21 @@ public class SafeUnsafePostFilter
             ServletException
     {
         boolean isSafe = true;
-        FormTokenService theFormTokenService = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( 
-                FormTokenService.class );
 
-        if(    theFormTokenService != null // otherwise we always think it's safe
-            && request instanceof HttpServletRequest )
-        {
+        if( request instanceof HttpServletRequest ) {
             HttpServletRequest realRequest = (HttpServletRequest) request;
+
+            SaneRequest sane        = SaneServletRequest.create( realRequest );
+            String      cookieValue = sane.getCookieValue( COOKIE_NAME );
+
+            if( cookieValue == null ) {
+                HttpServletResponse realResponse = (HttpServletResponse) response;
+                cookieValue = theGenerator.createUniqueToken();
+
+                realResponse.addCookie( new Cookie( COOKIE_NAME, cookieValue ));
+            }
+            sane.setAttribute( TOKEN_ATTRIBUTE_NAME, cookieValue );
+
             if( "POST".equalsIgnoreCase( realRequest.getMethod() )) {
 
                 String relativePath = realRequest.getServletPath();
@@ -88,10 +99,13 @@ public class SafeUnsafePostFilter
                 }
 
                 if( process ) {
-                    SaneRequest sane  = SaneServletRequest.create( realRequest );
-                    String      token = sane.getPostedArgument( INPUT_FIELD_NAME );
+                    String token = sane.getPostedArgument( INPUT_FIELD_NAME );
 
-                    isSafe = theFormTokenService.validateToken( token );
+                    if( cookieValue == null || token == null ) {
+                        isSafe = false;
+                    } else {
+                        isSafe = cookieValue.equals( token );
+                    }
                 }
             }
         }
@@ -268,7 +282,39 @@ public class SafeUnsafePostFilter
             = SaneRequestUtils.classToAttributeName( SafeUnsafePostFilter.class, "safeunsafe" );
 
     /**
+     * Our ResourceHelper, so field and cookie names are configurable.
+     */
+    private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( SafeUnsafePostFilter.class );
+
+    /**
      * Name of the hidden field in the form.
      */
-    public static final String INPUT_FIELD_NAME = "org-infogrid-jee-store-StoreTokenFormTag-csrf-field";
+    public static final String INPUT_FIELD_NAME = theResourceHelper.getResourceStringOrDefault(
+            "InputFieldName",
+            SafeUnsafePostFilter.class.getName().replace( '.', '-' ) + "-field" );
+
+    /**
+     * Name of the cookie.
+     */
+    public static final String COOKIE_NAME = theResourceHelper.getResourceStringOrDefault(
+            "CookieName",
+            SafeUnsafePostFilter.class.getName().replace( '.', '-' ) + "-cookie" );
+
+    /**
+     * Name of the cookie value as stored in the request attribute.
+     */
+    public static final String TOKEN_ATTRIBUTE_NAME
+            = SafeUnsafePostFilter.class.getName().replace( '.', '-' ) + "-value";
+
+    /**
+     * The length of the token.
+     */
+    protected static final int TOKEN_LENGTH = theResourceHelper.getResourceIntegerOrDefault(
+            "TokenLength",
+            64 );
+
+    /**
+     * The underlying random generator.
+     */
+    protected static final UniqueStringGenerator theGenerator = UniqueStringGenerator.create( TOKEN_LENGTH );
 }
