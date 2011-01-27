@@ -78,7 +78,9 @@ public class SafeUnsafePostFilter
                 HttpServletResponse realResponse = (HttpServletResponse) response;
                 cookieValue = theGenerator.createUniqueToken();
 
-                realResponse.addCookie( new Cookie( COOKIE_NAME, cookieValue ));
+                Cookie cook = new Cookie( COOKIE_NAME, cookieValue );
+                cook.setPath( sane.getContextPath() );
+                realResponse.addCookie( cook );
             }
             sane.setAttribute( TOKEN_ATTRIBUTE_NAME, cookieValue );
 
