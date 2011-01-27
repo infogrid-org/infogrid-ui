@@ -26,6 +26,7 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextDirectory;
 import org.infogrid.util.context.SimpleContextDirectory;
+import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -71,26 +72,31 @@ public abstract class InfoGridWebApp
     /**
      * Constructor, for subclasses.
      *
+     * @param firstRequest the first incoming request
      * @param applicationContext the main application Context. This context holds all the
      *        well-known objects needed by the application
      */
     protected InfoGridWebApp(
-            Context applicationContext )
+            SaneRequest firstRequest,
+            Context     applicationContext )
     {
-        this( applicationContext, SimpleContextDirectory.create() );
+        this( firstRequest, applicationContext, SimpleContextDirectory.create() );
     }
 
     /**
      * Constructor, for subclasses.
      *
+     * @param firstRequest the first incoming request
      * @param applicationContext the main application Context. This context holds all the
      *        well-known objects needed by the application
      * @param contextDirectory the ContextDirectory to use
      */
     protected InfoGridWebApp(
+            SaneRequest      firstRequest,
             Context          applicationContext,
             ContextDirectory contextDirectory )
     {
+        theFullContextUrl     = firstRequest.getAbsoluteContextUri();
         theApplicationContext = applicationContext;
         theContextDirectory   = contextDirectory;
 
@@ -98,7 +104,7 @@ public abstract class InfoGridWebApp
 
         Log log = Log.getLogInstance( InfoGridWebApp.class ); // don't use a subclass for this purpose
         if( log != null ) {
-            log.info( "Started InfoGridWebApp " + getClass().getName(), this );
+            log.info( "Started InfoGridWebApp " + getClass().getName() + " at " + theFullContextUrl, this );
         }
     }
 
@@ -324,7 +330,7 @@ public abstract class InfoGridWebApp
     {
         Log log = Log.getLogInstance( InfoGridWebApp.class ); // don't use a subclass for this purpose
         if( log != null ) {
-            log.info( "Died InfoGridWebApp " + getClass().getName(), this );
+            log.info( "Died InfoGridWebApp " + getClass().getName() + " at " + theFullContextUrl, this );
         }
 
         if( theApplicationContext == null ) {
@@ -340,6 +346,11 @@ public abstract class InfoGridWebApp
             // can happen in Tomcat5.5 -- no idea why, but it's not a problem so we swallow it
         }
     }
+
+    /**
+     * The full context URL at which the WebApp is running.
+     */
+    protected String theFullContextUrl;
 
     /**
      * The application context.

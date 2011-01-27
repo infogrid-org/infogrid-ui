@@ -196,7 +196,7 @@ public class DefaultInitializationFilter
         }
 
         // app
-        DefaultInfoGridWebApp ret = new DefaultInfoGridWebApp( rootContext );
+        DefaultInfoGridWebApp ret = new DefaultInfoGridWebApp( lidRequest, rootContext );
 
         return ret;        
     }

@@ -16,6 +16,7 @@ package org.infogrid.jee.defaultapp;
 
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.util.context.Context;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * The InfoGridWebApp when using the defaultapp template.
@@ -27,12 +28,14 @@ public class DefaultInfoGridWebApp
     /**
      * Constructor.
      *
+     * @param firstRequest the first incoming request
      * @param applicationContext the main application Context. This context holds all the
      *        well-known objects needed by the application
      */
     public DefaultInfoGridWebApp(
-            Context applicationContext )
+            SaneRequest firstRequest,
+            Context     applicationContext )
     {
-        super( applicationContext );
+        super( firstRequest, applicationContext );
     }
 }
