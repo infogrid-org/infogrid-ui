@@ -129,7 +129,7 @@ public class AllNetMeshObjectsViewlet
         }
         if( filterId != null && filterId.length() > 0 ) {
             try {
-                theHomeNetMeshBaseIdentifier = meshBase.getMeshBaseIdentifierFactory().fromExternalForm( filterId );
+                theHomeNetMeshBaseIdentifier = meshBase.getMeshBaseIdentifierFactory().guessFromExternalForm( filterId );
 
             } catch( ParseException ex ) {
                 throw new CannotViewException.InvalidParameter( this, HOME_NETMESHBASE_VIEWLET_PARAM, filterId, toView );
