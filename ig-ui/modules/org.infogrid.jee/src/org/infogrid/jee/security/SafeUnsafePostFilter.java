@@ -298,7 +298,7 @@ public class SafeUnsafePostFilter
      */
     public static final String COOKIE_NAME = theResourceHelper.getResourceStringOrDefault(
             "CookieName",
-            SafeUnsafePostFilter.class.getName().replace( '.', '-' ) + "-cookie" );
+            SafeUnsafePostFilter.class.getName().toLowerCase().replace( '.', '-' ) + "-cookie" );
 
     /**
      * Name of the cookie value as stored in the request attribute.
