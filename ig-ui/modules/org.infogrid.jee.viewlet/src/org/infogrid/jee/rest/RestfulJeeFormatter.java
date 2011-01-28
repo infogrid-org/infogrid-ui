@@ -240,7 +240,7 @@ public class RestfulJeeFormatter
 
         try {
             MeshObject ret = mb.findMeshObjectByIdentifier(
-                    mb.getMeshObjectIdentifierFactory().fromExternalForm( identifier ));
+                    mb.getMeshObjectIdentifierFactory().guessFromExternalForm( identifier ));
             return ret;
 
         } catch( ParseException ex ) {

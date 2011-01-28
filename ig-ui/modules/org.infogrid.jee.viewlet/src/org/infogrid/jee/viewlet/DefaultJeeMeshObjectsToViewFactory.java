@@ -238,7 +238,7 @@ public class DefaultJeeMeshObjectsToViewFactory
                 throw new UnknownSymbolParseException( request.getAbsoluteFullUri(), -1, mbIdentifierString );
             }
 
-            MeshObjectIdentifier subjectIdentifier = mb.getMeshObjectIdentifierFactory().fromExternalForm( subjectIdentifierString );
+            MeshObjectIdentifier subjectIdentifier = mb.getMeshObjectIdentifierFactory().guessFromExternalForm( subjectIdentifierString );
             subject                                = mb.accessLocally( subjectIdentifier );
 
             if( subject == null ) {

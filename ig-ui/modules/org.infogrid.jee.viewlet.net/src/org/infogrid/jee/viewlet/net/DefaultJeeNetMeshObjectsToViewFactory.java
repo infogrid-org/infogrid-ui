@@ -360,7 +360,7 @@ public class DefaultJeeNetMeshObjectsToViewFactory
                 throw new UnknownSymbolParseException( request.getAbsoluteFullUri(), -1, mbIdentifierString );
             }
 
-            NetMeshObjectIdentifier subjectIdentifier = mb.getMeshObjectIdentifierFactory().fromExternalForm( subjectIdentifierString );
+            NetMeshObjectIdentifier subjectIdentifier = mb.getMeshObjectIdentifierFactory().guessFromExternalForm( subjectIdentifierString );
             subject                                   = mb.accessLocally( subjectIdentifier );
 
             if( subject == null ) {

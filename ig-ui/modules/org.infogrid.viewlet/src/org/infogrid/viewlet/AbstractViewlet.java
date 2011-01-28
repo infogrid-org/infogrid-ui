@@ -123,7 +123,7 @@ public abstract class AbstractViewlet
             NotPermittedException
     {
         MeshBase             mb  = theViewedMeshObjects.getMeshBase();
-        MeshObjectIdentifier id  = mb.getMeshObjectIdentifierFactory().fromExternalForm( identifier );
+        MeshObjectIdentifier id  = mb.getMeshObjectIdentifierFactory().guessFromExternalForm( identifier );
         MeshObject           ret = mb.accessLocally( id );
 
         return ret;
