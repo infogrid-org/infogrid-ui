@@ -173,7 +173,7 @@ public abstract class AbstractTraverseSetTestTag
     }
 
     /**
-     * Evaluatate the condition. If it returns true, we output
+     * Evaluate the condition. If it returns true, we output
      * the Nodes contained in this Node. This is abstract as concrete
      * subclasses of this class need to have the ability to determine what
      * their evaluation criteria are.

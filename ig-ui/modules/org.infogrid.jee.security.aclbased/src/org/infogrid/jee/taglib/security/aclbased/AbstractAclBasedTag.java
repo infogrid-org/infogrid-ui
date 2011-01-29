@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -117,7 +117,7 @@ public abstract class AbstractAclBasedTag
     }
 
     /**
-     * Evaluatate the condition. If it returns true, the content of this tag is processed.
+     * Evaluate the condition. If it returns true, the content of this tag is processed.
      *
      * @return true in order to output the Nodes contained in this Node.
      * @throws JspException thrown if an evaluation error occurred
@@ -129,7 +129,7 @@ public abstract class AbstractAclBasedTag
             IgnoreException;
 
     /**
-     * Evaluatate whether the caller has access of a certain type to a given MeshObject.
+     * Evaluate whether the caller has access of a certain type to a given MeshObject.
      *
      * @param roleType the RoleType that indicates the type of access
      * @return true in order to output the Nodes contained in this Node.
@@ -154,7 +154,7 @@ public abstract class AbstractAclBasedTag
     }
 
     /**
-     * Evaluatate whether the caller is the owner of a given MeshObject.
+     * Evaluate whether the caller is the owner of a given MeshObject.
      *
      * @return true in order to output the Nodes contained in this Node.
      * @throws JspException thrown if an evaluation error occurred

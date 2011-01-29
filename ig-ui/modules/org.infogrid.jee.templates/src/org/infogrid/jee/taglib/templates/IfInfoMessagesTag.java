@@ -38,7 +38,7 @@ public class IfInfoMessagesTag
     }
 
     /**
-     * Evaluatate the condition. If it returns true, we include, in the output,
+     * Evaluate the condition. If it returns true, we include, in the output,
      * the content contained in this tag. This is abstract as concrete
      * subclasses of this class need to have the ability to determine what
      * their evaluation criteria are.

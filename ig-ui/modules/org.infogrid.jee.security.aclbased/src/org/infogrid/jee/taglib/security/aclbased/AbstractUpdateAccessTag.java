@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -36,7 +36,7 @@ public abstract class AbstractUpdateAccessTag
     }
 
     /**
-     * Evaluatate whether the caller has update access to a given MeshObject.
+     * Evaluate whether the caller has update access to a given MeshObject.
      *
      * @return true in order to output the Nodes contained in this Node.
      * @throws JspException thrown if an evaluation error occurred

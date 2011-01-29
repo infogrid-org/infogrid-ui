@@ -97,7 +97,7 @@ public abstract class AbstractTypeTestTag
     }
 
     /**
-     * Evaluatate the condition. If it returns true, we include output
+     * Evaluate the condition. If it returns true, we include output
      * the Nodes contained in this Node.
      *
      * @return true in order to output the Nodes contained in this Node.

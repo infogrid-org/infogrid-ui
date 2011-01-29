@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -134,7 +134,7 @@ public abstract class AbstractIsReachedObjectViewletTag
     }
 
     /**
-     * Evaluatate the condition. If it returns true, we output
+     * Evaluate the condition. If it returns true, we output
      * the Nodes contained in this Node. This is abstract as concrete
      * subclasses of this class need to have the ability to determine what
      * their evaluation criteria are.
@@ -151,7 +151,7 @@ public abstract class AbstractIsReachedObjectViewletTag
             JspException;
 
     /**
-     * Evaluatate the condition. If it returns true, we output
+     * Evaluate the condition. If it returns true, we output
      * the Nodes contained in this Node. This is abstract as concrete
      * subclasses of this class need to have the ability to determine what
      * their evaluation criteria are.

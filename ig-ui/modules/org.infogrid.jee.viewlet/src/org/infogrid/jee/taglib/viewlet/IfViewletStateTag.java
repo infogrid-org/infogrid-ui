@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -29,7 +29,7 @@ public class IfViewletStateTag
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
-     * Evaluatate the condition. If it returns true, the content of this tag is processed.
+     * Evaluate the condition. If it returns true, the content of this tag is processed.
      *
      * @return true in order to output the Nodes contained in this Node.
      * @throws JspException thrown if an evaluation error occurred

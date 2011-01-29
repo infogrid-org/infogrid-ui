@@ -146,7 +146,7 @@ public abstract class AbstractRelatedTag
     }
 
     /**
-     * Evaluatate the condition. If it returns true, the content of this tag is processed.
+     * Evaluate the condition. If it returns true, the content of this tag is processed.
      *
      * @return true in order to output the Nodes contained in this Node.
      * @throws JspException thrown if an evaluation error occurred

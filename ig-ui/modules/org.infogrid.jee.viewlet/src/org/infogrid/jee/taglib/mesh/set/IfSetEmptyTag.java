@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -36,7 +36,7 @@ public class IfSetEmptyTag
     }
 
     /**
-     * Evaluatate the condition. If it returns true, the content of this tag is processed.
+     * Evaluate the condition. If it returns true, the content of this tag is processed.
      *
      * @param set the MeshObjectSet to evaluate
      * @return true in order to output the Nodes contained in this Node.
