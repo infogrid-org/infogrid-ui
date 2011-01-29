@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -20,10 +20,10 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseSection;
 
 /**
- * Tests whether one or more errors have been reported.
+ * Tests whether one or more informational messages have been reported.
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class IfErrorsTag
+public class IfInfoMessagesTag
     extends
         AbstractSectionTestTag
 {
@@ -32,7 +32,7 @@ public class IfErrorsTag
     /**
      * Constructor.
      */
-    public IfErrorsTag()
+    public IfInfoMessagesTag()
     {
         // noop
     }
@@ -53,14 +53,14 @@ public class IfErrorsTag
             IgnoreException
     {
         boolean ret;
-        
+
         StructuredResponseSection section = evaluate();
         if( section != null ) {
-            ret = section.haveProblemsBeenReported();
+            ret = section.haveInfoMessagesBeenReported();
         } else {
             StructuredResponse response = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
             if( response != null ) {
-                ret = response.haveProblemsBeenReportedAggregate();
+                ret = response.haveInfoMessagesBeenReportedAggregate();
             } else {
                 ret = false;
             }

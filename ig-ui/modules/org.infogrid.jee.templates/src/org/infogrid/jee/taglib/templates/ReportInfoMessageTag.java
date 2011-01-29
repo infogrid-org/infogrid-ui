@@ -22,10 +22,10 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.templates.StructuredResponse;
 
 /**
- * <p>Report an error via JSP.</p>
+ * <p>Report an informational message via JSP.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class ReportProblemTag
+public class ReportInfoMessageTag
     extends
         AbstractInfoGridBodyTag
 {
@@ -34,7 +34,7 @@ public class ReportProblemTag
     /**
      * Constructor.
      */
-    public ReportProblemTag()
+    public ReportInfoMessageTag()
     {
         // noop
     }
@@ -93,12 +93,12 @@ public class ReportProblemTag
         if( bodyString.length() == 0 ) {
             return SKIP_BODY;
         }
-        
+
         StructuredResponse response = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
         if( response == null ) {
             return SKIP_BODY;
         }
-        response.reportProblem( new ReportException( bodyString ));
+        response.reportInfoMessage( new ReportException( bodyString ));
 
         return SKIP_BODY; // this is the default, subclasses may override
     }

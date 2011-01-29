@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -54,6 +54,36 @@ public interface ProblemReporter
      * @return problems reported so far, in sequence
      */
     public Iterator<Throwable> problems();
+
+    /**
+     * Report an informational message that should be shown to the user.
+     *
+     * @param t the Throwable indicating the message
+     */
+    public void reportInfoMessage(
+            Throwable t );
+
+    /**
+     * Convenience method to report several informational messages that should be shown to the user.
+     *
+     * @param ts [] the Throwables indicating the informational messages
+     */
+    public void reportInfoMessages(
+            Throwable [] ts );
+
+    /**
+     * Determine whether informational messages have been reported.
+     *
+     * @return true if at least one informational message has been reported
+     */
+    public boolean haveInfoMessagesBeenReported();
+
+    /**
+     * Obtain the informational messages reported so far.
+     *
+     * @return informational messages reported so far, in sequence
+     */
+    public Iterator<Throwable> infoMessages();
 
     /**
      * Name of a Request-level attribute that contains an object of this type, if any.

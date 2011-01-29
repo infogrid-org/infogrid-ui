@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -30,7 +30,7 @@ public class TextHtmlStructuredResponseSectionTemplate
     public static TextHtmlStructuredResponseSectionTemplate create(
             String name )
     {
-        TextHtmlStructuredResponseSectionTemplate ret = new TextHtmlStructuredResponseSectionTemplate( name, DEFAULT_MAX_PROBLEMS );
+        TextHtmlStructuredResponseSectionTemplate ret = new TextHtmlStructuredResponseSectionTemplate( name, DEFAULT_MAX_PROBLEMS, DEFAULT_MAX_INFO_MESSAGES );
         return ret;
     }
 
@@ -39,13 +39,15 @@ public class TextHtmlStructuredResponseSectionTemplate
      *
      * @param name the name of the section
      * @param maxProblems the maximum number of problems to store in sections of this type
+     * @param maxInfoMessages the maximum number of informational messages to store in sections of this type
      * @return the created StructuredResponseSectionTemplate
      */
     public static TextHtmlStructuredResponseSectionTemplate create(
             String name,
-            int    maxProblems )
+            int    maxProblems,
+            int    maxInfoMessages )
     {
-        TextHtmlStructuredResponseSectionTemplate ret = new TextHtmlStructuredResponseSectionTemplate( name, maxProblems );
+        TextHtmlStructuredResponseSectionTemplate ret = new TextHtmlStructuredResponseSectionTemplate( name, maxProblems, maxInfoMessages );
         return ret;
     }
 
@@ -54,11 +56,13 @@ public class TextHtmlStructuredResponseSectionTemplate
      * 
      * @param name the name of the section
      * @param maxProblems the maximum number of problems to store in sections of this type
+     * @param maxInfoMessages the maximum number of informational messages to store in sections of this type
      */
     protected TextHtmlStructuredResponseSectionTemplate(
             String name,
-            int    maxProblems )
+            int    maxProblems,
+            int    maxInfoMessages )
     {
-        super( name, maxProblems );
+        super( name, maxProblems, maxInfoMessages );
     }
 }

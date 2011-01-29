@@ -20,10 +20,10 @@ import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
 /**
- * Special-purpose exception only thrown by ReportProblemTag to report a problem to
- * the template framework.
+ * Special-purpose exception only thrown by ReportProblemTag and ReportInfoMessageTag to
+ * report a problem or an informational message to the template framework.
  */
-public class ReportProblemTagException
+public class ReportException
         extends
             Exception
         implements
@@ -34,7 +34,7 @@ public class ReportProblemTagException
      *
      * @param message the message
      */
-    public ReportProblemTagException(
+    public ReportException(
             String message )
     {
         super( message );

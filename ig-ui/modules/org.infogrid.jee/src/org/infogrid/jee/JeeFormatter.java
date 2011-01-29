@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -1041,6 +1041,51 @@ public class JeeFormatter
             ret = candidate; // this is the best we can do
         }
         return ret;
+    }
+
+    /**
+     * Format a list of informational messages represented as Throwables.
+     *
+     * @param saneRequest the incoming request
+     * @param infoMessagesIterator Iterator over the reported problems
+     * @param stringRepresentation the StringRepresentation to use
+     * @param colloquial if applicable, output in colloquial form
+     * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    public String formatInfoMessages(
+            SaneRequest         saneRequest,
+            Iterator<Throwable> infoMessagesIterator,
+            String              stringRepresentation,
+            boolean             colloquial )
+        throws
+            StringifierException
+    {
+        StringRepresentation                 rep  = determineStringRepresentation( stringRepresentation );
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               colloquial );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, saneRequest.getContextPath() );
+
+        String        sep = "";
+        StringBuilder buf = new StringBuilder();
+        while( infoMessagesIterator.hasNext() ) {
+            Throwable current  = infoMessagesIterator.next();
+            Throwable toFormat = determineThrowableToFormat( current );
+
+            String temp = rep.formatThrowable( toFormat, pars );
+            if(    buf.length() > 0
+                && temp.charAt( 0 ) != '\n'
+                && buf.charAt( buf.length()-1 ) != '\n' )
+            {
+                buf.append( sep );
+            }
+            buf.append( "<div class=\"info-message\">" );
+            buf.append( temp );
+            buf.append( "</div>" );
+            sep = "\n";
+        }
+        return buf.toString();
     }
 
     /**

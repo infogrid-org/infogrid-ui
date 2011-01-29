@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -55,7 +55,7 @@ public class StructuredResponse
             HttpServletResponse delegate,
             ServletContext      servletContext )
     {
-        StructuredResponse ret = new StructuredResponse( delegate, servletContext, DEFAULT_MAX_PROBLEMS );
+        StructuredResponse ret = new StructuredResponse( delegate, servletContext, DEFAULT_MAX_PROBLEMS, DEFAULT_MAX_INFO_MESSAGES );
         return ret;
     }
 
@@ -65,14 +65,16 @@ public class StructuredResponse
      * @param delegate the underlying HttpServletResponse
      * @param servletContext the ServletContext in which the StructuredResponse is created
      * @param maxProblems the maxmimum number of problems to report in this StructuredResponse
+     * @param maxInfoMessages the maximum number of informational messages to report in this StructuredResponse
      * @return the created StructuredResponse
      */
     public static StructuredResponse create(
             HttpServletResponse delegate,
             ServletContext      servletContext,
-            int                 maxProblems )
+            int                 maxProblems,
+            int                 maxInfoMessages )
     {
-        StructuredResponse ret = new StructuredResponse( delegate, servletContext, maxProblems );
+        StructuredResponse ret = new StructuredResponse( delegate, servletContext, maxProblems, maxInfoMessages );
         return ret;
     }
 
@@ -81,16 +83,19 @@ public class StructuredResponse
      *
      * @param delegate the underlying HttpServletResponse
      * @param servletContext the ServletContext in which the StructuredResponse is created
-     * @param maxProblems the maxmimum number of problems to report in this StructuredResponse
+     * @param maxProblems the maximum number of problems to report in this StructuredResponse
+     * @param maxInfoMessages the maximum number of informational messages to report in this StructuredResponse
      */
     protected StructuredResponse(
             HttpServletResponse delegate,
             ServletContext      servletContext,
-            int                 maxProblems )
+            int                 maxProblems,
+            int                 maxInfoMessages )
     {
-        theDelegate       = delegate;
-        theServletContext = servletContext;
-        theMaxProblems    = maxProblems;
+        theDelegate        = delegate;
+        theServletContext  = servletContext;
+        theMaxProblems     = maxProblems;
+        theMaxInfoMessages = maxInfoMessages;
     }
     
     /**
@@ -498,6 +503,113 @@ public class StructuredResponse
     }
 
     /**
+     * Report an informational message that should be shown to the user.
+     *
+     * @param t the THrowable indicating the message
+     */
+    public void reportInfoMessage(
+            Throwable t )
+    {
+        if( log.isDebugEnabled() ) {
+            log.debug( "Reporting info message: ", t );
+        }
+        if( theCurrentInfoMessages.size() <= theMaxInfoMessages ) {
+            // make sure we aren't growing this indefinitely
+            theCurrentInfoMessages.add( t );
+
+        } else {
+            log.error( "Too many info messages. Ignored ", t ); // late initialization
+        }
+    }
+
+    /**
+     * Convenience method to report several informational messages that should be shown to the user.
+     *
+     * @param ts [] the Throwables indicating the informational messages
+     */
+    public void reportInfoMessages(
+            Throwable [] ts )
+    {
+        for( int i=0 ; i<ts.length ; ++i ) {
+            reportInfoMessage( ts[i] );
+        }
+    }
+
+    /**
+     * Determine whether informational messages have been reported.
+     *
+     * @return true if at least one informational message has been reported
+     */
+    public boolean haveInfoMessagesBeenReported()
+    {
+        if( !theCurrentInfoMessages.isEmpty() ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determine whether informational messages have been reported here and in all contained sections.
+     *
+     * @return true if at least one informational message has been reported
+     */
+    public boolean haveInfoMessagesBeenReportedAggregate()
+    {
+        if( !theCurrentInfoMessages.isEmpty() ) {
+            return true;
+        }
+
+        for( TextStructuredResponseSection current : theTextSections.values() ) {
+            if( current.haveInfoMessagesBeenReported() ) {
+                return true;
+            }
+        }
+        for( BinaryStructuredResponseSection current : theBinarySections.values() ) {
+            if( current.haveInfoMessagesBeenReported() ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Obtain the informational messages reported so far.
+     *
+     * @return informational messages reported so far, in sequence
+     */
+    public Iterator<Throwable> infoMessages()
+    {
+        return theCurrentInfoMessages.iterator();
+    }
+
+    /**
+     * Obtain the informational messages reported so far here and in all contained sections.
+     *
+     * @return informational messages reported so far
+     */
+    public Iterator<Throwable> infoMessagesAggregate()
+    {
+        ArrayList<Throwable> ret =  new ArrayList<Throwable>();
+        ret.addAll( theCurrentInfoMessages );
+
+        for( TextStructuredResponseSection current : theTextSections.values() ) {
+            Iterator<Throwable> infoMessageIter = current.infoMessages();
+            while( infoMessageIter.hasNext() ) {
+                ret.add( infoMessageIter.next() );
+            }
+        }
+        for( BinaryStructuredResponseSection current : theBinarySections.values() ) {
+            Iterator<Throwable> infoMessageIter = current.infoMessages();
+            while( infoMessageIter.hasNext() ) {
+                ret.add( infoMessageIter.next() );
+            }
+        }
+
+        return ret.iterator();
+    }
+
+    /**
      * Obtain the desired MIME type.
      * 
      * @return the desired MIME type
@@ -706,6 +818,9 @@ public class StructuredResponse
         if( haveProblemsBeenReported()) {
             return false;
         }
+        if( haveInfoMessagesBeenReported()) {
+            return false;
+        }
         for( TextStructuredResponseSectionTemplate key : theTextSections.keySet() ) {
             TextStructuredResponseSection value = theTextSections.get(  key );
             if( !value.isEmpty() ) {
@@ -733,6 +848,7 @@ public class StructuredResponse
                 new String [] {
                     "theRequestedTemplateName",
                     "theCurrentProblems",
+                    "theCurrentInfoMessages",
                     "theMimeType",
                     "theCookies",
                     "theLocation",
@@ -744,6 +860,7 @@ public class StructuredResponse
                 new Object [] {
                     theRequestedTemplateName,
                     theCurrentProblems,
+                    theCurrentInfoMessages,
                     theMimeType,
                     theCookies,
                     theLocation,
@@ -787,9 +904,19 @@ public class StructuredResponse
     protected ArrayList<Throwable> theCurrentProblems = new ArrayList<Throwable>();
 
     /**
+     * The current informational messages, in sequence of occurrence.
+     */
+    protected ArrayList<Throwable> theCurrentInfoMessages = new ArrayList<Throwable>();
+
+    /**
      * The maximum number of problems to store in this type of section.
      */
     protected int theMaxProblems;
+
+    /**
+     * The maximum number of informational messages to store in this type of section.
+     */
+    protected int theMaxInfoMessages;
 
     /**
      * The desired MIME type. Currently not used.
@@ -843,6 +970,11 @@ public class StructuredResponse
      * The default maximum number of problems to store.
      */
     public static final int DEFAULT_MAX_PROBLEMS = theResourceHelper.getResourceIntegerOrDefault( "DefaultMaxProblems", 20 );
+
+    /**
+     * The default maximum number of informational messages to store.
+     */
+    public static final int DEFAULT_MAX_INFO_MESSAGES = theResourceHelper.getResourceIntegerOrDefault( "DefaultMaxInfoMessages", 20 );
 
 
     /**

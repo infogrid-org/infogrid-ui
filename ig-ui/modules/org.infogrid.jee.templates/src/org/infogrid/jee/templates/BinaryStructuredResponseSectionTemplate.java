@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -30,7 +30,7 @@ public class BinaryStructuredResponseSectionTemplate
     public static BinaryStructuredResponseSectionTemplate create(
             String name )
     {
-        BinaryStructuredResponseSectionTemplate ret = new BinaryStructuredResponseSectionTemplate( name, DEFAULT_MAX_PROBLEMS );
+        BinaryStructuredResponseSectionTemplate ret = new BinaryStructuredResponseSectionTemplate( name, DEFAULT_MAX_PROBLEMS, DEFAULT_MAX_INFO_MESSAGES );
         return ret;
     }
 
@@ -39,13 +39,15 @@ public class BinaryStructuredResponseSectionTemplate
      *
      * @param name the name of the section
      * @param maxProblems the maximum number of problems to store in sections of this type
+     * @param maxInfoMessages the maximum number of informational messages to store in sections of this type
      * @return the created StructuredResponseSectionTemplate
      */
     public static BinaryStructuredResponseSectionTemplate create(
             String name,
-            int    maxProblems )
+            int    maxProblems,
+            int    maxInfoMessages )
     {
-        BinaryStructuredResponseSectionTemplate ret = new BinaryStructuredResponseSectionTemplate( name, maxProblems );
+        BinaryStructuredResponseSectionTemplate ret = new BinaryStructuredResponseSectionTemplate( name, maxProblems, maxInfoMessages );
         return ret;
     }
 
@@ -54,11 +56,13 @@ public class BinaryStructuredResponseSectionTemplate
      * 
      * @param name the name of the section
      * @param maxProblems the maximum number of problems to store in sections of this type
+     * @param maxInfoMessages the maximum number of informational messages to store in sections of this type
      */
     protected BinaryStructuredResponseSectionTemplate(
             String name,
-            int    maxProblems )
+            int    maxProblems,
+            int    maxInfoMessages )
     {
-        super( name, maxProblems );
+        super( name, maxProblems, maxInfoMessages );
     }
 }

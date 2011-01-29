@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -26,13 +26,16 @@ public abstract class StructuredResponseSectionTemplate
      * 
      * @param name the name of the section
      * @param maxProblems the maximum number of problems to store in sections of this type
+     * @param maxInfoMessages the maximum number of informational messages to store in sections of this type
      */
     protected StructuredResponseSectionTemplate(
             String name,
-            int    maxProblems )
+            int    maxProblems,
+            int    maxInfoMessages )
     {
-        theSectionName = name;
-        theMaxProblems = maxProblems;
+        theSectionName     = name;
+        theMaxProblems     = maxProblems;
+        theMaxInfoMessages = maxInfoMessages;
     }
 
     /**
@@ -53,6 +56,16 @@ public abstract class StructuredResponseSectionTemplate
     public int getMaxProblems()
     {
         return theMaxProblems;
+    }
+
+    /**
+     * Determine the maximum number of informational messages to store in this type of section.
+     *
+     * @return the maximum number of informational messages
+     */
+    public int getMaxInfoMessages()
+    {
+        return theMaxInfoMessages;
     }
 
     /**
@@ -93,6 +106,11 @@ public abstract class StructuredResponseSectionTemplate
     protected int theMaxProblems;
 
     /**
+     * The maximum number of informational messages to store in this type of section.
+     */
+    protected int theMaxInfoMessages;
+
+    /**
      * Our ResourceHelper.
      */
     private static final ResourceHelper theResourceHelper = ResourceHelper.getInstance( StructuredResponseSectionTemplate.class );
@@ -101,4 +119,9 @@ public abstract class StructuredResponseSectionTemplate
      * The default maximum number of problems to store.
      */
     public static final int DEFAULT_MAX_PROBLEMS = theResourceHelper.getResourceIntegerOrDefault( "DefaultMaxProblems", 20 );
+
+    /**
+     * The default maximum number of informational messages to store.
+     */
+    public static final int DEFAULT_MAX_INFO_MESSAGES = theResourceHelper.getResourceIntegerOrDefault( "DefaultMaxInfoMessages", 20 );
 }

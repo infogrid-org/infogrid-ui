@@ -57,6 +57,11 @@
     </tag>
 
     <tag>
+        <name>ifInfoMessages</name>
+        <tag-class>org.infogrid.jee.taglib.templates.IfInfoMessagesTag</tag-class>
+    </tag>
+
+    <tag>
         <name>ifNotEmpty</name>
         <tag-class>org.infogrid.jee.taglib.templates.IfNotEmptyTag</tag-class>
         <attribute>
@@ -83,6 +88,20 @@
             <name>stringRepresentation</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+    </tag>
+
+    <tag>
+        <name>inlineInfoMessages</name>
+        <tag-class>org.infogrid.jee.taglib.templates.InlineInfoMessagesTag</tag-class>
+        <attribute>
+            <name>stringRepresentation</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>reportInfoMessage</name>
+        <tag-class>org.infogrid.jee.taglib.templates.ReportProblemTag</tag-class>
     </tag>
 
     <tag>

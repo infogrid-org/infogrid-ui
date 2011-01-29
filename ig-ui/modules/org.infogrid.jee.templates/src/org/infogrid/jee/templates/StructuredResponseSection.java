@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -129,6 +129,65 @@ public abstract class StructuredResponseSection
     public Iterator<Throwable> problems()
     {
         return theCurrentProblems.iterator();
+    }
+
+    /**
+     * Report an informational message that should be shown to the user.
+     *
+     * @param t the THrowable indicating the message
+     */
+    public void reportInfoMessage(
+            Throwable t )
+    {
+        if( log.isDebugEnabled() ) {
+            log.debug( "Reporting info message: ", t );
+        }
+        if( theCurrentInfoMessages.size() <= theSectionTemplate.getMaxInfoMessages() ) {
+            // make sure we aren't growing this indefinitely
+            theCurrentInfoMessages.add( t );
+
+        } else {
+            log.error( "Too many info messages. Ignored ", t ); // late initialization
+        }
+    }
+
+    /**
+     * Convenience method to report several informational messages that should be shown to the user.
+     *
+     * @param ts [] the Throwables indicating the informational messages
+     */
+    public void reportInfoMessages(
+            Throwable [] ts )
+    {
+        for( int i=0 ; i<ts.length ; ++i ) {
+            if( theCurrentInfoMessages.size() <= theSectionTemplate.getMaxInfoMessages() ) {
+                // make sure we aren't growing this indefinitely
+                theCurrentInfoMessages.add( ts[i] );
+            } else {
+                log.error( "Too many informational messages. Ignored " + (ts.length-i) + " problems starting with ", ts[i] );
+                break;
+            }
+        }
+    }
+
+    /**
+     * Determine whether informational messages have been reported.
+     *
+     * @return true if at least one informational message has been reported
+     */
+    public boolean haveInfoMessagesBeenReported()
+    {
+        return !theCurrentInfoMessages.isEmpty();
+    }
+
+    /**
+     * Obtain the informational messages reported so far.
+     *
+     * @return informational messages reported so far, in sequence
+     */
+    public Iterator<Throwable> infoMessages()
+    {
+        return theCurrentInfoMessages.iterator();
     }
 
     /**
@@ -362,4 +421,9 @@ public abstract class StructuredResponseSection
      * The current problems, in sequence of occurrence.
      */
     protected ArrayList<Throwable> theCurrentProblems = new ArrayList<Throwable>();
+
+    /**
+     * The current informational messages, in sequence of occurrence.
+     */
+    protected ArrayList<Throwable> theCurrentInfoMessages = new ArrayList<Throwable>();
 }
