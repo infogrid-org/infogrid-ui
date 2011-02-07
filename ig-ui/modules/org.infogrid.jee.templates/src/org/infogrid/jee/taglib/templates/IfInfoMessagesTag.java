@@ -16,16 +16,14 @@ package org.infogrid.jee.taglib.templates;
 
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.templates.StructuredResponse;
-import org.infogrid.jee.templates.StructuredResponseSection;
 
 /**
  * Tests whether one or more informational messages have been reported.
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
 public class IfInfoMessagesTag
-    extends
-        AbstractSectionTestTag
+        extends
+            AbstractInfoMessagesTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -52,19 +50,7 @@ public class IfInfoMessagesTag
             JspException,
             IgnoreException
     {
-        boolean ret;
-
-        StructuredResponseSection section = evaluate();
-        if( section != null ) {
-            ret = section.haveInfoMessagesBeenReported();
-        } else {
-            StructuredResponse response = (StructuredResponse) lookup( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
-            if( response != null ) {
-                ret = response.haveInfoMessagesBeenReportedAggregate();
-            } else {
-                ret = false;
-            }
-        }
+        boolean ret = haveInformationalMessagesBeenReportedAggregate();
         return ret;
     }
 }

@@ -100,6 +100,16 @@
     </tag>
 
     <tag>
+        <name>notIfErrors</name>
+        <tag-class>org.infogrid.jee.taglib.templates.NotIfErrorsTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>notIfInfoMessages</name>
+        <tag-class>org.infogrid.jee.taglib.templates.NotIfInfoMessagesTag</tag-class>
+    </tag>
+
+    <tag>
         <name>reportInfoMessage</name>
         <tag-class>org.infogrid.jee.taglib.templates.ReportProblemTag</tag-class>
     </tag>

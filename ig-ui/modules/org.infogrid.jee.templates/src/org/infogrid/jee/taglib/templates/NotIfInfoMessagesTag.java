@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -18,19 +18,19 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 
 /**
- * Tests whether one or more errors have been reported.
+ * Tests whether no informational messages have been reported.
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class IfErrorsTag
+public class NotIfInfoMessagesTag
         extends
-            AbstractErrorsTag
+            AbstractInfoMessagesTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
      * Constructor.
      */
-    public IfErrorsTag()
+    public NotIfInfoMessagesTag()
     {
         // noop
     }
@@ -50,7 +50,7 @@ public class IfErrorsTag
             JspException,
             IgnoreException
     {
-        boolean ret = haveProblemsBeenReportedAggregate();
+        boolean ret = !haveInformationalMessagesBeenReportedAggregate();
         return ret;
     }
 }
