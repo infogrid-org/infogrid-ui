@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -47,7 +47,6 @@ public class MeshTypeIdentifierTag
     protected void initializeToDefaults()
     {
         theMeshTypeName         = null;
-        theNullString           = "";
         theStringRepresentation = null;
         theMaxLength            = -1;
 
@@ -75,29 +74,6 @@ public class MeshTypeIdentifierTag
             String newValue )
     {
         theMeshTypeName = newValue;
-    }
-
-    /**
-     * Obtain value of the nullString property.
-     *
-     * @return value of the nullString property
-     * @see #setNullString
-     */
-    public String getNullString()
-    {
-        return theNullString;
-    }
-
-    /**
-     * Set value of the nullString property.
-     *
-     * @param newValue new value of the nullString property
-     * @see #getNullString
-     */
-    public void setNullString(
-            String newValue )
-    {
-        theNullString = newValue;
     }
 
     /**
@@ -176,7 +152,7 @@ public class MeshTypeIdentifierTag
             if( theIdentifier != null ) {
                 text = ((RestfulJeeFormatter)theFormatter).formatMeshTypeIdentifier( pageContext, theIdentifier, theStringRepresentation, theMaxLength );
             } else {
-                text = theNullString;
+                text = "";
             }
             print( text );
 
@@ -191,11 +167,6 @@ public class MeshTypeIdentifierTag
      * String containing the name of the bean that is the MeshType.
      */
     protected String theMeshTypeName;
-
-    /**
-     * The String that is shown if a value is null.
-     */
-    protected String theNullString;
 
     /**
      * Name of the String representation.
