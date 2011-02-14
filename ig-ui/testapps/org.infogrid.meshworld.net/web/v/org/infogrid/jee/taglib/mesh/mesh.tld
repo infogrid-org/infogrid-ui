@@ -9,7 +9,7 @@
 
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -247,10 +247,6 @@
         <attribute>
             <name>meshTypeName</name>
             <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>nullString</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
