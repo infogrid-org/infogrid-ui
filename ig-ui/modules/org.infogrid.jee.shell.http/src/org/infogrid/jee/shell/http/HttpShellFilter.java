@@ -17,6 +17,7 @@ package org.infogrid.jee.shell.http;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -166,20 +167,46 @@ public class HttpShellFilter
      * @throws HttpShellException a factory Exception occurred
      */
     protected String performFactoryOperations(
-            SaneRequest lidRequest )
+            final SaneRequest lidRequest )
         throws
             NotPermittedException,
             HttpShellException
     {
         ensureInitialized();
 
-        MSmartFactory<MeshBase,OnDemandTransaction,Void> txs = MSmartFactory.create(
-                new OnDemandTransactionFactory(),
-                MCachingHashMap.<MeshBase,OnDemandTransaction>create() );
+        Map<String,String[]>              postArguments = lidRequest.getPostedArguments();
+        final ArrayList<HttpShellHandler> handlers      = new ArrayList<HttpShellHandler>();
 
-        Map<String,String[]>       postArguments = lidRequest.getPostedArguments();
-        HashMap<String,MeshObject> variables     = new HashMap<String,MeshObject>();
-        Throwable                  thrown        = null;
+        // determine handlers
+        String [] handlerNames = postArguments.get( HANDLER_TAG );
+        if( handlerNames != null ) {
+            for( String handlerName : handlerNames ) {
+                try {
+                    HttpShellHandler handler = findHandler( handlerName );
+                    if( handler == null ) {
+                        throw new SpecifiedHandlerNotFoundException( handlerName );
+                    }
+                    handlers.add( handler );
+
+                } catch( Throwable ex ) {
+                    throw new HttpShellException( ex );
+                }
+            }
+        }
+        HashMap<String,MeshObject>  variables     = new HashMap<String,MeshObject>();
+        Throwable                   thrown        = null;
+
+        HttpShellOnDemandTransactionFactory txFact = new HttpShellOnDemandTransactionFactory( lidRequest, handlers, theMainMeshBase );
+
+        MSmartFactory<MeshBase,OnDemandTransaction,Void> txs = MSmartFactory.create(
+                txFact,
+                MCachingHashMap.<MeshBase,OnDemandTransaction>create() );
+        txFact.setTransactions( txs );
+
+        // invoke pre-transaction
+        for( HttpShellHandler handler : handlers ) {
+            handler.beforeTransactionStart( lidRequest, theMainMeshBase );
+        }
 
         try {
             // first look for all arguments of the form <PREFIX>.<VARIABLE>
@@ -487,6 +514,11 @@ public class HttpShellFilter
                 }
             }
 
+            // invoke pre-transaction
+            for( HttpShellHandler handler : handlers ) {
+                handler.beforeTransactionEnd( lidRequest, variables, txs, theMainMeshBase );
+            }
+
         } catch( ParseException ex ) {
             thrown = ex;
             throw new HttpShellException( ex );
@@ -576,26 +608,9 @@ public class HttpShellFilter
                     }
                 }
             }
-        }
-
-        // now handlers
-        String [] handlerNames = postArguments.get( HANDLER_TAG );
-        if( handlerNames != null ) {
-            for( String handlerName : handlerNames ) {
-                try {
-                    HttpShellHandler handler = findHandler( handlerName );
-                    if( handler == null ) {
-                        throw new SpecifiedHandlerNotFoundException( handlerName );
-                    }
-
-                    handler.handle( lidRequest, variables, txs, theMainMeshBase );
-
-                } catch( HttpShellException ex ) {
-                    throw ex;
-
-                } catch( Throwable ex ) {
-                    throw new HttpShellException( ex );
-                }
+            // invoke post-transaction
+            for( HttpShellHandler handler : handlers ) {
+                handler.afterTransactionEnd( lidRequest, variables, txs, theMainMeshBase, thrown );
             }
         }
 
