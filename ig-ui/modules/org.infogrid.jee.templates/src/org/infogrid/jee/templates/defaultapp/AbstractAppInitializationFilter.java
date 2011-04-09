@@ -21,11 +21,9 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.util.CompoundException;
 import org.infogrid.util.CompoundRuntimeException;
-import org.infogrid.util.context.Context;
 import org.infogrid.util.logging.Log;
 
 /**
@@ -87,8 +85,6 @@ public abstract class AbstractAppInitializationFilter
             IOException,
             ServletException
     {
-        Context appContext = InfoGridWebApp.getSingleton().getApplicationContext();
-
         synchronized( AbstractAppInitializationFilter.class ) {
             if( !isInitialized ) {
                 try {

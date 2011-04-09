@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1999-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1999-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -121,7 +121,7 @@ public enum DefaultJeeViewletStateTransitionEnum
      * Obtain a String representation of this instance that can be shown to the user.
      *
      * @param rep the StringRepresentation
-     * @param pars collects parameters that may influence the String representation
+     * @param pars collects parameters that may influence the String representation. Always provided.
      * @return String representation
      */
     public String toStringRepresentation(
@@ -136,7 +136,7 @@ public enum DefaultJeeViewletStateTransitionEnum
      * as a link/hyperlink and can be shown to the user.
      *
      * @param rep the StringRepresentation
-     * @param pars collects parameters that may influence the String representation
+     * @param pars collects parameters that may influence the String representation. Always provided.
      * @return String representation
      */
     public String toStringRepresentationLinkStart(
@@ -151,7 +151,7 @@ public enum DefaultJeeViewletStateTransitionEnum
      * as a link/hyperlink and can be shown to the user.
      *
      * @param rep the StringRepresentation
-     * @param pars collects parameters that may influence the String representation
+     * @param pars collects parameters that may influence the String representation. Always provided.
      * @return String representation
      */
     public String toStringRepresentationLinkEnd(

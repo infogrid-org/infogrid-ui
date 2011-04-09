@@ -167,14 +167,6 @@ span.org-infogrid-model-primitives-BlobValue > span.mime {
     display: none;
     visibility: hidden;
 }
-span.org-infogrid-model-primitives-ColorValue {
-    padding: 0 1em;
-}
-
-div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show textarea {
-    width: 100%;
-    min-width: 330px;
-}
 
 div.org-infogrid-jee-taglib-mesh-RefreshTag {
     font-size: 0.7em;

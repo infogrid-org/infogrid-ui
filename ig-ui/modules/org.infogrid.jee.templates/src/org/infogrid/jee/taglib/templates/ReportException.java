@@ -44,7 +44,7 @@ public class ReportException
      * Obtain a String representation of this instance that can be shown to the user.
      *
      * @param rep the StringRepresentation
-     * @param pars collects parameters that may influence the String representation
+     * @param pars collects parameters that may influence the String representation. Always provided.
      * @return String representation
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      */
@@ -62,7 +62,7 @@ public class ReportException
      * as a link/hyperlink and can be shown to the user.
      *
      * @param rep the StringRepresentation
-     * @param pars collects parameters that may influence the String representation
+     * @param pars collects parameters that may influence the String representation. Always provided.
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */
@@ -80,7 +80,7 @@ public class ReportException
      * as a link/hyperlink and can be shown to the user.
      *
      * @param rep the StringRepresentation
-     * @param pars collects parameters that may influence the String representation
+     * @param pars collects parameters that may influence the String representation. Always provided.
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @return String representation
      */

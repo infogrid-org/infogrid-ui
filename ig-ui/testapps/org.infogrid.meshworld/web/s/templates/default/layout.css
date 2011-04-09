@@ -2,7 +2,15 @@
 
 h1 {
     margin: 10px 0;
+    font-size: 1.5em;
+    font-weight: normal;
+    border: dotted;
+    border-width: 0 0 1px 0;
 }
+h2 {
+    font-size: 1.2em;
+}
+
 div.canvas-main {
     width: 950px;
     margin: 0 auto;
@@ -43,7 +51,7 @@ table.dialog-buttons > * > tr > td {
     border-width: 0;
     text-align: center;
     padding: 15px 0 5px 0;
-    width: 33.3%
+    width: 33.3%;
 }
 
 div.viewlet {
@@ -95,6 +103,9 @@ a.infogrid {
     float: right;
     margin-left: 10px;
     margin-top: 12px;
+}
+.footnote {
+    font-size: 9px;
 }
 div.footnote > p {
     margin: 0;
@@ -166,14 +177,6 @@ div.org-infogrid-model-primitives-TimeStampValue a {
 span.org-infogrid-model-primitives-BlobValue > span.mime {
     display: none;
     visibility: hidden;
-}
-span.org-infogrid-model-primitives-ColorValue {
-    padding: 0 1em;
-}
-
-div.org-infogrid-jee-taglib-mesh-PropertyValueTag-show textarea {
-    width: 100%;
-    min-width: 330px;
 }
 
 div.org-infogrid-jee-taglib-mesh-RefreshTag {

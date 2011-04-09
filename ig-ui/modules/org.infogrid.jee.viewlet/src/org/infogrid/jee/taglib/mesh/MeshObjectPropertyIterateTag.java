@@ -25,6 +25,7 @@ import org.infogrid.jee.taglib.util.InfoGridIterationTag;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.model.primitives.AttributableMeshType;
 import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
@@ -59,6 +60,7 @@ public class MeshObjectPropertyIterateTag
     protected void initializeToDefaults()
     {
         theMeshObjectName       = null;
+        theMeshType             = null;
         theMeshTypeName         = null;
         thePropertyList         = null;
         thePropertyValueLoopVar = null;
@@ -116,6 +118,29 @@ public class MeshObjectPropertyIterateTag
             String newValue )
     {
         theMeshTypeName = newValue;
+    }
+
+    /**
+     * Obtain value of the meshType property.
+     *
+     * @return value of the meshType property
+     * @see #setMeshType
+     */
+    public final String getMeshType()
+    {
+        return theMeshType;
+    }
+
+    /**
+     * Set value of the meshType property.
+     *
+     * @param newValue new value of the meshType property
+     * @see #getMeshType
+     */
+    public final void setMeshType(
+            String newValue )
+    {
+        theMeshType = newValue;
     }
 
     /**
@@ -245,7 +270,9 @@ public class MeshObjectPropertyIterateTag
             JspException,
             IgnoreException
     {
-        theMeshObject = lookupMeshObjectOrThrow( theMeshObjectName );
+        if( theMeshObjectName != null ) {
+            theMeshObject = lookupMeshObjectOrThrow( theMeshObjectName );
+        }
 
         Collection<PropertyType> propertyTypesToShow = new ArrayList<PropertyType>();
         
@@ -253,6 +280,9 @@ public class MeshObjectPropertyIterateTag
         if( theMeshTypeName != null ) {
             EntityType meshType = (EntityType) lookupOrThrow( theMeshTypeName );
             allPropertyTypes = meshType.getAllPropertyTypes();
+        } else if( theMeshType != null ) {
+            AttributableMeshType amo = (AttributableMeshType) super.findMeshTypeByIdentifierOrThrow( theMeshType );
+            allPropertyTypes = amo.getAllPropertyTypes();
         } else {
             allPropertyTypes = theMeshObject.getAllPropertyTypes();
         }
@@ -318,10 +348,12 @@ public class MeshObjectPropertyIterateTag
             PropertyValue currentValue = null;
 
             try {
-                currentValue = theMeshObject.getPropertyValue( currentType );
+                if( theMeshObject != null ) {
+                    currentValue = theMeshObject.getPropertyValue( currentType );
 
-                if( currentValue == null && theSkipNullProperty ) {
-                    continue;
+                    if( currentValue == null && theSkipNullProperty ) {
+                        continue;
+                    }
                 }
 
                 if( thePropertyTypeLoopVar != null ) {
@@ -386,6 +418,11 @@ public class MeshObjectPropertyIterateTag
      * Name of the bean that contains the EntityType to restricted iteration to, if any.
      */
     protected String theMeshTypeName;
+
+    /**
+     * String containing the identifier of the EntityType to restricted iteration to, if any.
+     */
+    protected String theMeshType;
 
     /**
      * String containing the names of all the Properties that shall be shown. If null, show all.

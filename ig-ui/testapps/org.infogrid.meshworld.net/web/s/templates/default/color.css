@@ -14,7 +14,6 @@ textarea {
     border-color: #808080;
 }
 
-
 .footnote {
     color: #606060;
 }
@@ -55,9 +54,11 @@ div.viewlet {
 
 button.commit {
     border-color: #404040;
+    background-image: url(../../images/tick.png);
 }
 button.cancel {
     border-color: #404040;
+    background-image: url(../../images/cancel.png);
 }
 
 div.viewlet-state {

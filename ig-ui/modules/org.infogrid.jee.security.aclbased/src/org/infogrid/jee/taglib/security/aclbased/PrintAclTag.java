@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -24,7 +24,6 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.mesh.NotRelatedException;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.meshbase.security.aclbased.AclbasedSubjectArea;
 import org.infogrid.util.ResourceHelper;
@@ -194,23 +193,18 @@ public class PrintAclTag
                     printMeshObject( current );
 
                     String sep = null;
-                    try {
-                        print( theResourceHelper.getResourceStringOrNull( "BeginAccessRights" ));
-                        if( domain.isRelated( AclbasedSubjectArea.MESHOBJECT_HASREADACCESSTO_PROTECTIONDOMAIN.getDestination(), current )) {
-                            // print( sep );
-                            print( theResourceHelper.getResourceStringOrNull( "ReadAccessRights" ));
-                            sep = theResourceHelper.getResourceStringOrNull( "Separator" );
-                        }
-                        if( domain.isRelated( AclbasedSubjectArea.MESHOBJECT_HASUPDATEACCESSTO_PROTECTIONDOMAIN.getDestination(), current )) {
-                            print( sep );
-                            print( theResourceHelper.getResourceStringOrNull( "UpdateAccessRights" ));
-                            // sep = theResourceHelper.getResourceStringOrNull( "Separator" );
-                        }
-                        print( theResourceHelper.getResourceStringOrNull( "EndAccessRights" ));
-                    } catch( NotRelatedException ex ) {
-                        log.error( ex );
+                    print( theResourceHelper.getResourceStringOrNull( "BeginAccessRights" ));
+                    if( domain.isRelated( AclbasedSubjectArea.MESHOBJECT_HASREADACCESSTO_PROTECTIONDOMAIN.getDestination(), current )) {
+                        // print( sep );
+                        print( theResourceHelper.getResourceStringOrNull( "ReadAccessRights" ));
+                        sep = theResourceHelper.getResourceStringOrNull( "Separator" );
                     }
-
+                    if( domain.isRelated( AclbasedSubjectArea.MESHOBJECT_HASUPDATEACCESSTO_PROTECTIONDOMAIN.getDestination(), current )) {
+                        print( sep );
+                        print( theResourceHelper.getResourceStringOrNull( "UpdateAccessRights" ));
+                        // sep = theResourceHelper.getResourceStringOrNull( "Separator" );
+                    }
+                    print( theResourceHelper.getResourceStringOrNull( "EndAccessRights" ));
                 }
                 println( "</td>" );
                 println( "</tr>" );

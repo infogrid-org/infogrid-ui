@@ -357,11 +357,14 @@
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectPropertyIterateTag</tag-class>
         <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>meshTypeName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>meshType</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
