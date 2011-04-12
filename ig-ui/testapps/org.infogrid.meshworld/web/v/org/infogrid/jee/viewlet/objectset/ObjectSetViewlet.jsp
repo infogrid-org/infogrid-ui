@@ -13,7 +13,7 @@
  <h1>ObjectSet found related to: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Html" maxLength="30"/></h1>
  <table class="objects">
   <tbody>
-   <objectset:iterate meshObjectSetName="Viewlet.reachedObjects" loopVar="current" ignore="true">
+   <objectset:iterate meshObjectSetName="Viewlet.viewedMeshObjects.reachedObjects" loopVar="current" ignore="true">
     <objectset:iteratecontentrow>
      <tr class="identifier">
       <th class="identifier">Identifier:</th>
