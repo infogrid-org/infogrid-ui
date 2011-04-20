@@ -115,4 +115,27 @@ public abstract class AbstractHttpShellHandler
     {
         // nothing
     }
+
+    /**
+     * Helper method to get the value of a HTTP shell variable, or
+     * throw an exception if not given.
+     *
+     * @param request the incoming request
+     * @param varName name of the shell variable
+     * @return value the value of the shell variable
+     * @throws HttpShellException thrown if the argument is missing or empty
+     */
+    protected String getArgumentOrThrow(
+            SaneRequest request,
+            String      varName )
+        throws
+            HttpShellException
+    {
+        String argName = HttpShellKeywords.PREFIX + varName;
+        String ret     = request.getPostedArgument( argName );
+        if( ret == null || ret.length() == 0 ) {
+            throw new HttpShellException( new EmptyArgumentValueException( argName ) );
+        }
+        return ret;
+    }
 }
