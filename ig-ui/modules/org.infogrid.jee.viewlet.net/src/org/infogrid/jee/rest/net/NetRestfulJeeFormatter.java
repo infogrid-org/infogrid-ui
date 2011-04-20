@@ -75,9 +75,10 @@ public class NetRestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation           rep  = determineStringRepresentation( stringRepresentation );
+        StringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
         
-        String ret = p.toStringRepresentation( rep, null );
+        String ret = p.toStringRepresentation( rep, pars );
         return ret;
     }
 
@@ -115,9 +116,10 @@ public class NetRestfulJeeFormatter
         throws
             StringifierException
     {
-        StringRepresentation rep = determineStringRepresentation( stringRepresentation );
+        StringRepresentation           rep  = determineStringRepresentation( stringRepresentation );
+        StringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
 
-        String ret = p.getPartnerMeshBaseIdentifier().toStringRepresentation( rep, null );
+        String ret = p.getPartnerMeshBaseIdentifier().toStringRepresentation( rep, pars );
         return ret;
     }
 
