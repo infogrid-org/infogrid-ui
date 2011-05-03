@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,7 +16,6 @@ package org.infogrid.jee.taglib.candy;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 
@@ -84,11 +83,6 @@ public class OverlayTag
             JspException,
             IgnoreException
     {
-        String context = (String) pageContext.getRequest().getAttribute( InitializationFilter.CONTEXT_PARAMETER );
-        if( context == null ) {
-            context = "";
-        }
-
         print( "<div class=\"" );
         print( getClass().getName().replace( '.', '-' ) );
         if( theHtmlClass != null ) {

@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -34,7 +34,7 @@ public abstract class StageUtils
      * Determine whether the application is run staged or in production.
      *
      * @param request the incoming request
-     * @param productionLocation the URL of the production location of the application
+     * @param productionLocation the URL of the production location of the application, or the hostname at which it runs
      * @return true if the application is staged
      */
     public static boolean isStaged(
@@ -45,9 +45,12 @@ public abstract class StageUtils
             return true;
         }
 
-        if( !request.getAbsoluteFullUri().startsWith( productionLocation )) {
-            return true;
+        if( request.getAbsoluteFullUri().startsWith( productionLocation )) {
+            return false;
         }
-        return false;
+        if( request.getServer().equals( productionLocation )) {
+            return false;
+        }
+        return true;
     }
 }
