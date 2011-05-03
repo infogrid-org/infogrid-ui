@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -46,7 +46,7 @@ public class AllMeshObjectsTest1
         
         String [] objects = {
             "<a href=\"/org.infogrid.jee.net.testapp/custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl</span></a>",
-            "<a href=\"/org.infogrid.jee.net.testapp/\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">&lt;HOME&gt;</span></a>",
+            "<a href=\"/org.infogrid.jee.net.testapp/\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\"></span></a>",
             "<a href=\"/org.infogrid.jee.net.testapp/custom%3A//example.com/\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.com/</span></a>",
             "<a href=\"/org.infogrid.jee.net.testapp/custom%3A//example.com/%23xxxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.com/#xxxx</span></a>",
             "<a href=\"/org.infogrid.jee.net.testapp/custom%3A//example.org/%3Ffoo%3Dbar%26argl%3Dbrgl%23xxxx\" target=\"_self\" title=\"\"><span class=\"org-infogrid-mesh-a-net-DefaultAnetMeshObjectIdentifier\">custom://example.org/?foo=bar&amp;argl=brgl#xxxx</span></a>"

@@ -19,7 +19,7 @@ import org.infogrid.util.AbstractLocalizedException;
 /**
  * Thrown if an operation is invoked with an argument that does not have a value.
  */
-public class EmptyArgumentValueException
+public class UnassignedArgumentException
         extends
             AbstractLocalizedException
 {
@@ -30,7 +30,7 @@ public class EmptyArgumentValueException
      *
      * @param argName name of the argument without a value
      */
-    public EmptyArgumentValueException(
+    public UnassignedArgumentException(
             String argName )
     {
         theArgumentName = argName;

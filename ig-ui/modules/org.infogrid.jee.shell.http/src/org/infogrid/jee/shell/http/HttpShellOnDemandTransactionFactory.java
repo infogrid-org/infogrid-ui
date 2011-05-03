@@ -72,8 +72,13 @@ public class HttpShellOnDemandTransactionFactory
                         TransactionException
                 {
                     Transaction ret = super.instantiate();
-                    for( HttpShellHandler handler : theHandlers ) {
-                        handler.afterTransactionStart( theRequest, theTransactions, theMainMeshBase );
+
+                    try {
+                        for( HttpShellHandler handler : theHandlers ) {
+                            handler.afterTransactionStart( theRequest, theTransactions, theMainMeshBase );
+                        }
+                    } catch( HttpShellException ex ) {
+                        throw new RuntimeException( ex ); // not sure that's the best
                     }
                     return ret;
                 }

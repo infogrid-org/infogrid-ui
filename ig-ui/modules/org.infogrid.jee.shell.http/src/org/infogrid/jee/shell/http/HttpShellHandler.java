@@ -57,12 +57,14 @@ public interface HttpShellHandler
      *            so far at the time of invocation of this method
      * @param defaultMeshBase the default MeshBase to use
      * @throws HttpShellException a problem occurred, check cause for details
+     * @throws TransactionException a problem with the Transaction occurred
      */
     public void afterTransactionStart(
             SaneRequest                                     request,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
             MeshBase                                        defaultMeshBase )
         throws
+            HttpShellException,
             TransactionException;
 
     /**
@@ -72,6 +74,8 @@ public interface HttpShellHandler
      * @param vars the variables set by the HttpShell
      * @param txs the Transactions used by this invocation of the HttpShell
      * @param defaultMeshBase the default MeshBase to use
+     * @throws HttpShellException a problem occurred, check cause for details
+     * @throws TransactionException a problem with the Transaction occurred
      */
     public void beforeTransactionEnd(
             SaneRequest                                     request,
@@ -79,6 +83,7 @@ public interface HttpShellHandler
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
             MeshBase                                        defaultMeshBase )
         throws
+            HttpShellException,
             TransactionException;
 
     /**

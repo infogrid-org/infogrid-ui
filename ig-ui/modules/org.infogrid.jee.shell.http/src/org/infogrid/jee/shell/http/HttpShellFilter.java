@@ -57,7 +57,6 @@ import org.infogrid.meshbase.MeshObjectIdentifierFactory;
 import org.infogrid.meshbase.MeshObjectsNotFoundException;
 import org.infogrid.meshbase.sweeper.Sweeper;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
-import org.infogrid.meshbase.transaction.OnDemandTransactionFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
 import org.infogrid.model.primitives.BlobDataType;
@@ -74,8 +73,10 @@ import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.MCachingHashMap;
 import org.infogrid.util.MSmartFactory;
+import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextObjectNotFoundException;
+import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
@@ -227,14 +228,14 @@ public class HttpShellFilter
                 String varName  = coreArg;
                 String varValue = lidRequest.getPostedArgument( arg ); // use SaneRequest's error handling for multiple values
 
+                if( UNASSIGNED_VALUE.equals( varValue )) {
+                    throw new HttpShellException( new UnassignedArgumentException( arg ));
+                }
                 MeshBase            base       = findMeshBaseFor( varName, lidRequest );
                 HttpShellAccessVerb accessVerb = HttpShellAccessVerb.findAccessFor( varName, lidRequest );
 
                 MeshObjectIdentifier id = parseMeshObjectIdentifier( base.getMeshObjectIdentifierFactory(), varValue );
 
-                if( !accessVerb.isIdentifierPermitted( id )) {
-                    throw new HttpShellException( new EmptyArgumentValueException( arg ));
-                }
                 OnDemandTransaction tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( id, base, tx, lidRequest );
@@ -268,9 +269,6 @@ public class HttpShellFilter
                 MeshBase            base       = findMeshBaseFor( varName, lidRequest );
                 HttpShellAccessVerb accessVerb = HttpShellAccessVerb.findAccessFor( varName, lidRequest );
 
-                if( !accessVerb.isIdentifierPermitted( null )) {
-                    throw new HttpShellException( new EmptyArgumentValueException( arg.substring( 0, arg.length()-ACCESS_TAG.length() ) ));
-                }
                 OnDemandTransaction  tx = txs.obtainFor( base );
 
                 MeshObject accessed = accessVerb.access( null, base, tx, lidRequest );
@@ -615,16 +613,18 @@ public class HttpShellFilter
         }
 
         // and now for redirects
-        String redirectVar = null;
+        String redirectVar   = null;
+        String redirectValue = null;
         for( String var1Name : variables.keySet() ) {
             String    key   = PREFIX + var1Name + REDIRECT_TAG;
             String [] value = postArguments.get( key );
 
-            if( value != null && value.length == 1 && REDIRECT_TAG_TRUE.equalsIgnoreCase( value[0] )) {
+            if( value != null && value.length == 1 && value[0] != null && value[0].trim().length() > 0 ) {
                 if( redirectVar != null ) {
                     throw new HttpShellException( new ConflictingArgumentsException( key, redirectVar ));
                 }
-                redirectVar = var1Name;
+                redirectVar   = var1Name;
+                redirectValue = value[0].trim();
             }
         }
 
@@ -648,7 +648,11 @@ public class HttpShellFilter
                 ret = redirectObj.getIdentifier().toStringRepresentation( rep, pars );
 
                 ret = lidRequest.getAbsoluteContextUriWithSlash() + ret;
-                
+
+                if( !REDIRECT_TAG_TRUE.equalsIgnoreCase( redirectValue )) {
+                    ret = HTTP.appendArgumentPairToUrl( ret, redirectValue );
+                }
+
             } catch( StringifierException ex ) {
                 getLog().error( ex );
             }
@@ -713,11 +717,7 @@ public class HttpShellFilter
         } else {
             raw = raw.trim();
             
-            if( raw.length() == 0 ) {
-                ret = null;
-            } else {
-                ret = idFact.fromStringRepresentation( theParsingRepresentation, raw );
-            }
+            ret = idFact.fromStringRepresentation( theParsingRepresentation, raw );
         }
 
         return ret;
@@ -1040,4 +1040,9 @@ public class HttpShellFilter
      * The StringRepresentation to use.
      */
     protected StringRepresentation theParsingRepresentation;
+
+    /**
+     * Special value that indicates a field should have been set (e.g. by JavaScript) but wasn't.
+     */
+    static final String UNASSIGNED_VALUE = ResourceHelper.getInstance( HttpShellFilter.class ).getResourceStringOrDefault( "UnassignedValue", "?" );
 }
