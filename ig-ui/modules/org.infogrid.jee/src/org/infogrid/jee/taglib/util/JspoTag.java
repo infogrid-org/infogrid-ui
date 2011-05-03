@@ -22,10 +22,10 @@ import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.util.ArrayHelper;
 
 /**
- * <p>Declares a JSP fragment as a subroutine, potentially with parameters.</p>
+ * <p>Declares a JSP overlay as a subroutine, potentially with parameters.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class JspfTag
+public class JspoTag
     extends
         AbstractInfoGridTag
 
@@ -35,7 +35,7 @@ public class JspfTag
     /**
      * Constructor.
      */
-    public JspfTag()
+    public JspoTag()
     {
         // noop
     }
@@ -67,7 +67,7 @@ public class JspfTag
     {
         theCallRecord = (CallJspXRecord) pageContext.getRequest().getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
         if( theCallRecord == null ) {
-            throw new JspException( "This JSP fragment must only be invoked using CallJspf" );
+            throw new JspException( "This JSP overlay must only be invoked using CallJspo" );
         }
 
         return EVAL_BODY_INCLUDE; // contains parameter declarations

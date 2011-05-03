@@ -21,11 +21,11 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 
 /**
- * Declares that a JSP fragment accepts a named parameter.
+ * Declares that a JSP overlay accepts a named parameter.
  *
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class JspfParamTag
+public class JspoParamTag
     extends
         AbstractInfoGridTag
 
@@ -35,7 +35,7 @@ public class JspfParamTag
     /**
      * Constructor.
      */
-    public JspfParamTag()
+    public JspoParamTag()
     {
         // noop
     }
@@ -113,15 +113,15 @@ public class JspfParamTag
             IOException
     {
         Tag parentTag = getParent();
-        if( !( parentTag instanceof JspfTag )) {
-            throw new JspException( "JspfParamTag must be directly contained in a JspfTag" );
+        if( !( parentTag instanceof JspoTag )) {
+            throw new JspException( "JspoParamTag must be directly contained in a JspfTag" );
         }
         CallJspXRecord record = (CallJspXRecord) pageContext.getRequest().getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
         if( record == null ) {
-            throw new JspException( "JspfParamTag cannot find JspfRecord for this call" );
+            throw new JspException( "JspoParamTag cannot find JspfRecord for this call" );
         }
         if( theName == null || theName.length() == 0 ) {
-            throw new JspException( "Attribute name of JspfParamTag must not be empty" );
+            throw new JspException( "Attribute name of JspoParamTag must not be empty" );
         }
         record.processParameterValue( pageContext.getRequest(), theName, theType ); // may throw
 

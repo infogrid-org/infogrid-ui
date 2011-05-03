@@ -27,14 +27,14 @@ import org.infogrid.util.http.SaneRequestUtils;
 /**
  * Captures a JSPF call.
  */
-class CallJspfRecord
+class CallJspXRecord
 {
     /**
      * Constructor.
      *
      * @param page name of the page that is being invoked
      */
-    public CallJspfRecord(
+    public CallJspXRecord(
             String page )
     {
         thePage = page;
@@ -123,6 +123,16 @@ class CallJspfRecord
     }
 
     /**
+     * Get the parameters.
+     *
+     * @return the set of parameters
+     */
+    public Set<Entry<String,Object>> getParameters()
+    {
+        return theParameters.entrySet();
+    }
+
+    /**
      * Name of the page that is being invoked.
      */
     protected String thePage;
@@ -141,6 +151,6 @@ class CallJspfRecord
     /**
      * Name of request attribute that contains the call record.
      */
-    public static final String CALL_JSPF_RECORD_ATTRIBUTE_NAME
+    public static final String CALL_JSPX_RECORD_ATTRIBUTE_NAME
             = SaneRequestUtils.classToAttributeName( CallJspfTag.class, "call-record" );
 }

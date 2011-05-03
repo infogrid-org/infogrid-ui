@@ -52,6 +52,46 @@
     </tag>
 
     <tag>
+        <name>callJspo</name>
+        <tag-class>org.infogrid.jee.taglib.util.CallJspoTag</tag-class>
+        <attribute>
+            <name>page</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>linkTitle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>action</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>submitLabel</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>callJspoParam</name>
+        <tag-class>org.infogrid.jee.taglib.util.CallJspoParamTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>jspf</name>
         <tag-class>org.infogrid.jee.taglib.util.JspfTag</tag-class>
     </tag>
@@ -59,6 +99,25 @@
     <tag>
         <name>jspfParam</name>
         <tag-class>org.infogrid.jee.taglib.util.JspfParamTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>type</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>jspo</name>
+        <tag-class>org.infogrid.jee.taglib.util.JspoTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>jspoParam</name>
+        <tag-class>org.infogrid.jee.taglib.util.JspoParamTag</tag-class>
         <attribute>
             <name>name</name>
             <required>true</required>
@@ -202,7 +261,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-    
+
     <tag>
         <name>safeFormHiddenInput</name>
         <tag-class>org.infogrid.jee.taglib.util.SafeFormHiddenInputTag</tag-class>

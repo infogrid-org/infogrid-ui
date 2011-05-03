@@ -115,7 +115,7 @@ public class CallJspfParamTag
         if( !( parentTag instanceof CallJspfTag )) {
             throw new JspException( "CallJspfParamTag must be directly contained in a CallJspfTag" );
         }
-        CallJspfRecord record = (CallJspfRecord) pageContext.getRequest().getAttribute( CallJspfRecord.CALL_JSPF_RECORD_ATTRIBUTE_NAME );
+        CallJspXRecord record = (CallJspXRecord) pageContext.getRequest().getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
         if( record == null ) {
             throw new JspException( "CallJspfParamTag cannot find CallJspfRecord for this call" );
         }

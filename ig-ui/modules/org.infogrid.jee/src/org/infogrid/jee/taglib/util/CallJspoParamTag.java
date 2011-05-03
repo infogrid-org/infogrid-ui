@@ -21,11 +21,10 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 
 /**
- * Declares that a JSP fragment accepts a named parameter.
- *
+ * Sets the value of a parameter to a Jspo call to a particular value for this invocation.
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class JspfParamTag
+public class CallJspoParamTag
     extends
         AbstractInfoGridTag
 
@@ -35,7 +34,7 @@ public class JspfParamTag
     /**
      * Constructor.
      */
-    public JspfParamTag()
+    public CallJspoParamTag()
     {
         // noop
     }
@@ -46,8 +45,8 @@ public class JspfParamTag
     @Override
     protected void initializeToDefaults()
     {
-        theName = null;
-        theType = null;
+        theName  = null;
+        theValue = null;
 
         super.initializeToDefaults();
     }
@@ -76,26 +75,26 @@ public class JspfParamTag
     }
 
     /**
-     * Obtain value of the type property.
+     * Obtain value of the value property.
      *
-     * @return value of the type property
-     * @see #setType
+     * @return value of the value property
+     * @see #setValue
      */
-    public String getType()
+    public Object getValue()
     {
-        return theType;
+        return theValue;
     }
 
     /**
-     * Set value of the type property.
+     * Set value of the value property.
      *
-     * @param newValue new value of the type property
-     * @see #getType
+     * @param newValue new value of the value property
+     * @see #getValue
      */
-    public void setType(
-            String newValue )
+    public void setValue(
+            Object newValue )
     {
-        theType = newValue;
+        theValue = newValue;
     }
 
     /**
@@ -113,18 +112,19 @@ public class JspfParamTag
             IOException
     {
         Tag parentTag = getParent();
-        if( !( parentTag instanceof JspfTag )) {
-            throw new JspException( "JspfParamTag must be directly contained in a JspfTag" );
+        if( !( parentTag instanceof CallJspoTag )) {
+            throw new JspException( "CallJspoParamTag must be directly contained in a CallJspoTag" );
         }
         CallJspXRecord record = (CallJspXRecord) pageContext.getRequest().getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
         if( record == null ) {
-            throw new JspException( "JspfParamTag cannot find JspfRecord for this call" );
+            throw new JspException( "CallJspfParamTag cannot find CallJspfRecord for this call" );
         }
         if( theName == null || theName.length() == 0 ) {
-            throw new JspException( "Attribute name of JspfParamTag must not be empty" );
+            throw new JspException( "Attribute name of CallJspfParamTag must not be empty" );
         }
-        record.processParameterValue( pageContext.getRequest(), theName, theType ); // may throw
-
+        if( !record.setParameterValue( theName, theValue )) {
+            throw new JspException( "Cannot set parameter " + theName + " more than once" );
+        }
         return SKIP_BODY;
     }
 
@@ -134,7 +134,7 @@ public class JspfParamTag
     protected String theName;
 
     /**
-     * Type of the parameter, as the name of a class.
+     * Value of the parameter.
      */
-    protected String theType;
+    protected Object theValue;
 }

@@ -93,9 +93,9 @@ public class CallJspfTag
             IOException
     {
         ServletRequest request    = pageContext.getRequest();
-        theOldCallRecord          = (CallJspfRecord) request.getAttribute( CallJspfRecord.CALL_JSPF_RECORD_ATTRIBUTE_NAME );
-        CallJspfRecord callRecord = new CallJspfRecord( thePage );
-        request.setAttribute( CallJspfRecord.CALL_JSPF_RECORD_ATTRIBUTE_NAME, callRecord );
+        theOldCallRecord          = (CallJspXRecord) request.getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
+        CallJspXRecord callRecord = new CallJspXRecord( thePage );
+        request.setAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME, callRecord );
 
         return EVAL_BODY_INCLUDE; // contains parameter declarations
     }
@@ -129,7 +129,7 @@ public class CallJspfTag
         } catch( ServletException ex ) {
             throw new JspException( ex ); // why in the world are these two differnt types of exceptions?
         } finally {
-            request.setAttribute( CallJspfRecord.CALL_JSPF_RECORD_ATTRIBUTE_NAME, theOldCallRecord );
+            request.setAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME, theOldCallRecord );
         }
     }
 
@@ -139,7 +139,7 @@ public class CallJspfTag
     protected String thePage;
 
     /**
-     * The CallJspfRecord to restore.
+     * The CallJspXRecord to restore.
      */
-    CallJspfRecord theOldCallRecord;
+    CallJspXRecord theOldCallRecord;
 }
