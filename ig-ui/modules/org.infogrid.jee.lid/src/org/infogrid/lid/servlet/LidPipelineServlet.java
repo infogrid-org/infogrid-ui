@@ -83,13 +83,12 @@ public class LidPipelineServlet
         LidPipeline pipe = obtainLidPipeline( appContext );
 
         String  site  = originalRequest.getAbsoluteContextUri();
-        String  realm = site;
         boolean done  = false;
         LidClientAuthenticationStatus authStatus;
 
         try {
             LidPipelineInstructions compoundInstructions
-                    = pipe.processPipeline( originalRequest, SimpleStringIdentifier.create( site ), realm );
+                    = pipe.processPipeline( originalRequest, SimpleStringIdentifier.create( site ) );
 
             authStatus = compoundInstructions.getClientAuthenticationStatus();
 
