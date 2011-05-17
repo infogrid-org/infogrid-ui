@@ -465,7 +465,7 @@ public class DefaultJeeNetMeshObjectsToViewFactory
                 mimeType,
                 theRelativeContextPath,
                 getContext(),
-                null );
+                request );
 
         return ret;
     }
