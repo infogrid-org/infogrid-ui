@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringifierException;
@@ -92,7 +93,7 @@ public abstract class AbstractPropertyMatchTag
         StringRepresentation rep = theFormatter.determineStringRepresentation( StringRepresentationDirectory.TEXT_PLAIN_NAME );
 
         try {
-            String foundAsString = PropertyValue.toStringRepresentationOrNull( found, rep, null );
+            String foundAsString = PropertyValue.toStringRepresentationOrNull( found, rep, SimpleStringRepresentationParameters.create() );
 
             Pattern p = Pattern.compile( theExpression );
             Matcher m = p.matcher( foundAsString );
