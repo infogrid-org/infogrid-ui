@@ -20,6 +20,12 @@
   </div>
   <div id="canvas-middle">
    <div class="canvas-main">
+    <noscript>
+     <div class="errors">
+      <h2>Errors:</h2>
+      <p>This site requires Javascript. Please enable Javascript before attempting to proceed.</p>
+     </div>
+    </noscript>
     <tmpl:ifErrors>
      <div class="errors">
       <tmpl:inlineErrors stringRepresentation="Html"/>
