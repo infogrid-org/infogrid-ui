@@ -66,6 +66,7 @@ public class TestAppViewletFactory
             ret.add( AllMeshObjectsViewlet.choice( realToView, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
 //            ret.add( AllMeshTypesViewlet.choice(   realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( BulkLoaderViewlet.choice(     realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+//            ret.add( BulkExporterViewlet.choice(     realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 //            ret.add( ProxiesViewlet.choice(        realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 //            ret.add( AllMeshBasesViewlet.choice(   realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 
