@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
 import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
+import org.infogrid.jee.viewlet.bulkexporter.BulkExporterViewlet;
 import org.infogrid.jee.viewlet.log4j.Log4jConfigurationViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.AllNetMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
@@ -77,6 +78,7 @@ public class MainNetMeshWorldViewletFactory
             ret.add( Log4jConfigurationViewlet.choice(      realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ModuleDirectoryViewlet.choice(         realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( BulkLoaderViewlet.choice(              realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( BulkExporterViewlet.choice(              realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ProxiesViewlet.choice(                 realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( ShadowAwareAllMeshBasesViewlet.choice( realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
 
