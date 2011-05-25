@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,7 +18,7 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.model.primitives.DataType;
-import org.infogrid.model.primitives.L10Map;
+import org.infogrid.model.primitives.L10PropertyValueMap;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.util.text.StringifierException;
@@ -266,8 +266,8 @@ public class MeshTypeTag
             } else if( found instanceof PropertyValue ) {
                 value = (PropertyValue) found;
                 
-            } else if( found instanceof L10Map ) {
-                L10Map map = (L10Map) found;
+            } else if( found instanceof L10PropertyValueMap ) {
+                L10PropertyValueMap map = (L10PropertyValueMap) found;
                 
                 if( theLocale == null ) {
                     value = map.getDefault();
