@@ -9,7 +9,7 @@
 
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -135,9 +135,20 @@
         <name>ifRelated</name>
         <tagclass>org.infogrid.jee.taglib.logic.IfRelatedTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>neighbor</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>neighborName</name>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>traversalSpecification</name>
@@ -146,11 +157,6 @@
         <attribute>
             <name>traversalSpecificationName</name>
             <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>neighborName</name>
-            <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>filter</name>
@@ -342,9 +348,20 @@
         <name>notIfRelated</name>
         <tagclass>org.infogrid.jee.taglib.logic.NotIfRelatedTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>neighbor</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>neighborName</name>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>traversalSpecification</name>
@@ -353,11 +370,6 @@
         <attribute>
             <name>traversalSpecificationName</name>
             <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>neighborName</name>
-            <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>filter</name>
