@@ -229,7 +229,7 @@ public class CallJspoTag
         out.println( ">" );
 
         if( theAction != null ) {
-            out.print( "<form action=\"" + theAction + "\" method=\"post\">" );
+            out.print( "<form action=\"" + theAction + "\" method=\"post\" enctype=\"multipart/form-data\">" );
 
             String toInsert = SafeFormHiddenInputTag.hiddenInputTagString( pageContext );
             if( toInsert != null ) {
