@@ -712,7 +712,7 @@ public class HttpShellFilter
             ParseException
     {
         MeshObjectIdentifier ret;
-        if( raw == null ) {
+        if( raw == null || raw.length() == 0 ) {
             ret = null;
         } else {
             raw = raw.trim();
