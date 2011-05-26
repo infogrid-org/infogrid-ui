@@ -51,14 +51,38 @@ public class MeshObjectRelatedIterateTag
     @Override
     protected void initializeToDefaults()
     {
+        theMeshObject                 = null;
         theMeshObjectName             = null;
         theTraversalSpecificationName = null;
-        theRelatedLoopVar            = null;
+        theRelatedLoopVar             = null;
         theIterator                   = null;
 
         super.initializeToDefaults();
     }
     
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
+    }
+
     /**
      * Obtain value of the meshObjectName property.
      *
@@ -142,7 +166,7 @@ public class MeshObjectRelatedIterateTag
             IgnoreException,
             IOException
     {
-        MeshObject             obj       = lookupMeshObjectOrThrow( theMeshObjectName );
+        MeshObject             obj       = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
         TraversalSpecification traversal = (TraversalSpecification) lookupOrThrow( theTraversalSpecificationName );
         
         MeshObjectSet found = obj.traverse( traversal );
@@ -221,6 +245,11 @@ public class MeshObjectRelatedIterateTag
             return false;
         }
     }
+
+    /**
+     * The MeshObject to start the traversal from.
+     */
+    protected Object theMeshObject;
 
     /**
      * Name of the bean that contains the MeshObject to start the traversal from.

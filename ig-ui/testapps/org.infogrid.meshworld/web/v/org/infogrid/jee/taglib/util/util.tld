@@ -106,6 +106,12 @@
         </attribute>
         <attribute>
             <name>type</name>
+        </attribute>
+        <attribute>
+            <name>optional</name>
+        </attribute>
+        <attribute>
+            <name>default</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
@@ -125,6 +131,9 @@
         </attribute>
         <attribute>
             <name>type</name>
+        </attribute>
+        <attribute>
+            <name>default</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>

@@ -65,12 +65,7 @@ public class NavigateToPageTag
             IgnoreException
     {
         MeshObject subject = lookupMeshObjectOrThrow( JeeViewlet.SUBJECT_ATTRIBUTE_NAME );
-        MeshObject start;
-        if( theMeshObject != null ) {
-            start = theMeshObject;
-        } else {
-            start = lookupMeshObjectOrThrow( theMeshObjectName );
-        }
+        MeshObject start   = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
 
         String toAppend = AbstractPagingCursorIterableViewlet.PAGE_START_NAME + "=" + HTTP.encodeToValidUrlArgument( start.getIdentifier().toExternalForm() );
 

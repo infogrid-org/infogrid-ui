@@ -53,8 +53,8 @@ public class MeshObjectLinkTag
     @Override
     protected void initializeToDefaults()
     {
-        theMeshObjectName       = null;
         theMeshObject           = null;
+        theMeshObjectName       = null;
         theAddArguments         = null;
         theTarget               = null;
         theTitle                = null;
@@ -62,6 +62,29 @@ public class MeshObjectLinkTag
         theTraversalPathName    = null;
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
     }
 
     /**
@@ -85,29 +108,6 @@ public class MeshObjectLinkTag
             String newValue )
     {
         theMeshObjectName = newValue;
-    }
-
-    /**
-     * Obtain value of the meshObject property.
-     *
-     * @return value of the meshObject property
-     * @see #setMeshObject
-     */
-    public MeshObject getMeshObject()
-    {
-        return theMeshObject;
-    }
-
-    /**
-     * Set value of the meshObject property.
-     *
-     * @param newValue new value of the meshObject property
-     * @see #getMeshObject
-     */
-    public void setMeshObject(
-            MeshObject newValue )
-    {
-        theMeshObject = newValue;
     }
 
     /**
@@ -237,15 +237,10 @@ public class MeshObjectLinkTag
             JspException,
             IgnoreException
     {
-        MeshObject obj;
-        if( theMeshObject != null ) {
-            obj = theMeshObject;
-        } else {
-            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
-        }
+        MeshObject obj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
 
         if( obj != null ) { // make be ignore="true"
-            String addArguments = constructAddArguments();
+            String addArguments = constructAddArguments( obj );
 
             try {
                 String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, addArguments, theTarget, theTitle, theStringRepresentation );
@@ -272,12 +267,7 @@ public class MeshObjectLinkTag
             JspException,
             IgnoreException
     {
-        MeshObject obj;
-        if( theMeshObject != null ) {
-            obj = theMeshObject;
-        } else {
-            obj = (MeshObject) lookupOrThrow( theMeshObjectName );
-        }
+        MeshObject obj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
 
         if( obj != null ) { // make be ignore="true"
             try {
@@ -295,11 +285,13 @@ public class MeshObjectLinkTag
     /**
      * Helper method to construct the additionalArguments value to pass on.
      *
+     * @param obj the found MeshObject
      * @return the value
      * @throws JspException thrown if an evaluation error occurred
      * @throws IgnoreException thrown to abort processing without an error
      */
-    protected String constructAddArguments()
+    protected String constructAddArguments(
+            MeshObject obj )
         throws
             JspException,
             IgnoreException
@@ -316,7 +308,7 @@ public class MeshObjectLinkTag
         TraversalPath path = (TraversalPath) lookupOrThrow( theTraversalPathName );
 
         try {
-            String [] args = translator.translateTraversalPath( theMeshObject, path );
+            String [] args = translator.translateTraversalPath( obj, path );
             if( args == null || args.length == 0 ) {
                 return theAddArguments;
             }
@@ -336,14 +328,14 @@ public class MeshObjectLinkTag
     }
 
     /**
-     * Name of the bean that holds the MeshObject (mutually exclusive with theMeshObject).
+     * The MeshObject.
      */
-    protected String theMeshObjectName;
+    protected Object theMeshObject;
 
     /**
-     * The MeshObject (mutually exclusive with theMeshObjectName).
+     * Name of the bean that holds the MeshObject.
      */
-    protected MeshObject theMeshObject;
+    protected String theMeshObjectName;
 
     /**
      * The arguments to append to the URL, separated by &.

@@ -58,6 +58,7 @@ public class TreeIterateTag
     @Override
     protected void initializeToDefaults()
     {
+        theStartObject            = null;
         theStartObjectName        = null;
         theTraversalSpecification = null;
         theTraversals             = null;
@@ -73,6 +74,29 @@ public class TreeIterateTag
         }
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the startObject property.
+     *
+     * @return value of the startObject property
+     * @see #setStartObject
+     */
+    public final Object getStartObject()
+    {
+        return theStartObject;
+    }
+
+    /**
+     * Set value of the startObject property.
+     *
+     * @param newValue new value of the startObject property
+     * @see #getStartObject
+     */
+    public final void setStartObject(
+            Object newValue )
+    {
+        theStartObject = newValue;
     }
 
     /**
@@ -221,7 +245,7 @@ public class TreeIterateTag
         theSetSorter = DefaultMeshObjectSorter.BY_USER_VISIBLE_STRING;
         
         try {
-            MeshObject start = lookupMeshObjectOrThrow( theStartObjectName );
+            MeshObject start = lookupMeshObjectOrThrow( "startObject", theStartObject, "startObjectName", theStartObjectName );
             theTraversals    = findTraversalSpecificationSequenceOrThrow( start, theTraversalSpecification );
 
             if( theTraversals == null || theTraversals.length == 0 ) {
@@ -502,6 +526,11 @@ public class TreeIterateTag
                     theState
                 } );
     }
+
+    /**
+     * The start MeshObject.
+     */
+    protected Object theStartObject;
 
     /**
      * Name of the bean that contains the start MeshObject.

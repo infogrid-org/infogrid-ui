@@ -45,6 +45,7 @@ public abstract class AbstractMeshObjectTimeTag
     @Override
     protected void initializeToDefaults()
     {
+        theMeshObject     = null;
         theMeshObjectName = null;
         theTimeZone       = null;
         theLocale         = null;
@@ -52,6 +53,29 @@ public abstract class AbstractMeshObjectTimeTag
         theTimeStyle      = null;
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
     }
 
     /**
@@ -191,7 +215,7 @@ public abstract class AbstractMeshObjectTimeTag
             JspException,
             IgnoreException
     {
-        MeshObject obj = lookupMeshObjectOrThrow( theMeshObjectName );
+        MeshObject obj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
 
         long then = getRespectiveTime( obj );
 
@@ -267,7 +291,12 @@ public abstract class AbstractMeshObjectTimeTag
     }
     
     /**
-     * Name of the bean that contains the MeshObject that will be rendered.
+     * The MeshObject to be rendered..
+     */
+    protected Object theMeshObject;
+
+    /**
+     * Name of the bean that contains the MeshObject to be rendered.
      */
     protected String theMeshObjectName;
     

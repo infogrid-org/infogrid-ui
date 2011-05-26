@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -43,6 +43,7 @@ public abstract class AbstractPropertyCompareTag
     {
         theValue             = null;
         theValueName         = null;
+        theMeshObject2       = null;
         theMeshObject2Name   = null;
         thePropertyType2Name = null;
         thePropertyType2     = null;
@@ -97,10 +98,33 @@ public abstract class AbstractPropertyCompareTag
     }
 
     /**
-     * Obtain value of the meshObjectName property.
+     * Obtain value of the meshObject2 property.
      *
-     * @return value of the meshObjectName property
-     * @see #setMeshObjectName
+     * @return value of the meshObject2 property
+     * @see #setMeshObject2
+     */
+    public final Object getMeshObject2()
+    {
+        return theMeshObject2;
+    }
+
+    /**
+     * Set value of the meshObject2 property.
+     *
+     * @param newValue new value of the meshObject2 property
+     * @see #getMeshObject2
+     */
+    public final void setMeshObject2(
+            Object newValue )
+    {
+        theMeshObject2 = newValue;
+    }
+
+    /**
+     * Obtain value of the meshObject2Name property.
+     *
+     * @return value of the meshObject2Name property
+     * @see #setMeshObject2Name
      */
     public final String getMeshObject2Name()
     {
@@ -108,10 +132,10 @@ public abstract class AbstractPropertyCompareTag
     }
 
     /**
-     * Set value of the meshObjectName property.
+     * Set value of the meshObject2Name property.
      *
-     * @param newValue new value of the meshObjectName property
-     * @see #getMeshObjectName
+     * @param newValue new value of the meshObject2Name property
+     * @see #getMeshObject2Name
      */
     public final void setMeshObject2Name(
             String newValue )
@@ -201,7 +225,6 @@ public abstract class AbstractPropertyCompareTag
         } else if( theMeshObject2Name != null || thePropertyType2Name != null || thePropertyType2 != null ) {
 
             // default to first set of attributes if not given here
-            String meshObject2Name   = theMeshObject2Name != null ? theMeshObject2Name : theMeshObjectName;
             String propertyType2Name;
             String propertyType2;
             
@@ -213,7 +236,7 @@ public abstract class AbstractPropertyCompareTag
                 propertyType2     = thePropertyType;
             }
 
-            PropertyValue value2 = determinePropertyValue( meshObject2Name, propertyType2Name, propertyType2, "propertyType2Name", "propertyType2" );
+            PropertyValue value2 = determinePropertyValue( theMeshObject2, theMeshObject2Name, propertyType2Name, propertyType2, "propertyType2Name", "propertyType2" );
 
             return PropertyValue.compare( found, value2 );
 
@@ -240,6 +263,11 @@ public abstract class AbstractPropertyCompareTag
      * The valueName property.
      */
     protected String theValueName;
+
+    /**
+     * The MeshObject whose property is considered in the test.
+     */
+    protected Object theMeshObject2;
 
     /**
      * String containing the name of the bean that is the MeshObject whose property is considered in the test.

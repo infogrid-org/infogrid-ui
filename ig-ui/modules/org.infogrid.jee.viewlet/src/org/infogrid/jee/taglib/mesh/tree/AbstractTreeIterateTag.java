@@ -8,14 +8,13 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.mesh.tree;
 
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
-import org.infogrid.util.logging.Log;
 
 /**
  * <p>Factors out common functionality of tags related to the traversal of trees.</p>
@@ -24,7 +23,6 @@ public abstract class AbstractTreeIterateTag
     extends
         AbstractRestInfoGridBodyTag
 {
-    private static final Log  log              = Log.getLogInstance( TreeIterateDownTag.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**

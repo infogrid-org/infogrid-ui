@@ -45,13 +45,36 @@ public class MeshObjectTag
     @Override
     protected void initializeToDefaults()
     {
-        theMeshObjectName       = null;
         theMeshObject           = null;
+        theMeshObjectName       = null;
         theStringRepresentation = null;
         theMaxLength            = -1;
         theColloquial           = true;
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
     }
 
     /**
@@ -75,29 +98,6 @@ public class MeshObjectTag
             String newValue )
     {
         theMeshObjectName = newValue;
-    }
-
-    /**
-     * Obtain value of the meshObject property.
-     *
-     * @return value of the meshObject property
-     * @see #setMeshObject
-     */
-    public MeshObject getMeshObject()
-    {
-        return theMeshObject;
-    }
-
-    /**
-     * Set value of the meshObject property.
-     *
-     * @param newValue new value of the meshObject property
-     * @see #getMeshObject
-     */
-    public void setMeshObject(
-            MeshObject newValue )
-    {
-        theMeshObject = newValue;
     }
 
     /**
@@ -179,12 +179,7 @@ public class MeshObjectTag
             JspException,
             IgnoreException
     {
-        MeshObject obj;
-        if( theMeshObject != null ) {
-            obj = theMeshObject;
-        } else {
-            obj = lookupMeshObjectOrThrow( theMeshObjectName );
-        }
+        MeshObject obj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
 
         if( obj != null ) {
             // filter may be true
@@ -201,14 +196,14 @@ public class MeshObjectTag
     }
 
     /**
-     * Name of the bean that holds the MeshObject (mutually exclusive with theMeshObject).
+     * The MeshObject.
      */
-    protected String theMeshObjectName;
+    protected Object theMeshObject;
 
     /**
-     * The MeshObject (mutually exclusive with theMeshObjectName).
+     * Name of the bean that holds the MeshObject.
      */
-    protected MeshObject theMeshObject;
+    protected String theMeshObjectName;
 
     /**
      * Name of the String representation.

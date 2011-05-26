@@ -65,28 +65,41 @@ class CallJspXRecord
      *
      * @param name name of the parameter
      * @param type name of the required class of the parameter
+     * @param isOptional if true, this parameter is not required
+     * @param defaultValue if provided parameter is not given, use this value instead
      * @throws JspException thrown if an error occurred
      */
     public void processParameterValue(
             ServletRequest request,
             String         name,
-            String         type )
+            String         type,
+            boolean        isOptional,
+            Object         defaultValue )
         throws
             JspException
     {
         if( theOldAttributes.containsKey( name )) {
             throw new JspException( "Parameter " + name + " must not be declared more than once" );
         }
-        if( !theParameters.containsKey( name )) {
+
+        Object value;
+        if( theParameters.containsKey( name )) {
+            value = theParameters.get( name );
+
+        } else if( isOptional ) {
+            value = defaultValue; // which may or may not have been given
+
+        } else {
             throw new JspException( "Parameter " + name + " missing in call" );
         }
-        Object value = theParameters.get( name );
+
         if( value != null && type != null && type.length() > 0 ) {
             // check for correct type
             if( !ClassInstanceHelper.conforms( value, type )) {
                 throw new JspException( "Parameter " + name + " has a value that is not of type " + type );
             }
         }
+
         theOldAttributes.put( name, request.getAttribute( name ));
         request.setAttribute( name, value );
     }

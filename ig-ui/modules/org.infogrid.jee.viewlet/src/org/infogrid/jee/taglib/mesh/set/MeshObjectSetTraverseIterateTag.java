@@ -58,7 +58,7 @@ public class MeshObjectSetTraverseIterateTag
      * @return value of the startObject property
      * @see #setStartObject
      */
-    public final String getStartObject()
+    public final Object getStartObject()
     {
         return theStartObject;
     }
@@ -70,7 +70,7 @@ public class MeshObjectSetTraverseIterateTag
      * @see #getStartObject
      */
     public final void setStartObject(
-            String newValue )
+            Object newValue )
     {
         theStartObject = newValue;
     }
@@ -133,13 +133,7 @@ public class MeshObjectSetTraverseIterateTag
             JspException,
             IgnoreException
     {
-        MeshObject start;
-        if( theStartObject != null ) {
-            start = findMeshObjectOrThrow( theStartObject );
-        } else {
-            start = lookupMeshObjectOrThrow( theStartObjectName );
-        }
-
+        MeshObject             start = lookupMeshObjectOrThrow( "startObject", theStartObject, "startObjectName", theStartObjectName );
         TraversalSpecification spec  = findTraversalSpecificationOrThrow( start, theTraversalSpecification );
 
         MeshObjectSet ret = start.traverse( spec );
@@ -147,9 +141,9 @@ public class MeshObjectSetTraverseIterateTag
     }
 
     /**
-     * String form of the start MeshObject's identifier.
+     * The start MeshObject.
      */
-    protected String theStartObject;
+    protected Object theStartObject;
 
     /**
      * Name of the bean that contains the start MeshObject.

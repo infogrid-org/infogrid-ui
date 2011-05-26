@@ -8,15 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.logic;
 
-import org.infogrid.jee.taglib.IgnoreException;
-
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.taglib.IgnoreException;
 
 /**
  * <p>This tag tests whether a MeshObject does not have a certain type.</p>

@@ -42,6 +42,7 @@ public abstract class AbstractPropertyTestTag
     @Override
     protected void initializeToDefaults()
     {
+        theMeshObject       = null;
         theMeshObjectName   = null;
         thePropertyTypeName = null;
         thePropertyType     = null;
@@ -49,6 +50,29 @@ public abstract class AbstractPropertyTestTag
         super.initializeToDefaults();
     }
     
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
+    }
+
     /**
      * Obtain value of the meshObjectName property.
      *
@@ -165,12 +189,13 @@ public abstract class AbstractPropertyTestTag
             JspException,
             IgnoreException
     {
-        return determinePropertyValue( theMeshObjectName, thePropertyTypeName, thePropertyType, "propertyTypeName", "propertyType" );
+        return determinePropertyValue( theMeshObject, theMeshObjectName, thePropertyTypeName, thePropertyType, "propertyTypeName", "propertyType" );
     }
 
     /**
      * Helper method to determine the value of a property.
      *
+     * @param meshObject  the MeshObject
      * @param meshObjectName name of the bean holding the MeshObject
      * @param propertyTypeName name of the bean holding the PropertyType
      * @param propertyType name of the PropertyType
@@ -181,6 +206,7 @@ public abstract class AbstractPropertyTestTag
      * @throws IgnoreException thrown to abort processing without an error
      */
     protected PropertyValue determinePropertyValue(
+            Object meshObject,
             String meshObjectName,
             String propertyTypeName,
             String propertyType,
@@ -190,7 +216,7 @@ public abstract class AbstractPropertyTestTag
             JspException,
             IgnoreException
     {
-        MeshObject obj  = lookupMeshObjectOrThrow( meshObjectName );
+        MeshObject obj    = lookupMeshObjectOrThrow( "meshObject", meshObject, "meshObjectName", meshObjectName );
 
         PropertyType  type  = null;
         PropertyValue value = null;
@@ -220,6 +246,11 @@ public abstract class AbstractPropertyTestTag
         }
         return value;
     }
+
+    /**
+     * The MeshObject whose property is considered in the test.
+     */
+    protected Object theMeshObject;
 
     /**
      * String containing the name of the bean that is the MeshObject whose property is considered in the test.

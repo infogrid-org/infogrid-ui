@@ -61,7 +61,7 @@ public abstract class AbstractRelatedTag
      * @return value of the meshObject property
      * @see #setMeshObject
      */
-    public final String getMeshObject()
+    public final Object getMeshObject()
     {
         return theMeshObject;
     }
@@ -73,7 +73,7 @@ public abstract class AbstractRelatedTag
      * @see #getMeshObject
      */
     public final void setMeshObject(
-            String newValue )
+            Object newValue )
     {
         theMeshObject = newValue;
     }
@@ -107,7 +107,7 @@ public abstract class AbstractRelatedTag
      * @return value of the neighbor property
      * @see #setNeighbor
      */
-    public final String getNeighbor()
+    public final Object getNeighbor()
     {
         return theNeighbor;
     }
@@ -119,7 +119,7 @@ public abstract class AbstractRelatedTag
      * @see #getNeighbor
      */
     public final void setNeighbor(
-            String newValue )
+            Object newValue )
     {
         theNeighbor = newValue;
     }
@@ -205,19 +205,8 @@ public abstract class AbstractRelatedTag
             JspException,
             IgnoreException
     {
-        MeshObject start;
-        MeshObject neighbor;
-
-        if( theMeshObject != null ) {
-            start = findMeshObjectOrThrow( theMeshObject );
-        } else {
-            start = lookupMeshObjectOrThrow( theMeshObjectName );
-        }
-        if( theNeighbor != null ) {
-            neighbor = findMeshObjectOrThrow( theNeighbor );
-        } else {
-            neighbor = lookupMeshObjectOrThrow( theNeighborName );
-        }
+        MeshObject start    = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
+        MeshObject neighbor = lookupMeshObjectOrThrow( "neighbor",   theNeighbor,   "neighborName",   theNeighborName );
 
         TraversalSpecification spec;
         if( theTraversalSpecification != null ) {
@@ -240,9 +229,9 @@ public abstract class AbstractRelatedTag
     }
 
     /**
-     * String containing the identifier is the MeshObject that considered in the test.
+     * The MeshObject that considered in the test.
      */
-    protected String theMeshObject;
+    protected Object theMeshObject;
 
     /**
      * String containing the name of the bean that is the MeshObject that is considered in the test.
@@ -250,9 +239,9 @@ public abstract class AbstractRelatedTag
     protected String theMeshObjectName;
 
     /**
-     * String containing the identifier that is the to-be-evaluated neighbor MeshObject.
+     * The to-be-evaluated neighbor MeshObject.
      */
-    protected String theNeighbor;
+    protected Object theNeighbor;
 
     /**
      * String containing the name of the bean that is the to-be-evaluated neighbor MeshObject.

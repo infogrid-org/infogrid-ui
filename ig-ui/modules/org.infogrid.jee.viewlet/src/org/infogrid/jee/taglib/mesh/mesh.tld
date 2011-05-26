@@ -22,11 +22,51 @@
          to find them in the IDE. -->
 
     <tag>
+        <name>blessedBy</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectBlessedByTag</tag-class>
+        <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>meshObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>supertype</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>supertypeName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>separator</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>blessedByIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectBlessedByIterateTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -52,8 +92,11 @@
         <name>durationSinceTimeCreated</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectSinceTimeCreatedTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -78,8 +121,11 @@
         <name>durationSinceTimeRead</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectSinceTimeReadTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -104,8 +150,11 @@
         <name>durationSinceTimeUpdated</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectSinceTimeUpdatedTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -130,11 +179,11 @@
         <name>meshObject</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectTag</tag-class>
         <attribute>
-            <name>meshObjectName</name>
+            <name>meshObject</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>meshObject</name>
+            <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -167,11 +216,11 @@
         <name>meshObjectId</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectIdentifierTag</tag-class>
         <attribute>
-            <name>meshObjectName</name>
+            <name>meshObject</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>meshObject</name>
+            <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -200,11 +249,11 @@
         <name>meshObjectLink</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectLinkTag</tag-class>
         <attribute>
-            <name>meshObjectName</name>
+            <name>meshObject</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>meshObject</name>
+            <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -275,8 +324,11 @@
         <name>neighborIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectNeighborIterateTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -355,6 +407,10 @@
     <tag>
         <name>propertyIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectPropertyIterateTag</tag-class>
+        <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
         <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
@@ -444,8 +500,11 @@
         <name>relatedIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectRelatedIterateTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -471,13 +530,19 @@
         <name>roleIterate</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectRoleIterateTag</tag-class>
         <attribute>
-            <name>startMeshObjectName</name>
-            <required>true</required>
+            <name>startObject</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>destinationMeshObjectName</name>
-            <required>true</required>
+            <name>startObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>destinationObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>destinationObjectName</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -502,8 +567,11 @@
         <name>timeCreated</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectTimeCreatedTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -540,8 +608,11 @@
         <name>timeRead</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectTimeReadTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -578,8 +649,11 @@
         <name>timeUpdated</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectTimeUpdatedTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -662,8 +736,11 @@
         <name>propertymeter</name>
         <tag-class>org.infogrid.jee.taglib.mesh.PropertyMeterTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>

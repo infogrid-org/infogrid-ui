@@ -49,6 +49,7 @@ public class MeshObjectNeighborIterateTag
     @Override
     protected void initializeToDefaults()
     {
+        theMeshObject      = null;
         theMeshObjectName  = null;
         theNeighborLoopVar = null;
         theIterator        = null;
@@ -56,6 +57,29 @@ public class MeshObjectNeighborIterateTag
         super.initializeToDefaults();
     }
     
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
+    }
+
     /**
      * Obtain value of the meshObjectName property.
      *
@@ -116,7 +140,7 @@ public class MeshObjectNeighborIterateTag
             IgnoreException,
             IOException
     {
-        MeshObject obj = lookupMeshObjectOrThrow( theMeshObjectName );
+        MeshObject obj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
 
         theIterator = obj.traverseToNeighborMeshObjects().iterator();
 
@@ -195,7 +219,12 @@ public class MeshObjectNeighborIterateTag
     }
 
     /**
-     * Name of the bean that contains the MeshObject to render.
+     * The MeshObject.
+     */
+    protected Object theMeshObject;
+
+    /**
+     * Name of the bean that contains the MeshObject.
      */
     protected String theMeshObjectName;
     

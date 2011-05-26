@@ -25,9 +25,12 @@
         <name>equal</name>
         <tagclass>org.infogrid.jee.taglib.logic.EqualTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>propertyTypeName</name>
@@ -38,7 +41,11 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>meshObject2Name</name>
+            <name>meshObject2</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -75,9 +82,12 @@
         <name>if</name>
         <tagclass>org.infogrid.jee.taglib.logic.IfTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>propertyTypeName</name>
@@ -105,9 +115,12 @@
         <name>ifNull</name>
         <tagclass>org.infogrid.jee.taglib.logic.IfNullTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>propertyTypeName</name>
@@ -176,9 +189,12 @@
         <name>ifType</name>
         <tagclass>org.infogrid.jee.taglib.logic.IfTypeTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>identifier</name>
@@ -203,12 +219,15 @@
         <name>match</name>
         <tagclass>org.infogrid.jee.taglib.logic.MatchTag</tagclass>
         <attribute>
-            <name>expression</name>
+            <name>meshObject</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>meshObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>expression</name>
             <rtexprvalue>true</rtexprvalue>
             <required>true</required>
         </attribute>
@@ -238,9 +257,12 @@
         <name>notEqual</name>
         <tagclass>org.infogrid.jee.taglib.logic.NotEqualTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>propertyTypeName</name>
@@ -248,6 +270,10 @@
         </attribute>
         <attribute>
             <name>propertyType</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>meshObject2</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -288,9 +314,12 @@
         <name>notIf</name>
         <tagclass>org.infogrid.jee.taglib.logic.NotIfTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>propertyTypeName</name>
@@ -318,9 +347,12 @@
         <name>notIfNull</name>
         <tagclass>org.infogrid.jee.taglib.logic.NotIfNullTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>propertyTypeName</name>
@@ -389,9 +421,12 @@
         <name>notIfType</name>
         <tagclass>org.infogrid.jee.taglib.logic.NotIfTypeTag</tagclass>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>identifier</name>
@@ -416,12 +451,15 @@
         <name>notMatch</name>
         <tagclass>org.infogrid.jee.taglib.logic.NotMatchTag</tagclass>
         <attribute>
-            <name>expression</name>
+            <name>meshObject</name>
             <rtexprvalue>true</rtexprvalue>
-            <required>true</required>
         </attribute>
         <attribute>
             <name>meshObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>expression</name>
             <rtexprvalue>true</rtexprvalue>
             <required>true</required>
         </attribute>

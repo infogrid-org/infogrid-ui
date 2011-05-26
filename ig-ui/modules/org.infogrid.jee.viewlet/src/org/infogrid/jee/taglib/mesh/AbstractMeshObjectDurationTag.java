@@ -43,10 +43,34 @@ public abstract class AbstractMeshObjectDurationTag
     @Override
     protected void initializeToDefaults()
     {
+        theMeshObject     = null;
         theMeshObjectName = null;
         theDurationFormat = null;
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
     }
 
     /**
@@ -117,7 +141,7 @@ public abstract class AbstractMeshObjectDurationTag
             JspException,
             IgnoreException
     {
-        MeshObject obj = lookupMeshObjectOrThrow( theMeshObjectName );
+        MeshObject obj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
 
         long then  = getRespectiveTime( obj );
         long now   = System.currentTimeMillis();
@@ -249,6 +273,11 @@ public abstract class AbstractMeshObjectDurationTag
 
         return ret;
     }
+
+    /**
+     * The MeshObject to render.
+     */
+    protected Object theMeshObject;
 
     /**
      * Name of the bean that contains the MeshObject to render.

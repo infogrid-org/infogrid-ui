@@ -21,6 +21,7 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.TypedMeshObjectFacade;
 import org.infogrid.model.primitives.DataType;
@@ -121,6 +122,50 @@ public abstract class AbstractRestInfoGridTag
             return null;
         } else {
             throw new ClassCastException( "Found object named " + name + " is not a MeshObject: " + almost );
+        }
+    }
+
+    /**
+     * Look up a MeshObject from the values or two conjoined XXX and XXXName properties, such as
+     * meshObject and meshObjectName. The first may contain a MeshObject directly, or a MeshObjectIdentifier
+     * for a MeshObject, or a String which is the stringified version of the MeshObject's identifier. The
+     * second is the name of a bean that contains a MeshObject. Only one may be specified.
+     *
+     * @param propertyLabel the name of the property, e.g. "meshObject"
+     * @param propertyValue the value of the property
+     * @param propertyNameLabel the name of the corresponding bean property, e.g. "meshObjectName"
+     * @param propertyNameValue the value of the corresponding bean property
+     * @return the found MeshObject
+     * @throws JspException if the bean was not found and the ignore attribute was not set
+     * @throws IgnoreException thrown if the bean could not be found but the ignore attribute was set
+     */
+    protected final MeshObject lookupMeshObjectOrThrow(
+            String propertyLabel,
+            Object propertyValue,
+            String propertyNameLabel,
+            String propertyNameValue )
+        throws
+            JspException,
+            IgnoreException
+    {
+        if( propertyValue != null && propertyNameValue != null ) {
+            throw new JspException( "Must specify either " + propertyLabel + " or " + propertyNameLabel + ", not both." );
+        }
+
+        if( propertyValue != null ) {
+            if( propertyValue instanceof MeshObject ) {
+                return (MeshObject) propertyValue;
+            } else if( propertyValue instanceof TypedMeshObjectFacade ) {
+                return ((TypedMeshObjectFacade)propertyValue).get_Delegate();
+            } else if( propertyValue instanceof MeshObjectIdentifier ) {
+                return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (MeshObjectIdentifier)propertyValue );
+            } else if( propertyValue instanceof String ) {
+                return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (String) propertyValue );
+            } else {
+                throw new JspException( "Unexpected type " + propertyValue.getClass().getName() + ": " + propertyValue );
+            }
+        } else {
+            return lookupMeshObjectOrThrow( propertyNameValue );
         }
     }
 

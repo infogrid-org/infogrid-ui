@@ -59,7 +59,9 @@ public class MeshObjectPropertyIterateTag
     @Override
     protected void initializeToDefaults()
     {
+        theMeshObject           = null;
         theMeshObjectName       = null;
+        theObj                  = null;
         theMeshType             = null;
         theMeshTypeName         = null;
         thePropertyList         = null;
@@ -72,6 +74,29 @@ public class MeshObjectPropertyIterateTag
         theMeshObject = null;
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
     }
 
     /**
@@ -270,9 +295,7 @@ public class MeshObjectPropertyIterateTag
             JspException,
             IgnoreException
     {
-        if( theMeshObjectName != null ) {
-            theMeshObject = lookupMeshObjectOrThrow( theMeshObjectName );
-        }
+        theObj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
 
         Collection<PropertyType> propertyTypesToShow = new ArrayList<PropertyType>();
         
@@ -284,7 +307,7 @@ public class MeshObjectPropertyIterateTag
             AttributableMeshType amo = (AttributableMeshType) super.findMeshTypeByIdentifierOrThrow( theMeshType );
             allPropertyTypes = amo.getAllPropertyTypes();
         } else {
-            allPropertyTypes = theMeshObject.getAllPropertyTypes();
+            allPropertyTypes = theObj.getAllPropertyTypes();
         }
         
         if( thePropertyList != null ) {
@@ -349,7 +372,7 @@ public class MeshObjectPropertyIterateTag
 
             try {
                 if( theMeshObject != null ) {
-                    currentValue = theMeshObject.getPropertyValue( currentType );
+                    currentValue = theObj.getPropertyValue( currentType );
 
                     if( currentValue == null && theSkipNullProperty ) {
                         continue;
@@ -410,9 +433,19 @@ public class MeshObjectPropertyIterateTag
     }
 
     /**
-     * Name of the bean that contains the MeshObject to render.
+     * The MeshObject.
+     */
+    protected Object theMeshObject;
+
+    /**
+     * Name of the bean that contains the MeshObject.
      */
     protected String theMeshObjectName;
+
+    /**
+     * The resolved MeshObject.
+     */
+    protected MeshObject theObj;
 
     /**
      * Name of the bean that contains the EntityType to restricted iteration to, if any.
@@ -448,11 +481,6 @@ public class MeshObjectPropertyIterateTag
      * String containing the name of the loop variable that contains the PropertyValue.
      */
     protected String thePropertyValueLoopVar;
-
-    /**
-     * The MeshObject whose values we show.
-     */
-    protected MeshObject theMeshObject;
 
     /**
      * Iterator over the set of PropertyTypes that we show.

@@ -52,58 +52,83 @@ public class MeshObjectRoleIterateTag
     @Override
     protected void initializeToDefaults()
     {
-        theStartMeshObjectName       = null;
-        theDestinationMeshObjectName = null;
-        theRoleTypeLoopVar           = null;
-        theIterator                  = null;
+        theStartObject           = null;
+        theStartObjectName       = null;
+        theDestinationObject     = null;
+        theDestinationObjectName = null;
+        theRoleTypeLoopVar       = null;
+        theIterator              = null;
 
         super.initializeToDefaults();
     }
 
     /**
-     * Obtain value of the startMeshObjectName property.
+     * Obtain value of the startObject property.
      *
-     * @return value of the startMeshObjectName property
-     * @see #setStartMeshObjectName
+     * @return value of the startObject property
+     * @see #setStartObject
      */
-    public final String getStartMeshObjectName()
+    public final Object getStartObject()
     {
-        return theStartMeshObjectName;
+        return theStartObject;
     }
 
     /**
-     * Set value of the meshObjectName property.
+     * Set value of the startObject property.
      *
-     * @param newValue new value of the meshObjectName property
-     * @see #getStartMeshObjectName
+     * @param newValue new value of the startObject property
+     * @see #getStartObject
      */
-    public final void setStartMeshObjectName(
+    public final void setStartObject(
+            Object newValue )
+    {
+        theStartObject = newValue;
+    }
+
+    /**
+     * Obtain value of the startObjectName property.
+     *
+     * @return value of the startObjectName property
+     * @see #setStartObjectName
+     */
+    public final String getStartObjectName()
+    {
+        return theStartObjectName;
+    }
+
+    /**
+     * Set value of the startObjectName property.
+     *
+     * @param newValue new value of the startObjectName property
+     * @see #getStartObjectName
+     */
+    public final void setStartObjectName(
             String newValue )
     {
-        theStartMeshObjectName = newValue;
+        theStartObjectName = newValue;
     }
 
     /**
-     * Obtain value of the destinationMeshObjectName property.
+     * Obtain value of the destinationObjectName property.
      *
-     * @return value of the destinationMeshObjectName property
-     * @see #setDestinationMeshObjectName
+     * @return value of the destinationObjectName property
+     * @see #setDestinationObjectName
      */
-    public final String getDestinationMeshObjectName()
+    public final String getDestinationObjectName()
     {
-        return theDestinationMeshObjectName;
+        return theDestinationObjectName;
     }
 
     /**
-     * Set value of the destinationMeshObjectName property.
+     * Set value of the destinationObjectName property.
      *
-     * @param newValue new value of the destinationMeshObjectName property
-     * @see #getDestinationMeshObjectName
+     * @param newValue new value of the destinationObjectName property
+     * @see #getDestinationObjectName
      */
-    public final void setDestinationMeshObjectName(
+    public final void setDestinationObjectName(
             String newValue )
     {
-        theDestinationMeshObjectName = newValue;
+        theDestinationObjectName = newValue;
     }
 
     /**
@@ -143,8 +168,8 @@ public class MeshObjectRoleIterateTag
             IgnoreException,
             IOException
     {
-        MeshObject start       = lookupMeshObjectOrThrow( theStartMeshObjectName );
-        MeshObject destination = lookupMeshObjectOrThrow( theDestinationMeshObjectName );
+        MeshObject start       = lookupMeshObjectOrThrow( "startObject",       theStartObject,       "startObjectName",       theStartObjectName );
+        MeshObject destination = lookupMeshObjectOrThrow( "destinationObject", theDestinationObject, "destinationObjectName", theDestinationObjectName );
 
         try {
             RoleType [] types = start.getRoleTypes( destination );
@@ -230,14 +255,24 @@ public class MeshObjectRoleIterateTag
     }
 
     /**
+     * The start MeshObject.
+     */
+    protected Object theStartObject;
+
+    /**
      * Name of the bean that contains the start MeshObject.
      */
-    protected String theStartMeshObjectName;
-    
+    protected String theStartObjectName;
+
+    /**
+     * The destination MeshObject.
+     */
+    protected Object theDestinationObject;
+
     /**
      * Name of the bean that contains the destination MeshObject.
      */
-    protected String theDestinationMeshObjectName;
+    protected String theDestinationObjectName;
     
     /**
      * String containing the name of the loop variable that contains the current RoleType.

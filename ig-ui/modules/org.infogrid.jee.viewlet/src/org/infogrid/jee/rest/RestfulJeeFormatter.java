@@ -36,6 +36,7 @@ import org.infogrid.model.primitives.MeshTypeIdentifier;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RoleType;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationParameters;
 import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.model.traversal.TraversalTranslator;
@@ -249,6 +250,24 @@ public class RestfulJeeFormatter
     }
 
     /**
+     * Find a MeshObject with the given identifier, or return null.
+
+     * @param identifier the MeshObjectIdentifier
+     * @return the found MeshObject, or null
+     * @throws JspException thrown if the identifier could not be parsed
+     */
+    public MeshObject findMeshObject(
+            MeshObjectIdentifier identifier )
+        throws
+            JspException
+    {
+        MeshBase mb = getDefaultMeshBase();
+
+        MeshObject ret = mb.findMeshObjectByIdentifier( identifier );
+        return ret;
+    }
+
+    /**
      * Find a MeshType by its identifier.
      *
      * @param identifier the MeshTypeIdentifier in String form
@@ -302,6 +321,25 @@ public class RestfulJeeFormatter
      */
     public MeshObject findMeshObjectOrThrow(
             String identifier )
+        throws
+            JspException
+    {
+        MeshObject ret = findMeshObject( identifier );
+        if( ret == null ) {
+            throw new JspException( "Could not find MeshObject with identifier " + identifier );
+        }
+        return ret;
+    }
+
+    /**
+     * Find a MeshObject with the given identifier, or throw an Exception.
+
+     * @param identifier the MeshObjectIdentifier
+     * @return the found MeshObject
+     * @throws JspException thrown if the identifier could not be parsed or the MeshObject could not be found
+     */
+    public MeshObject findMeshObjectOrThrow(
+            MeshObjectIdentifier identifier )
         throws
             JspException
     {
@@ -680,7 +718,36 @@ public class RestfulJeeFormatter
     }
 
     /**
-     * Format an Identifier.
+     * Format a MeshType.
+     * 
+     * @param pageContext the PageContext object for this page
+     * @param type the MeshType to format
+     * @param stringRepresentation the StringRepresentation to use
+     * @param maxLength maximum length of emitted String. -1 means unlimited.
+     * @param colloquial if applicable, output in colloquial form
+     * @return the String to display
+     * @throws StringifierException thrown if there was a problem when attempting to stringify
+     */
+    public String formatMeshType(
+            PageContext pageContext,
+            MeshType    type,
+            String      stringRepresentation,
+            int         maxLength,
+            boolean     colloquial )
+        throws
+            StringifierException
+    {
+        // FIXME?
+        
+        StringValue name = type.getUserVisibleName();
+        if( name == null ) {
+            name = type.getName();
+        }
+        return name.value();
+    }
+
+    /**
+     * Format a MeshTypeIdentifier.
      *
      * @param pageContext the PageContext object for this page
      * @param identifier the Identifier to format

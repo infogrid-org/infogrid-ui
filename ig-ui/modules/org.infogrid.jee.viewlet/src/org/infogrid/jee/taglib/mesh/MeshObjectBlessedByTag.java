@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
@@ -17,24 +17,25 @@ package org.infogrid.jee.taglib.mesh;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
-import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.model.primitives.EntityType;
 import org.infogrid.util.text.StringifierException;
 
 /**
- * <p>Tag that displays the identifier of a MeshObject.</p>
+ * <p>Tag that displays one or more types of a MeshObject.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class MeshObjectIdentifierTag
+public class MeshObjectBlessedByTag
     extends
-        AbstractRestInfoGridBodyTag
+        AbstractRestInfoGridTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
      * Constructor.
      */
-    public MeshObjectIdentifierTag()
+    public MeshObjectBlessedByTag()
     {
         // noop
     }
@@ -47,8 +48,12 @@ public class MeshObjectIdentifierTag
     {
         theMeshObject           = null;
         theMeshObjectName       = null;
+        theSupertypeName        = null;
+        theSupertype            = null;
+        theSeparator            = ", "; // comma as default
         theStringRepresentation = null;
         theMaxLength            = -1;
+        theColloquial           = true;
 
         super.initializeToDefaults();
     }
@@ -88,7 +93,7 @@ public class MeshObjectIdentifierTag
     }
 
     /**
-     * Set value of the meshObjectBean property.
+     * Set value of the meshObjectName property.
      *
      * @param newValue new value of the meshObjectName property
      * @see #getMeshObjectName
@@ -97,6 +102,75 @@ public class MeshObjectIdentifierTag
             String newValue )
     {
         theMeshObjectName = newValue;
+    }
+
+    /**
+     * Obtain value of the supertypeName property.
+     *
+     * @return value of the supertypeName property
+     * @see #setSupertypeName
+     */
+    public String getSupertypeName()
+    {
+        return theSupertypeName;
+    }
+
+    /**
+     * Set value of the supertypeName property.
+     *
+     * @param newValue new value of the supertypeName property
+     * @see #getSupertypeName
+     */
+    public void setSupertypeName(
+            String newValue )
+    {
+        theSupertypeName = newValue;
+    }
+
+    /**
+     * Obtain value of the supertype property.
+     *
+     * @return value of the supertype property
+     * @see #setSupertype
+     */
+    public String setSupertype()
+    {
+        return theSupertype;
+    }
+
+    /**
+     * Set value of the supertype property.
+     *
+     * @param newValue new value of the supertype property
+     * @see #setSupertype
+     */
+    public void setSupertype(
+            String newValue )
+    {
+        theSupertype = newValue;
+    }
+
+    /**
+     * Obtain value of the separator property.
+     *
+     * @return value of the separator property
+     * @see #setSeparator
+     */
+    public String getSeparator()
+    {
+        return theSeparator;
+    }
+
+    /**
+     * Set value of the separator property.
+     *
+     * @param newValue new value of the separator property
+     * @see #getSeparator
+     */
+    public void setSeparator(
+            String newValue )
+    {
+        theSeparator = newValue;
     }
 
     /**
@@ -143,7 +217,29 @@ public class MeshObjectIdentifierTag
     {
         theMaxLength = newValue;
     }
-    
+
+    /**
+     * Obtain value of the colloquial property.
+     *
+     * @return value of the colloquial property
+     * @see #setColloquial
+     */
+    public boolean getColloquial()
+    {
+        return theColloquial;
+    }
+
+    /**
+     * Set value of the colloquial property.
+     *
+     * @param newValue new value of the colloquial property
+     */
+    public void setColloquial(
+            boolean newValue )
+    {
+        theColloquial = newValue;
+    }
+
     /**
      * Our implementation of doStartTag().
      *
@@ -156,16 +252,26 @@ public class MeshObjectIdentifierTag
             JspException,
             IgnoreException
     {
-        MeshObject obj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
+        MeshObject obj  = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
+        EntityType type = (EntityType) findMeshTypeByIdentifier( theSupertypeName );
 
         if( obj != null ) {
-            // filter may be true
-            try {
-                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, obj, theStringRepresentation, theMaxLength );
-                print( text );
+            EntityType [] allTypes = obj.getTypes();
+            String        sep      = "";
+            for( int i=0 ; i<allTypes.length ; ++i ) {
+                if( type != null && !allTypes[i].equalsOrIsSupertype( type ) ) {
+                    continue;
+                }
+                try {
+                    String text = ((RestfulJeeFormatter)theFormatter).formatMeshType( pageContext, type, theStringRepresentation, theMaxLength, theColloquial );
+                    print( sep );
+                    print( text );
 
-            } catch( StringifierException ex ) {
-                throw new JspException( ex );
+                    sep = theSeparator;
+
+                } catch( StringifierException ex ) {
+                    throw new JspException( ex );
+                }
             }
         }
 
@@ -173,22 +279,42 @@ public class MeshObjectIdentifierTag
     }
 
     /**
-     * The MeshObject.
-     */
-    protected Object theMeshObject;
-
-    /**
      * Name of the bean that holds the MeshObject.
      */
     protected String theMeshObjectName;
 
     /**
+     * The MeshObject.
+     */
+    protected Object theMeshObject;
+
+    /**
+     * Name of the bean that holds the supertype EntityType (mutually exclusive with theSupertype).
+     */
+    protected String theSupertypeName;
+
+    /**
+     * The EntityType's identifier (mutually exclusive with theSupertypeName).
+     */
+    protected String theSupertype;
+
+    /**
+     * The separator between multiple printed types.
+     */
+    protected String theSeparator;
+
+    /**
      * Name of the String representation.
      */
     protected String theStringRepresentation;
-    
+
     /**
      * The maximum length of an emitted String.
      */
     protected int theMaxLength;
+
+    /**
+     * Should the value be outputted in colloquial form.
+     */
+    protected boolean theColloquial;
 }

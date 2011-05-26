@@ -46,8 +46,10 @@ public class JspoParamTag
     @Override
     protected void initializeToDefaults()
     {
-        theName = null;
-        theType = null;
+        theName     = null;
+        theType     = null;
+        theOptional = false;
+        theDefault  = null;
 
         super.initializeToDefaults();
     }
@@ -99,6 +101,52 @@ public class JspoParamTag
     }
 
     /**
+     * Obtain value of the optional property.
+     *
+     * @return value of the optional property
+     * @see #setOptional
+     */
+    public boolean getOptional()
+    {
+        return theOptional;
+    }
+
+    /**
+     * Set value of the optional property.
+     *
+     * @param newValue new value of the optional property
+     * @see #getOptional
+     */
+    public void setOptional(
+            boolean newValue )
+    {
+        theOptional = newValue;
+    }
+
+    /**
+     * Obtain value of the default property.
+     *
+     * @return value of the default property
+     * @see #setDefault
+     */
+    public Object getDefault()
+    {
+        return theDefault;
+    }
+
+    /**
+     * Set value of the default property.
+     *
+     * @param newValue new value of the default property
+     * @see #getDefault
+     */
+    public void setDefault(
+            Object newValue )
+    {
+        theDefault = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -123,7 +171,7 @@ public class JspoParamTag
         if( theName == null || theName.length() == 0 ) {
             throw new JspException( "Attribute name of JspoParamTag must not be empty" );
         }
-        record.processParameterValue( pageContext.getRequest(), theName, theType ); // may throw
+        record.processParameterValue( pageContext.getRequest(), theName, theType, theOptional, theDefault ); // may throw
 
         return SKIP_BODY;
     }
@@ -137,4 +185,14 @@ public class JspoParamTag
      * Type of the parameter, as the name of a class.
      */
     protected String theType;
+
+    /**
+     * Is this parameter optional.
+     */
+    protected boolean theOptional;
+
+    /**
+     * Default value of the parameter.
+     */
+    protected Object theDefault;
 }
