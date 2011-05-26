@@ -6,7 +6,7 @@
     <mesh:meshObjectLink meshObjectName="neighbor"><mesh:meshObjectId meshObjectName="neighbor" stringRepresentation="Plain" filter="true" /></mesh:meshObjectLink>
    </p>
    <ul>
-    <mesh:roleIterate startMeshObjectName="Subject" destinationMeshObjectName="neighbor" roleTypeLoopVar="roleType">
+    <mesh:roleIterate startObjectName="Subject" destinationObjectName="neighbor" roleTypeLoopVar="roleType">
      <li>
       <mesh:type meshTypeName="roleType" filter="false"/>
      </li>
