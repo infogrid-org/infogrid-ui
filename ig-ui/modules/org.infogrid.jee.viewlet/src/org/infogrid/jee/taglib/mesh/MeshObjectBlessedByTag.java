@@ -253,7 +253,20 @@ public class MeshObjectBlessedByTag
             IgnoreException
     {
         MeshObject obj  = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
-        EntityType type = (EntityType) findMeshTypeByIdentifier( theSupertypeName );
+        EntityType type;
+
+        if( theSupertypeName != null ) {
+            if( theSupertype != null ) {
+                throw new JspException( "Must specify either supertypeName or supertype, but not both" );
+            } else {
+                type = (EntityType) lookup( theSupertypeName );
+            }
+        } else if( theSupertype != null ) {
+            type = (EntityType) findMeshTypeByIdentifierOrThrow( theSupertype );
+        } else {
+            type = null;
+        }
+        
 
         if( obj != null ) {
             EntityType [] allTypes = obj.getTypes();
@@ -263,7 +276,7 @@ public class MeshObjectBlessedByTag
                     continue;
                 }
                 try {
-                    String text = ((RestfulJeeFormatter)theFormatter).formatMeshType( pageContext, type, theStringRepresentation, theMaxLength, theColloquial );
+                    String text = ((RestfulJeeFormatter)theFormatter).formatMeshType( pageContext, allTypes[i], theStringRepresentation, theMaxLength, theColloquial );
                     print( sep );
                     print( text );
 
