@@ -90,7 +90,7 @@ class CallJspXRecord
             value = defaultValue; // which may or may not have been given
 
         } else {
-            throw new JspException( "Parameter " + name + " missing in call" );
+            throw new JspException( "Parameter " + name + " missing in call to " + thePage );
         }
 
         if( value != null && type != null && type.length() > 0 ) {

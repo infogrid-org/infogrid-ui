@@ -202,6 +202,9 @@ public class CallJspoTag
         // This is not ordered, but that should not be a problem?
         for( Entry<String,Object> current : theCurrentCallRecord.getParameters() ) {
             Object value = current.getValue();
+            if( value == null ) {
+                continue;
+            }
 
             String parId;
             if( value instanceof HasIdentifier ) {
