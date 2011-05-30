@@ -111,9 +111,9 @@ public class CallJspfParamTag
             IgnoreException,
             IOException
     {
-        Tag parentTag = getParent();
-        if( !( parentTag instanceof CallJspfTag )) {
-            throw new JspException( "CallJspfParamTag must be directly contained in a CallJspfTag" );
+        Tag parentTag = findAncestorTag( CallJspfTag.class );
+        if( parentTag == null ) {
+            throw new JspException( "CallJspfParamTag must be contained in a CallJspfTag" );
         }
         CallJspXRecord record = (CallJspXRecord) pageContext.getRequest().getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
         if( record == null ) {

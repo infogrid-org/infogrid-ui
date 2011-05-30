@@ -53,6 +53,7 @@ public class MeshObjectBlessedByTag
         theSeparator            = ", "; // comma as default
         theStringRepresentation = null;
         theMaxLength            = -1;
+        theCapitalize           = null;
         theColloquial           = true;
 
         super.initializeToDefaults();
@@ -211,6 +212,7 @@ public class MeshObjectBlessedByTag
      * Set value of the maxLength property.
      *
      * @param newValue new value of the maxLength property
+     * @see #getMaxLength
      */
     public void setMaxLength(
             int newValue )
@@ -233,11 +235,35 @@ public class MeshObjectBlessedByTag
      * Set value of the colloquial property.
      *
      * @param newValue new value of the colloquial property
+     * @see #getColloquial
      */
     public void setColloquial(
             boolean newValue )
     {
         theColloquial = newValue;
+    }
+
+    /**
+     * Obtain value of the capitalize property.
+     *
+     * @return value of the capitalize property
+     * @see #setCapitalize
+     */
+    public String getCapitalize()
+    {
+        return theCapitalize;
+    }
+
+    /**
+     * Set value of the capitalize property.
+     *
+     * @param newValue new value of the capitalize property
+     * @see #getCapitalize
+     */
+    public void setCapitalize(
+            String newValue )
+    {
+        theCapitalize = newValue;
     }
 
     /**
@@ -269,6 +295,9 @@ public class MeshObjectBlessedByTag
         
 
         if( obj != null ) {
+
+            CAPITALIZE cap = CAPITALIZE.find( theCapitalize );
+
             EntityType [] allTypes = obj.getTypes();
             String        sep      = "";
             for( int i=0 ; i<allTypes.length ; ++i ) {
@@ -277,6 +306,8 @@ public class MeshObjectBlessedByTag
                 }
                 try {
                     String text = ((RestfulJeeFormatter)theFormatter).formatMeshType( pageContext, allTypes[i], theStringRepresentation, theMaxLength, theColloquial );
+                    text = cap.doCapitalization( text );
+
                     print( sep );
                     print( text );
 
@@ -325,6 +356,105 @@ public class MeshObjectBlessedByTag
      * The maximum length of an emitted String.
      */
     protected int theMaxLength;
+
+    /**
+     * Should we capitalize.
+     */
+    protected String theCapitalize;
+
+    /**
+     * Recognized values for capitalization.
+     */
+    private static enum CAPITALIZE {
+        ASIS( new String[] { "asis", "as-is" } ) {
+            public String doCapitalization(
+                    String candidate )
+            {
+                return candidate;
+            }
+        },
+        FIRST_TOUPPER( new String[] { "firsttoupper", "first-toupper" } ) {
+            public String doCapitalization(
+                    String candidate )
+            {
+                if( candidate.length() == 0 ) {
+                    return candidate;
+                }
+                return candidate.substring( 0, 1 ).toUpperCase() + candidate.substring( 1 );
+            }
+        },
+        ALL_TOUPPER( new String[] { "alltoupper", "all-toupper", "toupper" } ) {
+            public String doCapitalization(
+                    String candidate )
+            {
+                return candidate.toUpperCase();
+            }
+        },
+        FIRST_TOLOWER( new String[] { "firsttolower", "first-tolower" } ) {
+            public String doCapitalization(
+                    String candidate )
+            {
+                if( candidate.length() == 0 ) {
+                    return candidate;
+                }
+                return candidate.substring( 0, 1 ).toLowerCase() + candidate.substring( 1 );
+            }
+        },
+        ALL_TOLOWER( new String[] { "alltolower", "all-tolower", "tolower" } ) {
+            public String doCapitalization(
+                    String candidate )
+            {
+                return candidate.toLowerCase();
+            }
+        };
+
+        /**
+         * Determine the correct capitalization, given the value of the property.
+         *
+         * @param property the property value
+         * @return the CAPITALIZE
+         */
+        public static CAPITALIZE find(
+                String property )
+        {
+            if( property == null ) {
+                return ASIS;
+            }
+            for( CAPITALIZE current : values() ) {
+                for( String candidate : current.theValues ) {
+                    if( property.equals( candidate )) {
+                        return current;
+                    }
+                }
+            }
+            return ASIS;
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param values the values representing the policy.
+         */
+        CAPITALIZE(
+                String [] values )
+        {
+            theValues = values;
+        }
+
+        /**
+         * Perform the capitalization.
+         *
+         * @param candidate the input String
+         * @return return the capitalized String
+         */
+        public abstract String doCapitalization(
+                String candidate );
+
+        /**
+         * Values representing the policy.
+         */
+        protected String [] theValues;
+    };
 
     /**
      * Should the value be outputted in colloquial form.

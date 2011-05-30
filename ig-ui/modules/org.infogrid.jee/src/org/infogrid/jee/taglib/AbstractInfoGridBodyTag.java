@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.Tag;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
 
@@ -454,6 +455,22 @@ public abstract class AbstractInfoGridBodyTag
         }
         pageContext.getRequest().setAttribute( name, value );
 
+        return ret;
+    }
+
+    /**
+     * Find an ancestor tag of a particular type.
+     *
+     * @param clazz class name of the ancestor tag
+     * @return the ancestor tag, or null if not found
+     */
+    protected Tag findAncestorTag(
+            Class<? extends Tag> clazz )
+    {
+        Tag ret = getParent();
+        while( ret != null && !clazz.isInstance( ret )) {
+            ret = ret.getParent();
+        }
         return ret;
     }
 

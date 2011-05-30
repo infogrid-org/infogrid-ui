@@ -25,6 +25,10 @@
         <name>blessedBy</name>
         <tag-class>org.infogrid.jee.taglib.mesh.MeshObjectBlessedByTag</tag-class>
         <attribute>
+            <name>capitalize</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObject</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

@@ -295,7 +295,9 @@ public class MeshObjectPropertyIterateTag
             JspException,
             IgnoreException
     {
-        theObj = lookupMeshObjectOrThrow( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
+        if( theMeshObject != null || theMeshObjectName != null ) {
+            theObj = lookupMeshObject( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
+        }
 
         Collection<PropertyType> propertyTypesToShow = new ArrayList<PropertyType>();
         
@@ -371,7 +373,7 @@ public class MeshObjectPropertyIterateTag
             PropertyValue currentValue = null;
 
             try {
-                if( theMeshObject != null ) {
+                if( theObj != null ) {
                     currentValue = theObj.getPropertyValue( currentType );
 
                     if( currentValue == null && theSkipNullProperty ) {
