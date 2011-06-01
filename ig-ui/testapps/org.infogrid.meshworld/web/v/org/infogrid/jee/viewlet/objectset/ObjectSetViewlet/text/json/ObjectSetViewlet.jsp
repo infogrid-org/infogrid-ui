@@ -11,16 +11,16 @@
 <objectset:iterate meshObjectSetName="Viewlet.viewedMeshObjects.reachedObjects" loopVar="current" ignore="true">
  <objectset:iteratecontentrow>
   {
-    "Identifier" : <mesh:meshObjectId meshObjectName="current" stringRepresentation="Java"/>,
+    "Identifier" : <mesh:meshObjectId meshObjectName="current" stringRepresentation="Javascript"/>,
     "Types"      : [
   <mesh:blessedByIterate meshObjectName="current" blessedByLoopVar="blessedBy">
-      <mesh:meshTypeId meshTypeName="blessedBy" stringRepresentation="Java" />,
+      <mesh:meshTypeId meshTypeName="blessedBy" stringRepresentation="Javascript" /><u:ifIterationHasNext>,</u:ifIterationHasNext>
   </mesh:blessedByIterate>
                    ]
   <mesh:blessedByIterate meshObjectName="current" blessedByLoopVar="blessedBy">
     <mesh:propertyIterate meshObjectName="current" meshTypeName="blessedBy" propertyTypeLoopVar="propertyType" propertyValueLoopVar="propertyValue" skipNullProperty="false">
-       , <mesh:meshTypeId meshTypeName="propertyType" stringRepresentation="Java" />
-       : <mesh:propertyValue propertyValueName="propertyValue" stringRepresentation="Java" ignore="true" nullString="null"/>
+       , <mesh:meshTypeId meshTypeName="propertyType" stringRepresentation="Javascript" />
+       : <mesh:propertyValue propertyValueName="propertyValue" stringRepresentation="Javascript" ignore="true" nullString="null"/>
     </mesh:propertyIterate>
   </mesh:blessedByIterate>
   }<u:ifIterationHasNext>,</u:ifIterationHasNext>
