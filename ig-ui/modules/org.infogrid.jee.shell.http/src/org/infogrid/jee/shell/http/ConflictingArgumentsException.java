@@ -8,20 +8,18 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.shell.http;
 
-import org.infogrid.util.AbstractLocalizedException;
-
 /**
- * Thrown if an operation is invoked with inconsistent arguments.
+ * Thrown if an operation is invoked with conflicting arguments.
  */
 public class ConflictingArgumentsException
         extends
-            AbstractLocalizedException
+            InconsistentArgumentsException
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 

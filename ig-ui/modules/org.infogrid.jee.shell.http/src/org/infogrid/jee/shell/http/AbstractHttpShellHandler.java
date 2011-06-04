@@ -68,6 +68,21 @@ public abstract class AbstractHttpShellHandler
     /**
      * {@inheritDoc }
      */
+    public void afterAccess(
+            SaneRequest                                     request,
+            Map<String,MeshObject>                          vars,
+            SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
+            MeshBase                                        defaultMeshBase )
+        throws
+            HttpShellException,
+            TransactionException
+    {
+        // nothing
+    }
+
+    /**
+     * {@inheritDoc }
+     */
     public void beforeTransactionEnd(
             SaneRequest                                     request,
             Map<String,MeshObject>                          vars,
@@ -83,7 +98,7 @@ public abstract class AbstractHttpShellHandler
     /**
      * {@inheritDoc }
      */
-    public void afterTransactionEnd(
+    public String afterTransactionEnd(
             SaneRequest                                     request,
             Map<String,MeshObject>                          vars,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
@@ -93,6 +108,7 @@ public abstract class AbstractHttpShellHandler
             HttpShellException
     {
         // nothing
+        return null;
     }
 
     /**

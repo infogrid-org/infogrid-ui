@@ -68,6 +68,26 @@ public interface HttpShellHandler
             TransactionException;
 
     /**
+     * Invoked by the HttpShell after MeshObjects were accessed, but before
+     * any property setting or relationship management takes place.
+     * 
+     * @param request the incoming request
+     * @param vars the variables set by the HttpShell
+     * @param txs the Transactions used by this invocation of the HttpShell
+     * @param defaultMeshBase the default MeshBase to use
+     * @throws HttpShellException a problem occurred, check cause for details
+     * @throws TransactionException a problem with the Transaction occurred
+     */
+    public void afterAccess(
+            SaneRequest                                     request,
+            Map<String,MeshObject>                          vars,
+            SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
+            MeshBase                                        defaultMeshBase )
+        throws
+            HttpShellException,
+            TransactionException;
+
+    /**
      * Invoked by the HttpShell before Transactions are closed.
      *
      * @param request the incoming request
@@ -94,9 +114,10 @@ public interface HttpShellHandler
      * @param txs the (now closed) Transactions used by this invocation of the HttpShell
      * @param defaultMeshBase the default MeshBase to use
      * @param maybeThrown if a Throwable was thrown, it is passed here
+     * @return a URL where to redirect to, or null
      * @throws HttpShellException a problem occurred, check cause for details
      */
-    public void afterTransactionEnd(
+    public String afterTransactionEnd(
             SaneRequest                                     request,
             Map<String,MeshObject>                          vars,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,

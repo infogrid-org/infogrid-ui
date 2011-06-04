@@ -177,6 +177,7 @@ public class HttpShellFilter
 
         Map<String,String[]>              postArguments = lidRequest.getPostedArguments();
         final ArrayList<HttpShellHandler> handlers      = new ArrayList<HttpShellHandler>();
+        String                            ret           = null;
 
         // determine handlers
         String [] handlerNames = postArguments.get( HANDLER_TAG );
@@ -240,13 +241,6 @@ public class HttpShellFilter
 
                 MeshObject accessed = accessVerb.access( id, base, tx, lidRequest );
                 variables.put( varName, accessed );
-                if( accessed != null && !accessed.getIsDead() ) {
-
-                    // first bless then unbless, then properties
-                    potentiallyBless(         varName, accessed, tx, lidRequest );
-                    potentiallyUnbless(       varName, accessed, tx, lidRequest );
-                    potentiallySetProperties( varName, accessed, tx, lidRequest );
-                }
             }
 
             // then look for all arguments of the form <PREFIX>.<VARIABLE>.<ACCESS_TAG> for which
@@ -273,9 +267,22 @@ public class HttpShellFilter
 
                 MeshObject accessed = accessVerb.access( null, base, tx, lidRequest );
                 variables.put( varName, accessed );
-                if( accessed != null && !accessed.getIsDead() ) {
+            }
 
+            // invoke after access
+            for( HttpShellHandler handler : handlers ) {
+                handler.afterAccess( lidRequest, variables, txs, theMainMeshBase );
+            }
+
+            for( Map.Entry<String,MeshObject> entry : variables.entrySet() ) {
+                String     varName  = entry.getKey();
+                MeshObject accessed = entry.getValue();
+
+                if( accessed != null && !accessed.getIsDead() ) {
                     // first bless then unbless, then properties
+
+                    OnDemandTransaction  tx = txs.obtainFor( accessed.getMeshBase() );
+
                     potentiallyBless(         varName, accessed, tx, lidRequest );
                     potentiallyUnbless(       varName, accessed, tx, lidRequest );
                     potentiallySetProperties( varName, accessed, tx, lidRequest );
@@ -309,6 +316,24 @@ public class HttpShellFilter
                                 RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
                                 Transaction tx2 = tx.obtain();
                                 found1.unblessRelationship( toUnbless, found2 );
+                            }
+                        }
+                    }
+                    if( arg.endsWith( UNBLESS_ROLE_IF_NEEDED_TAG )) {
+                        String     var2Name = arg.substring( key.length(), arg.length()-UNBLESS_ROLE_IF_NEEDED_TAG.length() );
+                        MeshObject found2   = variables.get( var2Name );
+                        MeshObject found1   = variables.get( var1Name );
+
+                        String [] values = lidRequest.getMultivaluedPostedArgument( arg );
+                        if( values != null ) {
+                            OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
+
+                            for( String v : values ) {
+                                RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                if( found1.isRelated( toUnbless, found2 ) ) {
+                                    Transaction tx2 = tx.obtain();
+                                    found1.unblessRelationship( toUnbless, found2 );
+                                }
                             }
                         }
                     }
@@ -373,6 +398,27 @@ public class HttpShellFilter
                                     RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
                                     Transaction tx2 = tx.obtain();
                                     found1.blessRelationship( toBless, found2 );
+                                }
+                            }
+                        }
+                    }
+                    if( arg.endsWith( BLESS_ROLE_IF_NEEDED_TAG )) {
+                        String     var2Name = arg.substring( key.length(), arg.length()-BLESS_ROLE_IF_NEEDED_TAG.length() );
+                        MeshObject found2   = variables.get( var2Name );
+                        MeshObject found1   = variables.get( var1Name );
+
+                        if( found1 != null && found2 != null ) {
+                            // be lenient
+                            String [] values = lidRequest.getMultivaluedPostedArgument( arg );
+                            if( values != null ) {
+                                OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
+
+                                for( String v : values ) {
+                                    RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                    if( !found1.isRelated( toBless, found2 )) {
+                                        Transaction tx2 = tx.obtain();
+                                        found1.blessRelationship( toBless, found2 );
+                                    }
                                 }
                             }
                         }
@@ -608,54 +654,88 @@ public class HttpShellFilter
             }
             // invoke post-transaction
             for( HttpShellHandler handler : handlers ) {
-                handler.afterTransactionEnd( lidRequest, variables, txs, theMainMeshBase, thrown );
-            }
-        }
-
-        // and now for redirects
-        String redirectVar   = null;
-        String redirectValue = null;
-        for( String var1Name : variables.keySet() ) {
-            String    key   = PREFIX + var1Name + REDIRECT_TAG;
-            String [] value = postArguments.get( key );
-
-            if( value != null && value.length == 1 && value[0] != null && value[0].trim().length() > 0 ) {
-                if( redirectVar != null ) {
-                    throw new HttpShellException( new ConflictingArgumentsException( key, redirectVar ));
+                String ret2 = handler.afterTransactionEnd( lidRequest, variables, txs, theMainMeshBase, thrown );
+                if( ret2 == null ) {
+                    continue;
                 }
-                redirectVar   = var1Name;
-                redirectValue = value[0].trim();
+
+                if( ret == null || ret.equals( ret2 )) {
+                    ret = ret2;
+                } else {
+                    log.error( "More than one handler declared redirect URL: ", ret, ret2, handler );
+                }
             }
         }
 
-        String ret = null;
-        if( redirectVar != null ) {
-            MeshObject redirectObj = variables.get( redirectVar );
+        // and now for redirects, if none has been found so far
+        if( ret == null ) {
+            String redirectVar   = null;
+            String redirectValue = null;
+            for( String var1Name : variables.keySet() ) {
+                String    key   = PREFIX + var1Name + REDIRECT_TAG;
+                String [] value = postArguments.get( key );
 
-            StringRepresentationDirectory  dir  = StringRepresentationDirectorySingleton.getSingleton();
-            StringRepresentation           rep  = dir.get( StringRepresentationDirectory.TEXT_URL_NAME );
-            
-            if( rep == null ) {
-                rep = dir.getFallback();
+                if( value != null && value.length == 1 && value[0] != null && value[0].trim().length() > 0 ) {
+                    if( redirectVar != null ) {
+                        throw new HttpShellException( new ConflictingArgumentsException( key, redirectVar ));
+                    }
+                    redirectVar   = var1Name;
+                    redirectValue = value[0].trim();
+                }
             }
-            
-            SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
-            pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
-            pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, lidRequest.getAbsoluteContextUri() );
-            pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, lidRequest.getContextPath() );
 
-            try {
-                ret = redirectObj.getIdentifier().toStringRepresentation( rep, pars );
+            if( redirectVar != null ) {
+                MeshObject redirectObj = variables.get( redirectVar );
 
-                ret = lidRequest.getAbsoluteContextUriWithSlash() + ret;
+                String ret2 = calculateRedirectUrlFromMeshObject( lidRequest, redirectObj );
 
                 if( !REDIRECT_TAG_TRUE.equalsIgnoreCase( redirectValue )) {
-                    ret = HTTP.appendArgumentPairToUrl( ret, redirectValue );
+                    ret2 = HTTP.appendArgumentPairToUrl( ret2, redirectValue );
                 }
 
-            } catch( StringifierException ex ) {
-                getLog().error( ex );
+                if( ret2 != null ) {
+                    if( ret == null || ret.equals( ret2 )) {
+                        ret = ret2;
+                    } else {
+                        log.error( "Shell declaration of redirect after a handler declared redirect URL: ", ret, ret2, redirectVar );
+                    }
+                }
             }
+        }
+        return ret;
+    }
+
+    /**
+     * Helper method to construct a redirect URL from a MeshObject that will be subject.
+     *
+     * @param lidRequest the incoming request
+     * @param subject the subject MeshObject
+     * @return the URL
+     */
+    public static String calculateRedirectUrlFromMeshObject(
+            SaneRequest lidRequest,
+            MeshObject  subject )
+    {
+        StringRepresentationDirectory  dir  = StringRepresentationDirectorySingleton.getSingleton();
+        StringRepresentation           rep  = dir.get( StringRepresentationDirectory.TEXT_URL_NAME );
+
+        if( rep == null ) {
+            rep = dir.getFallback();
+        }
+
+        SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+        pars.put( StringRepresentationParameters.COLLOQUIAL,               false );
+        pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, lidRequest.getAbsoluteContextUri() );
+        pars.put( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY, lidRequest.getContextPath() );
+
+        String ret = null;
+        try {
+            ret = subject.getIdentifier().toStringRepresentation( rep, pars );
+
+            ret = lidRequest.getAbsoluteContextUriWithSlash() + ret;
+
+        } catch( StringifierException ex ) {
+            getLog().error( ex );
         }
         return ret;
     }
@@ -771,17 +851,33 @@ public class HttpShellFilter
             TransactionException,
             NotPermittedException
     {
-        StringBuilder buf = new StringBuilder();
-        buf.append( PREFIX );
-        buf.append( varName );
-        buf.append( BLESS_TAG );
+        StringBuilder buf1 = new StringBuilder();
+        buf1.append( PREFIX );
+        buf1.append( varName );
+        buf1.append( BLESS_TAG );
 
-        String [] values = request.getMultivaluedPostedArgument( buf.toString() );
-        if( values != null ) {
-            for( String v : values ) {
+        String [] values1 = request.getMultivaluedPostedArgument( buf1.toString() );
+        if( values1 != null ) {
+            for( String v : values1 ) {
                 EntityType toBless = (EntityType) findMeshType( v ); // can thrown ClassCastException
                 Transaction tx2 = tx.obtain();
                 obj.bless( toBless );
+            }
+        }
+
+        StringBuilder buf2 = new StringBuilder();
+        buf2.append( PREFIX );
+        buf2.append( varName );
+        buf2.append( BLESS_IF_NEEDED_TAG );
+
+        String [] values2 = request.getMultivaluedPostedArgument( buf2.toString() );
+        if( values2 != null ) {
+            for( String v : values2 ) {
+                EntityType toBless = (EntityType) findMeshType( v ); // can thrown ClassCastException
+                if( !obj.isBlessedBy( toBless ) ) {
+                    Transaction tx2 = tx.obtain();
+                    obj.bless( toBless );
+                }
             }
         }
     }
@@ -816,17 +912,33 @@ public class HttpShellFilter
             TransactionException,
             NotPermittedException
     {
-        StringBuilder buf = new StringBuilder();
-        buf.append( PREFIX );
-        buf.append( varName );
-        buf.append( UNBLESS_TAG );
+        StringBuilder buf1 = new StringBuilder();
+        buf1.append( PREFIX );
+        buf1.append( varName );
+        buf1.append( UNBLESS_TAG );
 
-        String [] values = request.getMultivaluedPostedArgument( buf.toString() );
-        if( values != null ) {
-            for( String v : values ) {
+        String [] values1 = request.getMultivaluedPostedArgument( buf1.toString() );
+        if( values1 != null ) {
+            for( String v : values1 ) {
                 EntityType toUnbless = (EntityType) findMeshType( v ); // can thrown ClassCastException
                 Transaction tx2 = tx.obtain();
                 obj.unbless( toUnbless );
+            }
+        }
+
+        StringBuilder buf2 = new StringBuilder();
+        buf2.append( PREFIX );
+        buf2.append( varName );
+        buf2.append( UNBLESS_IF_NEEDED_TAG );
+
+        String [] values2 = request.getMultivaluedPostedArgument( buf2.toString() );
+        if( values2 != null ) {
+            for( String v : values2 ) {
+                EntityType toUnbless = (EntityType) findMeshType( v ); // can thrown ClassCastException
+                if( obj.isBlessedBy( toUnbless ) ) {
+                    Transaction tx2 = tx.obtain();
+                    obj.unbless( toUnbless );
+                }
             }
         }
     }

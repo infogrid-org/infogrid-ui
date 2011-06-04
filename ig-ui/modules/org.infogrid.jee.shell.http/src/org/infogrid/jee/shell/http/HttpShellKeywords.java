@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -77,13 +77,27 @@ public interface HttpShellKeywords
 
     /**
      * Keyword indicating with which <code>EntityType</code> a MeshObject shall be blessed.
+     * If blessing is unsuccessful, an exception is thrown.
      */
     public static final String BLESS_TAG = SEPARATOR + "bless";
 
     /**
+     * Keyword indicating with which <code>EntityType</code> a MeshObject shall be blessed
+     * if it is not blessed with this type already.
+     */
+    public static final String BLESS_IF_NEEDED_TAG = SEPARATOR + "blessIfNeeded";
+
+    /**
      * Keyword indicating from which <code>EntityType</code> a MeshObject shall be unblessed.
+     * If unblessing is unsuccessful, an exception is thrown.
      */
     public static final String UNBLESS_TAG = SEPARATOR + "unbless";
+
+    /**
+     * Keyword indicating from which <code>EntityType</code> a MeshObject shall be unblessed
+     * if it is blessed with this type.
+     */
+    public static final String UNBLESS_IF_NEEDED_TAG = SEPARATOR + "unblessIfNeeded";
 
     /**
      * Keyword indicating a relationship to another MeshObject.
@@ -98,13 +112,27 @@ public interface HttpShellKeywords
 
     /**
      * Keyword indicating the <code>RoleType</code> a relationship shall be blessed with.
+     * If blessing is unsuccessful, an exception is thrown.
      */
     public static final String BLESS_ROLE_TAG = SEPARATOR + "blessRole";
 
     /**
+     * Keyword indicating the <code>RoleType</code> a relationship shall be blessed with
+     * if it is not blessed with this RoleType already.
+     */
+    public static final String BLESS_ROLE_IF_NEEDED_TAG = SEPARATOR + "blessRoleIfNeeded";
+
+    /**
      * Keyword indicating the <code>RoleType</code> a relationship shall be unblessed from.
+     * If unblessing is unsuccessful, an exception is thrown.
      */
     public static final String UNBLESS_ROLE_TAG = SEPARATOR + "unblessRole";
+
+    /**
+     * Keyword indicating the <code>RoleType</code> a relationship shall be unblessed from
+     * if the relationship is blessed with this RoleType.
+     */
+    public static final String UNBLESS_ROLE_IF_NEEDED_TAG = SEPARATOR + "unblessRoleIfNeeded";
 
     /**
      * Keyword indicating the presence of a relationship checkbox by specifying a RoleType that
