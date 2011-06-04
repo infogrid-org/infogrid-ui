@@ -342,6 +342,9 @@ public class PropertyTag
         } else {
             throw new JspException( "Must specify either propertyTypeName or propertyType" );
         }
+        if( theMeshObjectVarName != null && !theMeshObjectVarName.startsWith( "shell." )) {
+            throw new JspException( "meshObjectVarName must be specified as 'shell.xxx', not " + theMeshObjectVarName ); // see HttpShellKeywords.PREFIX, which cannot be imported to avoid creating a dependency
+        }
 
         Integer varCounter = (Integer) lookup( VARIABLE_COUNTER_NAME );
         if( varCounter == null ) {
