@@ -58,6 +58,7 @@ public class CallJspoTag
         theLinkTitle     = null;
         theAction        = null;
         theSubmitLabel   = null;
+        theActivated     = false;
         theOldCallRecord = null;
 
         super.initializeToDefaults();
@@ -156,6 +157,29 @@ public class CallJspoTag
     }
 
     /**
+     * Obtain value of the activated property.
+     *
+     * @return value of the activated property
+     * @see #setActivated
+     */
+    public boolean getActivated()
+    {
+        return theActivated;
+    }
+
+    /**
+     * Set value of the activated property.
+     *
+     * @param newValue new value of the activated property
+     * @see #getActivated
+     */
+    public void setActivated(
+            boolean newValue )
+    {
+        theActivated = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -217,15 +241,21 @@ public class CallJspoTag
             domId.append( parId );
         }
 
-        out.print( "<a href=\"javascript:overlay_show( '" + domId + "', {} )\"" );
-        if( theLinkTitle != null ) {
-            out.print( " title=\"" + theLinkTitle + "\"" );
+        String bodyContentString = body.getString();
+        if( bodyContentString.trim().length() > 0 ) {
+            // skip if there's nothing between the CallJspoTags that generates anything other than white space
+
+            out.print( "<a href=\"javascript:overlay_show( '" + domId + "', {} )\"" );
+            if( theLinkTitle != null ) {
+                out.print( " title=\"" + theLinkTitle + "\"" );
+            }
+            out.println( ">" );
+
+            out.print( bodyContentString );
+
+            out.println( "</a>" );
         }
-        out.println( ">" );
 
-        body.writeOut( out );
-
-        out.println( "</a>" );
         out.print( "<div class=\"" );
         out.print( OverlayTag.class.getName().replace( '.', '-' ) );
         out.print( "\" id=\"" + domId + "\"" );
@@ -273,6 +303,12 @@ public class CallJspoTag
             }
             out.println( "</form>" );
             out.println( "</div>" );
+
+            if( theActivated ) {
+                out.println( "<script type=\"text/javascript\">\n" );
+                out.println( "    overlay_show( '" + domId + "', {} );\n" );
+                out.println( "</script>\n" );
+            }
         }
     }
 
@@ -295,6 +331,11 @@ public class CallJspoTag
      * Label on the submit button.
      */
     protected String theSubmitLabel;
+
+    /**
+     * If the overlay should be activated.
+     */
+    protected boolean theActivated;
 
     /**
      * The CallJspXRecord to restore.
