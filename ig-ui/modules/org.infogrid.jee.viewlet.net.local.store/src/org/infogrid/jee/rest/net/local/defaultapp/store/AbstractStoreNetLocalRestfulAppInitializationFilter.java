@@ -109,7 +109,7 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
                 ProbeDirectory probeDirectory = createAndPopulateProbeDirectory(
                         meshBaseIdentifierFactory );
 
-            final ScheduledExecutorService exec = createScheduledExecutorService();
+                final ScheduledExecutorService exec = createScheduledExecutorService();
                 if( qm != null ) {
                     qm.addDirectQuitListener( new AbstractQuitListener() {
                         @Override
