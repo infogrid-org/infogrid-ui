@@ -563,6 +563,10 @@ public class HttpShellFilter
                 handler.beforeTransactionEnd( lidRequest, variables, txs, theMainMeshBase );
             }
 
+        } catch( HttpShellException ex ) {
+            thrown = ex;
+            throw ex;
+
         } catch( ParseException ex ) {
             thrown = ex;
             throw new HttpShellException( ex );
