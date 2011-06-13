@@ -22,11 +22,6 @@
          to find them in the IDE. -->
 
     <tag>
-        <name>ifIterationHasNext</name>
-        <tag-class>org.infogrid.jee.taglib.util.IfIterationHasNextTag</tag-class>
-    </tag>
-
-    <tag>
         <name>callJspf</name>
         <tag-class>org.infogrid.jee.taglib.util.CallJspfTag</tag-class>
         <attribute>
@@ -84,6 +79,39 @@
     <tag>
         <name>callJspoParam</name>
         <tag-class>org.infogrid.jee.taglib.util.CallJspoParamTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>currentUrl</name>
+        <tag-class>org.infogrid.jee.taglib.util.CurrentUrlTag</tag-class>
+        <attribute>
+            <name>additionalArguments</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>removedArguments</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ifIterationHasNext</name>
+        <tag-class>org.infogrid.jee.taglib.util.IfIterationHasNextTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>ifUrlArgumentMatches</name>
+        <tag-class>org.infogrid.jee.taglib.util.IfUrlArgumentMatchesTag</tag-class>
         <attribute>
             <name>name</name>
             <required>true</required>
@@ -159,6 +187,21 @@
         </attribute>
     </tag>
 
+    <tag>
+        <name>notIfUrlArgumentMatches</name>
+        <tag-class>org.infogrid.jee.taglib.util.NotIfUrlArgumentMatchesTag</tag-class>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    
     <tag>
         <name>rotatingTr</name>
         <tag-class>org.infogrid.jee.taglib.util.RotatingTrTag</tag-class>
