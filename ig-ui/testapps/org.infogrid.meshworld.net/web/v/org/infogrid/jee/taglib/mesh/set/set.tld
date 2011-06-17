@@ -204,6 +204,170 @@
     </tag>
 
     <tag>
+        <name>intersectTraverseIterate</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIntersectTraverseIterateTag</tag-class>
+        <attribute>
+            <name>startObject1</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>startObject1Name</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>traversalSpecification1</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>startObject2</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>startObject2Name</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>traversalSpecification2</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>loopVar</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>statusVar</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>orderBy</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>reverse</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>limit</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>iterate</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateTag</tag-class>
+        <attribute>
+            <name>meshObjectSetName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>loopVar</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>statusVar</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>orderBy</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>reverse</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>limit</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>iteratebeyondlimit</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateBeyondLimitTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>iteratecontentrow</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateContentRowTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>iteratefooter</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateFooterTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>iterateheader</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateHeaderTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>iteratenocontent</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateNoContentTag</tag-class>
+    </tag>
+
+    <tag>
+        <name>pathIterate</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.TraversalPathSetIterateTag</tag-class>
+        <attribute>
+            <name>traversalPathSetName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>loopVar</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>statusVar</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>reverse</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>setSize</name>
         <tag-class>org.infogrid.jee.taglib.mesh.set.SetSizeTag</tag-class>
 
@@ -245,104 +409,6 @@
         </attribute>
         <attribute>
             <name>destinationName</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>filter</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>ignore</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>scope</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>traverseSetSize</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.TraverseSetSizeTag</tag-class>
-
-        <attribute>
-            <name>startObject</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>startObjectName</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>traversalSpecification</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>filter</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>ignore</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>scope</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>iteratebeyondlimit</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateBeyondLimitTag</tag-class>
-    </tag>
-
-    <tag>
-        <name>iteratecontentrow</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateContentRowTag</tag-class>
-    </tag>
-
-    <tag>
-        <name>iterateheader</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateHeaderTag</tag-class>
-    </tag>
-
-    <tag>
-        <name>iteratefooter</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateFooterTag</tag-class>
-    </tag>
-
-    <tag>
-        <name>iteratenocontent</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateNoContentTag</tag-class>
-    </tag>
-
-    <tag>
-        <name>iterate</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.MeshObjectSetIterateTag</tag-class>
-        <attribute>
-            <name>meshObjectSetName</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>loopVar</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>statusVar</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>orderBy</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>reverse</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>limit</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
@@ -410,23 +476,20 @@
     </tag>
 
     <tag>
-        <name>pathIterate</name>
-        <tag-class>org.infogrid.jee.taglib.mesh.set.TraversalPathSetIterateTag</tag-class>
+        <name>traverseSetSize</name>
+        <tag-class>org.infogrid.jee.taglib.mesh.set.TraverseSetSizeTag</tag-class>
+
         <attribute>
-            <name>traversalPathSetName</name>
+            <name>startObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>startObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>traversalSpecification</name>
             <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>loopVar</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>statusVar</name>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>reverse</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>

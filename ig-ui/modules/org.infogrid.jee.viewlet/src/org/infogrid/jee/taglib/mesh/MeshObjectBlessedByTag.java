@@ -53,6 +53,7 @@ public class MeshObjectBlessedByTag
         theSeparator            = ", "; // comma as default
         theStringRepresentation = null;
         theMaxLength            = -1;
+        theVarName              = null;
         theCapitalize           = null;
         theColloquial           = true;
 
@@ -244,6 +245,29 @@ public class MeshObjectBlessedByTag
     }
 
     /**
+     * Obtain value of the varName property.
+     *
+     * @return value of the varName property
+     * @see #setVarName
+     */
+    public String getVarName()
+    {
+        return theVarName;
+    }
+
+    /**
+     * Set value of the varName property.
+     *
+     * @param newValue new value of the varName property
+     * @see #getVarName
+     */
+    public void setVarName(
+            String newValue )
+    {
+        theVarName = newValue;
+    }
+
+    /**
      * Obtain value of the capitalize property.
      *
      * @return value of the capitalize property
@@ -292,8 +316,8 @@ public class MeshObjectBlessedByTag
         } else {
             type = null;
         }
-        
 
+        StringBuilder result = null;
         if( obj != null ) {
 
             CAPITALIZE cap = CAPITALIZE.find( theCapitalize );
@@ -308,14 +332,24 @@ public class MeshObjectBlessedByTag
                     String text = ((RestfulJeeFormatter)theFormatter).formatMeshType( pageContext, allTypes[i], theStringRepresentation, theMaxLength, theColloquial );
                     text = cap.doCapitalization( text );
 
-                    print( sep );
-                    print( text );
+                    if( result == null ) {
+                        result = new StringBuilder();
+                    }
+                    result.append( sep );
+                    result.append( text );
 
                     sep = theSeparator;
 
                 } catch( StringifierException ex ) {
                     throw new JspException( ex );
                 }
+            }
+        }
+        if( result != null ) {
+            if( theVarName != null ) {
+                pageContext.getRequest().setAttribute( theVarName, result.toString() );
+            } else {
+                print( result.toString() );
             }
         }
 
@@ -361,6 +395,11 @@ public class MeshObjectBlessedByTag
      * Should we capitalize.
      */
     protected String theCapitalize;
+
+    /**
+     * If this is non-null, instead of emitting the resulting String, set a variable with this name instead.
+     */
+    protected String theVarName;
 
     /**
      * Recognized values for capitalization.

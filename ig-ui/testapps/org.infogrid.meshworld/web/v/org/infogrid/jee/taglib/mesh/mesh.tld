@@ -49,6 +49,10 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>varName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>filter</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
