@@ -19,29 +19,22 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.TransactionException;
-import org.infogrid.util.context.AbstractObjectInContext;
 import org.infogrid.util.SmartFactory;
-import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 
 /**
  * Implemented by classes that can be invoked after the HttpShell is done with its processing.
  */
 public abstract class AbstractHttpShellHandler
-        extends
-            AbstractObjectInContext
         implements
             HttpShellHandler
 {
     /**
      * Constructor for subclasses only.
-     *
-     * @param c the Context
      */
-    protected AbstractHttpShellHandler(
-            Context c )
+    protected AbstractHttpShellHandler()
     {
-        super( c );
+        // nothing
     }
 
     /**
