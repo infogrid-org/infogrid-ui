@@ -639,6 +639,10 @@ public class HttpShellFilter
             thrown = ex;
             getLog().error( ex ); // should not happen
 
+        } catch( RuntimeException ex ) {
+            thrown = ex;
+            throw new HttpShellException( ex );
+
         } finally {
 
             for( OnDemandTransaction tx : txs.values() ) {
