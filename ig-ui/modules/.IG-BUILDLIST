@@ -14,3 +14,4 @@ org.infogrid.jee.security.aclbased
 org.infogrid.jee.viewlet.bulk
 org.infogrid.jee.viewlet.log4j
 org.infogrid.jee.viewlet.module
+org.infogrid.jee.viewlet.json
