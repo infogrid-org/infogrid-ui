@@ -120,12 +120,12 @@ public abstract class AbstractHttpShellHandler
     }
 
     /**
-     * Helper method to get the value of a HTTP shell variable, or
+     * Helper method to get the raw, unresolved value of an HTTP shell variable, or
      * throw an exception if not given.
      *
      * @param request the incoming request
      * @param varName name of the shell variable
-     * @return value the value of the shell variable
+     * @return the raw String value of the shell variable
      * @throws HttpShellException thrown if the argument is missing or empty
      */
     protected String getArgumentOrThrow(
@@ -137,6 +137,30 @@ public abstract class AbstractHttpShellHandler
         String argName = HttpShellKeywords.PREFIX + varName;
         String ret     = request.getPostedArgument( argName );
         if( ret == null || HttpShellFilter.UNASSIGNED_VALUE.equals( ret )) {
+            throw new HttpShellException( new UnassignedArgumentException( argName ) );
+        }
+        return ret;
+    }
+
+    /**
+     * Helper method to get the resolved value of an HTTP shell variable, or throw
+     * an exception if not given.
+     *
+     * @param vars the resolved variables
+     * @param varName name of the shell variable
+     * @return the resolved value of the shell variable
+     * @throws HttpShellException thrown if the variable is null
+     */
+    protected MeshObject getVariableOrThrow(
+            Map<String,MeshObject> vars,
+            String                 varName )
+        throws
+            HttpShellException
+    {
+        MeshObject ret = vars.get( varName );
+        if( ret == null ) {
+            String argName = HttpShellKeywords.PREFIX + varName;
+            
             throw new HttpShellException( new UnassignedArgumentException( argName ) );
         }
         return ret;
