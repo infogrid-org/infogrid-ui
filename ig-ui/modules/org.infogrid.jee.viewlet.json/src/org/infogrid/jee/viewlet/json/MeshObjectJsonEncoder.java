@@ -80,7 +80,7 @@ public class MeshObjectJsonEncoder {
     /**
      * Factory constructor.
      * @param theOutputStream
-     * @return
+     * @return MeshObjectJsonEncoder
      */
     public static MeshObjectJsonEncoder create(OutputStream theOutputStream,
             SaneRequest saneRequest)
