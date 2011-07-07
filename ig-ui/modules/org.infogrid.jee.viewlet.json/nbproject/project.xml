@@ -6,6 +6,7 @@
             <name>org.infogrid.jee.viewlet.json</name>
             <source-roots>
                 <root id="src.dir"/>
+                <root id="src.module-generated.dir"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir"/>
