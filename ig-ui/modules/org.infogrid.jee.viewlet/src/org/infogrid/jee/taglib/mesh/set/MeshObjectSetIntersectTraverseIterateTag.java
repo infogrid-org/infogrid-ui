@@ -117,7 +117,7 @@ public class MeshObjectSetIntersectTraverseIterateTag
      * Set value of the traversalSpecification property.
      *
      * @param newValue new value of the traversalSpecification property
-     * @see #getTraversalSpecification
+     * @see #getTraversalSpecification1
      */
     public final void setTraversalSpecification1(
             String newValue )
@@ -186,7 +186,7 @@ public class MeshObjectSetIntersectTraverseIterateTag
      * Set value of the traversalSpecification property.
      *
      * @param newValue new value of the traversalSpecification property
-     * @see #getTraversalSpecification
+     * @see #getTraversalSpecification2
      */
     public final void setTraversalSpecification2(
             String newValue )
