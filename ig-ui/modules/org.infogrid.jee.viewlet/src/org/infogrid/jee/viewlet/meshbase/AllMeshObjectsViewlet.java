@@ -14,7 +14,8 @@
 
 package org.infogrid.jee.viewlet.meshbase;
 
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.infogrid.jee.viewlet.AbstractPagingCursorIterableViewlet;
@@ -26,6 +27,9 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.IterableMeshBase;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.model.primitives.EntityType;
+import org.infogrid.model.primitives.MeshType;
+import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.SubjectArea;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
@@ -267,14 +271,19 @@ public class AllMeshObjectsViewlet
         ret.append( " value=\"\">All EntityTypes</option>\n" );
 
         // need to list all EntityTypes from the ModelBase, and select the ones that we currently filter by.
-        ModelBase mb = getSubject().getMeshBase().getModelBase();
+        // We'll try alphabetically
 
-        Iterator<SubjectArea> saIter = mb.subjectAreaIterator();
-        while( saIter.hasNext() ) {
-            SubjectArea sa = saIter.next();
+        ModelBase mb = getSubject().getMeshBase().getModelBase();
+        SubjectArea [] sas = ArrayHelper.copyIntoNewArray( mb.subjectAreaIterator(), SubjectArea.class );
+        Arrays.sort( sas, theByUserVisibleNameComparator );
+
+        for( SubjectArea sa : sas ) {
             ret.append( "<optgroup label=\"" ).append( sa.getUserVisibleName().value() ).append( "\">\n" );
 
-            for( EntityType et : sa.getEntityTypes()) {
+            EntityType [] entityTypes = sa.getEntityTypes();
+            Arrays.sort( entityTypes, theByUserVisibleNameComparator );
+
+            for( EntityType et : entityTypes ) {
                 ret.append( " <option" );
                 if( theEntityTypes != null && ArrayHelper.isIn( et, theEntityTypes, false )) {
                     ret.append( " selected=\"selected\"" );
@@ -315,4 +324,19 @@ public class AllMeshObjectsViewlet
      * Viewlet parameter containing the list of the EntityTypes for the filter.
      */
     public static final String ENTITY_TYPES_VIEWLET_PARAM = "show-types";
+
+    /**
+     * Sorter by UserVisibleName.
+     */
+    protected static final Comparator<MeshType> theByUserVisibleNameComparator = new Comparator<MeshType>() {
+        public int compare(
+                MeshType one,
+                MeshType two )
+        {
+            StringValue name1 = one.getUserVisibleName();
+            StringValue name2 = two.getUserVisibleName();
+
+            return PropertyValue.compare( name1, name2 );
+        }
+    };
 }
