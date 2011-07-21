@@ -427,7 +427,10 @@ public abstract class AbstractJeeViewlet
         @SuppressWarnings("unchecked")
         Deque<JeeViewedMeshObjects> parentViewedStack = (Deque<JeeViewedMeshObjects>) theCurrentRequest.getAttribute( IncludeViewletTag.PARENT_STACK_ATTRIBUTE_NAME );
 
-        return getPostUrl( parentViewedStack );
+        JeeMeshObjectsToView currentlyToView = getViewedMeshObjects().getMeshObjectsToView();
+        JeeMeshObjectsToView newToView       = currentlyToView.createCopy();
+
+        return getPostUrl( parentViewedStack, newToView );
     }
 
     /**
@@ -438,26 +441,25 @@ public abstract class AbstractJeeViewlet
      * This can be overridden by subclasses.
      *
      * @param viewedMeshObjectsStack the Stack of ViewedMeshObjects of the parent Viewlets, if any
+     * @param toView the MeshObjectsToView upon post
      * @return the URL
      */
     public String getPostUrl(
-            Deque<JeeViewedMeshObjects> viewedMeshObjectsStack )
+            Deque<JeeViewedMeshObjects> viewedMeshObjectsStack,
+            JeeMeshObjectsToView        toView )
     {
-        JeeMeshObjectsToView currentlyToView = getViewedMeshObjects().getMeshObjectsToView();
-        JeeMeshObjectsToView newToView       = currentlyToView.createCopy();
-
-        newToView.setViewletState( DefaultJeeViewletStateEnum.VIEW );
+        toView.setViewletState( DefaultJeeViewletStateEnum.VIEW );
 
         StringBuilder buf = new StringBuilder();
-        buf.append( newToView.getAsUrl( (Deque<JeeViewedMeshObjects>) null ));
+        buf.append( toView.getAsUrl( (Deque<JeeViewedMeshObjects>) null ));
         if( viewedMeshObjectsStack != null && !viewedMeshObjectsStack.isEmpty() ) {
-            HTTP.appendArgumentToUrl( buf, "lid-target", newToView.getAsUrl( viewedMeshObjectsStack ));
+            HTTP.appendArgumentToUrl( buf, "lid-target", toView.getAsUrl( viewedMeshObjectsStack ));
         }
-        if( currentlyToView.getViewletTypeName() != null ) {
-            HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.VIEWLET_PREFIX + currentlyToView.getViewletTypeName() );
+        if( toView.getViewletTypeName() != null ) {
+            HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.VIEWLET_PREFIX + toView.getViewletTypeName() );
         }
-        if( currentlyToView.getMimeType() != null ) {
-            HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.MIME_PREFIX + currentlyToView.getMimeType() );
+        if( toView.getMimeType() != null ) {
+            HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.MIME_PREFIX + toView.getMimeType() );
         }
         return buf.toString();
     }

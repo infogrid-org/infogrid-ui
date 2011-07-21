@@ -211,10 +211,12 @@ public interface JeeViewlet
      * Obtain the URL to which forms should be HTTP POSTed.
      *
      * @param viewedMeshObjectsStack the Stack of ViewedMeshObjects of the parent Viewlets, if any
+     * @param toView the MeshObjectsToView upon post
      * @return the URL
      */
     public String getPostUrl(
-            Deque<JeeViewedMeshObjects> viewedMeshObjectsStack );
+            Deque<JeeViewedMeshObjects> viewedMeshObjectsStack,
+            JeeMeshObjectsToView        toView );
 
     /**
      * Name of the Request attribute that contains the current JeeViewlet instance.
