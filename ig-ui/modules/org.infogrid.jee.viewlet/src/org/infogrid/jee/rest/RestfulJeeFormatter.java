@@ -843,7 +843,7 @@ public class RestfulJeeFormatter
     /**
      * Format the identifier of a MeshObject for a viewlet.
      *
-     * @param pageContext the PageContext object for this page
+     * @param saneRequest the incoming request
      * @param mesh the MeshObject whose identifier is to be formatted
      * @param stringRepresentation the StringRepresentation to use
      * @param maxLength maximum length of emitted String. -1 means unlimited.
