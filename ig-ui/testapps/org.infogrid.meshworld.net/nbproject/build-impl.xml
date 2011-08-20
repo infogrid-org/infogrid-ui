@@ -971,8 +971,9 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_util_logging_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${libs.Log4j.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${libs.JSTL.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${libs.ig-library-log4j.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${libs.ig-library-jstl.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${libs.ig-library-mysql.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
@@ -1020,8 +1021,9 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_util_logging_log4j.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${libs.Log4j.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${libs.JSTL.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.ig-library-log4j.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.ig-library-jstl.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.ig-library-mysql.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init" if="dist.ear.dir" name="-clean-webinf-lib">
         <delete dir="${build.web.dir}/WEB-INF/lib"/>
