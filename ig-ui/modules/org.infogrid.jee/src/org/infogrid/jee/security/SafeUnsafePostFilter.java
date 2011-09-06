@@ -15,6 +15,9 @@
 package org.infogrid.jee.security;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.Filter;
@@ -27,14 +30,22 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.util.Base64;
+import org.infogrid.util.CreateWhenNeeded;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.UniqueStringGenerator;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.http.SaneRequestUtils;
+import org.infogrid.util.logging.Log;
 
 /**
  * Categorizes incoming POST requests as safe or unsafe, depending on whether they contain
  * a valid form token or not.
+ *
+ * By default, we generate random cookies, and a random secret for this SafeUnsafePostFilter
+ * instance. When forms are created, they can ask for a form field, which is the hash of
+ * the cookie and the secret. Upon post, we check for the existence of the POST field, and
+ * re-calculate the hash.
  */
 public class SafeUnsafePostFilter
         implements
@@ -69,20 +80,27 @@ public class SafeUnsafePostFilter
         boolean isSafe = true;
 
         if( request instanceof HttpServletRequest ) {
-            HttpServletRequest realRequest = (HttpServletRequest) request;
+            HttpServletRequest  realRequest  = (HttpServletRequest)  request;
+            HttpServletResponse realResponse = (HttpServletResponse) response;
 
             SaneRequest sane        = SaneServletRequest.create( realRequest );
             String      cookieValue = sane.getCookieValue( COOKIE_NAME );
 
             if( cookieValue == null ) {
-                HttpServletResponse realResponse = (HttpServletResponse) response;
-                cookieValue = theGenerator.createUniqueToken();
+                cookieValue = createNewCookieValue( sane );
 
                 Cookie cook = new Cookie( COOKIE_NAME, cookieValue );
                 cook.setPath( sane.getContextPath() );
                 realResponse.addCookie( cook );
             }
-            sane.setAttribute( TOKEN_ATTRIBUTE_NAME, cookieValue );
+
+            final String finalCookieValue = cookieValue; // sometimes all you can do is to hate Java
+            sane.setAttribute( TOKEN_ATTRIBUTE_NAME, new CreateWhenNeeded<String>() {
+                    protected String instantiate()
+                    {
+                        return calculateFormFieldValue( finalCookieValue );
+                    }
+            });
 
             if( "POST".equalsIgnoreCase( realRequest.getMethod() )) {
 
@@ -101,12 +119,13 @@ public class SafeUnsafePostFilter
                 }
 
                 if( process ) {
-                    String token = sane.getPostedArgument( INPUT_FIELD_NAME );
+                    String formValue = sane.getPostedArgument( INPUT_FIELD_NAME );
 
-                    if( cookieValue == null || token == null ) {
+                    if( cookieValue == null || formValue == null ) {
                         isSafe = false;
                     } else {
-                        isSafe = cookieValue.equals( token );
+                        String correctFormValue = calculateFormFieldValue( cookieValue );
+                        isSafe = formValue.equals( correctFormValue );
                     }
                 }
             }
@@ -141,7 +160,47 @@ public class SafeUnsafePostFilter
     {
         // noop
     }
-    
+
+    /**
+     * Generate a new cookie value.
+     *
+     * @param sane the incoming request
+     * @return the cookie value
+     */
+    protected String createNewCookieValue(
+            SaneRequest sane )
+    {
+        String cookieValue = theGenerator.createUniqueToken();
+        return cookieValue;
+    }
+
+    /**
+     * Calculate the form field value from the cookie value and the secret.
+     *
+     * @param cookieValue the value of the cookie
+     * @return the value of the field in the form
+     */
+    protected String calculateFormFieldValue(
+            String cookieValue )
+    {
+        try {
+            MessageDigest md = MessageDigest.getInstance( DIGEST_ALGORITHM );
+            md.update( cookieValue.getBytes( "UTF-8" ));
+
+            byte hash [] = md.digest();
+
+            String ret = Base64.base64encode( hash );
+            ret = ret.replaceAll( "\\s", "" );
+            return ret;
+
+        } catch ( NoSuchAlgorithmException ex ) {
+            getLog().error( ex );
+        } catch ( UnsupportedEncodingException ex ) {
+            getLog().error( ex );
+        }
+        return null;
+    }
+
     /**
      * Determine whether this incoming request is a safe POST. This is a static method
      * here so it can be invoked from anywhere in the application.
@@ -260,6 +319,19 @@ public class SafeUnsafePostFilter
             }
         }
         return ret;
+    }
+
+    /**
+     * Get the logger.
+     *
+     * @return the logger
+     */
+    private static Log getLog()
+    {
+        if( _log == null ) {
+            _log = Log.getLogInstance( SafeUnsafePostFilter.class );
+        }
+        return _log;
     }
 
     /**
@@ -313,10 +385,26 @@ public class SafeUnsafePostFilter
      */
     protected static final int TOKEN_LENGTH = theResourceHelper.getResourceIntegerOrDefault(
             "TokenLength",
-            64 );
+            32 );
 
     /**
      * The underlying random generator.
      */
     protected static final UniqueStringGenerator theGenerator = UniqueStringGenerator.create( TOKEN_LENGTH );
+
+    /**
+     * The Digest algorithm to use.
+     */
+    public static final String DIGEST_ALGORITHM = "SHA-512";
+
+    /**
+     * Our own, private logger. Allocated as needed: can't be done statically as this is a Filter.
+     */
+    private static Log _log; // allocated as needed
+
+    /**
+     * The secret for this instance of SafeUnsafePostFilter. This can be overridden in the Resource in order to
+     * allow easier test instrumentation.
+     */
+    protected String theMySecret = theResourceHelper.getResourceStringOrDefault( "MySecret", theGenerator.createUniqueToken() );
 }

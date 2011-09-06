@@ -21,6 +21,7 @@ import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.util.CreateWhenNeeded;
 
 /**
  * Inserts the hidden input field with the token to make a safe form. This is only
@@ -74,19 +75,20 @@ public class SafeFormHiddenInputTag
      * @param pageContext the PageContext of the current page
      * @return the String
      */
+    @SuppressWarnings("unchecked")
     public static String hiddenInputTagString(
             PageContext pageContext )
     {
-        SaneServletRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
-        String             value       = (String) saneRequest.getAttribute( SafeUnsafePostFilter.TOKEN_ATTRIBUTE_NAME );
+        SaneServletRequest       saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
+        CreateWhenNeeded<String> onDemand    = (CreateWhenNeeded<String>) saneRequest.getAttribute( SafeUnsafePostFilter.TOKEN_ATTRIBUTE_NAME );
 
-        if( value != null ) {
+        if( onDemand != null ) {
             StringBuilder ret = new StringBuilder();
 
             ret.append( "<input name=\"" );
             ret.append( SafeUnsafePostFilter.INPUT_FIELD_NAME );
             ret.append( "\" type=\"hidden\" value=\"" );
-            ret.append( value );
+            ret.append( onDemand.obtain() );
             ret.append( "\" />" );
             return ret.toString();
 
