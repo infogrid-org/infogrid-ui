@@ -139,7 +139,10 @@ public class HttpShellFilter
                     }
 
                 } else {
-                    getLog().warn( "Ignoring unsafe POST", lidRequest );
+                    if( getLog().isDebugEnabled() ) {
+                        // otherwise it's producing way too much output
+                        getLog().debug( "Ignoring unsafe POST", lidRequest );
+                    }
                 }
             }
         
