@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -40,7 +40,6 @@ import org.infogrid.meshbase.MeshObjectAccessException;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.CannotViewException;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactory;
@@ -54,7 +53,6 @@ public class ViewletDispatcherServlet
         extends
             GenericServlet
 {
-    private static final Log  log              = Log.getLogInstance( ViewletDispatcherServlet.class ); // our own, private logger
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
@@ -89,22 +87,15 @@ public class ViewletDispatcherServlet
 
         JeeMeshObjectsToViewFactory toViewFactory = c.findContextObjectOrThrow( JeeMeshObjectsToViewFactory.class );
 
-        Deque<MeshObjectsToView> toViewStack;
+        Deque<MeshObjectsToView> toViewStack = null; // make compiler happy
         try {
             toViewStack = IncludeViewletTag.determineMeshObjectsToViewStack( saneRequest, toViewFactory );
             
         } catch( FactoryException ex ) {
-            if( ex.getCause() instanceof CannotViewException.NoSubject ) {
-                throw new ServletExceptionWithHttpStatusCode( ex.getCause(), HttpServletResponse.SC_NOT_FOUND ); // 404
-            } else if( ex.getCause() instanceof MeshObjectAccessException ) {
-                throw new ServletExceptionWithHttpStatusCode( ex.getCause(), HttpServletResponse.SC_NOT_FOUND ); // 404
-            } else if( ex.getCause() instanceof NotPermittedException ) {
-                throw new ServletExceptionWithHttpStatusCode( ex.getCause(), HttpServletResponse.SC_FORBIDDEN ); // 402
-            } else {
-                throw new ServletExceptionWithHttpStatusCode( ex.getCause(), HttpServletResponse.SC_BAD_REQUEST ); // 400
-            }
+            handleMeshObjectsToViewFactoryException( ex );
+
         } catch( MalformedURLException ex ) {
-            throw new ServletException( ex );
+            handleMeshObjectsToViewFactoryException( ex );
         }
 
         request.setAttribute( IncludeViewletTag.TO_INCLUDE_STACK_ATTRIBUTE_NAME, toViewStack );
@@ -177,6 +168,37 @@ public class ViewletDispatcherServlet
                     viewlet.performAfter( saneRequest, structured, thrown );
                 }
             }
+        }
+    }
+
+    /**
+     * Handle exceptions thrown when attempting to create a MeshObjectsToView. This method is
+     * factored out so subclasses can easily override.
+     * 
+     * @param t the thrown exception
+     */
+    protected void handleMeshObjectsToViewFactoryException(
+            Throwable t )
+        throws
+            ServletException
+    {
+        if( t instanceof MalformedURLException ) {
+            throw new ServletException( t );
+        }
+
+        Throwable cause = t.getCause();
+
+        if( cause instanceof CannotViewException.NoSubject ) {
+            throw new ServletExceptionWithHttpStatusCode( cause, HttpServletResponse.SC_NOT_FOUND ); // 404
+
+        } else if( cause instanceof MeshObjectAccessException ) {
+            throw new ServletExceptionWithHttpStatusCode( cause, HttpServletResponse.SC_NOT_FOUND ); // 404
+
+        } else if( cause instanceof NotPermittedException ) {
+            throw new ServletExceptionWithHttpStatusCode( cause, HttpServletResponse.SC_FORBIDDEN ); // 402
+
+        } else {
+            throw new ServletExceptionWithHttpStatusCode( cause, HttpServletResponse.SC_BAD_REQUEST ); // 400
         }
     }
 }
