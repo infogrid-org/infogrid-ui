@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.sane;
 
+import javax.servlet.http.HttpServletRequest;
 import org.infogrid.util.http.SaneRequest;
 
 /**
@@ -52,5 +53,21 @@ public abstract class StageUtils
             return false;
         }
         return true;
+    }
+
+    /**
+     * Determine whether the application is run staged or in production.
+     *
+     * @param request the incoming request
+     * @param productionLocation the URL of the production location of the application, or the hostname at which it runs
+     * @return true if the application is staged
+     */
+    public static boolean isStaged(
+            HttpServletRequest request,
+            String             productionLocation )
+    {
+        SaneRequest sane = SaneServletRequest.create( request );
+
+        return isStaged( sane, productionLocation );
     }
 }
