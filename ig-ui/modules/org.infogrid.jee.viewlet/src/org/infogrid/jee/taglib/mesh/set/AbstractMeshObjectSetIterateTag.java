@@ -93,17 +93,33 @@ public abstract class AbstractMeshObjectSetIterateTag
         }
 
         MeshObjectSorter sorter;
-        if( theOrderBy != null ) {
-            PropertyType orderBy = (PropertyType) findMeshTypeByIdentifierOrThrow( theOrderBy );
-
-            sorter = ByPropertyValueSorter.create( orderBy, reverse );
-
-        } else {
+        if( theOrderBy == null ) {
             if( !reverse ) {
                 sorter = DefaultMeshObjectSorter.BY_USER_VISIBLE_STRING;
             } else {
                 sorter = DefaultMeshObjectSorter.BY_REVERSE_USER_VISIBLE_STRING;
             }
+            
+        } else if( ORDER_BY_TIME_CREATED.equals( theOrderBy ) ) {
+            if( !reverse ) {
+                sorter = DefaultMeshObjectSorter.BY_TIME_CREATED;
+            } else {
+                sorter = DefaultMeshObjectSorter.BY_REVERSE_TIME_CREATED;
+            }
+            
+        } else if( ORDER_BY_TIME_UPDATED.equals( theOrderBy ) ) {
+            if( !reverse ) {
+                sorter = DefaultMeshObjectSorter.BY_TIME_UPDATED;
+            } else {
+                sorter = DefaultMeshObjectSorter.BY_REVERSE_TIME_UPDATED;
+            }
+
+        } else {
+            // must be a PropertyType
+            PropertyType orderBy = (PropertyType) findMeshTypeByIdentifierOrThrow( theOrderBy );
+
+            sorter = ByPropertyValueSorter.create( orderBy, reverse );
+
         }
 
         theSet = theSet.getFactory().createOrderedImmutableMeshObjectSet( theSet, sorter );
@@ -127,4 +143,14 @@ public abstract class AbstractMeshObjectSetIterateTag
      * String containing the identifier of the PropertyType by which we sort the set, if any.
      */
     protected String theOrderBy;
+
+    /**
+     * Special value for the orderBy attribute that indicates orderiong by the timeCreated pseudo-property.
+     */
+    public static final String ORDER_BY_TIME_CREATED = "timeCreated";
+
+    /**
+     * Special value for the orderBy attribute that indicates orderiong by the timeUpdated pseudo-property.
+     */
+    public static final String ORDER_BY_TIME_UPDATED = "timeUpdated";
 }
