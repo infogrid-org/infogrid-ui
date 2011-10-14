@@ -114,7 +114,7 @@ public class JspStructuredResponseTemplate
         try {
             theRequest.setAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME, structured );
 
-            theRequestDispatcher.include(
+            theRequestDispatcher.forward(
                     ((SaneServletRequest) theRequest).getDelegate(),
                     delegate );
 
