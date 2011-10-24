@@ -15,12 +15,69 @@
 
 <taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
     <tlib-version>1.0</tlib-version>
-    <short-name>candy</short-name>
+    <short-name>logic</short-name>
     <uri>/v/org/infogrid/jee/taglib/logic/logic.tld</uri>
     
     <!-- Tags are ordered alphabetically by Java Class name. Makes it easier
          to find them in the IDE. -->
     
+    <tag>
+        <name>compare</name>
+        <tagclass>org.infogrid.jee.taglib.logic.CompareTag</tagclass>
+        <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>meshObjectName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyTypeName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyType</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>meshObject2</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>meshObject2Name</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyType2Name</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>propertyType2</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>valueName</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>filter</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ignore</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
     <tag>
         <name>equal</name>
         <tagclass>org.infogrid.jee.taglib.logic.EqualTag</tagclass>
@@ -45,7 +102,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>meshObjectName</name>
+            <name>meshObject2Name</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
