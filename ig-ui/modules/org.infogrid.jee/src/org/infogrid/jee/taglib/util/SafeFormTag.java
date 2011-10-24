@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.util;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
         
@@ -64,7 +65,7 @@ public class SafeFormTag
         theName          = null;
         theOnsubmit      = null;
         theOnReset       = null;
-        theAcceptCharset = null;
+        theAcceptCharset = SaneServletRequest.FORM_CHARSET; // default
 
         super.initializeToDefaults();
     }

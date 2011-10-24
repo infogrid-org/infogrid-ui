@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.viewlet;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.viewlet.DefaultJeeViewletStateEnum;
 import org.infogrid.jee.viewlet.JeeViewlet;
@@ -119,7 +120,9 @@ public class ViewletTag
                 content.append( "\" id=\"" );
                 content.append( theFormId );
             }
-            content.append( "\" enctype=\"multipart/form-data\">\n" ); // use the more general form
+            content.append( "\" enctype=\"multipart/form-data\" accept-charset=\"" ); // use the more general form
+            content.append( SaneServletRequest.FORM_CHARSET ); // use the more general form
+            content.append( "\">\n" ); // use the more general form
 
         }
         content.append( "<div class=\"viewlet" );

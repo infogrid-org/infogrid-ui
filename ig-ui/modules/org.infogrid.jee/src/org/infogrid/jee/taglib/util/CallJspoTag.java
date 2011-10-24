@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
+import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.candy.OverlayTag;
@@ -262,7 +263,9 @@ public class CallJspoTag
         out.println( ">" );
 
         if( theAction != null ) {
-            out.print( "<form action=\"" + theAction + "\" method=\"post\" enctype=\"multipart/form-data\">" );
+            out.print( "<form action=\"" + theAction + "\" method=\"post\" enctype=\"multipart/form-data\" accept-charset=\"" );
+            out.print( SaneServletRequest.FORM_CHARSET );
+            out.print( "\">" );
 
             String toInsert = SafeFormHiddenInputTag.hiddenInputTagString( pageContext );
             if( toInsert != null ) {

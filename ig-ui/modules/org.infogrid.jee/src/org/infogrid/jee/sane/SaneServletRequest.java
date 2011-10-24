@@ -316,18 +316,9 @@ public class SaneServletRequest
         throws
             IOException
     {
-        String charset = "ISO-8859-1"; // FIXME, needs to be more general
-        String content;
-
-        if( true ) {
-            // makes debugging easier
-            byte [] content2 = StreamUtils.slurp( inStream );
-            inStream = new BufferedInputStream( new ByteArrayInputStream( content2 ));
-            content = new String( content2, charset );
-        }
         // determine boundary
         String  stringBoundary = FormDataUtils.determineBoundaryString( mime );
-        byte [] byteBoundary   = FormDataUtils.constructByteBoundary( stringBoundary, charset );
+        byte [] byteBoundary   = FormDataUtils.constructByteBoundary( stringBoundary, FORM_CHARSET );
 
         // forward to first boundary
         StreamUtils.slurpUntilBoundary( inStream, byteBoundary );
@@ -340,7 +331,7 @@ public class SaneServletRequest
             HashMap<String,String> partHeaders = new HashMap<String,String>();
             String currentLogicalLine = null;
             while( true ) { // for all headers in this part
-                String line = FormDataUtils.readStringLine( inStream, charset );
+                String line = FormDataUtils.readStringLine( inStream, FORM_CHARSET );
                 if( line == null ) {
                     hasData = false;
                     break outer; // end of stream -- we don't want heads and no content
@@ -381,7 +372,7 @@ public class SaneServletRequest
                 partMime = "text/plain"; // apparently the default
             }
 
-            String partCharset     = charset; // FIXME?
+            String partCharset     = FORM_CHARSET; // FIXME?
             String partName        = null;
             String partDisposition = null;
             String disposition     = partHeaders.get( "content-disposition" );
@@ -891,6 +882,11 @@ public class SaneServletRequest
      * Name of a POSTed parameter that represents the submit button.
      */
     public static final String LID_SUBMIT_PARAMETER_NAME = "lid-submit";
+
+    /**
+     * The character set for forms.
+     */
+    public static final String FORM_CHARSET = "UTF-8";
 
     /**
      * Bridges the SaneCookie interface into the servlet cookies.
