@@ -20,6 +20,7 @@ import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.OnDemandTransactionFactory;
 import org.infogrid.meshbase.transaction.Transaction;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.SmartFactory;
 import org.infogrid.util.http.SaneRequest;
@@ -37,17 +38,20 @@ public class HttpShellOnDemandTransactionFactory
      * @param request the incoming request
      * @param handlers the HttpShellHandlers to invoke when a Transaction is created
      * @param mainMeshBase the main MeshBase
+     * @param now the time the HttpShell was invoked
      */
     public HttpShellOnDemandTransactionFactory(
             SaneRequest            request,
             List<HttpShellHandler> handlers,
-            MeshBase               mainMeshBase )
+            MeshBase               mainMeshBase,
+            TimeStampValue         now )
     {
         super();
 
         theRequest      = request;
         theHandlers     = handlers;
         theMainMeshBase = mainMeshBase;
+        theNow          = now;
     }
 
     /**
@@ -75,7 +79,7 @@ public class HttpShellOnDemandTransactionFactory
 
                     try {
                         for( HttpShellHandler handler : theHandlers ) {
-                            handler.afterTransactionStart( theRequest, theTransactions, theMainMeshBase );
+                            handler.afterTransactionStart( theRequest, theTransactions, theMainMeshBase, theNow );
                         }
                     } catch( HttpShellException ex ) {
                         throw new RuntimeException( ex ); // not sure that's the best
@@ -105,6 +109,11 @@ public class HttpShellOnDemandTransactionFactory
      * The main MeshBase.
      */
     protected MeshBase theMainMeshBase;
+
+    /**
+     * The time the HttpShell was invoked.
+     */
+    protected TimeStampValue theNow;
 
     /**
      * The on-demand Transactions.

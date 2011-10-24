@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.util.SmartFactory;
 import org.infogrid.util.http.SaneRequest;
 
@@ -40,11 +41,13 @@ public interface HttpShellHandler
      *
      * @param request the incoming request
      * @param defaultMeshBase the default MeshBase to use
+     * @param now the time at which the HttpShell was invoked
      * @throws HttpShellException a problem occurred, check cause for details
      */
     public void beforeTransactionStart(
             SaneRequest                                     request,
-            MeshBase                                        defaultMeshBase )
+            MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now )
         throws
             HttpShellException;
 
@@ -56,13 +59,15 @@ public interface HttpShellHandler
      * @param txs the Transactions used by this invocation of the HttpShell
      *            so far at the time of invocation of this method
      * @param defaultMeshBase the default MeshBase to use
+     * @param now the time at which the HttpShell was invoked
      * @throws HttpShellException a problem occurred, check cause for details
      * @throws TransactionException a problem with the Transaction occurred
      */
     public void afterTransactionStart(
             SaneRequest                                     request,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
-            MeshBase                                        defaultMeshBase )
+            MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now )
         throws
             HttpShellException,
             TransactionException;
@@ -75,6 +80,7 @@ public interface HttpShellHandler
      * @param vars the variables set by the HttpShell
      * @param txs the Transactions used by this invocation of the HttpShell
      * @param defaultMeshBase the default MeshBase to use
+     * @param now the time at which the HttpShell was invoked
      * @throws HttpShellException a problem occurred, check cause for details
      * @throws TransactionException a problem with the Transaction occurred
      */
@@ -82,7 +88,8 @@ public interface HttpShellHandler
             SaneRequest                                     request,
             Map<String,MeshObject>                          vars,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
-            MeshBase                                        defaultMeshBase )
+            MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now )
         throws
             HttpShellException,
             TransactionException;
@@ -94,6 +101,7 @@ public interface HttpShellHandler
      * @param vars the variables set by the HttpShell
      * @param txs the Transactions used by this invocation of the HttpShell
      * @param defaultMeshBase the default MeshBase to use
+     * @param now the time at which the HttpShell was invoked
      * @throws HttpShellException a problem occurred, check cause for details
      * @throws TransactionException a problem with the Transaction occurred
      */
@@ -101,7 +109,8 @@ public interface HttpShellHandler
             SaneRequest                                     request,
             Map<String,MeshObject>                          vars,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
-            MeshBase                                        defaultMeshBase )
+            MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now )
         throws
             HttpShellException,
             TransactionException;
@@ -113,6 +122,7 @@ public interface HttpShellHandler
      * @param vars the variables set by the HttpShell
      * @param txs the (now closed) Transactions used by this invocation of the HttpShell
      * @param defaultMeshBase the default MeshBase to use
+     * @param now the time at which the HttpShell was invoked
      * @param maybeThrown if a Throwable was thrown, it is passed here
      * @return a URL where to redirect to, or null
      * @throws HttpShellException a problem occurred, check cause for details
@@ -122,6 +132,7 @@ public interface HttpShellHandler
             Map<String,MeshObject>                          vars,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
             MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now,
             Throwable                                       maybeThrown )
         throws
             HttpShellException;

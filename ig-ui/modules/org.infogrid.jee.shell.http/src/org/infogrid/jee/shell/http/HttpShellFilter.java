@@ -67,6 +67,7 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.PropertyValueParsingException;
 import org.infogrid.model.primitives.RoleType;
+import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.modelbase.MeshTypeWithIdentifierNotFoundException;
 import org.infogrid.modelbase.ModelBase;
 import org.infogrid.util.CreateWhenNeeded;
@@ -198,10 +199,11 @@ public class HttpShellFilter
                 }
             }
         }
-        HashMap<String,MeshObject>  variables     = new HashMap<String,MeshObject>();
-        Throwable                   thrown        = null;
+        HashMap<String,MeshObject> variables = new HashMap<String,MeshObject>();
+        Throwable                  thrown    = null;
+        TimeStampValue             now       = TimeStampValue.now();
 
-        HttpShellOnDemandTransactionFactory txFact = new HttpShellOnDemandTransactionFactory( lidRequest, handlers, theMainMeshBase );
+        HttpShellOnDemandTransactionFactory txFact = new HttpShellOnDemandTransactionFactory( lidRequest, handlers, theMainMeshBase, now );
 
         MSmartFactory<MeshBase,OnDemandTransaction,Void> txs = MSmartFactory.create(
                 txFact,
@@ -210,7 +212,7 @@ public class HttpShellFilter
 
         // invoke pre-transaction
         for( HttpShellHandler handler : handlers ) {
-            handler.beforeTransactionStart( lidRequest, theMainMeshBase );
+            handler.beforeTransactionStart( lidRequest, theMainMeshBase, now );
         }
 
         try {
@@ -274,7 +276,7 @@ public class HttpShellFilter
 
             // invoke after access
             for( HttpShellHandler handler : handlers ) {
-                handler.afterAccess( lidRequest, variables, txs, theMainMeshBase );
+                handler.afterAccess( lidRequest, variables, txs, theMainMeshBase, now );
             }
 
             for( Map.Entry<String,MeshObject> entry : variables.entrySet() ) {
@@ -563,7 +565,7 @@ public class HttpShellFilter
 
             // invoke pre-transaction
             for( HttpShellHandler handler : handlers ) {
-                handler.beforeTransactionEnd( lidRequest, variables, txs, theMainMeshBase );
+                handler.beforeTransactionEnd( lidRequest, variables, txs, theMainMeshBase, now );
             }
 
         } catch( HttpShellException ex ) {
@@ -665,7 +667,7 @@ public class HttpShellFilter
             }
             // invoke post-transaction
             for( HttpShellHandler handler : handlers ) {
-                String ret2 = handler.afterTransactionEnd( lidRequest, variables, txs, theMainMeshBase, thrown );
+                String ret2 = handler.afterTransactionEnd( lidRequest, variables, txs, theMainMeshBase, now, thrown );
                 if( ret2 == null ) {
                     continue;
                 }

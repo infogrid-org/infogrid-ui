@@ -19,6 +19,7 @@ import org.infogrid.mesh.MeshObject;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.transaction.OnDemandTransaction;
 import org.infogrid.meshbase.transaction.TransactionException;
+import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.util.SmartFactory;
 import org.infogrid.util.http.SaneRequest;
 
@@ -52,7 +53,8 @@ public abstract class AbstractHttpShellHandler
      */
     public void beforeTransactionStart(
             SaneRequest                                     request,
-            MeshBase                                        defaultMeshBase )
+            MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now )
         throws
             HttpShellException
     {
@@ -65,7 +67,8 @@ public abstract class AbstractHttpShellHandler
     public void afterTransactionStart(
             SaneRequest                                     request,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
-            MeshBase                                        defaultMeshBase )
+            MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now )
         throws
             HttpShellException,
             TransactionException
@@ -80,7 +83,8 @@ public abstract class AbstractHttpShellHandler
             SaneRequest                                     request,
             Map<String,MeshObject>                          vars,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
-            MeshBase                                        defaultMeshBase )
+            MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now )
         throws
             HttpShellException,
             TransactionException
@@ -95,7 +99,8 @@ public abstract class AbstractHttpShellHandler
             SaneRequest                                     request,
             Map<String,MeshObject>                          vars,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
-            MeshBase                                        defaultMeshBase )
+            MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now )
         throws
             HttpShellException,
             TransactionException
@@ -111,6 +116,7 @@ public abstract class AbstractHttpShellHandler
             Map<String,MeshObject>                          vars,
             SmartFactory<MeshBase,OnDemandTransaction,Void> txs,
             MeshBase                                        defaultMeshBase,
+            TimeStampValue                                  now,
             Throwable                                       maybeThrown )
         throws
             HttpShellException
