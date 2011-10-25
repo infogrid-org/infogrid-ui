@@ -60,6 +60,7 @@ public class CallJspoTag
         theAction        = null;
         theSubmitLabel   = null;
         theActivated     = false;
+        theCssClass      = null;
         theOldCallRecord = null;
 
         super.initializeToDefaults();
@@ -181,6 +182,29 @@ public class CallJspoTag
     }
 
     /**
+     * Obtain value of the cssClass property.
+     *
+     * @return value of the cssClass property
+     * @see #setCssClass
+     */
+    public String getCssClass()
+    {
+        return theCssClass;
+    }
+
+    /**
+     * Set value of the cssClass property.
+     *
+     * @param newValue new value of the cssClass property
+     * @see #getCssClass
+     */
+    public void setCssClass(
+            String newValue )
+    {
+        theCssClass = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -259,6 +283,10 @@ public class CallJspoTag
 
         out.print( "<div class=\"" );
         out.print( OverlayTag.class.getName().replace( '.', '-' ) );
+        if( theCssClass != null && theCssClass.length() > 0 ) {
+            out.print( " " );
+            out.print( theCssClass );
+        }
         out.print( "\" id=\"" + domId + "\"" );
         out.println( ">" );
 
@@ -339,6 +367,11 @@ public class CallJspoTag
      * If the overlay should be activated.
      */
     protected boolean theActivated;
+
+    /**
+     * Additional CSS class, if any.
+     */
+    protected String theCssClass;
 
     /**
      * The CallJspXRecord to restore.
