@@ -202,14 +202,26 @@ public abstract class AbstractRestInfoGridBodyTag
             } else if( propertyValue instanceof TypedMeshObjectFacade ) {
                 return ((TypedMeshObjectFacade)propertyValue).get_Delegate();
             } else if( propertyValue instanceof MeshObjectIdentifier ) {
-                return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (MeshObjectIdentifier)propertyValue );
+                if( theFormatter.isTrue( getIgnore() )) {
+                    return ((RestfulJeeFormatter)theFormatter).findMeshObject( (MeshObjectIdentifier)propertyValue );
+                } else {
+                    return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (MeshObjectIdentifier)propertyValue );
+                }
             } else if( propertyValue instanceof String ) {
-                return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (String) propertyValue );
+                if( theFormatter.isTrue( getIgnore() )) {
+                    return ((RestfulJeeFormatter)theFormatter).findMeshObject( (String) propertyValue );
+                } else {
+                    return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (String) propertyValue );
+                }
             } else {
                 throw new JspException( "Unexpected type " + propertyValue.getClass().getName() + ": " + propertyValue );
             }
         } else {
-            return lookupMeshObjectOrThrow( propertyNameValue );
+            if( theFormatter.isTrue( getIgnore() )) {
+                return lookupMeshObject( propertyNameValue );
+            } else {
+                return lookupMeshObjectOrThrow( propertyNameValue );
+            }
         }
     }
 
