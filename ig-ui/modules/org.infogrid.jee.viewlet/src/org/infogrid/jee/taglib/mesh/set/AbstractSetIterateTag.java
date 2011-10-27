@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -286,6 +286,9 @@ public abstract class AbstractSetIterateTag<T>
             return false;
         }
         if( theStatus == Status.PROCESS_FOOTER_AND_LAST_ROW ) {
+            return false;
+        }
+        if( theStatus == Status.PROCESS_SINGLE_ROW ) {
             return false;
         }
         return true;
