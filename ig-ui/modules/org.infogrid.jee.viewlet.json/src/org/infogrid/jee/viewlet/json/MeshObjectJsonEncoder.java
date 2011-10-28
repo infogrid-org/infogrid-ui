@@ -105,6 +105,8 @@ public class MeshObjectJsonEncoder {
             } catch (NumberFormatException ex) {
                 throw new AttributeValueException("The traversal level must be 0 or more", "4");
             }
+        } else {
+            theTargetLevel = 0;
         }
         value = theSaneRequest.getUrlArgument(DATEENCODING_ATTRIBUTE_NAME); // pesky date encoding
         if (value != null) {
@@ -115,11 +117,14 @@ public class MeshObjectJsonEncoder {
             } else {
                 throw new AttributeValueException("The date encoding value must be either: " + DATEENCODING_VALUE_FN + ", or: " + DATEENCODING_VALUE_STR, "6");
             }
+        } else {
+            theDateEncoding = DATE_ENCODING_STR;
         }
         String[] values = theSaneRequest.getMultivaluedUrlArgument(IGNOREBLESSING_ATTRIBUTE_NAME); // unwanted blessings
-        theIgnoredBlessings.addAll(Arrays.asList(values));
+        if (values != null && values.length != 0) {
+            theIgnoredBlessings.addAll(Arrays.asList(values));
+        }
         value = theSaneRequest.getUrlArgument(META_ATTRIBUTE_NAME); // output meta: only, include, no|false
-        theMeta = Meta.yes; // default output meta with the entity
         if (value != null) {
             if ("YES".equals(value.toUpperCase()) || "TRUE".equals(value.toUpperCase())) {
                 theMeta = Meta.yes;
@@ -128,12 +133,16 @@ public class MeshObjectJsonEncoder {
             } else if ("ONLY".equals(value.toUpperCase())) {
                 theMeta = Meta.only;
             }
+        } else {
+            theMeta = Meta.yes; // default output meta with the entity
         }
         value = theSaneRequest.getUrlArgument(TRIMSA_ATTRIBUTE_NAME); // remove the SA prefix
         if (value != null) {
             if ("YES".equals(value.toUpperCase()) || "TRUE".equals(value.toUpperCase())) {
                 theTrimSa = true;
             }
+        } else {
+            theTrimSa = true;
         }
     }
 
