@@ -15,11 +15,14 @@
 package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
+import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.mesh.TypedMeshObjectFacade;
 import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.text.StringifierException;
@@ -48,6 +51,7 @@ public class PropertyTag
     @Override
     protected void initializeToDefaults()
     {
+        theMeshObject           = null;
         theMeshObjectName       = null;
         theMeshObjectVarName    = null;
         thePropertyTypeName     = null;
@@ -60,6 +64,29 @@ public class PropertyTag
         theState                = null;
 
         super.initializeToDefaults();
+    }
+
+    /**
+     * Obtain value of the meshObject property.
+     *
+     * @return value of the meshObject property
+     * @see #setMeshObject
+     */
+    public final Object getMeshObject()
+    {
+        return theMeshObject;
+    }
+
+    /**
+     * Set value of the meshObject property.
+     *
+     * @param newValue new value of the meshObject property
+     * @see #getMeshObject
+     */
+    public final void setMeshObject(
+            Object newValue )
+    {
+        theMeshObject = newValue;
     }
 
     /**
@@ -315,18 +342,49 @@ public class PropertyTag
         MeshObject   obj  = null;
         PropertyType type = null;
 
-        if( theMeshObjectName != null ) {
+        if( theMeshObject != null ) {
+            if( theMeshObjectName != null ) {
+                throw new JspException( "Must not specify both meshObject and meshObjectName" );
+            }
+            if( theMeshObjectVarName != null ) {
+                throw new JspException( "Must not specify both meshObject and meshObjectVarName" );
+            }
+
+            if( theMeshObject instanceof MeshObject ) {
+                obj = (MeshObject) theMeshObject;
+            } else if( theMeshObject instanceof TypedMeshObjectFacade ) {
+                obj = ((TypedMeshObjectFacade)theMeshObject).get_Delegate();
+            } else if( theMeshObject instanceof MeshObjectIdentifier ) {
+                if( theFormatter.isTrue( getIgnore() )) {
+                    obj = ((RestfulJeeFormatter)theFormatter).findMeshObject( (MeshObjectIdentifier)theMeshObject );
+                } else {
+                    obj = ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (MeshObjectIdentifier)theMeshObject );
+                }
+            } else if( theMeshObject instanceof String ) {
+                if( theFormatter.isTrue( getIgnore() )) {
+                    obj = ((RestfulJeeFormatter)theFormatter).findMeshObject( (String) theMeshObject );
+                } else {
+                    obj = ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (String) theMeshObject );
+                }
+            } else {
+                throw new JspException( "Unexpected type " + theMeshObject.getClass().getName() + ": " + theMeshObject );
+            }
+
+        } else if( theMeshObjectName != null ) {
             if( theMeshObjectVarName != null ) {
                 throw new JspException( "Must not specify both meshObjectName and meshObjectVarName" );
             }
-            obj = lookupMeshObjectOrThrow( theMeshObjectName );
-
-            if( obj == null ) {
-                // if we get here, ignore is necessarily true
-                return SKIP_BODY;
+            if( theFormatter.isTrue( getIgnore() )) {
+                obj = lookupMeshObject( theMeshObjectName );
+            } else {
+                obj = lookupMeshObjectOrThrow( theMeshObjectName );
             }
         } else if( theMeshObjectVarName == null ) {
-            throw new JspException( "Must specify either meshObjectName or meshObjectVarName" );
+            throw new JspException( "Must specify either meshObject, meshObjectName or meshObjectVarName" );
+        }
+        if( obj == null ) {
+            // if we get here, ignore is necessarily true
+            return SKIP_BODY;
         }
         
         if( thePropertyType != null ) {
@@ -396,6 +454,11 @@ public class PropertyTag
         
         return SKIP_BODY;
     }
+
+    /**
+     * The MeshObject to render.
+     */
+    protected Object theMeshObject;
 
     /**
      * String containing the name of the bean that is the MeshObject whose property we render.

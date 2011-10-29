@@ -216,7 +216,7 @@ public abstract class AbstractPropertyTestTag
             JspException,
             IgnoreException
     {
-        MeshObject obj    = lookupMeshObjectOrThrow( "meshObject", meshObject, "meshObjectName", meshObjectName );
+        MeshObject obj = lookupMeshObjectOrThrow( "meshObject", meshObject, "meshObjectName", meshObjectName );
 
         PropertyType  type  = null;
         PropertyValue value = null;

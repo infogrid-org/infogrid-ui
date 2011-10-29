@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.logic;
 
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.primitives.PropertyValue;
 
 /**
@@ -48,6 +49,11 @@ public class IfNullTag
             JspException,
             IgnoreException
     {
+        if( thePropertyType == null || thePropertyTypeName == null ) {
+            MeshObject obj = lookupMeshObject( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
+            return obj == null;
+        }
+
         PropertyValue value = evaluate();
 
         return value == null;

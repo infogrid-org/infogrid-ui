@@ -357,6 +357,10 @@
         <name>property</name>
         <tag-class>org.infogrid.jee.taglib.mesh.PropertyTag</tag-class>
         <attribute>
+            <name>meshObject</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>meshObjectName</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
