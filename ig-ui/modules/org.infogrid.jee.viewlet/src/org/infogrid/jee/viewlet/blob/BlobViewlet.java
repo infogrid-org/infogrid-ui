@@ -16,6 +16,8 @@ package org.infogrid.jee.viewlet.blob;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+import org.infogrid.jee.ServletExceptionWithHttpStatusCode;
 import org.infogrid.jee.templates.BinaryStructuredResponseSection;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.AbstractJeeViewlet;
@@ -23,7 +25,6 @@ import org.infogrid.jee.viewlet.DefaultJeeViewedMeshObjects;
 import org.infogrid.jee.viewlet.DefaultJeeViewletFactoryChoice;
 import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
 import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
-import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
@@ -162,6 +163,8 @@ public class BlobViewlet
             BinaryStructuredResponseSection section = structured.getDefaultBinarySection();
             section.setContent( content.value() );
             section.setMimeType( content.getMimeType() );
+        } else {
+            throw new ServletExceptionWithHttpStatusCode( HttpServletResponse.SC_NOT_FOUND ); // 404
         }
     }
 
