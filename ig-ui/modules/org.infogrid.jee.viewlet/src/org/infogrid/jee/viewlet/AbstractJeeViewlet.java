@@ -262,8 +262,11 @@ public abstract class AbstractJeeViewlet
         throws
             ServletException
     {
-        // if no HTML title was set, set one
+        // if no HTML title was set but it's a non-binary html response, set one
 
+        if( response.isEmpty() ) {
+            return;
+        }
         TextStructuredResponseSection titleSection = response.obtainTextSection( StructuredResponse.HTML_TITLE_SECTION );
         if( titleSection.isEmpty() ) {
             InfoGridWebApp app = InfoGridWebApp.getSingleton();
