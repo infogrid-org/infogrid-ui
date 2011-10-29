@@ -49,7 +49,7 @@ public class IfNullTag
             JspException,
             IgnoreException
     {
-        if( thePropertyType == null || thePropertyTypeName == null ) {
+        if( thePropertyType == null && thePropertyTypeName == null ) {
             MeshObject obj = lookupMeshObject( "meshObject", theMeshObject, "meshObjectName", theMeshObjectName );
             return obj == null;
         }
