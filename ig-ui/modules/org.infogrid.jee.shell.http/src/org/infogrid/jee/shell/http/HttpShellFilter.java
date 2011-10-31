@@ -513,6 +513,9 @@ public class HttpShellFilter
                         if( radiogroupName == null ) {
                             continue;
                         }
+                        OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
+                        tx.obtain();
+
                         String doBless = lidRequest.getPostedArgument( radiogroupName );
                         if( doBless != null && doBless.equals( key + var2Name + RADIOBOX_TAG )) {
                             // relate and bless
