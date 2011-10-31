@@ -382,7 +382,7 @@ public class PropertyTag
         } else if( theMeshObjectVarName == null ) {
             throw new JspException( "Must specify either meshObject, meshObjectName or meshObjectVarName" );
         }
-        if( obj == null ) {
+        if( theMeshObjectVarName == null && obj == null ) {
             // if we get here, ignore is necessarily true
             return SKIP_BODY;
         }
