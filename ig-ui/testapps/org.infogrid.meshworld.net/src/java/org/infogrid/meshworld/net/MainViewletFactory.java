@@ -12,47 +12,50 @@
 // All rights reserved.
 //
 
-package org.infogrid.meshworld;
+package org.infogrid.meshworld.net;
 
 import java.util.ArrayList;
-import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.DefaultJspViewlet;
-import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
 import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.jee.viewlet.bulk.BulkLoaderViewlet;
 import org.infogrid.jee.viewlet.bulkexporter.BulkExporterViewlet;
 import org.infogrid.jee.viewlet.log4j.Log4jConfigurationViewlet;
-import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
+import org.infogrid.jee.viewlet.meshbase.net.AllNetMeshObjectsViewlet;
+import org.infogrid.jee.viewlet.meshbase.net.ProxiesViewlet;
+import org.infogrid.jee.viewlet.meshbase.net.ProxyViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
 import org.infogrid.jee.viewlet.module.ModuleDirectoryViewlet;
+import org.infogrid.jee.viewlet.net.JeeNetMeshObjectsToView;
+import org.infogrid.jee.viewlet.probe.shadow.ShadowAwareAllMeshBasesViewlet;
 import org.infogrid.mesh.IllegalPropertyTypeException;
-import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
+import org.infogrid.mesh.net.NetMeshObject;
+import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.model.Wiki.WikiSubjectArea;
 import org.infogrid.model.primitives.BlobDataType;
 import org.infogrid.model.primitives.BlobValue;
 import org.infogrid.model.primitives.PropertyType;
+import org.infogrid.util.ArrayHelper;
+import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewletFactory;
 import org.infogrid.viewlet.MeshObjectsToView;
 import org.infogrid.viewlet.ViewletFactoryChoice;
-import org.infogrid.util.ArrayHelper;
-import org.infogrid.util.logging.Log;
 
 /**
- * ViewletFactory for the MeshWorld application's main screen.
+ * ViewletFactory for the NetMeshWorld application's main screen.
  */
-public class MainMeshWorldViewletFactory
+public class MainViewletFactory
         extends
             AbstractViewletFactory
 {
-    private static final Log log = Log.getLogInstance( MainMeshWorldViewletFactory.class ); // our own, private logger
+    private static final Log log = Log.getLogInstance( MainViewletFactory.class ); // our own, private logger
 
     /**
      * Constructor.
      */
-    public MainMeshWorldViewletFactory()
+    public MainViewletFactory()
     {
-        super( JeeViewlet.class.getName() );
+        super( "org.infogrid.jee.viewlet.JeeViewlet" );
     }
 
     /**
@@ -65,22 +68,28 @@ public class MainMeshWorldViewletFactory
     public ViewletFactoryChoice [] determineFactoryChoicesIgnoringType(
             MeshObjectsToView toView )
     {
-        JeeMeshObjectsToView realToView = (JeeMeshObjectsToView) toView;
-
+        JeeNetMeshObjectsToView realToView = (JeeNetMeshObjectsToView) toView;
         ArrayList<ViewletFactoryChoice> ret = new ArrayList<ViewletFactoryChoice>();
         
-        MeshObject subject = toView.getSubject();
+        NetMeshObject subject = (NetMeshObject) toView.getSubject();
         if( subject.getMeshBase().getHomeObject() == subject ) {
-            ret.add( AllMeshObjectsViewlet.choice(     realToView, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( AllMeshTypesViewlet.choice(       realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( Log4jConfigurationViewlet.choice( realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( ModuleDirectoryViewlet.choice(    realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( BulkLoaderViewlet.choice(         realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( BulkExporterViewlet.choice(         realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( AllNetMeshObjectsViewlet.choice(       realToView, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
+            ret.add( AllMeshTypesViewlet.choice(            realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( Log4jConfigurationViewlet.choice(      realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( ModuleDirectoryViewlet.choice(         realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( BulkLoaderViewlet.choice(              realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( BulkExporterViewlet.choice(              realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( ProxiesViewlet.choice(                 realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( ShadowAwareAllMeshBasesViewlet.choice( realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+
+            Proxy p = realToView.getRequestedProxy();
+            if( p != null ) {
+                ret.add( ProxyViewlet.choice( realToView, ViewletFactoryChoice.PERFECT_MATCH_QUALITY+1.d )); // not quite perfect
+            }
         }
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
             ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
-            ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet",    ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
+            ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.wikiobject.WikiObjectEditViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY+1.0f ));
         }
         for( PropertyType type : subject.getAllPropertyTypes()) {
             if( type.getDataType() instanceof BlobDataType ) {
@@ -97,9 +106,10 @@ public class MainMeshWorldViewletFactory
                 }
             }
         }
-        ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet",         ViewletFactoryChoice.BAD_MATCH_QUALITY ));
-        ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-        ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",         ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.graphtree.GraphTreeViewlet",                ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet",        ViewletFactoryChoice.BAD_MATCH_QUALITY ));
+        ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.propertysheet.net.NetPropertySheetViewlet", ViewletFactoryChoice.BAD_MATCH_QUALITY - 1.0 )); // slightly better
+        ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.objectset.ObjectSetViewlet",                ViewletFactoryChoice.BAD_MATCH_QUALITY ));
 
         return ArrayHelper.copyIntoNewArray( ret, ViewletFactoryChoice.class );
     }

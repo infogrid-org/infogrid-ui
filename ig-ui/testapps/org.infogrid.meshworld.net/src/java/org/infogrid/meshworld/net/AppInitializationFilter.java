@@ -12,19 +12,21 @@
 // All rights reserved.
 //
 
-package org.infogrid.meshworld;
+package org.infogrid.meshworld.net;
 
 import java.io.IOException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import org.infogrid.jee.rest.defaultapp.store.AbstractStoreRestfulAppInitializationFilter;
+import org.infogrid.jee.rest.net.local.defaultapp.store.AbstractStoreNetLocalRestfulAppInitializationFilter;
 import org.infogrid.jee.templates.defaultapp.AppInitializationException;
-import org.infogrid.jee.viewlet.DefaultJeeMeshObjectsToViewFactory;
 import org.infogrid.jee.viewlet.JeeMeshObjectsToViewFactory;
-import org.infogrid.meshbase.MeshBase;
-import org.infogrid.meshbase.MeshBaseIdentifierFactory;
-import org.infogrid.meshbase.MeshBaseNameServer;
+import org.infogrid.jee.viewlet.net.DefaultJeeNetMeshObjectsToViewFactory;
+import org.infogrid.meshbase.net.IterableNetMeshBase;
+import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
+import org.infogrid.meshbase.net.NetMeshBaseNameServer;
+import org.infogrid.meshbase.net.sweeper.DefaultNetIterableSweeper;
+import org.infogrid.meshbase.net.sweeper.UnnecessaryReplicasSweepPolicy;
 import org.infogrid.model.traversal.TraversalTranslator;
 import org.infogrid.model.traversal.xpath.XpathTraversalTranslator;
 import org.infogrid.store.m.MStore;
@@ -39,16 +41,16 @@ import org.infogrid.viewlet.ViewletFactory;
 /**
  * Initializes application-level functionality.
  */
-public class MeshWorldAppInitializationFilter
+public class AppInitializationFilter
         extends
-            AbstractStoreRestfulAppInitializationFilter
+            AbstractStoreNetLocalRestfulAppInitializationFilter
 {
     /**
-     * Constructor.
+     * Constructor for subclasses only, use factory method.
      */
-    public MeshWorldAppInitializationFilter()
+    public AppInitializationFilter()
     {
-        // nothing
+        // nothing right now
     }
 
     /**
@@ -64,19 +66,26 @@ public class MeshWorldAppInitializationFilter
                 IOException,
                 AppInitializationException
     {
-        String         name    = "java:comp/env/jdbc/meshworlddb";
+        String         name    = "java:comp/env/jdbc/org.infogrid.meshworld.net";
         InitialContext ctx     = null;
         Throwable      toThrow = null;
 
         try {
             // Database access via JNDI
-            ResourceHelper rh = ResourceHelper.getInstance( MeshWorldAppInitializationFilter.class );
+            ResourceHelper rh = ResourceHelper.getInstance( AppInitializationFilter.class );
 
             ctx                      = new InitialContext();
             DataSource theDataSource = (DataSource) ctx.lookup( name );
 
-            theMeshStore = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "MeshObjectTable", "MeshObjects" ));
+            theMeshStore        = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "MeshObjectTable",  "MeshObjects" ));
+            theProxyStore       = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "ProxyStoreTable",  "Proxies"       ));
+            theShadowStore      = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "ShadowTable",      "Shadows"       ));
+            theShadowProxyStore = MysqlStore.create( theDataSource, rh.getResourceStringOrDefault( "ShadowProxyTable", "ShadowProxies" ));
+
             theMeshStore.initializeIfNecessary();
+            theProxyStore.initializeIfNecessary();
+            theShadowStore.initializeIfNecessary();
+            theShadowProxyStore.initializeIfNecessary();
 
         } catch( NamingException ex ) {
             toThrow = new NamingReportingException( name, ctx, ex );
@@ -91,6 +100,15 @@ public class MeshWorldAppInitializationFilter
         if( toThrow != null ) {
             theMeshStore = MStore.create();
             theMeshStore.initializeIfNecessary();
+
+            theProxyStore = MStore.create();
+            theProxyStore.initializeIfNecessary();
+
+            theShadowStore = MStore.create();
+            theShadowStore.initializeIfNecessary();
+
+            theShadowProxyStore = MStore.create();
+            theShadowProxyStore.initializeIfNecessary();
 
             throw new AppInitializationException(
                     new CompoundException(
@@ -115,19 +133,20 @@ public class MeshWorldAppInitializationFilter
     {
         super.initializeContextObjects( incomingRequest, rootContext );
 
-        MeshBase mb = rootContext.findContextObjectOrThrow( MeshBase.class );
+        IterableNetMeshBase mb = rootContext.findContextObjectOrThrow( IterableNetMeshBase.class );
+        mb.setSweeper( DefaultNetIterableSweeper.create( mb, UnnecessaryReplicasSweepPolicy.create( 1000L )));
 
-        MeshBaseIdentifierFactory mbIdentifierFact = rootContext.findContextObject( MeshBaseIdentifierFactory.class );
-        MeshBaseNameServer        mbNameServer     = rootContext.findContextObject( MeshBaseNameServer.class );
+        NetMeshBaseIdentifierFactory mbIdentifierFact = rootContext.findContextObject( NetMeshBaseIdentifierFactory.class );
+        NetMeshBaseNameServer        mbNameServer     = rootContext.findContextObject( NetMeshBaseNameServer.class );
 
         TraversalTranslator translator = XpathTraversalTranslator.create( mb );
         rootContext.addContextObject( translator );
 
-        ViewletFactory mainVlFact = new MainMeshWorldViewletFactory();
+        ViewletFactory mainVlFact = new MainViewletFactory();
         rootContext.addContextObject( mainVlFact );
 
         @SuppressWarnings("unchecked")
-        JeeMeshObjectsToViewFactory toViewFact = DefaultJeeMeshObjectsToViewFactory.create(
+        JeeMeshObjectsToViewFactory toViewFact = DefaultJeeNetMeshObjectsToViewFactory.create(
                 mb.getIdentifier(),
                 mbIdentifierFact,
                 mbNameServer,

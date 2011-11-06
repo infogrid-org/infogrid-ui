@@ -22,7 +22,7 @@
  <dependencies>
   <requires name="org.infogrid.util.logging.log4j">
    <parameter name="org.infogrid.util.logging.log4j.ConfigPropertiesFile" value="org/infogrid/meshworld/net/Log.properties"/>
-   <parameter name="org.infogrid.util.ResourceHelper.ApplicationResourceBundle" value="org/infogrid/meshworld/net/NetMeshWorld" />
+   <parameter name="org.infogrid.util.ResourceHelper.ApplicationResourceBundle" value="org/infogrid/meshworld/net/App" />
   </requires>
   <requires name="org.infogrid.comm.pingpong"/>
   <requires name="org.infogrid.model.Tagging"/>

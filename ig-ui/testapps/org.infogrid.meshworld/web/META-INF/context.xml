@@ -17,7 +17,7 @@
   <Resource auth="Container"
             type="javax.sql.DataSource"
             driverClassName="com.mysql.jdbc.Driver"
-            name="jdbc/meshworlddb"
+            name="jdbc/org.infogrid.meshworld"
             url="jdbc:mysql://localhost:3306/meshworlddb"
             username=""
             password=""

@@ -199,3 +199,7 @@ span.org-infogrid-util-MeshTypeIdentifier {
 div.org-infogrid-jee-viewlet-meshbase-net-AllNetMeshObjectsViewlet > table.set > tbody > tr > td {
     font-size: 0.7em;
 }
+a.built-on-infogrid {
+    float: right;
+    margin-top: -8px;
+}
