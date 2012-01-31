@@ -57,33 +57,33 @@
   <div class="left">
    <c:if test="${Viewlet.navigationBackMeshObject != null}">
     <v:navigateToPage meshObject="${Viewlet.navigationBackMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
-     <img src="${CONTEXT}/s/images/control_rewind_blue.png" alt="start" />
+     <img src="${CONTEXT}/s/images/control_rewind_blue.png" alt="Previous" />
     </v:navigateToPage>
    </c:if>
    <c:if test="${Viewlet.navigationBackMeshObject == null}">
-    <img src="${CONTEXT}/s/images/control_rewind.png" alt="start" />
+    <img src="${CONTEXT}/s/images/control_rewind.png" alt="Previous (disabled)" />
    </c:if>
   </div>
 
   <div class="right">
    <c:if test="${Viewlet.navigationEndMeshObject != null}">
     <v:navigateToPage meshObject="${Viewlet.navigationEndMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
-     <img src="${CONTEXT}/s/images/control_end_blue.png" alt="start" />
+     <img src="${CONTEXT}/s/images/control_end_blue.png" alt="Go to last" />
     </v:navigateToPage>
    </c:if>
    <c:if test="${Viewlet.navigationEndMeshObject == null}">
-    <img src="${CONTEXT}/s/images/control_end.png" alt="start" />
+    <img src="${CONTEXT}/s/images/control_end.png" alt="Go to last (disabled)" />
    </c:if>
   </div>
 
   <div class="right">
    <c:if test="${Viewlet.navigationForwardMeshObject != null}">
     <v:navigateToPage meshObject="${Viewlet.navigationForwardMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
-     <img src="${CONTEXT}/s/images/control_fastforward_blue.png" alt="start" />
+     <img src="${CONTEXT}/s/images/control_fastforward_blue.png" alt="Next" />
     </v:navigateToPage>
    </c:if>
    <c:if test="${Viewlet.navigationForwardMeshObject == null}">
-    <img src="${CONTEXT}/s/images/control_fastforward.png" alt="start" />
+    <img src="${CONTEXT}/s/images/control_fastforward.png" alt="Next (disabled)" />
    </c:if>
   </div>
   <div class="middle">
@@ -168,5 +168,50 @@
    </c:forEach>
   </tbody>
  </table>
+ <div class="nav">
+  <div class="left">
+   <c:if test="${Viewlet.navigationStartMeshObject != null}">
+    <v:navigateToPage meshObject="${Viewlet.navigationStartMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
+     <img src="${CONTEXT}/s/images/control_start_blue.png" alt="Go to start" />
+    </v:navigateToPage>
+   </c:if>
+   <c:if test="${Viewlet.navigationStartMeshObject == null}">
+    <img src="${CONTEXT}/s/images/control_start.png" alt="Go to start (disabled)" />
+   </c:if>
+  </div>
+
+  <div class="left">
+   <c:if test="${Viewlet.navigationBackMeshObject != null}">
+    <v:navigateToPage meshObject="${Viewlet.navigationBackMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
+     <img src="${CONTEXT}/s/images/control_rewind_blue.png" alt="Previous" />
+    </v:navigateToPage>
+   </c:if>
+   <c:if test="${Viewlet.navigationBackMeshObject == null}">
+    <img src="${CONTEXT}/s/images/control_rewind.png" alt="Previous (disabled)" />
+   </c:if>
+  </div>
+
+  <div class="right">
+   <c:if test="${Viewlet.navigationEndMeshObject != null}">
+    <v:navigateToPage meshObject="${Viewlet.navigationEndMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
+     <img src="${CONTEXT}/s/images/control_end_blue.png" alt="Go to last" />
+    </v:navigateToPage>
+   </c:if>
+   <c:if test="${Viewlet.navigationEndMeshObject == null}">
+    <img src="${CONTEXT}/s/images/control_end.png" alt="Go to last (disabled)" />
+   </c:if>
+  </div>
+
+  <div class="right">
+   <c:if test="${Viewlet.navigationForwardMeshObject != null}">
+    <v:navigateToPage meshObject="${Viewlet.navigationForwardMeshObject}" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet&page-length=${Viewlet.pageLength}&id-regex=${Viewlet.idRegex}&show-types=${Viewlet.showTypes}">
+     <img src="${CONTEXT}/s/images/control_fastforward_blue.png" alt="Next" />
+    </v:navigateToPage>
+   </c:if>
+   <c:if test="${Viewlet.navigationForwardMeshObject == null}">
+    <img src="${CONTEXT}/s/images/control_fastforward.png" alt="Next (disabled)" />
+   </c:if>
+  </div>
+ </div>
  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb.jsp" %>
 </v:viewlet>
