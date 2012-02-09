@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -119,13 +119,20 @@ public class SafeUnsafePostFilter
                 }
 
                 if( process ) {
-                    String formValue = sane.getPostedArgument( INPUT_FIELD_NAME );
+                    String [] formValues = sane.getMultivaluedPostedArgument( INPUT_FIELD_NAME );
 
-                    if( cookieValue == null || formValue == null ) {
+                    if( cookieValue == null || formValues == null || formValues.length == 0 ) {
                         isSafe = false;
                     } else {
                         String correctFormValue = calculateFormFieldValue( cookieValue );
-                        isSafe = formValue.equals( correctFormValue );
+                        isSafe = true;
+                        for( String formValue : formValues ) {
+                            // no harm if the same token is submitted more than once, but it better have the same value
+                            if( !formValue.equals( correctFormValue )) {
+                                isSafe = false;
+                                break;
+                            }
+                        }
                     }
                 }
             }
