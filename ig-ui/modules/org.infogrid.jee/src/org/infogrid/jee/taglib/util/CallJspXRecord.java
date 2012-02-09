@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -96,7 +96,7 @@ class CallJspXRecord
         if( value != null && type != null && type.length() > 0 ) {
             // check for correct type
             if( !ClassInstanceHelper.conforms( value, type )) {
-                throw new JspException( "Parameter " + name + " has a value that is not of type " + type );
+                throw new JspException( "Parameter " + name + " has a value that is not of type " + type + ": " + value.getClass().getName() );
             }
         }
 
