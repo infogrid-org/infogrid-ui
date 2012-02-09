@@ -198,5 +198,4 @@
    </c:if>
   </div>
  </div>
- <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb.jsp" %>
 </v:viewlet>

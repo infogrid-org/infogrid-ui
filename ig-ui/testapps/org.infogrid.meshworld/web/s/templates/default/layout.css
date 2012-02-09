@@ -203,3 +203,11 @@ a.built-on-infogrid {
     float: right;
     margin-top: -8px;
 }
+
+div.scroll-if-too-long {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.advice {
+    font-size: smaller;
+}

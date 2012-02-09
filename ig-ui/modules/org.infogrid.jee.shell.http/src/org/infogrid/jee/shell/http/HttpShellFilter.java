@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -318,9 +318,11 @@ public class HttpShellFilter
                             OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
                             for( String v : values ) {
-                                RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
-                                Transaction tx2 = tx.obtain();
-                                found1.unblessRelationship( toUnbless, found2 );
+                                if( v.length() > 0 ) { // support "none" as an option in select fields
+                                    RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                    Transaction tx2 = tx.obtain();
+                                    found1.unblessRelationship( toUnbless, found2 );
+                                }
                             }
                         }
                     }
@@ -334,10 +336,12 @@ public class HttpShellFilter
                             OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
                             for( String v : values ) {
-                                RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
-                                if( found1.isRelated( toUnbless, found2 ) ) {
-                                    Transaction tx2 = tx.obtain();
-                                    found1.unblessRelationship( toUnbless, found2 );
+                                if( v.length() > 0 ) { // support "none" as an option in select fields
+                                    RoleType toUnbless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                    if( found1.isRelated( toUnbless, found2 ) ) {
+                                        Transaction tx2 = tx.obtain();
+                                        found1.unblessRelationship( toUnbless, found2 );
+                                    }
                                 }
                             }
                         }
@@ -400,9 +404,11 @@ public class HttpShellFilter
                                 OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
                                 for( String v : values ) {
-                                    RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
-                                    Transaction tx2 = tx.obtain();
-                                    found1.blessRelationship( toBless, found2 );
+                                    if( v.length() > 0 ) { // support "none" as an option in select fields
+                                        RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                        Transaction tx2 = tx.obtain();
+                                        found1.blessRelationship( toBless, found2 );
+                                    }
                                 }
                             }
                         }
@@ -419,10 +425,12 @@ public class HttpShellFilter
                                 OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
                                 for( String v : values ) {
-                                    RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
-                                    if( !found1.isRelated( toBless, found2 )) {
-                                        Transaction tx2 = tx.obtain();
-                                        found1.blessRelationship( toBless, found2 );
+                                    if( v.length() > 0 ) { // support "none" as an option in select fields
+                                        RoleType toBless = (RoleType) findMeshType( v ); // can thrown ClassCastException
+                                        if( !found1.isRelated( toBless, found2 )) {
+                                            Transaction tx2 = tx.obtain();
+                                            found1.blessRelationship( toBless, found2 );
+                                        }
                                     }
                                 }
                             }
@@ -875,9 +883,11 @@ public class HttpShellFilter
         String [] values1 = request.getMultivaluedPostedArgument( buf1.toString() );
         if( values1 != null ) {
             for( String v : values1 ) {
-                EntityType toBless = (EntityType) findMeshType( v ); // can thrown ClassCastException
-                Transaction tx2 = tx.obtain();
-                obj.bless( toBless );
+                if( v.length() > 0 ) { // support "none" as an option in select fields
+                    EntityType toBless = (EntityType) findMeshType( v ); // can thrown ClassCastException
+                    Transaction tx2 = tx.obtain();
+                    obj.bless( toBless );
+                }
             }
         }
 
@@ -889,10 +899,12 @@ public class HttpShellFilter
         String [] values2 = request.getMultivaluedPostedArgument( buf2.toString() );
         if( values2 != null ) {
             for( String v : values2 ) {
-                EntityType toBless = (EntityType) findMeshType( v ); // can thrown ClassCastException
-                if( !obj.isBlessedBy( toBless ) ) {
-                    Transaction tx2 = tx.obtain();
-                    obj.bless( toBless );
+                if( v.length() > 0 ) { // support "none" as an option in select fields
+                    EntityType toBless = (EntityType) findMeshType( v ); // can thrown ClassCastException
+                    if( !obj.isBlessedBy( toBless ) ) {
+                        Transaction tx2 = tx.obtain();
+                        obj.bless( toBless );
+                    }
                 }
             }
         }
@@ -936,9 +948,11 @@ public class HttpShellFilter
         String [] values1 = request.getMultivaluedPostedArgument( buf1.toString() );
         if( values1 != null ) {
             for( String v : values1 ) {
-                EntityType toUnbless = (EntityType) findMeshType( v ); // can thrown ClassCastException
-                Transaction tx2 = tx.obtain();
-                obj.unbless( toUnbless );
+                if( v.length() > 0 ) { // support "none" as an option in select fields
+                    EntityType toUnbless = (EntityType) findMeshType( v ); // can thrown ClassCastException
+                    Transaction tx2 = tx.obtain();
+                    obj.unbless( toUnbless );
+                }
             }
         }
 
@@ -950,10 +964,12 @@ public class HttpShellFilter
         String [] values2 = request.getMultivaluedPostedArgument( buf2.toString() );
         if( values2 != null ) {
             for( String v : values2 ) {
-                EntityType toUnbless = (EntityType) findMeshType( v ); // can thrown ClassCastException
-                if( obj.isBlessedBy( toUnbless ) ) {
-                    Transaction tx2 = tx.obtain();
-                    obj.unbless( toUnbless );
+                if( v.length() > 0 ) { // support "none" as an option in select fields
+                    EntityType toUnbless = (EntityType) findMeshType( v ); // can thrown ClassCastException
+                    if( obj.isBlessedBy( toUnbless ) ) {
+                        Transaction tx2 = tx.obtain();
+                        obj.unbless( toUnbless );
+                    }
                 }
             }
         }

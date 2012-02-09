@@ -16,7 +16,9 @@
 <v:viewletAlternatives />
 <v:viewlet>
  <div class="slide-in-button">
-  <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-create', {} )" title="Create a MeshObject"><img src="${CONTEXT}/s/images/add.png" alt="Create"/></a>
+  <u:callJspo page="/o/create.jspo" action="${Viewlet.postUrl}" linkTitle="Create a MeshObject" submitLabel="Create">
+   <img src="${CONTEXT}/s/images/add.png" alt="Create" />
+  </u:callJspo>
  </div>
 <%
     AllMeshObjectsViewlet v = (AllMeshObjectsViewlet) pageContext.getRequest().getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
@@ -98,8 +100,8 @@
     <div class="middle-item">
      <input  type="submit" name="lid-submit" value="Filter" />
     </div>
-   </div>
    </u:safeForm>
+  </div>
  </div>
  <table class="set">
   <thead>
@@ -116,7 +118,10 @@
      <td>
       <div class="slide-in-button">
        <mesh:meshObjectLink meshObjectName="current" addArguments="lid-format=viewlet:org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet"><img src="${CONTEXT}/s/images/pencil.png" alt="Edit"/></mesh:meshObjectLink>
-       <a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="current" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete"/></a>
+       <u:callJspo page="/o/delete.jspo" action="${Viewlet.postUrl}" linkTitle="Delete this MeshObject" submitLabel="Delete">
+        <u:callJspoParam name="toDelete" value="${current}"/>
+        <img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete" />
+       </u:callJspo>
       </div>
       <mesh:meshObjectLink meshObjectName="current"><mesh:meshObjectId meshObjectName="current" maxLength="30"/></mesh:meshObjectLink>
      </td>
@@ -198,5 +203,4 @@
    </c:if>
   </div>
  </div>
- <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb.jsp" %>
 </v:viewlet>

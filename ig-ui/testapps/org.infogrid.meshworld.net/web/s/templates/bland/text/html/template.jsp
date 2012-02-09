@@ -8,6 +8,8 @@
  <head>
   <tmpl:inline sectionName="html-title"/>
   <link rel="stylesheet" href="${CONTEXT}/s/templates/bland/bland.css" type="text/css" />
+  <link rel="stylesheet" href="${CONTEXT}/v/org/infogrid/jee/taglib/candy/OverlayTag.css" type="text/css" />
+  <script src="${CONTEXT}/v/org/infogrid/jee/taglib/candy/OverlayTag.js" type="text/javascript"></script>
   <tmpl:inline sectionName="html-head"/>
  </head>
  <body>
@@ -35,7 +37,7 @@
    </div>
   </div>
   <div id="canvas-bottom">
-   <div class="canvas-main footnote">&copy; 2001-2010 NetMesh Inc. All rights
+   <div class="canvas-main footnote">&copy; 2001-2012 NetMesh Inc. All rights
     reserved. NetMesh and InfoGrid are trademarks or registered trademarks of NetMesh Inc.
     Learn more about <a href="http://infogrid.org/">InfoGrid</a>.</div>
   </div>

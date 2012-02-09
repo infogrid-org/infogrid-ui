@@ -84,7 +84,8 @@ dt.selected * {
 
 div.org-infogrid-jee-taglib-candy-OverlayTag {
     background: #ffffff;
-    border: 3px solid rgb(0,80,144);
+    border: 1px solid rgb(0,80,144);
+    box-shadow: 3px 3px 10px rgba(0,0,0,.8);
 }
 div#org-infogrid-jee-taglib-candy-OverlayTagCanvas {
     background: #808080;
@@ -129,11 +130,11 @@ div.org-infogrid-jee-taglib-viewlet-ViewletAlternativesTag {
     border-color: #808080;
 }
 
-div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet table.set > tbody > tr.bright {
+div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr.bright {
     background: white;
 }
 
-div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet table.set > tbody > tr.dark {
+div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr.dark {
     background: #f6f6ff;
 }
 div.org-infogrid-jee-viewlet-meshbase-AllMeshObjectsViewlet > table.set > tbody > tr > td {

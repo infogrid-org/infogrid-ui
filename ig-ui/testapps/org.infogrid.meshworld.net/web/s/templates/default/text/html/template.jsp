@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="${CONTEXT}/s/templates/default/layout.css" type="text/css" />
   <link rel="stylesheet" href="${CONTEXT}/s/templates/default/color.css"  type="text/css" />
   <link rel="stylesheet" href="${CONTEXT}/v/org/infogrid/jee/taglib/mesh/RefreshTag.css" type="text/css" />
+  <link rel="stylesheet" href="${CONTEXT}/v/org/infogrid/jee/taglib/candy/OverlayTag.css" type="text/css" />
+  <script src="${CONTEXT}/v/org/infogrid/jee/taglib/candy/OverlayTag.js" type="text/javascript"></script>
   <tmpl:inline sectionName="html-head"/>
  </head>
  <body>
@@ -48,7 +50,7 @@
   <div id="canvas-bottom">
    <div class="canvas-main footnote">
     <p><a class="built-on-infogrid" href="http://infogrid.org/"><img src="${CONTEXT}/s/images/built-on-infogrid.png" title="Built on InfoGrid&trade;" alt="[Built on InfoGrid&trade;]"/></a>
-       &copy; 2001-2010 NetMesh Inc. All rights reserved. NetMesh and InfoGrid are trademarks or registered
+       &copy; 2001-2012 NetMesh Inc. All rights reserved. NetMesh and InfoGrid are trademarks or registered
        trademarks of NetMesh Inc.</p>
     <p>Silk Icons from <a href="http://www.famfamfam.com/lab/icons/silk/">famfamfam.com</a> using Creative Commons license.
        <a href="http://infogrid.org/">Learn more</a> about InfoGrid&trade;.</p>

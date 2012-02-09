@@ -19,9 +19,14 @@
 <v:viewlet formId="viewlet" cssClass="org-infogrid-jee-viewlet-propertysheet-PropertySheetViewlet">
  <table class="audit"> <!-- IE is unable to render float:right correctly, so here is a table for you -->
   <tr>
-   <td>
+   <td class="title">
     <v:ifState viewletState="edit">
-     <div class="slide-in-button"><a href="javascript:overlay_show( 'org-infogrid-jee-shell-http-HttpShellVerb-delete', { 'shell.subject' : '<mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Plain" filter="true" />' } )" title="Delete this MeshObject"><img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete"/></a></div>
+     <div class="slide-in-button">
+      <u:callJspo page="/o/delete.jspo" action="${Viewlet.postUrl}" linkTitle="Delete this NetMeshObject" submitLabel="Delete">
+       <u:callJspoParam name="toDelete" value="${Subject}"/>
+       <img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete" />
+      </u:callJspo>
+     </div>
     </v:ifState>
     <h1>Net Property Sheet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Html" maxLength="30"/></h1>
    </td>
@@ -48,17 +53,3 @@
   </div>
  </v:ifState>
 </v:viewlet>
-
- <v:ifState viewletState="edit">
-  <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/shell/http/HttpShellVerb.css"/>
-  <tmpl:stylesheet href="${CONTEXT}/v/org/infogrid/jee/taglib/candy/OverlayTag.css"/>
-  <tmpl:script src="${CONTEXT}/v/org/infogrid/jee/taglib/candy/OverlayTag.js"/>
-  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb/bless.jsp" %>
-  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb/blessRole.jsp" %>
-  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb/create.jsp" %>
-  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb/delete.jsp" %>
-  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb/relate.jsp" %>
-  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb/unbless.jsp" %>
-  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb/unblessRole.jsp" %>
-  <%@ include file="/v/org/infogrid/jee/shell/http/HttpShellVerb/unrelate.jsp" %>
- </v:ifState>
