@@ -1128,10 +1128,13 @@ public class JeeFormatter
         } else if( "View".equals( raw )) {
             sanitized = "Html";
 
+        } else if( Character.isUpperCase( raw.charAt( 0 ))) {
+            sanitized = raw;
+
         } else {
             StringBuilder temp = new StringBuilder( raw.length() );
             temp.append( Character.toUpperCase( raw.charAt( 0 )));
-            temp.append( raw.substring( 1 ).toLowerCase() );
+            temp.append( raw.substring( 1 ) );
             sanitized = temp.toString();
         }
         return sanitized;
