@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -36,8 +36,11 @@ public enum HttpShellRelationshipVerb
              *
              * @param source the source MeshObject
              * @param destination the destination MeshObject
+             * @param sourceVarName variable name of the source MeshObject, for error reporting
+             * @param destinationVarName variable name of the destination MeshObject, for error reporting
              * @param tx the Transaction if and when created
              * @param request the request
+             * @throws SpecifiedMeshObjectNotFoundException thrown if one of the required MeshObjects was not given
              * @throws RelatedAlreadyException thrown if the two MeshObjects are related already
              * @throws TransactionException thrown if a problem occurred with the Transaction
              * @throws NotPermittedException thrown if the caller did not have sufficient permissions to perform this operation
@@ -45,13 +48,23 @@ public enum HttpShellRelationshipVerb
             public void perform(
                     MeshObject                    source,
                     MeshObject                    destination,
+                    String                        sourceVarName,
+                    String                        destinationVarName,
                     CreateWhenNeeded<Transaction> tx,
                     SaneRequest                   request )
                 throws
+                    SpecifiedMeshObjectNotFoundException,
                     RelatedAlreadyException,
                     TransactionException,
                     NotPermittedException
             {
+                if( source == null ) {
+                    throw new SpecifiedMeshObjectNotFoundException( sourceVarName );
+                }
+                if( destination == null ) {
+                    throw new SpecifiedMeshObjectNotFoundException( destinationVarName );
+                }
+
                 Transaction tx2 = tx.obtain();
 
                 source.relate( destination );
@@ -63,6 +76,8 @@ public enum HttpShellRelationshipVerb
              *
              * @param source the source MeshObject
              * @param destination the destination MeshObject
+             * @param sourceVarName variable name of the source MeshObject, for error reporting
+             * @param destinationVarName variable name of the destination MeshObject, for error reporting
              * @param tx the Transaction if and when created
              * @param request the request
              * @throws RelatedAlreadyException thrown if the two MeshObjects are related already
@@ -72,6 +87,8 @@ public enum HttpShellRelationshipVerb
             public void perform(
                     MeshObject                    source,
                     MeshObject                    destination,
+                    String                        sourceVarName,
+                    String                        destinationVarName,
                     CreateWhenNeeded<Transaction> tx,
                     SaneRequest                   request )
                 throws
@@ -98,8 +115,11 @@ public enum HttpShellRelationshipVerb
              *
              * @param source the source MeshObject
              * @param destination the destination MeshObject
+             * @param sourceVarName variable name of the source MeshObject, for error reporting
+             * @param destinationVarName variable name of the destination MeshObject, for error reporting
              * @param tx the Transaction if and when created
              * @param request the request
+             * @throws SpecifiedMeshObjectNotFoundException thrown if one of the required MeshObjects was not given
              * @throws NotRelatedException thrown if the two MeshObjects are not related
              * @throws TransactionException thrown if a problem occurred with the Transaction
              * @throws NotPermittedException thrown if the caller did not have sufficient permissions to perform this operation
@@ -107,13 +127,23 @@ public enum HttpShellRelationshipVerb
             public void perform(
                     MeshObject                    source,
                     MeshObject                    destination,
+                    String                        sourceVarName,
+                    String                        destinationVarName,
                     CreateWhenNeeded<Transaction> tx,
                     SaneRequest                   request )
                 throws
+                    SpecifiedMeshObjectNotFoundException,
                     NotRelatedException,
                     TransactionException,
                     NotPermittedException
             {
+                if( source == null ) {
+                    throw new SpecifiedMeshObjectNotFoundException( sourceVarName );
+                }
+                if( destination == null ) {
+                    throw new SpecifiedMeshObjectNotFoundException( destinationVarName );
+                }
+
                 Transaction tx2 = tx.obtain();
 
                 source.unrelate( destination );
@@ -125,6 +155,8 @@ public enum HttpShellRelationshipVerb
              *
              * @param source the source MeshObject
              * @param destination the destination MeshObject
+             * @param sourceVarName variable name of the source MeshObject, for error reporting
+             * @param destinationVarName variable name of the destination MeshObject, for error reporting
              * @param tx the Transaction if and when created
              * @param request the request
              * @throws NotRelatedException thrown if the two MeshObjects are not related
@@ -134,6 +166,8 @@ public enum HttpShellRelationshipVerb
             public void perform(
                     MeshObject                    source,
                     MeshObject                    destination,
+                    String                        sourceVarName,
+                    String                        destinationVarName,
                     CreateWhenNeeded<Transaction> tx,
                     SaneRequest                   request )
                 throws
@@ -206,8 +240,11 @@ public enum HttpShellRelationshipVerb
      *
      * @param source the source MeshObject
      * @param destination the destination MeshObject
+     * @param sourceVarName variable name of the source MeshObject, for error reporting
+     * @param destinationVarName variable name of the destination MeshObject, for error reporting
      * @param tx the Transaction if and when created
      * @param request the request
+     * @throws SpecifiedMeshObjectNotFoundException thrown if one of the required MeshObjects was not given
      * @throws NotRelatedException thrown if the two MeshObjects are not related
      * @throws RelatedAlreadyException thrown if the two MeshObjects are related already
      * @throws TransactionException thrown if a problem occurred with the Transaction
@@ -216,9 +253,12 @@ public enum HttpShellRelationshipVerb
     public abstract void perform(
             MeshObject                    source,
             MeshObject                    destination,
+            String                        sourceVarName,
+            String                        destinationVarName,
             CreateWhenNeeded<Transaction> tx,
             SaneRequest                   request )
         throws
+            SpecifiedMeshObjectNotFoundException,
             RelatedAlreadyException,
             NotRelatedException,
             TransactionException,

@@ -373,7 +373,7 @@ public class HttpShellFilter
                         OnDemandTransaction tx = txs.obtainFor( found1.getMeshBase() );
 
                         if( relVerb != null ) {
-                            relVerb.perform( found1, found2, tx, lidRequest );
+                            relVerb.perform( found1, found2, var1Name, var2Name, tx, lidRequest );
                         }
                     }
                 }
@@ -582,6 +582,10 @@ public class HttpShellFilter
         } catch( HttpShellException ex ) {
             thrown = ex;
             throw ex;
+
+        } catch( SpecifiedMeshObjectNotFoundException ex ) {
+            thrown = ex;
+            throw new HttpShellException( ex );
 
         } catch( ParseException ex ) {
             thrown = ex;
