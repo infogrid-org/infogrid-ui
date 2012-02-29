@@ -889,7 +889,7 @@ public class RestfulJeeFormatter
             StringifierException
     {
         SaneRequest saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
-        return  formatMeshObjectIdentifier(saneRequest, mesh, stringRepresentation, maxLength);
+        return formatMeshObjectIdentifier( saneRequest, mesh, stringRepresentation, maxLength );
     }
 
     /**
