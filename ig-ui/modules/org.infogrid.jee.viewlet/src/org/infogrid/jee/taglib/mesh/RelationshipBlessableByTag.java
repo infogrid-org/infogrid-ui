@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.mesh.MeshObject;
-import org.infogrid.model.primitives.EntityType;
 import org.infogrid.model.primitives.MeshType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.RelationshipType;
@@ -33,6 +33,7 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.util.Pair;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * <p>Tag that displays one or more RoleTypes that a Relationship still may be blessed with.</p>
@@ -311,19 +312,27 @@ public class RelationshipBlessableByTag
         }
         pageContext.getRequest().setAttribute( VARIABLE_COUNTER_NAME, varCounter );
 
-        if( start != null ) {
-            print( "<input type=\"hidden\" name=\"" );
-            print( startObjectEditVar );
-            print( "\" value=\"" );
-            print( start.getIdentifier().toExternalForm() );
-            println( "\"/>" );
-        }
-        if( neighbor != null ) {
-            print( "<input type=\"hidden\" name=\"" );
-            print( neighborEditVar );
-            print( "\" value=\"" );
-            print( neighbor.getIdentifier().toExternalForm() );
-            println( "\"/>" );
+        try {
+            if( start != null ) {
+                String identifier = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, start, LINK_STRING_REPRESENTATION, -1 );
+
+                print( "<input type=\"hidden\" name=\"" );
+                print( startObjectEditVar );
+                print( "\" value=\"" );
+                print( identifier );
+                println( "\"/>" );
+            }
+            if( neighbor != null ) {
+                String identifier = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, neighbor, LINK_STRING_REPRESENTATION, -1 );
+
+                print( "<input type=\"hidden\" name=\"" );
+                print( neighborEditVar );
+                print( "\" value=\"" );
+                print( identifier );
+                println( "\"/>" );
+            }
+        } catch( StringifierException ex ) {
+            throw new JspException( ex );
         }
 
         String shortStartObjectEditVar    = startObjectEditVar.substring( "shell.".length() );
@@ -423,4 +432,11 @@ public class RelationshipBlessableByTag
     public static final String VARIABLE_PATTERN = theResourceHelper.getResourceStringOrDefault(
             "VariablePattern",
             "shell.relationshipBlessableByTagMeshObject%d" );
+
+    /**
+     * Name of the StringRepresentation for links.
+     */
+    public static final String LINK_STRING_REPRESENTATION = theResourceHelper.getResourceStringOrDefault(
+            "LinkStringRepresentation",
+            "HttpShell" );
 }
