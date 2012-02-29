@@ -298,6 +298,9 @@ public class RelationshipBlessableByTag
         String neighborEditVar;
 
         if( theStartObjectVarName != null ) {
+            if( !theStartObjectVarName.startsWith( SHELL_VAR_PREFIX )) {
+                throw new JspException( "HttpShell variables must start with \"" + SHELL_VAR_PREFIX + "\". Variable name given: " + theStartObjectVarName );
+            }
             startObjectEditVar = theStartObjectVarName;
         } else {
             startObjectEditVar = String.format( VARIABLE_PATTERN, varCounter );
@@ -305,6 +308,9 @@ public class RelationshipBlessableByTag
         }
 
         if( theNeighborVarName != null ) {
+            if( !theNeighborVarName.startsWith( SHELL_VAR_PREFIX )) {
+                throw new JspException( "HttpShell variables must start with \"" + SHELL_VAR_PREFIX + "\". Variable name given: " + theNeighborVarName );
+            }
             neighborEditVar = theNeighborVarName;
         } else {
             neighborEditVar = String.format( VARIABLE_PATTERN, varCounter );
@@ -335,8 +341,8 @@ public class RelationshipBlessableByTag
             throw new JspException( ex );
         }
 
-        String shortStartObjectEditVar    = startObjectEditVar.substring( "shell.".length() );
-        String shortNeighborObjectEditVar = neighborEditVar.substring( "shell.".length() );
+        String shortStartObjectEditVar    = startObjectEditVar.substring( SHELL_VAR_PREFIX.length() );
+        String shortNeighborObjectEditVar = neighborEditVar.substring(    SHELL_VAR_PREFIX.length() );
 
         if( !candidates.isEmpty() ) {
             print( "<select name=\"shell." );
@@ -439,4 +445,9 @@ public class RelationshipBlessableByTag
     public static final String LINK_STRING_REPRESENTATION = theResourceHelper.getResourceStringOrDefault(
             "LinkStringRepresentation",
             "HttpShell" );
+
+    /**
+     * Variable name prefix for HttpShell variables.
+     */
+    public static final String SHELL_VAR_PREFIX = "shell.";
 }
