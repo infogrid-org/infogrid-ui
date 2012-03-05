@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -165,6 +165,11 @@ public abstract class AbstractAclBasedTag
             JspException,
             IgnoreException
     {
+        MeshObject caller = ThreadIdentityManager.getCaller();
+        if( caller == null ) {
+            return false;
+        }
+
         MeshObject obj;
         if( theTestObject != null ) {
             obj = findMeshObjectOrThrow( theTestObject );
@@ -172,7 +177,7 @@ public abstract class AbstractAclBasedTag
             obj = (MeshObject) lookupOrThrow( theTestObjectName );
         }
 
-        boolean ret = AclUtils.isOwner( ThreadIdentityManager.getCaller(), obj );
+        boolean ret = AclUtils.isOwner( caller, obj );
         return ret;
     }
 
