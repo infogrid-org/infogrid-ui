@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -32,7 +32,7 @@ import org.infogrid.model.traversal.TraversalSpecification;
 import org.infogrid.util.text.StringifierException;
 
 /**
- * Adds REST awareness to the AbstractInfoGridTag.
+ * Adds REST awareness to the AbstractInfoGridBodyTag.
  */
 public abstract class AbstractRestInfoGridBodyTag
         extends
