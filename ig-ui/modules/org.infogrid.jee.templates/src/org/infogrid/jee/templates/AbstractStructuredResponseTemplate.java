@@ -253,6 +253,9 @@ public abstract class AbstractStructuredResponseTemplate
     {
         for( HasHeaderPreferences current : toConsider( structured ) ) {
             for( String key : current.getHeaders().keySet() ) {
+                if( "Location".equalsIgnoreCase( key )) {
+                    continue; // we already did this
+                }
                 String [] values = current.getHeaders().get( key );
                 for( String current2 : values ) {
                     delegate.addHeader( key, current2 );
