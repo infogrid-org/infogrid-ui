@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -93,7 +93,11 @@ public abstract class DefaultJspViewletFactoryChoice
         throws
             StringifierException
     {
-        String userVisibleName = ResourceHelper.getInstance( thePseudoClassName, DefaultJspViewletFactoryChoice.class.getClassLoader() ).getResourceStringOrDefault( "UserVisibleName", thePseudoClassName );
+        ClassLoader ctxtLoader = Thread.currentThread().getContextClassLoader();
+        if( ctxtLoader == null ) {
+            ctxtLoader = DefaultJspViewletFactoryChoice.class.getClassLoader();
+        }
+        String userVisibleName = ResourceHelper.getInstance( thePseudoClassName, ctxtLoader ).getResourceStringOrDefault( "UserVisibleName", thePseudoClassName );
 
         String ret = rep.formatEntry(
                 getClass(), // dispatch to the right subtype

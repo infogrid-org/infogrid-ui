@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -93,7 +93,12 @@ public abstract class AbstractJspViewlet
     @Override
     public String getUserVisibleName()
     {
-        ResourceHelper rh = ResourceHelper.getInstance( thePseudoClassName, DefaultJspViewletFactoryChoice.class.getClassLoader() );
+        ClassLoader ctxtLoader = Thread.currentThread().getContextClassLoader();
+        if( ctxtLoader == null ) {
+            ctxtLoader = getClass().getClassLoader();
+        }
+
+        ResourceHelper rh = ResourceHelper.getInstance( thePseudoClassName, ctxtLoader );
         
         String userVisibleName = rh.getResourceStringOrDefault( "UserVisibleName", thePseudoClassName );
         return userVisibleName;
