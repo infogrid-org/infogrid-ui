@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -21,7 +21,6 @@
   <jar>org.infogrid.viewlet.jar</jar>
  </provides>
  <dependencies>
-  <requires name="org.infogrid.kernel"/>
-  <requires name="org.infogrid.util"/>
+  <requires name="org.infogrid.model.Viewlet"/>
  </dependencies>
 </standardmodule>
