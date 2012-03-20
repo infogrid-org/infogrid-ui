@@ -8,26 +8,21 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.defaultapp;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.jee.servlet.AbstractInfoGridServlet;
 import org.infogrid.jee.servlet.InitializationFilter;
 import org.infogrid.module.Module;
-import org.infogrid.module.ModuleException;
-import org.infogrid.module.ModuleRegistry;
-import org.infogrid.module.ModuleRequirement;
-import org.infogrid.module.SoftwareInstallation;
 import org.infogrid.module.servlet.ServletBootLoader;
 import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
@@ -54,6 +49,17 @@ public class DefaultInitializationFilter
     }
 
     /**
+     * Find the InfoGridWebApp object.
+     *
+     * @return the InfoGridWebApp object
+     */
+    protected InfoGridWebApp getInfoGridWebApp()
+    {
+        InfoGridWebApp ret = (InfoGridWebApp) theFilterConfig.getServletContext().getAttribute( AbstractInfoGridServlet.INFOGRID_WEB_APP_NAME );
+        return ret;
+    }
+
+    /**
      * Initialize the InfoGridWebApp if needed.
      *
      * @param incomingRequest the incoming request
@@ -65,138 +71,60 @@ public class DefaultInitializationFilter
         throws
             ServletException
     {
-        InfoGridWebApp theApp = InfoGridWebApp.getSingleton();
+        InfoGridWebApp theApp = getInfoGridWebApp();
         if( theApp == null ) {
-            String className  = theFilterConfig.getInitParameter( INFOGRID_WEB_APP_CLASS_NAME_PARAMETER );
-            String rootModule = theFilterConfig.getInitParameter( ROOT_MODULE_NAME_PARAMETER );
+            // try again, this time synchronized
+            synchronized( DefaultInitializationFilter.class ) {
+                theApp = getInfoGridWebApp();
+                if( theApp == null ) {
+                    SaneRequest lidRequest = SaneServletRequest.create( incomingRequest );
 
-            if( ( className == null || className.length() == 0 ) && ( rootModule == null || rootModule.length() == 0 )) {
-                throw new ServletException(
-                        "Cannot initialize InfoGridWebApp: either parameter "
-                        + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER
-                        + " or parameter "
-                        + ROOT_MODULE_NAME_PARAMETER
-                        + " must be given in web.xml file" );
-            }
-            if( className != null && className.length() > 0 && rootModule != null && rootModule.length() > 0 ) {
-                throw new ServletException(
-                        "Cannot initialize InfoGridWebApp: only parameter "
-                        + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER
-                        + " or parameter "
-                        + ROOT_MODULE_NAME_PARAMETER
-                        + " must be given in web.xml file, not both" );
-            }
-            
-            if( className != null && className.length() > 0 ) {
-                theApp = initializeViaClassName( className );
-                
-            } else if( rootModule != null && rootModule.length() > 0 ) {
-                theApp = initializeViaModuleName( incomingRequest, rootModule );
-                
-            } else {
-                throw new ServletException( "Don't know how we got there" );
-            }
-            try {
-                InfoGridWebApp.setSingleton( theApp );
+                    theApp = createInfoGridWebApp( lidRequest );
 
-            } catch( IllegalStateException ex ) {
-                // have one already, that's fine (a parallel thread was faster)
+                    try {
+                        theFilterConfig.getServletContext().setAttribute( AbstractInfoGridServlet.INFOGRID_WEB_APP_NAME, theApp );
+
+                    } catch( IllegalStateException ex ) {
+                        // have one already, that's fine (a parallel thread was faster)
+                    }
+                    try {
+                        initializeContextObjects( lidRequest, theApp.getApplicationContext() );
+
+                    } catch( Throwable t ) {
+                        throw new ServletException( "could not initialize context objects", t );
+                    }
+
+                }
             }
         }
     }
 
-    /**
-     * Initialize via the traditional subclass of InfoGridWebApp.
-     * 
-     * @param className the name of the class to be instantiated
-     * @return the instantiated class
-     * @throws ServletException thrown if the InfoGridWebApp could not be initialized
-     */
-    protected InfoGridWebApp initializeViaClassName(
-            String className )
+    protected InfoGridWebApp createInfoGridWebApp(
+            SaneRequest lidRequest )
         throws
             ServletException
     {
-        InfoGridWebApp theApp;
-        
-        try {                
-            Class<?> appClass      = Class.forName( className );
-            Method   factoryMethod = appClass.getMethod( "create", String.class );
+        // Context
+        SimpleContext rootContext = SimpleContext.createRoot( theFilterConfig.getServletContext().getServletContextName() + " root context" );
+        rootContext.addContextObject( QuitManager.create() );
 
-            theApp = (InfoGridWebApp) factoryMethod.invoke( null, theDefaultMeshBaseIdentifier );
+        String rootModule = theFilterConfig.getInitParameter( ROOT_MODULE_NAME_PARAMETER );
+        if( rootModule != null ) {
+            Properties properties = new Properties();
+            properties.put( "rootmodule", rootModule );
+
+            Module theThisModule = ServletBootLoader.initialize( properties );
+
+            ResourceHelper.initializeLogging();
 
             log = Log.getLogInstance( getClass() );
 
-            return theApp;
-
-        } catch( ClassNotFoundException ex ) {
-            throw new ServletException( "Cannot find class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex  );
-
-        } catch( NoSuchMethodException ex ) {
-            throw new ServletException( "Cannot find method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
-
-        } catch( IllegalAccessException ex ) {
-            throw new ServletException( "Cannot access method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex );
-
-        } catch( InvocationTargetException ex ) {
-            throw new ServletException( "Cannot execute method \"create( String, String )\" in class " + className + " specified as parameter " + INFOGRID_WEB_APP_CLASS_NAME_PARAMETER + " in Filter configuration (web.xml)", ex.getTargetException() );
-        }
-    }
-    
-    /**
-     * Initialize via InfoGridWebApp and initializing a root module.
-     * 
-     * @param incomingRequest the incoming request
-     * @param rootModule the name of the module to be activated
-     * @return the instantiated class
-     * @throws ServletException thrown if the InfoGridWebApp could not be initialized
-     */
-    protected InfoGridWebApp initializeViaModuleName(
-            HttpServletRequest incomingRequest,
-            String             rootModule )
-        throws
-            ServletException
-    {
-        Properties properties = new Properties();
-        properties.put( "rootmodule", rootModule );
-
-        Module theThisModule;
-        if( SoftwareInstallation.getSoftwareInstallation() == null ) {
-            theThisModule = ServletBootLoader.initialize( properties );
-        } else {
-            try {
-                ModuleRequirement req      = ModuleRequirement.create1( rootModule );
-                ModuleRegistry    registry = ServletBootLoader.getModuleRegistry();
-
-                theThisModule = registry.resolve( registry.determineSingleResolutionCandidate( req )); // we know it is there
-
-            } catch( ModuleException ex ) {
-                throw new ServletException( "Initialization of Module " + rootModule + " failed", ex );
-            }
-        }
-
-        ResourceHelper.initializeLogging();
-
-        log = Log.getLogInstance( getClass() );
-
-        // SaneServletRequest adds itself as a request attribute
-        SaneRequest lidRequest = SaneServletRequest.create( incomingRequest );
-
-        // Context
-        SimpleContext rootContext = SimpleContext.createRoot( rootModule + " root context" );
-        rootContext.addContextObject( theThisModule.getModuleRegistry() );
-
-        rootContext.addContextObject( QuitManager.create() );
-
-        try {
-            initializeContextObjects( lidRequest, rootContext );
-
-        } catch( Throwable t ) {
-            throw new ServletException( "could not initialize context objects", t );
+            rootContext.addContextObject( theThisModule.getModuleRegistry() );
         }
 
         // app
         DefaultInfoGridWebApp ret = new DefaultInfoGridWebApp( lidRequest, rootContext );
+        rootContext.addContextObject( ret );
 
         return ret;        
     }
