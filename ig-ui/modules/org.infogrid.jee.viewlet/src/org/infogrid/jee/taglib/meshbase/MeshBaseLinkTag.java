@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,8 +16,8 @@ package org.infogrid.jee.taglib.meshbase;
 
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
-import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
+import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.util.text.StringifierException;
 
@@ -27,7 +27,7 @@ import org.infogrid.util.text.StringifierException;
  */
 public class MeshBaseLinkTag
     extends
-        AbstractInfoGridBodyTag
+        AbstractRestInfoGridBodyTag
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -184,7 +184,7 @@ public class MeshBaseLinkTag
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkStart( pageContext, mb, theAddArguments, theTarget, theTitle, theStringRepresentation );
+            String text = getFormatter().formatMeshBaseLinkStart( pageContext, mb, theAddArguments, theTarget, theTitle, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -210,7 +210,7 @@ public class MeshBaseLinkTag
         MeshBase mb = (MeshBase) lookupOrThrow( theMeshBaseName );
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshBaseLinkEnd( pageContext, mb, theStringRepresentation );
+            String text = getFormatter().formatMeshBaseLinkEnd( pageContext, mb, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {

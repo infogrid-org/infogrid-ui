@@ -8,17 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.templates.servlet;
 
 import java.io.IOException;
-import java.util.List;
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -29,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.ProblemReporter;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.jee.servlet.AbstractInfoGridWebAppFilter;
 import org.infogrid.jee.servlet.BufferedServletResponse;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.StructuredResponseTemplate;
@@ -44,8 +42,8 @@ import org.infogrid.util.logging.Log;
  *    the InfoGrid web template framework.</p>
  */
 public class TemplatesFilter
-        implements
-            Filter
+        extends
+            AbstractInfoGridWebAppFilter
 {
     private static Log log; // this requires delayed initialization
 
@@ -76,7 +74,7 @@ public class TemplatesFilter
         HttpServletRequest  realRequest  = (HttpServletRequest)  request;
         HttpServletResponse realResponse = (HttpServletResponse) response;
 
-        InfoGridWebApp      app           = InfoGridWebApp.getSingleton();
+        InfoGridWebApp      app           = getInfoGridWebApp();
         SaneRequest         saneRequest   = SaneServletRequest.create( realRequest );
         StructuredResponse  structured    = createStructuredResponse( saneRequest, realResponse );
 
@@ -178,17 +176,6 @@ public class TemplatesFilter
     }
     
     /**
-     * Initialization method for this filter.
-     * 
-     * @param filterConfig the Filter configuration
-     */
-    public void init(
-            FilterConfig filterConfig )
-    {
-        theFilterConfig = filterConfig;
-    }
-
-    /**
      * Initialize and get the log.
      *
      * @return the log
@@ -200,11 +187,6 @@ public class TemplatesFilter
         }
         return log;
     }
-
-    /**
-     * The Filter configuration object.
-     */
-    protected FilterConfig theFilterConfig;
 
     /**
      * Name of the LID application context parameter. For simplicity, this is used for two purposes:

@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -254,12 +254,14 @@ public class PrintAclTag
     {
         String text;
 
+        RestfulJeeFormatter formatter = getFormatter();
+
         try {
-            text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, null, null, null, "Html" );
+            text = formatter.formatMeshObjectLinkStart( pageContext, obj, null, null, null, "Html" );
             print( text );
-            text = ((RestfulJeeFormatter)theFormatter).formatMeshObject( pageContext, obj, "Html", -1, true );
+            text = formatter.formatMeshObject( pageContext, obj, "Html", -1, true );
             print( text );
-            text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, "Html" );
+            text = formatter.formatMeshObjectLinkEnd( pageContext, obj, "Html" );
             print( text );
         } catch( StringifierException ex ) {
             log.error( ex );

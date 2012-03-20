@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -77,7 +77,7 @@ public class NavigateToPageTag
         }
 
         try {
-            String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, subject, additionalArguments, theTarget, theTitle, theStringRepresentation );
+            String text = getFormatter().formatMeshObjectLinkStart( pageContext, subject, additionalArguments, theTarget, theTitle, theStringRepresentation );
             print( text );
 
         } catch( StringifierException ex ) {

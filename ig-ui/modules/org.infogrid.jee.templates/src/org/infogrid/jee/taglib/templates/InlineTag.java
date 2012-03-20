@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -118,7 +118,7 @@ public class InlineTag
             }
 
         } else {
-            if( theFormatter.isFalse( getIgnore() )) {
+            if( getFormatter().isFalse( getIgnore() )) {
                 throw new JspException( "Cannot find ResponseSection named " + theSectionName );
             }
         }

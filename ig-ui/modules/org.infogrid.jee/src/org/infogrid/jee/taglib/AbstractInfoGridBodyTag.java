@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -23,6 +23,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.Tag;
 import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.servlet.AbstractInfoGridServlet;
 
 /**
  * <p>Factors out common functionality for BodyTags. Also redefines the JEE Tag
@@ -68,8 +69,6 @@ public abstract class AbstractInfoGridBodyTag
      */
     protected AbstractInfoGridBodyTag()
     {
-        theFormatter = InfoGridWebApp.getSingleton().getApplicationContext().findContextObjectOrThrow( JeeFormatter.class );
-
         initializeToDefaults(); // may invoke subclass invocation
     }
 
@@ -308,7 +307,7 @@ public abstract class AbstractInfoGridBodyTag
         if( name == null || name.length() == 0 ) {
             throw new JspException( "Cannot look up bean with empty name" );
         }
-        Object ret = theFormatter.nestedLookup( pageContext, name, theScope );
+        Object ret = getFormatter().nestedLookup( pageContext, name, theScope );
         return ret;
     }
 
@@ -332,10 +331,10 @@ public abstract class AbstractInfoGridBodyTag
         }
         
         Object ret;
-        if( theFormatter.isTrue( theIgnore )) {
-            ret = theFormatter.nestedLookup( pageContext, name, theScope );
+        if( getFormatter().isTrue( theIgnore )) {
+            ret = getFormatter().nestedLookup( pageContext, name, theScope );
         } else {
-            ret = theFormatter.nestedLookupOrThrow( pageContext, name, theScope );
+            ret = getFormatter().nestedLookupOrThrow( pageContext, name, theScope );
         }
         return ret;
     }
@@ -361,10 +360,10 @@ public abstract class AbstractInfoGridBodyTag
         }
         
         Object ret;
-        if( theFormatter.isTrue( theIgnore )) {
-            ret = theFormatter.nestedLookup( pageContext, name, propertyName, theScope );
+        if( getFormatter().isTrue( theIgnore )) {
+            ret = getFormatter().nestedLookup( pageContext, name, propertyName, theScope );
         } else {
-            ret = theFormatter.nestedLookupOrThrow( pageContext, name, propertyName, theScope );
+            ret = getFormatter().nestedLookupOrThrow( pageContext, name, propertyName, theScope );
         }
         return ret;
     }
@@ -381,7 +380,7 @@ public abstract class AbstractInfoGridBodyTag
             JspException
     {
         if( text != null ) {
-            theFormatter.print( pageContext, theFormatter.isTrue( theFilter ), text );
+            getFormatter().print( pageContext, getFormatter().isTrue( theFilter ), text );
         }
     }
 
@@ -397,7 +396,7 @@ public abstract class AbstractInfoGridBodyTag
             JspException
     {
         if( text != null ) {
-            theFormatter.println( pageContext, theFormatter.isTrue( theFilter ), text );
+            getFormatter().println( pageContext, getFormatter().isTrue( theFilter ), text );
         }
     }
 
@@ -475,6 +474,32 @@ public abstract class AbstractInfoGridBodyTag
     }
 
     /**
+     * Find the InfoGridWebApp object.
+     *
+     * @return the InfoGridWebApp object
+     */
+    protected InfoGridWebApp getInfoGridWebApp()
+    {
+        InfoGridWebApp app = (InfoGridWebApp) pageContext.getServletContext().getAttribute( AbstractInfoGridServlet.INFOGRID_WEB_APP_NAME );
+        return app;
+    }
+
+    /**
+     * Get the formatter to use.
+     *
+     * @return the formatter
+     */
+    protected JeeFormatter getFormatter()
+    {
+        if( theFormatter == null ) {
+            InfoGridWebApp app = getInfoGridWebApp();
+            theFormatter       = app.getApplicationContext().findContextObjectOrThrow( JeeFormatter.class );
+
+        }
+        return theFormatter;
+    }
+
+    /**
      * Filter the rendered output for characters that are sensitive in HTML?
      */
     private String theFilter;
@@ -492,7 +517,7 @@ public abstract class AbstractInfoGridBodyTag
     /**
      * The formatter to use.
      */
-    protected JeeFormatter theFormatter;
+    private JeeFormatter theFormatter;
 
     /**
      * The buffered request attributes that the tag temporarily overrides.

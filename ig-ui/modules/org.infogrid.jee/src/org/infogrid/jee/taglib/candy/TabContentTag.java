@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -59,7 +59,7 @@ public class TabContentTag
         TabTag    ourTab       = findEnclosingTabTagOrThrow( this );
         TabbedTag ourContainer = findEnclosingTabbedTagOrThrow( ourTab );
 
-        if( ourContainer.isHead() || theFormatter.isFalse( ourTab.getIsSelected() )) {
+        if( ourContainer.isHead() || getFormatter().isFalse( ourTab.getIsSelected() )) {
             return SKIP_BODY;
         } else {
             return EVAL_BODY_INCLUDE;

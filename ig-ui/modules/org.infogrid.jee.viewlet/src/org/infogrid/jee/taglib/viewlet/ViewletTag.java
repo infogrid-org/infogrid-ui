@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.viewlet;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.viewlet.DefaultJeeViewletStateEnum;
@@ -135,7 +136,7 @@ public class ViewletTag
             content.append( " " ).append( theCssClass );
         }
         content.append( "\">" );
-        theFormatter.println( pageContext, false, content.toString() );
+        getFormatter().println( pageContext, false, content.toString() );
 
         return EVAL_BODY_INCLUDE;
     }
@@ -153,11 +154,12 @@ public class ViewletTag
             JspException
     {
         JeeViewlet vl = (JeeViewlet) pageContext.getRequest().getAttribute( JeeViewlet.VIEWLET_ATTRIBUTE_NAME );
+        JeeFormatter formatter = getFormatter();
 
-        theFormatter.println( pageContext, false, "</div>" );
+        formatter.println( pageContext, false, "</div>" );
 
         if( !DefaultJeeViewletStateEnum.VIEW.getName().equals( vl.getViewletState().getName() )) { // compare Strings, enum's won't allow equals() override
-            theFormatter.println( pageContext, false, "</form>" );
+            formatter.println( pageContext, false, "</form>" );
         }
 
         return EVAL_PAGE;

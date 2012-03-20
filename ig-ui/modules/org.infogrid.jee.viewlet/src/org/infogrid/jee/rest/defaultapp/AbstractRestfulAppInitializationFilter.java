@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -46,13 +46,11 @@ public abstract class AbstractRestfulAppInitializationFilter
      * @throws ServletException thrown if misconfigured
      */
     @Override
-    public void init(
+    public void internalInit(
             FilterConfig filterConfig )
         throws
             ServletException
     {
-        super.init( filterConfig );
-
         theDefaultMeshBaseIdentifier = filterConfig.getInitParameter( DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER_NAME );
     }
 

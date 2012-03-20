@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,6 +17,7 @@ package org.infogrid.jee.taglib.mesh.tree;
 import java.io.IOException;
 import java.util.Stack;
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.mesh.MeshObject;
@@ -302,7 +303,9 @@ public class TreeIterateTag
         }
         try {
             if( super.bodyContent != null ) {
-                theFormatter.printPrevious( pageContext, theFormatter.isTrue( getFilter()), bodyContent.getString() );
+                JeeFormatter formatter = getFormatter();
+
+                formatter.printPrevious( pageContext, formatter.isTrue( getFilter()), bodyContent.getString() );
                 bodyContent.clearBody();
             }
 

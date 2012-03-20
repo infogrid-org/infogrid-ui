@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.mesh;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
@@ -276,7 +277,7 @@ public class PropertyMeterTag
         }
 
         if( value == null ) {
-            if( theFormatter.isTrue( getIgnore() )) {
+            if( getFormatter().isTrue( getIgnore() )) {
                 return SKIP_BODY;
             } else {
                 throw new JspException( "PropertyValue is null, cannot show" );
@@ -317,7 +318,9 @@ public class PropertyMeterTag
             JspException
     {
         if( bodyContent != null ) {
-            theFormatter.printPrevious( pageContext, theFormatter.isTrue( getFilter()), bodyContent.getString() );
+            JeeFormatter formatter = getFormatter();
+
+            formatter.printPrevious( pageContext, formatter.isTrue( getFilter()), bodyContent.getString() );
             bodyContent.clearBody();
         }
 

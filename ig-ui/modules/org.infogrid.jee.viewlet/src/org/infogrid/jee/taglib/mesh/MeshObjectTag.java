@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -184,7 +184,7 @@ public class MeshObjectTag
         if( obj != null ) {
             // filter may be true
             try {
-                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObject( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
+                String text = getFormatter().formatMeshObject( pageContext, obj, theStringRepresentation, theMaxLength, theColloquial );
                 print( text );
 
             } catch( StringifierException ex ) {

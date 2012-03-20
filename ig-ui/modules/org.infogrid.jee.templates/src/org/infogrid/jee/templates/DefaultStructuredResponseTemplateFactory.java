@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -37,10 +37,11 @@ public class DefaultStructuredResponseTemplateFactory
      *
      * @return the created DefaultStructuredResponseTemplateFactory
      */
-    public static DefaultStructuredResponseTemplateFactory create()
+    public static DefaultStructuredResponseTemplateFactory create(
+            InfoGridWebApp app )
     {
         DefaultStructuredResponseTemplateFactory ret
-                = new DefaultStructuredResponseTemplateFactory( DEFAULT_TEMPLATE_NAME, DEFAULT_MIME_TYPE );
+                = new DefaultStructuredResponseTemplateFactory( DEFAULT_TEMPLATE_NAME, DEFAULT_MIME_TYPE, app );
         return ret;
     }
 
@@ -51,10 +52,11 @@ public class DefaultStructuredResponseTemplateFactory
      * @return the created DefaultStructuredResponseTemplateFactory
      */
     public static DefaultStructuredResponseTemplateFactory create(
-            String defaultTemplateName )
+            String         defaultTemplateName,
+            InfoGridWebApp app )
     {
         DefaultStructuredResponseTemplateFactory ret
-                = new DefaultStructuredResponseTemplateFactory( defaultTemplateName, DEFAULT_MIME_TYPE );
+                = new DefaultStructuredResponseTemplateFactory( defaultTemplateName, DEFAULT_MIME_TYPE, app );
         return ret;
     }
 
@@ -66,11 +68,12 @@ public class DefaultStructuredResponseTemplateFactory
      * @return the created DefaultStructuredResponseTemplateFactory
      */
     public static DefaultStructuredResponseTemplateFactory create(
-            String defaultTemplateName,
-            String defaultMimeType )
+            String         defaultTemplateName,
+            String         defaultMimeType,
+            InfoGridWebApp app )
     {
         DefaultStructuredResponseTemplateFactory ret
-                = new DefaultStructuredResponseTemplateFactory( defaultTemplateName, defaultMimeType );
+                = new DefaultStructuredResponseTemplateFactory( defaultTemplateName, defaultMimeType, app );
         return ret;
     }
 
@@ -81,11 +84,13 @@ public class DefaultStructuredResponseTemplateFactory
      * @param defaultMimeType default mime type of no other is specified.
      */
     protected DefaultStructuredResponseTemplateFactory(
-            String defaultTemplateName,
-            String defaultMimeType )
+            String         defaultTemplateName,
+            String         defaultMimeType,
+            InfoGridWebApp app )
     {
         theDefaultTemplateName = defaultTemplateName;
         theDefaultMimeType     = defaultMimeType;
+        theApp                 = app;
     }
 
     /**
@@ -126,7 +131,7 @@ public class DefaultStructuredResponseTemplateFactory
 
         Context c = (Context) request.getAttribute( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
         if( c == null ) {
-            c = InfoGridWebApp.getSingleton().getApplicationContext();
+            c = theApp.getApplicationContext();
         }
         
         if( NoContentStructuredResponseTemplate.NO_CONTENT_TEMPLATE_NAME.equals( requestedTemplateName )) {
@@ -242,8 +247,7 @@ public class DefaultStructuredResponseTemplateFactory
         }
         jspPath.append( TEMPLATE_JSP_NAME );
 
-        InfoGridWebApp    app        = InfoGridWebApp.getSingleton();
-        RequestDispatcher dispatcher = app.findLocalizedRequestDispatcher(
+        RequestDispatcher dispatcher = theApp.findLocalizedRequestDispatcher(
                 jspPath.toString(),
                 request.acceptLanguageIterator(),
                 structured.getServletContext() );
@@ -260,7 +264,12 @@ public class DefaultStructuredResponseTemplateFactory
      * The default mime type, if no other has been specified in the request.
      */
     protected String theDefaultMimeType;
-    
+
+    /**
+     * The app we belong to.
+     */
+    protected InfoGridWebApp theApp;
+
     /**
      * Our ResourceHelper.
      */

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.taglib.util.InfoGridIterationTag;
@@ -348,8 +349,9 @@ public class MeshObjectPropertyIterateTag
             IOException
     {
         if( super.bodyContent != null ) {
+            JeeFormatter formatter = getFormatter();
 
-            theFormatter.printPrevious( pageContext, theFormatter.isTrue( getFilter()), bodyContent.getString() );
+            formatter.printPrevious( pageContext, formatter.isTrue( getFilter()), bodyContent.getString() );
             bodyContent.clearBody();
         }
 

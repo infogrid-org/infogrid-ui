@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -134,7 +134,7 @@ public class ProxyTag
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
 
         try {
-            String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyStart( pageContext, p, theStringRepresentation, theMaxLength );
+            String text = getFormatter().formatProxyStart( pageContext, p, theStringRepresentation, theMaxLength );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -159,11 +159,22 @@ public class ProxyTag
     {
         Proxy p = (Proxy) lookupOrThrow( theProxyName );
 
-        String text = ((NetRestfulJeeFormatter)theFormatter).formatProxyEnd( pageContext, p, theStringRepresentation );
+        String text = getFormatter().formatProxyEnd( pageContext, p, theStringRepresentation );
 
         print( text );
 
         return EVAL_PAGE;
+    }
+
+    /**
+     * Get the formatter to use.
+     *
+     * @return the formatter
+     */
+    @Override
+    protected NetRestfulJeeFormatter getFormatter()
+    {
+        return (NetRestfulJeeFormatter) super.getFormatter();
     }
 
     /**

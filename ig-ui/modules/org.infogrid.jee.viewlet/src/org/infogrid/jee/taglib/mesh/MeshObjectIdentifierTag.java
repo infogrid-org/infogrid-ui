@@ -8,14 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.mesh.MeshObject;
@@ -161,7 +160,7 @@ public class MeshObjectIdentifierTag
         if( obj != null ) {
             // filter may be true
             try {
-                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, obj, theStringRepresentation, theMaxLength );
+                String text = getFormatter().formatMeshObjectIdentifier( pageContext, obj, theStringRepresentation, theMaxLength );
                 print( text );
 
             } catch( StringifierException ex ) {

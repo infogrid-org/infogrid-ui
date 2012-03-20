@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.taglib.candy;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
+import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
 
@@ -137,8 +138,9 @@ public class TabbedTag
             IOException
     {
         if( super.bodyContent != null ) {
+            JeeFormatter formatter = getFormatter();
 
-            theFormatter.printPrevious( pageContext, theFormatter.isTrue( getFilter()), bodyContent.getString() );
+            formatter.printPrevious( pageContext, formatter.isTrue( getFilter()), bodyContent.getString() );
             bodyContent.clearBody();
         }
         if( isHead ) {

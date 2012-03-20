@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -73,7 +73,7 @@ public class LidPipelineServlet
             ServletException,
             IOException
     {
-        InfoGridWebApp     app             = InfoGridWebApp.getSingleton();
+        InfoGridWebApp     app             = getInfoGridWebApp();
         Context            appContext      = app.getApplicationContext();
         HttpServletRequest realRequest     = (HttpServletRequest) request;
         SaneServletRequest lidRequest      = SaneServletRequest.create( realRequest );

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -153,14 +153,15 @@ public abstract class AbstractRestInfoGridTag
         }
 
         if( propertyValue != null ) {
+            RestfulJeeFormatter formatter = getFormatter();
             if( propertyValue instanceof MeshObject ) {
                 return (MeshObject) propertyValue;
             } else if( propertyValue instanceof TypedMeshObjectFacade ) {
                 return ((TypedMeshObjectFacade)propertyValue).get_Delegate();
             } else if( propertyValue instanceof MeshObjectIdentifier ) {
-                return ((RestfulJeeFormatter)theFormatter).findMeshObject( (MeshObjectIdentifier)propertyValue );
+                return formatter.findMeshObject( (MeshObjectIdentifier)propertyValue );
             } else if( propertyValue instanceof String ) {
-                return ((RestfulJeeFormatter)theFormatter).findMeshObject( (String) propertyValue );
+                return formatter.findMeshObject( (String) propertyValue );
             } else {
                 throw new JspException( "Unexpected type " + propertyValue.getClass().getName() + ": " + propertyValue );
             }
@@ -196,28 +197,29 @@ public abstract class AbstractRestInfoGridTag
             throw new JspException( "Must specify either " + propertyLabel + " or " + propertyNameLabel + ", not both." );
         }
 
+        RestfulJeeFormatter formatter = getFormatter();
         if( propertyValue != null ) {
             if( propertyValue instanceof MeshObject ) {
                 return (MeshObject) propertyValue;
             } else if( propertyValue instanceof TypedMeshObjectFacade ) {
                 return ((TypedMeshObjectFacade)propertyValue).get_Delegate();
             } else if( propertyValue instanceof MeshObjectIdentifier ) {
-                if( theFormatter.isTrue( getIgnore() )) {
-                    return ((RestfulJeeFormatter)theFormatter).findMeshObject( (MeshObjectIdentifier)propertyValue );
+                if( formatter.isTrue( getIgnore() )) {
+                    return formatter.findMeshObject( (MeshObjectIdentifier)propertyValue );
                 } else {
-                    return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (MeshObjectIdentifier)propertyValue );
+                    return formatter.findMeshObjectOrThrow( (MeshObjectIdentifier)propertyValue );
                 }
             } else if( propertyValue instanceof String ) {
-                if( theFormatter.isTrue( getIgnore() )) {
-                    return ((RestfulJeeFormatter)theFormatter).findMeshObject( (String) propertyValue );
+                if( formatter.isTrue( getIgnore() )) {
+                    return formatter.findMeshObject( (String) propertyValue );
                 } else {
-                    return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (String) propertyValue );
+                    return formatter.findMeshObjectOrThrow( (String) propertyValue );
                 }
             } else {
                 throw new JspException( "Unexpected type " + propertyValue.getClass().getName() + ": " + propertyValue );
             }
         } else {
-            if( theFormatter.isTrue( getIgnore() )) {
+            if( formatter.isTrue( getIgnore() )) {
                 return lookupMeshObject( propertyNameValue );
             } else {
                 return lookupMeshObjectOrThrow( propertyNameValue );
@@ -247,7 +249,7 @@ public abstract class AbstractRestInfoGridTag
         throws
             StringifierException
     {
-        String ret = ((RestfulJeeFormatter)theFormatter).formatPropertyValue(
+        String ret = getFormatter().formatPropertyValue(
                 pageContext,
                 value,
                 nullString,
@@ -292,7 +294,7 @@ public abstract class AbstractRestInfoGridTag
             IllegalPropertyTypeException,
             NotPermittedException
     {
-        String ret = ((RestfulJeeFormatter)theFormatter).formatProperty(
+        String ret = getFormatter().formatProperty(
                 pageContext,
                 owningMeshObject,
                 propertyType,
@@ -324,7 +326,7 @@ public abstract class AbstractRestInfoGridTag
         throws
             StringifierException
     {
-        String ret = ((RestfulJeeFormatter)theFormatter).formatDataType(
+        String ret = getFormatter().formatDataType(
                 pageContext,
                 type,
                 stringRepresentation,
@@ -344,7 +346,7 @@ public abstract class AbstractRestInfoGridTag
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findMeshObject( identifier );
+        return getFormatter().findMeshObject( identifier );
     }
 
     /**
@@ -359,7 +361,7 @@ public abstract class AbstractRestInfoGridTag
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( identifier );
+        return getFormatter().findMeshObjectOrThrow( identifier );
     }
 
     /**
@@ -374,7 +376,7 @@ public abstract class AbstractRestInfoGridTag
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findMeshTypeByIdentifier( identifier );
+        return getFormatter().findMeshTypeByIdentifier( identifier );
     }
 
     /**
@@ -389,7 +391,7 @@ public abstract class AbstractRestInfoGridTag
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findMeshTypeByIdentifierOrThrow( identifier );
+        return getFormatter().findMeshTypeByIdentifierOrThrow( identifier );
     }
 
     /**
@@ -405,7 +407,7 @@ public abstract class AbstractRestInfoGridTag
             MeshObject obj,
             String     name )
     {
-        return ((RestfulJeeFormatter)theFormatter).findPropertyType( obj, name );
+        return getFormatter().findPropertyType( obj, name );
     }
 
     /**
@@ -424,7 +426,7 @@ public abstract class AbstractRestInfoGridTag
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findPropertyTypeOrThrow( obj, name );
+        return getFormatter().findPropertyTypeOrThrow( obj, name );
     }
 
     /**
@@ -438,7 +440,7 @@ public abstract class AbstractRestInfoGridTag
             MeshObject startObject,
             String     traversalTerm )
     {
-        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecification( startObject, traversalTerm );
+        return getFormatter().findTraversalSpecification( startObject, traversalTerm );
     }
 
     /**
@@ -455,7 +457,7 @@ public abstract class AbstractRestInfoGridTag
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationOrThrow( startObject, traversalTerm );
+        return getFormatter().findTraversalSpecificationOrThrow( startObject, traversalTerm );
     }
 
     /**
@@ -469,7 +471,7 @@ public abstract class AbstractRestInfoGridTag
             MeshObject startObject,
             String     traversalTerm )
     {
-        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationSequence( startObject, traversalTerm );
+        return getFormatter().findTraversalSpecificationSequence( startObject, traversalTerm );
     }
 
     /**
@@ -486,6 +488,17 @@ public abstract class AbstractRestInfoGridTag
         throws
             JspException
     {
-        return ((RestfulJeeFormatter)theFormatter).findTraversalSpecificationSequenceOrThrow( startObject, traversalTerm );
+        return getFormatter().findTraversalSpecificationSequenceOrThrow( startObject, traversalTerm );
+    }
+
+    /**
+     * Get the formatter to use.
+     *
+     * @return the formatter
+     */
+    @Override
+    protected RestfulJeeFormatter getFormatter()
+    {
+        return (RestfulJeeFormatter) super.getFormatter();
     }
 }

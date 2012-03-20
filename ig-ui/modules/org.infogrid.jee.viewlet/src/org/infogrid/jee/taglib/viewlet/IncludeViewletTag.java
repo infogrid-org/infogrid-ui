@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -231,7 +231,7 @@ public class IncludeViewletTag
         HttpServletRequest servletRequest = (HttpServletRequest) pageContext.getRequest();
         SaneServletRequest saneRequest    = SaneServletRequest.create( servletRequest );
 
-        InfoGridWebApp app = InfoGridWebApp.getSingleton();
+        InfoGridWebApp app = getInfoGridWebApp();
         Context c          = (Context) saneRequest.getAttribute( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
         if( c == null && theRequestContext != null ) {
             ContextDirectory dir = app.getContextDirectory();

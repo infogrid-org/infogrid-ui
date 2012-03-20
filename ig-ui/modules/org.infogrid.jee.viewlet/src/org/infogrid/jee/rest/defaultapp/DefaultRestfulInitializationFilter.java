@@ -8,12 +8,14 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.rest.defaultapp;
 
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
 import org.infogrid.jee.defaultapp.DefaultInitializationFilter;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
@@ -67,7 +69,36 @@ public class DefaultRestfulInitializationFilter
         rootContext.addContextObject( formatter );
 
         // StructuredResponseTemplateFactory
-        StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create();
+        StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create( getInfoGridWebApp() );
         rootContext.addContextObject( tmplFactory );
     }
+
+    /**
+     * Initialization method for this filter.
+     *
+     * @param filterConfig the filter configuration
+     * @throws ServletException an exception occurred
+     */
+    @Override
+    protected void internalInit(
+            FilterConfig filterConfig )
+        throws
+            ServletException
+    {
+        super.internalInit( filterConfig );
+
+        theDefaultMeshBaseIdentifier = theFilterConfig.getInitParameter( DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER );
+    }
+
+    /**
+     * The default MeshBaseIdentifier, in String form,
+     */
+    protected String theDefaultMeshBaseIdentifier;
+
+    /**
+     * Name of the String in the RequestContext that contains the identifier of the default
+     * MeshBase.
+     */
+    public static final String DEFAULT_MESH_BASE_IDENTIFIER_PARAMETER = "DefaultMeshBaseIdentifier";
+
 }

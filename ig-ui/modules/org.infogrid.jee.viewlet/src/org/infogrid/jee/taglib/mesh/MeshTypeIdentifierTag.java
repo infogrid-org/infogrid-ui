@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -141,7 +141,7 @@ public class MeshTypeIdentifierTag
             theIdentifier = ((MeshType)found).getIdentifier();
         } else if( found instanceof MeshTypeIdentifier ) {
             theIdentifier = (MeshTypeIdentifier) found;
-        } else if( theFormatter.isTrue( getIgnore() )) {
+        } else if( getFormatter().isTrue( getIgnore() )) {
             throw new ClassCastException( "Found object named " + theMeshTypeName + " is neither a MeshType nor a MeshTypeIdentifier: " + found );
         } else {
             theIdentifier = null;
@@ -150,7 +150,7 @@ public class MeshTypeIdentifierTag
         try {
             String text;
             if( theIdentifier != null ) {
-                text = ((RestfulJeeFormatter)theFormatter).formatMeshTypeIdentifier( pageContext, theIdentifier, theStringRepresentation, theMaxLength );
+                text = getFormatter().formatMeshTypeIdentifier( pageContext, theIdentifier, theStringRepresentation, theMaxLength );
             } else {
                 text = "";
             }

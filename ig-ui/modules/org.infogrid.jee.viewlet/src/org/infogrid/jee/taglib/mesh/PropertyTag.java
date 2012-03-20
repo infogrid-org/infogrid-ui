@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -350,21 +350,23 @@ public class PropertyTag
                 throw new JspException( "Must not specify both meshObject and meshObjectVarName" );
             }
 
+            RestfulJeeFormatter formatter = getFormatter();
+
             if( theMeshObject instanceof MeshObject ) {
                 obj = (MeshObject) theMeshObject;
             } else if( theMeshObject instanceof TypedMeshObjectFacade ) {
                 obj = ((TypedMeshObjectFacade)theMeshObject).get_Delegate();
             } else if( theMeshObject instanceof MeshObjectIdentifier ) {
-                if( theFormatter.isTrue( getIgnore() )) {
-                    obj = ((RestfulJeeFormatter)theFormatter).findMeshObject( (MeshObjectIdentifier)theMeshObject );
+                if( formatter.isTrue( getIgnore() )) {
+                    obj = formatter.findMeshObject( (MeshObjectIdentifier)theMeshObject );
                 } else {
-                    obj = ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (MeshObjectIdentifier)theMeshObject );
+                    obj = formatter.findMeshObjectOrThrow( (MeshObjectIdentifier)theMeshObject );
                 }
             } else if( theMeshObject instanceof String ) {
-                if( theFormatter.isTrue( getIgnore() )) {
-                    obj = ((RestfulJeeFormatter)theFormatter).findMeshObject( (String) theMeshObject );
+                if( formatter.isTrue( getIgnore() )) {
+                    obj = formatter.findMeshObject( (String) theMeshObject );
                 } else {
-                    obj = ((RestfulJeeFormatter)theFormatter).findMeshObjectOrThrow( (String) theMeshObject );
+                    obj = formatter.findMeshObjectOrThrow( (String) theMeshObject );
                 }
             } else {
                 throw new JspException( "Unexpected type " + theMeshObject.getClass().getName() + ": " + theMeshObject );
@@ -374,7 +376,7 @@ public class PropertyTag
             if( theMeshObjectVarName != null ) {
                 throw new JspException( "Must not specify both meshObjectName and meshObjectVarName" );
             }
-            if( theFormatter.isTrue( getIgnore() )) {
+            if( getFormatter().isTrue( getIgnore() )) {
                 obj = lookupMeshObject( theMeshObjectName );
             } else {
                 obj = lookupMeshObjectOrThrow( theMeshObjectName );

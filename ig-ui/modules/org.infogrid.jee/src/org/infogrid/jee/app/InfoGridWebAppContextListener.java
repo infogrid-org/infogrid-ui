@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -16,6 +16,7 @@ package org.infogrid.jee.app;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import org.infogrid.jee.servlet.AbstractInfoGridServlet;
 
 /**
  * Listens to ServletContext events and destroys InfoGridWebApp appropriately.
@@ -46,7 +47,7 @@ public class InfoGridWebAppContextListener
         InfoGridWebApp app = null;
         
         try {
-            app = InfoGridWebApp.getSingleton();
+            app = (InfoGridWebApp) event.getServletContext().getAttribute( AbstractInfoGridServlet.INFOGRID_WEB_APP_NAME );
         } catch( Throwable t ) {
             // swallow everything. Tomcat 5.5 sometimes throws NoClassDefFoundErrors here.
         }

@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -105,7 +105,7 @@ public class InlineInfoMessagesTag
         SaneRequest sane = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
 
         try {
-            String content = theFormatter.formatInfoMessages( sane, reportedInfoMessagesIter, theStringRepresentation, false );
+            String content = getFormatter().formatInfoMessages( sane, reportedInfoMessagesIter, theStringRepresentation, false );
             print( content );
 
         } catch( StringifierException ex ) {

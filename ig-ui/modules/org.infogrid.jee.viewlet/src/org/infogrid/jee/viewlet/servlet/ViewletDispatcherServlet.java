@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -17,7 +17,6 @@ package org.infogrid.jee.viewlet.servlet;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Deque;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -28,6 +27,7 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.security.UnsafePostException;
+import org.infogrid.jee.servlet.AbstractInfoGridServlet;
 import org.infogrid.jee.taglib.viewlet.IncludeViewletTag;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.servlet.TemplatesFilter;
@@ -51,7 +51,7 @@ import org.infogrid.viewlet.ViewletFactory;
  */
 public class ViewletDispatcherServlet
         extends
-            GenericServlet
+            AbstractInfoGridServlet
 {
     private static final long serialVersionUID = 1L; // helps with serialization
 
@@ -74,7 +74,7 @@ public class ViewletDispatcherServlet
         SaneRequest        saneRequest    = SaneServletRequest.create( servletRequest );
         StructuredResponse structured     = (StructuredResponse) request.getAttribute( StructuredResponse.STRUCTURED_RESPONSE_ATTRIBUTE_NAME );
 
-        InfoGridWebApp app = InfoGridWebApp.getSingleton();
+        InfoGridWebApp app = getInfoGridWebApp();
         Context        c   = (Context) saneRequest.getAttribute( TemplatesFilter.LID_APPLICATION_CONTEXT_PARAMETER_NAME );
         if( c == null ) {
             c = app.getApplicationContext();

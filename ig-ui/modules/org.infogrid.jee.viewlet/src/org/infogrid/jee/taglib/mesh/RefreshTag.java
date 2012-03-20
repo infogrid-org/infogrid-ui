@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -91,7 +91,7 @@ public class RefreshTag
         SaneRequest        saneRequest = (SaneRequest)        lookupOrThrow( SaneServletRequest.SANE_SERVLET_REQUEST_ATTRIBUTE_NAME );
 
         String href = saneRequest.getAbsoluteFullUri();
-        href = theFormatter.filter( href );
+        href = getFormatter().filter( href );
         
         StringBuilder buf = new StringBuilder();
         buf.append( "<div class=\"" ).append( getClass().getName().replace( '.', '-' )).append( "\">" );

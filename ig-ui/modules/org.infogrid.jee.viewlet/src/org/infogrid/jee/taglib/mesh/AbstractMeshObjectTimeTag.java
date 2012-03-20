@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -241,7 +241,7 @@ public abstract class AbstractMeshObjectTimeTag
         int    dateStyle;
         int    timeStyle;
 
-        Locale locale = theFormatter.determineLocale( theLocale );
+        Locale locale = getFormatter().determineLocale( theLocale );
                 
         dateStyle = determineStyle( theDateStyle, "DateStyle" );
         timeStyle = determineStyle( theTimeStyle, "TimeStyle" );

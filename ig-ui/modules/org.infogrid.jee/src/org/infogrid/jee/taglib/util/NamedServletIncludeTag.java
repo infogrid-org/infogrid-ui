@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -119,7 +119,7 @@ public class NamedServletIncludeTag
         // This is created after org/apache/jasper/runtime/JspRuntimeLibrary.include
         
         JspWriter out = pageContext.getOut();
-        if( theFormatter.isTrue( theFlush ) && !(out instanceof BodyContent)) {
+        if( getFormatter().isTrue( theFlush ) && !(out instanceof BodyContent)) {
             out.flush();
         }
 

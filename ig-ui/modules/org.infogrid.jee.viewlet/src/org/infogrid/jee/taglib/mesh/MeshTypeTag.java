@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -271,7 +271,7 @@ public class MeshTypeTag
                 
                 if( theLocale == null ) {
                     value = map.getDefault();
-                } else if( theFormatter.isTrue( theExactLocaleMatch )) {
+                } else if( getFormatter().isTrue( theExactLocaleMatch )) {
                     value = map.getExact( theLocale );
                 } else {
                     value = map.get( theLocale );

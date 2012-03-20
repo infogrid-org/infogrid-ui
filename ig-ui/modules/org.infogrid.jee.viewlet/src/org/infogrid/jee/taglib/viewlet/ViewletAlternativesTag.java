@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -193,7 +193,7 @@ public class ViewletAlternativesTag
             pageContext.getRequest().setAttribute( INSTANCE_ID_PAR_NAME, nextId + 1 );
 
             SaneRequest          saneRequest = SaneServletRequest.create( (HttpServletRequest) pageContext.getRequest() );
-            StringRepresentation rep         = theFormatter.determineStringRepresentation( theStringRepresentation );
+            StringRepresentation rep         = getFormatter().determineStringRepresentation( theStringRepresentation );
 
             SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
             pars.put( StringRepresentationParameters.WEB_ABSOLUTE_CONTEXT_KEY, saneRequest.getAbsoluteContextUri() );

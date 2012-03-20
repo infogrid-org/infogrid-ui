@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -25,11 +25,9 @@ import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.templates.TextStructuredResponseSection;
 import org.infogrid.jee.templates.utils.JeeTemplateUtils;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.StringHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.HTTP;
 import org.infogrid.util.http.SaneRequest;
-import org.infogrid.util.logging.Log;
 import org.infogrid.viewlet.AbstractViewlet;
 import org.infogrid.viewlet.CannotViewException;
 
@@ -42,8 +40,6 @@ public abstract class AbstractJeeViewlet
         implements
             JeeViewlet
 {
-    private static final Log log = Log.getLogInstance( AbstractJeeViewlet.class ); // our own, private logger
-
     /**
      * Constructor, for subclasses only.
      * 
@@ -269,7 +265,7 @@ public abstract class AbstractJeeViewlet
         }
         TextStructuredResponseSection titleSection = response.obtainTextSection( StructuredResponse.HTML_TITLE_SECTION );
         if( titleSection.isEmpty() ) {
-            InfoGridWebApp app = InfoGridWebApp.getSingleton();
+            InfoGridWebApp app = getContext().findContextObjectOrThrow( InfoGridWebApp.class );
 
             String name                     = getName();
             String userVisibleName          = getUserVisibleName();
@@ -393,7 +389,7 @@ public abstract class AbstractJeeViewlet
             String servletPath = getServletPath();
 
             if( servletPath != null ) {
-                InfoGridWebApp app = InfoGridWebApp.getSingleton();
+                InfoGridWebApp app = getContext().findContextObjectOrThrow( InfoGridWebApp.class );
 
                 RequestDispatcher dispatcher = app.findLocalizedRequestDispatcher(
                         servletPath,

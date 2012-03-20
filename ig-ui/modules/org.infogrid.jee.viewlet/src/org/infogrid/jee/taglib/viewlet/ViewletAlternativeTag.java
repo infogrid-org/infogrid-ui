@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -112,7 +112,7 @@ public class ViewletAlternativeTag
         ViewletFactoryChoice choice  = (ViewletFactoryChoice) lookupOrThrow( theViewletAlternativeName );
 
         if( choice != null ) { // may happen if ignore="true"
-            StringRepresentation rep = theFormatter.determineStringRepresentation( theStringRepresentation );
+            StringRepresentation rep = getFormatter().determineStringRepresentation( theStringRepresentation );
             try {
 
                 String text = choice.toStringRepresentation( rep, null );

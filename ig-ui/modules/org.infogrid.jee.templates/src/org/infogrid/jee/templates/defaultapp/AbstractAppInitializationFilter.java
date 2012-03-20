@@ -8,19 +8,18 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.templates.defaultapp;
 
 import java.io.IOException;
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import org.infogrid.jee.servlet.AbstractInfoGridWebAppFilter;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.util.CompoundException;
 import org.infogrid.util.CompoundRuntimeException;
@@ -30,8 +29,8 @@ import org.infogrid.util.logging.Log;
  * Common functionality of application initialization filters.
  */
 public abstract class AbstractAppInitializationFilter
-        implements
-            Filter
+        extends
+            AbstractInfoGridWebAppFilter
 {
     private static Log log; // because this is a filter, it needs delayed initialization
 
@@ -149,21 +148,7 @@ public abstract class AbstractAppInitializationFilter
             IOException,
             ServletException
     {
-        // by default, do nothing
-    }
-
-    /**
-     * Initialize the Filter.
-     *
-     * @param filterConfig the Filter configuration object
-     * @throws ServletException thrown if misconfigured
-     */
-    public void init(
-            FilterConfig filterConfig )
-        throws
-            ServletException
-    {
-        theFilterConfig  = filterConfig;
+        Thread.currentThread().setContextClassLoader( getClass().getClassLoader() ); // this will most likely be the WebApp's ("WAR") ClassLoader
     }
 
     /**
@@ -188,12 +173,7 @@ public abstract class AbstractAppInitializationFilter
     }
 
     /**
-     * The filter configuration object this Filter is associated with.
+     * Has the Filter been successfully initialized.
      */
-    protected FilterConfig theFilterConfig = null;
-
-    /**
-     * Have the Stores been successfully initialized.
-     */
-    protected boolean isInitialized = false;
+    protected volatile boolean isInitialized = false;
 }

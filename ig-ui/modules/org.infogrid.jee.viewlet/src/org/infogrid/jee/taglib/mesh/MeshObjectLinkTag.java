@@ -8,15 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.app.InfoGridWebApp;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridBodyTag;
 import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
@@ -243,7 +241,7 @@ public class MeshObjectLinkTag
             String addArguments = constructAddArguments( obj );
 
             try {
-                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkStart( pageContext, obj, addArguments, theTarget, theTitle, theStringRepresentation );
+                String text = getFormatter().formatMeshObjectLinkStart( pageContext, obj, addArguments, theTarget, theTitle, theStringRepresentation );
                 print( text );
 
             } catch( StringifierException ex ) {
@@ -271,7 +269,7 @@ public class MeshObjectLinkTag
 
         if( obj != null ) { // make be ignore="true"
             try {
-                String text = ((RestfulJeeFormatter)theFormatter).formatMeshObjectLinkEnd( pageContext, obj, theStringRepresentation );
+                String text = getFormatter().formatMeshObjectLinkEnd( pageContext, obj, theStringRepresentation );
                 print( text );
 
             } catch( StringifierException ex ) {
@@ -300,7 +298,7 @@ public class MeshObjectLinkTag
             return theAddArguments;
         }
 
-        TraversalTranslator translator = InfoGridWebApp.getSingleton().getApplicationContext().findContextObject( TraversalTranslator.class );
+        TraversalTranslator translator = getInfoGridWebApp().getApplicationContext().findContextObject( TraversalTranslator.class );
         if( translator == null ) {
             return theAddArguments;
         }

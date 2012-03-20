@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -63,7 +63,7 @@ public abstract class AbstractMRestfulAppInitializationFilter
         HttpServletRequest realRequest = (HttpServletRequest) request;
         SaneRequest        saneRequest = SaneServletRequest.create( realRequest );
 
-        InfoGridWebApp app        = InfoGridWebApp.getSingleton();
+        InfoGridWebApp app        = getInfoGridWebApp();
         Context        appContext = app.getApplicationContext();
 
         // ModelBase

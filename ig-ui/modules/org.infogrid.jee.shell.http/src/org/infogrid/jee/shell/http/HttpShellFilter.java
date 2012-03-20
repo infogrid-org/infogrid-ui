@@ -21,19 +21,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.ProblemReporter;
-import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.util.http.MimePart;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
+import org.infogrid.jee.servlet.AbstractInfoGridWebAppFilter;
 import org.infogrid.mesh.EntityBlessedAlreadyException;
 import org.infogrid.mesh.EntityNotBlessedException;
 import org.infogrid.mesh.IllegalPropertyTypeException;
@@ -93,8 +91,9 @@ import org.infogrid.util.text.StringifierException;
  *    constructed to make it easy to issue them from HTML forms using HTTP POST.</p>
  */
 public class HttpShellFilter
+    extends
+        AbstractInfoGridWebAppFilter
     implements
-        Filter,
         HttpShellKeywords
 {
     private static Log log; // initialized only after the InitializationFilter has run.
@@ -1092,8 +1091,7 @@ public class HttpShellFilter
         if( theMainMeshBase == null ) {
             // the name server may be null, so we test against main MeshBase, which is always non-null
 
-            InfoGridWebApp app = InfoGridWebApp.getSingleton();
-            theAppContext      = app.getApplicationContext();
+            theAppContext = getInfoGridWebApp().getApplicationContext();
 
             theMeshBaseNameServer        = theAppContext.findContextObject( MeshBaseNameServer.class );
             theMeshBaseIdentifierFactory = theAppContext.findContextObject( MeshBaseIdentifierFactory.class );
@@ -1129,17 +1127,6 @@ public class HttpShellFilter
     }
 
     /**
-     * Initialization method for this filter.
-     *
-     * @param filterConfig the filter configuration object
-     */
-    public void init(
-            FilterConfig filterConfig )
-    {
-        theFilterConfig = filterConfig;
-    }
-
-    /**
      * Destroy method for this filter.
      */
     public void destroy()
@@ -1158,11 +1145,6 @@ public class HttpShellFilter
         }
         return log;
     }
-
-    /**
-     * The Filter configuration object.
-     */
-    protected FilterConfig theFilterConfig;
 
     /**
      * The Context to use.

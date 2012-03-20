@@ -329,7 +329,7 @@ public class MeshObjectBlessedByTag
                     continue;
                 }
                 try {
-                    String text = ((RestfulJeeFormatter)theFormatter).formatMeshType( pageContext, allTypes[i], theStringRepresentation, theMaxLength, theColloquial );
+                    String text = getFormatter().formatMeshType( pageContext, allTypes[i], theStringRepresentation, theMaxLength, theColloquial );
                     text = cap.doCapitalization( text );
 
                     if( result == null ) {

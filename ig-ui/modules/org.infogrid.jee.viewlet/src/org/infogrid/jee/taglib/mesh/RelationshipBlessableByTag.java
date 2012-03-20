@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.mesh.MeshObject;
@@ -320,7 +319,7 @@ public class RelationshipBlessableByTag
 
         try {
             if( start != null ) {
-                String identifier = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, start, LINK_STRING_REPRESENTATION, -1 );
+                String identifier = getFormatter().formatMeshObjectIdentifier( pageContext, start, LINK_STRING_REPRESENTATION, -1 );
 
                 print( "<input type=\"hidden\" name=\"" );
                 print( startObjectEditVar );
@@ -329,7 +328,7 @@ public class RelationshipBlessableByTag
                 println( "\"/>" );
             }
             if( neighbor != null ) {
-                String identifier = ((RestfulJeeFormatter)theFormatter).formatMeshObjectIdentifier( pageContext, neighbor, LINK_STRING_REPRESENTATION, -1 );
+                String identifier = getFormatter().formatMeshObjectIdentifier( pageContext, neighbor, LINK_STRING_REPRESENTATION, -1 );
 
                 print( "<input type=\"hidden\" name=\"" );
                 print( neighborEditVar );

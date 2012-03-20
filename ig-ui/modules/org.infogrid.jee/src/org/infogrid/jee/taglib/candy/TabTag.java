@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -84,7 +84,7 @@ public class TabTag
             IgnoreException
     {
         print( "<li" );
-        if( theFormatter.isTrue( theIsSelected )) {
+        if( getFormatter().isTrue( theIsSelected )) {
             print( " selected=\"selected\"" );
         }
         println( "\">" );

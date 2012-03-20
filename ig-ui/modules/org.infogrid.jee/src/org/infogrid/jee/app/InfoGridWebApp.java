@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -42,33 +42,6 @@ import org.infogrid.util.logging.Log;
  */
 public abstract class InfoGridWebApp
 {
-    /**
-     * Set the singleton instance.
-     *
-     * @param single the singleton instance
-     * @throws IllegalStateException if a singleton instance was set previously
-     */
-    public static void setSingleton(
-            InfoGridWebApp single )
-        throws
-            IllegalStateException
-    {
-        if( theSingleton != null ) {
-            throw new IllegalStateException( "Singleton set already: " + theSingleton );
-        }
-        theSingleton = single;
-    }
-
-    /**
-     * Obtain the singleton instance.
-     *
-     * @return the singleton instance
-     */
-    public static InfoGridWebApp getSingleton()
-    {
-        return theSingleton;
-    }
-
     /**
      * Constructor, for subclasses.
      *

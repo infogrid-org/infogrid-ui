@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -27,7 +27,7 @@ import org.infogrid.util.logging.Log;
  */
 public abstract class AbstractServletInvokingServlet
         extends
-            GenericServlet
+            AbstractInfoGridServlet
 {
     private static final long serialVersionUID = 1L; // helps with serialization
     private static final Log  log              = Log.getLogInstance( AbstractServletInvokingServlet.class ); // our own, private logger
