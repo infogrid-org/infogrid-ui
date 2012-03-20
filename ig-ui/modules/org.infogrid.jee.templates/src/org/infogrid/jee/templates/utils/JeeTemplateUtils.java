@@ -8,19 +8,17 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2009 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.templates.utils;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
-import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.servlet.BufferedServletResponse;
 import org.infogrid.jee.templates.BinaryStructuredResponseSection;
