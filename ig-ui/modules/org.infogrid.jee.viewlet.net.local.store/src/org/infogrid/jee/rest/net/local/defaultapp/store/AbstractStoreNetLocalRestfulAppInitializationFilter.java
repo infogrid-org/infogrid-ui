@@ -24,6 +24,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
+import org.infogrid.jee.rest.net.NetRestfulJeeFormatter;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.defaultapp.AppInitializationException;
 import org.infogrid.meshbase.MeshBase;
@@ -31,6 +32,7 @@ import org.infogrid.meshbase.MeshBaseNameServer;
 import org.infogrid.meshbase.net.DefaultNetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.DefaultNetMeshObjectAccessSpecificationFactory;
 import org.infogrid.meshbase.net.IterableNetMeshBase;
+import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifier;
 import org.infogrid.meshbase.net.NetMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.net.local.store.IterableLocalNetStoreMeshBase;
@@ -46,6 +48,7 @@ import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
  * Common functionality of application initialization filters that are net-enabled and REST-ful.
@@ -250,6 +253,30 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         ret.setExecuteExistingDelayedTasksAfterShutdownPolicy( false );
 
         return ret;
+    }
+
+    /**
+     * Initialize the context objects. This may be overridden by subclasses.
+     *
+     * @param incomingRequest the incoming request
+     * @param rootContext the root Context
+     * @throws Exception initialization may fail
+     */
+    @Override
+    protected void initializeContextObjects(
+            SaneRequest incomingRequest,
+            Context     rootContext )
+        throws
+            Exception
+    {
+        super.initializeContextObjects( incomingRequest, rootContext );
+
+        // Formatter
+        NetMeshBase                   defaultNetMeshBase = rootContext.findContextObject( NetMeshBase.class );
+        StringRepresentationDirectory srepdir            = rootContext.findContextObjectOrThrow( StringRepresentationDirectory.class );
+
+        NetRestfulJeeFormatter formatter = NetRestfulJeeFormatter.create( defaultNetMeshBase, srepdir );
+        rootContext.addContextObject( formatter );
     }
 
     /**

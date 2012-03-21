@@ -18,8 +18,8 @@
  <display-name>org.infogrid.jee.testapp</display-name>
 
  <filter>
-  <filter-name>DefaultInitializationFilter</filter-name>
-  <filter-class>org.infogrid.jee.rest.defaultapp.DefaultRestfulInitializationFilter</filter-class>
+  <filter-name>InitializationFilter</filter-name>
+  <filter-class>org.infogrid.jee.defaultapp.DefaultInitializationFilter</filter-class>
   <init-param>
    <param-name>ROOTMODULE</param-name>
    <param-value>org.infogrid.jee.testapp</param-value>
@@ -61,7 +61,7 @@
  </servlet>
 
  <filter-mapping>
-  <filter-name>DefaultInitializationFilter</filter-name>
+  <filter-name>InitializationFilter</filter-name>
   <url-pattern>/*</url-pattern>
  </filter-mapping>
 

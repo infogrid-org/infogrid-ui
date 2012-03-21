@@ -17,7 +17,6 @@ package org.infogrid.jee.defaultapp;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import org.infogrid.jee.JeeFormatter;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.servlet.AbstractInfoGridServlet;
@@ -26,12 +25,9 @@ import org.infogrid.module.Module;
 import org.infogrid.module.servlet.ServletBootLoader;
 import org.infogrid.util.QuitManager;
 import org.infogrid.util.ResourceHelper;
-import org.infogrid.util.context.Context;
 import org.infogrid.util.context.SimpleContext;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
-import org.infogrid.util.text.StringRepresentationDirectory;
-import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 
 /**
  * Configures the default InfoGridWebApp with log4j logging.
@@ -87,18 +83,18 @@ public class DefaultInitializationFilter
                     } catch( IllegalStateException ex ) {
                         // have one already, that's fine (a parallel thread was faster)
                     }
-                    try {
-                        initializeContextObjects( lidRequest, theApp.getApplicationContext() );
-
-                    } catch( Throwable t ) {
-                        throw new ServletException( "could not initialize context objects", t );
-                    }
-
                 }
             }
         }
     }
 
+    /**
+     * Create the InfoGridWebApp instance.
+     *
+     * @param lidRequest the incoming request
+     * @return the created InfoGridWebApp
+     * @throws ServletException thrown if the InfoGridWebApp could not be initialized
+     */
     protected InfoGridWebApp createInfoGridWebApp(
             SaneRequest lidRequest )
         throws
@@ -127,33 +123,6 @@ public class DefaultInitializationFilter
         rootContext.addContextObject( ret );
 
         return ret;        
-    }
-
-    /**
-     * Initialize the context objects. This may be overridden by subclasses.
-     *
-     * @param incomingRequest the incoming request
-     * @param rootContext the root Context
-     * @throws Exception initialization may fail
-     */
-    protected void initializeContextObjects(
-            SaneRequest incomingRequest,
-            Context     rootContext )
-        throws
-            Exception
-    {
-        StringRepresentationDirectory srepdir = rootContext.findContextObject( StringRepresentationDirectory.class );
-        if( srepdir == null ) {
-            srepdir = StringRepresentationDirectorySingleton.getSingleton();
-            rootContext.addContextObject( srepdir );
-        }
-
-        // Formatter
-        JeeFormatter formatter = rootContext.findContextObject( JeeFormatter.class );
-        if( formatter == null ) {
-            formatter = JeeFormatter.create( srepdir );
-            rootContext.addContextObject( formatter );
-        }
     }
 
     /**

@@ -18,8 +18,8 @@
         <listener-class>org.infogrid.jee.app.InfoGridWebAppContextListener</listener-class>
     </listener>
     <filter>
-        <filter-name>DefaultInitializationFilter</filter-name>
-        <filter-class>org.infogrid.jee.rest.defaultapp.DefaultRestfulInitializationFilter</filter-class>
+        <filter-name>InitializationFilter</filter-name>
+        <filter-class>org.infogrid.jee.defaultapp.DefaultInitializationFilter</filter-class>
         <init-param>
             <param-name>ROOTMODULE</param-name>
             <param-value>org.infogrid.meshworld</param-value>
@@ -54,7 +54,7 @@
         <servlet-class>org.infogrid.jee.viewlet.servlet.ViewletDispatcherServlet</servlet-class>
     </servlet>
     <filter-mapping>
-        <filter-name>DefaultInitializationFilter</filter-name>
+        <filter-name>InitializationFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>

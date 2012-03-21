@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 package org.infogrid.jee.viewlet.json;
@@ -41,12 +41,13 @@ import org.infogrid.model.primitives.TimeStampValue;
 import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationDirectorySingleton;
 import org.infogrid.util.CursorIterator;
+import org.infogrid.util.context.AbstractObjectInContext;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationDirectory;
-import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
@@ -56,15 +57,38 @@ import org.infogrid.util.text.StringifierException;
  * external identifier.
  *
  */
-public class MeshObjectJsonEncoder {
+public class MeshObjectJsonEncoder
+    extends
+        AbstractObjectInContext
+{
+    /**
+     * Factory method.
+     *
+     * @param theOutputStream
+     * @return MeshObjectJsonEncoder
+     */
+    public static MeshObjectJsonEncoder create(
+            OutputStream theOutputStream,
+            SaneRequest  saneRequest,
+            Context      ctxt )
+        throws IOException
+    {
+        return new MeshObjectJsonEncoder(theOutputStream, saneRequest, ctxt );
+    }
+
 
     /**
      * constr - do not use, use static create
      * @param theOutputStream
      */
-    protected MeshObjectJsonEncoder(OutputStream theOutputStream,
-            SaneRequest saneRequest)
-            throws IOException {
+    protected MeshObjectJsonEncoder(
+            OutputStream theOutputStream,
+            SaneRequest  saneRequest,
+            Context      ctxt )
+        throws IOException
+    {
+        super( ctxt );
+
         this.theSaneRequest = saneRequest; // cache for URL formatting
         this.theJsonFactory = new JsonFactory();
         this.theJsonGenerator = theJsonFactory.createJsonGenerator(theOutputStream, JsonEncoding.UTF8);
@@ -75,17 +99,6 @@ public class MeshObjectJsonEncoder {
         } catch (AttributeValueException ex) {
             errorOut(ex);
         }
-    }
-
-    /**
-     * Factory constructor.
-     * @param theOutputStream
-     * @return MeshObjectJsonEncoder
-     */
-    public static MeshObjectJsonEncoder create(OutputStream theOutputStream,
-            SaneRequest saneRequest)
-            throws IOException {
-        return new MeshObjectJsonEncoder(theOutputStream, saneRequest);
     }
 
     /**
@@ -325,8 +338,8 @@ public class MeshObjectJsonEncoder {
                             writeString(thePropertyValue);
                         }
                     } else if (theDataType instanceof BlobDataType) {
-                        RestfulJeeFormatter theFormatter = RestfulJeeFormatter.create(StringRepresentationDirectorySingleton.getSingleton());
-                        String objectId = ((RestfulJeeFormatter) theFormatter).formatMeshObjectIdentifier(theSaneRequest, theObject, "url", -1);
+                        RestfulJeeFormatter theFormatter = getContext().findContextObjectOrThrow( RestfulJeeFormatter.class );
+                        String objectId = theFormatter.formatMeshObjectIdentifier(theSaneRequest, theObject, "url", -1);
                         theJsonGenerator.writeString(theRootURI
                                 + objectId
                                 + "?lid-format=viewlet:org.infogrid.jee.viewlet.blob.BlobViewlet"

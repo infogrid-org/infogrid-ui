@@ -611,6 +611,12 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+        <ant antfile="${project.org_infogrid_vendors_org_apache_jakarta_taglibs_jstl}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
+        <ant antfile="${project.org_infogrid_vendors_org_apache_logging_log4j}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
         <ant antfile="${project.org_infogrid_viewlet}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -701,6 +707,12 @@ exists or setup the property manually. For example like this:
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
+        <ant antfile="${project.org_infogrid_vendors_org_apache_jakarta_taglibs_jstl}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
+        <ant antfile="${project.org_infogrid_vendors_org_apache_logging_log4j}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_viewlet}/build.xml" inheritall="false" target="jar">
@@ -882,6 +894,8 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_util.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_util_logging_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.org_infogrid_vendors_org_apache_jakarta_taglibs_jstl.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.org_infogrid_vendors_org_apache_logging_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.ig-library-jstl.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.ig-library-log4j.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
@@ -918,6 +932,8 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_util.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_util_logging_log4j.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.org_infogrid_vendors_org_apache_jakarta_taglibs_jstl.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.org_infogrid_vendors_org_apache_logging_log4j.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.ig-library-jstl.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.ig-library-log4j.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
@@ -1315,6 +1331,8 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_probe}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_util_logging_log4j}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_vendors_org_apache_jakarta_taglibs_jstl}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_vendors_org_apache_logging_log4j}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_viewlet}/build.xml" inheritall="false" target="clean"/>
     </target>
     <target depends="init" name="do-clean">

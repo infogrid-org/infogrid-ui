@@ -20,14 +20,14 @@
  <table class="audit"> <!-- IE is unable to render float:right correctly, so here is a table for you -->
   <tr>
    <td class="title">
-    <v:ifState viewletState="edit">
+    <v:notIfState viewletState="edit">
      <div class="slide-in-button">
       <u:callJspo page="/o/delete.jspo" action="${Viewlet.postUrl}" linkTitle="Delete this NetMeshObject" submitLabel="Delete">
        <u:callJspoParam name="toDelete" value="${Subject}"/>
        <img src="${CONTEXT}/s/images/bin_closed.png" alt="Delete" />
       </u:callJspo>
      </div>
-    </v:ifState>
+    </v:notIfState>
     <h1>Net Property Sheet for: <mesh:meshObjectId meshObjectName="Subject" stringRepresentation="Html" maxLength="30"/></h1>
    </td>
    <td class="audit">
@@ -41,8 +41,8 @@
  <%@ include file="/v/org/infogrid/jee/viewlet/propertysheet/net/NetPropertySheetViewlet/replica-info.jsp" %>
 
  <v:ifState viewletState="edit">
-  <u:safeFormHiddenInput/>
   <div class="dialog-buttons">
+   <u:safeFormHiddenInput/>
    <input id="shell.submit" type="hidden" name="shell.submit" value="" />
    <table class="dialog-buttons">
     <tr>

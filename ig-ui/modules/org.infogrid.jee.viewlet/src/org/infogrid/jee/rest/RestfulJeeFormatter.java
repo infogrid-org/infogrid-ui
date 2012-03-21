@@ -67,24 +67,30 @@ public class RestfulJeeFormatter
     /**
      * Factory method.
      *
+     * @param defaultMeshBase the default MeshBase
      * @param stringRepDir the StringRepresentationDirectory to use
      * @return the created JeeFormatter
      */
     public static RestfulJeeFormatter create(
+            MeshBase                      defaultMeshBase,
             StringRepresentationDirectory stringRepDir )
     {
-        return new RestfulJeeFormatter( stringRepDir );
+        return new RestfulJeeFormatter( defaultMeshBase, stringRepDir );
     }
 
     /**
      * Private constructor for subclasses only, use factory method.
      *
+     * @param defaultMeshBase the default MeshBase
      * @param stringRepDir the StringRepresentationDirectory to use
      */
     protected RestfulJeeFormatter(
+            MeshBase                      defaultMeshBase,
             StringRepresentationDirectory stringRepDir )
     {
         super( stringRepDir );
+
+        theDefaultMeshBase = defaultMeshBase;
     }
 
     /**

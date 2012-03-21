@@ -17,12 +17,18 @@ package org.infogrid.jee.rest.defaultapp;
 import java.text.ParseException;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import org.infogrid.jee.rest.RestfulJeeFormatter;
+import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
+import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.defaultapp.AbstractAppInitializationFilter;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
 import org.infogrid.meshbase.MeshBaseIdentifierFactory;
+import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationDirectorySingleton;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationDirectory;
+import org.infogrid.util.text.StringRepresentationDirectorySingleton;
 
 /**
  * Common functionality of application initialization filters that are REST-ful.
@@ -80,7 +86,14 @@ public abstract class AbstractRestfulAppInitializationFilter
         throws
             Exception
     {
-        // nothing on this level
+        ModelPrimitivesStringRepresentationDirectorySingleton.initialize();
+
+        StringRepresentationDirectory srepdir = StringRepresentationDirectorySingleton.getSingleton();
+        rootContext.addContextObject( srepdir );
+
+        // StructuredResponseTemplateFactory
+        StructuredResponseTemplateFactory tmplFactory = DefaultStructuredResponseTemplateFactory.create( getInfoGridWebApp() );
+        rootContext.addContextObject( tmplFactory );
     }
 
     /**

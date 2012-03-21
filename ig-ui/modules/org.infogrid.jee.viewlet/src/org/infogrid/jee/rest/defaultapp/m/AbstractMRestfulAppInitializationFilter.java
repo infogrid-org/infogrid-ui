@@ -18,6 +18,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
@@ -31,6 +32,7 @@ import org.infogrid.modelbase.ModelBase;
 import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
  * Common functionality of application initialization filters that are REST-ful and use MMeshBase.
@@ -91,5 +93,28 @@ public abstract class AbstractMRestfulAppInitializationFilter
         appContext.addContextObject( nameServer );
 
         initializeContextObjects( saneRequest, appContext );
+    }
+
+    /**
+     * Initialize the context objects. This may be overridden by subclasses.
+     *
+     * @param incomingRequest the incoming request
+     * @param rootContext the root Context
+     * @throws Exception initialization may fail
+     */
+    @Override
+    protected void initializeContextObjects(
+            SaneRequest incomingRequest,
+            Context     rootContext )
+        throws
+            Exception
+    {
+        super.initializeContextObjects( incomingRequest, rootContext );
+
+        MeshBase                      defaultMeshBase = rootContext.findContextObject( MeshBase.class );
+        StringRepresentationDirectory srepdir         = rootContext.findContextObjectOrThrow( StringRepresentationDirectory.class );
+
+        RestfulJeeFormatter formatter = RestfulJeeFormatter.create( defaultMeshBase, srepdir );
+        rootContext.addContextObject( formatter );
     }
 }

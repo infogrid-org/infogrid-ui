@@ -31,33 +31,6 @@ import org.infogrid.util.logging.Log;
 /**
  * <p>Filter that makes sure InfoGrid initialization has been performed prior to processing
  *    requests.</p>
- * <p>The following Filter parameters are available in the <code>web.xml</code> file:</p>
- * <table class="infogrid-border">
- *  <thead>
- *   <tr>
- *    <td>Parameter Name</td>
- *    <td>Description</td>
- *    <td>Required?</td>
- *   </tr>
- *  </thead>
- *  <tbody>
- *   <tr>
- *    <td><code>org.infogrid.jee.app.InfoGridWebApp</code></td>
- *    <td>Filter parameter specifying the name of the class to use as the
- *        {@link org.infogrid.jee.app.InfoGridWebApp InfoGridWebApp}.
- *        This class must have a static factory method with the signature
- *        <code>public InfoGridWebApp create( String )</code>, where the String
- *        parameter is the name of the <code>DataSource</code> in the JNDI directory.</td>
- *    <td>Required</td>
- *   </tr>
- *   <tr>
- *    <td><code>DefaultMeshBaseIdentifier</code></td>
- *    <td>Filter parameter specifying the MeshBaseIdentifier of the default MeshBase in the
- *        application.</td>
- *    <td>Required</td>
- *   </tr>
- *  </tbody>
- * </table>
  */
 public class InitializationFilter
         implements

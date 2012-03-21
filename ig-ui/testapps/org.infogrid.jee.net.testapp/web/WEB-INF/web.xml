@@ -8,7 +8,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -18,8 +18,8 @@
  <display-name>org.infogrid.jee.net.testapp</display-name>
 
  <filter>
-  <filter-name>DefaultInitializationFilter</filter-name>
-  <filter-class>org.infogrid.jee.rest.net.defaultapp.DefaultNetRestfulInitializationFilter</filter-class>
+  <filter-name>InitializationFilter</filter-name>
+  <filter-class>org.infogrid.jee.defaultapp.DefaultInitializationFilter</filter-class>
   <init-param>
    <param-name>ROOTMODULE</param-name>
    <param-value>org.infogrid.jee.net.testapp</param-value>
@@ -61,7 +61,7 @@
  </servlet>
 
  <filter-mapping>
-  <filter-name>DefaultInitializationFilter</filter-name>
+  <filter-name>InitializationFilter</filter-name>
   <url-pattern>/*</url-pattern>
  </filter-mapping>
 

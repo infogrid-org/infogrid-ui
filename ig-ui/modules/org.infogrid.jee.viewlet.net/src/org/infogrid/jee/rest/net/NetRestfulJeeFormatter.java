@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.meshbase.net.NetMeshBase;
 import org.infogrid.meshbase.net.proxy.Proxy;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
@@ -36,25 +37,29 @@ public class NetRestfulJeeFormatter
 {
     /**
      * Factory method.
-     * 
+     *
+     * @param defaultMeshBase the default NetMeshBase
      * @param stringRepDir the StringRepresentationDirectory to use
      * @return the created NetRestfulJeeFormatter
      */
     public static NetRestfulJeeFormatter create(
+            NetMeshBase                   defaultMeshBase,
             StringRepresentationDirectory stringRepDir )
     {
-        return new NetRestfulJeeFormatter( stringRepDir );
+        return new NetRestfulJeeFormatter( defaultMeshBase, stringRepDir );
     }
     
     /**
      * Private constructor for subclasses only, use factory method.
      * 
+     * @param defaultMeshBase the default NetMeshBase
      * @param stringRepDir the StringRepresentationDirectory to use
      */
     protected NetRestfulJeeFormatter(
+            NetMeshBase                   defaultMeshBase,
             StringRepresentationDirectory stringRepDir )
     {
-        super( stringRepDir );
+        super( defaultMeshBase, stringRepDir );
     }
 
     /**

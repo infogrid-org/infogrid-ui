@@ -30,15 +30,7 @@ import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 
 /**
- * <p>An InfoGrid web application. This needs to be subclassed.</p>
- * <p>The application developer must instantiate this subclass exactly
- *    once per application and set the resulting instance with the
- *    {@link InfoGridWebApp#setSingleton InfoGridWebApp.setSingleton} method.</p>
- * <p>If the {@link org.infogrid.jee.servlet.InitializationFilter InitializationFilter}
- *    is used, this can be accomplished simply by declaring the name of the
- *    application class (e.g. <code>org.infogrid.jee.app.InfoGridWebApp</code>)
- *    as a parameter in the <code>web.xml</code> file. See documentation for
- *    {@link org.infogrid.jee.servlet.InitializationFilter InitializationFilter}.</p>
+ * An InfoGrid web application.
  */
 public abstract class InfoGridWebApp
 {
@@ -334,9 +326,4 @@ public abstract class InfoGridWebApp
      * The context directory.
      */
     protected ContextDirectory theContextDirectory;
-
-    /**
-     * The singleton instance of this class.
-     */
-    private static InfoGridWebApp theSingleton;    
 }

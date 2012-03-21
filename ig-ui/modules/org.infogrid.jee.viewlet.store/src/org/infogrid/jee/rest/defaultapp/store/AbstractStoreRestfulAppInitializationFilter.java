@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -20,6 +20,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.infogrid.jee.app.InfoGridWebApp;
+import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.templates.defaultapp.AppInitializationException;
@@ -35,6 +36,7 @@ import org.infogrid.modelbase.ModelBaseSingleton;
 import org.infogrid.store.IterableStore;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationDirectory;
 
 /**
  * Common functionality of application initialization filters that are REST-ful and use a Store for MeshBase persistence.
@@ -67,7 +69,7 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         HttpServletRequest realRequest = (HttpServletRequest) request;
         SaneRequest        saneRequest = SaneServletRequest.create( realRequest );
         
-        InfoGridWebApp app        = InfoGridWebApp.getSingleton();
+        InfoGridWebApp app        = getInfoGridWebApp();
         Context        appContext = app.getApplicationContext();
 
         // ModelBase
@@ -138,6 +140,29 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
     protected AccessManager createAccessManager()
     {
         return null;
+    }
+
+    /**
+     * Initialize the context objects. This may be overridden by subclasses.
+     *
+     * @param incomingRequest the incoming request
+     * @param rootContext the root Context
+     * @throws Exception initialization may fail
+     */
+    @Override
+    protected void initializeContextObjects(
+            SaneRequest incomingRequest,
+            Context     rootContext )
+        throws
+            Exception
+    {
+        super.initializeContextObjects( incomingRequest, rootContext );
+
+        MeshBase                      defaultMeshBase = rootContext.findContextObject( MeshBase.class );
+        StringRepresentationDirectory srepdir         = rootContext.findContextObjectOrThrow( StringRepresentationDirectory.class );
+
+        RestfulJeeFormatter formatter = RestfulJeeFormatter.create( defaultMeshBase, srepdir );
+        rootContext.addContextObject( formatter );
     }
 
     /**

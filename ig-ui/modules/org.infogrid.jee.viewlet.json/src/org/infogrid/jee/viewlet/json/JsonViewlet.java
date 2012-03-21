@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -119,7 +119,7 @@ public class JsonViewlet
             IOException {
         HttpServletResponse response = structured.getDelegate();
         response.setContentType(MIME_TYPE);
-        MeshObjectJsonEncoder theParser = MeshObjectJsonEncoder.create(response.getOutputStream(), request);
+        MeshObjectJsonEncoder theParser = MeshObjectJsonEncoder.create(response.getOutputStream(), request, getContext());
         theParser.write(getViewedMeshObjects().getSubject());
     }
 
