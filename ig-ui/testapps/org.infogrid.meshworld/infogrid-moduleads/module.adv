@@ -9,7 +9,7 @@
  
     For more information about InfoGrid go to http://infogrid.org/
 
-    Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+    Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
     All rights reserved.
 -->
 
@@ -17,7 +17,7 @@
  <name>org.infogrid.meshworld</name>
  <userdescription>The MeshWorld example application.</userdescription>
  <provides>
-  <jar>org.infogrid.meshworld.jar</jar>
+  <jar>org.infogrid.meshworld.war</jar>
  </provides>
  <dependencies>
   <requires name="org.infogrid.util.logging.log4j">

@@ -83,7 +83,6 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         
         InfoGridWebApp app        = getInfoGridWebApp();
         Context        appContext = app.getApplicationContext();
-        QuitManager    qm         = appContext.findContextObject( QuitManager.class );
 
         // ModelBase
         ModelBase modelBase = ModelBaseSingleton.getSingleton();
@@ -96,21 +95,61 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         // Main MeshBase
         NetMeshBaseIdentifier mbId = (NetMeshBaseIdentifier) determineMainMeshBaseIdentifier( saneRequest, meshBaseIdentifierFactory );
 
-        Throwable thrown = null; // set if data source initialization failed
+        IterableLocalNetStoreMeshBase mb = setupMeshBase( saneRequest, mbId, modelBase, app );
+
+        if( mb != null ) {
+            appContext.addContextObject( mb );
+            // MeshBase adds itself to QuitManager
+
+            // Name Server
+            MeshBaseNameServer nameServer = mb.getLocalNameServer();
+            appContext.addContextObject( nameServer );
+        }
+
+        if( mb != null ) {
+            initializeContextObjects( saneRequest, appContext );
+        } else {
+            try {
+                initializeContextObjects( saneRequest, appContext );
+            } catch( Throwable t ) {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Overridable default implementation for how to setup a MeshBase.
+     *
+     * @param saneRequest the incoming request, so it is possible to determine hostname, context etc.
+     * @param mbId the MeshBaseIdentifier for the MeshBase
+     * @param modelBase the ModelBase for the MeshBase
+     * @param app the InfoGridWebApp that is being set up
+     * @return the set up MeshBase
+     */
+    protected IterableLocalNetStoreMeshBase setupMeshBase(
+            SaneRequest           saneRequest,
+            NetMeshBaseIdentifier mbId,
+            ModelBase             modelBase,
+            InfoGridWebApp        app )
+        throws
+            NamingException,
+            IOException,
+            URISyntaxException,
+            AppInitializationException
+    {
+        IterableLocalNetStoreMeshBase meshBase = null;
+
         try {
             initializeDataSources();
-
-        } catch( Throwable t ) {
-            thrown = t;
-            throw thrown;
 
         } finally {
 
             if( theMeshStore != null && theProxyStore != null && theShadowStore != null && theShadowProxyStore != null ) {
-                NetAccessManager accessMgr = createAccessManager();
+                QuitManager                  qm        = app.getApplicationContext().findContextObject( QuitManager.class );
+                NetAccessManager             accessMgr = createAccessManager();
+                NetMeshBaseIdentifierFactory idFact    = app.getApplicationContext().findContextObject( NetMeshBaseIdentifierFactory.class );
 
-                ProbeDirectory probeDirectory = createAndPopulateProbeDirectory(
-                        meshBaseIdentifierFactory );
+                ProbeDirectory probeDirectory = createAndPopulateProbeDirectory( idFact );
 
                 final ScheduledExecutorService exec = createScheduledExecutorService();
                 if( qm != null ) {
@@ -123,11 +162,11 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
                     });
                 }
 
-                IterableLocalNetStoreMeshBase meshBase = IterableLocalNetStoreMeshBase.create(
+                meshBase = IterableLocalNetStoreMeshBase.create(
                         mbId,
                         DefaultNetMeshObjectAccessSpecificationFactory.create(
                                 mbId,
-                                meshBaseIdentifierFactory ),
+                                idFact ),
                         modelBase,
                         accessMgr,
                         theMeshStore,
@@ -137,25 +176,11 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
                         probeDirectory,
                         exec,
                         true,
-                        appContext );
+                        app.getApplicationContext() );
                 populateMeshBase( saneRequest, meshBase );
-                appContext.addContextObject( meshBase );
-                // MeshBase adds itself to QuitManager
-
-                MeshBaseNameServer nameServer = meshBase.getLocalNameServer();
-                appContext.addContextObject( nameServer );
             }
-
-            if( thrown == null ) {
-                initializeContextObjects( saneRequest, appContext );
-            } else {
-                try {
-                    initializeContextObjects( saneRequest, appContext );
-                } catch( Throwable t ) {
-                    // ignore
-                }
-            }
-        } 
+        }
+        return meshBase;
     }
 
     /**
@@ -170,6 +195,16 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
                 NamingException,
                 IOException,
                 AppInitializationException;
+
+    /**
+     * Overridable method to create the NetAccessManager to use.
+     *
+     * @return the created AccessManager, or null
+     */
+    protected NetAccessManager createAccessManager()
+    {
+        return null;
+    }
 
     /**
      * Overridable method to create the NetMeshBaseIdentifierFactory appropriate for this
@@ -227,16 +262,6 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
             IterableNetMeshBase mb )
     {
         // nothing on this level
-    }
-
-    /**
-     * Overridable method to create the AccessManager to use.
-     *
-     * @return the created AccessManager, or null
-     */
-    protected NetAccessManager createAccessManager()
-    {
-        return null;
     }
 
     /**

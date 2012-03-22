@@ -83,40 +83,63 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
         // Main MeshBase
         MeshBaseIdentifier mbId = determineMainMeshBaseIdentifier( saneRequest, meshBaseIdentifierFactory );
 
-        Throwable thrown = null; // set if data source initialization failed
+        MeshBase mb = setupMeshBase( saneRequest, mbId, modelBase, app );
+
+        if( mb != null ) {
+            appContext.addContextObject( mb );
+            // MeshBase adds itself to QuitManager
+
+            // Name Server
+            MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
+            nameServer.put( mbId, mb );
+            appContext.addContextObject( nameServer );
+        }
+
+        if( mb != null ) {
+            initializeContextObjects( saneRequest, appContext );
+        } else {
+            try {
+                initializeContextObjects( saneRequest, appContext );
+            } catch( Throwable t ) {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Overridable default implementation for how to setup a MeshBase.
+     *
+     * @param saneRequest the incoming request, so it is possible to determine hostname, context etc.
+     * @param mbId the MeshBaseIdentifier for the MeshBase
+     * @param modelBase the ModelBase for the MeshBase
+     * @param app the InfoGridWebApp that is being set up
+     * @return the set up MeshBase
+     */
+    protected MeshBase setupMeshBase(
+            SaneRequest        saneRequest,
+            MeshBaseIdentifier mbId,
+            ModelBase          modelBase,
+            InfoGridWebApp     app )
+        throws
+            NamingException,
+            IOException,
+            AppInitializationException
+    {
+        IterableStoreMeshBase meshBase = null;
+
         try {
             initializeDataSources();
-
-        } catch( Throwable t ) {
-            thrown = t;
-            throw thrown;
 
         } finally {
 
             if( theMeshStore != null ) {
                 AccessManager accessMgr = createAccessManager();
 
-                IterableStoreMeshBase meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, appContext );
+                meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, app.getApplicationContext() );
                 populateMeshBase( saneRequest, meshBase );
-                appContext.addContextObject( meshBase );
-                // MeshBase adds itself to QuitManager
-
-                // Name Server
-                MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
-                nameServer.put( mbId, meshBase );
-                appContext.addContextObject( nameServer );
-            }
-
-            if( thrown == null ) {
-                initializeContextObjects( saneRequest, appContext );
-            } else {
-                try {
-                    initializeContextObjects( saneRequest, appContext );
-                } catch( Throwable t ) {
-                    // ignore
-                }
             }
         }
+        return meshBase;
     }
 
     /**
@@ -127,10 +150,10 @@ public abstract class AbstractStoreRestfulAppInitializationFilter
      * @throws AppInitializationException thrown if the application could not be initialized
      */
     protected abstract void initializeDataSources()
-            throws
-                NamingException,
-                IOException,
-                AppInitializationException;
+        throws
+            NamingException,
+            IOException,
+            AppInitializationException;
 
     /**
      * Overridable method to create the AccessManager to use.

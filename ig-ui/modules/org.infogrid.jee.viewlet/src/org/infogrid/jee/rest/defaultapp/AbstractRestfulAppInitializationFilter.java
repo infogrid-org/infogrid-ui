@@ -17,7 +17,6 @@ package org.infogrid.jee.rest.defaultapp;
 import java.text.ParseException;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.templates.DefaultStructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.StructuredResponseTemplateFactory;
 import org.infogrid.jee.templates.defaultapp.AbstractAppInitializationFilter;

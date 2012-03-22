@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.rest.defaultapp.m;
 
+import java.io.IOException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.rest.defaultapp.AbstractRestfulAppInitializationFilter;
 import org.infogrid.jee.sane.SaneServletRequest;
+import org.infogrid.jee.templates.defaultapp.AppInitializationException;
 import org.infogrid.meshbase.DefaultMeshBaseIdentifierFactory;
 import org.infogrid.meshbase.MeshBase;
 import org.infogrid.meshbase.MeshBaseIdentifier;
@@ -79,20 +81,62 @@ public abstract class AbstractMRestfulAppInitializationFilter
         // Main MeshBase
         MeshBaseIdentifier mbId = determineMainMeshBaseIdentifier( saneRequest, meshBaseIdentifierFactory );
 
-        // AccessManager
-        AccessManager accessMgr = null;
+        MeshBase mb = setupMeshBase( saneRequest, mbId, modelBase, app );
 
-        MMeshBase meshBase = MMeshBase.create( mbId, modelBase, accessMgr, appContext );
+        if( mb != null ) {
+            appContext.addContextObject( mb );
+            // MeshBase adds itself to QuitManager
+
+            // Name Server
+            MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
+            nameServer.put( mbId, mb );
+            appContext.addContextObject( nameServer );
+        }
+
+        if( mb != null ) {
+            initializeContextObjects( saneRequest, appContext );
+        } else {
+            try {
+                initializeContextObjects( saneRequest, appContext );
+            } catch( Throwable t ) {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Overridable default implementation for how to setup a MeshBase.
+     *
+     * @param saneRequest the incoming request, so it is possible to determine hostname, context etc.
+     * @param mbId the MeshBaseIdentifier for the MeshBase
+     * @param modelBase the ModelBase for the MeshBase
+     * @param app the InfoGridWebApp that is being set up
+     * @return the set up MeshBase
+     */
+    protected MeshBase setupMeshBase(
+            SaneRequest        saneRequest,
+            MeshBaseIdentifier mbId,
+            ModelBase          modelBase,
+            InfoGridWebApp     app )
+        throws
+            IOException,
+            AppInitializationException
+    {
+        AccessManager accessMgr = createAccessManager();
+        MMeshBase meshBase = MMeshBase.create( mbId, modelBase, accessMgr, app.getApplicationContext() );
         populateMeshBase( saneRequest, meshBase );
-        appContext.addContextObject( meshBase );
-        // MeshBase adds itself to QuitManager
 
-        // Name Server
-        MMeshBaseNameServer<MeshBaseIdentifier,MeshBase> nameServer = MMeshBaseNameServer.create();
-        nameServer.put( mbId, meshBase );
-        appContext.addContextObject( nameServer );
+        return meshBase;
+    }
 
-        initializeContextObjects( saneRequest, appContext );
+    /**
+     * Overridable method to create the AccessManager to use.
+     *
+     * @return the created AccessManager, or null
+     */
+    protected AccessManager createAccessManager()
+    {
+        return null;
     }
 
     /**
