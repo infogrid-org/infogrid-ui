@@ -73,10 +73,16 @@ public class DefaultInitializationFilter
             synchronized( DefaultInitializationFilter.class ) {
                 theApp = getInfoGridWebApp();
                 if( theApp == null ) {
+                    Module thisModule = initializeModuleFramework();
+
                     SaneRequest lidRequest = SaneServletRequest.create( incomingRequest );
 
                     theApp = createInfoGridWebApp( lidRequest );
 
+                    if( thisModule != null ) {
+                        theApp.getApplicationContext().addContextObject( thisModule.getModuleRegistry() );
+                    }
+                    
                     try {
                         theFilterConfig.getServletContext().setAttribute( AbstractInfoGridServlet.INFOGRID_WEB_APP_NAME, theApp );
 
@@ -86,6 +92,24 @@ public class DefaultInitializationFilter
                 }
             }
         }
+    }
+
+    /**
+     * Initialize the module framework, if needed.
+     *
+     * @return the top Module, or null
+     */
+    protected Module initializeModuleFramework()
+    {
+        String rootModule = theFilterConfig.getInitParameter( ROOT_MODULE_NAME_PARAMETER );
+        Module ret        = null;
+        if( rootModule != null ) {
+            Properties properties = new Properties();
+            properties.put( "rootmodule", rootModule );
+
+            ret = ServletBootLoader.initialize( properties );
+        }
+        return ret;
     }
 
     /**
@@ -100,23 +124,13 @@ public class DefaultInitializationFilter
         throws
             ServletException
     {
+        ResourceHelper.initializeLogging();
+
+        log = Log.getLogInstance( getClass() );
+
         // Context
         SimpleContext rootContext = SimpleContext.createRoot( theFilterConfig.getServletContext().getServletContextName() + " root context" );
         rootContext.addContextObject( QuitManager.create() );
-
-        String rootModule = theFilterConfig.getInitParameter( ROOT_MODULE_NAME_PARAMETER );
-        if( rootModule != null ) {
-            Properties properties = new Properties();
-            properties.put( "rootmodule", rootModule );
-
-            Module theThisModule = ServletBootLoader.initialize( properties );
-
-            ResourceHelper.initializeLogging();
-
-            log = Log.getLogInstance( getClass() );
-
-            rootContext.addContextObject( theThisModule.getModuleRegistry() );
-        }
 
         // app
         DefaultInfoGridWebApp ret = new DefaultInfoGridWebApp( lidRequest, rootContext );
