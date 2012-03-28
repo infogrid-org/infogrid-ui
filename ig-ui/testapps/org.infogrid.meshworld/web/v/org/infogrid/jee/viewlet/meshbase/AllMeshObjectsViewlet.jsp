@@ -89,7 +89,7 @@
    <u:safeForm action="${Viewlet.postUrl}" method="GET">
     <input type="hidden" name="lid-format" value="viewlet:org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet" />
     <div class="middle-item">
-     Regex for Identifier: <input type="text" name="identifier-regex" value="${Viewlet.idRegex}"/>
+     Regex for Identifier: <input type="text" autocorrect="off" autocapitalization="off" name="identifier-regex" value="${Viewlet.idRegex}"/>
     </div>
     <div class="middle-item">
      Show MeshTypes:
