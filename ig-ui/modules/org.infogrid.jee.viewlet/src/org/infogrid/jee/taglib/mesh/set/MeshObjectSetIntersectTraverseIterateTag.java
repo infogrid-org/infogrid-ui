@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -215,8 +215,7 @@ public class MeshObjectSetIntersectTraverseIterateTag
         MeshObjectSet set1 = start1.traverse( spec1 );
         MeshObjectSet set2 = start2.traverse( spec2 );
 
-        MeshObjectSet ret = set1.getFactory().createImmutableMeshObjectSetIntersection( set1, set2 );
-
+        MeshObjectSet ret = set1.intersect( set2 );
         return ret;
     }
 
