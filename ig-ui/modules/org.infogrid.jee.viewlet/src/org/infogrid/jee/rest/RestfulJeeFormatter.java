@@ -662,6 +662,7 @@ public class RestfulJeeFormatter
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param colloquial if applicable, output in colloquial form
      * @param allowNull if applicable, allow null values to be entered in edit mode
+     * @param defaultValue if given, use this as the default value instead what is specified in the model
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify\
      * @throws IllegalPropertyTypeException thrown if the PropertyType does not exist on this MeshObject
@@ -678,7 +679,8 @@ public class RestfulJeeFormatter
             String        stringRepresentation,
             int           maxLength,
             boolean       colloquial,
-            boolean       allowNull )
+            boolean       allowNull,
+            PropertyValue defaultValue )
         throws
             StringifierException,
             IllegalPropertyTypeException,
@@ -706,6 +708,9 @@ public class RestfulJeeFormatter
         }
         if( editVar != null ) {
             pars.put( StringRepresentationParameters.EDIT_VARIABLE, editVar );
+        }
+        if( defaultValue != null ) {
+            pars.put( ModelPrimitivesStringRepresentationParameters.DEFAULT_VALUE, defaultValue );
         }
         pars.put( StringRepresentationParameters.EDIT_INDEX, editIndex );
 

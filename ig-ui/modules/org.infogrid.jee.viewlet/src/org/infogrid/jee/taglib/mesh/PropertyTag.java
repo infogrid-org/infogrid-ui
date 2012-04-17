@@ -24,7 +24,11 @@ import org.infogrid.mesh.MeshObjectIdentifier;
 import org.infogrid.mesh.NotPermittedException;
 import org.infogrid.mesh.TypedMeshObjectFacade;
 import org.infogrid.model.primitives.PropertyType;
+import org.infogrid.model.primitives.PropertyValue;
+import org.infogrid.model.primitives.PropertyValueParsingException;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -62,6 +66,7 @@ public class PropertyTag
         theColloquial           = true;
         theAllowNull            = true;
         theState                = null;
+        theDefaultValue         = null;
 
         super.initializeToDefaults();
     }
@@ -328,6 +333,29 @@ public class PropertyTag
     }
 
     /**
+     * Obtain the value of the defaultValue property.
+     *
+     * @return value of the defaultValue property
+     * @see #setDefaultValue
+     */
+    public String getDefaultValue()
+    {
+        return theDefaultValue;
+    }
+
+    /**
+     * Set value of the defaultValue property.
+     *
+     * @param newValue new value of the defaultValue property
+     * @see #getDefaultValue
+     */
+    public void setDefaultValue(
+            String newValue )
+    {
+        theDefaultValue = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -430,6 +458,20 @@ public class PropertyTag
             editVar = String.format( VARIABLE_PATTERN, varCounter );
         }
 
+        PropertyValue defaultValue;
+        if( theDefaultValue != null ) {
+            StringRepresentation httpPost = getFormatter().determineStringRepresentation( StringRepresentationDirectory.TEXT_HTTP_POST_NAME );
+
+            try {
+                defaultValue = type.fromStringRepresentation( httpPost, theDefaultValue, null );
+
+            } catch( PropertyValueParsingException ex ) {
+                throw new JspException( ex );
+            }
+        } else {
+            defaultValue = null;
+        }
+
         try {
             String text = formatProperty(
                         pageContext,
@@ -441,7 +483,8 @@ public class PropertyTag
                         realStringRep,
                         theMaxLength,
                         theColloquial,
-                        theAllowNull );
+                        theAllowNull,
+                        defaultValue );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -511,6 +554,11 @@ public class PropertyTag
      * The state of the tag, e.g. edit vs. view.
      */
     protected String theState;
+
+    /**
+     * A non-default value, if any.
+     */
+    protected String theDefaultValue;
 
     /**
      * Our ResourceHelper.

@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -20,6 +20,7 @@ import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
 import org.infogrid.jee.viewlet.blob.BlobViewlet;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.Blob.BlobSubjectArea;
+import org.infogrid.model.Test.TestSubjectArea;
 import org.infogrid.util.ArrayHelper;
 import org.infogrid.viewlet.AbstractViewletFactory;
 import org.infogrid.viewlet.MeshObjectsToView;
@@ -58,6 +59,9 @@ public class TestAppViewletFactory
 
         if( subject.isBlessedBy( BlobSubjectArea.IMAGE )) {
             ret.add( BlobViewlet.choice( realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+        }
+        if( subject.isBlessedBy( TestSubjectArea.OPTIONALPROPERTIES )) {
+            ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.alternatedefaultpropertysheet.AlternateDefaultPropertySheetViewlet", ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         }
         ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.propertysheet.PropertySheetViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
 

@@ -272,6 +272,7 @@ public abstract class AbstractRestInfoGridTag
      * @param theMaxLength the maximum length of an emitted String
      * @param colloquial if applicable, output in colloquial form
      * @param allowNull if applicable, allow null values to be entered in edit mode
+     * @param defaultValue if given, use this as the default value instead what is specified in the model
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @throws IllegalPropertyTypeException thrown if the PropertyType does not exist on this MeshObject
@@ -288,7 +289,8 @@ public abstract class AbstractRestInfoGridTag
             String        stringRepresentation,
             int           theMaxLength,
             boolean       colloquial,
-            boolean       allowNull )
+            boolean       allowNull,
+            PropertyValue defaultValue )
         throws
             StringifierException,
             IllegalPropertyTypeException,
@@ -304,7 +306,8 @@ public abstract class AbstractRestInfoGridTag
                 stringRepresentation,
                 theMaxLength,
                 colloquial,
-                allowNull );
+                allowNull,
+                defaultValue );
         return ret;
     }
 
