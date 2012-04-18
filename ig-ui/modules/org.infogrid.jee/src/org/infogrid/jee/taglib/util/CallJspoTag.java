@@ -320,14 +320,16 @@ public class CallJspoTag
                 out.println( "<div class=\"dialog-buttons\">" );
                 out.println( "<table class=\"dialog-buttons\">" );
                 out.println( "<tr>" );
+                out.println( "<td><a class=\"cancel\" href=\"javascript:overlay_hide( '" + domId + "' )\">Cancel</a></td>" );
                 out.print( "<td><input type=\"submit\" class=\"submit\" value=\"" );
                 if( theSubmitLabel != null ) {
                     out.print( theSubmitLabel );
+                } else if( theLinkTitle != null ) { // seems like a reasonable default
+                    out.print( theLinkTitle );
                 } else {
                     out.print( DEFAULT_SUBMIT_LABEL );
                 }
                 out.println( "\" /></td>" );
-                out.println( "<td><a class=\"cancel\" href=\"javascript:overlay_hide( '" + domId + "' )\">Cancel</a></td>" );
                 out.println( "</tr>" );
                 out.println( "</table>" );
                 out.println( "</div>" );
