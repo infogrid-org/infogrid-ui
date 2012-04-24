@@ -300,7 +300,7 @@ public class CallJspoTag
                 out.print( toInsert );
             }
         }
-        out.println( "<div class=\"scroll-if-too-long\">" );
+        out.println( "<div class=\"dialog-content\">" );
 
         try {
             // This is created after org/apache/jasper/runtime/JspRuntimeLibrary.include
