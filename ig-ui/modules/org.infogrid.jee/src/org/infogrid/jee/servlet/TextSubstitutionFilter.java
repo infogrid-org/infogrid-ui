@@ -8,14 +8,18 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.servlet;
 
-import org.infogrid.util.logging.Log;
-
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.Cookie;
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -23,14 +27,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.Filter;
-
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.Cookie;
+import org.infogrid.util.logging.Log;
 
 /**
  * Replaces text in a response. This filter only filters content types that start with "text/"
@@ -123,7 +120,7 @@ public class TextSubstitutionFilter
                 }
 
                 if( bufferedString != null ) {
-                    bufferedBytes = bufferedString.getBytes();
+                    bufferedBytes = bufferedString.getBytes( "UTF-8" );
                 }
                 
                 if( bufferedBytes != null ) {

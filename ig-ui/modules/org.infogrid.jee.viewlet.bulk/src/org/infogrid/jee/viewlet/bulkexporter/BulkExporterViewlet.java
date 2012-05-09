@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 package org.infogrid.jee.viewlet.bulkexporter;
@@ -40,8 +40,8 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
  * Viewlet for an EcgTrace. Defaults from SimpleJeeViewlet.
  */
 public class BulkExporterViewlet
-        extends SimpleJeeViewlet {
-
+        extends SimpleJeeViewlet
+{
     private static final Log log = Log.getLogInstance(BulkExporterViewlet.class); // our own, private logger
 
     /**
@@ -52,7 +52,8 @@ public class BulkExporterViewlet
      */
     protected BulkExporterViewlet(
             JeeViewedMeshObjects viewed,
-            Context c) {
+            Context              c )
+    {
         super(viewed, c);
     }
 
@@ -65,9 +66,10 @@ public class BulkExporterViewlet
      */
     public static BulkExporterViewlet create(
             MeshBase mb,
-            Context c) {
+            Context  c )
+    {
         DefaultJeeViewedMeshObjects viewed = new DefaultJeeViewedMeshObjects(mb);
-        BulkExporterViewlet ret = new BulkExporterViewlet(viewed, c);
+        BulkExporterViewlet         ret    = new BulkExporterViewlet(viewed, c);
         viewed.setViewlet(ret);
         return ret;
     }
@@ -80,14 +82,15 @@ public class BulkExporterViewlet
      */
     public static ViewletFactoryChoice choice(
             JeeMeshObjectsToView toView,
-            double matchQuality) {
+            double               matchQuality )
+    {
         return new DefaultJeeViewletFactoryChoice(toView, BulkExporterViewlet.class, matchQuality) {
-
-            public Viewlet instantiateViewlet()
+                public Viewlet instantiateViewlet()
                     throws
-                    CannotViewException {
-                return create(getMeshObjectsToView().getMeshBase(), getMeshObjectsToView().getContext());
-            }
+                        CannotViewException
+                {
+                    return create(getMeshObjectsToView().getMeshBase(), getMeshObjectsToView().getContext());
+                }
         };
     }
 
@@ -103,16 +106,17 @@ public class BulkExporterViewlet
      */
     @Override
     public void processRequest(
-            SaneRequest request,
-            StructuredResponse structured)
-            throws
+            SaneRequest        request,
+            StructuredResponse structured )
+        throws
             ServletException,
-            IOException {
+            IOException
+    {
         HttpServletResponse response = structured.getDelegate();
         response.setContentType(MIME_TYPE);
         BulkExternalizedMeshObjectXmlEncoder theParser = new BulkExternalizedMeshObjectXmlEncoder();
         OutputStream outStream = response.getOutputStream();
-        outStream.write(XML.getBytes());
+        outStream.write(XML.getBytes( "UTF-8" ));
         IterableMeshBase meshBase = (IterableMeshBase) getSubject().getMeshBase(); // derive from the subject, so we can do any MeshBase
         CursorIterator<MeshObject> ret = meshBase.iterator();
         try {
@@ -138,23 +142,22 @@ public class BulkExporterViewlet
      */
     @Override
     public void performAfter(
-            SaneRequest request,
+            SaneRequest        request,
             StructuredResponse response,
-            Throwable thrown)
-            throws
-            ServletException {
+            Throwable          thrown)
+        throws
+            ServletException
+    {
         // nop - the response has been streamed
     }
+
     /**
-     * cache the mesh base
-     */
-    private MeshBase theMeshBase;
-    /**
-     * mime header on the response
+     * Mime header on the response.
      */
     private static final String MIME_TYPE = "application/xml+meshbulk";
+
     /**
-     * xml header 
+     * Xml header.
      */
     private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 }
