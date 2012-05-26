@@ -93,26 +93,29 @@ public abstract class AbstractStoreNetLocalRestfulAppInitializationFilter
         appContext.addContextObject( meshBaseIdentifierFactory );
 
         // Main MeshBase
-        NetMeshBaseIdentifier mbId = (NetMeshBaseIdentifier) determineMainMeshBaseIdentifier( saneRequest, meshBaseIdentifierFactory );
+        NetMeshBaseIdentifier         mbId = (NetMeshBaseIdentifier) determineMainMeshBaseIdentifier( saneRequest, meshBaseIdentifierFactory );
+        IterableLocalNetStoreMeshBase mb   = null;
 
-        IterableLocalNetStoreMeshBase mb = setupMeshBase( saneRequest, mbId, modelBase, app );
+        try {
+            mb = setupMeshBase( saneRequest, mbId, modelBase, app );
 
-        if( mb != null ) {
-            appContext.addContextObject( mb );
-            // MeshBase adds itself to QuitManager
+        } finally {
+            if( mb != null ) {
+                appContext.addContextObject( mb );
+                // MeshBase adds itself to QuitManager
 
-            // Name Server
-            MeshBaseNameServer nameServer = mb.getLocalNameServer();
-            appContext.addContextObject( nameServer );
-        }
+                // Name Server
+                MeshBaseNameServer nameServer = mb.getLocalNameServer();
+                appContext.addContextObject( nameServer );
 
-        if( mb != null ) {
-            initializeContextObjects( saneRequest, appContext );
-        } else {
-            try {
                 initializeContextObjects( saneRequest, appContext );
-            } catch( Throwable t ) {
-                // ignore
+                
+            } else {
+                try {
+                    initializeContextObjects( saneRequest, appContext );
+                } catch( Throwable t ) {
+                    // ignore
+                }
             }
         }
     }
