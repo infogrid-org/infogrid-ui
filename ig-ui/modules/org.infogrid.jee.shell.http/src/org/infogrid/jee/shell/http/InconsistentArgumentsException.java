@@ -8,13 +8,14 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.shell.http;
 
 import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Thrown if an operation is invoked with inconsistent arguments.
@@ -27,10 +28,13 @@ public class InconsistentArgumentsException
 
     /**
      * Constructor.
+     *
+     * @param request the incoming request
      */
-    public InconsistentArgumentsException()
+    public InconsistentArgumentsException(
+            SaneRequest request )
     {
-        // nothing
+        theRequest = request;
     }
 
     /**
@@ -40,6 +44,14 @@ public class InconsistentArgumentsException
      */
     public Object [] getLocalizationParameters()
     {
-        return new Object[] {};
+        return new Object[] {
+            theRequest,
+            theRequest.getAbsoluteFullUri()
+        };
     }
+
+    /**
+     * The incoming request.
+     */
+    protected SaneRequest theRequest;
 }

@@ -8,11 +8,13 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.shell.http;
+
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Thrown if an operation is invoked with conflicting arguments.
@@ -28,11 +30,15 @@ public class ConflictingArgumentsException
      *
      * @param arg1Name name of the first conflicting argument
      * @param arg2Name name of the second conflicting argument
+     * @param request the incoming request
      */
     public ConflictingArgumentsException(
-            String arg1Name,
-            String arg2Name )
+            String      arg1Name,
+            String      arg2Name,
+            SaneRequest request )
     {
+        super( request );
+
         theArgument1Name = arg1Name;
         theArgument2Name = arg2Name;
     }
@@ -61,10 +67,11 @@ public class ConflictingArgumentsException
      * Obtain resource parameters for the internationalization.
      *
      * @return the resource parameters
-     */    
+     */
+    @Override
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theArgument1Name, theArgument2Name };
+        return new Object[] { theArgument1Name, theArgument2Name, theRequest, theRequest.getAbsoluteFullUri() };
     }
 
     /**

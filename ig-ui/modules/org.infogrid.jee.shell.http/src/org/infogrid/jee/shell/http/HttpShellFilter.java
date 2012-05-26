@@ -704,7 +704,7 @@ public class HttpShellFilter
 
                 if( value != null && value.length == 1 && value[0] != null && value[0].trim().length() > 0 ) {
                     if( redirectVar != null ) {
-                        throw new HttpShellException( new ConflictingArgumentsException( key, redirectVar ));
+                        throw new HttpShellException( new ConflictingArgumentsException( key, redirectVar, lidRequest ));
                     }
                     redirectVar   = var1Name;
                     redirectValue = value[0].trim();

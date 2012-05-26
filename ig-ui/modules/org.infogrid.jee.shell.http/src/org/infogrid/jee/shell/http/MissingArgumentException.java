@@ -8,11 +8,13 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.shell.http;
+
+import org.infogrid.util.http.SaneRequest;
 
 /**
  * Thrown if an operation is invoked that requires a particular argument but it was not given.
@@ -27,10 +29,14 @@ public class MissingArgumentException
      * Constructor.
      *
      * @param argName name of the missing argument
+     * @param request the incoming request
      */
     public MissingArgumentException(
-            String argName )
+            String      argName,
+            SaneRequest request )
     {
+        super( request );
+
         theArgumentName = argName;
     }
 
@@ -52,7 +58,7 @@ public class MissingArgumentException
     @Override
     public Object [] getLocalizationParameters()
     {
-        return new Object[] { theArgumentName };
+        return new Object[] { theArgumentName, theRequest, theRequest.getAbsoluteFullUri() };
     }
 
     /**
