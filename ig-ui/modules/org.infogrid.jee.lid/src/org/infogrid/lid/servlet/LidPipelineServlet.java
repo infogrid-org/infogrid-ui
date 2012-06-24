@@ -34,6 +34,8 @@ import org.infogrid.lid.LidPipeline;
 import org.infogrid.lid.LidPipelineInstructions;
 import org.infogrid.lid.LidPipelineStageInstructions;
 import org.infogrid.lid.LidSsoPipelineStageInstructions;
+import org.infogrid.lid.session.LidSession;
+import org.infogrid.lid.session.LidSessionManagementInstructions;
 import org.infogrid.util.SimpleStringIdentifier;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
@@ -84,32 +86,16 @@ public class LidPipelineServlet
 
         String  site  = originalRequest.getAbsoluteContextUri();
         boolean done  = false;
+        
         LidClientAuthenticationStatus authStatus;
+        LidSession                    session;
 
         try {
             LidPipelineInstructions compoundInstructions
                     = pipe.processPipeline( originalRequest, SimpleStringIdentifier.create( site ) );
 
             authStatus = compoundInstructions.getClientAuthenticationStatus();
-
-            if( authStatus.isAnonymous() ) {
-                if( authStatus.getClientIdentifier() != null ) {
-                    request.setAttribute( CLIENT_ATTRIBUTE_NAME,    authStatus.getClientAccount() );
-                    request.setAttribute( CLIENT_ID_ATTRIBUTE_NAME, authStatus.getClientIdentifier() );
-                    request.setAttribute( USER_ID_ATTRIBUTE_NAME,   authStatus.getClientIdentifier() );
-                    request.setAttribute( LID_ATTRIBUTE_NAME,       authStatus.getClientIdentifier() );
-                    request.setAttribute( USER_NICK_ATTRIBUTE_NAME, authStatus.getClientIdentifier().toColloquialExternalForm() ); // FIXME
-                }
-                if( authStatus.getClientAccountIdentifier() != null ) {
-                    request.setAttribute( ACCOUNT_ATTRIBUTE_NAME,    authStatus.getClientAccount() );
-                    request.setAttribute( ACCOUNT_ID_ATTRIBUTE_NAME, authStatus.getClientAccountIdentifier() );
-                    if( authStatus.getClientIdentifier() == null ) {
-                        request.setAttribute( USER_ID_ATTRIBUTE_NAME,   authStatus.getClientAccountIdentifier() );
-                        request.setAttribute( LID_ATTRIBUTE_NAME,       authStatus.getClientAccountIdentifier() );
-                        request.setAttribute( USER_NICK_ATTRIBUTE_NAME, authStatus.getClientAccountIdentifier().toColloquialExternalForm() ); // FIXME
-                    }
-                }
-            }
+            session    = authStatus.getPreexistingClientSession();
 
             LidPipelineStageInstructions currentInstructions;
             
@@ -130,8 +116,10 @@ public class LidPipelineServlet
                 }
             }
 
+            LidSessionManagementInstructions sessionInstructions = null;
             if( !done ) {
-                currentInstructions = compoundInstructions.getSessionManagementInstructions();
+                sessionInstructions = compoundInstructions.getSessionManagementInstructions();
+                currentInstructions = sessionInstructions;
                 if( currentInstructions != null ) {
                     done = currentInstructions.applyAsRecommended( originalRequest, lidResponse.getDelegate() );
                 }
