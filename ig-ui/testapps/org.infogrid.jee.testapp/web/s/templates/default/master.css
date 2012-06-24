@@ -43,7 +43,7 @@ button.commit {
     width: 80px;
     padding: 2px 2px 2px 18px;
     border-color: #404040;
-    -moz-border-radius: 4px;
+    border-radius: 4px;
     -webkit-border-radius: 4px;
     background-position: 4px 50%;
     background-repeat: no-repeat;
