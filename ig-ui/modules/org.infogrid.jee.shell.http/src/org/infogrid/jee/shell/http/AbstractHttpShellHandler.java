@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -169,6 +169,22 @@ public abstract class AbstractHttpShellHandler
             
             throw new HttpShellException( new UnassignedArgumentException( argName ) );
         }
+        return ret;
+    }
+
+    /**
+     * Helper method to get the resolved value of an HTTP shell variable, or return
+     * null if not given. This is merely a convenience method for consistency purposes.
+     *
+     * @param vars the resolved variables
+     * @param varName name of the shell variable
+     * @return the resolved value of the shell variable, or null
+     */
+    protected MeshObject getVariable(
+            Map<String,MeshObject> vars,
+            String                 varName )
+    {
+        MeshObject ret = vars.get( varName );
         return ret;
     }
 }
