@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -61,6 +61,7 @@ public class CallJspoTag
         theSubmitLabel   = null;
         theActivated     = false;
         theCssClass      = null;
+        theDisabled      = false;
         theOldCallRecord = null;
 
         super.initializeToDefaults();
@@ -205,6 +206,29 @@ public class CallJspoTag
     }
 
     /**
+     * Obtain value of the disabled property.
+     *
+     * @return value of the disabled property
+     * @see #setDisabled
+     */
+    public boolean getDisabled()
+    {
+        return theDisabled;
+    }
+
+    /**
+     * Set value of the disabled property.
+     *
+     * @param newValue new value of the disabled property
+     * @see #getDisabled
+     */
+    public void setDisabled(
+            boolean newValue )
+    {
+        theDisabled = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -220,7 +244,7 @@ public class CallJspoTag
     {
         ServletRequest request    = pageContext.getRequest();
         theOldCallRecord          = (CallJspXRecord) request.getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
-        theCurrentCallRecord      = new CallJspXRecord( thePage );
+        theCurrentCallRecord      = new CallJspoRecord( thePage, theDisabled );
         request.setAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME, theCurrentCallRecord );
 
         return EVAL_BODY_BUFFERED; // contains parameter declarations
@@ -245,103 +269,117 @@ public class CallJspoTag
         BodyContent    body    = getBodyContent();
         JspWriter      out     = body.getEnclosingWriter();
 
-        StringBuilder domId = new StringBuilder();
-        domId.append( thePage );
-
-        // This is not ordered, but that should not be a problem?
-        for( Entry<String,Object> current : theCurrentCallRecord.getParameters() ) {
-            Object value = current.getValue();
-            if( value == null ) {
-                continue;
-            }
-
-            String parId;
-            if( value instanceof HasIdentifier ) {
-                parId = ((HasIdentifier)value).getIdentifier().toExternalForm();
-            } else {
-                parId = value.toString();
-            }
-
-            domId.append( "-" );
-            domId.append( parId );
-        }
-
-        String bodyContentString = body.getString();
-        if( bodyContentString.trim().length() > 0 ) {
-            // skip if there's nothing between the CallJspoTags that generates anything other than white space
-
-            out.print( "<a href=\"javascript:overlay_show( '" + domId + "', {} )\"" );
-            if( theLinkTitle != null ) {
-                out.print( " title=\"" + theLinkTitle + "\"" );
-            }
-            out.println( ">" );
-
-            out.print( bodyContentString );
-
-            out.println( "</a>" );
-        }
-
-        out.print( "<div class=\"" );
-        out.print( OverlayTag.class.getName().replace( '.', '-' ) );
-        if( theCssClass != null && theCssClass.length() > 0 ) {
-            out.print( " " );
-            out.print( theCssClass );
-        }
-        out.print( "\" id=\"" + domId + "\"" );
-        out.println( ">" );
-
-        if( theAction != null ) {
-            out.print( "<form action=\"" + theAction + "\" method=\"post\" enctype=\"multipart/form-data\" accept-charset=\"" );
-            out.print( SaneServletRequest.FORM_CHARSET );
-            out.print( "\">" );
-
-            String toInsert = SafeFormHiddenInputTag.hiddenInputTagString( pageContext );
-            if( toInsert != null ) {
-                out.print( toInsert );
-            }
-        }
-        out.println( "<div class=\"dialog-content\">" );
-
         try {
-            // This is created after org/apache/jasper/runtime/JspRuntimeLibrary.include
-            RequestDispatcher rd = pageContext.getServletContext().getRequestDispatcher( thePage );
-            rd.include( request, new ServletResponseWrapperInclude( (HttpServletResponse) pageContext.getResponse(), out ));
+            StringBuilder domId = new StringBuilder();
+            domId.append( thePage );
 
-            return EVAL_PAGE;
+            // This is not ordered, but that should not be a problem?
+            for( Entry<String,Object> current : theCurrentCallRecord.getParameters() ) {
+                Object value = current.getValue();
+                if( value == null ) {
+                    continue;
+                }
 
-        } catch( ServletException ex ) {
-            throw new JspException( ex ); // why in the world are these two differnt types of exceptions?
+                String parId;
+                if( value instanceof HasIdentifier ) {
+                    parId = ((HasIdentifier)value).getIdentifier().toExternalForm();
+                } else {
+                    parId = value.toString();
+                }
 
+                domId.append( "-" );
+                domId.append( parId );
+            }
+
+            String bodyContentString = body.getString();
+            if( bodyContentString.trim().length() > 0 ) {
+                // skip if there's nothing between the CallJspoTags that generates anything other than white space
+
+                if( !theDisabled ) {
+                    out.print( "<a href=\"javascript:overlay_show( '" + domId + "', {} )\"" );
+                    if( theLinkTitle != null ) {
+                        out.print( " title=\"" + theLinkTitle + "\"" );
+                    }
+                    out.println( ">" );
+                } else {
+                    out.print( "<span class=\"jspo-disabled\">" );
+                }
+
+                out.print( bodyContentString );
+
+                if( !theDisabled ) {
+                    out.println( "</a>" );
+                } else {
+                    out.println( "</span>" );
+                }
+            }
+
+            if( !theDisabled ) {
+                out.print( "<div class=\"" );
+                out.print( OverlayTag.class.getName().replace( '.', '-' ) );
+                if( theCssClass != null && theCssClass.length() > 0 ) {
+                    out.print( " " );
+                    out.print( theCssClass );
+                }
+                out.print( "\" id=\"" + domId + "\"" );
+                out.println( ">" );
+
+                if( theAction != null ) {
+                    out.print( "<form action=\"" + theAction + "\" method=\"post\" enctype=\"multipart/form-data\" accept-charset=\"" );
+                    out.print( SaneServletRequest.FORM_CHARSET );
+                    out.print( "\">" );
+
+                    String toInsert = SafeFormHiddenInputTag.hiddenInputTagString( pageContext );
+                    if( toInsert != null ) {
+                        out.print( toInsert );
+                    }
+                }
+                out.println( "<div class=\"dialog-content\">" );
+
+                try {
+                    // This is created after org/apache/jasper/runtime/JspRuntimeLibrary.include
+                    RequestDispatcher rd = pageContext.getServletContext().getRequestDispatcher( thePage );
+                    rd.include( request, new ServletResponseWrapperInclude( (HttpServletResponse) pageContext.getResponse(), out ));
+
+                    return EVAL_PAGE;
+
+                } catch( ServletException ex ) {
+                    throw new JspException( ex ); // why in the world are these two differnt types of exceptions?
+
+                } finally {
+                    out.println( "</div>" );
+                    if( theAction != null ) {
+                        out.println( "<div class=\"dialog-buttons\">" );
+                        out.println( "<table class=\"dialog-buttons\">" );
+                        out.println( "<tr>" );
+                        out.println( "<td><a class=\"cancel\" href=\"javascript:overlay_hide( '" + domId + "' )\">Cancel</a></td>" );
+                        out.print( "<td><input type=\"submit\" class=\"submit\" value=\"" );
+                        if( theSubmitLabel != null ) {
+                            out.print( theSubmitLabel );
+                        } else if( theLinkTitle != null ) { // seems like a reasonable default
+                            out.print( theLinkTitle );
+                        } else {
+                            out.print( DEFAULT_SUBMIT_LABEL );
+                        }
+                        out.println( "\" /></td>" );
+                        out.println( "</tr>" );
+                        out.println( "</table>" );
+                        out.println( "</div>" );
+                    }
+                    out.println( "</form>" );
+                    out.println( "</div>" );
+
+                    if( theActivated ) {
+                        out.println( "<script type=\"text/javascript\">\n" );
+                        out.println( "    overlay_show( '" + domId + "', {} );\n" );
+                        out.println( "</script>\n" );
+                    }
+                }
+            } else {
+                return EVAL_PAGE;
+            }
         } finally {
             request.setAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME, theOldCallRecord );
-
-            out.println( "</div>" );
-            if( theAction != null ) {
-                out.println( "<div class=\"dialog-buttons\">" );
-                out.println( "<table class=\"dialog-buttons\">" );
-                out.println( "<tr>" );
-                out.println( "<td><a class=\"cancel\" href=\"javascript:overlay_hide( '" + domId + "' )\">Cancel</a></td>" );
-                out.print( "<td><input type=\"submit\" class=\"submit\" value=\"" );
-                if( theSubmitLabel != null ) {
-                    out.print( theSubmitLabel );
-                } else if( theLinkTitle != null ) { // seems like a reasonable default
-                    out.print( theLinkTitle );
-                } else {
-                    out.print( DEFAULT_SUBMIT_LABEL );
-                }
-                out.println( "\" /></td>" );
-                out.println( "</tr>" );
-                out.println( "</table>" );
-                out.println( "</div>" );
-            }
-            out.println( "</form>" );
-            out.println( "</div>" );
-
-            if( theActivated ) {
-                out.println( "<script type=\"text/javascript\">\n" );
-                out.println( "    overlay_show( '" + domId + "', {} );\n" );
-                out.println( "</script>\n" );
-            }
         }
     }
 
@@ -375,6 +413,11 @@ public class CallJspoTag
      */
     protected String theCssClass;
 
+    /**
+     * If true, the popup will be disabled.
+     */
+    protected boolean theDisabled;
+    
     /**
      * The CallJspXRecord to restore.
      */

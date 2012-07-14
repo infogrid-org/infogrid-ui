@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -65,12 +65,15 @@ public class JspoTag
             IgnoreException,
             IOException
     {
-        theCallRecord = (CallJspXRecord) pageContext.getRequest().getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
+        theCallRecord = (CallJspoRecord) pageContext.getRequest().getAttribute( CallJspXRecord.CALL_JSPX_RECORD_ATTRIBUTE_NAME );
         if( theCallRecord == null ) {
             throw new JspException( "This JSP overlay must only be invoked using CallJspo" );
         }
-
-        return EVAL_BODY_INCLUDE; // contains parameter declarations
+        if( theCallRecord.getIsDisabled() ) {
+            return SKIP_BODY;
+        } else {
+            return EVAL_BODY_INCLUDE; // contains parameter declarations
+        }
     }
 
     /**
@@ -89,11 +92,13 @@ public class JspoTag
             IOException
     {
         try {
-            Set<String> remainingParameters = theCallRecord.getRemainingParameters();
-            if( !remainingParameters.isEmpty() ) {
-                throw new JspException(
-                        "Parameters passed were not declared: "
-                        + ArrayHelper.collectionToString( remainingParameters, ", " ) + "." );
+            if( !theCallRecord.getIsDisabled() ) {
+                Set<String> remainingParameters = theCallRecord.getRemainingParameters();
+                if( !remainingParameters.isEmpty() ) {
+                    throw new JspException(
+                            "Parameters passed were not declared: "
+                            + ArrayHelper.collectionToString( remainingParameters, ", " ) + "." );
+                }
             }
             return EVAL_PAGE;
         } finally {
@@ -104,5 +109,5 @@ public class JspoTag
     /**
      * The current call record.
      */
-    CallJspXRecord theCallRecord;
+    CallJspoRecord theCallRecord;
 }
