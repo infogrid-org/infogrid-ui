@@ -121,16 +121,29 @@ public class SaneServletRequest
             mimeType = sRequest.getContentType();
             try {
                 BufferedInputStream inStream = new BufferedInputStream( sRequest.getInputStream() );
-                if( mimeType == null || !mimeType.startsWith( FORM_DATA_MIME )) {
+                if( mimeType == null || mimeType.startsWith( FORM_DATA_MIME_URLENCODED )) {
                     int     length = sRequest.getContentLength();
                     byte [] buf    = StreamUtils.slurp( inStream, length );
 
                     postData = new String( buf, "utf-8" );
 
-                    addUrlEncodedArguments( postData, postedArguments );
+                    try {
+                        addUrlEncodedArguments( postData, postedArguments );
+                    } catch( Throwable t ) {
+                        if( mimeType == null ) {
+                            log.info( t );
+                        } else {
+                            log.warn( t );
+                        }
+                    }
 
-                } else {
+                } else if( mimeType.startsWith( FORM_DATA_MIME_MULTIPART )) {
                     addFormDataArguments( inStream, mimeType, postedArguments, mimeParts );
+                } else {
+                    int     length = sRequest.getContentLength();
+                    byte [] buf    = StreamUtils.slurp( inStream, length );
+
+                    postData = new String( buf, "utf-8" );
                 }
                 postedArguments.remove( LID_SUBMIT_PARAMETER_NAME ); // delete the contribution of the submit button
 
@@ -836,9 +849,14 @@ public class SaneServletRequest
     protected String theClientIp;
 
     /**
-     * Name of the MIME type that JEE does not know how to parse. :-(
+     * Name of the form MIME type that JEE does know how to parse. :-(
      */
-    public static final String FORM_DATA_MIME = "multipart/form-data";
+    public static final String FORM_DATA_MIME_URLENCODED = "application/x-www-form-urlencoded";
+
+    /**
+     * Name of the form MIME type that JEE does not know how to parse. :-(
+     */
+    public static final String FORM_DATA_MIME_MULTIPART = "multipart/form-data";
 
     /**
      * If true, determine the SaneServletRequest from non-standard HTTP headers set by a reverse proxy.
