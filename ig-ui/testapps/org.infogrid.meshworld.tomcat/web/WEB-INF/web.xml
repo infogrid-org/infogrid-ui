@@ -74,6 +74,11 @@
 
     <servlet-mapping>
         <servlet-name>jsp</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>jsp</servlet-name>
         <url-pattern>*.jspf</url-pattern>
     </servlet-mapping>
 

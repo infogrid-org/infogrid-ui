@@ -131,7 +131,7 @@ public abstract class TomcatProxy
 
             StringBuilder buf = new StringBuilder();
             buf.append( theManagerUrl.toExternalForm() );
-            buf.append( "/deploy?update=true" ); // use "/html/deploy?update=true" for Tomcat7
+            buf.append( "/deploy?update=true" );
             buf.append( "&path=" ).append( HTTP.encodeToValidUrlArgument( path ));
 
             URL endpoint = new URL( buf.toString() );
