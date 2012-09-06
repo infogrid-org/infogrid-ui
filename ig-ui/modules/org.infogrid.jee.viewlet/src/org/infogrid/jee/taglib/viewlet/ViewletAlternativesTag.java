@@ -14,6 +14,7 @@
 
 package org.infogrid.jee.taglib.viewlet;
 
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.sane.SaneServletRequest;
@@ -26,19 +27,19 @@ import org.infogrid.jee.viewlet.JeeViewlet;
 import org.infogrid.jee.viewlet.JeeViewletFactoryChoice;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.model.traversal.TraversalPath;
-import org.infogrid.viewlet.MeshObjectsToView;
-import org.infogrid.viewlet.ViewletFactory;
-import org.infogrid.viewlet.ViewletFactoryChoice;
-import org.infogrid.util.context.Context;
-import org.infogrid.util.logging.Log;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.context.Context;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.http.SaneRequestUtils;
 import org.infogrid.util.http.SaneUrl;
+import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
+import org.infogrid.viewlet.MeshObjectsToView;
+import org.infogrid.viewlet.ViewletFactory;
+import org.infogrid.viewlet.ViewletFactoryChoice;
 
 /**
  * Allows the user to select an alternate JeeViewlet to display the current subject.
@@ -226,8 +227,6 @@ public class ViewletAlternativesTag
 
                 println( "</li>" );
             }
-            println( "</ul>" );
-            println( "</div>" );
 
             String contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath();
 
@@ -253,7 +252,28 @@ public class ViewletAlternativesTag
             }
         }
 
-        return SKIP_BODY;
+        return EVAL_BODY_INCLUDE;
+    }
+
+    /**
+     * Our implementation of doEndTag(), to be provided by subclasses.
+     *
+     * @return evaluate or skip body
+     * @throws JspException thrown if an evaluation error occurred
+     * @throws IgnoreException thrown to abort processing without an error
+     * @throws IOException thrown if an I/O Exception occurred
+     */
+    @Override
+    protected int realDoEndTag()
+        throws
+            JspException,
+            IgnoreException,
+            IOException
+    {
+        println( "</ul>" );
+        println( "</div>" );
+        
+        return EVAL_PAGE;
     }
     
     /**
