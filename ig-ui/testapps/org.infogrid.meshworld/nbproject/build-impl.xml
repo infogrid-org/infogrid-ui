@@ -578,6 +578,9 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+        <ant antfile="${project.org_infogrid_util_sql}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
         <ant antfile="${project.org_infogrid_vendors_com_mysql_jdbc}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -656,6 +659,9 @@ exists or setup the property manually. For example like this:
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
+        <ant antfile="${project.org_infogrid_util_sql}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.org_infogrid_vendors_com_mysql_jdbc}/build.xml" inheritall="false" target="jar">
@@ -851,6 +857,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_viewlet.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_util.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_util_logging_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.org_infogrid_util_sql.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_vendors_org_apache_jakarta_taglibs_jstl.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.org_infogrid_vendors_org_apache_logging_log4j.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
@@ -884,6 +891,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.org_infogrid_viewlet.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_util.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_util_logging_log4j.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.org_infogrid_util_sql.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_vendors_com_mysql_jdbc.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_vendors_org_apache_jakarta_taglibs_jstl.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.org_infogrid_vendors_org_apache_logging_log4j.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -1274,6 +1282,7 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.org_infogrid_store}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_store_sql}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_store_sql_mysql}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.org_infogrid_util_sql}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_vendors_com_mysql_jdbc}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_vendors_org_apache_jakarta_taglibs_jstl}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.org_infogrid_vendors_org_apache_logging_log4j}/build.xml" inheritall="false" target="clean"/>
