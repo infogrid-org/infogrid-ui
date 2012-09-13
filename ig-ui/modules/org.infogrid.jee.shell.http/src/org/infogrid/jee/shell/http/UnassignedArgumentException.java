@@ -8,13 +8,16 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.shell.http;
 
 import org.infogrid.util.AbstractLocalizedException;
+import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
+import org.infogrid.util.text.StringifierException;
 
 /**
  * Thrown if an operation is invoked with an argument that does not have a value.
@@ -26,14 +29,28 @@ public class UnassignedArgumentException
     private static final long serialVersionUID = 1L; // helps with serialization
 
     /**
-     * Constructor.
+     * Constructor. Emit the default error message
      *
      * @param argName name of the argument without a value
      */
     public UnassignedArgumentException(
             String argName )
     {
+        this( argName, null );
+    }
+
+    /**
+     * Constructor. Emit a custom error message
+     *
+     * @param argName name of the argument without a value
+     * @param msg the custom error message
+     */
+    public UnassignedArgumentException(
+            String argName,
+            String msg )
+    {
         theArgumentName = argName;
+        theMessage      = msg;
     }
 
     /**
@@ -57,7 +74,29 @@ public class UnassignedArgumentException
     }
 
     /**
+     * {@inheritDoc }
+     */
+    @Override
+    public String toStringRepresentation(
+            StringRepresentation           rep,
+            StringRepresentationParameters pars )
+        throws
+            StringifierException
+    {
+        if( theMessage != null ) {
+            return theMessage;
+        } else {
+            return super.toStringRepresentation( rep, pars );
+        }
+    }
+
+    /**
      * Name of the missing argument.
      */
     protected String theArgumentName;
+    
+    /**
+     * Custom error message.
+     */
+    protected String theMessage;
 }

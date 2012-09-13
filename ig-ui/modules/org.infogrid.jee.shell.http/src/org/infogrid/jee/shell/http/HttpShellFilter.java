@@ -28,7 +28,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.infogrid.jee.ProblemReporter;
-import org.infogrid.util.http.MimePart;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.security.SafeUnsafePostFilter;
 import org.infogrid.jee.servlet.AbstractInfoGridWebAppFilter;
@@ -76,6 +75,7 @@ import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.context.Context;
 import org.infogrid.util.context.ContextObjectNotFoundException;
 import org.infogrid.util.http.HTTP;
+import org.infogrid.util.http.MimePart;
 import org.infogrid.util.http.SaneRequest;
 import org.infogrid.util.logging.Log;
 import org.infogrid.util.text.SimpleStringRepresentationParameters;
@@ -681,15 +681,32 @@ public class HttpShellFilter
             }
             // invoke post-transaction
             for( HttpShellHandler handler : handlers ) {
-                String ret2 = handler.afterTransactionEnd( lidRequest, variables, txs, theMainMeshBase, now, thrown );
-                if( ret2 == null ) {
-                    continue;
-                }
+                try {
+                    String ret2 = handler.afterTransactionEnd( lidRequest, variables, txs, theMainMeshBase, now, thrown );
+                    if( ret2 == null ) {
+                        continue;
+                    }
 
-                if( ret == null || ret.equals( ret2 )) {
-                    ret = ret2;
-                } else {
-                    log.error( "More than one handler declared redirect URL: ", ret, ret2, handler );
+                    if( ret == null || ret.equals( ret2 )) {
+                        ret = ret2;
+                    } else {
+                        getLog().error( "More than one handler declared redirect URL: ", ret, ret2, handler );
+                    }
+
+                // make sure we pass on the first exception
+                } catch( HttpShellException t ) {
+                    if( thrown != null ) {
+                        getLog().error( "Two exceptions, passing on first:", thrown, t );
+                    } else {
+                        throw t;
+                    }
+                    
+                } catch( RuntimeException t ) {
+                    if( thrown != null ) {
+                        getLog().error( "Two exceptions, passing on first:", thrown, t );
+                    } else {
+                        throw t;
+                    }
                 }
             }
         }
@@ -724,7 +741,7 @@ public class HttpShellFilter
                     if( ret == null || ret.equals( ret2 )) {
                         ret = ret2;
                     } else {
-                        log.error( "Shell declaration of redirect after a handler declared redirect URL: ", ret, ret2, redirectVar );
+                        getLog().error( "Shell declaration of redirect after a handler declared redirect URL: ", ret, ret2, redirectVar );
                     }
                 }
             }
@@ -1060,7 +1077,7 @@ public class HttpShellFilter
                     try {
                         value = type.createBlobValue( uploadPart.getContentAsString(), uploadPart.getMimeType() );
                     } catch( UnsupportedEncodingException ex ) {
-                        log.warn( ex );
+                        getLog().warn( ex );
                         value = type.createBlobValue( uploadPart.getContent(), uploadPart.getMimeType() ); // try this instead
                     }
                 } else {
