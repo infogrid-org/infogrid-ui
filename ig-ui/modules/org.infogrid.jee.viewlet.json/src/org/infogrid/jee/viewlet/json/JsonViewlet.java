@@ -92,6 +92,7 @@ public class JsonViewlet
             double matchQuality) {
         return new DefaultJeeViewletFactoryChoice(toView, JsonViewlet.class, matchQuality) {
 
+            @Override
             public Viewlet instantiateViewlet()
                     throws
                     CannotViewException {
@@ -118,8 +119,9 @@ public class JsonViewlet
             ServletException,
             IOException {
         HttpServletResponse response = structured.getDelegate();
+        response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(MIME_TYPE);
-        MeshObjectJsonEncoder theParser = MeshObjectJsonEncoder.create(response.getOutputStream(), request, getContext());
+        MeshObjectJsonEncoder theParser = MeshObjectJsonEncoder.create(structured, request, getContext());
         theParser.write(getViewedMeshObjects().getSubject());
     }
 
