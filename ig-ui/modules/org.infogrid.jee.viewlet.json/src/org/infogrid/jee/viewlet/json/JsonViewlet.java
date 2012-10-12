@@ -38,14 +38,18 @@ import org.infogrid.viewlet.ViewletFactoryChoice;
  * Accepts several URL arguments, namely:
  * <p>
  * <ul>
- * <li>level=n - number of traversal away from this object - 0 says infinity.
- * <li>dateenc=func|string - specifies how to encode dates - either as a string or function. ASP.net likes the latter.
+ * <li>level=n - number of traversal away from this object - 0 is the default and says infinity.
+ * <li>dateenc=func|string - specifies how to encode dates - either as a string or function. func is the default and most liked.
+ *            Implement javascript as follows, to re-represent the json date functional representation as a date object: 
+ *            var date = eval(val.replace(/\/Date\((.*?)\)\//gi, "new Date($1)"));
  * <li>ignoreblessing=entitytype_name_regex - the name of an entitytype that blesses any object in the graph for which
  *            properties and relationships should not be output. The main reason for this is to remove things like
  *            ProbeModel blessings which are generally uninteresting to the client.
- * <li>meta=[no|false]|[true|yes]|only - whether or not to output meta information about the object (default is true),
+ *            e.g. ignoreblessing=.*ProbeUpdateSpecification
+ *            No default value.
+ * <li>meta=[no|false]|[true|yes]|only - whether or not to output meta information about the object. Default is no.
  *            or just output the meta.
- * <li>trimsa=[yes|true]|[no|false] - whether or not to trim the subject area prefix from the property type names.
+ * <li>trimsa=[yes|true]|[no|false] - whether or not to trim the subject area prefix from the property type names. Default is yes.
  * </ul>
  */
 public class JsonViewlet
@@ -66,11 +70,10 @@ public class JsonViewlet
     }
 
     /**
-     * Factory method.
-     *
-     * @param mb the MeshBase from which the viewed MeshObjects are taken
+     * Static create, use this to construct an instance.
+     * @param mb the mesh base
      * @param c the application context
-     * @return the created PropertySheetViewlet
+     * @return a new instance of JsonViewlet
      */
     public static JsonViewlet create(
             MeshBase mb,
@@ -83,8 +86,8 @@ public class JsonViewlet
 
     /**
      * Factory method for a ViewletFactoryChoice that instantiates this Viewlet.
-     *
-     * @param matchQuality the match quality
+     * @param toView
+     * @param matchQuality
      * @return the ViewletFactoryChoice
      */
     public static ViewletFactoryChoice choice(
@@ -104,7 +107,7 @@ public class JsonViewlet
     /**
      * Process the incoming request.
      * Set the mime type in the real response so the structured response remains empty.
-     * Stream out the XML.
+     * Stream out the json.
      *
      * @param request the incoming request
      * @param structured the StructuredResponse into which to write the result
@@ -130,9 +133,9 @@ public class JsonViewlet
      * the JeeViewlet can perform whatever operations needed after to the execution of the servlet, e.g.
      * logging. Subclasses will often override this.</p>
      *
-     * @param request the incoming request
-     * @param response the response to be assembled
-     * @param thrown if this is non-null, it is the Throwable indicating a problem that occurred
+     * @param request           the incoming request
+     * @param response          the response to be assembled
+     * @param thrown            if this is non-null, it is the Throwable indicating a problem that occurred
      *        either during execution of performBefore or of the servlet.
      * @throws ServletException thrown if an error occurred
      * @see #performBeforeGet

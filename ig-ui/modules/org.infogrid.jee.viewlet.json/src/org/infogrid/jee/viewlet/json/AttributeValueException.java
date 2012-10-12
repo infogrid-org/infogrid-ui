@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -19,6 +19,9 @@ package org.infogrid.jee.viewlet.json;
  */
 public class AttributeValueException extends Exception {
 
+    /**
+     * The url parameter in error
+     */
     private String identifier;
 
     AttributeValueException(String message, String identifier) {

@@ -44,7 +44,6 @@ import org.infogrid.model.primitives.StringDataType;
 import org.infogrid.model.primitives.StringValue;
 import org.infogrid.model.primitives.TimeStampDataType;
 import org.infogrid.model.primitives.TimeStampValue;
-import org.infogrid.model.primitives.externalized.EncodingException;
 import org.infogrid.model.primitives.text.ModelPrimitivesStringRepresentationDirectorySingleton;
 import org.infogrid.util.CursorIterator;
 import org.infogrid.util.context.AbstractObjectInContext;
@@ -67,12 +66,13 @@ public class MeshObjectJsonEncoder
         extends AbstractObjectInContext {
 
     /**
-     * Factory method.
-     * @param structured
-     * @param saneRequest
-     * @param ctxt
-     * @return
-     * @throws IOException 
+     * Factory method that constructs an instance.
+     * 
+     * @param structured     the Structured response
+     * @param saneRequest    the sane request
+     * @param ctxt           the context
+     * @return               a MeshObjectJsonEncoder
+     * @throws IOException   an input output exception
      */
     public static MeshObjectJsonEncoder create(
             StructuredResponse structured,
@@ -84,10 +84,11 @@ public class MeshObjectJsonEncoder
 
     /**
      * constr. - do not use, use static create
-     * @param structured
-     * @param saneRequest
-     * @param ctxt
-     * @throws IOException 
+     * 
+     * @param structured    the structured response.
+     * @param saneRequest   the sane request.
+     * @param ctxt          the context.
+     * @throws IOException  an input output exception.
      */
     protected MeshObjectJsonEncoder(
             StructuredResponse structured,
@@ -97,7 +98,7 @@ public class MeshObjectJsonEncoder
         super(ctxt);
         HttpServletResponse response = structured.getDelegate();
         OutputStream theOutputStream = response.getOutputStream();
-        this.theSaneRequest = saneRequest; // cache for URL formatting
+        this.theSaneRequest = saneRequest;
         this.theJsonFactory = new JsonFactory();
         this.theJsonGenerator = theJsonFactory.createJsonGenerator(theOutputStream, JsonEncoding.UTF8);
         try {
@@ -111,9 +112,10 @@ public class MeshObjectJsonEncoder
     }
 
     /**
-     * Parse the attributes from the URL.
-     *
-     * @param request
+     * Parse the attributes from the URL into instance variables.
+     * TODO - collect up all the errors and throw once.
+     * 
+     * @throws AttributeValueException   a checked exception to indicate errors in the URL attributes. 
      */
     private void getAttributes()
             throws AttributeValueException {
@@ -157,7 +159,7 @@ public class MeshObjectJsonEncoder
                 theMeta = Meta.only;
             }
         } else {
-            theMeta = Meta.yes; // default output meta with the entity
+            theMeta = Meta.no; // default output meta with the entity
         }
         value = theSaneRequest.getUrlArgument(TRIMSA_ATTRIBUTE_NAME); // remove the SA prefix
         if (value != null) {
@@ -172,8 +174,8 @@ public class MeshObjectJsonEncoder
     /**
      * Write the error output.
      *
-     * @param ex
-     * @throws IOException
+     * @param ex            the local checked exception which carries the first encountered error.
+     * @throws IOException  an input output exception.
      */
     private void errorOut(AttributeValueException ex)
             throws IOException {
@@ -193,8 +195,8 @@ public class MeshObjectJsonEncoder
      * the targetLevel. A targetLevel of 0 means no limit - go to infinity.
      * There is a risk it could output the whole meshbase.
      *
-     * @param theObject
-     * @throws EncodingException
+     * @param theObject            the root MeshObject to be written as json.
+     * @throws IOException         an input output exception.
      */
     public void write(MeshObject theObject)
             throws IOException {
@@ -206,8 +208,8 @@ public class MeshObjectJsonEncoder
     /**
      * Write a graph traced from this object to the targetLevel
      *
-     * @param theObject
-     * @param thisLevel
+     * @param theObject           a MeshObject to write.
+     * @param thisLevel           the current level in the object graph.
      * @throws IOException
      */
     private void writeObject(MeshObject theObject,
@@ -248,8 +250,8 @@ public class MeshObjectJsonEncoder
     /**
      * Write the meta data this object.
      *
-     * @param theObject
-     * @throws IOException
+     * @param theObject       a mesh object for which this method writes its meta information.
+     * @throws IOException    an input output exception.
      */
     private void writeMeta(MeshObject theObject)
             throws IOException {
@@ -273,8 +275,8 @@ public class MeshObjectJsonEncoder
     /**
      * Write the property types as an object array
      *
-     * @param theObject
-     * @throws IOException
+     * @param theObject        the mesh object for which this method writes its property types.
+     * @throws IOException     an input output exception.
      */
     private void writePropertyTypes(MeshObject theObject)
             throws IOException {
@@ -292,8 +294,8 @@ public class MeshObjectJsonEncoder
     /**
      * Helper to ignore typeid regex's
      *
-     * @param entityTypeId
-     * @return
+     * @param entityTypeId     the string id of an entity type. 
+     * @return boolean         whether or not to ignore mesh objects with this id.
      */
     private boolean ignoreTypeId(String entityTypeId) {
         if (theIgnoredBlessings.contains(entityTypeId)) { // exact match
@@ -311,8 +313,8 @@ public class MeshObjectJsonEncoder
     /**
      * Write a property id
      *
-     * @param propertyType
-     * @throws IOException
+     * @param propertyType     a property type who's id is to be written by this method.
+     * @throws IOException     an input output exception.
      */
     private void writePropertyId(PropertyType propertyType)
             throws IOException {
@@ -326,8 +328,8 @@ public class MeshObjectJsonEncoder
     /**
      * Write the object's property names and values
      *
-     * @param theObject
-     * @throws IOException
+     * @param theObject        the mesh object for which this method writes its property values.
+     * @throws IOException     an input output exception
      */
     private void writePropertyValues(MeshObject theObject)
             throws IOException {
@@ -388,9 +390,9 @@ public class MeshObjectJsonEncoder
     /**
      * Helper to write the property value as a string
      *
-     * @param thePropertyValue
-     * @throws IOException
-     * @throws StringifierException
+     * @param thePropertyValue          a property value which this method writes as json.
+     * @throws IOException              an input output exception.
+     * @throws StringifierException     an exception that is thrown if the property value can not be represented as a string.
      */
     private void writeString(PropertyValue thePropertyValue)
             throws IOException,
@@ -405,11 +407,9 @@ public class MeshObjectJsonEncoder
     /**
      * Write the object's relationships
      *
-     * @param theObject
-     * @param visitedMeshObjects
-     * @param targetLevel
-     * @param thisLevel
-     * @throws IOException
+     * @param theObject        the mesh object for which this method writes its relationships.
+     * @param thisLevel        the level of this object in the graph.
+     * @throws IOException     an input output exception.
      */
     private void writeRelationships(MeshObject theObject,
             int thisLevel)
@@ -455,12 +455,12 @@ public class MeshObjectJsonEncoder
     /**
      * Date encoding options
      */
-    private static final String DATEENCODING_VALUE_FN = "func"; // asp.net
-    private static final String DATEENCODING_VALUE_STR = "string"; // default
+    private static final String DATEENCODING_VALUE_FN = "func"; // default asp.net
+    private static final String DATEENCODING_VALUE_STR = "string"; // return the date as a string
     /**
      * Blessings that we want to ignore
      */
-    private HashSet<String> theIgnoredBlessings = null;
+    private HashSet<String> theIgnoredBlessings;
     /**
      * who sent me
      */
