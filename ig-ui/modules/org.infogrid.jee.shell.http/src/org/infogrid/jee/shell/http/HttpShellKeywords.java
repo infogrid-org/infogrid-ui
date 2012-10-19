@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -74,6 +74,11 @@ public interface HttpShellKeywords
      * Value for the NULL_PROPERTY_VALUE_TAG.
      */
     public static final String NULL_PROPERTY_VALUE_TAG_TRUE = "true";
+
+    /**
+     * Keyword indicating a non-default format in which the String representation of the <code>PropertyValue</code> is given.
+     */
+    public static final String PROPERTY_VALUE_FORMAT_TAG = SEPARATOR + "format";
 
     /**
      * Keyword indicating with which <code>EntityType</code> a MeshObject shall be blessed.

@@ -50,6 +50,7 @@ public class PropertyValueTag
         thePropertyValueName    = null;
         theNullString           = "";
         theStringRepresentation = null;
+        theFormatString         = null;
         theMaxLength            = -1;
         theColloquial           = true;
 
@@ -149,6 +150,29 @@ public class PropertyValueTag
     }
 
     /**
+     * Obtain value of the formatString property.
+     *
+     * @return value of the formatString property
+     * @see #setFormatString
+     */
+    public String getFormatString()
+    {
+        return theFormatString;
+    }
+
+    /**
+     * Set value of the formatString property.
+     *
+     * @param newValue new value of the formatString property
+     * @see #getFormatString
+     */
+    public void setFormatString(
+            String newValue )
+    {
+        theFormatString = newValue;
+    }
+
+    /**
      * Obtain value of the maxLength property.
      *
      * @return value of the maxLength property
@@ -223,6 +247,7 @@ public class PropertyValueTag
                     value,
                     theNullString,
                     theStringRepresentation,
+                    theFormatString,
                     theMaxLength,
                     theColloquial );
             print( text );
@@ -253,6 +278,11 @@ public class PropertyValueTag
      * Name of the String representation.
      */
     protected String theStringRepresentation;
+    
+    /**
+     * If given, overrides the default format string.
+     */
+    protected String theFormatString;
     
     /**
      * The maximum length of an emitted String.

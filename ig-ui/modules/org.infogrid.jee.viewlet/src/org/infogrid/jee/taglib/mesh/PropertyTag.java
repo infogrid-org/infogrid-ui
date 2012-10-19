@@ -27,6 +27,7 @@ import org.infogrid.model.primitives.PropertyType;
 import org.infogrid.model.primitives.PropertyValue;
 import org.infogrid.model.primitives.PropertyValueParsingException;
 import org.infogrid.util.ResourceHelper;
+import org.infogrid.util.text.SimpleStringRepresentationParameters;
 import org.infogrid.util.text.StringRepresentation;
 import org.infogrid.util.text.StringRepresentationDirectory;
 import org.infogrid.util.text.StringifierException;
@@ -62,11 +63,13 @@ public class PropertyTag
         thePropertyType         = null;
         theNullString           = null;
         theStringRepresentation = null;
+        theFormatString         = null;
         theMaxLength            = -1;
         theColloquial           = true;
         theAllowNull            = true;
         theState                = null;
         theDefaultValue         = null;
+        theAddText              = null;
 
         super.initializeToDefaults();
     }
@@ -233,6 +236,29 @@ public class PropertyTag
     }
 
     /**
+     * Obtain value of the formatString property.
+     *
+     * @return value of the formatString property
+     * @see #setFormatString
+     */
+    public String getFormatString()
+    {
+        return theFormatString;
+    }
+
+    /**
+     * Set value of the formatString property.
+     *
+     * @param newValue new value of the formatString property
+     * @see #getFormatString
+     */
+    public void setFormatString(
+            String newValue )
+    {
+        theFormatString = newValue;
+    }
+
+    /**
      * Obtain value of the maxLength property.
      *
      * @return value of the maxLength property
@@ -356,6 +382,29 @@ public class PropertyTag
     }
 
     /**
+     * Obtain the value of the addText property.
+     *
+     * @return value of the addText property
+     * @see #setAddText
+     */
+    public String getAddText()
+    {
+        return theAddText;
+    }
+
+    /**
+     * Set value of the addText property.
+     *
+     * @param newValue new value of the addText property
+     * @see #getAddText
+     */
+    public void setAddText(
+            String newValue )
+    {
+        theAddText = newValue;
+    }
+
+    /**
      * Our implementation of doStartTag().
      *
      * @return evaluate or skip body
@@ -463,7 +512,7 @@ public class PropertyTag
             StringRepresentation httpPost = getFormatter().determineStringRepresentation( StringRepresentationDirectory.TEXT_HTTP_POST_NAME );
 
             try {
-                defaultValue = type.fromStringRepresentation( httpPost, theDefaultValue, null );
+                defaultValue = type.fromStringRepresentation( httpPost, SimpleStringRepresentationParameters.create(), theDefaultValue, null );
 
             } catch( PropertyValueParsingException ex ) {
                 throw new JspException( ex );
@@ -481,10 +530,12 @@ public class PropertyTag
                         varCounter,
                         theNullString,
                         realStringRep,
+                        theFormatString,
                         theMaxLength,
                         theColloquial,
                         theAllowNull,
-                        defaultValue );
+                        defaultValue,
+                        theAddText );
             print( text );
 
         } catch( StringifierException ex ) {
@@ -536,6 +587,11 @@ public class PropertyTag
     protected String theStringRepresentation;
     
     /**
+     * If given, overrides the default format string.
+     */
+    protected String theFormatString;
+    
+    /**
      * The maximum length of an emitted String.
      */
     protected int theMaxLength;
@@ -559,6 +615,11 @@ public class PropertyTag
      * A non-default value, if any.
      */
     protected String theDefaultValue;
+
+    /**
+     * Any text to add when emitting this tag. This text will be processed like a format.
+     */
+    protected String theAddText;
 
     /**
      * Our ResourceHelper.

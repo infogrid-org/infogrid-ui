@@ -841,7 +841,7 @@ public class HttpShellFilter
         } else {
             raw = raw.trim();
             
-            ret = idFact.fromStringRepresentation( theParsingRepresentation, raw );
+            ret = idFact.fromStringRepresentation( theParsingRepresentation, SimpleStringRepresentationParameters.create(), raw );
         }
 
         return ret;
@@ -1086,7 +1086,20 @@ public class HttpShellFilter
 
 
             } else if( propValueString != null ) {
-                value = propertyType.fromStringRepresentation( theParsingRepresentation, propValueString, propMimeString );
+                buf = new StringBuilder();
+                buf.append( PREFIX );
+                buf.append( varName );
+                buf.append( PROPERTY_VALUE_TAG );
+                buf.append( propVarName );
+                buf.append( PROPERTY_VALUE_FORMAT_TAG );
+                
+                String format = request.getPostedArgument( buf.toString() );
+            
+                SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
+                if( format != null ) {
+                    pars.put( StringRepresentationParameters.FORMAT_STRING, format );
+                }
+                value = propertyType.fromStringRepresentation( theParsingRepresentation, pars, propValueString, propMimeString );
 
             } else {
                 // nothing given: leave as is

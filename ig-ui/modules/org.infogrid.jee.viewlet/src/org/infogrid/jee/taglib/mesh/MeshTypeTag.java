@@ -51,6 +51,7 @@ public class MeshTypeTag
         thePropertyName         = null;
         theNullString           = "";
         theStringRepresentation = null;
+        theFormatString         = null;
         theMaxLength            = -1;
         theLocale               = null;
         theExactLocaleMatch     = null;
@@ -149,6 +150,29 @@ public class MeshTypeTag
             String newValue )
     {
         theStringRepresentation = newValue;
+    }
+
+    /**
+     * Obtain value of the formatString property.
+     *
+     * @return value of the formatString property
+     * @see #setFormatString
+     */
+    public String getFormatString()
+    {
+        return theFormatString;
+    }
+
+    /**
+     * Set value of the formatString property.
+     *
+     * @param newValue new value of the formatString property
+     * @see #getFormatString
+     */
+    public void setFormatString(
+            String newValue )
+    {
+        theFormatString = newValue;
     }
 
     /**
@@ -311,6 +335,7 @@ public class MeshTypeTag
                         value,
                         theNullString,
                         theStringRepresentation,
+                        theFormatString,
                         theMaxLength,
                         theColloquial );
 
@@ -342,6 +367,11 @@ public class MeshTypeTag
      * Name of the String representation.
      */
     protected String theStringRepresentation;
+    
+    /**
+     * If given, overrides the default format string.
+     */
+    protected String theFormatString;
     
     /**
      * The maximum length of an emitted String.

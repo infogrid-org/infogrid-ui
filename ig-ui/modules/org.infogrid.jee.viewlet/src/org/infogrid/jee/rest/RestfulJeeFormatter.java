@@ -612,6 +612,7 @@ public class RestfulJeeFormatter
      * @param value the PropertyValue
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
+     * @param overrideFormatString if given, use this String as format String instead of the default
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param colloquial if applicable, output in colloquial form
      * @return the String to display
@@ -622,6 +623,7 @@ public class RestfulJeeFormatter
             PropertyValue value,
             String        nullString,
             String        stringRepresentation,
+            String        overrideFormatString,
             int           maxLength,
             boolean       colloquial )
         throws
@@ -645,6 +647,9 @@ public class RestfulJeeFormatter
             if( nullString != null ) {
                 pars.put( StringRepresentationParameters.NULL_STRING, nullString );
             }
+            if( overrideFormatString != null ) {
+                pars.put( StringRepresentationParameters.FORMAT_STRING, overrideFormatString );
+            }
             ret = value.toStringRepresentation( rep, pars );
         }
         return ret;
@@ -659,10 +664,12 @@ public class RestfulJeeFormatter
      * @param editVar name of the HTML form elements to use
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
+     * @param overrideFormatString if given, use this String as format String instead of the default
      * @param maxLength maximum length of emitted String. -1 means unlimited.
      * @param colloquial if applicable, output in colloquial form
      * @param allowNull if applicable, allow null values to be entered in edit mode
      * @param defaultValue if given, use this as the default value instead what is specified in the model
+     * @param addText any text to add
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify\
      * @throws IllegalPropertyTypeException thrown if the PropertyType does not exist on this MeshObject
@@ -677,10 +684,12 @@ public class RestfulJeeFormatter
             int           editIndex,
             String        nullString,
             String        stringRepresentation,
+            String        overrideFormatString,
             int           maxLength,
             boolean       colloquial,
             boolean       allowNull,
-            PropertyValue defaultValue )
+            PropertyValue defaultValue,
+            String        addText )
         throws
             StringifierException,
             IllegalPropertyTypeException,
@@ -706,11 +715,17 @@ public class RestfulJeeFormatter
         if( nullString != null ) {
             pars.put( StringRepresentationParameters.NULL_STRING, nullString );
         }
+        if( overrideFormatString != null ) {
+            pars.put( StringRepresentationParameters.FORMAT_STRING, overrideFormatString );
+        }
         if( editVar != null ) {
             pars.put( StringRepresentationParameters.EDIT_VARIABLE, editVar );
         }
         if( defaultValue != null ) {
             pars.put( ModelPrimitivesStringRepresentationParameters.DEFAULT_VALUE, defaultValue );
+        }
+        if( addText != null ) {
+            pars.put( StringRepresentationParameters.ADD_TEXT, addText );
         }
         pars.put( StringRepresentationParameters.EDIT_INDEX, editIndex );
 
@@ -977,16 +992,17 @@ public class RestfulJeeFormatter
      * @throws ParseException thrown if a syntax error occurred
      */
     public MeshObjectIdentifier fromMeshObjectIdentifier(
-            MeshObjectIdentifierFactory factory,
-            StringRepresentation        representation,
-            String                      s )
+            MeshObjectIdentifierFactory    factory,
+            StringRepresentation           representation,
+            StringRepresentationParameters pars,
+            String                         s )
         throws
             ParseException
     {
         if( s == null ) {
             return null;
         }
-        MeshObjectIdentifier ret = factory.fromStringRepresentation( representation, s );
+        MeshObjectIdentifier ret = factory.fromStringRepresentation( representation, pars, s );
 
         return ret;
     }

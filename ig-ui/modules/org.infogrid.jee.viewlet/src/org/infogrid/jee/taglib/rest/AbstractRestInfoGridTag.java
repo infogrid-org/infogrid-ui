@@ -234,6 +234,7 @@ public abstract class AbstractRestInfoGridTag
      * @param value the PropertyValue
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
+     * @param overrideFormatString if given, use this String as format String instead of the default
      * @param theMaxLength the maximum length of an emitted String
      * @param colloquial if applicable, output in colloquial form
      * @return the String to display
@@ -244,6 +245,7 @@ public abstract class AbstractRestInfoGridTag
             PropertyValue value,
             String        nullString,
             String        stringRepresentation,
+            String        overrideFormatString,
             int           theMaxLength,
             boolean       colloquial )
         throws
@@ -253,6 +255,7 @@ public abstract class AbstractRestInfoGridTag
                 pageContext,
                 value,
                 nullString,
+                overrideFormatString,
                 stringRepresentation,
                 theMaxLength,
                 colloquial );
@@ -269,10 +272,12 @@ public abstract class AbstractRestInfoGridTag
      * @param editIndex index further qualifying the HTML form elements to use
      * @param nullString the String to display of the value is null
      * @param stringRepresentation the StringRepresentation for PropertyValues
+     * @param overrideFormatString if given, use this String as format String instead of the default
      * @param theMaxLength the maximum length of an emitted String
      * @param colloquial if applicable, output in colloquial form
      * @param allowNull if applicable, allow null values to be entered in edit mode
      * @param defaultValue if given, use this as the default value instead what is specified in the model
+     * @param addText any text to add
      * @return the String to display
      * @throws StringifierException thrown if there was a problem when attempting to stringify
      * @throws IllegalPropertyTypeException thrown if the PropertyType does not exist on this MeshObject
@@ -287,10 +292,12 @@ public abstract class AbstractRestInfoGridTag
             int           editIndex,
             String        nullString,
             String        stringRepresentation,
+            String        overrideFormatString,
             int           theMaxLength,
             boolean       colloquial,
             boolean       allowNull,
-            PropertyValue defaultValue )
+            PropertyValue defaultValue,
+            String        addText )
         throws
             StringifierException,
             IllegalPropertyTypeException,
@@ -304,10 +311,12 @@ public abstract class AbstractRestInfoGridTag
                 editIndex,
                 nullString,
                 stringRepresentation,
+                overrideFormatString,
                 theMaxLength,
                 colloquial,
                 allowNull,
-                defaultValue );
+                defaultValue,
+                addText );
         return ret;
     }
 
