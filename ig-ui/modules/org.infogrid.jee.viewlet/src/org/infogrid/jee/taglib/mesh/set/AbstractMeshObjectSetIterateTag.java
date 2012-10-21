@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -21,6 +21,7 @@ import org.infogrid.mesh.set.ByPropertyValueSorter;
 import org.infogrid.mesh.set.DefaultMeshObjectSorter;
 import org.infogrid.mesh.set.MeshObjectSet;
 import org.infogrid.mesh.set.MeshObjectSorter;
+import org.infogrid.mesh.set.OrderedMeshObjectSet;
 import org.infogrid.model.primitives.PropertyType;
 
 /**
@@ -94,10 +95,15 @@ public abstract class AbstractMeshObjectSetIterateTag
 
         MeshObjectSorter sorter;
         if( theOrderBy == null ) {
-            if( !reverse ) {
-                sorter = DefaultMeshObjectSorter.BY_USER_VISIBLE_STRING;
+            if( !( theSet instanceof OrderedMeshObjectSet )) {
+                if( !reverse ) {
+                    sorter = DefaultMeshObjectSorter.BY_USER_VISIBLE_STRING;
+                } else {
+                    sorter = DefaultMeshObjectSorter.BY_REVERSE_USER_VISIBLE_STRING;
+                }
             } else {
-                sorter = DefaultMeshObjectSorter.BY_REVERSE_USER_VISIBLE_STRING;
+                // if it's ordered already, let's not change that
+                sorter = null;
             }
             
         } else if( ORDER_BY_TIME_CREATED.equals( theOrderBy ) ) {
@@ -122,7 +128,9 @@ public abstract class AbstractMeshObjectSetIterateTag
 
         }
 
-        theSet = theSet.getFactory().createOrderedImmutableMeshObjectSet( theSet, sorter );
+        if( sorter != null ) {
+            theSet = theSet.getFactory().createOrderedImmutableMeshObjectSet( theSet, sorter );
+        }
 
         return theSet;
     }
