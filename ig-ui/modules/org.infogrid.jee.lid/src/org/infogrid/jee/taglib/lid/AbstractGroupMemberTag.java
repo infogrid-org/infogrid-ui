@@ -8,13 +8,14 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
 package org.infogrid.jee.taglib.lid;
 
 import java.io.IOException;
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridBodyTag;
 import org.infogrid.jee.taglib.IgnoreException;
@@ -115,9 +116,21 @@ public abstract class AbstractGroupMemberTag
         for( int i=0 ; i<toTest.length ; ++i ) {
             toTest[i] = toTest[i].trim();
         }
-
+        return isMember( pageContext.getRequest(), toTest );
+    }
+    
+    /**
+     * Determine whether the current user is a member of at least one of the specified groups.
+     * This is factored out so the same code can be used somewhere else, too.
+     *
+     * @return true if the current user is a member of at least one of the specified groups.
+     */
+    public static boolean isMember(
+            ServletRequest request,
+            String []      toTest )
+    {
         // look for group membership via the LidAccount
-        LidAccount me = (LidAccount) pageContext.getRequest().getAttribute( LidPipelineServlet.ACCOUNT_ATTRIBUTE_NAME );
+        LidAccount me = (LidAccount) request.getAttribute( LidPipelineServlet.ACCOUNT_ATTRIBUTE_NAME );
         if( me != null ) {
             Identifier [] meMemberId = me.getGroupIdentifiers();
 
@@ -146,7 +159,7 @@ public abstract class AbstractGroupMemberTag
         }
 
         // look for group membership via the request attribute
-        String [] groups = (String []) pageContext.getRequest().getAttribute( LidPipelineServlet.USER_GROUPS_ATTRIBUTE_NAME );
+        String [] groups = (String []) request.getAttribute( LidPipelineServlet.USER_GROUPS_ATTRIBUTE_NAME );
         if( groups != null ) {
             for( String currentString : groups ) {
 
