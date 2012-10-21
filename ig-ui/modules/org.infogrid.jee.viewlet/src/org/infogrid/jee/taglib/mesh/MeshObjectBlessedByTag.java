@@ -15,7 +15,6 @@
 package org.infogrid.jee.taglib.mesh;
 
 import javax.servlet.jsp.JspException;
-import org.infogrid.jee.rest.RestfulJeeFormatter;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.jee.taglib.rest.AbstractRestInfoGridTag;
 import org.infogrid.mesh.MeshObject;
