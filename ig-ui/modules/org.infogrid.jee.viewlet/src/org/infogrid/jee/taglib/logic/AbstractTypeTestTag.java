@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -143,7 +143,7 @@ public abstract class AbstractTypeTestTag
             EntityType         comparison = modelBase.findEntityTypeByIdentifier( identifier );
 
             for( EntityType current : types ) {
-                if( comparison.equalsOrIsSupertype( current )) {
+                if( current.equalsOrIsSupertype( comparison )) {
                     return true;
                 }
             }
