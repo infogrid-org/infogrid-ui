@@ -48,6 +48,7 @@ public class MeshTypeTag
     protected void initializeToDefaults()
     {
         theMeshTypeName         = null;
+        theMeshType             = null;
         thePropertyName         = null;
         theNullString           = "";
         theStringRepresentation = null;
@@ -81,6 +82,29 @@ public class MeshTypeTag
             String newValue )
     {
         theMeshTypeName = newValue;
+    }
+
+    /**
+     * Obtain value of the meshType property.
+     *
+     * @return value of the meshType property
+     * @see #setMeshType
+     */
+    public final String getMeshType()
+    {
+        return theMeshType;
+    }
+
+    /**
+     * Set value of the meshType property.
+     *
+     * @param newValue new value of the meshType property
+     * @see #getMeshType
+     */
+    public final void setMeshType(
+            String newValue )
+    {
+        theMeshType = newValue;
     }
 
     /**
@@ -281,8 +305,23 @@ public class MeshTypeTag
         PropertyValue value = null;
         String        text  = null;
 
+        Object found;
+        if( theMeshTypeName != null ) {
+            if( theMeshType != null ) {
+                throw new JspException( "Must specify either meshType or meshTypeName, not both." );
+            }
+            found = lookupOrThrow( theMeshTypeName );
+        } else {
+            if( theMeshType == null ) {
+                throw new JspException( "Must specify either meshType or meshTypeName." );
+            }
+            found = getFormatter().findMeshTypeByIdentifierOrThrow( theMeshType );
+        }
         if( thePropertyName != null ) {
-            Object found = lookupOrThrow( theMeshTypeName, thePropertyName );
+            found = getFormatter().getNestedPropertyOrThrow( found, thePropertyName );
+        }
+        
+        if( found != null ) {
 
             if( found == null ) {
                 value = null;
@@ -312,19 +351,16 @@ public class MeshTypeTag
                 } catch( StringifierException ex ) {
                     throw new JspException( ex );
                 }
+            } else if( found instanceof MeshType ) {
+                
+                MeshType type = (MeshType) found;
 
+                value = type.getUserVisibleName();
+                if( value == null ) {
+                    value = type.getName();
+                }
             } else {
                 throw new ClassCastException( "Found object named " + theMeshTypeName + " is neither a PropertyValue nor an L10Map: " + found );
-            }
-
-        } else {
-            Object found = lookupOrThrow( theMeshTypeName );
-
-            MeshType type = (MeshType) found;
-
-            value = type.getUserVisibleName();
-            if( value == null ) {
-                value = type.getName();
             }
         }
         if( text == null ) {
@@ -353,6 +389,11 @@ public class MeshTypeTag
      */
     protected String theMeshTypeName;
 
+    /**
+     * String containing the MeshTypeIdentifier.
+     */
+    protected String theMeshType;
+    
     /**
      * Name of the property of the MeshType to show.
      */
