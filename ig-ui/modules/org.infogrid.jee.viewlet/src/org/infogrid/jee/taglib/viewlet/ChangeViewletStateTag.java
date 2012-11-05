@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2010 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -28,6 +28,7 @@ import org.infogrid.jee.viewlet.JeeViewletState;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.StringHelper;
 import org.infogrid.util.http.SaneRequest;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 
 /**
@@ -156,7 +157,7 @@ public class ChangeViewletStateTag
                         if( !DISPLAY_COMPACT.equals( theDisplay )) {
                             buf.append( "  <li>" );
                             buf.append( "<b>" );
-                            buf.append( found.toStringRepresentation( null, null ) ); // arguments don't matter
+                            buf.append( found.toStringRepresentation( null, StringRepresentationParameters.EMPTY ) ); // arguments don't matter
                             buf.append( "</b>" );
                             buf.append( "  </li>\n" );
                         }
@@ -172,7 +173,7 @@ public class ChangeViewletStateTag
                         buf.append( StringHelper.stringToHtml( href ));
 
                         buf.append( "\">" );
-                        buf.append( found.toStringRepresentation( null, null ) ); // arguments don't matter
+                        buf.append( found.toStringRepresentation( null, StringRepresentationParameters.EMPTY ) ); // arguments don't matter
                         buf.append( "</a>" );
                         buf.append( "  </li>\n" );
 

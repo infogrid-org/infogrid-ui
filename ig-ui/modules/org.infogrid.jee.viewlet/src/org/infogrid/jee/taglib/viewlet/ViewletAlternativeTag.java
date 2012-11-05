@@ -18,6 +18,7 @@ import javax.servlet.jsp.JspException;
 import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
 import org.infogrid.util.text.StringRepresentation;
+import org.infogrid.util.text.StringRepresentationParameters;
 import org.infogrid.util.text.StringifierException;
 import org.infogrid.viewlet.ViewletFactoryChoice;
 
@@ -115,7 +116,7 @@ public class ViewletAlternativeTag
             StringRepresentation rep = getFormatter().determineStringRepresentation( theStringRepresentation );
             try {
 
-                String text = choice.toStringRepresentation( rep, null );
+                String text = choice.toStringRepresentation( rep, StringRepresentationParameters.EMPTY );
                 print( text );
 
             } catch( StringifierException ex ) {

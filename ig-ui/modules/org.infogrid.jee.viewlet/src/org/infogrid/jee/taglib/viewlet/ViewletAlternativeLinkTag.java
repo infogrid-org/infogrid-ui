@@ -261,7 +261,7 @@ public class ViewletAlternativeLinkTag
             StringRepresentation rep = getFormatter().determineStringRepresentation( theStringRepresentation );
             try {
 
-                String text = choice.toStringRepresentationLinkEnd( rep, null );
+                String text = choice.toStringRepresentationLinkEnd( rep, StringRepresentationParameters.EMPTY );
                 print( text );
 
             } catch( StringifierException ex ) {
