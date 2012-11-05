@@ -118,7 +118,7 @@ public abstract class AbstractGroupMemberTag
         }
         return isMember( pageContext.getRequest(), toTest );
     }
-    
+
     /**
      * Determine whether the current user is a member of at least one of the specified groups.
      * This is factored out so the same code can be used somewhere else, too.
@@ -173,6 +173,54 @@ public abstract class AbstractGroupMemberTag
         return false;
     }
 
+    /**
+     * Determine whether the current user is a member of the specified group.
+     * This is factored out so the same code can be used somewhere else, too.
+     *
+     * @return true if the current user is a member of the specified group.
+     */
+    public static boolean isMember(
+            ServletRequest request,
+            String         toTest )
+    {
+        // look for group membership via the LidAccount
+        LidAccount me = (LidAccount) request.getAttribute( LidPipelineServlet.ACCOUNT_ATTRIBUTE_NAME );
+        if( me != null ) {
+            Identifier [] meMemberId = me.getGroupIdentifiers();
+
+            if( meMemberId != null ) {
+                for( Identifier current : meMemberId ) {
+                    String currentString = current.toExternalForm();
+
+                    if( currentString.equals( toTest )) {
+                        return true;
+                    }
+                }
+            }
+            String [] meMemberString = me.getGroupNames();
+            if( meMemberString != null ) {
+                for( String currentString : meMemberString ) {
+
+                    if( currentString.equals( toTest )) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // look for group membership via the request attribute
+        String [] groups = (String []) request.getAttribute( LidPipelineServlet.USER_GROUPS_ATTRIBUTE_NAME );
+        if( groups != null ) {
+            for( String currentString : groups ) {
+
+                if( currentString.equals( toTest )) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     /**
      * The group members attribute.
      */
