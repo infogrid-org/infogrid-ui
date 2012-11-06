@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -90,19 +90,11 @@ public abstract class DefaultJeeViewletFactoryChoice
         throws
             StringifierException
     {
-        String contextPath = null;
-        String target      = null;
-        String title       = null;
-        String pane        = null;
-        Deque<JeeViewedMeshObjects> viewedMeshObjectsStack = null;
-
-        if( pars != null ) {
-            contextPath = (String) pars.get( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY );
-            target      = (String) pars.get( StringRepresentationParameters.LINK_TARGET_KEY );
-            title       = (String) pars.get( StringRepresentationParameters.LINK_TITLE_KEY );
-            pane        = (String) pars.get( JeeViewlet.PANE_STRING_REPRESENTATION_PARAMETER_KEY );
-            viewedMeshObjectsStack = (Deque<JeeViewedMeshObjects>) pars.get( JeeViewletFactoryChoice.VIEWEDMESHOBJECTS_STACK_KEY );
-        }
+        String contextPath = (String) pars.get( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY );
+        String target      = (String) pars.get( StringRepresentationParameters.LINK_TARGET_KEY );
+        String title       = (String) pars.get( StringRepresentationParameters.LINK_TITLE_KEY );
+        String pane        = (String) pars.get( JeeViewlet.PANE_STRING_REPRESENTATION_PARAMETER_KEY );
+        Deque<JeeViewedMeshObjects> viewedMeshObjectsStack = (Deque<JeeViewedMeshObjects>) pars.get( JeeViewletFactoryChoice.VIEWEDMESHOBJECTS_STACK_KEY );
 
         if( target == null ) {
             target = "_self";
@@ -140,15 +132,9 @@ public abstract class DefaultJeeViewletFactoryChoice
         throws
             StringifierException
     {
-        String contextPath = null;
-        String pane        = null;
-        Deque<JeeViewedMeshObjects> viewedMeshObjectsStack = null;
-
-        if( pars != null ) {
-            contextPath = (String) pars.get( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY );
-            pane        = (String) pars.get( JeeViewlet.PANE_STRING_REPRESENTATION_PARAMETER_KEY );
-            viewedMeshObjectsStack = (Deque<JeeViewedMeshObjects>) pars.get( JeeViewletFactoryChoice.VIEWEDMESHOBJECTS_STACK_KEY );
-        }
+        String contextPath = (String) pars.get( StringRepresentationParameters.WEB_RELATIVE_CONTEXT_KEY );
+        String pane        = (String) pars.get( JeeViewlet.PANE_STRING_REPRESENTATION_PARAMETER_KEY );
+        Deque<JeeViewedMeshObjects> viewedMeshObjectsStack = (Deque<JeeViewedMeshObjects>) pars.get( JeeViewletFactoryChoice.VIEWEDMESHOBJECTS_STACK_KEY );
 
         String toViewUrl = getMeshObjectsToView().getAsUrl( PANE_TOP.equals( pane ) ? null : viewedMeshObjectsStack );
 
