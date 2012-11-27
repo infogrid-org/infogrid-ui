@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -133,7 +133,10 @@ public class MeshObjectSetTraverseIterateTag
             JspException,
             IgnoreException
     {
-        MeshObject             start = lookupMeshObjectOrThrow( "startObject", theStartObject, "startObjectName", theStartObjectName );
+        MeshObject start = lookupMeshObjectOrThrow( "startObject", theStartObject, "startObjectName", theStartObjectName );
+        if( start == null ) {
+            return null; // can be if ignore=true
+        }
         TraversalSpecification spec  = findTraversalSpecificationOrThrow( start, theTraversalSpecification );
 
         MeshObjectSet ret = start.traverse( spec );
