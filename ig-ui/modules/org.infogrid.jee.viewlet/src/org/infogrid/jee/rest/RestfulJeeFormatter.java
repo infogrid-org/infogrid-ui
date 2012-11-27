@@ -385,7 +385,7 @@ public class RestfulJeeFormatter
         }
 
         if( obj == null ) {
-            throw new NullPointerException( "Cannot find PropertyType named " + name + " without a MeshObject" );
+            throw new NullPointerException( "Cannot find PropertyType named " + name + " (no MeshObject given)" );
         }
         PropertyType [] allTypes = obj.getAllPropertyTypes();
         for( PropertyType current : allTypes ) {
