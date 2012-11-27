@@ -67,7 +67,7 @@
       </td>
       <td class="commands">
        <u:safeForm action="${Viewlet.postUrl}" method="POST">
-        <input type="hidden" name="MeshBase" value="<meshbase:meshBaseId meshBaseName="current" stringRepresentation="Plain" colloquial="false" />"/>
+        <input type="hidden" name="MeshBase" value="<meshbase:meshBaseId meshBaseName="current" stringRepresentation="HttpShell" colloquial="false" />"/>
         <ul>
          <probe:ifIsShadowMeshBase meshBaseName="current">
           <li><input type="submit" name="RunNowAction" value="Probe now"/></li>
