@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2008 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -44,12 +44,36 @@ public abstract class AbstractInsertIntoSectionTag
     @Override
     protected void initializeToDefaults()
     {
-        theResponse = null;
-        theSection  = null;
+        theResponse         = null;
+        theSection         = null;
+        theAllowDuplicates = true;
 
         super.initializeToDefaults();
     }
     
+    /**
+     * Obtain value of the allowDuplicates property.
+     *
+     * @return value of the allowDuplicates property
+     * @see #setAllowDuplicates
+     */
+    public final boolean getAllowDuplicates()
+    {
+        return theAllowDuplicates;
+    }
+
+    /**
+     * Set value of the allowDuplicates property.
+     *
+     * @param newValue new value of the allowDuplicates property
+     * @see #getAllowDuplicates
+     */
+    public final void setAllowDuplicates(
+            boolean newValue )
+    {
+        theAllowDuplicates = newValue;
+    }
+
     /**
      * Our implementation of doStartTag().
      *
@@ -71,7 +95,12 @@ public abstract class AbstractInsertIntoSectionTag
 
         String text = determineStartText();
         if( text != null ) {
-            theSection.appendContent( text );
+            if( theAllowDuplicates ) {
+                theSection.appendContent( text );
+                
+            } else if( !theSection.containsContent( text ) ) {
+                theSection.appendContent( text );
+            }
         }
         
         return EVAL_BODY_BUFFERED;
@@ -194,4 +223,9 @@ public abstract class AbstractInsertIntoSectionTag
      * The TextStructuredResponse to which we write.
      */
     protected TextStructuredResponseSection theSection;
+    
+    /**
+     * If true, duplicate insertions are allowed.
+     */
+    protected boolean theAllowDuplicates;
 }
