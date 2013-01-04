@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2013 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -255,8 +255,8 @@ public abstract class AbstractRestInfoGridTag
                 pageContext,
                 value,
                 nullString,
-                overrideFormatString,
                 stringRepresentation,
+                overrideFormatString,
                 theMaxLength,
                 colloquial );
         return ret;
