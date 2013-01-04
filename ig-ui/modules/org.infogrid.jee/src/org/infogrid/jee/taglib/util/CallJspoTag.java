@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2013 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -344,7 +344,12 @@ public class CallJspoTag
                     return EVAL_PAGE;
 
                 } catch( ServletException ex ) {
-                    throw new JspException( ex ); // why in the world are these two differnt types of exceptions?
+                    if( ex.getMessage().contains( "Unable to compile class" )) {
+                        // seems to be the only way of detecting this
+                        throw new JspException( new CalledJspCompileException( thePage , ex ));
+                    } else {
+                        throw new JspException( ex ); // why in the world are these two differnt types of exceptions?
+                    }
 
                 } finally {
                     out.println( "</div>" );
