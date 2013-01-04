@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2013 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -452,13 +452,13 @@ public abstract class AbstractJeeViewlet
         StringBuilder buf = new StringBuilder();
         buf.append( toView.getAsUrl( (Deque<JeeViewedMeshObjects>) null ));
         if( viewedMeshObjectsStack != null && !viewedMeshObjectsStack.isEmpty() ) {
-            HTTP.appendArgumentToUrl( buf, "lid-target", toView.getAsUrl( viewedMeshObjectsStack ));
+            HTTP.replaceOrAppendArgumentToUrl( buf, "lid-target", toView.getAsUrl( viewedMeshObjectsStack ));
         }
         if( toView.getViewletTypeName() != null ) {
-            HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.VIEWLET_PREFIX + toView.getViewletTypeName() );
+            HTTP.replaceOrAppendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.VIEWLET_PREFIX + toView.getViewletTypeName() );
         }
         if( toView.getMimeType() != null ) {
-            HTTP.appendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.MIME_PREFIX + toView.getMimeType() );
+            HTTP.replaceOrAppendArgumentToUrl( buf, JeeMeshObjectsToView.LID_FORMAT_ARGUMENT_NAME, JeeMeshObjectsToView.MIME_PREFIX + toView.getMimeType() );
         }
         return buf.toString();
     }
