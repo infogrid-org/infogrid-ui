@@ -20,10 +20,10 @@ import org.infogrid.jee.taglib.AbstractInfoGridTag;
 import org.infogrid.jee.taglib.IgnoreException;
         
 /**
- * <p>Processes the body if the inclosing iteration has a next element.</p>
+ * <p>Processes the body if the inclosing iteration does not have a next element.</p>
  * @see <a href="package-summary.html">Details in package documentation</a>
  */
-public class IfIterationHasNextTag
+public class NotIfIterationHasNextTag
         extends
              AbstractInfoGridTag
 {
@@ -32,7 +32,7 @@ public class IfIterationHasNextTag
     /**
      * Constructor.
      */
-    public IfIterationHasNextTag()
+    public NotIfIterationHasNextTag()
     {
         // noop
     }
@@ -68,12 +68,12 @@ public class IfIterationHasNextTag
         }
         if( iterationTag == null ) {
             // not inside an iteration
-            throw new JspException( "IfIterationHasNextTag: not contained inside an iteration tag" );
+            throw new JspException( "NotIfIterationHasNextTag: not contained inside an iteration tag" );
         }
 
         InfoGridIterationTag realIterationTag = (InfoGridIterationTag) iterationTag;
 
-        if( realIterationTag.hasNext() ) {
+        if( !realIterationTag.hasNext() ) {
             return EVAL_BODY_INCLUDE;
         } else {
             return SKIP_BODY;
