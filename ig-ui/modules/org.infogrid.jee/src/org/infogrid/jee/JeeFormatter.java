@@ -346,7 +346,7 @@ public class JeeFormatter
 
         while( true ) {
             if( currentObj == null ) {
-                throw new IllegalArgumentException( "Object in property expression cannot be null" );
+                return null; 
             }
 
             index = remainingName.indexOf( '.' );
