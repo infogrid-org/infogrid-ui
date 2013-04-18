@@ -19,19 +19,19 @@
   <tr>
    <td class="label">MeshObject:</td>
    <td>
-    <input class="subject" name="shell.subject" size="32" readonly="readonly" value="<mesh:meshObjectId meshObjectName="from" stringRepresentation="HttpShell"/>" />
+    <input class="subject" name="shell.subject" size="32" readonly="readonly" value="<mesh:meshObjectId meshObjectName="from" stringRepresentation="HttpPost"/>" />
    </td>
   </tr>
   <tr>
    <td class="label">RoleType:</td>
    <td>
-    <input class="roleType" name="shell.subject.to.object.unblessRole" size="32" value="<mesh:meshTypeId meshTypeName="role" stringRepresentation="HttpShell"/>" />
+    <input class="roleType" name="shell.subject.to.object.unblessRole" size="32" value="<mesh:meshTypeId meshTypeName="role" stringRepresentation="HttpPost"/>" />
    </td>
   </tr>
   <tr>
    <td class="label">Neighbor:</td>
    <td>
-    <input class="object" name="shell.object" size="32" value="<mesh:meshObjectId meshObjectName="to" stringRepresentation="HttpShell"/>" />
+    <input class="object" name="shell.object" size="32" value="<mesh:meshObjectId meshObjectName="to" stringRepresentation="HttpPost"/>" />
    </td>
   </tr>
  </table>
