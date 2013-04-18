@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2013 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -440,7 +440,7 @@ public abstract class CannotViewException
                 MeshObjectsToView o,
                 Throwable         cause )
         {
-            super( v, o, "Internal error", cause );
+            super( v, o, ( cause != null ) ? ( "Internal error: " + cause.getMessage()) : "Internal Error.", cause );
         }
 
         /**
