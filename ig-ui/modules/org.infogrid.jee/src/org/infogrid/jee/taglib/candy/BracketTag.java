@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2013 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -126,12 +126,12 @@ public class BracketTag
         if( theFlag != null ) {
             throw new JspException( "BracketTag must contain exactly one BracketContentTag" );
         }
-        theIfContentBuffer.append( content );
 
         if( content.trim().length() == 0 ) {
             theFlag = false;
         } else {
             theFlag = true;
+            theIfContentBuffer.append( content ); // otherwise we just get whitespace
         }
     }
 
