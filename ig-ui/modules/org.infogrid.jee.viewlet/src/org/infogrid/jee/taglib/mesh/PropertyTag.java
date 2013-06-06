@@ -8,7 +8,7 @@
 // 
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2012 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2013 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -382,6 +382,29 @@ public class PropertyTag
     }
 
     /**
+     * Obtain the value of the defaultValueName property.
+     *
+     * @return value of the defaultValueName property
+     * @see #setDefaultValueName
+     */
+    public String getDefaultValueName()
+    {
+        return theDefaultValueName;
+    }
+
+    /**
+     * Set value of the defaultValueName property.
+     *
+     * @param newValue new value of the defaultValueName property
+     * @see #getDefaultValueName
+     */
+    public void setDefaultValueName(
+            String newValue )
+    {
+        theDefaultValueName = newValue;
+    }
+
+    /**
      * Obtain the value of the addText property.
      *
      * @return value of the addText property
@@ -509,14 +532,20 @@ public class PropertyTag
 
         PropertyValue defaultValue;
         if( theDefaultValue != null ) {
-            StringRepresentation httpPost = getFormatter().determineStringRepresentation( StringRepresentationDirectory.TEXT_HTTP_POST_NAME );
+            if( theDefaultValueName != null ) {
+                throw new JspException( "May specify either defaultValue or defaultValueName, not both" );
+            }
 
+            StringRepresentation httpPost = getFormatter().determineStringRepresentation( StringRepresentationDirectory.TEXT_HTTP_POST_NAME );
             try {
                 defaultValue = type.fromStringRepresentation( httpPost, SimpleStringRepresentationParameters.create(), theDefaultValue, null );
 
             } catch( PropertyValueParsingException ex ) {
                 throw new JspException( ex );
             }
+        } else if( theDefaultValueName != null ) {
+            defaultValue = (PropertyValue) lookupOrThrow( theDefaultValueName );
+            
         } else {
             defaultValue = null;
         }
@@ -616,6 +645,11 @@ public class PropertyTag
      */
     protected String theDefaultValue;
 
+    /**
+     * Name of a bean that contains the non-default value, if any.
+     */
+    protected String theDefaultValueName;
+    
     /**
      * Any text to add when emitting this tag. This text will be processed like a format.
      */
