@@ -8,7 +8,7 @@
 //
 // For more information about InfoGrid go to http://infogrid.org/
 //
-// Copyright 1998-2011 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
+// Copyright 1998-2013 by R-Objects Inc. dba NetMesh Inc., Johannes Ernst
 // All rights reserved.
 //
 
@@ -149,6 +149,10 @@ public abstract class AbstractHasAccountTag
                 }
             } else if( "active".equals( current )) {
                 if( positive ^ account.getAccountStatus() == LidAccount.LidAccountStatus.ACTIVE ) {
+                    return false;
+                }
+            } else if( "closed".equals( current )) {
+                if( positive ^ account.getAccountStatus() == LidAccount.LidAccountStatus.CLOSED ) {
                     return false;
                 }
             } else if( "disabled".equals( current )) {
