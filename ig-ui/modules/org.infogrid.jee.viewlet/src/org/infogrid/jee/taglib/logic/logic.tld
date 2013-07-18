@@ -671,7 +671,7 @@
     
     <tag>
         <name>notIfZero</name>
-        <tagclass>org.infogrid.jee.taglib.logic.IfZeroTag</tagclass>
+        <tagclass>org.infogrid.jee.taglib.logic.NotIfZeroTag</tagclass>
         <attribute>
             <name>meshObject</name>
             <rtexprvalue>true</rtexprvalue>

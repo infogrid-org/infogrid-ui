@@ -88,7 +88,7 @@ public abstract class AbstractNumericalPropertyConditionTag
         } else if( found instanceof CurrencyValue ) {
             CurrencyValue realFound = (CurrencyValue) found;
             
-            if( realFound.getIsPositive()) {
+            if( realFound.isPositive()) {
                 return +1;
             } else if( realFound.isFree() ) {
                 return 0;
