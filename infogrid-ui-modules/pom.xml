@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.infogrid</groupId>
+    <artifactId>infogrid-ui-modules</artifactId>
+    <packaging>pom</packaging>
+    <name>infogrid-ui-modules</name>
+    <url>http://infogrid.org/</url>
+
+    <parent>
+        <groupId>org.infogrid</groupId>
+        <artifactId>infogrid-ui</artifactId>
+        <version>3.0-SNAPSHOT</version>
+    </parent>
+
+    <modules>
+        <module>org.infogrid.jee</module>
+        <module>org.infogrid.jee.lid</module>
+        <module>org.infogrid.jee.probe</module>
+        <module>org.infogrid.jee.security.aclbased</module>
+        <module>org.infogrid.jee.shell.http</module>
+        <module>org.infogrid.jee.templates</module>
+        <module>org.infogrid.jee.viewlet</module>
+        <module>org.infogrid.jee.viewlet.bulk</module>
+        <module>org.infogrid.jee.viewlet.json</module>
+        <module>org.infogrid.jee.viewlet.log4j</module>
+        <module>org.infogrid.jee.viewlet.module</module>
+        <module>org.infogrid.jee.viewlet.net</module>
+        <module>org.infogrid.jee.viewlet.net.local</module>
+        <module>org.infogrid.jee.viewlet.net.local.store</module>
+        <module>org.infogrid.jee.viewlet.store</module>
+        <module>org.infogrid.model.Viewlet</module>
+        <module>org.infogrid.viewlet</module>
+    </modules>
+</project>
