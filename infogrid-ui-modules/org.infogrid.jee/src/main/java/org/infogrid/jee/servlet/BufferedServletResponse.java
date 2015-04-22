@@ -267,10 +267,10 @@ public class BufferedServletResponse
     }
 
     /**
-     * @deprecated	As of version 2.1, use encodeURL(String url) instead
+     * @deprecated  As of version 2.1, use encodeURL(String url) instead
      *
-     * @param	url	the url to be encoded.
-     * @return		the encoded URL if encoding is needed; the unchanged URL otherwise.
+     * @param   url the url to be encoded.
+     * @return      the encoded URL if encoding is needed; the unchanged URL otherwise.
      */
     public String encodeUrl(
             String url )
@@ -279,10 +279,10 @@ public class BufferedServletResponse
     }
     
     /**
-     * @deprecated	As of version 2.1, use encodeRedirectURL(String url) instead
+     * @deprecated  As of version 2.1, use encodeRedirectURL(String url) instead
      *
-     * @param	url	the url to be encoded.
-     * @return		the encoded URL if encoding is needed; the unchanged URL otherwise.
+     * @param   url the url to be encoded.
+     * @return      the encoded URL if encoding is needed; the unchanged URL otherwise.
      */
     public String encodeRedirectUrl(
             String url )
@@ -388,7 +388,7 @@ public class BufferedServletResponse
     /**
      * Sets the status code for this response.
      *
-     * @param	sc	the status code
+     * @param   sc  the status code
      * @see #sendError
      */
     public void setStatus(
@@ -405,8 +405,8 @@ public class BufferedServletResponse
      *
      * Sets the status code and message for this response.
      * 
-     * @param	sc	the status code
-     * @param	sm	the status message
+     * @param   sc  the status code
+     * @param   sm  the status message
      */
     public void setStatus(
             int    sc,

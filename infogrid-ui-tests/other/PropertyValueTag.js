@@ -68,12 +68,12 @@ function org_infogrid_jee_taglib_mesh_PropertyValueTag_mimeChanged( control, nod
     var uploadCb = document.getElementById( nodeName + '.uploadcheckbox' );
 
     if( mime.value.substring( 0, 5 ) == "text/" ) {
-	    uploadCb.checked = false;
+        uploadCb.checked = false;
         upload.className = prefix + '-hide';
         direct.className = prefix + '-show';
         mime.className   = prefix + '-show';
     } else {
-	    uploadCb.checked = true;
+        uploadCb.checked = true;
         upload.className = prefix + '-show';
         direct.className = prefix + '-hide';
         mime.className   = prefix + '-hide';
