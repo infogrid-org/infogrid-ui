@@ -37,8 +37,8 @@
    </div>
   </div>
   <div id="canvas-bottom">
-   <div class="canvas-main footnote">&copy; 2001-2012 NetMesh Inc. All rights
-    reserved. NetMesh and InfoGrid are trademarks or registered trademarks of NetMesh Inc.
+   <div class="canvas-main footnote">&copy; 2001-2015 Johannes Ernst. All rights
+    reserved. InfoGrid is a trademark or registered trademarks of Johannes Ernst
     Learn more about <a href="http://infogrid.org/">InfoGrid</a>.</div>
   </div>
  </body>

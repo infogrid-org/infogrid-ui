@@ -50,8 +50,8 @@
   <div id="canvas-bottom">
    <div class="canvas-main footnote">
     <p><a class="built-on-infogrid" href="http://infogrid.org/"><img src="${CONTEXT}/s/images/built-on-infogrid.png" title="Built on InfoGrid&trade;" alt="[Built on InfoGrid&trade;]"/></a>
-       &copy; 2001-2012 NetMesh Inc. All rights reserved. NetMesh and InfoGrid are trademarks or registered
-       trademarks of NetMesh Inc.</p>
+       &copy; 2001-2015 Johannes Ernst. All rights reserved. InfoGrid is a trademarks or registered
+       trademark of Johannes Ernst.</p>
     <p>Silk Icons from <a href="http://www.famfamfam.com/lab/icons/silk/">famfamfam.com</a> using Creative Commons license.
        <a href="http://infogrid.org/">Learn more</a> about InfoGrid&trade;.</p>
    </div>
