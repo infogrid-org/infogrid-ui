@@ -8,9 +8,29 @@
     <name>infogrid-ui</name>
     <url>http://infogrid.org/</url>
     <modules>
-        <module>infogrid-ui-modules</module>
-        <module>infogrid-ui-tests</module>
-        <module>infogrid-ui-testapps</module>
+        <module>org.infogrid.jee</module>
+        <module>org.infogrid.jee.lid</module>
+        <module>org.infogrid.jee.net.testapp</module>
+        <module>org.infogrid.jee.probe</module>
+        <module>org.infogrid.jee.security.aclbased</module>
+        <module>org.infogrid.jee.shell.http</module>
+        <module>org.infogrid.jee.templates</module>
+        <module>org.infogrid.jee.testapp</module>
+        <module>org.infogrid.jee.viewlet</module>
+        <module>org.infogrid.jee.viewlet.bulk</module>
+        <module>org.infogrid.jee.viewlet.json</module>
+        <module>org.infogrid.jee.viewlet.log4j</module>
+        <module>org.infogrid.jee.viewlet.module</module>
+        <module>org.infogrid.jee.viewlet.net</module>
+        <module>org.infogrid.jee.viewlet.net.local</module>
+        <module>org.infogrid.jee.viewlet.net.local.store</module>
+        <module>org.infogrid.jee.viewlet.store</module>
+        <module>org.infogrid.meshworld</module>
+        <module>org.infogrid.meshworld.net</module>
+        <module>org.infogrid.meshworld.tomcat</module>
+        <module>org.infogrid.model.Viewlet</module>
+        <module>org.infogrid.testharness.tomcat</module>
+        <module>org.infogrid.viewlet</module>
     </modules>
 
     <build>
@@ -58,7 +78,7 @@
                             </goals>
                             <configuration>
                                 <sources>
-                                    <source>${basedir}/src/generated</source>
+                                    <source>${basedir}/target/infogrid-generated</source>
                                 </sources>
                             </configuration>
                         </execution>
