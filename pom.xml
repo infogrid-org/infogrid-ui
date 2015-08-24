@@ -20,7 +20,6 @@
         <module>org.infogrid.jee.viewlet.bulk</module>
         <module>org.infogrid.jee.viewlet.json</module>
         <module>org.infogrid.jee.viewlet.log4j</module>
-        <module>org.infogrid.jee.viewlet.module</module>
         <module>org.infogrid.jee.viewlet.net</module>
         <module>org.infogrid.jee.viewlet.net.local</module>
         <module>org.infogrid.jee.viewlet.net.local.store</module>
@@ -29,11 +28,33 @@
         <module>org.infogrid.meshworld.net</module>
         <module>org.infogrid.meshworld.tomcat</module>
         <module>org.infogrid.model.Viewlet</module>
-        <module>org.infogrid.testharness.tomcat</module>
         <module>org.infogrid.viewlet</module>
     </modules>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -42,28 +63,20 @@
                     <version>1.4.0</version>
                     <executions>
                         <execution>
-                            <phase>generate-sources</phase>
+                            <id>copy-pom</id>
+                            <phase>test-compile</phase>
                             <goals>
                                 <goal>exec</goal>
                             </goals>
+                            <configuration>
+                                <executable>bash</executable>
+                                <arguments>
+                                    <argument>-c</argument>
+                                    <argument>mkdir -p ${project.build.directory}/test-classes/META-INF/maven; cp ${project.basedir}/pom.xml ${project.build.directory}/test-classes/META-INF/maven/this-pom.xml</argument>
+                                </arguments>
+                            </configuration>
                         </execution>
                     </executions>
-                    <configuration>
-                        <executable>java</executable>
-                        <mainClass>org.infogrid.module.commandline.CommandlineBootLoader</mainClass>
-                        <arguments>
-                            <argument>-classpath</argument>
-                            <argument>${env.HOME}/.m2/repository/org/infogrid/org.infogrid.module/3.0-SNAPSHOT/org.infogrid.module-3.0-SNAPSHOT.jar:${env.HOME}/.m2/repository/org/infogrid/org.infogrid.module.commandline/${project.version}/org.infogrid.module.commandline-${project.version}.jar</argument>
-                            <argument>org.infogrid.module.commandline.CommandlineBootLoader</argument>
-                            <argument>--rootmodule</argument>
-                            <argument>org.infogrid.codegen</argument>
-                            <argument>--moduledirectory</argument>
-                            <argument>${env.HOME}/.m2/repository/org/infogrid</argument>
-                            <argument>${basedir}/infogrid-models/model.xml</argument>
-                            <argument>-o</argument>
-                            <argument>${basedir}/src/generated</argument>
-                        </arguments>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -84,18 +97,14 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.6.1</version>
-                    <configuration>
-                        <filesets>
-                            <fileset>
-                                <directory>src/generated</directory>
-                            </fileset>
-                        </filesets>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <diet4j.version>0.7</diet4j.version>
+    </properties>
 </project>
