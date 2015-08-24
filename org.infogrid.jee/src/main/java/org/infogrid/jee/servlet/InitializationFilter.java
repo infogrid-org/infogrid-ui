@@ -36,7 +36,7 @@ public class InitializationFilter
         implements
             Filter
 {
-    protected static Log log; // initialized later
+    private static Log log; // initialized later
 
     /**
      * Constructor.
@@ -176,7 +176,7 @@ public class InitializationFilter
     public void destroy()
     {
     }
-    
+
     /**
      * Initialize and get the log.
      *

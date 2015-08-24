@@ -24,7 +24,6 @@ import org.infogrid.jee.viewlet.bulkexporter.BulkExporterViewlet;
 import org.infogrid.jee.viewlet.log4j.Log4jConfigurationViewlet;
 import org.infogrid.jee.viewlet.meshbase.AllMeshObjectsViewlet;
 import org.infogrid.jee.viewlet.modelbase.AllMeshTypesViewlet;
-import org.infogrid.jee.viewlet.module.ModuleDirectoryViewlet;
 import org.infogrid.mesh.IllegalPropertyTypeException;
 import org.infogrid.mesh.MeshObject;
 import org.infogrid.mesh.NotPermittedException;
@@ -74,9 +73,8 @@ public class MainViewletFactory
             ret.add( AllMeshObjectsViewlet.choice(     realToView, ViewletFactoryChoice.GOOD_MATCH_QUALITY ));
             ret.add( AllMeshTypesViewlet.choice(       realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( Log4jConfigurationViewlet.choice( realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( ModuleDirectoryViewlet.choice(    realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
             ret.add( BulkLoaderViewlet.choice(         realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
-            ret.add( BulkExporterViewlet.choice(         realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
+            ret.add( BulkExporterViewlet.choice(       realToView, ViewletFactoryChoice.AVERAGE_MATCH_QUALITY ));
         }
         if( subject.isBlessedBy( WikiSubjectArea.WIKIOBJECT )) {
             ret.add( DefaultJspViewlet.choice( realToView, "org.infogrid.jee.viewlet.wikiobject.WikiObjectDisplayViewlet", ViewletFactoryChoice.GOOD_MATCH_QUALITY ));

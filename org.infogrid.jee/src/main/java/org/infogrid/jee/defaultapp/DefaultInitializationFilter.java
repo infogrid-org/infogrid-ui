@@ -14,9 +14,15 @@
 
 package org.infogrid.jee.defaultapp;
 
-import java.util.Properties;
+import java.io.IOException;
+import java.text.ParseException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import org.diet4j.core.Module;
+import org.diet4j.core.ModuleException;
+import org.diet4j.core.ModuleMeta;
+import org.diet4j.core.ModuleRequirement;
+import org.diet4j.inclasspath.InClasspathModuleRegistry;
 import org.infogrid.jee.app.InfoGridWebApp;
 import org.infogrid.jee.sane.SaneServletRequest;
 import org.infogrid.jee.servlet.AbstractInfoGridServlet;
@@ -34,6 +40,8 @@ public class DefaultInitializationFilter
         extends
             InitializationFilter
 {
+    private static Log log; // initialized later
+
     /**
      * Public constructor.
      */
@@ -71,10 +79,16 @@ public class DefaultInitializationFilter
             synchronized( DefaultInitializationFilter.class ) {
                 theApp = getInfoGridWebApp();
                 if( theApp == null ) {
+                    Module thisModule = initializeModuleFramework();
+
                     SaneRequest lidRequest = SaneServletRequest.create( incomingRequest );
 
                     theApp = createInfoGridWebApp( lidRequest );
 
+                    if( thisModule != null ) {
+                        theApp.getApplicationContext().addContextObject( thisModule.getModuleRegistry() );
+                    }
+                    
                     try {
                         theFilterConfig.getServletContext().setAttribute( AbstractInfoGridServlet.INFOGRID_WEB_APP_NAME, theApp );
 
@@ -84,6 +98,36 @@ public class DefaultInitializationFilter
                 }
             }
         }
+    }
+
+    /**
+     * Initialize the module framework, if needed.
+     *
+     * @return the top Module, or null
+     */
+    protected Module initializeModuleFramework()
+    {
+        String rootModule = theFilterConfig.getInitParameter( ROOT_MODULE_NAME_PARAMETER );
+        Module ret        = null;
+        if( rootModule != null ) {
+            InClasspathModuleRegistry registry;
+            ModuleMeta                meta;
+            try {
+                registry = InClasspathModuleRegistry.instantiate(getClass().getClassLoader() );
+                meta     = registry.determineSingleResolutionCandidate(ModuleRequirement.parse( rootModule ));
+
+                ret = registry.resolve( meta );
+                ret.activateRecursively();
+
+            } catch( ParseException ex ) {
+                getLog().error( ex );
+            } catch( IOException ex ) {
+                getLog().error( ex );
+            } catch( ModuleException ex ) {
+                getLog().error( ex );
+            }
+        }
+        return ret;
     }
 
     /**
@@ -111,6 +155,19 @@ public class DefaultInitializationFilter
         rootContext.addContextObject( ret );
 
         return ret;        
+    }
+
+    /**
+     * Initialize and get the log.
+     *
+     * @return the log
+     */
+    private static Log getLog()
+    {
+        if( log == null ) {
+            log = Log.getLogInstance( InitializationFilter.class ); // our own, private logger
+        }
+        return log;
     }
 
     /**

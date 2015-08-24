@@ -32,7 +32,6 @@ import org.infogrid.meshbase.store.IterableStoreMeshBase;
 import org.infogrid.model.traversal.TraversalTranslator;
 import org.infogrid.model.traversal.xpath.XpathTraversalTranslator;
 import org.infogrid.modelbase.ModelBase;
-import org.infogrid.module.SharedSpace;
 import org.infogrid.store.m.MStore;
 import org.infogrid.store.sql.mysql.MysqlStore;
 import org.infogrid.util.CompoundException;
@@ -55,61 +54,6 @@ public class AppInitializationFilter
     public AppInitializationFilter()
     {
         // nothing
-    }
-
-    /**
-     * This overrides the default implementation with one in which the created MeshBase is being
-     * registered in the SharedSpace, using its identifier as a name
-     *
-     * @param saneRequest the incoming request, so it is possible to determine hostname, context etc.
-     * @param mbId the MeshBaseIdentifier for the MeshBase
-     * @param modelBase the ModelBase for the MeshBase
-     * @param app the InfoGridWebApp being created
-     * @return the set up MeshBase
-     */
-    @Override
-    protected MeshBase setupMeshBase(
-            final SaneRequest        saneRequest,
-            final MeshBaseIdentifier mbId,
-            final ModelBase          modelBase,
-            final InfoGridWebApp     app )
-    {
-        MeshBase mb = (MeshBase) SharedSpace.checkoutObject(
-                app,
-                mbId.toExternalForm(),
-                new SharedSpace.Factory() {
-                        public Object create()
-                                throws Throwable
-                        {
-                            IterableStoreMeshBase meshBase = null;
-
-                            try {
-                                initializeDataSources();
-
-                            } finally {
-
-                                if( theMeshStore != null ) {
-                                    AccessManager accessMgr = createAccessManager();
-
-                                    meshBase = IterableStoreMeshBase.create( mbId, modelBase, accessMgr, theMeshStore, app.getApplicationContext() );
-                                    populateMeshBase( saneRequest, meshBase );
-                                }
-                            }
-                            return meshBase;
-                        }
-                },
-                new SharedSpace.LastReturned() {
-                        public void lastReturned(
-                                String name,
-                                Object sharedObject )
-                        {
-                            IterableStoreMeshBase meshBase = (IterableStoreMeshBase) sharedObject;
-                            if( meshBase != null ) {
-                                meshBase.die();
-                            }
-                        }
-                } );
-        return mb;
     }
 
     /**

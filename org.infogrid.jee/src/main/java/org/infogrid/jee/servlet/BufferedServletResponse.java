@@ -195,6 +195,7 @@ public class BufferedServletResponse
     }
 
     // use comment from supertype
+    @SuppressWarnings("unchecked")
     public String getHeader(
             String name )
     {
@@ -218,6 +219,7 @@ public class BufferedServletResponse
     }
 
     // use comment from supertype
+    @SuppressWarnings("unchecked")
     public Collection<String> getHeaders(
             String name )
     {
@@ -231,7 +233,7 @@ public class BufferedServletResponse
             ret = new ArrayList<>();
             ret.add( (String) found );
         } else {
-            ret = (ArrayList<String>) found;
+            ret = (Collection<String>) found;
         }
         return ret;
     }

@@ -13,6 +13,6 @@
     All rights reserved.
 -->
 <Context cookies="false" path="/org.infogrid.meshworld.tomcat">
-  <Loader className="org.infogrid.module.tomcat.TomcatModuleLoader" moduledirectory="/home/buildmaster/.m2/repository" rootmodule="org.infogrid.meshworld.tomcat"/>
+  <Loader className="org.diet4j.tomcat.TomcatModuleLoader" moduledirectory="/home/buildmaster/.m2/repository" rootmodule="org.infogrid.meshworld.tomcat"/>
   <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="20" maxIdle="10" maxWait="-1" name="jdbc/org.infogrid.meshworld" password="" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/meshworlddb" username=""/>
 </Context>

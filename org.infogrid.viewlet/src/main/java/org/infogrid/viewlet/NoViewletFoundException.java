@@ -14,7 +14,7 @@
 
 package org.infogrid.viewlet;
 
-import org.infogrid.module.ModuleRegistry;
+import org.diet4j.core.ModuleRegistry;
 import org.infogrid.util.FactoryException;
 import org.infogrid.util.logging.CanBeDumped;
 import org.infogrid.util.logging.Dumper;
