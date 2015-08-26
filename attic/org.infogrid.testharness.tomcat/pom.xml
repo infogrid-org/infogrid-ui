@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.infogrid</groupId>
-    <artifactId>org.infogrid.jee.net.testapp</artifactId>
+    <artifactId>org.infogrid.testharness.tomcat</artifactId>
     <packaging>jar</packaging>
-    <name>org.infogrid.jee.net.testapp</name>
+    <name>org.infogrid.testharness.tomcat</name>
     <url>http://infogrid.org/</url>
 
     <parent>
         <groupId>org.infogrid</groupId>
         <artifactId>infogrid-ui</artifactId>
-        <version>2.9.6</version>
+        <version>3.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -19,5 +19,11 @@
             <artifactId>org.infogrid.kernel</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>org.infogrid.testharness</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
+
 </project>
