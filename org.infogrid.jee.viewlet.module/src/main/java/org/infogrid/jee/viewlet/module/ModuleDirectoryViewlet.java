@@ -15,9 +15,13 @@
 package org.infogrid.jee.viewlet.module;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
-import java.util.Iterator;
 import javax.servlet.ServletException;
+import org.diet4j.core.Module;
+import org.diet4j.core.ModuleMeta;
+import org.diet4j.core.ModuleRegistry;
+import org.diet4j.core.ModuleRequirement;
 import org.infogrid.util.context.Context;
 import org.infogrid.jee.templates.StructuredResponse;
 import org.infogrid.jee.viewlet.DefaultJeeViewedMeshObjects;
@@ -26,9 +30,6 @@ import org.infogrid.jee.viewlet.JeeMeshObjectsToView;
 import org.infogrid.jee.viewlet.JeeViewedMeshObjects;
 import org.infogrid.jee.viewlet.SimpleJeeViewlet;
 import org.infogrid.meshbase.MeshBase;
-import org.infogrid.module.Module;
-import org.infogrid.module.ModuleMeta;
-import org.infogrid.module.ModuleRegistry;
 import org.infogrid.util.ResourceHelper;
 import org.infogrid.util.DateTimeUtil;
 import org.infogrid.util.StringHelper;
@@ -148,7 +149,13 @@ public class ModuleDirectoryViewlet
             content.append( " <tbody>\n" );
 
             for( String moduleName : registry.nameSet() ) {
-                ModuleMeta [] moduleMetas  = registry.getModuleMetasFor( moduleName );
+                ModuleMeta [] moduleMetas;
+                try {
+                    moduleMetas = registry.determineResolutionCandidates( ModuleRequirement.parse( moduleName ));
+                } catch( ParseException ex ) {
+                    log.error( ex );
+                    continue;
+                }
                 for( int i=0 ; i<moduleMetas.length ; ++i ) {
                     ModuleMeta currentMeta = moduleMetas[i];
 
@@ -164,7 +171,7 @@ public class ModuleDirectoryViewlet
                         content.append( StringHelper.stringToHtml( moduleName ));
                         content.append( "  </td>\n" );
                     }
-                    Module currentMod = registry.getLocalResolution( currentMeta );
+                    Module currentMod = registry.getResolutionOf( currentMeta );
 
                     content.append( "  <td>\n" );
                     if( currentMeta.getModuleVersion() != null ) {

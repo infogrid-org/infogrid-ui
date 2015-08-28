@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.diet4j.core.Module;
 import org.diet4j.core.ModuleException;
 import org.diet4j.core.ModuleMeta;
+import org.diet4j.core.ModuleRegistry;
 import org.diet4j.core.ModuleRequirement;
 import org.diet4j.inclasspath.InClasspathModuleRegistry;
 import org.infogrid.jee.app.InfoGridWebApp;
@@ -110,11 +111,11 @@ public class DefaultInitializationFilter
         String rootModule = theFilterConfig.getInitParameter( ROOT_MODULE_NAME_PARAMETER );
         Module ret        = null;
         if( rootModule != null ) {
-            InClasspathModuleRegistry registry;
-            ModuleMeta                meta;
+            ModuleRegistry registry;
+            ModuleMeta     meta;
             try {
-                registry = InClasspathModuleRegistry.instantiate(getClass().getClassLoader() );
-                meta     = registry.determineSingleResolutionCandidate(ModuleRequirement.parse( rootModule ));
+                registry = InClasspathModuleRegistry.instantiateOrGet( getClass().getClassLoader() );
+                meta     = registry.determineSingleResolutionCandidate( ModuleRequirement.parse( rootModule ));
 
                 ret = registry.resolve( meta );
                 ret.activateRecursively();
