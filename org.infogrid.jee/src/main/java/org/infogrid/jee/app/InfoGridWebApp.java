@@ -78,9 +78,9 @@ public abstract class InfoGridWebApp
      *
      * @return the name
      */
-    public final String getName()
+    public String getName()
     {
-        return ResourceHelper.getInstance( InfoGridWebApp.class ).getResourceStringOrNull( "Name" );
+        return ResourceHelper.getInstance( getClass() ).getResourceStringOrNull( "Name" );
     }
 
     /**
@@ -88,9 +88,9 @@ public abstract class InfoGridWebApp
      *
      * @return the user-visible name of the application
      */
-    public final String getUserVisibleName()
+    public String getUserVisibleName()
     {
-        return ResourceHelper.getInstance( InfoGridWebApp.class ).getResourceStringOrNull( "UserVisibleName" );
+        return ResourceHelper.getInstance( getClass() ).getResourceStringOrNull( "UserVisibleName" );
     }
 
     /**
