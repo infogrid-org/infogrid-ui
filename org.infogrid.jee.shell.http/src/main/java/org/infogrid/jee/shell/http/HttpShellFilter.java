@@ -5,7 +5,7 @@
 // have received with InfoGrid. If you have not received LICENSE.InfoGrid.txt
 // or you do not consent to all aspects of the license and the disclaimers,
 // no license is granted; do not use this file.
-// 
+//
 // For more information about InfoGrid go to http://infogrid.org/
 //
 // Copyright 1998-2015 by Johannes Ernst
@@ -19,9 +19,11 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -106,6 +108,27 @@ public class HttpShellFilter
     }
 
     /**
+     * Initialize
+     *
+     * @param filterConfig the filter configuration
+     * @throws ServletException an exception occurred
+     */
+    @Override
+    protected void internalInit(
+            FilterConfig filterConfig )
+        throws
+            ServletException
+    {
+        String s = filterConfig.getInitParameter( PREFER_VARS_FROM_REQUEST_PAR_NAME );
+        if( s != null ) {
+            thePreferVarsFromRequest = new HashSet<>();
+            for( String t : s.split( "," )) {
+                thePreferVarsFromRequest.add( t.trim() );
+            }
+        }
+    }
+
+    /**
      * Main filter operation.
      *
      * @param request The servlet request to process
@@ -145,7 +168,7 @@ public class HttpShellFilter
                     }
                 }
             }
-        
+
         } catch( Throwable ex ) {
             getLog().warn( ex );
 
@@ -161,10 +184,10 @@ public class HttpShellFilter
             chain.doFilter( realRequest, realResponse );
         }
     }
-    
+
     /**
      * Perform all factory methods contained in the request.
-     * 
+     *
      * @param lidRequest the incoming request
      * @return URL to redirect to, if any
      * @throws NotPermittedException thrown if the caller had insufficient privileges to perform this operation
@@ -179,7 +202,7 @@ public class HttpShellFilter
         ensureInitialized();
 
         Map<String,String[]>              postArguments = lidRequest.getPostedArguments();
-        final ArrayList<HttpShellHandler> handlers      = new ArrayList<HttpShellHandler>();
+        final ArrayList<HttpShellHandler> handlers      = new ArrayList<>();
         String                            ret           = null;
 
         // determine handlers
@@ -198,7 +221,7 @@ public class HttpShellFilter
                 }
             }
         }
-        HashMap<String,MeshObject> variables = new HashMap<String,MeshObject>();
+        HashMap<String,MeshObject> variables = new HashMap<>();
         Throwable                  thrown    = null;
         TimeStampValue             now       = TimeStampValue.now();
 
@@ -214,6 +237,17 @@ public class HttpShellFilter
             handler.beforeTransactionStart( lidRequest, theMainMeshBase, now );
         }
 
+        if( thePreferVarsFromRequest != null ) {
+            for( String varName : thePreferVarsFromRequest ) {
+                Object varValue = lidRequest.getAttribute( varName );
+                if( varValue == null || varValue instanceof MeshObject ) {
+                    variables.put( varName, (MeshObject) varValue );
+                } else {
+                    variables.put( varName, null );
+                    log.error( "HttpShellFilter variable", varName, "obtained from request has wrong type:", varValue );
+                }
+            }
+        }
         try {
             // first look for all arguments of the form <PREFIX>.<VARIABLE>
             for( String arg : postArguments.keySet() ) {
@@ -227,10 +261,14 @@ public class HttpShellFilter
                 if( coreArg.equals( COMMAND_TAG )) {
                     continue; // skip command tag
                 }
-                if( coreArg.indexOf( SEPARATOR ) >= 0 ) {
+                if( coreArg.contains( SEPARATOR ) ) {
                     continue; // skip all that aren't referring to the MeshObjects
                 }
                 String varName  = coreArg;
+
+                if( variables.containsKey( varName )) {
+                    continue; // no repetition please
+                }
                 String varValue = lidRequest.getPostedArgument( arg ); // use SaneRequest's error handling for multiple values
 
                 if( UNASSIGNED_VALUE.equals( varValue )) {
@@ -259,8 +297,7 @@ public class HttpShellFilter
                 }
                 String coreArg = arg.substring( PREFIX.length(), arg.length()-ACCESS_TAG.length() );
                 String varName = coreArg;
-                String varValue = lidRequest.getPostedArgument( PREFIX + varName );
-                if( varValue != null ) {
+                if( variables.containsKey( varName )) {
                     // dealt with this one already
                     continue;
                 }
@@ -700,7 +737,7 @@ public class HttpShellFilter
                     } else {
                         throw t;
                     }
-                    
+
                 } catch( RuntimeException t ) {
                     if( thrown != null ) {
                         getLog().error( "Two exceptions, passing on first:", thrown, t );
@@ -823,7 +860,7 @@ public class HttpShellFilter
 
     /**
      * Parse a String into a MeshObjectIdentifier.
-     * 
+     *
      * @param idFact the MeshObjectIdentifierFactory
      * @param raw the String
      * @return the parsed MeshObjectIdentifier
@@ -840,7 +877,7 @@ public class HttpShellFilter
             ret = null;
         } else {
             raw = raw.trim();
-            
+
             ret = idFact.fromStringRepresentation( theParsingRepresentation, SimpleStringRepresentationParameters.create(), raw );
         }
 
@@ -1069,7 +1106,7 @@ public class HttpShellFilter
             // null has preference over upload, which has preference over the regular value
             if( NULL_PROPERTY_VALUE_TAG_TRUE.equals( nullValueString )) {
                 value = null;
-                
+
             } else if( uploadPart != null && uploadPart.getContent().length > 0 && propertyType.getDataType() instanceof BlobDataType ) {
                 BlobDataType type = (BlobDataType) propertyType.getDataType();
 
@@ -1092,9 +1129,9 @@ public class HttpShellFilter
                 buf.append( PROPERTY_VALUE_TAG );
                 buf.append( propVarName );
                 buf.append( PROPERTY_VALUE_FORMAT_TAG );
-                
+
                 String format = request.getPostedArgument( buf.toString() );
-            
+
                 SimpleStringRepresentationParameters pars = SimpleStringRepresentationParameters.create();
                 if( format != null ) {
                     pars.put( StringRepresentationParameters.FORMAT_STRING, format );
@@ -1200,6 +1237,17 @@ public class HttpShellFilter
      * The StringRepresentation to use.
      */
     protected StringRepresentation theParsingRepresentation;
+
+    /**
+     * The set of vars to take from the incomingg request, instead of from HTTP POST.
+     */
+    protected HashSet<String> thePreferVarsFromRequest = null; // only initialized if needed
+
+    /**
+     * Name of the filter parameter that indicates which vars to take from the incoming request.
+     * The value is a comma-separated list.
+     */
+    public static final String PREFER_VARS_FROM_REQUEST_PAR_NAME = "prefer-vars-from-request";
 
     /**
      * Special value that indicates a field should have been set (e.g. by JavaScript) but wasn't.
